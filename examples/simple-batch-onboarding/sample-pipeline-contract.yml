@@ -1,0 +1,18 @@
+pipeline_name: pl_student_enrolment_daily
+source_table: raw.student_enrolment
+target_table: curated.student_enrolment
+schedule: "0 3 * * *"
+dependencies:
+  - ingest_student_enrolment
+validation_required: true
+schema_drift_action: fail_and_alert
+data_drift_action: raise_alert_and_continue
+retry_policy:
+  max_retries: 2
+  retry_interval_minutes: 15
+alerting:
+  on_failure: true
+  channel: demo_ops_channel
+owner:
+  technical_owner: technical_owner_demo
+  support_group: data_platform_demo

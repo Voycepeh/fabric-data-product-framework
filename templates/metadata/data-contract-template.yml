@@ -1,0 +1,23 @@
+contract_name: student_enrolment_data_contract
+domain_name: education_demo
+table_name: student_enrolment
+owner:
+  business_owner: business_owner_placeholder
+  technical_owner: technical_owner_placeholder
+refresh_frequency: daily
+schema_expectations:
+  required_columns: []
+  primary_key: []
+quality_expectations:
+  ruleset_id: dq_rules_student_enrolment_v1
+  fail_on_severity: [critical, high]
+drift_policy:
+  schema_drift_action: fail_and_alert
+  data_drift_action: warn_and_review
+failure_policy:
+  on_contract_failure: stop_pipeline
+  alert_channel: ops-alerts-placeholder
+approval:
+  approved_by: reviewer_placeholder
+  approved_on: YYYY-MM-DD
+  status: draft

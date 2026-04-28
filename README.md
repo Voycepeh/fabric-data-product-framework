@@ -4,6 +4,54 @@ Setting up our Data to be BI & AI ready.
 
 A reusable Microsoft Fabric notebook framework for building documented, governed, quality-checked, drift-aware, AI-ready data products.
 
+
+## AI-Assisted Fabric Framework
+
+### Framework purpose
+A reusable AI-assisted Microsoft Fabric framework that helps teams onboard data products consistently, improve data quality, detect schema/data drift, enforce contracts, and generate handover documentation.
+
+### Problem
+Data projects often depend too much on senior engineers' tacit knowledge. Junior engineers need to learn Fabric, PySpark, data quality, governance, pipeline design, documentation, and domain logic all at once.
+
+### Framework answer
+Standard templates plus AI-in-the-loop workflows turn senior engineering judgement into repeatable delivery patterns.
+
+### Tagline
+**AI proposes. Humans approve. Pipelines enforce. Documentation updates automatically.**
+
+### Delivery flow
+Requirement Gathering → Data Model & Dictionary → Data Generation → Data Verification → Handover
+
+```mermaid
+flowchart LR
+    A[Requirement Gathering] --> B[Data Model & Dictionary]
+    B --> C[Data Generation]
+    C --> D[Data Verification]
+    D --> E[Handover & Operations]
+
+    AI[AI Assistant] -.-> A
+    AI -.-> B
+    AI -.-> C
+    AI -.-> D
+    AI -.-> E
+
+    A --> A1[Business requirements<br/>Previous reports<br/>Workflow clarification<br/>Use cases]
+    B --> B1[Table registry<br/>Column dictionary<br/>Keys & relationships<br/>Sensitivity labels]
+    C --> C1[Notebook templates<br/>Pipeline templates<br/>Reusable PySpark patterns]
+    D --> D1[Data quality rules<br/>Schema drift checks<br/>Data drift checks<br/>Contract validation]
+    E --> E1[Runbook<br/>Test plan<br/>Known limitations<br/>Support notes]
+
+    D1 --> F[Central Validation Log]
+    E1 --> G[Generated Handover Pack]
+
+    H[Human Reviewer] --> B
+    H --> D
+    H --> E
+
+    F --> I[Monitoring Dashboard]
+    G --> J[Junior Engineer Onboarding]
+```
+
 ## Why this exists
 
 Data teams often rebuild the same notebook patterns for profiling, quality checks, drift monitoring, governance notes, and lineage handoffs. This framework provides a consistent starting point so teams can focus on dataset-specific logic and business meaning instead of reinventing operational scaffolding.
