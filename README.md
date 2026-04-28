@@ -160,6 +160,24 @@ else:
     print("Dataset contract is valid.")
 ```
 
+
+
+## DataFrame profiling example
+
+```python
+import pandas as pd
+from fabric_data_product_framework.profiling import profile_dataframe, summarize_profile
+
+df = pd.DataFrame({
+    "customer_id": [1, 2, 3],
+    "email": ["a@example.com", "b@example.com", None],
+    "amount": [10.5, 20.0, 30.0],
+})
+
+profile = profile_dataframe(df, dataset_name="synthetic_orders")
+summary = summarize_profile(profile)
+```
+
 Validation-to-gate flow:
 
 ```mermaid
