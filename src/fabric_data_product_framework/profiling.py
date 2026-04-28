@@ -58,17 +58,21 @@ def to_jsonable(value: Any) -> Any:
         return value.isoformat()
     if isinstance(value, Decimal):
         return float(value)
-    if pd.isna(value):
-        return None
+    if isinstance(value, (list, tuple)):
+        return [to_jsonable(v) for v in value]
+    if isinstance(value, dict):
+        return {str(k): to_jsonable(v) for k, v in value.items()}
     if hasattr(value, "item"):
         try:
             return to_jsonable(value.item())
         except Exception:
             return str(value)
-    if isinstance(value, (list, tuple)):
-        return [to_jsonable(v) for v in value]
-    if isinstance(value, dict):
-        return {str(k): to_jsonable(v) for k, v in value.items()}
+    try:
+        missing = pd.isna(value)
+        if isinstance(missing, bool) and missing:
+            return None
+    except Exception:
+        pass
     return str(value)
 
 

@@ -6,6 +6,7 @@ from fabric_data_product_framework.profiling import (
     profile_column,
     profile_dataframe,
     summarize_profile,
+    to_jsonable,
 )
 
 
@@ -90,3 +91,19 @@ def test_empty_dataframe_does_not_crash():
     assert prof["row_count"] == 0
     assert prof["column_count"] == 0
     assert prof["columns"] == []
+
+
+def test_to_jsonable_list_with_timestamp():
+    out = to_jsonable([1, None, pd.Timestamp("2024-01-01")])
+    assert out == [1, None, "2024-01-01T00:00:00"]
+
+
+def test_to_jsonable_nested_dict_with_pd_na_and_nan():
+    out = to_jsonable({"a": pd.NA, "b": [1, float("nan")]})
+    assert out == {"a": None, "b": [1, None]}
+
+
+def test_profile_column_mixed_object_values_is_json_serializable():
+    s = pd.Series([1, "x", pd.Timestamp("2024-01-01"), None], name="mixed_obj", dtype="object")
+    prof = profile_column(s)
+    json.dumps(prof)
