@@ -1,0 +1,80 @@
+dataset:
+  id: synthetic_customer_orders_product
+  purpose: "Create a trusted synthetic customer orders dataset for reporting and model experimentation."
+  owner: "data.owner@example.org"
+  steward: "data.steward@example.org"
+
+source:
+  table: "lakehouse_demo.synthetic_orders_raw"
+  extraction_mode: "incremental"
+
+target:
+  table: "lakehouse_demo.synthetic_orders_curated"
+  refresh_frequency: "daily"
+  write_mode: "merge"
+
+incremental:
+  watermark_column: "event_timestamp"
+  partition_column: "event_date"
+  business_keys:
+    - "order_id"
+    - "order_line_id"
+
+schema_drift_policy:
+  on_new_column: "warn"
+  on_missing_column: "error"
+  on_type_change: "error"
+  allow_nullable_expansion: true
+
+data_drift_policy:
+  baseline_window_days: 30
+  checks:
+    - metric: "distribution_shift"
+      column: "order_amount"
+      threshold: 0.20
+      action: "warn"
+    - metric: "null_ratio_change"
+      column: "customer_region"
+      threshold: 0.05
+      action: "warn"
+
+incremental_safety_policy:
+  prevent_watermark_regression: true
+  max_late_arrival_days: 7
+  block_on_partition_gap: true
+
+quality_rules:
+  - id: "qr_order_id_not_null"
+    description: "Order ID must always be populated."
+    severity: "error"
+    expression: "order_id IS NOT NULL"
+  - id: "qr_amount_non_negative"
+    description: "Order amount should be non-negative for synthetic transactions."
+    severity: "error"
+    expression: "order_amount >= 0"
+
+governance_labels:
+  dataset:
+    confidentiality: "internal-synthetic"
+    domain: "sales"
+  columns:
+    customer_email_hash: "pseudonymous_identifier"
+
+upstream_contract:
+  provider: "synthetic_source_team"
+  expectation: "Source publishes daily by 03:00 UTC with stable business keys."
+
+downstream_contract:
+  consumers:
+    - name: "synthetic_sales_dashboard"
+      expectation: "Curated table available by 06:00 UTC daily."
+    - name: "synthetic_feature_pipeline"
+      expectation: "No breaking schema changes without one release notice."
+
+transformation_steps:
+  - step: "filter_valid_orders"
+    reason: "Exclude canceled test records from analytical outputs."
+  - step: "normalize_currency"
+    reason: "Provide comparable amounts for downstream KPIs."
+  - step: "derive_customer_value_band"
+    reason: "Enable segmentation analysis for synthetic personas."

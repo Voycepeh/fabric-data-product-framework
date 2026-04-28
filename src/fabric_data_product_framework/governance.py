@@ -1,0 +1,1 @@
+"""Governance labeling module scaffold."""
