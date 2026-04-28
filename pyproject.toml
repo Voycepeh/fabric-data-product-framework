@@ -7,9 +7,25 @@ name = "fabric-data-product-framework"
 version = "0.1.0"
 description = "A reusable Microsoft Fabric notebook framework for building documented, governed, quality-checked, drift-aware, AI-ready data products."
 requires-python = ">=3.10"
+dependencies = [
+  "PyYAML>=6.0",
+  "jsonschema>=4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
+include-package-data = true
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+fabric_data_product_framework = ["schemas/*.json"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
