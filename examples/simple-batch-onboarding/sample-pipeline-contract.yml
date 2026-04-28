@@ -6,7 +6,7 @@ dependencies:
   - ingest_student_enrolment
 validation_required: true
 schema_drift_action: fail_and_alert
-data_drift_action: raise_alert_and_continue
+data_drift_action: warn_and_continue
 retry_policy:
   max_retries: 2
   retry_interval_minutes: 15

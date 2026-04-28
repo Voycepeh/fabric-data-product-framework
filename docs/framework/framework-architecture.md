@@ -21,6 +21,14 @@ This architecture describes a reusable delivery system for Microsoft Fabric proj
 - **Documentation generation**
   - Produces handover packs and operational docs from metadata + logs.
 
+
+## Contract enum note
+
+Use controlled enum values for drift actions so future validators can parse and enforce contracts consistently:
+
+- `schema_drift_action`: `fail_and_alert` or `warn_and_continue`
+- `data_drift_action`: `fail_and_alert`, `warn_and_continue`, or `warn_and_review`
+
 ```mermaid
 flowchart TB
     subgraph Inputs
