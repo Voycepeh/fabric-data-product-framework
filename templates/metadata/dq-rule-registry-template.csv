@@ -1,0 +1,1 @@
+domain_name,table_name,column_name,rule_id,rule_name,rule_type,rule_description,severity,threshold,rule_expression,plain_english_requirement,ai_suggested,human_approved,on_failure_action
