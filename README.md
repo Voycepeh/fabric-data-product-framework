@@ -1,6 +1,6 @@
 # Fabric Data Product Framework
 
-**Tagline:** Data First before AI First
+Setting up our Data to be BI & AI ready.
 
 A reusable Microsoft Fabric notebook framework for building documented, governed, quality-checked, drift-aware, AI-ready data products.
 
@@ -42,7 +42,7 @@ Data teams often rebuild the same notebook patterns for profiling, quality check
 ## What the framework is trying to do
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[Define dataset purpose and ownership] --> B[Run notebook lifecycle in Fabric]
     B --> C[Profile sources and check drift/safety]
     C --> D[Apply transformations + technical columns]
