@@ -93,3 +93,21 @@ This repository is in an **early scaffold** stage. The initial focus is product 
 ## Public repo safety note
 
 Do not commit real organisational data, secrets, tenant information, internal table names, production metadata, real workspace names, or screenshots containing sensitive details.
+
+## Dataset contract validation
+
+Dataset contracts are now schema-validated using JSON Schema before runtime logic is implemented.
+
+```python
+from fabric_data_product_framework.config import load_and_validate_dataset_contract
+
+contract, errors = load_and_validate_dataset_contract(
+    "examples/configs/sample_dataset_contract.yaml"
+)
+
+if errors:
+    for error in errors:
+        print(error)
+else:
+    print("Dataset contract is valid.")
+```

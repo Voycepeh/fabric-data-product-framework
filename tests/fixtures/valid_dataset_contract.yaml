@@ -73,11 +73,6 @@ governance:
       semantic_type: pseudonymous_identifier
       pii: true
       handling_rule: hash_only
-    order_amount:
-      classification: internal
-      semantic_type: monetary_value
-      pii: false
-      handling_rule: unrestricted
 
 contracts:
   upstream:
@@ -111,13 +106,3 @@ transformations:
     columns_used:
       - order_status
     columns_created: []
-  - step_id: step_derive_customer_value_band
-    name: derive_customer_value_band
-    description: Add a segmentation band based on synthetic spend.
-    reason: Support downstream segmentation use cases.
-    input: temp_valid_orders
-    output: lakehouse_demo.synthetic_orders_curated
-    columns_used:
-      - order_amount
-    columns_created:
-      - customer_value_band
