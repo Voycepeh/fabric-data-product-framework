@@ -1,0 +1,1 @@
+"""Data contract module scaffold."""

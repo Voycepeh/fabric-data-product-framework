@@ -1,0 +1,1 @@
+"""Technical columns module scaffold."""
