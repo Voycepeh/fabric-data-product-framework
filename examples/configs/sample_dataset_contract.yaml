@@ -13,15 +13,15 @@ dataset:
     - Customer outreach automation
 
 source:
-  system: fabric_lakehouse_demo
-  table: lakehouse_demo.synthetic_orders_raw
+  system: synthetic_source_system
+  table: synthetic_source.synthetic_orders_raw
   type: delta
   description: Synthetic raw order events generated for non-production testing.
 
 target:
-  lakehouse: lakehouse_demo
+  lakehouse: synthetic_target
   schema: curated
-  table: synthetic_orders_curated
+  table: synthetic_orders_product
   write_mode: merge
 
 refresh:
@@ -33,7 +33,7 @@ refresh:
 keys:
   business_keys:
     - order_id
-    - order_line_id
+    - order_item_id
 
 policies:
   schema_drift:
@@ -83,18 +83,18 @@ contracts:
   upstream:
     expected_columns:
       - order_id
-      - order_line_id
+      - order_item_id
       - event_timestamp
       - order_amount
-    expected_freshness: daily_by_03_00_utc
+    expected_freshness: daily_by_08_00_utc
     breaking_changes:
       - Removed expected column
       - Changed type for key columns
   downstream:
-    grain: order_line
+    grain: order_item
     guaranteed_columns:
       - order_id
-      - order_line_id
+      - order_item_id
       - event_date
       - order_amount
     quality_expectations:
@@ -106,7 +106,7 @@ transformations:
     name: filter_valid_orders
     description: Remove canceled synthetic test orders from curated output.
     reason: Ensure consumers only query analytically valid synthetic orders.
-    input: lakehouse_demo.synthetic_orders_raw
+    input: synthetic_source.synthetic_orders_raw
     output: temp_valid_orders
     columns_used:
       - order_status
@@ -116,7 +116,7 @@ transformations:
     description: Add a segmentation band based on synthetic spend.
     reason: Support downstream segmentation use cases.
     input: temp_valid_orders
-    output: lakehouse_demo.synthetic_orders_curated
+    output: synthetic_target.synthetic_orders_product
     columns_used:
       - order_amount
     columns_created:

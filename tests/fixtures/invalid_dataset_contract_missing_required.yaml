@@ -11,9 +11,9 @@ dataset:
     - Production credit decisions
 
 target:
-  lakehouse: lakehouse_demo
+  lakehouse: synthetic_target
   schema: curated
-  table: synthetic_orders_curated
+  table: synthetic_orders_product
   write_mode: merge
 
 refresh:
@@ -62,10 +62,10 @@ contracts:
   upstream:
     expected_columns:
       - order_id
-    expected_freshness: daily_by_03_00_utc
+    expected_freshness: daily_by_08_00_utc
     breaking_changes: []
   downstream:
-    grain: order_line
+    grain: order_item
     guaranteed_columns:
       - order_id
     quality_expectations:
@@ -76,5 +76,5 @@ transformations:
     name: filter_valid_orders
     description: Remove canceled synthetic test orders from curated output.
     reason: Ensure consumers only query analytically valid synthetic orders.
-    input: lakehouse_demo.synthetic_orders_raw
+    input: synthetic_source.synthetic_orders_raw
     output: temp_valid_orders

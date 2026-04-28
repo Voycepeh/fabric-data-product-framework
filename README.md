@@ -111,3 +111,20 @@ if errors:
 else:
     print("Dataset contract is valid.")
 ```
+
+Validation-to-gate flow:
+
+```mermaid
+flowchart LR
+    A[Dataset contract YAML] --> B[Schema validation]
+    B --> C[Profiling]
+    B --> D[Schema drift checks]
+    B --> E[Data drift checks]
+    B --> F[Governance checks]
+    B --> G[DQ execution]
+    C --> H[Pipeline gate]
+    D --> H
+    E --> H
+    F --> H
+    G --> H
+```

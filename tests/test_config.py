@@ -1,6 +1,11 @@
+from importlib.resources import files
 from pathlib import Path
 
+import pytest
+
 from fabric_data_product_framework.config import (
+    DatasetContractValidationError,
+    assert_valid_dataset_contract,
     load_and_validate_dataset_contract,
     load_dataset_contract,
     validate_dataset_contract,
@@ -73,7 +78,57 @@ def test_load_and_validate_dataset_contract_returns_contract_and_errors() -> Non
     assert errors
 
 
-def test_default_schema_path_works_without_explicit_argument() -> None:
+def test_default_schema_loading_from_package_resource_path() -> None:
+    schema_resource = files("fabric_data_product_framework.schemas").joinpath(
+        "dataset_contract.schema.json"
+    )
+
+    assert schema_resource.is_file()
+
     _, errors = load_and_validate_dataset_contract(VALID_FIXTURE)
+    assert errors == []
+
+
+def test_unknown_typo_fields_are_rejected() -> None:
+    contract = load_dataset_contract(VALID_FIXTURE)
+    contract["dataset"]["owenr"] = "typo_field"
+
+    errors = validate_dataset_contract(contract)
+
+    assert any("dataset" in error and "Additional properties are not allowed" in error for error in errors)
+
+
+def test_full_refresh_contract_does_not_require_watermark_or_partition() -> None:
+    contract = load_dataset_contract(VALID_FIXTURE)
+    contract["refresh"]["mode"] = "full_refresh"
+    contract["refresh"].pop("watermark_column")
+    contract["refresh"].pop("partition_column")
+
+    errors = validate_dataset_contract(contract)
 
     assert errors == []
+
+
+def test_incremental_contract_requires_watermark_and_partition() -> None:
+    contract = load_dataset_contract(VALID_FIXTURE)
+    contract["refresh"]["mode"] = "incremental"
+    contract["refresh"].pop("watermark_column")
+    contract["refresh"].pop("partition_column")
+
+    errors = validate_dataset_contract(contract)
+
+    assert any("refresh.watermark_column" in error for error in errors)
+    assert any("refresh.partition_column" in error for error in errors)
+
+
+def test_assert_valid_dataset_contract_raises_on_invalid_contract() -> None:
+    contract = load_dataset_contract(MISSING_REQUIRED_FIXTURE)
+
+    with pytest.raises(DatasetContractValidationError):
+        assert_valid_dataset_contract(contract)
+
+
+def test_assert_valid_dataset_contract_does_not_raise_on_valid_contract() -> None:
+    contract = load_dataset_contract(VALID_FIXTURE)
+
+    assert_valid_dataset_contract(contract)
