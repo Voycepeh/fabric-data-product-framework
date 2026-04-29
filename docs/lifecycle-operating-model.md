@@ -1,88 +1,59 @@
 # Lifecycle Operating Model
 
-This framework uses a three-lane model to separate preparation, human decisions, and framework automation.
+This is the canonical lifecycle guide for how work moves between people, framework code, and Fabric runtime.
 
-## Three lanes
-- **Outside Fabric:** business context and supporting context prepared before notebook runtime.
-- **Inside Fabric: Human-guided:** practitioner-led setup, interpretation, transformation, approvals, and review.
-- **Inside Fabric: Framework-run:** deterministic checks, contracts, metadata outputs, and handover artifacts.
+## Six-phase flow
 
-AI is an assistance tag across selected steps; it is not a standalone accountable actor.
+1. **Outside Fabric preparation**
+   - Confirm product purpose, steward, approved usage, caveats, and business context.
+   - Prepare supporting inputs (mapping/reference files, assumptions, known exclusions).
+2. **Inside Fabric human-guided setup and interpretation**
+   - Set notebook parameters, load contract intent, declare source/target tables.
+   - Review source profile outputs and capture EDA/data nuance notes.
+3. **Framework-run checks and logging**
+   - Execute deterministic profiling, schema drift, data drift/incremental safety, and metadata logging.
+4. **AI-assisted drafting and summarisation**
+   - Use evidence-based AI prompts to draft DQ candidates or transformation summaries.
+   - Keep AI output as reviewable artifacts; do not treat chat history as a system of record.
+5. **Human approval**
+   - Approve/reject DQ candidates, review exceptions, and confirm release readiness.
+6. **Framework enforcement and run artifacts**
+   - Enforce quality and contract gates, apply technical columns/write pattern, and publish run outputs.
+
+## Notebook journey mapped to lifecycle
+
+| Notebook activity | Primary lane | Lifecycle phase |
+|---|---|---|
+| Purpose and approved usage section | Outside Fabric + Human-guided | 1, 2 |
+| Notebook parameters | Human-guided | 2 |
+| Source declaration | Human-guided | 2 |
+| Source profiling | Framework-run | 3 |
+| Schema drift / data drift / incremental safety | Framework-run | 3 |
+| EDA notes and nuance explanation | Human-guided | 2, 5 |
+| Transformation logic | Human-guided | 2 |
+| Technical columns and write pattern | Framework-run | 6 |
+| Output profiling | Framework-run | 3, 6 |
+| DQ checks | Framework-run + Human-guided | 3, 5, 6 |
+| Governance labels (where implemented) | Human-guided + Framework-run | 5, 6 |
+| Contracts | Framework-run + Human-guided | 3, 5, 6 |
+| Lineage | Framework-run + Human-guided | 6 |
+| Run summary + AI context export | Framework-run + Human-guided | 6 |
+
+## What the framework does automatically
+- Profiles source/output datasets and formats metadata records.
+- Runs schema drift and incremental safety gates.
+- Runs quality rules and contract checks.
+- Builds lineage, run summaries, and handover-ready structured artifacts.
+
+## What humans still provide
+- Business purpose, approved usage, caveats, and data interpretation.
+- Dataset-specific transformation logic.
+- Approval decisions for AI suggestions, exceptions, and release gating.
+
+## AI role in this lifecycle
+Use AI only as a bounded assistant within explicit artifacts.
+
+- Canonical AI behavior and guardrails: [workflows/ai-generated-dq-rules.md](workflows/ai-generated-dq-rules.md)
+- Transformation-summary workflow: [workflows/ai-transformation-summary.md](workflows/ai-transformation-summary.md)
 
 **Boundary:** AI proposes. Humans approve. The framework validates and records.
-
-## End-to-end lifecycle
-
-| Step | Stage | Lane |
-|---:|---|---|
-| 1 | Purpose, steward, usage, and caveats | Outside Fabric |
-| 2 | Supporting data and metadata preparation | Outside Fabric |
-| 3 | Dataset contract and runtime parameters | Inside Fabric: Human-guided |
-| 4 | Source declaration | Inside Fabric: Human-guided |
-| 5 | Source profiling | Inside Fabric: Framework-run |
-| 6 | Schema drift, data drift, and incremental safety | Inside Fabric: Framework-run |
-| 7 | EDA notes and data nuance explanation | Inside Fabric: Human-guided |
-| 8 | Transformation logic | Inside Fabric: Human-guided |
-| 9 | Technical columns and write pattern | Inside Fabric: Framework-run |
-| 10 | Output profiling | Inside Fabric: Framework-run |
-| 11 | DQ rules and runtime contract validation | Inside Fabric: Framework-run + Human-guided |
-| 12 | Lineage and transformation summary | Inside Fabric: Framework-run + Human-guided |
-| 13 | Run summary, AI context, and handover package | Inside Fabric: Framework-run + Human-guided |
-
-## Lane responsibilities by phase
-
-### Outside Fabric
-- Confirm purpose, steward, approved usage, and caveats.
-- Prepare supporting files, mapping tables, and reference data.
-- Define governance expectations and metadata requirements.
-
-### Inside Fabric: Human-guided
-- Configure runtime parameters and contract intent.
-- Declare sources and interpret source behavior.
-- Author transformation logic and review exceptions.
-- Approve DQ/contract outcomes and handover readiness.
-
-### Inside Fabric: Framework-run
-- Execute profiling, metadata logging, and safety gates.
-- Enforce schema/data drift and incremental safety checks.
-- Apply technical columns and standard write patterns.
-- Execute DQ and contract checks.
-- Generate lineage, run summary, and handover-ready outputs.
-
-## Three-lane flow diagram
-```mermaid
-flowchart LR
-    subgraph OUT["Outside Fabric"]
-        O1["Business agreement"]
-        O2["Approved usage, steward, definitions, caveats"]
-        O3["Supporting files, mapping tables, reference data"]
-        O4["Metadata collection and governance expectations"]
-    end
-
-    subgraph HUMAN["Inside Fabric: Human-guided"]
-        H1["Notebook setup and runtime parameters"]
-        H2["Source declaration"]
-        H3["EDA and data nuance explanation"]
-        H4["Transformation logic"]
-        H5["DQ rule approval and exception review"]
-        H6["Handover review"]
-    end
-
-    subgraph FRAMEWORK["Inside Fabric: Framework-run"]
-        F1["Naming and runtime checks"]
-        F2["Source profiling and metadata logging"]
-        F3["Schema drift, data drift, incremental safety"]
-        F4["DQ execution and contract validation"]
-        F5["Technical columns and write pattern"]
-        F6["Output profiling, lineage, run summary, metadata logs"]
-    end
-
-    OUT --> HUMAN
-    HUMAN --> FRAMEWORK
-    FRAMEWORK --> HUMAN
-    HUMAN --> OUT
-
-    AI["AI-assisted where useful:<br/>Copilot prompts or Fabric AI functions<br/>AI proposes, humans approve, framework records"]
-    AI -.-> HUMAN
-    AI -.-> FRAMEWORK
-```
