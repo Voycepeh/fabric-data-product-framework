@@ -1,150 +1,104 @@
 # Fabric Data Product Framework
 
-Setting up our Data to be BI & AI ready.
+A reusable Microsoft Fabric notebook framework for turning raw data into documented, quality-checked, governed, AI-ready data products.
 
-A reusable Microsoft Fabric notebook framework for building documented, governed, quality-checked, drift-aware, AI-ready data products.
+## What this framework is for
 
+This framework helps Python-proficient data practitioners deliver consistent Fabric data products without first mastering every Fabric engineering best practice. It provides a practical notebook lifecycle, reusable templates, and metadata outputs that support onboarding, review, and handover.
 
-## AI-Assisted Fabric Framework
+## Core idea
 
-### Framework purpose
-A reusable AI-assisted Microsoft Fabric framework that helps teams onboard data products consistently, improve data quality, detect schema/data drift, enforce contracts, and generate handover documentation.
-
-### Problem
-Data projects often depend too much on senior engineers' tacit knowledge. Junior engineers need to learn Fabric, PySpark, data quality, governance, pipeline design, documentation, and domain logic all at once.
-
-### Framework answer
-Standard templates plus AI-in-the-loop workflows turn senior engineering judgement into repeatable delivery patterns.
-
-### Tagline
 **AI proposes. Humans approve. Pipelines enforce. Documentation updates automatically.**
-
-### Delivery flow
-Requirement Gathering → Data Model & Dictionary → Data Generation → Data Verification → Handover
-
-```mermaid
-flowchart LR
-    A[Requirement Gathering] --> B[Data Model & Dictionary]
-    B --> C[Data Generation]
-    C --> D[Data Verification]
-    D --> E[Handover & Operations]
-
-    AI[AI Assistant] -.-> A
-    AI -.-> B
-    AI -.-> C
-    AI -.-> D
-    AI -.-> E
-
-    A --> A1[Business requirements<br/>Previous reports<br/>Workflow clarification<br/>Use cases]
-    B --> B1[Table registry<br/>Column dictionary<br/>Keys & relationships<br/>Sensitivity labels]
-    C --> C1[Notebook templates<br/>Pipeline templates<br/>Reusable PySpark patterns]
-    D --> D1[Data quality rules<br/>Schema drift checks<br/>Data drift checks<br/>Contract validation]
-    E --> E1[Runbook<br/>Test plan<br/>Known limitations<br/>Support notes]
-
-    D1 --> F[Central Validation Log]
-    E1 --> G[Generated Handover Pack]
-
-    H[Human Reviewer] --> B
-    H --> D
-    H --> E
-
-    F --> I[Monitoring Dashboard]
-    G --> J[Junior Engineer Onboarding]
-```
-
-## Why this exists
-
-Data teams often rebuild the same notebook patterns for profiling, quality checks, drift monitoring, governance notes, and lineage handoffs. This framework provides a consistent starting point so teams can focus on dataset-specific logic and business meaning instead of reinventing operational scaffolding.
-
-## Who this is for
-
-- Python-proficient data engineers, analytics engineers, and data scientists working in Microsoft Fabric
-- Teams standardizing notebook-based data product delivery
-- Organizations that want governed, explainable, and reusable dataset pipelines
-
-## What problem it solves
-
-- Reduces repeated engineering effort across dataset pipelines
-- Introduces a shared lifecycle from source declaration to run summary
-- Improves traceability with structured metadata outputs
-- Supports AI-readiness with curated context export after human-reviewed runs
-
-## What the framework standardizes
-
-- Notebook section structure and execution flow
-- Dataset contract configuration patterns (YAML)
-- Profiling, drift, and quality metadata outputs
-- Governance and lineage logging conventions
-- Run summaries and AI context packaging
-
-## Product positioning
-
-- **Data First before AI First**
-- **GitHub is the source of truth**
-- **Fabric is the execution environment**
-- **Not** a full data catalog
-- **Not** a replacement for Microsoft Purview
-- **Not** only a data quality library
-- A reusable notebook framework for turning pipelines into trusted data products
-
-## What the framework is trying to do
-
-```mermaid
-flowchart TD
-    A[Define dataset purpose and ownership] --> B[Run notebook lifecycle in Fabric]
-    B --> C[Profile sources and check drift/safety]
-    C --> D[Apply transformations + technical columns]
-    D --> E[Profile outputs and run quality checks]
-    E --> F[Apply governance labels and contracts]
-    F --> G[Write lineage + run summary metadata]
-    G --> H[Export AI-ready context for assisted documentation]
-    H --> I[Human review and approval]
-```
-
-## What belongs in GitHub vs what belongs in Fabric
-
-### GitHub (source of truth)
-
-- Framework code and reusable package modules
-- Notebook templates and documentation
-- Dataset contracts and configuration examples
-- Tests, CI definitions, and release history
-
-### Fabric (execution environment)
-
-- Notebook execution, scheduling, and orchestration
-- Lakehouse reads/writes and runtime outputs
-- Metadata table persistence for runs, drift, quality, and lineage
-- Workspace-level operational monitoring
 
 ## Core lifecycle
 
-1. Dataset purpose and steward agreement
-2. Notebook parameters and environment setup
-3. Source declaration
-4. Source profiling
-5. Schema drift, data drift, and incremental safety checks
-6. EDA notes and data nuance explanation
-7. Transformation pipeline
-8. Technical columns and write pattern
-9. Output profiling
-10. Data quality rules
-11. Governance labeling
-12. Data contracts
-13. Lineage and transformation summary
-14. Run summary and AI context export
+Use this lifecycle as the default operating model for each dataset.
+
+| Step | Lifecycle stage | Purpose | Output |
+|---|---|---|---|
+| 1 | Dataset purpose and steward agreement | Define business purpose, scope, steward, and expected usage. | Dataset purpose note |
+| 2 | Notebook parameters and environment setup | Set runtime parameters, paths, target tables, and execution mode. | Run configuration for the notebook execution |
+| 3 | Source declaration | Register declared sources, keys, refresh expectations, and ingestion intent. | Source registry |
+| 4 | Source profiling | Profile input shape, nulls, distributions, and basic quality indicators. | Source profile |
+| 5 | Schema drift, data drift, and incremental safety checks | Compare current vs baseline structure and behavior before transforms; verify incremental boundaries. | Drift check result |
+| 6 | EDA notes and data nuance explanation | Capture observed quirks, caveats, and business-relevant interpretation notes. | EDA notes |
+| 7 | Transformation pipeline | Apply business logic from raw/bronze to curated outputs with reproducible steps. | Transformation summary |
+| 8 | Technical columns and write pattern | Apply audit columns, watermark/version columns, partition/write rules, and persistence pattern. | Managed output write with technical metadata |
+| 9 | Output profiling | Re-profile final output to confirm expected shape and characteristics. | Output profile |
+| 10 | Data quality rules | Run required checks (completeness, validity, consistency, thresholds) and capture pass/fail details. | Data quality result |
+| 11 | Governance labeling | Apply sensitivity/classification labels and usage controls in documented form. | Governance label result |
+| 12 | Data contracts | Validate and publish dataset contract expectations for schema, semantics, and constraints. | Data contract |
+| 13 | Lineage and transformation summary | Record lineage and summarize how each output is derived. | Lineage summary |
+| 14 | Run summary and AI context export | Produce run summary and package curated context for assisted documentation and handover. | Run summary and AI context export |
+
+```mermaid
+flowchart TD
+    S1[1. Dataset purpose & steward agreement] --> S2[2. Notebook params & environment setup]
+    S2 --> S3[3. Source declaration]
+    S3 --> S4[4. Source profiling]
+    S4 --> S5[5. Drift & incremental safety checks]
+    S5 --> S6[6. EDA notes & nuance explanation]
+    S6 --> S7[7. Transformation pipeline]
+    S7 --> S8[8. Technical columns & write pattern]
+    S8 --> S9[9. Output profiling]
+    S9 --> S10[10. Data quality rules]
+    S10 --> S11[11. Governance labeling]
+    S11 --> S12[12. Data contracts]
+    S12 --> S13[13. Lineage & transformation summary]
+    S13 --> S14[14. Run summary & AI context export]
+
+    AI[AI support: draft metadata, rules, EDA wording, docs, handover context] -.-> S6
+    AI -.-> S10
+    AI -.-> S14
+    H[Human review & approval] -.-> S5
+    H -.-> S10
+    H -.-> S12
+    H -.-> S14
+```
+
+## What gets created by the framework
+
+- Dataset purpose note
+- Source registry
+- Source profile
+- Drift check result
+- EDA notes
+- Transformation summary
+- Output profile
+- Data quality result
+- Governance label result
+- Data contract
+- Lineage summary
+- Run summary
+- AI context export
+
+## What belongs in GitHub vs Fabric
+
+### GitHub (source of truth)
+
+- Templates and reusable framework code
+- Contracts, examples, tests, and documentation
+- Review history and change control
+
+### Fabric (execution environment)
+
+- Notebook and pipeline execution
+- Lakehouse reads/writes and operational runs
+- Metadata tables, monitoring, and runtime outputs
 
 ## Repository status
 
-This repository is in an **early scaffold** stage. The initial focus is product direction, standards, and safe public templates. Core execution engines are intentionally not implemented yet.
+This repository is in an **early scaffold** stage. The current focus is standards, lifecycle consistency, and safe public templates.
 
 ## Public repo safety note
 
-Do not commit real organisational data, secrets, tenant information, internal table names, production metadata, real workspace names, or screenshots containing sensitive details.
+Do not commit real organisational data, secrets, tenant details, internal table names, workspace names, screenshots, or production metadata.
 
-## Dataset contract validation
+## Short examples
 
-Dataset contracts are now schema-validated using JSON Schema before runtime logic is implemented.
+For deeper examples, see [docs/architecture.md](docs/architecture.md), [docs/schema-drift.md](docs/schema-drift.md), and [docs/metadata-model.md](docs/metadata-model.md).
+
+### Contract validation
 
 ```python
 from fabric_data_product_framework.config import load_and_validate_dataset_contract
@@ -152,92 +106,32 @@ from fabric_data_product_framework.config import load_and_validate_dataset_contr
 contract, errors = load_and_validate_dataset_contract(
     "examples/configs/sample_dataset_contract.yaml"
 )
-
-if errors:
-    for error in errors:
-        print(error)
-else:
-    print("Dataset contract is valid.")
 ```
 
-
-
-## DataFrame profiling example
+### DataFrame profiling
 
 ```python
 import pandas as pd
-from fabric_data_product_framework.profiling import profile_dataframe, summarize_profile
+from fabric_data_product_framework.profiling import profile_dataframe
 
-df = pd.DataFrame({
-    "customer_id": [1, 2, 3],
-    "email": ["a@example.com", "b@example.com", None],
-    "amount": [10.5, 20.0, 30.0],
-})
-
+df = pd.DataFrame({"customer_id": [1, 2, 3], "amount": [10.5, 20.0, 30.0]})
 profile = profile_dataframe(df, dataset_name="synthetic_orders")
-summary = summarize_profile(profile)
 ```
 
-Validation-to-gate flow:
-
-```mermaid
-flowchart LR
-    A[Dataset contract YAML] --> B[Schema validation]
-    B --> C[Profiling]
-    B --> D[Schema drift checks]
-    B --> E[Data drift checks]
-    B --> F[Governance checks]
-    B --> G[DQ execution]
-    C --> H[Pipeline gate]
-    D --> H
-    E --> H
-    F --> H
-    G --> H
-```
-
-## Schema drift example
+### Schema drift check
 
 ```python
-import pandas as pd
-from fabric_data_product_framework.drift import (
-    SchemaDriftError,
-    build_schema_snapshot,
-    compare_schema_snapshots,
-    assert_no_blocking_schema_drift,
-)
+from fabric_data_product_framework.drift import compare_schema_snapshots
 
-baseline_df = pd.DataFrame({
-    "customer_id": [1, 2],
-    "order_amount": [10.0, 20.0],
-})
-
-current_df = pd.DataFrame({
-    "customer_id": [1, 2],
-    "order_amount": [10.0, 20.0],
-    "new_status": ["paid", "pending"],
-})
-
-baseline = build_schema_snapshot(baseline_df, dataset_name="synthetic_orders", table_name="source_orders")
-current = build_schema_snapshot(current_df, dataset_name="synthetic_orders", table_name="source_orders")
-
-result = compare_schema_snapshots(baseline, current)
-
-try:
-    assert_no_blocking_schema_drift(result)
-except SchemaDriftError as exc:
-    print("Schema drift requires review:", exc)
+result = compare_schema_snapshots(baseline_snapshot, current_snapshot)
 ```
-
-
 
 ## Execution engines
 
 The framework exposes engine-aware dataframe APIs with `engine="auto" | "pandas" | "spark"`.
 
-- **pandas**: for local/small synthetic datasets, CSV/Excel workflows, and tests.
-- **spark**: intended runtime engine for Microsoft Fabric/lakehouse-scale workloads.
-- **auto**: detects the dataframe engine defensively at runtime.
+- **pandas**: local and synthetic workloads
+- **spark**: Fabric/lakehouse-scale workloads
+- **auto**: runtime engine detection
 
-The framework does **not** automatically convert Spark DataFrames to pandas.
-
-See [docs/engine-model.md](docs/engine-model.md) for detailed engine behavior and API examples.
+See [docs/engine-model.md](docs/engine-model.md) for engine behavior and API usage.
