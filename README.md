@@ -194,3 +194,37 @@ flowchart LR
     F --> H
     G --> H
 ```
+
+## Schema drift example
+
+```python
+import pandas as pd
+from fabric_data_product_framework.drift import (
+    SchemaDriftError,
+    build_schema_snapshot,
+    compare_schema_snapshots,
+    assert_no_blocking_schema_drift,
+)
+
+baseline_df = pd.DataFrame({
+    "customer_id": [1, 2],
+    "order_amount": [10.0, 20.0],
+})
+
+current_df = pd.DataFrame({
+    "customer_id": [1, 2],
+    "order_amount": [10.0, 20.0],
+    "new_status": ["paid", "pending"],
+})
+
+baseline = build_schema_snapshot(baseline_df, dataset_name="synthetic_orders", table_name="source_orders")
+current = build_schema_snapshot(current_df, dataset_name="synthetic_orders", table_name="source_orders")
+
+result = compare_schema_snapshots(baseline, current)
+
+try:
+    assert_no_blocking_schema_drift(result)
+except SchemaDriftError as exc:
+    print("Schema drift requires review:", exc)
+```
+
