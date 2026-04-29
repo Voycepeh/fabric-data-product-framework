@@ -1,5 +1,69 @@
 # Fabric Data Product Framework
 
+## What this is
+A reusable Microsoft Fabric notebook framework for turning raw or source data into governed, quality-checked, handover-ready data products.
+
+It abstracts the repeatable 80% of pipeline work so teams can focus on the dataset-specific 20%: business meaning, transformation logic, and data nuance.
+
+## Why this exists
+This framework is designed to make Fabric data products easier to:
+- build
+- review
+- govern
+- operate
+- hand over
+
+It is especially intended for teams where people may know Python or data analysis, but may not yet know Fabric engineering best practices.
+
+## Operating model
+
+| Actor | Owns |
+|---|---|
+| Functional People | Purpose, definitions, usage, caveats, governance approval, handover acceptance |
+| Technical People | Source declaration, EDA, transformation logic, contracts, DQ rules, exception review |
+| AI | Drafting, summarising, recommending, explaining, candidate rules, lineage and handover narrative |
+| Framework | Profiling, metadata logging, drift checks, DQ execution, validation, write pattern, handover export |
+
+Functional people define meaning. Technical people turn meaning into data products. AI accelerates documentation and reasoning. The framework makes the process repeatable, validated, and handover-ready.
+
+## Lifecycle at a glance
+
+| Step | Stage | Primary actor | Where it happens |
+|---:|---|---|---|
+| 1 | Dataset purpose and steward agreement | Functional People | Governance doc / metadata table |
+| 2 | Business metadata entry | Functional People | Metadata table / form |
+| 3 | Governance labeling and usage controls | Functional People | Governance doc / metadata table |
+| 4 | Data contract draft | Technical People | Contract file / notebook |
+| 5 | Notebook parameters and source declaration | Technical People | Main pipeline notebook |
+| 6 | Source profiling | Framework | Profiling notebook / utility |
+| 7 | Source metadata logging | Framework | Metadata table |
+| 8 | EDA notes and data nuance explanation | Technical People | Separate EDA notebook |
+| 9 | Schema drift, data drift, and incremental safety checks | Framework | Checks notebook / reusable gate |
+| 10 | Transformation pipeline | Technical People | Main pipeline notebook |
+| 11 | Technical columns and write pattern | Framework | Main pipeline notebook |
+| 12 | Output profiling | Framework | Profiling utility / metadata table |
+| 13 | DQ rules and contract validation | Technical People + Framework | Checks notebook / pipeline gate |
+| 14 | Lineage and transformation summary | Framework + AI + Technical People | Handover notebook |
+| 15 | Handover package and AI context export | Framework + AI, accepted by Functional People | Handover notebook |
+
+## Quick start
+1. Define purpose, steward, usage, and business metadata.
+2. Draft governance labels and data contract expectations.
+3. Configure the notebook parameters and declared sources.
+4. Run source profiling and metadata logging.
+5. Complete the separate EDA notes notebook.
+6. Build the transformation pipeline.
+7. Run drift, incremental, DQ, and contract checks.
+8. Export lineage, run summary, AI context, and handover package.
+
+## More documentation
+- [Lifecycle operating model](docs/lifecycle-operating-model.md)
+- [Notebook structure](docs/notebook-structure.md)
+- [AI in the loop](docs/ai-in-the-loop.md)
+- [Functional responsibilities](docs/functional-responsibilities.md)
+- [Technical responsibilities](docs/technical-responsibilities.md)
+- [Framework responsibilities](docs/framework-responsibilities.md)
+- [Handover package](docs/handover-package.md)
 A reusable Microsoft Fabric notebook framework for turning raw data into documented, quality-checked, governed, AI-ready data products.
 
 ## What this framework is for
@@ -323,76 +387,4 @@ Wire only three adapters to start testing in your environment:
 The template is intentionally adapter-based and does not depend on a specific workspace setup or Fabric-only SDK imports.
 
 ## Callable Function Reference
-
-### Contract and configuration
-
-| Function | What it does | Typical lifecycle stage | Engine support | Minimal example usage |
-|---|---|---|---|---|
-| `load_and_validate_dataset_contract` | Loads a contract file and validates it against schema. | 1, 12 | N/A | `contract, errors = load_and_validate_dataset_contract("examples/configs/sample_dataset_contract.yaml")` |
-| `validate_dataset_contract` | Validates an in-memory contract and returns issues. | 1, 12 | N/A | `errors = validate_dataset_contract(contract)` |
-
-### Runtime and notebook setup
-
-| Function | What it does | Typical lifecycle stage | Engine support | Minimal example usage |
-|---|---|---|---|---|
-| `build_runtime_context` | Builds run metadata such as `run_id`, timestamps, and dataset names. | 2 | N/A | `ctx = build_runtime_context(dataset_name="synthetic_orders", environment="dev", source_table="source.synthetic_orders", target_table="product.synthetic_orders")` |
-| `assert_notebook_name_valid` | Enforces notebook naming conventions before execution. | 2 | N/A | `assert_notebook_name_valid("source_to_product_orders", ["source_to_product_"])` |
-
-### Fabric read/write wrappers
-
-| Function | What it does | Typical lifecycle stage | Engine support | Minimal example usage |
-|---|---|---|---|---|
-| `build_table_identifier` | Builds a consistent `lakehouse.schema.table` identifier string. | 2, 8 | N/A | `table_id = build_table_identifier("lh", "product", "sample_framework_output")` |
-| `read_table` | Reads a table using an injected adapter/reader. | 3, 7 | Adapter-based | `df = read_table(table_id, reader=fabric_reader)` |
-| `write_table` | Writes a dataframe using an injected adapter/writer. | 8 | Adapter-based | `write_table(df_out, table_id, writer=fabric_writer, mode="overwrite")` |
-
-### Profiling and metadata shaping
-
-| Function | What it does | Typical lifecycle stage | Engine support | Minimal example usage |
-|---|---|---|---|---|
-| `profile_dataframe` | Profiles source/output dataframe shape and column stats. | 4, 9 | pandas + Spark supported | `profile = profile_dataframe(df_source, dataset_name="synthetic_orders", engine="spark")` |
-| `flatten_profile_for_metadata` | Flattens profile output into metadata table rows. | 4, 9 | pandas + Spark profile inputs | `rows = flatten_profile_for_metadata(profile, "source.synthetic_orders", run_id=ctx["run_id"], table_stage="source")` |
-| `summarize_profile` | Produces a compact profile summary for run notes/handover. | 9, 14 | pandas + Spark profile inputs | `summary = summarize_profile(profile)` |
-
-### Schema drift
-
-| Function | What it does | Typical lifecycle stage | Engine support | Minimal example usage |
-|---|---|---|---|---|
-| `build_schema_snapshot` | Builds a schema baseline/current snapshot. | 5 | pandas + Spark supported | `baseline = build_schema_snapshot(df_source, dataset_name="synthetic_orders", table_name="source.synthetic_orders")` |
-| `compare_schema_snapshots` | Compares snapshots and classifies blocking/warning drift. | 5 | engine-agnostic snapshot comparison | `drift = compare_schema_snapshots(baseline, current)` |
-| `assert_no_blocking_schema_drift` | Raises on blocking schema drift before continuing transforms. | 5 | engine-agnostic result check | `assert_no_blocking_schema_drift(drift)` |
-
-### Incremental safety
-
-| Function | What it does | Typical lifecycle stage | Engine support | Minimal example usage |
-|---|---|---|---|---|
-| `build_partition_snapshot` | Builds partition-level fingerprints for incremental checks. | 5 | pandas + Spark supported | `snap = build_partition_snapshot(df, partition_column="business_date", business_keys=["customer_id"], engine="spark")` |
-| `compare_partition_snapshots` | Compares baseline/current partition snapshots for historical changes. | 5 | engine-agnostic snapshot comparison | `result = compare_partition_snapshots(prev_snap, curr_snap)` |
-| `assert_incremental_safe` | Raises on blocking incremental safety result. | 5 | engine-agnostic result check | `assert_incremental_safe(result)` |
-
-### Technical columns
-
-| Function | What it does | Typical lifecycle stage | Engine support | Minimal example usage |
-|---|---|---|---|---|
-| `add_standard_technical_columns` | Adds run, source, watermark, and hash technical columns. | 8 | pandas + Spark supported | `df_out = add_standard_technical_columns(df_out, run_id=ctx["run_id"], business_keys=["customer_id"], source_system="manual", source_table="sample_framework_input", engine="spark")` |
-| `add_datetime_parts` | Adds date/time helper columns from a datetime field. | 8 | pandas + Spark supported | `df_out = add_datetime_parts(df_out, "updated_at", engine="spark")` |
-
-### Metadata records
-
-| Function | What it does | Typical lifecycle stage | Engine support | Minimal example usage |
-|---|---|---|---|---|
-| `build_dataset_run_record` | Builds a dataset run status record. | 14 | N/A | `run_row = build_dataset_run_record(run_id=ctx["run_id"], dataset_name="synthetic_orders", environment="dev", source_table="source.synthetic_orders", target_table="product.synthetic_orders")` |
-| `build_schema_snapshot_records` | Flattens schema snapshot to metadata rows. | 5 | snapshot input | `rows = build_schema_snapshot_records(snapshot, run_id=ctx["run_id"], table_stage="source")` |
-| `build_schema_drift_records` | Flattens schema drift result to metadata rows. | 5 | comparison input | `rows = build_schema_drift_records(drift, run_id=ctx["run_id"], table_stage="source")` |
-| `write_multiple_metadata_outputs` | Writes multiple metadata outputs with one writer adapter. | 14 | adapter-based | `write_multiple_metadata_outputs(outputs, mapping, writer=metadata_writer)` |
-
-## Manual Fabric validation checklist
-
-- [ ] Local `PYTHONPATH=src pytest -q` passes
-- [ ] Package import works in Fabric
-- [ ] Synthetic Spark profiling works
-- [ ] Metadata rows are produced
-- [ ] Technical columns are added
-- [ ] Delta write/read works
-- [ ] Output profiling works
-- [ ] Row counts match
+See [src/README.md](src/README.md) for callable API references.
