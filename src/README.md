@@ -28,11 +28,9 @@ ctx = build_runtime_context(
 )
 ```
 
-## Config and contracts
+## Config
 
 Functions from `src/fabric_data_product_framework/config.py`.
-
-`src/fabric_data_product_framework/contracts.py` is currently a scaffold for future contract-specific helpers.
 
 | Function | Purpose | Typical use |
 |---|---|---|
@@ -105,17 +103,16 @@ Functions from `src/fabric_data_product_framework/technical_columns.py`.
 | `add_datetime_parts` | Derive date/time helper columns from datetime input. | Build partitioning/reporting helper fields. |
 | `add_standard_technical_columns` | Apply standard technical column bundle. | One-call technical enrichment before writes. |
 
-## Governance
+## Scaffold modules
 
-Functions from `src/fabric_data_product_framework/governance.py`.
+These modules exist to reserve the framework structure, but do not expose public callable functions yet:
 
-_No public callable helpers are currently exposed in this module._
-
-## Lineage and AI context
-
-Functions from `src/fabric_data_product_framework/lineage.py` and `src/fabric_data_product_framework/ai_context.py`.
-
-_No public callable helpers are currently exposed in these modules._
+| Module | Planned purpose |
+|---|---|
+| `contracts.py` | Future contract-specific helpers |
+| `governance.py` | Future governance label helpers |
+| `lineage.py` | Future lineage capture helpers |
+| `ai_context.py` | Future AI context export helpers |
 
 ## Fabric adapters
 
