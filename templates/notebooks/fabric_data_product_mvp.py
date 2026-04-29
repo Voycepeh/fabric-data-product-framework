@@ -1,0 +1,181 @@
+"""MVP Fabric notebook template (Python script form).
+
+Copy into a Fabric notebook and wire the adapter functions below.
+"""
+
+# 1. Imports
+from fabric_data_product_framework.config import load_and_validate_dataset_contract
+from fabric_data_product_framework.drift import (
+    assert_no_blocking_schema_drift,
+    build_schema_snapshot,
+    compare_schema_snapshots,
+)
+from fabric_data_product_framework.fabric import build_table_identifier, read_table, write_table
+from fabric_data_product_framework.metadata import (
+    build_dataset_run_record,
+    build_schema_drift_records,
+    build_schema_snapshot_records,
+    write_multiple_metadata_outputs,
+)
+from fabric_data_product_framework.profiling import flatten_profile_for_metadata, profile_dataframe
+from fabric_data_product_framework.runtime import assert_notebook_name_valid, build_runtime_context
+from fabric_data_product_framework.technical_columns import add_loaded_at, add_pipeline_run_id, default_technical_columns
+
+
+# Adapter placeholders: replace with your Fabric patterns.
+def fabric_reader(table_identifier):
+    # Replace with spark.read.table(table_identifier) in Fabric.
+    raise NotImplementedError("Wire this to your Fabric read pattern.")
+
+
+def fabric_table_writer(df, table_identifier, mode="append", **options):
+    # Replace with df.write.mode(mode).saveAsTable(table_identifier) in Fabric.
+    raise NotImplementedError("Wire this to your Fabric table write pattern.")
+
+
+def metadata_writer(records, table_identifier, mode="append", **options):
+    # Replace with your metadata write pattern.
+    raise NotImplementedError("Wire this to your metadata table write pattern.")
+
+
+# 2. Notebook parameters
+DATASET_CONTRACT_PATH = "REPLACE_WITH_CONTRACT_PATH"
+NOTEBOOK_NAME = "source_to_product_synthetic_dataset"
+WORKSPACE = "workspace_placeholder"
+LAKEHOUSE = "lakehouse_placeholder"
+SOURCE_TABLE = "source_table_placeholder"
+TARGET_TABLE = "target_table_placeholder"
+ENVIRONMENT = "dev"
+DRY_RUN = False
+PROFILE_ONLY = False
+
+# 3. Load and validate dataset contract
+contract, errors = load_and_validate_dataset_contract(DATASET_CONTRACT_PATH)
+if errors:
+    raise ValueError(f"Dataset contract is invalid: {errors}")
+
+# 4. Build runtime context
+ctx = build_runtime_context(
+    dataset_name=contract.get("dataset_name", "synthetic_dataset"),
+    environment=ENVIRONMENT,
+    source_table=SOURCE_TABLE,
+    target_table=TARGET_TABLE,
+    notebook_name=NOTEBOOK_NAME,
+)
+
+# 5. Validate notebook naming
+assert_notebook_name_valid(ctx["notebook_name"], ["source_to_product_", "bronze_to_silver_", "silver_to_gold_"])
+
+# 6. Declare source and target table identifiers
+source_table_identifier = build_table_identifier(WORKSPACE, LAKEHOUSE, ctx["source_table"])
+target_table_identifier = build_table_identifier(WORKSPACE, LAKEHOUSE, ctx["target_table"])
+
+# 7. Read source
+df_source = read_table(source_table_identifier, reader=fabric_reader)
+
+# 8. Source schema snapshot
+source_snapshot = build_schema_snapshot(df_source, dataset_name=ctx["dataset_name"], table_name=source_table_identifier)
+
+# 9. Source profiling
+source_profile = profile_dataframe(df_source, dataset_name=ctx["dataset_name"], engine="auto")
+source_profile_rows = flatten_profile_for_metadata(
+    source_profile,
+    table_name=source_table_identifier,
+    run_id=ctx["run_id"],
+    table_stage="source",
+    exclude_columns=default_technical_columns(),
+)
+
+# 10. Optional schema drift comparison
+# Replace baseline snapshot retrieval with your own metadata table read.
+baseline_snapshot = None
+schema_drift_result = None
+if baseline_snapshot:
+    schema_drift_result = compare_schema_snapshots(baseline_snapshot, source_snapshot)
+    assert_no_blocking_schema_drift(schema_drift_result)
+
+# 11. EDA notes placeholder
+# Keep EDA/debug cells in development only. Freeze or remove them before scheduled runs.
+
+# 12. Transformation section
+# USER TRANSFORMATION START
+df_output = df_source
+# USER TRANSFORMATION END
+
+if PROFILE_ONLY:
+    df_output = df_source
+
+# 13. Add technical columns
+df_output = add_pipeline_run_id(df_output, ctx["run_id"], engine="auto")
+df_output = add_loaded_at(df_output, engine="auto")
+
+# 14. Write target
+if not DRY_RUN and not PROFILE_ONLY:
+    write_table(df_output, target_table_identifier, writer=fabric_table_writer, mode="overwrite")
+
+# 15. Read/profile output
+if DRY_RUN:
+    df_written = df_output
+else:
+    df_written = read_table(target_table_identifier, reader=fabric_reader)
+
+output_profile = profile_dataframe(df_written, dataset_name=ctx["dataset_name"], engine="auto")
+output_profile_rows = flatten_profile_for_metadata(
+    output_profile,
+    table_name=target_table_identifier,
+    run_id=ctx["run_id"],
+    table_stage="target",
+    exclude_columns=default_technical_columns(),
+)
+
+# 16. Build metadata records
+dataset_run_row = build_dataset_run_record(
+    run_id=ctx["run_id"],
+    dataset_name=ctx["dataset_name"],
+    environment=ctx["environment"],
+    source_table=source_table_identifier,
+    target_table=target_table_identifier,
+    status="completed",
+    started_at_utc=ctx["started_at_utc"],
+    row_count_source=source_profile.get("row_count"),
+    row_count_output=output_profile.get("row_count"),
+    notes="MVP notebook template run.",
+)
+schema_snapshot_rows = build_schema_snapshot_records(source_snapshot, run_id=ctx["run_id"], table_stage="source")
+schema_drift_rows = build_schema_drift_records(
+    schema_drift_result or {"dataset_name": ctx["dataset_name"], "table_name": source_table_identifier, "baseline_engine": source_snapshot.get("engine"), "current_engine": source_snapshot.get("engine"), "status": "passed", "can_continue": True, "changes": []},
+    run_id=ctx["run_id"],
+    table_stage="source",
+)
+
+# 17. Write metadata records
+metadata_outputs = {
+    "dataset_runs": [dataset_run_row],
+    "column_profiles": source_profile_rows + output_profile_rows,
+    "schema_snapshots": schema_snapshot_rows,
+    "schema_drift_results": schema_drift_rows,
+}
+metadata_table_mapping = {
+    "dataset_runs": "metadata.dataset_runs",
+    "column_profiles": "metadata.column_profiles",
+    "schema_snapshots": "metadata.schema_snapshots",
+    "schema_drift_results": "metadata.schema_drift_results",
+}
+if not DRY_RUN:
+    write_multiple_metadata_outputs(
+        outputs=metadata_outputs,
+        table_mapping=metadata_table_mapping,
+        writer=metadata_writer,
+        mode="append",
+    )
+
+# 18. Build final run summary placeholder
+run_summary = {
+    "run_id": ctx["run_id"],
+    "dataset_name": ctx["dataset_name"],
+    "source_row_count": source_profile.get("row_count"),
+    "output_row_count": output_profile.get("row_count"),
+    "dry_run": DRY_RUN,
+    "profile_only": PROFILE_ONLY,
+}
+print(run_summary)
