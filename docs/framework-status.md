@@ -25,14 +25,20 @@
 
 ## Planned next
 
-1. Data drift checks
-2. Incremental partition safety checks
-3. Data quality rule execution
-4. Governance labeling checks
-5. Runtime data contract enforcement
-6. Automated lineage summary
-7. Run summary
-8. AI context export
+1. Governance labeling checks
+2. AI context export
+
+## Implemented or partially implemented
+
+1. Data quality rule execution (`run_quality_rules`, quality result records, and quality gate)
+2. AI-assisted DQ rule generation workflow (provider-neutral prompt building/parsing/validation)
+3. DQ rule compilation from layman candidates to executable quality rules
+4. Row-level quarantine helper for pandas/Spark (`add_dq_failure_columns`, `split_valid_and_quarantine`)
+5. Human approval pattern documented in workflow docs (implementation pattern, not full governance app)
+6. AI-assisted transformation summary workflow (partially implemented: framework prompt/parse/record helpers; provider call remains notebook-layer)
+7. Data drift checks, incremental partition safety checks, runtime data contract enforcement, automated lineage summary, and run summary are implemented in this repository
+
+Note: AI provider integration remains notebook-layer (for example Fabric AI response APIs).
 
 ## GitHub vs Fabric
 

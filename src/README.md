@@ -219,3 +219,40 @@ All importable framework code lives in:
 `src/fabric_data_product_framework/`
 
 The main project overview is in the root `README.md`.
+
+
+## AI-assisted data quality rules
+
+Functions from `src/fabric_data_product_framework/ai_quality_rules.py`, `src/fabric_data_product_framework/rule_compiler.py`, and `src/fabric_data_product_framework/quarantine.py`.
+
+| Function | Purpose | Typical use |
+|---|---|---|
+| `build_quality_rule_prompt_context` | Build JSON-safe context from profile/contract/business context. | Build evidence-rich notebook prompt inputs. |
+| `build_quality_rule_generation_prompt` | Build strict provider-neutral prompt instructions for AI rule generation. | Send to notebook-layer Fabric AI response call. |
+| `parse_ai_quality_rule_candidates` | Parse AI response (JSON array) safely, including fenced JSON text. | Validate and extract candidate rules before review. |
+| `normalize_quality_rule_candidate` | Normalize rule candidate shape/defaults. | Standardize AI payloads for storage/compilation. |
+| `validate_ai_quality_rule_candidate` | Validate candidate against supported framework rule patterns. | Gate candidate compilation and approvals. |
+| `build_layman_rule_records` | Flatten layman candidates into metadata-ready records. | Persist approval-candidate history. |
+| `compile_layman_rule_to_quality_rule` | Compile one candidate to executable `run_quality_rules` rule format. | Convert approved candidate to technical rule. |
+| `compile_layman_rules_to_quality_rules` | Compile many candidates and preserve skipped warnings. | Batch conversion with traceable compiler outcomes. |
+| `build_rule_registry_records` | Build registry rows for compiled executable rules. | Persist rule definitions in technical rule registry. |
+| `add_dq_failure_columns` | Add row-level `dq_errors`/`dq_warnings` columns for supported rule checks. | Annotate records before quarantine split. |
+| `split_valid_and_quarantine` | Split valid vs quarantine rows using `dq_errors`. | Route good rows forward and isolate failing rows. |
+| `build_quarantine_summary_records` | Build summary rows for quarantine counts. | Feed monitoring/dashboard tables. |
+
+See `docs/workflows/ai-generated-dq-rules.md` for the full Fabric workflow and handover pattern.
+
+
+## AI-assisted transformation summaries
+
+Functions from `src/fabric_data_product_framework/ai_lineage_summary.py`.
+
+| Function | Purpose | Typical use |
+|---|---|---|
+| `build_transformation_summary_prompt_context` | Build compact context from lineage summary and optional runtime/code/business inputs. | Prepare evidence package for notebook-layer AI summarisation. |
+| `build_transformation_summary_generation_prompt` | Build strict prompt requiring JSON-array summaries per step. | Send to Fabric AI response API from notebook code. |
+| `parse_ai_transformation_summaries` | Parse and validate AI summary candidates from JSON or fenced JSON. | Convert raw AI output to safe candidate objects. |
+| `normalize_transformation_summary_candidate` | Normalize defaults and preserve unknown fields under metadata. | Standardize candidates before review/storage. |
+| `build_transformation_summary_records` | Flatten candidates into metadata-ready records. | Persist reviewed summaries for handover/lineage tables. |
+
+See `docs/workflows/ai-transformation-summary.md` for the full workflow pattern.
