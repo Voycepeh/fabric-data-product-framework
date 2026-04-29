@@ -165,6 +165,23 @@ profile_rows = flatten_profile_for_metadata(
 )
 ```
 
+
+### Technical columns
+
+```python
+from fabric_data_product_framework.technical_columns import add_standard_technical_columns
+
+df_output = add_standard_technical_columns(
+    df_output,
+    run_id=ctx["run_id"],
+    environment=ctx["environment"],
+    source_table=ctx["source_table"],
+    watermark_column="updated_at",
+    business_keys=["customer_id"],
+    engine="spark",
+)
+```
+
 ### Schema drift check
 
 ```python
