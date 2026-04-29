@@ -75,3 +75,27 @@ See [docs/quick-start.md](docs/quick-start.md) for runnable examples and setup d
 See [src/README.md](src/README.md) for callable API references.
 
 See [docs/contract-enforcement.md](docs/contract-enforcement.md) and [docs/run-summary.md](docs/run-summary.md) for runtime behavior details, and [AGENTS.md](AGENTS.md) for implementation guidance.
+
+
+## Lineage recorder (lightweight)
+
+```python
+from fabric_data_product_framework.lineage import LineageRecorder
+
+lineage = LineageRecorder(
+    dataset_name=ctx["dataset_name"],
+    run_id=ctx["run_id"],
+    source_tables=[ctx["source_table"]],
+    target_table=ctx["target_table"],
+)
+
+lineage.add_step(
+    step_id="T001",
+    step_name="Apply business filter",
+    input_name="df_source",
+    output_name="df_filtered",
+    description="Filter to records needed for reporting.",
+    reason="The product table should only contain approved reporting records.",
+    transformation_type="filter",
+)
+```
