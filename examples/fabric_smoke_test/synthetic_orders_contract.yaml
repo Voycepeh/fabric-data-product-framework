@@ -1,0 +1,25 @@
+dataset_name: synthetic_orders_curated
+version: 1
+owner: data_product_team
+source:
+  table: source.synthetic_orders
+target:
+  table: product.synthetic_orders_curated
+schema:
+  - name: order_id
+    type: string
+    nullable: false
+  - name: customer_id
+    type: string
+    nullable: false
+  - name: order_date
+    type: date
+    nullable: false
+  - name: amount
+    type: double
+    nullable: false
+checks:
+  dq_rules:
+    - rule_id: amount_non_negative
+      expression: "amount >= 0"
+      severity: error

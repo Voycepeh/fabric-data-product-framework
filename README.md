@@ -70,6 +70,7 @@ See [docs/quick-start.md](docs/quick-start.md) for runnable examples and setup d
 - [Execution engine model](docs/engine-model.md)
 - [Public repo safety guidance](docs/public-repo-safety.md)
 - [Lineage recorder](docs/lineage.md)
+- [Fabric smoke test](docs/fabric-smoke-test.md)
 - [Callable API reference](src/README.md)
 
 ## Callable Function Reference
