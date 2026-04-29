@@ -19,6 +19,7 @@ from fabric_data_product_framework.metadata import (
     write_multiple_metadata_outputs,
 )
 from fabric_data_product_framework.profiling import flatten_profile_for_metadata, profile_dataframe
+from fabric_data_product_framework.quality import assert_quality_gate, build_quality_result_records, run_quality_rules
 from fabric_data_product_framework.runtime import assert_notebook_name_valid, build_runtime_context
 from fabric_data_product_framework.technical_columns import add_loaded_at, add_pipeline_run_id, default_technical_columns
 
@@ -125,11 +126,43 @@ if PROFILE_ONLY:
 df_output = add_pipeline_run_id(df_output, ctx["run_id"], engine="auto")
 df_output = add_loaded_at(df_output, engine="auto")
 
-# 14. Write target
+# 14. Run data quality rules before publish
+quality_result = run_quality_rules(
+    df_output,
+    contract.get("quality_rules", []),
+    dataset_name=ctx["dataset_name"],
+    table_name=target_table_identifier,
+    engine="auto",
+)
+quality_records = build_quality_result_records(quality_result, run_id=ctx["run_id"])
+
+# Optional failure metadata pattern:
+# If the quality gate fails, you can persist `quality_records` and a failed
+# dataset run row before re-raising DataQualityError.
+# try:
+#     assert_quality_gate(quality_result)
+# except Exception:
+#     failed_dataset_run_row = build_dataset_run_record(
+#         run_id=ctx["run_id"],
+#         dataset_name=ctx["dataset_name"],
+#         environment=ctx["environment"],
+#         source_table=source_table_identifier,
+#         target_table=target_table_identifier,
+#         status="failed",
+#         started_at_utc=ctx["started_at_utc"],
+#         row_count_source=source_profile.get("row_count"),
+#         row_count_output=None,
+#         notes="Data quality gate failed before publish.",
+#     )
+#     write_multiple_metadata_outputs(...)
+#     raise
+assert_quality_gate(quality_result)
+
+# 15. Write target only after gate passes
 if not DRY_RUN and not PROFILE_ONLY:
     write_table(df_output, target_table_identifier, writer=fabric_table_writer, mode="overwrite")
 
-# 15. Read/profile output
+# 16. Read/profile output
 if DRY_RUN:
     df_written = df_output
 else:
@@ -144,7 +177,7 @@ output_profile_rows = flatten_profile_for_metadata(
     exclude_columns=default_technical_columns(),
 )
 
-# 16. Build metadata records
+# 17. Build metadata records
 dataset_run_row = build_dataset_run_record(
     run_id=ctx["run_id"],
     dataset_name=ctx["dataset_name"],
@@ -164,18 +197,20 @@ schema_drift_rows = build_schema_drift_records(
     table_stage="source",
 )
 
-# 17. Write metadata records
+# 18. Write metadata records
 metadata_outputs = {
     "dataset_runs": [dataset_run_row],
     "column_profiles": source_profile_rows + output_profile_rows,
     "schema_snapshots": schema_snapshot_rows,
     "schema_drift_results": schema_drift_rows,
+    "quality_results": quality_records,
 }
 metadata_table_mapping = {
     "dataset_runs": "metadata.dataset_runs",
     "column_profiles": "metadata.column_profiles",
     "schema_snapshots": "metadata.schema_snapshots",
     "schema_drift_results": "metadata.schema_drift_results",
+    "quality_results": "metadata.quality_results",
 }
 if not DRY_RUN:
     write_multiple_metadata_outputs(
@@ -185,7 +220,7 @@ if not DRY_RUN:
         mode="append",
     )
 
-# 18. Build final run summary placeholder
+# 19. Build final run summary placeholder
 run_summary = {
     "run_id": ctx["run_id"],
     "dataset_name": ctx["dataset_name"],
