@@ -221,3 +221,15 @@ The framework exposes engine-aware dataframe APIs with `engine="auto" | "pandas"
 - **auto**: runtime engine detection
 
 See [docs/engine-model.md](docs/engine-model.md) for engine behavior and API usage.
+
+## First runnable notebook MVP
+
+After PR 14, you can copy `templates/notebooks/fabric_data_product_mvp.py` into a Fabric notebook to run a full MVP flow from contract validation to metadata outputs.
+
+Wire only three adapters to start testing in your environment:
+
+- `fabric_reader`
+- `fabric_table_writer`
+- `metadata_writer`
+
+The template is intentionally adapter-based and does not depend on a specific workspace setup or Fabric-only SDK imports.
