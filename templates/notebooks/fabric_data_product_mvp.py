@@ -11,6 +11,7 @@ from fabric_data_product_framework.drift import (
     compare_schema_snapshots,
 )
 from fabric_data_product_framework.fabric import build_table_identifier, read_table, write_table
+from fabric_data_product_framework.incremental import assert_incremental_safe, build_partition_snapshot, compare_partition_snapshots
 from fabric_data_product_framework.metadata import (
     build_dataset_run_record,
     build_schema_drift_records,
@@ -93,6 +94,21 @@ schema_drift_result = None
 if baseline_snapshot:
     schema_drift_result = compare_schema_snapshots(baseline_snapshot, source_snapshot)
     assert_no_blocking_schema_drift(schema_drift_result)
+
+# 11. Optional incremental safety check
+# previous_partition_snapshots = ...  # Load from metadata table
+# current_partition_snapshots = build_partition_snapshot(
+#     df_source,
+#     dataset_name=ctx["dataset_name"],
+#     table_name=source_table_identifier,
+#     partition_column="business_date",
+#     business_keys=["customer_id", "order_id"],
+#     watermark_column="updated_at",
+#     run_id=ctx["run_id"],
+#     engine="auto",
+# )
+# incremental_result = compare_partition_snapshots(previous_partition_snapshots, current_partition_snapshots)
+# assert_incremental_safe(incremental_result)
 
 # 11. EDA notes placeholder
 # Keep EDA/debug cells in development only. Freeze or remove them before scheduled runs.
