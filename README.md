@@ -20,7 +20,7 @@ Use this lifecycle as the default operating model for each dataset.
 | 2 | Notebook parameters and environment setup | Set runtime parameters, paths, target tables, and execution mode. | Fabric notebook setup pattern with parameters, paths, runtime imports, and naming convention check. |
 | 3 | Source declaration | Register declared sources, keys, refresh expectations, and ingestion intent. | Source table and lakehouse variables; source registry is planned. |
 | 4 | Source profiling | Profile input shape, nulls, distributions, and basic quality indicators. | Implemented profiling utility and Fabric metadata logging pattern. |
-| 5 | Schema drift, data drift, and incremental safety checks | Compare current vs baseline structure and behavior before transforms; verify incremental boundaries. | Schema drift utility implemented. Data drift and incremental safety checks planned. |
+| 5 | Schema drift, data drift, and incremental safety checks | Compare current vs baseline structure and behavior before transforms; verify incremental boundaries. | Schema drift and incremental safety utilities implemented. Data drift checks planned. |
 | 6 | EDA notes and data nuance explanation | Capture observed quirks, caveats, and business-relevant interpretation notes. | Notebook documentation pattern. Findings are frozen after development so they do not become recurring pipeline logic. |
 | 7 | Transformation pipeline | Apply business logic from raw/bronze to curated outputs with reproducible steps. | Notebook section pattern for dataset-specific business logic designed to run end-to-end. |
 | 8 | Technical columns and write pattern | Apply audit columns, watermark/version columns, partition/write rules, and persistence pattern. | Fabric notebook pattern for audit columns, datetime standardization, and lakehouse writes. |
@@ -100,7 +100,7 @@ Planned Gate / Export]
 ### Planned next
 
 1. Data drift checks
-2. Incremental safety checks
+2. Incremental partition safety checks
 3. Data quality rule execution
 4. Governance labeling checks
 5. Runtime data contract enforcement
@@ -188,6 +188,33 @@ df_output = add_standard_technical_columns(
 from fabric_data_product_framework.drift import compare_schema_snapshots
 
 result = compare_schema_snapshots(baseline_snapshot, current_snapshot)
+```
+
+### Incremental safety check
+
+```python
+from fabric_data_product_framework.incremental import (
+    assert_incremental_safe,
+    build_partition_snapshot,
+    compare_partition_snapshots,
+)
+
+current_partition_snapshots = build_partition_snapshot(
+    df_source,
+    dataset_name="synthetic_orders",
+    table_name="source.synthetic_orders",
+    partition_column="business_date",
+    business_keys=["customer_id", "order_id"],
+    watermark_column="updated_at",
+    engine="spark",
+)
+
+safety_result = compare_partition_snapshots(
+    previous_partition_snapshots,
+    current_partition_snapshots,
+)
+
+assert_incremental_safe(safety_result)
 ```
 
 ### Notebook runtime helper
