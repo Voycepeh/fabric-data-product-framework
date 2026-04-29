@@ -46,3 +46,12 @@ Adjust `metadata_table_mapping` to your environment.
 ## Lifecycle alignment
 
 The template maps directly to the 14-stage framework lifecycle from contract validation through metadata outputs and run summary.
+
+## How to run the first Fabric smoke test
+
+For a runnable first validation path, use:
+- `docs/fabric-smoke-test.md`
+- `docs/metadata-table-bootstrap.md`
+- `examples/fabric_smoke_test/`
+
+Start in dry-run mode, validate metadata outputs, and only then enable target writes.
