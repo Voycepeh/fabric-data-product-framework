@@ -30,7 +30,9 @@ ctx = build_runtime_context(
 
 ## Config and contracts
 
-Functions from `src/fabric_data_product_framework/config.py` and `src/fabric_data_product_framework/contracts.py`.
+Functions from `src/fabric_data_product_framework/config.py`.
+
+`src/fabric_data_product_framework/contracts.py` is currently a scaffold for future contract-specific helpers.
 
 | Function | Purpose | Typical use |
 |---|---|---|
