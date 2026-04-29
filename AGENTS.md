@@ -1,61 +1,48 @@
 # AGENTS.md
 
-## Project purpose
+## Purpose
 
-Build and maintain a **reusable Microsoft Fabric data product framework** that is portable, scaffold-friendly, and safe to share publicly.
+Guide agent/Codex contributions for this repository so changes stay reusable, public-safe, and easy to hand over.
 
-## Preferred workflow
+## Repo working rules
 
-- Pull requests should target the `main` branch.
-- Treat GitHub as the source of truth and Microsoft Fabric as the execution environment.
+- Pull requests must target `main`.
+- Treat GitHub as the source of truth.
+- Treat Microsoft Fabric as the execution environment.
+- Keep an AI-in-the-loop workflow and optimize for junior-friendly handover.
 
-## Delivery emphasis
-
-- Keep an **AI-in-the-loop** workflow so generated artifacts can be reviewed, explained, and improved by humans.
-- Design for **reusable onboarding** across teams and projects.
-- Optimize for **junior-friendly handover** with clear structure, conventions, and practical examples.
-
-## Development commands
-
-- `python -m compileall src tests`
-- `PYTHONPATH=src pytest -q`
-
-## Guardrails
+## Public safety rules
 
 - Keep the framework generic and public-safe.
-- Do **not** include NUS-specific secrets, data, workspace names, tenant details, or internal URLs.
-- Do not add real organizational data, secrets, tenant/workspace identifiers, or internal URLs.
-- Keep module files lightweight unless a PR explicitly introduces engine logic.
+- Do not include real data, NUS-specific secrets, tenant details, workspace identifiers, internal URLs, or production screenshots.
 
-## Documentation and change expectations
+## Documentation placement rules
 
 - Prefer concise documentation.
+- Root `README.md` is for high-level overview, lifecycle, quick start, and navigation only.
+- Do not add detailed function, helper, API, implementation, or utility notes to root `README.md`.
+- Public functions, helpers, utilities, and callable APIs must be documented in `src/README.md`.
+- Detailed lifecycle, governance, contract behavior, run summary behavior, AI context, and diagram explanations belong in `docs/`.
+- Synthetic examples and walkthroughs belong in `examples/`.
 - Use Mermaid diagrams where useful.
-- Favor implementation patterns that are teachable to Python users who may not be Fabric/PySpark experts.
-- For schema or configuration changes, update **examples, tests, and README together**.
-- Prioritize synthetic examples and public-safe content.
-- Prefer clear documentation and notebook lifecycle consistency over premature optimization.
+- Keep examples teachable for Python users who may not be Fabric/PySpark experts.
 
-## Current intent and roadmap context
+For runtime contract behavior, see `docs/contract-enforcement.md`.
+For run summary behavior, see `docs/run-summary.md`.
+For callable utility usage, see `src/README.md`.
 
-- Keep implementation minimal while standards and lifecycle are being defined.
+## PR expectations
 
-Near-term roadmap:
+- If a PR adds or changes a public function in `src/`, update `src/README.md` with:
+  - function name
+  - purpose
+  - minimal usage example
+  - expected input/output behavior
+  - Fabric-specific assumptions
+- Update root `README.md` only when top-level user journey, lifecycle, installation, quick start, or navigation changes.
+- Prefer links to `docs/` and `src/README.md` over long implementation details.
 
-1. Dataset contract schema and validation.
-2. Basic profiling and metadata writers.
-3. Drift and incremental safety checks.
-4. Quality rules, contracts, lineage, and AI context enhancements.
+## Testing expectations
 
-## Runtime contract enforcement and run summary
-
-Use runtime contract enforcement and run summary wiring in notebook templates as implementation steps:
-
-- Run runtime contract validation **after quality rules pass**.
-- Assert contract validity **before writing target output**.
-- Build and persist run summary artifacts **before metadata write**.
-
-Use these callable functions in notebook implementations: `validate_runtime_contracts`, `assert_contracts_valid`, `build_contract_validation_records`, `build_run_summary`, `render_run_summary_markdown`, and `build_run_summary_record`.
-
-`AGENTS.md` is implementation guidance for agents/Codex only; it is not the user-facing function reference. For exact callable API examples, use `src/README.md`. For user-facing behavior docs, use `docs/contract-enforcement.md` and `docs/run-summary.md`.
-
+- Run `python -m compileall src tests`.
+- Run `PYTHONPATH=src pytest -q`.
