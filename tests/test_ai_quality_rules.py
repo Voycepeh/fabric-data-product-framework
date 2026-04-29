@@ -54,3 +54,27 @@ def test_pandas_quarantine_unique_and_unique_combination():
     valid_df, quarantine_df = split_valid_and_quarantine(df, rules, engine="pandas")
     assert len(quarantine_df) == 2
     assert len(valid_df) == 1
+
+
+def test_parse_fenced_malformed_and_non_array():
+    fenced = '''```json
+[{"rule_type":"not_null","column":"id"}]
+```'''
+    ok = parse_ai_quality_rule_candidates(fenced)
+    assert ok["ok"] is True
+
+    malformed = parse_ai_quality_rule_candidates('{bad')
+    assert malformed["ok"] is False
+
+    non_array = parse_ai_quality_rule_candidates('{"rule_type":"not_null"}')
+    assert non_array["ok"] is False
+
+
+def test_normalization_defaults():
+    parsed = parse_ai_quality_rule_candidates('[{"rule_type":"not_null","column":"id","columns":"k"}]')
+    c = parsed["candidates"][0]
+    assert c["approval_status"] == "candidate"
+    assert c["severity"] == "warning"
+    assert c["confidence"] == "medium"
+    assert c["rule_config"] == {}
+    assert isinstance(c["columns"], list)

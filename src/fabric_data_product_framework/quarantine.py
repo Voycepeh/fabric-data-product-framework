@@ -113,17 +113,31 @@ def _add_spark(df, rules):
             cond = F.col(rule["column"]).isNotNull() & cond
         elif rt == "unique":
             c = rule["column"]
-            dup = df.groupBy(c).count().filter((F.col(c).isNotNull()) & (F.col("count") > 1)).select(c)
-            cond = F.col(c).isNotNull() & F.col(c).isin([r[c] for r in dup.collect()])
+            dup_keys = (
+                df.groupBy(c)
+                .count()
+                .filter(F.col(c).isNotNull() & (F.col("count") > 1))
+                .select(F.col(c).alias("__dup_key"))
+                .withColumn("__dup_marker", F.lit(True))
+            )
+            joined = out.join(dup_keys, out[c] == F.col("__dup_key"), "left")
+            out = joined.withColumn(bucket, F.when(F.col("__dup_marker") == True, F.array_union(F.col(bucket), F.array(F.lit(msg)))).otherwise(F.col(bucket))).drop("__dup_key", "__dup_marker")
+            continue
         elif rt == "unique_combination":
             cols = rule.get("columns", [])
-            dup = df.groupBy(*cols).count().filter(F.col("count") > 1).select(*cols)
-            cond = F.lit(False)
-            for row in dup.collect():
-                row_cond = F.lit(True)
-                for c in cols:
-                    row_cond = row_cond & (F.col(c) == F.lit(row[c]))
-                cond = cond | row_cond
+            if cols:
+                dup_combo = (
+                    df.groupBy(*cols)
+                    .count()
+                    .filter(F.col("count") > 1)
+                    .select(*[F.col(c).alias(f"__dup_{c}") for c in cols])
+                    .withColumn("__dup_marker", F.lit(True))
+                )
+                join_cond = [out[c] == F.col(f"__dup_{c}") for c in cols]
+                joined = out.join(dup_combo, join_cond, "left")
+                drop_cols = [f"__dup_{c}" for c in cols] + ["__dup_marker"]
+                out = joined.withColumn(bucket, F.when(F.col("__dup_marker") == True, F.array_union(F.col(bucket), F.array(F.lit(msg)))).otherwise(F.col(bucket))).drop(*drop_cols)
+                continue
         if cond is None:
             continue
         out = out.withColumn(bucket, F.when(cond, F.array_union(F.col(bucket), F.array(F.lit(msg)))).otherwise(F.col(bucket)))
