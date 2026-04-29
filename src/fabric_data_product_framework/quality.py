@@ -101,15 +101,15 @@ def _pandas_rule(df: pd.DataFrame, rule: dict[str, Any], row_count: int) -> tupl
     if rtype == "range_check":
         c = rule["column"]
         min_v, max_v = rule.get("min_value"), rule.get("max_value")
+        if min_v is None and max_v is None:
+            raise ValueError("range_check requires at least one of min_value or max_value")
         s = df[c]
-        mask = s.notna()
+        out_of_range = pd.Series(False, index=df.index)
         if min_v is not None:
-            mask &= s < min_v
-        out_low = mask
-        mask2 = s.notna()
+            out_of_range |= s.notna() & (s < min_v)
         if max_v is not None:
-            mask2 &= s > max_v
-        return int((out_low | mask2).sum()), row_count, {"min_value": min_v, "max_value": max_v}, f"Column '{c}' is out of range"
+            out_of_range |= s.notna() & (s > max_v)
+        return int(out_of_range.sum()), row_count, {"min_value": min_v, "max_value": max_v}, f"Column '{c}' is out of range"
     if rtype == "regex_check":
         c = rule["column"]
         pattern = rule["pattern"]
@@ -248,7 +248,12 @@ def run_quality_rules(df: Any, rules: list[dict], *, dataset_name: str = "unknow
             results.append(base)
             continue
 
-        failed_count, total_count, threshold, msg = (_pandas_rule(df, rule, row_count) if resolved_engine == "pandas" else _spark_rule(df, rule, row_count))
+        try:
+            failed_count, total_count, threshold, msg = (_pandas_rule(df, rule, row_count) if resolved_engine == "pandas" else _spark_rule(df, rule, row_count))
+        except ValueError as exc:
+            base["message"] = str(exc)
+            results.append(base)
+            continue
         if sev_msg:
             msg = f"{msg}. {sev_msg}"
         results.append(_result_from_counts(rule, severity, failed_count, total_count, threshold, msg))

@@ -76,6 +76,26 @@ def test_records_json_safe_and_unsupported_and_missing_column():
     json.dumps(rows)
 
 
+
+
+def test_range_check_min_only_max_only_and_both():
+    df = pd.DataFrame({"amount": [-1, 0, 5, 12, None]})
+    min_only = _run(df, {"rule_type": "range_check", "column": "amount", "min_value": 0})
+    assert min_only["results"][0]["failed_count"] == 1
+
+    max_only = _run(df, {"rule_type": "range_check", "column": "amount", "max_value": 10})
+    assert max_only["results"][0]["failed_count"] == 1
+
+    both = _run(df, {"rule_type": "range_check", "column": "amount", "min_value": 0, "max_value": 10})
+    assert both["results"][0]["failed_count"] == 2
+
+
+def test_range_check_missing_min_and_max_is_invalid_rule():
+    df = pd.DataFrame({"amount": [1, 2, 3]})
+    result = _run(df, {"rule_type": "range_check", "column": "amount"})
+    assert result["results"][0]["status"] == "failed"
+    assert "requires at least one of min_value or max_value" in result["results"][0]["message"]
+
 def test_import_without_pyspark_and_auto_detection_and_invalid_engine():
     module = importlib.import_module("fabric_data_product_framework.quality")
     assert module is not None

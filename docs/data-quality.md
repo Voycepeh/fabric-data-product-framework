@@ -78,3 +78,27 @@ quality_result = run_quality_rules(
 
 assert_quality_gate(quality_result)
 ```
+
+## Manual Fabric validation
+
+Use this compact Spark notebook check when CI does not run Spark tests:
+
+```python
+from fabric_data_product_framework.quality import run_quality_rules, assert_quality_gate
+
+rules = [
+    {"rule_id": "DQ001", "rule_type": "not_null", "column": "customer_id", "severity": "critical"},
+    {"rule_id": "DQ002", "rule_type": "range_check", "column": "amount", "min_value": 0, "max_value": 100000, "severity": "critical"},
+]
+
+quality_result = run_quality_rules(
+    df_output,
+    rules,
+    dataset_name=ctx["dataset_name"],
+    table_name=ctx["target_table"],
+    engine="spark",
+)
+
+print(quality_result["status"], quality_result["can_continue"])
+assert_quality_gate(quality_result)
+```
