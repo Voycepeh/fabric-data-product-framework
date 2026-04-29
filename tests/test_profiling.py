@@ -1,3 +1,4 @@
+import pytest
 import json
 
 import pandas as pd
@@ -8,6 +9,13 @@ from fabric_data_product_framework.profiling import (
     summarize_profile,
     to_jsonable,
 )
+
+
+class FakeSparkDataFrame:
+    __module__ = "pyspark.sql.dataframe"
+
+    def __init__(self):
+        self.schema = {"fields": []}
 
 
 def test_profile_dataframe_counts_and_duplicates():
@@ -107,3 +115,20 @@ def test_profile_column_mixed_object_values_is_json_serializable():
     s = pd.Series([1, "x", pd.Timestamp("2024-01-01"), None], name="mixed_obj", dtype="object")
     prof = profile_column(s)
     json.dumps(prof)
+
+
+def test_profile_dataframe_engine_auto_uses_pandas_path():
+    df = pd.DataFrame({"a": [1, 1], "b": ["x", "x"]})
+    prof = profile_dataframe(df, engine="auto")
+    assert prof["row_count"] == 2
+
+
+def test_profile_dataframe_engine_pandas_explicit():
+    df = pd.DataFrame({"a": [1, 2]})
+    prof = profile_dataframe(df, engine="pandas")
+    assert prof["column_count"] == 1
+
+
+def test_profile_dataframe_engine_spark_raises_not_implemented():
+    with pytest.raises(NotImplementedError, match="Spark profiling is planned but not implemented yet"):
+        profile_dataframe(FakeSparkDataFrame(), engine="spark")

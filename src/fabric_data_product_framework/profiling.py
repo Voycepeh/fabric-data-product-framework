@@ -11,6 +11,8 @@ from typing import Any
 
 import pandas as pd
 
+from fabric_data_product_framework.engines import detect_dataframe_engine, validate_engine
+
 
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
 PHONE_RE = re.compile(r"^[+()\-\s0-9]{7,}$")
@@ -178,12 +180,23 @@ def profile_column(series: pd.Series, sample_size: int = 5, top_n: int = 5) -> d
 
 
 def profile_dataframe(
-    df: pd.DataFrame,
+    df,
     dataset_name: str = "unknown",
     sample_size: int = 5,
     top_n: int = 5,
+    engine: str = "auto",
 ) -> dict[str, Any]:
-    """Profile a pandas DataFrame into a JSON-serializable dict."""
+    """Profile a dataframe into a JSON-serializable dict."""
+    selected_engine = validate_engine(engine)
+    if selected_engine == "auto":
+        selected_engine = detect_dataframe_engine(df)
+
+    if selected_engine == "spark":
+        raise NotImplementedError(
+            "Spark profiling is planned but not implemented yet. Use Spark schema snapshots for now, "
+            "or explicitly sample/convert tiny data only when safe."
+        )
+
     row_count = int(df.shape[0])
     column_count = int(df.shape[1])
     duplicate_row_count = int(df.duplicated().sum()) if row_count else 0

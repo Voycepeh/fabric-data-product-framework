@@ -116,3 +116,11 @@ This standard defines a consistent notebook lifecycle for framework-aligned data
   - `export_ai_context(run_id, include_sections=["eda", "quality", "lineage"])`
 
 > AI-generated suggestions must always be reviewed and approved by humans before adoption.
+
+
+## Engine-aware guidance
+
+- Use pandas for small/local synthetic data, CSV/Excel prototyping, and unit tests.
+- Use Spark for Fabric lakehouse-scale production workloads.
+- Public dataframe APIs should accept `engine="auto" | "pandas" | "spark"`.
+- Do not auto-convert Spark DataFrames to pandas.

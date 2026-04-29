@@ -228,3 +228,16 @@ except SchemaDriftError as exc:
     print("Schema drift requires review:", exc)
 ```
 
+
+
+## Execution engines
+
+The framework exposes engine-aware dataframe APIs with `engine="auto" | "pandas" | "spark"`.
+
+- **pandas**: for local/small synthetic datasets, CSV/Excel workflows, and tests.
+- **spark**: intended runtime engine for Microsoft Fabric/lakehouse-scale workloads.
+- **auto**: detects the dataframe engine defensively at runtime.
+
+The framework does **not** automatically convert Spark DataFrames to pandas.
+
+See [docs/engine-model.md](docs/engine-model.md) for detailed engine behavior and API examples.

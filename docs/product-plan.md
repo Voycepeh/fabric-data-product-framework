@@ -73,3 +73,11 @@ The MVP provides:
 5. Add schema drift, data drift, and incremental safety checks
 6. Add quality rule execution engine and contract validation
 7. Add observability integration and AI context refinement
+
+
+## Engine-aware guidance
+
+- Use pandas for small/local synthetic data, CSV/Excel prototyping, and unit tests.
+- Use Spark for Fabric lakehouse-scale production workloads.
+- Public dataframe APIs should accept `engine="auto" | "pandas" | "spark"`.
+- Do not auto-convert Spark DataFrames to pandas.
