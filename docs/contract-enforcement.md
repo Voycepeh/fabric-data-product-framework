@@ -10,8 +10,10 @@ Schema validation checks whether a YAML contract is structurally valid. Runtime 
 ## Checks
 
 - Required columns
-- Grain validation
-- Freshness validation (`"2 days"`, `"1 day"`, `"24 hours"` supported)
+- Grain validation (returns `duplicate_key_count`, `duplicate_row_count`, and backward-compatible `duplicate_count` mapped to duplicate rows)
+- Freshness validation (`"1 day"`, `"2 days"`, `"24 hours"`, `"23 hours"`, `"25 hours"`)
+
+Freshness compares `datetime.now(timezone.utc) - max_watermark` against the parsed threshold timedelta.
 
 ## Engine behavior
 

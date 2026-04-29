@@ -20,6 +20,9 @@ def test_build_summary_pass_warning_fail_and_markdown_record():
     json.dumps(record)
 
 
-def test_missing_sections_do_not_crash():
+def test_missing_sections_do_not_crash_and_are_explicit():
     summary = build_run_summary(runtime_context=_ctx())
     assert summary["sections"]["quality"] is None
+    assert "quality" in summary["not_provided_sections"]
+    md = render_run_summary_markdown(summary)
+    assert "Not Provided Sections" in md

@@ -162,7 +162,7 @@ assert_quality_gate(quality_result)
 
 
 
-# 15.5 Runtime contract enforcement
+# 15. Runtime contract enforcement
 contract_result = validate_runtime_contracts(
     source_df=df_source,
     output_df=df_output,
@@ -172,11 +172,11 @@ contract_result = validate_runtime_contracts(
 assert_contracts_valid(contract_result)
 contract_validation_records = build_contract_validation_records(contract_result, run_id=ctx["run_id"])
 
-# 15. Write target only after gate passes
+# 16. Write target only after gate passes
 if not DRY_RUN and not PROFILE_ONLY:
     write_table(df_output, target_table_identifier, writer=fabric_table_writer, mode="overwrite")
 
-# 16. Read/profile output
+# 17. Read/profile output
 if DRY_RUN:
     df_written = df_output
 else:
@@ -191,7 +191,7 @@ output_profile_rows = flatten_profile_for_metadata(
     exclude_columns=default_technical_columns(),
 )
 
-# 17. Build metadata records
+# 18. Build metadata records
 dataset_run_row = build_dataset_run_record(
     run_id=ctx["run_id"],
     dataset_name=ctx["dataset_name"],
@@ -211,7 +211,7 @@ schema_drift_rows = build_schema_drift_records(
     table_stage="source",
 )
 
-# 18. Build final run summary
+# 19. Build final run summary
 run_summary = build_run_summary(
     runtime_context=ctx,
     contract=contract,
@@ -226,7 +226,7 @@ summary_markdown = render_run_summary_markdown(run_summary)
 print(summary_markdown)
 run_summary_record = build_run_summary_record(run_summary)
 
-# 19. Write metadata records
+# 20. Write metadata records
 metadata_outputs = {
     "dataset_runs": [dataset_run_row],
     "column_profiles": source_profile_rows + output_profile_rows,

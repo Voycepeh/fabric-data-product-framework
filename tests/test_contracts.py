@@ -7,7 +7,7 @@ import pytest
 from fabric_data_product_framework import contracts
 
 
-def _contract():
+def _contract(expected_freshness: str = "2 days"):
     return {
         "dataset": {"name": "sales", "purpose": "testing"},
         "source": {"table": "bronze.sales"},
@@ -15,7 +15,7 @@ def _contract():
         "refresh": {"watermark_column": "updated_at"},
         "keys": {"business_keys": ["id"]},
         "contracts": {
-            "upstream": {"expected_columns": ["id", "updated_at"], "expected_freshness": "2 days"},
+            "upstream": {"expected_columns": ["id", "updated_at"], "expected_freshness": expected_freshness},
             "downstream": {"guaranteed_columns": ["id", "updated_at", "value"]},
         },
     }
@@ -34,20 +34,29 @@ def test_required_columns_missing_fails():
     assert res["status"] == "failed"
 
 
-def test_grain_checks():
+def test_grain_checks_and_duplicate_counts_are_consistent():
     ok = pd.DataFrame({"id": [1, 2]})
-    bad = pd.DataFrame({"id": [1, 1]})
+    triple_dup = pd.DataFrame({"id": [1, 1, 1]})
     miss = pd.DataFrame({"other": [1]})
     assert contracts.validate_grain(ok, ["id"], engine="auto")["status"] == "passed"
-    assert contracts.validate_grain(bad, ["id"], engine="auto")["status"] == "failed"
+    result = contracts.validate_grain(triple_dup, ["id"], engine="auto")
+    assert result["status"] == "failed"
+    assert result["duplicate_key_count"] == 1
+    assert result["duplicate_row_count"] == 3
+    assert result["duplicate_count"] == 3
     assert contracts.validate_grain(miss, ["id"], engine="auto")["status"] == "failed"
 
 
-def test_freshness_pass_and_fail():
+def test_freshness_pass_and_fail_and_hour_based_contract_support():
     fresh = pd.DataFrame({"updated_at": [datetime.now(timezone.utc)]})
     stale = pd.DataFrame({"updated_at": [datetime.now(timezone.utc) - timedelta(days=10)]})
     assert contracts.validate_freshness(fresh, "updated_at", max_age_days=2, engine="pandas")["status"] == "passed"
     assert contracts.validate_freshness(stale, "updated_at", max_age_days=2, engine="pandas")["status"] == "failed"
+
+    src = pd.DataFrame({"id": [1], "updated_at": [datetime.now(timezone.utc) - timedelta(hours=24)]})
+    # 25 hours should pass and 23 hours should fail for the same data point.
+    assert contracts.validate_upstream_contract(src, _contract("25 hours"), engine="auto")["status"] == "passed"
+    assert contracts.validate_upstream_contract(src, _contract("23 hours"), engine="auto")["status"] == "failed"
 
 
 def test_upstream_downstream_runtime_and_assert_and_records():
