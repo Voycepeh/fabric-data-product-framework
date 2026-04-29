@@ -30,6 +30,17 @@ Build and maintain a **reusable Microsoft Fabric data product framework** that i
 ## Documentation and change expectations
 
 - Prefer concise documentation.
+
+## Documentation placement rules
+
+- Root `README.md` is only for framework overview, lifecycle, quick start, and navigation links.
+- Do not add every new function, helper, API, implementation note, or utility example to root `README.md`.
+- Public functions, helpers, utilities, and callable APIs must be documented in `src/README.md`.
+- Detailed lifecycle, governance, contract enforcement, AI context, run summary, and diagram explanations belong in `docs/`.
+- Synthetic examples and walkthroughs belong in `examples/`.
+- If a PR adds or changes a public function in `src/`, it must update `src/README.md` with function name, purpose, minimal usage example, expected input/output behavior, and Fabric-specific assumptions.
+- Update root `README.md` only when top-level user journey, lifecycle, installation, quick start, or navigation changes.
+- Prefer linking from root `README.md` to `docs/` or `src/README.md` instead of adding long implementation details.
 - Use Mermaid diagrams where useful.
 - Favor implementation patterns that are teachable to Python users who may not be Fabric/PySpark experts.
 - For schema or configuration changes, update **examples, tests, and README together**.
