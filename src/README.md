@@ -103,6 +103,52 @@ Functions from `src/fabric_data_product_framework/technical_columns.py`.
 | `add_datetime_parts` | Derive date/time helper columns from datetime input. | Build partitioning/reporting helper fields. |
 | `add_standard_technical_columns` | Apply standard technical column bundle. | One-call technical enrichment before writes. |
 
+## Runtime contract enforcement and run summary
+
+Functions from `src/fabric_data_product_framework/contracts.py` and `src/fabric_data_product_framework/run_summary.py`.
+
+| Function | Purpose | Typical use |
+|---|---|---|
+| `validate_runtime_contracts` | Validate runtime source/output data against upstream/downstream contract expectations. | Run after quality checks and before writing output. |
+| `assert_contracts_valid` | Raise if runtime contract validation contains blocking errors. | Enforce fail-fast contract gate in notebook pipelines. |
+| `build_contract_validation_records` | Flatten contract validation results into metadata-ready records. | Persist contract outcomes for audit and reporting. |
+| `build_run_summary` | Build an execution summary payload from runtime context and optional check results. | Create concise handover summary after pipeline checks. |
+| `render_run_summary_markdown` | Render a human-readable markdown summary from run summary payload. | Print notebook-friendly handover output. |
+| `build_run_summary_record` | Flatten run summary to a single metadata-ready record. | Write summary to metadata tables/files. |
+
+```python
+from fabric_data_product_framework.contracts import (
+    validate_runtime_contracts,
+    assert_contracts_valid,
+    build_contract_validation_records,
+)
+from fabric_data_product_framework.run_summary import (
+    build_run_summary,
+    render_run_summary_markdown,
+    build_run_summary_record,
+)
+
+contract_result = validate_runtime_contracts(
+    source_df=df_source,
+    output_df=df_output,
+    contract=contract,
+    engine="auto",
+)
+assert_contracts_valid(contract_result)
+contract_records = build_contract_validation_records(contract_result, run_id=ctx["run_id"])
+
+summary = build_run_summary(
+    runtime_context=ctx,
+    contract=contract,
+    source_profile=source_profile,
+    output_profile=output_profile,
+    quality_result=quality_result,
+    contract_validation_result=contract_result,
+)
+print(render_run_summary_markdown(summary))
+summary_record = build_run_summary_record(summary)
+```
+
 ## Scaffold modules
 
 These modules exist to reserve the framework structure, but do not expose public callable functions yet:

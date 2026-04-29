@@ -46,3 +46,16 @@ Near-term roadmap:
 2. Basic profiling and metadata writers.
 3. Drift and incremental safety checks.
 4. Quality rules, contracts, lineage, and AI context enhancements.
+
+## Runtime contract enforcement and run summary
+
+Use runtime contract enforcement and run summary wiring in notebook templates as implementation steps:
+
+- Run runtime contract validation **after quality rules pass**.
+- Assert contract validity **before writing target output**.
+- Build and persist run summary artifacts **before metadata write**.
+
+Use these callable functions in notebook implementations: `validate_runtime_contracts`, `assert_contracts_valid`, `build_contract_validation_records`, `build_run_summary`, `render_run_summary_markdown`, and `build_run_summary_record`.
+
+`AGENTS.md` is implementation guidance for agents/Codex only; it is not the user-facing function reference. For exact callable API examples, use `src/README.md`. For user-facing behavior docs, use `docs/contract-enforcement.md` and `docs/run-summary.md`.
+
