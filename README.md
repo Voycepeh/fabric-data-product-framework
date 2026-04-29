@@ -30,47 +30,89 @@ Use this lifecycle as the default operating model for each dataset.
 | 12 | Data contracts | Validate and publish dataset contract expectations for schema, semantics, and constraints. | Contract schema validation implemented. Runtime enforcement planned. |
 | 13 | Lineage and transformation summary | Record lineage and summarize how each output is derived. | AI-assisted lineage prompt/template proven. Automated extraction planned. |
 | 14 | Run summary and AI context export | Produce run summary and package curated context for assisted documentation and handover. | Planned handover package. |
+| 15 | Business metadata layer | Capture business definitions, metric meaning, known caveats, owner notes, and usage examples so the data product is understandable after handover. | Planned handover artefact; AI-assisted drafting with human steward review. |
+
+## Lifecycle ownership model
+
+The framework separates lifecycle work into five teachable streams:
+
+- **Governance documents**
+- **Pipeline engineering artefacts**
+- **Automated checks**
+- **Human data understanding**
+- **Handover documents**
+
+This helps teams see who owns decisions, where AI helps, and what the framework automates.
+
+## AI in the loop, human accountable
+
+The framework uses AI in the loop to reduce documentation and metadata burden, but accountability remains with humans. AI can draft, summarize, recommend, and explain. Humans approve purpose, business rules, governance decisions, data contracts, and business meaning. The framework then makes the approved decisions executable through repeatable profiling, validation, logging, and pipeline gates.
+
+## Human, AI, and framework responsibilities
 
 ```mermaid
 flowchart TD
-    S1[1. Dataset purpose & steward agreement
-Template / Pattern] --> S2[2. Notebook params & environment setup
-Template / Pattern]
-    S2 --> S3[3. Source declaration
-Template / Pattern]
-    S3 --> S4[4. Source profiling
-Implemented Utility + Pattern]
-    S4 --> S5[5. Drift & incremental safety checks
-Implemented Utility + Planned Gate]
-    S5 --> S6[6. EDA notes & nuance explanation
-Template / Pattern]
-    S6 --> S7[7. Transformation pipeline
-Template / Pattern]
-    S7 --> S8[8. Technical columns & write pattern
-Template / Pattern]
-    S8 --> S9[9. Output profiling
-Implemented Utility + Pattern]
-    S9 --> S10[10. Data quality rules
-Planned Gate / Export]
-    S10 --> S11[11. Governance labeling
-Planned Gate / Export]
-    S11 --> S12[12. Data contracts
-Implemented Utility + Planned Gate]
-    S12 --> S13[13. Lineage & transformation summary
-Template / Pattern + Planned Export]
-    S13 --> S14[14. Run summary & AI context export
-Planned Gate / Export]
 
-    AI[AI support: draft metadata, EDA explanations, DQ suggestions, lineage explanations, handover context] -.-> S1
-    AI -.-> S6
-    AI -.-> S10
-    AI -.-> S13
-    AI -.-> S14
-    H[Human review & approval] -.-> S5
-    H -.-> S10
-    H -.-> S12
-    H -.-> S14
+subgraph G["Governance / Data Ownership"]
+    G1["1. Dataset purpose and steward agreement<br/><br/>Human accountable<br/>AI assisted drafting<br/>Output: approved purpose, scope, usage, owner, steward"]
+    G11["11. Governance labeling<br/><br/>Human accountable<br/>AI can recommend labels<br/>Output: sensitivity label, classification, usage controls"]
+    G12["12. Data contracts<br/><br/>Human accountable, engineering enforced<br/>AI can draft contract expectations<br/>Output: schema, semantics, constraints, refresh expectations"]
+end
+
+subgraph E["Pipeline Engineering / Transformation Implementation"]
+    E2["2. Notebook parameters and environment setup<br/><br/>Framework automated<br/>Human configures dataset-specific values<br/>Output: parameters, paths, imports, naming checks"]
+    E3["3. Source declaration<br/><br/>Human declares source intent<br/>Framework records metadata<br/>Output: sources, keys, refresh pattern, ingestion intent"]
+    E4["4. Source profiling<br/><br/>Framework automated<br/>AI can summarize profile<br/>Output: input profile metadata"]
+    E7["7. Transformation pipeline<br/><br/>Human authors business logic<br/>AI can explain and refactor<br/>Output: reproducible transformation code"]
+    E8["8. Technical columns and write pattern<br/><br/>Framework automated<br/>Human selects write mode where needed<br/>Output: audit columns, partitions, watermark/version fields"]
+    E9["9. Output profiling<br/><br/>Framework automated<br/>AI can summarize output changes<br/>Output: output profile metadata"]
+end
+
+subgraph C["Automated Checks / Pipeline Gates"]
+    C5["5. Schema drift, data drift, and incremental safety checks<br/><br/>Framework automated gate<br/>Human reviews exceptions<br/>Output: pass/fail drift and incremental safety result"]
+    C10["10. Data quality rules<br/><br/>Framework executes checks<br/>Human approves rules<br/>AI can suggest candidate rules<br/>Output: completeness, validity, consistency, threshold results"]
+end
+
+subgraph H["Human Data Understanding"]
+    H6["6. EDA notes and data nuance explanation<br/><br/>Human owned<br/>AI assisted summarisation<br/>Output: frozen quirks, caveats, assumptions, and transformation rationale"]
+end
+
+subgraph O["Handover / Operational Readiness"]
+    O13["13. Lineage and transformation summary<br/><br/>Framework captures lineage<br/>AI drafts explanation<br/>Human reviews<br/>Output: source-to-output lineage and transformation explanation"]
+    O14["14. Run summary and AI context export<br/><br/>Framework packages run metadata<br/>AI prepares context<br/>Output: run summary, profile summary, quality results, contract status, governance status"]
+    O15["15. Business metadata layer<br/><br/>Human accountable<br/>AI can draft definitions<br/>Output: business definitions, metric meaning, owner notes, known caveats, usage examples"]
+end
+
+G1 --> E2
+E2 --> E3
+E3 --> E4
+E4 --> C5
+C5 --> H6
+H6 --> E7
+E7 --> E8
+E8 --> E9
+E9 --> C10
+C10 --> G11
+G11 --> G12
+G12 --> O13
+O13 --> O14
+O14 --> O15
+
+C5 -. "If drift or incremental risk found" .-> H6
+C10 -. "If quality rule fails" .-> H6
+G12 -. "If contract expectation changes" .-> E3
+O15 -. "If handover exposes missing context" .-> H6
 ```
+
+## Responsibility matrix
+
+| Stream | Steps | Human responsibility | AI responsibility | Framework responsibility | Main artefacts |
+|---|---:|---|---|---|---|
+| Governance / data ownership | 1, 11, 12 | Approve purpose, usage, steward, labels, contracts | Draft purpose, suggest labels, draft contract expectations | Store and validate metadata | Purpose agreement, labels, data contract |
+| Pipeline engineering / transformation | 2, 3, 4, 7, 8, 9 | Configure dataset-specific values and author business logic | Explain/refactor logic, summarize profiling | Run setup, profiling, technical columns, write pattern | Notebook config, source registry, profiles, transformation code |
+| Automated checks / gates | 5, 10 | Approve exceptions and thresholds | Suggest candidate checks and explain failures | Execute drift, incremental, and DQ gates | Check results, pass/fail logs |
+| Human data understanding | 6 | Interpret data nuances and business caveats | Summarize findings and convert notes into documentation | Preserve notes as non-runtime documentation | EDA notes, assumptions, caveats |
+| Handover / operational readiness | 13, 14, 15 | Review and accept handover context | Generate lineage narrative, run summary, business metadata drafts | Export run context and metadata package | Lineage, run summary, AI context export, business metadata layer |
 
 ## What the framework currently standardizes or supports
 
@@ -260,3 +302,78 @@ Wire only three adapters to start testing in your environment:
 - `metadata_writer`
 
 The template is intentionally adapter-based and does not depend on a specific workspace setup or Fabric-only SDK imports.
+
+## Callable Function Reference
+
+### Contract and configuration
+
+| Function | What it does | Typical lifecycle stage | Engine support | Minimal example usage |
+|---|---|---|---|---|
+| `load_and_validate_dataset_contract` | Loads a contract file and validates it against schema. | 1, 12 | N/A | `contract, errors = load_and_validate_dataset_contract("examples/configs/sample_dataset_contract.yaml")` |
+| `validate_dataset_contract` | Validates an in-memory contract and returns issues. | 1, 12 | N/A | `errors = validate_dataset_contract(contract)` |
+
+### Runtime and notebook setup
+
+| Function | What it does | Typical lifecycle stage | Engine support | Minimal example usage |
+|---|---|---|---|---|
+| `build_runtime_context` | Builds run metadata such as `run_id`, timestamps, and dataset names. | 2 | N/A | `ctx = build_runtime_context(dataset_name="synthetic_orders", environment="dev", source_table="source.synthetic_orders", target_table="product.synthetic_orders")` |
+| `assert_notebook_name_valid` | Enforces notebook naming conventions before execution. | 2 | N/A | `assert_notebook_name_valid("source_to_product_orders", ["source_to_product_"])` |
+
+### Fabric read/write wrappers
+
+| Function | What it does | Typical lifecycle stage | Engine support | Minimal example usage |
+|---|---|---|---|---|
+| `build_table_identifier` | Builds a consistent `lakehouse.schema.table` identifier string. | 2, 8 | N/A | `table_id = build_table_identifier("lh", "product", "sample_framework_output")` |
+| `read_table` | Reads a table using an injected adapter/reader. | 3, 7 | Adapter-based | `df = read_table(table_id, reader=fabric_reader)` |
+| `write_table` | Writes a dataframe using an injected adapter/writer. | 8 | Adapter-based | `write_table(df_out, table_id, writer=fabric_writer, mode="overwrite")` |
+
+### Profiling and metadata shaping
+
+| Function | What it does | Typical lifecycle stage | Engine support | Minimal example usage |
+|---|---|---|---|---|
+| `profile_dataframe` | Profiles source/output dataframe shape and column stats. | 4, 9 | pandas + Spark supported | `profile = profile_dataframe(df_source, dataset_name="synthetic_orders", engine="spark")` |
+| `flatten_profile_for_metadata` | Flattens profile output into metadata table rows. | 4, 9 | pandas + Spark profile inputs | `rows = flatten_profile_for_metadata(profile, "source.synthetic_orders", run_id=ctx["run_id"], table_stage="source")` |
+| `summarize_profile` | Produces a compact profile summary for run notes/handover. | 9, 14 | pandas + Spark profile inputs | `summary = summarize_profile(profile)` |
+
+### Schema drift
+
+| Function | What it does | Typical lifecycle stage | Engine support | Minimal example usage |
+|---|---|---|---|---|
+| `build_schema_snapshot` | Builds a schema baseline/current snapshot. | 5 | pandas + Spark supported | `baseline = build_schema_snapshot(df_source, dataset_name="synthetic_orders", table_name="source.synthetic_orders")` |
+| `compare_schema_snapshots` | Compares snapshots and classifies blocking/warning drift. | 5 | engine-agnostic snapshot comparison | `drift = compare_schema_snapshots(baseline, current)` |
+| `assert_no_blocking_schema_drift` | Raises on blocking schema drift before continuing transforms. | 5 | engine-agnostic result check | `assert_no_blocking_schema_drift(drift)` |
+
+### Incremental safety
+
+| Function | What it does | Typical lifecycle stage | Engine support | Minimal example usage |
+|---|---|---|---|---|
+| `build_partition_snapshot` | Builds partition-level fingerprints for incremental checks. | 5 | pandas + Spark supported | `snap = build_partition_snapshot(df, partition_column="business_date", business_keys=["customer_id"], engine="spark")` |
+| `compare_partition_snapshots` | Compares baseline/current partition snapshots for historical changes. | 5 | engine-agnostic snapshot comparison | `result = compare_partition_snapshots(prev_snap, curr_snap)` |
+| `assert_incremental_safe` | Raises on blocking incremental safety result. | 5 | engine-agnostic result check | `assert_incremental_safe(result)` |
+
+### Technical columns
+
+| Function | What it does | Typical lifecycle stage | Engine support | Minimal example usage |
+|---|---|---|---|---|
+| `add_standard_technical_columns` | Adds run, source, watermark, and hash technical columns. | 8 | pandas + Spark supported | `df_out = add_standard_technical_columns(df_out, run_id=ctx["run_id"], business_keys=["customer_id"], source_system="manual", source_table="sample_framework_input", engine="spark")` |
+| `add_datetime_parts` | Adds date/time helper columns from a datetime field. | 8 | pandas + Spark supported | `df_out = add_datetime_parts(df_out, "updated_at", engine="spark")` |
+
+### Metadata records
+
+| Function | What it does | Typical lifecycle stage | Engine support | Minimal example usage |
+|---|---|---|---|---|
+| `build_dataset_run_record` | Builds a dataset run status record. | 14 | N/A | `run_row = build_dataset_run_record(run_id=ctx["run_id"], dataset_name="synthetic_orders", environment="dev", source_table="source.synthetic_orders", target_table="product.synthetic_orders")` |
+| `build_schema_snapshot_records` | Flattens schema snapshot to metadata rows. | 5 | snapshot input | `rows = build_schema_snapshot_records(snapshot, run_id=ctx["run_id"], table_stage="source")` |
+| `build_schema_drift_records` | Flattens schema drift result to metadata rows. | 5 | comparison input | `rows = build_schema_drift_records(drift, run_id=ctx["run_id"], table_stage="source")` |
+| `write_multiple_metadata_outputs` | Writes multiple metadata outputs with one writer adapter. | 14 | adapter-based | `write_multiple_metadata_outputs(outputs, mapping, writer=metadata_writer)` |
+
+## Manual Fabric validation checklist
+
+- [ ] Local `PYTHONPATH=src pytest -q` passes
+- [ ] Package import works in Fabric
+- [ ] Synthetic Spark profiling works
+- [ ] Metadata rows are produced
+- [ ] Technical columns are added
+- [ ] Delta write/read works
+- [ ] Output profiling works
+- [ ] Row counts match

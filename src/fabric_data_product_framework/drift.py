@@ -18,6 +18,7 @@ VALID_ENGINES = {"auto", "pandas", "spark"}
 
 
 def default_schema_drift_policy() -> dict:
+    """Return default schema drift policy used for pre-transform safety checks (step 5)."""
     return {
         "block_on_removed_column": True,
         "block_on_type_change": True,
@@ -29,6 +30,7 @@ def default_schema_drift_policy() -> dict:
 
 
 def detect_dataframe_engine(df) -> str:
+    """Detect pandas or Spark dataframe type for schema snapshot helpers (step 5)."""
     module_name = type(df).__module__
     if module_name.startswith("pandas") and hasattr(df, "dtypes") and hasattr(df, "columns"):
         return "pandas"
@@ -99,6 +101,10 @@ def _build_spark_schema_snapshot(df, dataset_name: str, table_name: str) -> dict
 
 
 def build_schema_snapshot(df, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "auto") -> dict:
+    """Create a schema snapshot for baseline/current comparison before transforms (step 5).
+
+    Returns dataset/table/column structure details. Supports pandas and Spark.
+    """
     if engine not in VALID_ENGINES:
         raise ValueError(f"Unsupported engine '{engine}'. Expected one of: {sorted(VALID_ENGINES)}")
 
@@ -121,6 +127,7 @@ def _resolve_change_behavior(is_warning: bool, is_blocking: bool) -> tuple[str, 
 
 
 def compare_schema_snapshots(baseline_snapshot: dict, current_snapshot: dict, policy: dict | None = None) -> dict:
+    """Compare baseline and current schema snapshots and classify drift actions (step 5)."""
     active_policy = {**default_schema_drift_policy(), **(policy or {})}
 
     baseline_columns = {col["column_name"]: col for col in baseline_snapshot.get("columns", [])}
@@ -193,5 +200,6 @@ def compare_schema_snapshots(baseline_snapshot: dict, current_snapshot: dict, po
 
 
 def assert_no_blocking_schema_drift(result: dict) -> None:
+    """Raise ``SchemaDriftError`` when drift comparison contains blocking changes (step 5 gate)."""
     if not bool(result.get("can_continue", True)):
         raise SchemaDriftError("Blocking schema drift detected.")

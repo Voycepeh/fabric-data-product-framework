@@ -21,6 +21,7 @@ def build_dataset_run_record(
     row_count_output: int | None = None,
     notes: str | None = None,
 ) -> dict:
+    """Build a dataset-level run record for status tracking and handover exports (step 14)."""
     return to_jsonable(
         {
             "run_id": run_id,
@@ -39,6 +40,7 @@ def build_dataset_run_record(
 
 
 def build_schema_snapshot_records(snapshot: dict, *, run_id: str, table_stage: str) -> list[dict]:
+    """Convert schema snapshot output into row records for metadata tables (step 5)."""
     base = {
         "run_id": run_id,
         "dataset_name": snapshot.get("dataset_name"),
@@ -63,6 +65,7 @@ def build_schema_snapshot_records(snapshot: dict, *, run_id: str, table_stage: s
 
 
 def build_schema_drift_records(drift_result: dict, *, run_id: str, table_stage: str) -> list[dict]:
+    """Convert schema drift comparison results into metadata rows (step 5 gate logging)."""
     base = {
         "run_id": run_id,
         "dataset_name": drift_result.get("dataset_name"),
@@ -115,6 +118,7 @@ def build_quality_result_records(
     table_name: str,
     table_stage: str,
 ) -> list[dict]:
+    """Normalize quality rule outputs into metadata rows for quality reporting (step 10)."""
     results: list[dict[str, Any]]
     if isinstance(quality_result, dict):
         results = list(quality_result.get("results", []))
@@ -147,6 +151,10 @@ def build_quality_result_records(
 
 
 def write_metadata_records(records: list[dict], table_identifier: str, writer=None, mode: str = "append", **options):
+    """Write metadata rows via an injected writer adapter (steps 4/5/9/10/14).
+
+    Safety: this module does not hardcode runtime-specific writers; callers must inject one.
+    """
     if not records:
         return None
     if writer is None:
@@ -163,6 +171,7 @@ def write_multiple_metadata_outputs(
     mode: str = "append",
     **options,
 ) -> dict:
+    """Write multiple named metadata outputs using a name-to-table mapping and shared writer."""
     results = {}
     for output_name, records in outputs.items():
         if not records:
