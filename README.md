@@ -162,6 +162,28 @@ from fabric_data_product_framework.drift import compare_schema_snapshots
 result = compare_schema_snapshots(baseline_snapshot, current_snapshot)
 ```
 
+### Notebook runtime helper
+
+```python
+from fabric_data_product_framework.runtime import (
+    build_runtime_context,
+    assert_notebook_name_valid,
+)
+
+ctx = build_runtime_context(
+    dataset_name="synthetic_orders",
+    environment="dev",
+    source_table="source.synthetic_orders",
+    target_table="product.synthetic_orders",
+    notebook_name="source_to_product_synthetic_orders",
+)
+
+assert_notebook_name_valid(
+    ctx["notebook_name"],
+    allowed_prefixes=["source_to_product_", "bronze_to_silver_", "silver_to_gold_"],
+)
+```
+
 ## Execution engines
 
 The framework exposes engine-aware dataframe APIs with `engine="auto" | "pandas" | "spark"`.
