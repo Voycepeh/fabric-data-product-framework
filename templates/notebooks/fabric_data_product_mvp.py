@@ -13,6 +13,7 @@ from fabric_data_product_framework.drift import (
 )
 from fabric_data_product_framework.fabric import build_table_identifier, read_table, write_table
 from fabric_data_product_framework.incremental import assert_incremental_safe, build_partition_snapshot, compare_partition_snapshots
+from fabric_data_product_framework.lineage import LineageRecorder, build_lineage_records, build_transformation_summary_markdown
 from fabric_data_product_framework.metadata import (
     build_dataset_run_record,
     build_schema_drift_records,
@@ -116,19 +117,37 @@ if baseline_snapshot:
 # 11. EDA notes placeholder
 # Keep EDA/debug cells in development only. Freeze or remove them before scheduled runs.
 
-# 12. Transformation section
+# 12. Initialize optional lineage recorder
+lineage = LineageRecorder(
+    dataset_name=ctx["dataset_name"],
+    run_id=ctx["run_id"],
+    source_tables=[source_table_identifier],
+    target_table=target_table_identifier,
+)
+
+# 13. Transformation section
 # USER TRANSFORMATION START
 df_output = df_source
+# Optional lineage example:
+# lineage.add_step(
+#     step_id="T001",
+#     step_name="Apply business filter",
+#     input_name="df_source",
+#     output_name="df_output",
+#     description="Filter to records needed for reporting.",
+#     reason="The product table should only contain approved reporting records.",
+#     transformation_type="filter",
+# )
 # USER TRANSFORMATION END
 
 if PROFILE_ONLY:
     df_output = df_source
 
-# 13. Add technical columns
+# 14. Add technical columns
 df_output = add_pipeline_run_id(df_output, ctx["run_id"], engine="auto")
 df_output = add_loaded_at(df_output, engine="auto")
 
-# 14. Run data quality rules before publish
+# 15. Run data quality rules before publish
 quality_result = run_quality_rules(
     df_output,
     contract.get("quality_rules", []),
@@ -162,7 +181,7 @@ assert_quality_gate(quality_result)
 
 
 
-# 15. Runtime contract enforcement
+# 16. Runtime contract enforcement
 contract_result = validate_runtime_contracts(
     source_df=df_source,
     output_df=df_output,
@@ -172,11 +191,11 @@ contract_result = validate_runtime_contracts(
 assert_contracts_valid(contract_result)
 contract_validation_records = build_contract_validation_records(contract_result, run_id=ctx["run_id"])
 
-# 16. Write target only after gate passes
+# 17. Write target only after gate passes
 if not DRY_RUN and not PROFILE_ONLY:
     write_table(df_output, target_table_identifier, writer=fabric_table_writer, mode="overwrite")
 
-# 17. Read/profile output
+# 18. Read/profile output
 if DRY_RUN:
     df_written = df_output
 else:
@@ -191,7 +210,7 @@ output_profile_rows = flatten_profile_for_metadata(
     exclude_columns=default_technical_columns(),
 )
 
-# 18. Build metadata records
+# 19. Build metadata records
 dataset_run_row = build_dataset_run_record(
     run_id=ctx["run_id"],
     dataset_name=ctx["dataset_name"],
@@ -211,7 +230,19 @@ schema_drift_rows = build_schema_drift_records(
     table_stage="source",
 )
 
-# 19. Build final run summary
+# 20. Build final run summary
+
+lineage_summary = lineage.build_summary()
+lineage_summary_markdown = build_transformation_summary_markdown(lineage_summary)
+print(lineage_summary_markdown)
+lineage_records = build_lineage_records(
+    dataset_name=ctx["dataset_name"],
+    run_id=ctx["run_id"],
+    source_tables=[source_table_identifier],
+    target_table=target_table_identifier,
+    transformation_steps=lineage.to_records(),
+)
+
 run_summary = build_run_summary(
     runtime_context=ctx,
     contract=contract,
@@ -220,13 +251,14 @@ run_summary = build_run_summary(
     schema_drift_result=schema_drift_result,
     quality_result=quality_result,
     contract_validation_result=contract_result,
+    lineage_summary=lineage_summary,
     notes=["MVP notebook template run."],
 )
 summary_markdown = render_run_summary_markdown(run_summary)
 print(summary_markdown)
 run_summary_record = build_run_summary_record(run_summary)
 
-# 20. Write metadata records
+# 21. Write metadata records
 metadata_outputs = {
     "dataset_runs": [dataset_run_row],
     "column_profiles": source_profile_rows + output_profile_rows,
@@ -234,6 +266,7 @@ metadata_outputs = {
     "schema_drift_results": schema_drift_rows,
     "quality_results": quality_records,
     "contract_validation_results": contract_validation_records,
+    "lineage": lineage_records,
     "run_summaries": [run_summary_record],
 }
 metadata_table_mapping = {
@@ -243,6 +276,7 @@ metadata_table_mapping = {
     "schema_drift_results": "metadata.schema_drift_results",
     "quality_results": "metadata.quality_results",
     "contract_validation_results": "metadata.contract_validation_results",
+    "lineage": "metadata.lineage",
     "run_summaries": "metadata.run_summaries",
 }
 if not DRY_RUN:

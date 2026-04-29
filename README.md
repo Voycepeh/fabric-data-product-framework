@@ -69,9 +69,11 @@ See [docs/quick-start.md](docs/quick-start.md) for runnable examples and setup d
 - [Framework status (implemented vs planned)](docs/framework-status.md)
 - [Execution engine model](docs/engine-model.md)
 - [Public repo safety guidance](docs/public-repo-safety.md)
+- [Lineage recorder](docs/lineage.md)
 - [Callable API reference](src/README.md)
 
 ## Callable Function Reference
 See [src/README.md](src/README.md) for callable API references.
 
 See [docs/contract-enforcement.md](docs/contract-enforcement.md) and [docs/run-summary.md](docs/run-summary.md) for runtime behavior details, and [AGENTS.md](AGENTS.md) for implementation guidance.
+

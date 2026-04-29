@@ -149,6 +149,47 @@ print(render_run_summary_markdown(summary))
 summary_record = build_run_summary_record(summary)
 ```
 
+
+## Lineage
+
+Functions and classes from `src/fabric_data_product_framework/lineage.py`.
+
+| Function/Class | Purpose | Typical use |
+|---|---|---|
+| `TransformationStep` | Structured shape for a recorded transformation step. | Keep per-step lineage fields consistent and JSON-safe. |
+| `LineageRecorder` | Notebook-friendly recorder for notable transformations. | Add steps during transformation logic and build summary outputs. |
+| `build_lineage_records` | Flatten transformation steps into metadata-ready rows. | Persist lineage step records to metadata tables/files. |
+| `generate_mermaid_lineage` | Build a Mermaid flowchart from sources, steps, and target. | Render quick lineage diagrams in handover docs/notebooks. |
+| `build_transformation_summary_markdown` | Render concise markdown summary of transformations and business impact. | Print handover-friendly run lineage summaries. |
+| `build_lineage_prompt_context` | Build prompt-ready markdown context for lineage review (no AI call). | Pass context to Copilot/AI tools while constraining invented details. |
+
+```python
+from fabric_data_product_framework.lineage import (
+    LineageRecorder,
+    build_transformation_summary_markdown,
+)
+
+lineage = LineageRecorder(
+    dataset_name=ctx["dataset_name"],
+    run_id=ctx["run_id"],
+    source_tables=[ctx["source_table"]],
+    target_table=ctx["target_table"],
+)
+
+lineage.add_step(
+    step_id="T001",
+    step_name="Apply business filter",
+    input_name="df_source",
+    output_name="df_filtered",
+    description="Filter to records needed for reporting.",
+    reason="The product table should only contain approved reporting records.",
+    transformation_type="filter",
+)
+
+summary = lineage.build_summary()
+print(build_transformation_summary_markdown(summary))
+```
+
 ## Scaffold modules
 
 These modules exist to reserve the framework structure, but do not expose public callable functions yet:
@@ -157,7 +198,6 @@ These modules exist to reserve the framework structure, but do not expose public
 |---|---|
 | `contracts.py` | Future contract-specific helpers |
 | `governance.py` | Future governance label helpers |
-| `lineage.py` | Future lineage capture helpers |
 | `ai_context.py` | Future AI context export helpers |
 
 ## Fabric adapters
