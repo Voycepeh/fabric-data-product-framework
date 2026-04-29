@@ -259,6 +259,25 @@ safety_result = compare_partition_snapshots(
 assert_incremental_safe(safety_result)
 ```
 
+### Data quality gate
+
+```python
+from fabric_data_product_framework.quality import (
+    assert_quality_gate,
+    run_quality_rules,
+)
+
+quality_result = run_quality_rules(
+    df_output,
+    contract.get("quality_rules", []),
+    dataset_name=ctx["dataset_name"],
+    table_name=ctx["target_table"],
+    engine="spark",
+)
+
+assert_quality_gate(quality_result)
+```
+
 ### Notebook runtime helper
 
 ```python
