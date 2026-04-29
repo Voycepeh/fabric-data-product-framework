@@ -42,15 +42,47 @@ def _safe_node_id(raw: str, prefix: str = "node") -> str:
 
 
 class LineageRecorder:
-    def __init__(self, dataset_name: str, run_id: str | None = None, source_tables: list[str] | None = None, target_table: str | None = None) -> None:
+    def __init__(
+        self,
+        dataset_name: str,
+        run_id: str | None = None,
+        source_tables: list[str] | None = None,
+        target_table: str | None = None,
+    ) -> None:
         self.dataset_name = dataset_name
         self.run_id = run_id
         self.source_tables = _clean_list(source_tables)
         self.target_table = target_table
         self._steps: list[TransformationStep] = []
 
-    def add_step(self, *, step_id: str, step_name: str, input_name: str, output_name: str, description: str, reason: str, transformation_type: str = "custom", columns_used: list[str] | None = None, columns_created: list[str] | None = None, business_impact: str | None = None, notes: str | None = None) -> dict:
-        step = TransformationStep(step_id=step_id, step_name=step_name, input_name=input_name, output_name=output_name, description=description, reason=reason, transformation_type=transformation_type, columns_used=_clean_list(columns_used), columns_created=_clean_list(columns_created), business_impact=business_impact, notes=notes)
+    def add_step(
+        self,
+        *,
+        step_id: str,
+        step_name: str,
+        input_name: str,
+        output_name: str,
+        description: str,
+        reason: str,
+        transformation_type: str = "custom",
+        columns_used: list[str] | None = None,
+        columns_created: list[str] | None = None,
+        business_impact: str | None = None,
+        notes: str | None = None,
+    ) -> dict:
+        step = TransformationStep(
+            step_id=step_id,
+            step_name=step_name,
+            input_name=input_name,
+            output_name=output_name,
+            description=description,
+            reason=reason,
+            transformation_type=transformation_type,
+            columns_used=_clean_list(columns_used),
+            columns_created=_clean_list(columns_created),
+            business_impact=business_impact,
+            notes=notes,
+        )
         self._steps.append(step)
         return asdict(step)
 
@@ -76,8 +108,36 @@ class LineageRecorder:
         }
 
 
-def build_lineage_records(*, dataset_name: str, run_id: str, source_tables: list[str], target_table: str, transformation_steps: list[dict]) -> list[dict]:
-    return [{"run_id": run_id, "dataset_name": dataset_name, "source_tables": _clean_list(source_tables), "target_table": target_table, "step_id": step.get("step_id"), "step_name": step.get("step_name"), "input_name": step.get("input_name"), "output_name": step.get("output_name"), "transformation_type": step.get("transformation_type", "custom"), "columns_used": _clean_list(step.get("columns_used")), "columns_created": _clean_list(step.get("columns_created")), "description": step.get("description"), "reason": step.get("reason"), "business_impact": step.get("business_impact"), "notes": step.get("notes")} for step in (transformation_steps or [])]
+def build_lineage_records(
+    *,
+    dataset_name: str,
+    run_id: str,
+    source_tables: list[str],
+    target_table: str,
+    transformation_steps: list[dict],
+) -> list[dict]:
+    records = []
+    for step in transformation_steps or []:
+        records.append(
+            {
+                "run_id": run_id,
+                "dataset_name": dataset_name,
+                "source_tables": _clean_list(source_tables),
+                "target_table": target_table,
+                "step_id": step.get("step_id"),
+                "step_name": step.get("step_name"),
+                "input_name": step.get("input_name"),
+                "output_name": step.get("output_name"),
+                "transformation_type": step.get("transformation_type", "custom"),
+                "columns_used": _clean_list(step.get("columns_used")),
+                "columns_created": _clean_list(step.get("columns_created")),
+                "description": step.get("description"),
+                "reason": step.get("reason"),
+                "business_impact": step.get("business_impact"),
+                "notes": step.get("notes"),
+            }
+        )
+    return records
 
 
 def generate_mermaid_lineage(*, source_tables: list[str], target_table: str, transformation_steps: list[dict], graph_direction: str = "LR") -> str:
@@ -114,11 +174,28 @@ def generate_mermaid_lineage(*, source_tables: list[str], target_table: str, tra
 
 def build_transformation_summary_markdown(summary: dict, *, include_mermaid: bool = True) -> str:
     steps = summary.get("steps", []) or []
-    lines = [f"## Transformation Summary — {summary.get('dataset_name', 'unknown')}", f"- Run ID: `{summary.get('run_id') or 'not_provided'}`", f"- Source tables: `{', '.join(summary.get('source_tables', []) or ['not_provided'])}`", f"- Target table: `{summary.get('target_table') or 'not_provided'}`", f"- Step count: `{summary.get('step_count', len(steps))}`", f"- Columns used: `{', '.join(summary.get('columns_used', []) or ['none'])}`", f"- Columns created: `{', '.join(summary.get('columns_created', []) or ['none'])}`", "", "### Steps"]
+    lines = [
+        f"## Transformation Summary — {summary.get('dataset_name', 'unknown')}",
+        f"- Run ID: `{summary.get('run_id') or 'not_provided'}`",
+        f"- Source tables: `{', '.join(summary.get('source_tables', []) or ['not_provided'])}`",
+        f"- Target table: `{summary.get('target_table') or 'not_provided'}`",
+        f"- Step count: `{summary.get('step_count', len(steps))}`",
+        f"- Columns used: `{', '.join(summary.get('columns_used', []) or ['none'])}`",
+        f"- Columns created: `{', '.join(summary.get('columns_created', []) or ['none'])}`",
+        "",
+        "### Steps",
+    ]
     if steps:
         for step in steps:
             impact = step.get("business_impact") or "not_provided"
-            lines.extend([f"- **{step.get('step_id', 'step')} — {step.get('step_name', 'Unnamed')}**", f"  - Reason: {step.get('reason', 'not_provided')}", f"  - Description: {step.get('description', 'not_provided')}", f"  - Business impact: {impact}"])
+            lines.extend(
+                [
+                    f"- **{step.get('step_id', 'step')} — {step.get('step_name', 'Unnamed')}**",
+                    f"  - Reason: {step.get('reason', 'not_provided')}",
+                    f"  - Description: {step.get('description', 'not_provided')}",
+                    f"  - Business impact: {impact}",
+                ]
+            )
     else:
         lines.append("- No transformation steps recorded.")
     if include_mermaid:
@@ -127,12 +204,35 @@ def build_transformation_summary_markdown(summary: dict, *, include_mermaid: boo
     return "\n".join(lines)
 
 
-def build_lineage_prompt_context(*, dataset_name: str, source_tables: list[str], target_table: str, transformation_steps: list[dict], eda_notes: str | None = None) -> str:
-    lines = ["Use this context to draft or review a lineage explanation.", "Do not invent transformations not listed here.", "", f"- Dataset: `{dataset_name}`", f"- Source tables: `{', '.join(_clean_list(source_tables) or ['not_provided'])}`", f"- Target table: `{target_table}`", "", "## Transformation Steps"]
+def build_lineage_prompt_context(
+    *,
+    dataset_name: str,
+    source_tables: list[str],
+    target_table: str,
+    transformation_steps: list[dict],
+    eda_notes: str | None = None,
+) -> str:
+    lines = [
+        "Use this context to draft or review a lineage explanation.",
+        "Do not invent transformations not listed here.",
+        "",
+        f"- Dataset: `{dataset_name}`",
+        f"- Source tables: `{', '.join(_clean_list(source_tables) or ['not_provided'])}`",
+        f"- Target table: `{target_table}`",
+        "",
+        "## Transformation Steps",
+    ]
     steps = transformation_steps or []
     if steps:
         for step in steps:
-            lines.extend([f"- **{step.get('step_id', 'step')} — {step.get('step_name', 'Unnamed step')}**", f"  - Reason: {step.get('reason', 'not_provided')}", f"  - Columns used: {', '.join(_clean_list(step.get('columns_used')) or ['none'])}", f"  - Columns created: {', '.join(_clean_list(step.get('columns_created')) or ['none'])}"])
+            lines.extend(
+                [
+                    f"- **{step.get('step_id', 'step')} — {step.get('step_name', 'Unnamed step')}**",
+                    f"  - Reason: {step.get('reason', 'not_provided')}",
+                    f"  - Columns used: {', '.join(_clean_list(step.get('columns_used')) or ['none'])}",
+                    f"  - Columns created: {', '.join(_clean_list(step.get('columns_created')) or ['none'])}",
+                ]
+            )
     else:
         lines.append("- No transformation steps were recorded.")
     lines.extend(["", "## EDA Notes", eda_notes or "Not provided."])
