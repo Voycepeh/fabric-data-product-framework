@@ -23,6 +23,17 @@ Each column record includes:
 - `nullable` (whether nulls are present)
 - `column_hash` (deterministic hash from name, ordinal, dtype, nullable)
 
+
+## Engine behavior (pandas and Spark)
+
+- Use pandas mode for local/small datasets, tests, and laptop workflows.
+- Use Spark mode for Fabric-scale/lakehouse workloads.
+- `build_schema_snapshot(..., engine="auto")` detects `pandas` or `spark` defensively.
+- The framework must never auto-convert Spark DataFrames to pandas.
+- Spark schema snapshots read `df.schema.fields` only and do not scan or collect data.
+- Pandas `nullable` is observed from values with `isna().any()`.
+- Spark `nullable` is taken from schema metadata (`field.nullable`).
+
 ## How comparison works
 
 `compare_schema_snapshots` compares baseline and current snapshots and reports:
@@ -68,6 +79,7 @@ Schema drift gates reduce incremental refresh risk by preventing runs from proce
 ```python
 import pandas as pd
 from fabric_data_product_framework.drift import (
+    SchemaDriftError,
     build_schema_snapshot,
     compare_schema_snapshots,
     assert_no_blocking_schema_drift,
@@ -88,5 +100,9 @@ baseline = build_schema_snapshot(baseline_df, dataset_name="synthetic_orders", t
 current = build_schema_snapshot(current_df, dataset_name="synthetic_orders", table_name="source_orders")
 
 result = compare_schema_snapshots(baseline, current)
-assert_no_blocking_schema_drift(result)
+
+try:
+    assert_no_blocking_schema_drift(result)
+except SchemaDriftError as exc:
+    print("Schema drift requires review:", exc)
 ```
