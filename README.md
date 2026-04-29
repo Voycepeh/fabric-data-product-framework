@@ -12,8 +12,9 @@ This framework is designed to make Fabric data products easier to:
 - govern
 - operate
 - hand over
+- make AI-ready
 
-It is especially intended for teams where people may know Python or data analysis, but may not yet know Fabric engineering best practices.
+It is intended for teams building governed and AI-ready Microsoft Fabric data products, where pipeline logic, metadata, data quality, contracts, lineage, and handover context need to be repeatable rather than rebuilt from scratch for every dataset.
 
 ## Operating model
 
@@ -71,10 +72,11 @@ See [docs/quick-start.md](docs/quick-start.md) for runnable examples and setup d
 - [Public repo safety guidance](docs/public-repo-safety.md)
 - [Lineage recorder](docs/lineage.md)
 - [Fabric smoke test](docs/fabric-smoke-test.md)
+- [Contract enforcement](docs/contract-enforcement.md)
+- [Run summary](docs/run-summary.md)
 - [Callable API reference](src/README.md)
 
 ## Callable Function Reference
 See [src/README.md](src/README.md) for callable API references.
 
-See [docs/contract-enforcement.md](docs/contract-enforcement.md) and [docs/run-summary.md](docs/run-summary.md) for runtime behavior details, and [AGENTS.md](AGENTS.md) for implementation guidance.
 

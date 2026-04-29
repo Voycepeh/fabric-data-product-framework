@@ -3,20 +3,75 @@
 ## Public-safe reminder
 Do not commit real organisational data, secrets, tenant details, internal table names, workspace names, screenshots, or production metadata.
 
-## Minimal flow
+## What you can test today
+The current MVP is a **single Fabric notebook flow** that turns one source Lakehouse table into one target table with repeatable checks and metadata.
 
-1. Define purpose, steward, usage, and business metadata.
-2. Draft governance labels and contract expectations.
-3. Configure notebook parameters and declared sources.
-4. Run profiling and metadata logging.
-5. Build transformations and technical columns.
-6. Run drift, incremental, quality, and contract checks.
-7. Export lineage and handover context.
+Today you can test:
+- contract + runtime parameter loading
+- source read, schema snapshot, and source profiling
+- optional schema drift and incremental safety checks
+- transformation logic plus technical audit columns
+- data quality and runtime contract validation
+- conditional target write (write only when gates pass)
+- output profiling, lineage, run summary, and metadata outputs
 
-## Short code examples
+This gives you a practical end-to-end pattern for governed, repeatable Fabric data products without rebuilding notebook scaffolding for each dataset.
+
+## Current MVP workflow
+
+```mermaid
+flowchart TD
+    A[Define dataset contract and runtime parameters] --> B[Read source Lakehouse table]
+    B --> C[Build source schema snapshot]
+    C --> D[Run source profiling]
+    D --> E{Optional safety gates}
+    E --> E1[Schema drift check]
+    E --> E2[Incremental safety check]
+    E1 --> F[Apply transformation logic]
+    E2 --> F
+    F --> G[Add technical audit columns]
+    G --> H[Run data quality rules]
+    H --> I[Run runtime contract validation]
+    I --> J{Checks pass?}
+    J -- No --> K[Stop run and write failure metadata]
+    J -- Yes --> L[Write target table]
+    L --> M[Read back written output]
+    M --> N[Run output profiling]
+    N --> O[Record lineage]
+    O --> P[Build run summary]
+    P --> Q[Write metadata outputs]
+```
+
+## Recommended first Fabric smoke test
+1. Create a small synthetic source table in a Fabric Lakehouse (for example 20–100 rows).
+2. Copy `templates/notebooks/fabric_data_product_mvp.py` into a Fabric notebook.
+3. Set runtime config to your test dataset, source table, and target table.
+4. Run with `PROFILE_ONLY = True` to verify source read, schema snapshot, and profiling metadata.
+5. Run with `DRY_RUN = True` to execute transformation, technical columns, DQ, contract validation, lineage, and run summary **without** final target write.
+6. Run with `PROFILE_ONLY = False` and `DRY_RUN = False` to perform the actual target write after checks pass.
+7. Confirm target data and metadata outputs were created for each stage.
+
+## Execution stages
+- **Stage 1: `PROFILE_ONLY = True`**  
+  Focus on source read, schema/profile capture, and metadata shape.
+- **Stage 2: `DRY_RUN = True`**  
+  Run the full logic and gates without publishing target data.
+- **Stage 3: actual target write** (`PROFILE_ONLY = False`, `DRY_RUN = False`)  
+  Publish target table only when quality and contract checks pass.
+
+## Expected outputs
+From the current MVP notebook template, expect metadata outputs such as:
+- run metadata (run id, dataset, notebook/runtime context, status)
+- source schema snapshot and source profile summary
+- optional drift/incremental safety check results
+- data quality results and runtime contract validation results
+- lineage records (source-to-target mapping)
+- run summary record
+- output profile summary after write
+
+## Useful code snippets
 
 ### Contract validation
-
 ```python
 from fabric_data_product_framework.config import load_and_validate_dataset_contract
 
@@ -25,81 +80,7 @@ contract, errors = load_and_validate_dataset_contract(
 )
 ```
 
-### DataFrame profiling
-
-```python
-import pandas as pd
-from fabric_data_product_framework.profiling import flatten_profile_for_metadata, profile_dataframe
-
-df = pd.DataFrame({"customer_id": [1, 2, 3], "amount": [10.5, 20.0, 30.0]})
-profile = profile_dataframe(df, dataset_name="synthetic_orders")
-```
-
-### Technical columns
-
-```python
-from fabric_data_product_framework.technical_columns import add_standard_technical_columns
-
-df_output = add_standard_technical_columns(
-    df_output,
-    run_id=ctx["run_id"],
-    environment=ctx["environment"],
-    source_table=ctx["source_table"],
-    watermark_column="updated_at",
-    business_keys=["customer_id"],
-    engine="spark",
-)
-```
-
-### Schema drift check
-
-```python
-from fabric_data_product_framework.drift import compare_schema_snapshots
-
-result = compare_schema_snapshots(baseline_snapshot, current_snapshot)
-```
-
-### Incremental safety check
-
-```python
-from fabric_data_product_framework.incremental import assert_incremental_safe, build_partition_snapshot, compare_partition_snapshots
-
-current_partition_snapshots = build_partition_snapshot(
-    df_source,
-    dataset_name="synthetic_orders",
-    table_name="source.synthetic_orders",
-    partition_column="business_date",
-    business_keys=["customer_id", "order_id"],
-    watermark_column="updated_at",
-    engine="spark",
-)
-
-safety_result = compare_partition_snapshots(
-    previous_partition_snapshots,
-    current_partition_snapshots,
-)
-
-assert_incremental_safe(safety_result)
-```
-
-### Data quality gate
-
-```python
-from fabric_data_product_framework.quality import assert_quality_gate, run_quality_rules
-
-quality_result = run_quality_rules(
-    df_output,
-    contract.get("quality_rules", []),
-    dataset_name=ctx["dataset_name"],
-    table_name=ctx["target_table"],
-    engine="spark",
-)
-
-assert_quality_gate(quality_result)
-```
-
-### Notebook runtime helper
-
+### Runtime context helper
 ```python
 from fabric_data_product_framework.runtime import assert_notebook_name_valid, build_runtime_context
 
@@ -117,8 +98,22 @@ assert_notebook_name_valid(
 )
 ```
 
-## Execution engines
+### Data quality gate
+```python
+from fabric_data_product_framework.quality import assert_quality_gate, run_quality_rules
 
+quality_result = run_quality_rules(
+    df_output,
+    contract.get("quality_rules", []),
+    dataset_name=ctx["dataset_name"],
+    table_name=ctx["target_table"],
+    engine="spark",
+)
+
+assert_quality_gate(quality_result)
+```
+
+## Execution engines
 The framework exposes engine-aware dataframe APIs with `engine="auto" | "pandas" | "spark"`.
 
 - **pandas**: local and synthetic workloads
@@ -127,12 +122,7 @@ The framework exposes engine-aware dataframe APIs with `engine="auto" | "pandas"
 
 See [engine model](engine-model.md) for full behavior details.
 
-## First runnable notebook MVP
-
-Copy `templates/notebooks/fabric_data_product_mvp.py` into a Fabric notebook to run a full MVP flow from contract validation to metadata outputs.
-
-Wire only three adapters to start testing in your environment:
-
-- `fabric_reader`
-- `fabric_table_writer`
-- `metadata_writer`
+## Current limitations
+- Governance labeling checks are not fully implemented end-to-end yet.
+- AI context export is not fully implemented end-to-end yet.
+- Treat additional governance automation as planned work, not current guaranteed behavior.
