@@ -2,6 +2,16 @@
 
 This page lists the main callable functions intended to be imported from `fabric_data_product_framework`.
 
+
+## Execution scope quick reference
+
+| Area | Local safe | Fabric runtime required |
+|---|---|---|
+| Contract/config/runtime helpers | Yes | No |
+| Profiling/quality/drift logic | Yes (pandas/samples) | Optional for Spark-scale validation |
+| Fabric adapters (`fabric.py`) | Adapter validation only | Yes (actual Lakehouse IO) |
+| AI helper modules | Yes (prompt/parse/compile) | Yes for real Fabric AI calls |
+
 ## Runtime
 
 Functions from `src/fabric_data_product_framework/runtime.py`.

@@ -1,44 +1,53 @@
 # AI-generated DQ rules workflow (Fabric notebook + framework)
 
-This workflow treats AI-assisted DQ rule generation as a core pattern while keeping the framework provider-neutral.
+This is the canonical AI workflow doc for data quality rule generation.
+
+## Decision boundary
+
+**AI proposes. Humans approve. The framework validates and records.**
 
 ## Responsibility split
 
 | Layer | Responsibility |
 |---|---|
-| Fabric AI response | Generate candidate readable and technical rules |
-| Framework | Prompt context, parsing, validation, compiling, execution |
-| Human | Approve/reject rules |
-| Power BI | Monitor DQ outcomes |
+| Fabric Copilot | Notebook/code/prompt authoring assistance for practitioners. |
+| Fabric AI functions (execution-time, where available) | Generate candidate DQ rules from explicit prompt context. |
+| Framework code | Build evidence context, parse outputs, validate shape, compile approved rules, execute checks, persist artifacts. |
+| Human reviewer | Approve/reject AI candidates and decide whether a rule should be enforced. |
 
-- Fabric AI is used in the notebook layer.
-- The core framework does not directly call AI providers.
-- This keeps the repo safe, portable, and testable.
+## Required evidence for AI suggestions
+
+AI prompts should be grounded in explicit artifacts, not memory:
+- Profile evidence (column stats, null behavior, value patterns).
+- Metadata and contract context (critical fields, expectations, constraints).
+- Business context (approved usage, caveats, known exclusions).
+
+Do not depend on invisible chat history to define rules; all accepted rules must be reproducible from saved artifacts.
 
 ## End-to-end flow
 
 ```mermaid
 flowchart TD
-    A[Profile table] --> B[Build AI prompt context]
-    B --> C[Call Fabric AI response in notebook]
-    C --> D[Parse AI candidate rules]
-    D --> E[Store human-readable rule candidates]
-    E --> F[Compile candidates into executable DQ rules]
-    F --> G[Human approval pattern]
-    G --> H[Run DQ rules]
-    H --> I[Split valid and quarantine rows]
-    I --> J[Build metadata records and monitor]
+    A[Profile table] --> B[Build evidence-rich prompt context]
+    B --> C[Call Fabric AI function in notebook]
+    C --> D[Parse and validate candidate rules]
+    D --> E[Store reviewable candidate artifacts]
+    E --> F[Compile approved candidates to executable rules]
+    F --> G[Run framework DQ checks]
+    G --> H[Record quality + quarantine outputs]
 ```
 
-## Steps (A-J)
+## Steps
 
-A. Profile table with `profile_dataframe`.
-B. Build prompt using `build_quality_rule_prompt_context` and `build_quality_rule_generation_prompt`.
-C. Call Fabric AI in notebook code (for example `ai.generate_response`) and collect raw text.
-D. Parse/validate candidates with `parse_ai_quality_rule_candidates`, `normalize_quality_rule_candidate`, and `validate_ai_quality_rule_candidate`.
-E. Store human-readable candidates with `build_layman_rule_records`.
-F. Compile to executable rules using `compile_layman_rules_to_quality_rules`.
-G. Human approves/rejects candidates; execute only approved compiled rules.
-H. Run aggregate checks through `run_quality_rules`.
-I. Run row-level split with `add_dq_failure_columns` + `split_valid_and_quarantine`.
-J. Persist quality and quarantine summary records for monitoring/dashboarding.
+1. Profile source/output data with `profile_dataframe`.
+2. Build prompt context with `build_quality_rule_prompt_context` and `build_quality_rule_generation_prompt`.
+3. Call Fabric AI from notebook code (provider call stays outside the framework package).
+4. Parse and validate candidates with `parse_ai_quality_rule_candidates`, `normalize_quality_rule_candidate`, and `validate_ai_quality_rule_candidate`.
+5. Persist human-review artifacts with `build_layman_rule_records`.
+6. Compile approved rules via `compile_layman_rules_to_quality_rules`.
+7. Execute rules using `run_quality_rules` and gate with `assert_quality_gate` where required.
+8. Produce row-level quarantine artifacts with `add_dq_failure_columns`, `split_valid_and_quarantine`, and `build_quarantine_summary_records`.
+
+## Related docs
+- Lifecycle placement: [../lifecycle-operating-model.md](../lifecycle-operating-model.md)
+- API reference: [../../src/README.md](../../src/README.md)

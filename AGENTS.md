@@ -10,6 +10,7 @@ Guide agent/Codex contributions for this repository so changes stay reusable, pu
 - Treat GitHub as the source of truth.
 - Treat Microsoft Fabric as the execution environment.
 - Keep an AI-in-the-loop workflow and optimize for junior-friendly handover.
+- Prefer small, focused PRs over large restructures.
 
 ## Public safety rules
 
@@ -18,18 +19,13 @@ Guide agent/Codex contributions for this repository so changes stay reusable, pu
 
 ## Documentation placement rules
 
-- Prefer concise documentation.
-- Root `README.md` is for high-level overview, lifecycle, quick start, and navigation only.
-- Do not add detailed function, helper, API, implementation, or utility notes to root `README.md`.
-- Public functions, helpers, utilities, and callable APIs must be documented in `src/README.md`.
-- Detailed lifecycle, governance, contract behavior, run summary behavior, AI context, and diagram explanations belong in `docs/`.
-- Synthetic examples and walkthroughs belong in `examples/`.
-- Use Mermaid diagrams where useful.
-- Keep examples teachable for Python users who may not be Fabric/PySpark experts.
-
-For runtime contract behavior, see `docs/contract-enforcement.md`.
-For run summary behavior, see `docs/run-summary.md`.
-For callable utility usage, see `src/README.md`.
+- Keep root `README.md` concise as the entry point only.
+- Put lifecycle/operating behavior in `docs/`.
+- Put callable API reference in `src/README.md`.
+- Update `docs/` when lifecycle or architecture behavior changes.
+- Update `src/README.md` when public APIs in `src/` change.
+- Keep examples in `examples/` runnable and teachable for Python users.
+- Use links to detailed docs instead of duplicating long explanations across multiple files.
 
 ## PR expectations
 
@@ -39,8 +35,7 @@ For callable utility usage, see `src/README.md`.
   - minimal usage example
   - expected input/output behavior
   - Fabric-specific assumptions
-- Update root `README.md` only when top-level user journey, lifecycle, installation, quick start, or navigation changes.
-- Prefer links to `docs/` and `src/README.md` over long implementation details.
+- Update root `README.md` only for top-level journey/navigation changes.
 
 ## Testing expectations
 

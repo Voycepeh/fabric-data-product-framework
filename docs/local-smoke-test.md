@@ -1,11 +1,23 @@
 # Local Smoke Test
 
-Use this quick sequence to validate local quality gates before running in Fabric.
+Use local validation for logic that does **not** require Fabric runtime services.
+
+## What local testing covers
+- Unit and integration tests in `tests/`.
+- Import and syntax checks.
+- Pandas/small-sample execution paths.
+- Contract, drift, incremental, and DQ rule logic.
+- Documentation sanity for examples/commands.
 
 ## Commands
 1. `python -m compileall src tests`
 2. `PYTHONPATH=src pytest -q`
 
-## Notes
-- Use local smoke test for syntax and behavior checks that do not require Fabric runtime services.
-- Use [fabric-smoke-test.md](fabric-smoke-test.md) for minimal in-Fabric validation.
+## What local testing does not cover
+- PySpark execution in Fabric runtime.
+- Lakehouse and OneLake read/write behavior.
+- `notebookutils` integration.
+- Fabric AI function execution.
+- Large-scale profiling performance.
+
+For those checks, run [fabric-smoke-test.md](fabric-smoke-test.md).
