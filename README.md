@@ -1,119 +1,107 @@
 # Fabric Data Product Framework
 
-## What this is
-A reusable Microsoft Fabric notebook framework for turning raw or source data into governed, quality-checked, handover-ready data products.
+A Microsoft Fabric-first framework for building governed, quality-checked, drift-aware, contract-validated, handover-ready, AI-ready data products in Fabric notebooks.
 
-It abstracts the repeatable 80% of pipeline work so teams can focus on the dataset-specific 20%: business meaning, transformation logic, and data nuance.
+## What this framework is
+This repository provides a reusable notebook framework and supporting documentation for teams that want consistent delivery controls in Microsoft Fabric: contracts, drift checks, DQ checks, lineage, run summaries, and handover outputs.
 
-## Why this exists
-This framework is designed to make Fabric data products easier to:
-- build
-- review
-- govern
-- operate
-- hand over
-- make AI-ready
+## Why it exists
+Many data products repeat the same control-plane work for every dataset. This framework standardizes that repeatable work so practitioners can focus on dataset-specific decisions and business interpretation.
 
-It is intended for teams building governed and AI-ready Microsoft Fabric data products, where pipeline logic, metadata, data quality, contracts, lineage, and handover context need to be repeatable rather than rebuilt from scratch for every dataset.
+## Who it is for
+- Python-proficient data practitioners working in Microsoft Fabric notebooks.
+- Teams that need governed, explainable, handover-ready outputs.
+- Teams that want AI assistance without removing human accountability.
 
-## Operating model
-
-The framework uses three execution lanes.
-
-| Lane | Responsibility |
+## Three-lane operating model
+| Lane | Core responsibility |
 |---|---|
-| Outside Fabric | Prepare the business and supporting context needed before the notebook can run: purpose, steward, approved usage, definitions, caveats, supporting files, mapping tables, reference data, and governance expectations. |
-| Inside Fabric: Human-guided | Configure and review the data product inside Fabric notebooks: notebook setup, source declaration, EDA, transformation logic, DQ rule approval, exception review, and handover review. |
-| Inside Fabric: Framework-run | Run repeatable framework logic: profiling, metadata logging, drift checks, incremental safety checks, DQ execution, contract validation, technical columns, write pattern, lineage, run summary, and metadata outputs. |
+| Outside Fabric | Prepare business and supporting context before notebook runtime. |
+| Inside Fabric: Human-guided | Configure, interpret, transform, approve, and review in the notebook. |
+| Inside Fabric: Framework-run | Execute deterministic checks, metadata logging, gates, write patterns, lineage, run summary, and handover outputs. |
 
-AI is not a separate owner. It is used as assistance inside the workflow.
+### Outside Fabric: what must be prepared
+- Purpose, steward, approved usage, caveats.
+- Supporting files, mapping tables, reference data.
+- Metadata and governance expectations.
 
-Some human-guided and framework-run steps can be AI-assisted through Copilot or Fabric AI functions, but AI output must be reviewed before becoming part of the pipeline.
+### Inside Fabric: Human-guided
+- Dataset contract inputs and runtime parameters.
+- Source declaration, EDA interpretation, data nuance explanation.
+- Transformation logic.
+- DQ exception review, approval decisions, handover review.
 
-AI proposes. Humans approve. The framework validates and records.
+### Inside Fabric: Framework-run
+- Source/output profiling and metadata logging.
+- Schema drift, data drift, and incremental safety checks.
+- Contract validation, DQ execution, technical columns, standard write behavior.
+- Lineage capture, run summary, and handover artifacts.
 
-## Lifecycle at a glance
+## Where AI fits
+AI is an assistance tag, not a standalone accountable actor.
+- Copilot prompts inside Fabric notebooks.
+- Fabric AI functions or notebook-level AI calls using structured context.
+- AI-assisted suggestions for DQ rules, metadata labels, lineage summaries, transformation explanations, and handover notes.
 
-| Step | Stage | Lane | Notes |
-|---:|---|---|---|
-| 1 | Purpose, steward, usage, and caveats | Outside Fabric | Business agreement and context before build |
-| 2 | Supporting data and metadata preparation | Outside Fabric | Mapping files, reference data, manual metadata, governance expectations |
-| 3 | Notebook setup and runtime parameters | Inside Fabric: Human-guided | Configure environment, source, target, flags |
-| 4 | Source declaration | Inside Fabric: Human-guided | Declare source tables/files and expected grain |
-| 5 | Source profiling and metadata logging | Inside Fabric: Framework-run | Framework profiles source and records metadata |
-| 6 | Schema drift, data drift, and incremental safety | Inside Fabric: Framework-run | Framework blocks unsafe changes where configured |
-| 7 | EDA notes and data nuance explanation | Inside Fabric: Human-guided | Human interprets profile, captures caveats; may use AI assistance |
-| 8 | Transformation logic | Inside Fabric: Human-guided | Dataset-specific transformation logic |
-| 9 | Technical columns and write pattern | Inside Fabric: Framework-run | Add audit fields, hashes, timestamps, standard write behavior |
-| 10 | Output profiling | Inside Fabric: Framework-run | Framework profiles output and records metadata |
-| 11 | DQ rules and runtime contract validation | Inside Fabric: Framework-run + Human-guided | Framework executes; human approves rules and reviews exceptions |
-| 12 | Lineage and transformation summary | Inside Fabric: Framework-run + Human-guided | Framework records lineage; AI may draft summaries; human reviews |
-| 13 | Run summary, AI context, and handover package | Inside Fabric: Framework-run + Human-guided | Framework exports; human accepts handover |
+**Boundary:** AI proposes. Humans approve. The framework validates and records.
 
-## Lifecycle flow
-
+## Lane handoff overview
+The diagram shows the lane handoff only. The detailed lifecycle is described in [docs/lifecycle-operating-model.md](docs/lifecycle-operating-model.md).
 ```mermaid
-flowchart LR
+flowchart TB
     subgraph OUT["Outside Fabric"]
-        O1["Business agreement"]
-        O2["Approved usage, steward, definitions, caveats"]
-        O3["Supporting files, mapping tables, reference data"]
-        O4["Metadata collection and governance expectations"]
+        O1["Business context<br/>Purpose, steward, usage, caveats"]
+        O2["Supporting inputs<br/>Mapping tables, reference data, metadata"]
     end
 
     subgraph HUMAN["Inside Fabric: Human-guided"]
-        H1["Notebook setup and runtime parameters"]
-        H2["Source declaration"]
-        H3["EDA and data nuance explanation"]
-        H4["Transformation logic"]
-        H5["DQ rule approval and exception review"]
-        H6["Handover review"]
+        H1["Notebook setup<br/>Runtime parameters and source declaration"]
+        H2["EDA and data nuance<br/>Interpret profiles, capture caveats"]
+        H3["Transformation logic<br/>Dataset-specific modelling"]
+        H4["Review and approval<br/>DQ exceptions, contracts, handover"]
     end
 
     subgraph FRAMEWORK["Inside Fabric: Framework-run"]
-        F1["Naming and runtime checks"]
-        F2["Source profiling and metadata logging"]
-        F3["Schema drift, data drift, incremental safety"]
-        F4["DQ execution and contract validation"]
-        F5["Technical columns and write pattern"]
-        F6["Output profiling, lineage, run summary, metadata logs"]
+        F1["Profile and log metadata"]
+        F2["Check drift and incremental safety"]
+        F3["Apply technical columns and write pattern"]
+        F4["Execute DQ and contract validation"]
+        F5["Export lineage, run summary, metadata logs"]
     end
 
     OUT --> HUMAN
     HUMAN --> FRAMEWORK
     FRAMEWORK --> HUMAN
-    HUMAN --> OUT
 
-    AI["AI-assisted where useful:<br/>Copilot prompts or Fabric AI functions<br/>AI proposes, humans approve, framework records"]
+    AI["AI-assisted where useful<br/>Copilot or Fabric AI functions<br/>AI proposes, humans approve, framework records"]
     AI -.-> HUMAN
     AI -.-> FRAMEWORK
 ```
 
-## Quick start
-1. Define purpose, steward, usage, and business metadata.
-2. Prepare supporting files, reference data, and governance expectations.
-3. Configure notebook parameters and declared sources.
-4. Run source profiling and metadata logging.
-5. Complete EDA notes and human review.
-6. Build transformation logic and run framework checks.
-7. Review DQ outcomes and contract validation.
-8. Export lineage, run summary, AI context, and handover package.
+## Current capability status
+See [docs/capability-status.md](docs/capability-status.md).
 
-See [docs/quick-start.md](docs/quick-start.md) for runnable examples and setup details.
+## How to test locally
+See [docs/local-smoke-test.md](docs/local-smoke-test.md).
 
-## More documentation
+## How to test minimally in Fabric
+See [docs/fabric-smoke-test.md](docs/fabric-smoke-test.md).
+
+## Documentation map
+- [Getting started](docs/getting-started.md)
 - [Lifecycle operating model](docs/lifecycle-operating-model.md)
-- [Notebook structure](docs/notebook-structure.md)
-- [AI-assisted steps](docs/ai-in-the-loop.md)
-- [Handover package](docs/handover-package.md)
-- [Framework status (implemented vs planned)](docs/framework-status.md)
-- [Execution engine model](docs/engine-model.md)
-- [Public repo safety guidance](docs/public-repo-safety.md)
-- [Lineage recorder](docs/lineage.md)
+- [Capability status](docs/capability-status.md)
+- [Local smoke test](docs/local-smoke-test.md)
 - [Fabric smoke test](docs/fabric-smoke-test.md)
+- [Notebook structure](docs/notebook-structure.md)
+- [Engine model](docs/engine-model.md)
 - [Contract enforcement](docs/contract-enforcement.md)
 - [Run summary](docs/run-summary.md)
-- [Callable API reference](src/README.md)
+- [Lineage](docs/lineage.md)
+- [Public repo safety](docs/public-repo-safety.md)
+- [AI workflow: generated DQ rules](docs/workflows/ai-generated-dq-rules.md)
+- [AI workflow: transformation summary](docs/workflows/ai-transformation-summary.md)
+- [Callable function reference](src/README.md)
 
 ## Callable Function Reference
-See [src/README.md](src/README.md) for callable API references.
+See [src/README.md](src/README.md) for callable APIs and usage examples.
