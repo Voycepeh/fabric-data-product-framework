@@ -51,6 +51,11 @@ class DataFrameProfile:
 
 
 def to_jsonable(value: Any) -> Any:
+    """Convert values to JSON-safe primitives for lifecycle metadata writes (steps 4/9/14).
+
+    Supports pandas and Spark value objects; this helper never triggers Spark-to-pandas conversion.
+    Returns a JSON-serializable value (or nested structure).
+    """
     if value is None:
         return None
     if isinstance(value, (str, int, float, bool)):
@@ -80,6 +85,11 @@ def to_jsonable(value: Any) -> Any:
 
 
 def infer_semantic_type(column_name: str, sample_values: list[Any]) -> str:
+    """Infer a lightweight semantic label for profiling columns in steps 4 and 9.
+
+    Uses column name hints plus sample values. Supports pandas and Spark profiles
+    because inputs are plain Python values. Returns a semantic type string.
+    """
     name = (column_name or "").lower()
     values = [str(v).strip() for v in sample_values if v is not None and str(v).strip()]
     if any(token in name for token in ["email", "e_mail"]):
@@ -116,6 +126,11 @@ def _is_spark_date_like_type(data_type: str) -> bool:
 
 
 def profile_column(series: pd.Series, sample_size: int = 5, top_n: int = 5) -> dict[str, Any]:
+    """Profile a single pandas column for source/output checks (steps 4 and 9).
+
+    Args include sample_size/top_n for hover-friendly summaries. Returns one
+    JSON-safe column profile dictionary. Pandas only.
+    """
     row_count = int(series.shape[0])
     non_null = int(series.notna().sum())
     null_count = int(row_count - non_null)
@@ -189,6 +204,11 @@ def _profile_spark_dataframe(df, dataset_name: str = "unknown", sample_size: int
 
 
 def profile_dataframe(df, dataset_name: str = "unknown", sample_size: int = 5, top_n: int = 5, engine: str = "auto") -> dict[str, Any]:
+    """Profile a pandas or Spark dataframe without collecting Spark data to pandas (steps 4/9).
+
+    Use ``engine='auto'`` for detection. Returns a JSON-safe dataframe profile
+    including row, column, and per-column statistics.
+    """
     selected_engine = validate_engine(engine)
     if selected_engine == "auto":
         selected_engine = detect_dataframe_engine(df)
@@ -203,10 +223,19 @@ def profile_dataframe(df, dataset_name: str = "unknown", sample_size: int = 5, t
 
 
 def default_technical_columns() -> list[str]:
+    """Return standard technical column names to exclude from business profiling.
+
+    Typically used during metadata shaping in steps 8 and 9. Engine-agnostic.
+    """
     return ["_pipeline_run_id", "_pipeline_name", "_pipeline_environment", "_source_system", "_source_table", "_source_extract_timestamp", "_record_loaded_timestamp", "_record_updated_timestamp", "_effective_start_datetime", "_effective_end_datetime", "_is_current", "_row_hash", "_business_key_hash", "_watermark_value", "pipeline_run_id", "loaded_at", "run_ingest_id", "ingest_run_id"]
 
 
 def flatten_profile_for_metadata(profile: dict, table_name: str, run_id: str, table_stage: str, exclude_columns: list[str] | None = None) -> list[dict]:
+    """Flatten profile output to metadata table rows for stages such as source/output (steps 4/9/14).
+
+    Key args: ``run_id``, ``table_name``, ``table_stage`` and optional excludes.
+    Returns one record per column. Engine support: pandas and Spark profile inputs.
+    """
     excluded = set(exclude_columns or [])
     rows = []
     for col in profile.get("columns", []):
@@ -243,6 +272,11 @@ def flatten_profile_for_metadata(profile: dict, table_name: str, run_id: str, ta
 
 
 def summarize_profile(profile: dict[str, Any]) -> dict[str, Any]:
+    """Build a concise profile summary for run notes, reviews, and handover (steps 9/14).
+
+    Returns dataset-level indicators such as null columns and likely sensitive fields.
+    Engine-agnostic because input is already profile JSON.
+    """
     columns = profile.get("columns", [])
     likely_sensitive = [c.get("column_name") for c in columns if c.get("inferred_semantic_type") in {"email", "phone", "person_name"}]
     return {

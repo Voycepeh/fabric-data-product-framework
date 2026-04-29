@@ -15,6 +15,7 @@ class IncrementalSafetyError(Exception):
 
 
 def default_incremental_safety_policy() -> dict:
+    """Return default incremental partition safety policy for lifecycle step 5 checks."""
     return {
         "block_on_historical_partition_change": True,
         "closed_partition_grace_days": 1,
@@ -128,6 +129,11 @@ def _build_spark_partition_snapshot(df, *, dataset_name: str, table_name: str, p
 
 
 def build_partition_snapshot(df, *, dataset_name: str = "unknown", table_name: str = "unknown", partition_column: str, business_keys: list[str], watermark_column: str | None = None, run_id: str | None = None, engine: str = "auto") -> list[dict]:
+    """Build per-partition snapshots for incremental safety validation (step 5).
+
+    Requires ``partition_column`` and ``business_keys``. Returns partition records.
+    Supports pandas and Spark without Spark-to-pandas conversion.
+    """
     selected_engine = validate_engine(engine)
     if selected_engine == "auto":
         selected_engine = detect_dataframe_engine(df)
@@ -163,6 +169,7 @@ def _is_closed_partition(partition_value: Any, grace_days: int) -> bool:
 
 
 def compare_partition_snapshots(baseline_snapshots: list[dict], current_snapshots: list[dict], policy: dict | None = None) -> dict:
+    """Compare baseline/current partition snapshots and classify historical-change risk (step 5)."""
     active_policy = {**default_incremental_safety_policy(), **(policy or {})}
     baseline = {str(s.get("partition_value")): s for s in baseline_snapshots}
     current = {str(s.get("partition_value")): s for s in current_snapshots}
@@ -207,11 +214,13 @@ def compare_partition_snapshots(baseline_snapshots: list[dict], current_snapshot
 
 
 def assert_incremental_safe(result: dict) -> None:
+    """Raise ``IncrementalSafetyError`` when incremental comparison has blocking changes."""
     if not bool(result.get("can_continue", True)):
         raise IncrementalSafetyError("Blocking incremental partition safety changes detected.")
 
 
 def build_incremental_safety_records(result: dict, *, run_id: str, dataset_name: str, table_name: str) -> list[dict]:
+    """Flatten incremental safety outcomes into metadata rows for run tracking (steps 5/14)."""
     changes = result.get("changes", []) or [
         {
             "drift_type": "none",

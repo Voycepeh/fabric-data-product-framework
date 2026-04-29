@@ -12,6 +12,11 @@ from fabric_data_product_framework.engines import detect_dataframe_engine, valid
 
 
 def default_technical_columns() -> list[str]:
+    """Return the framework's default technical/audit column names (step 8).
+
+    Use this list when excluding technical fields from profiling or hashing logic.
+    Engine support: pandas and Spark.
+    """
     return [
         "_pipeline_run_id",
         "_pipeline_name",
@@ -62,6 +67,7 @@ def _hash_row(values: list[Any]) -> str:
 
 
 def add_literal_column(df, column_name: str, value, engine: str = "auto"):
+    """Add a constant column to pandas/Spark dataframes during enrichment (step 8)."""
     selected_engine = _resolve_engine(df, engine)
     if selected_engine == "pandas":
         out = df.copy()
@@ -74,10 +80,12 @@ def add_literal_column(df, column_name: str, value, engine: str = "auto"):
 
 
 def add_pipeline_run_id(df, run_id: str, column_name: str = "_pipeline_run_id", engine: str = "auto"):
+    """Stamp a run id column for traceability across lifecycle outputs (steps 2/8/14)."""
     return add_literal_column(df, column_name=column_name, value=run_id, engine=engine)
 
 
 def add_pipeline_metadata(df, *, run_id: str, pipeline_name: str | None = None, environment: str | None = None, column_prefix: str = "_", engine: str = "auto"):
+    """Add pipeline-level metadata columns such as run id, name, and environment (step 8)."""
     out = add_pipeline_run_id(df, run_id=run_id, column_name=f"{column_prefix}pipeline_run_id", engine=engine)
     if pipeline_name is not None:
         out = add_literal_column(out, column_name=f"{column_prefix}pipeline_name", value=pipeline_name, engine=engine)
@@ -87,6 +95,7 @@ def add_pipeline_metadata(df, *, run_id: str, pipeline_name: str | None = None, 
 
 
 def add_source_metadata(df, *, source_system: str | None = None, source_table: str | None = None, source_extract_timestamp: str | None = None, column_prefix: str = "_", engine: str = "auto"):
+    """Add source lineage metadata columns for ingestion transparency (steps 3/8/13)."""
     out = df
     if source_system is not None:
         out = add_literal_column(out, column_name=f"{column_prefix}source_system", value=source_system, engine=engine)
@@ -98,6 +107,7 @@ def add_source_metadata(df, *, source_system: str | None = None, source_table: s
 
 
 def add_loaded_at(df, timestamp: str | None = None, column_name: str = "_record_loaded_timestamp", engine: str = "auto"):
+    """Add record load timestamp in UTC-compatible format for auditability (step 8)."""
     selected_engine = _resolve_engine(df, engine)
     if timestamp is not None:
         return add_literal_column(df, column_name=column_name, value=timestamp, engine=selected_engine)
@@ -111,6 +121,7 @@ def add_loaded_at(df, timestamp: str | None = None, column_name: str = "_record_
 
 
 def add_watermark_value(df, watermark_column: str, output_column: str = "_watermark_value", engine: str = "auto"):
+    """Copy a business watermark into a standard technical column (steps 5/8)."""
     _assert_columns_exist(df, [watermark_column])
     selected_engine = _resolve_engine(df, engine)
     if selected_engine == "pandas":
@@ -124,6 +135,7 @@ def add_watermark_value(df, watermark_column: str, output_column: str = "_waterm
 
 
 def add_row_hash(df, columns: list[str] | None = None, output_column: str = "_row_hash", engine: str = "auto"):
+    """Add a row-level SHA256 hash from selected columns for change detection (steps 5/8)."""
     selected_engine = _resolve_engine(df, engine)
     columns = columns or _non_technical_columns(df)
     _assert_columns_exist(df, columns)
@@ -138,6 +150,7 @@ def add_row_hash(df, columns: list[str] | None = None, output_column: str = "_ro
 
 
 def add_business_key_hash(df, business_keys: list[str], output_column: str = "_business_key_hash", engine: str = "auto"):
+    """Add a SHA256 hash from declared business keys for incremental safety (steps 5/8)."""
     _assert_columns_exist(df, business_keys)
     selected_engine = _resolve_engine(df, engine)
     if selected_engine == "pandas":
@@ -151,6 +164,7 @@ def add_business_key_hash(df, business_keys: list[str], output_column: str = "_b
 
 
 def add_datetime_parts(df, datetime_column: str, *, timezone: str = "Asia/Singapore", prefix: str | None = None, include_date: bool = True, include_time: bool = True, include_hour: bool = True, include_30_min_block: bool = True, engine: str = "auto"):
+    """Derive date/time helper columns from a UTC datetime column (step 8)."""
     _assert_columns_exist(df, [datetime_column])
     selected_engine = _resolve_engine(df, engine)
     col_prefix = prefix or datetime_column
@@ -188,6 +202,11 @@ def add_datetime_parts(df, datetime_column: str, *, timezone: str = "Asia/Singap
 
 
 def add_standard_technical_columns(df, *, run_id: str, pipeline_name: str | None = None, environment: str | None = None, source_system: str | None = None, source_table: str | None = None, source_extract_timestamp: str | None = None, watermark_column: str | None = None, business_keys: list[str] | None = None, add_hash: bool = True, engine: str = "auto"):
+    """Apply the standard technical column bundle used before persistence (step 8).
+
+    Key args include ``run_id``, optional ``business_keys``, and optional source details.
+    Returns the transformed dataframe. Supports pandas and Spark without Spark-to-pandas conversion.
+    """
     out = add_pipeline_metadata(df, run_id=run_id, pipeline_name=pipeline_name, environment=environment, engine=engine)
     out = add_source_metadata(out, source_system=source_system, source_table=source_table, source_extract_timestamp=source_extract_timestamp, engine=engine)
     out = add_loaded_at(out, engine=engine)
