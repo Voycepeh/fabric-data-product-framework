@@ -45,40 +45,35 @@ AI is an assistance tag, not a standalone accountable actor.
 
 **Boundary:** AI proposes. Humans approve. The framework validates and records.
 
-## Lifecycle diagram
+## Lane handoff overview
+The diagram shows the lane handoff only. The detailed lifecycle is described in [docs/lifecycle-operating-model.md](docs/lifecycle-operating-model.md).
 ```mermaid
-flowchart LR
+flowchart TB
     subgraph OUT["Outside Fabric"]
-        O1["Business agreement"]
-        O2["Approved usage, steward, definitions, caveats"]
-        O3["Supporting files, mapping tables, reference data"]
-        O4["Metadata collection and governance expectations"]
+        O1["Business context<br/>Purpose, steward, usage, caveats"]
+        O2["Supporting inputs<br/>Mapping tables, reference data, metadata"]
     end
 
     subgraph HUMAN["Inside Fabric: Human-guided"]
-        H1["Notebook setup and runtime parameters"]
-        H2["Source declaration"]
-        H3["EDA and data nuance explanation"]
-        H4["Transformation logic"]
-        H5["DQ rule approval and exception review"]
-        H6["Handover review"]
+        H1["Notebook setup<br/>Runtime parameters and source declaration"]
+        H2["EDA and data nuance<br/>Interpret profiles, capture caveats"]
+        H3["Transformation logic<br/>Dataset-specific modelling"]
+        H4["Review and approval<br/>DQ exceptions, contracts, handover"]
     end
 
     subgraph FRAMEWORK["Inside Fabric: Framework-run"]
-        F1["Naming and runtime checks"]
-        F2["Source profiling and metadata logging"]
-        F3["Schema drift, data drift, incremental safety"]
-        F4["DQ execution and contract validation"]
-        F5["Technical columns and write pattern"]
-        F6["Output profiling, lineage, run summary, metadata logs"]
+        F1["Profile and log metadata"]
+        F2["Check drift and incremental safety"]
+        F3["Apply technical columns and write pattern"]
+        F4["Execute DQ and contract validation"]
+        F5["Export lineage, run summary, metadata logs"]
     end
 
     OUT --> HUMAN
     HUMAN --> FRAMEWORK
     FRAMEWORK --> HUMAN
-    HUMAN --> OUT
 
-    AI["AI-assisted where useful:<br/>Copilot prompts or Fabric AI functions<br/>AI proposes, humans approve, framework records"]
+    AI["AI-assisted where useful<br/>Copilot or Fabric AI functions<br/>AI proposes, humans approve, framework records"]
     AI -.-> HUMAN
     AI -.-> FRAMEWORK
 ```
