@@ -2,10 +2,9 @@
 
 This page is intentionally concise.
 
-For the detailed lifecycle and actor ownership model, use:
+For the detailed lifecycle and lane ownership model, use:
 - [Lifecycle operating model](lifecycle-operating-model.md)
 - [Notebook structure](notebook-structure.md)
-- [Technical responsibilities](technical-responsibilities.md)
-- [Framework responsibilities](framework-responsibilities.md)
+- [AI-assisted steps](ai-in-the-loop.md)
 
 For legacy notebook standards, prefer the six-notebook structure described in [Notebook structure](notebook-structure.md).

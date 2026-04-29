@@ -1,113 +1,115 @@
 # Lifecycle Operating Model
 
-This framework is an operating model and reusable notebook framework for building governed, quality-checked, handover-ready data products in Microsoft Fabric.
+This framework uses three execution lanes so teams can separate business context preparation, human-guided notebook decisions, and framework automation.
 
-## Four actors
+## What the three lanes mean
 
-### Functional People
-Business owners, data stewards, process owners, domain SMEs, and report consumers.
-They own business meaning, usage, definitions, caveats, governance approval, and handover acceptance.
+- **Outside Fabric** covers business and governance context prepared before notebook execution.
+- **Inside Fabric: Human-guided** covers setup, interpretation, and approvals performed by people in notebooks.
+- **Inside Fabric: Framework-run** covers repeatable checks, validations, and metadata/logging behaviors implemented by the framework.
 
-### Technical People
-Data analysts, data scientists, data engineers, and Fabric developers.
-They own source declaration, profiling interpretation, EDA, transformation logic, data contracts, DQ rules, and exception review.
+Business context still matters. Human review still matters. Framework automation still matters. AI is useful but not accountable.
 
-### AI
-Copilot / Fabric AI / ChatGPT-style assistant.
-AI drafts, summarizes, recommends, explains, and generates candidate rules, labels, lineage, and handover context.
-AI does not approve, govern, or sign off production readiness.
+## Outside Fabric
 
-### Framework
-Reusable notebooks, utilities, metadata tables, gates, and templates.
-The framework runs profiling, logs metadata, executes drift checks, applies write patterns, validates contracts, executes DQ rules, and exports handover context.
+Outside Fabric work establishes the intent and constraints for the data product:
 
-Functional people define meaning. Technical people turn meaning into data products. AI accelerates documentation and reasoning. The framework makes the process repeatable, validated, and handover-ready.
+- purpose and steward ownership
+- approved usage and caveats
+- definitions and metric meaning
+- supporting files, mapping tables, and reference data
+- governance expectations and approval boundaries
 
-## 15-step lifecycle
+## Inside Fabric: Human-guided
 
-| Step | Stage | Primary actor | Where it happens |
+Human-guided work in Fabric notebooks includes:
+
+- notebook setup and runtime parameters
+- source declaration and expected grain
+- EDA interpretation and data nuance explanation
+- transformation logic decisions
+- DQ rule approval and exception review
+- handover review and acceptance decisions
+
+## Inside Fabric: Framework-run
+
+Framework-run work executes repeatable controls and outputs:
+
+- profiling and metadata logging
+- schema drift, data drift, and incremental safety checks
+- DQ execution and runtime contract validation
+- technical columns and standard write pattern
+- output profiling, lineage capture, and run summary export
+- metadata output artifacts for handover and monitoring
+
+## AI assistance boundary
+
+AI is a support mechanism, not an accountable actor.
+
+Some human-guided and framework-run steps can be AI-assisted through Copilot or Fabric AI functions, but AI output must be reviewed before becoming part of the pipeline.
+
+**AI proposes. Humans approve. The framework validates and records.**
+
+## End-to-end lifecycle
+
+| Step | Stage | Lane | Notes |
 |---:|---|---|---|
-| 1 | Dataset purpose and steward agreement | Functional People | Governance doc / metadata table |
-| 2 | Business metadata entry | Functional People | Metadata table / form |
-| 3 | Governance labeling and usage controls | Functional People | Governance doc / metadata table |
-| 4 | Data contract draft | Technical People | Contract file / notebook |
-| 5 | Notebook parameters and source declaration | Technical People | Main pipeline notebook |
-| 6 | Source profiling | Framework | Profiling notebook / utility |
-| 7 | Source metadata logging | Framework | Metadata table |
-| 8 | EDA notes and data nuance explanation | Technical People | Separate EDA notebook |
-| 9 | Schema drift, data drift, and incremental safety checks | Framework | Checks notebook / reusable gate |
-| 10 | Transformation pipeline | Technical People | Main pipeline notebook |
-| 11 | Technical columns and write pattern | Framework | Main pipeline notebook |
-| 12 | Output profiling | Framework | Profiling utility / metadata table |
-| 13 | DQ rules and contract validation | Technical People + Framework | Checks notebook / pipeline gate |
-| 14 | Lineage and transformation summary | Framework + AI + Technical People | Handover notebook |
-| 15 | Handover package and AI context export | Framework + AI, accepted by Functional People | Handover notebook |
+| 1 | Purpose, steward, usage, and caveats | Outside Fabric | Business agreement and context before build |
+| 2 | Supporting data and metadata preparation | Outside Fabric | Mapping files, reference data, manual metadata, governance expectations |
+| 3 | Notebook setup and runtime parameters | Inside Fabric: Human-guided | Configure environment, source, target, flags |
+| 4 | Source declaration | Inside Fabric: Human-guided | Declare source tables/files and expected grain |
+| 5 | Source profiling and metadata logging | Inside Fabric: Framework-run | Framework profiles source and records metadata |
+| 6 | Schema drift, data drift, and incremental safety | Inside Fabric: Framework-run | Framework blocks unsafe changes where configured |
+| 7 | EDA notes and data nuance explanation | Inside Fabric: Human-guided | Human interprets profile, captures caveats; may use AI assistance |
+| 8 | Transformation logic | Inside Fabric: Human-guided | Dataset-specific transformation logic |
+| 9 | Technical columns and write pattern | Inside Fabric: Framework-run | Add audit fields, hashes, timestamps, standard write behavior |
+| 10 | Output profiling | Inside Fabric: Framework-run | Framework profiles output and records metadata |
+| 11 | DQ rules and runtime contract validation | Inside Fabric: Framework-run + Human-guided | Framework executes; human approves rules and reviews exceptions |
+| 12 | Lineage and transformation summary | Inside Fabric: Framework-run + Human-guided | Framework records lineage; AI may draft summaries; human reviews |
+| 13 | Run summary, AI context, and handover package | Inside Fabric: Framework-run + Human-guided | Framework exports; human accepts handover |
 
-## Lifecycle flow
+## Handoff points
+
+- **Outside Fabric → Human-guided**: approved context and supporting artifacts are ready for notebook execution.
+- **Human-guided → Framework-run**: parameters, source declarations, and transformation intent are ready for automated execution.
+- **Framework-run → Human-guided**: checks, contracts, and summaries are reviewed before acceptance.
+- **Human-guided → Outside Fabric**: handover package returns to business/governance stakeholders for operational use.
+
+## Mermaid diagram
 
 ```mermaid
-flowchart TD
+flowchart LR
+    subgraph OUT["Outside Fabric"]
+        O1["Business agreement"]
+        O2["Approved usage, steward, definitions, caveats"]
+        O3["Supporting files, mapping tables, reference data"]
+        O4["Metadata collection and governance expectations"]
+    end
 
-subgraph FUNC["Functional People"]
-    F1["1. Dataset purpose and steward agreement"]
-    F2["2. Business metadata entry<br/>Definitions, metric meaning, usage examples, caveats"]
-    F3["3. Governance labeling and usage controls"]
-    F4["15. Accept handover package"]
-end
+    subgraph HUMAN["Inside Fabric: Human-guided"]
+        H1["Notebook setup and runtime parameters"]
+        H2["Source declaration"]
+        H3["EDA and data nuance explanation"]
+        H4["Transformation logic"]
+        H5["DQ rule approval and exception review"]
+        H6["Handover review"]
+    end
 
-subgraph TECH["Technical People"]
-    T1["4. Data contract draft"]
-    T2["5. Notebook parameters and source declaration"]
-    T3["8. EDA notes and data nuance explanation<br/>Separate EDA notebook"]
-    T4["10. Transformation pipeline<br/>Main pipeline notebook"]
-    T5["13. Approve DQ rules and review exceptions"]
-    T6["14. Review lineage and transformation summary"]
-end
+    subgraph FRAMEWORK["Inside Fabric: Framework-run"]
+        F1["Naming and runtime checks"]
+        F2["Source profiling and metadata logging"]
+        F3["Schema drift, data drift, incremental safety"]
+        F4["DQ execution and contract validation"]
+        F5["Technical columns and write pattern"]
+        F6["Output profiling, lineage, run summary, metadata logs"]
+    end
 
-subgraph AI["AI"]
-    A1["Assist purpose and metadata drafting"]
-    A2["Recommend labels and contract expectations"]
-    A3["Summarise source profile and EDA notes"]
-    A4["Suggest DQ rules from profiles and metadata"]
-    A5["Generate lineage explanation and handover narrative"]
-end
+    OUT --> HUMAN
+    HUMAN --> FRAMEWORK
+    FRAMEWORK --> HUMAN
+    HUMAN --> OUT
 
-subgraph FW["Framework"]
-    W1["6. Run source profiling"]
-    W2["7. Log source metadata"]
-    W3["9. Run schema drift, data drift, and incremental safety checks"]
-    W4["11. Apply technical columns and write pattern"]
-    W5["12. Run output profiling"]
-    W6["13. Execute DQ rules and contract validation"]
-    W7["14. Capture lineage metadata"]
-    W8["15. Export run summary and AI context package"]
-end
-
-F1 --> A1 --> F2
-F2 --> A2 --> F3
-F3 --> T1
-T1 --> T2
-T2 --> W1 --> W2
-W2 --> A3 --> T3
-T3 --> W3
-W3 --> T4
-T4 --> W4 --> W5
-W5 --> A4 --> T5
-T5 --> W6
-W6 --> W7 --> A5 --> T6
-T6 --> W8 --> F4
-
-W3 -. "If drift or incremental risk is found" .-> T3
-W6 -. "If DQ or contract validation fails" .-> T5
-T6 -. "If lineage is unclear" .-> T4
-F4 -. "If business context is incomplete" .-> F2
+    AI["AI-assisted where useful:<br/>Copilot prompts or Fabric AI functions<br/>AI proposes, humans approve, framework records"]
+    AI -.-> HUMAN
+    AI -.-> FRAMEWORK
 ```
-
-## Where work happens
-
-- **Governance doc / metadata table** for purpose, steward, business metadata, labels, and business signoff.
-- **Profiling notebook** for source profiling and source metadata logging.
-- **Separate EDA notebook** for analyst interpretation, caveats, and assumptions.
-- **Main pipeline notebook** for parameter setup, source declaration, transformation logic, technical columns, and write pattern.
-- **Checks notebook / reusable gates** for drift checks, incremental safety, DQ rules, and contract validation.
-- **Handover notebook** for lineage summary, run summary, AI context export, and final handover package.
