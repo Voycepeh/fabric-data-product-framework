@@ -148,10 +148,21 @@ contract, errors = load_and_validate_dataset_contract(
 
 ```python
 import pandas as pd
-from fabric_data_product_framework.profiling import profile_dataframe
+from fabric_data_product_framework.profiling import (
+    flatten_profile_for_metadata,
+    profile_dataframe,
+)
 
 df = pd.DataFrame({"customer_id": [1, 2, 3], "amount": [10.5, 20.0, 30.0]})
 profile = profile_dataframe(df, dataset_name="synthetic_orders")
+
+source_profile = profile_dataframe(df_source, dataset_name="synthetic_orders", engine="spark")
+profile_rows = flatten_profile_for_metadata(
+    source_profile,
+    table_name="source.synthetic_orders",
+    run_id=ctx["run_id"],
+    table_stage="source",
+)
 ```
 
 ### Schema drift check

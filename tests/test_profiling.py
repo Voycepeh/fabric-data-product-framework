@@ -129,6 +129,3 @@ def test_profile_dataframe_engine_pandas_explicit():
     assert prof["column_count"] == 1
 
 
-def test_profile_dataframe_engine_spark_raises_not_implemented():
-    with pytest.raises(NotImplementedError, match="Spark profiling is planned but not implemented yet"):
-        profile_dataframe(FakeSparkDataFrame(), engine="spark")
