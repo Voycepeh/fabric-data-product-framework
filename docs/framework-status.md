@@ -7,6 +7,23 @@
 3. Schema snapshot and schema drift comparison
 4. Engine-aware dataframe API pattern for pandas, Spark, and auto mode
 5. Safe public examples and documentation structure
+6. Data quality rule execution
+7. AI-assisted DQ prompt, parse, validation, and compilation helpers
+8. AI-assisted transformation summary prompt, parse, and record helpers
+9. Row-level quarantine helper with partial rule coverage
+
+## Partially implemented
+
+1. Human approval pattern is documented, not a full approval workflow app/table yet
+2. Fabric AI provider call remains notebook-layer
+3. Quarantine is row-level for selected rules only
+
+## Planned
+
+1. Governance labeling checks
+2. AI context export
+3. Production dashboard schema
+4. Full row-level coverage or explicit aggregate-only handling for all rule types
 
 ## Proven in the Fabric notebook pattern
 
@@ -22,23 +39,6 @@
 10. Lakehouse write pattern
 11. Output profiling written to metadata table
 12. AI-assisted lineage prompt/template
-
-## Planned next
-
-1. Governance labeling checks
-2. AI context export
-
-## Implemented or partially implemented
-
-1. Data quality rule execution (`run_quality_rules`, quality result records, and quality gate)
-2. AI-assisted DQ rule generation workflow (provider-neutral prompt building/parsing/validation)
-3. DQ rule compilation from layman candidates to executable quality rules
-4. Row-level quarantine helper for pandas/Spark (`add_dq_failure_columns`, `split_valid_and_quarantine`)
-5. Human approval pattern documented in workflow docs (implementation pattern, not full governance app)
-6. AI-assisted transformation summary workflow (partially implemented: framework prompt/parse/record helpers; provider call remains notebook-layer)
-7. Data drift checks, incremental partition safety checks, runtime data contract enforcement, automated lineage summary, and run summary are implemented in this repository
-
-Note: AI provider integration remains notebook-layer (for example Fabric AI response APIs).
 
 ## GitHub vs Fabric
 

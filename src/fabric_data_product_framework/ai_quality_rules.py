@@ -10,18 +10,8 @@ from typing import Any
 from .quality import SUPPORTED_RULE_TYPES
 
 SUPPORTED_CANDIDATE_FIELDS = {
-    "rule_id",
-    "table_name",
-    "column",
-    "columns",
-    "layman_rule",
-    "rule_type",
-    "rule_config",
-    "severity",
-    "confidence",
-    "reason",
-    "evidence",
-    "approval_status",
+    "rule_id", "table_name", "column", "columns", "layman_rule", "rule_type", "rule_config",
+    "severity", "confidence", "reason", "evidence", "approval_status",
 }
 
 
@@ -72,23 +62,28 @@ def _strip_json_fences(text: str) -> str:
 
 def parse_ai_quality_rule_candidates(raw_response):
     try:
-        if isinstance(raw_response, str):
-            parsed = json.loads(_strip_json_fences(raw_response))
-        else:
-            parsed = raw_response
-        if not isinstance(parsed, list):
-            return {"ok": False, "candidates": [], "errors": ["AI response must be a JSON array"]}
+        parsed = json.loads(_strip_json_fences(raw_response)) if isinstance(raw_response, str) else raw_response
     except Exception as exc:
-        return {"ok": False, "candidates": [], "errors": [f"Invalid AI JSON response: {exc}"]}
+        return {"ok": False, "candidates": [], "errors": [f"Invalid AI JSON response: {exc}"], "warnings": []}
+    if not isinstance(parsed, list):
+        return {"ok": False, "candidates": [], "errors": ["AI response must be a JSON array"], "warnings": []}
 
-    normalized = [normalize_quality_rule_candidate(c) for c in parsed if isinstance(c, dict)]
-    errors = []
-    for c in normalized:
-        validation = validate_ai_quality_rule_candidate(c)
-        if not validation["is_valid"]:
-            errors.append(validation["message"])
-    clean = [c for c in normalized if validate_ai_quality_rule_candidate(c)["is_valid"]]
-    return {"ok": len(errors) == 0, "candidates": clean, "errors": errors}
+    errors: list[str] = []
+    warnings: list[str] = []
+    candidates = []
+    for idx, item in enumerate(parsed):
+        if not isinstance(item, dict):
+            warnings.append(f"Skipped non-dict item at index {idx}")
+            continue
+        c = normalize_quality_rule_candidate(item)
+        val = validate_ai_quality_rule_candidate(c)
+        c["is_valid_candidate"] = val["is_valid"]
+        c["validation_message"] = val["message"]
+        c["can_compile"] = val["is_valid"]
+        if not val["is_valid"]:
+            warnings.append(val["message"])
+        candidates.append(c)
+    return {"ok": len(errors) == 0, "candidates": candidates, "errors": errors, "warnings": warnings}
 
 
 def normalize_quality_rule_candidate(candidate):
@@ -106,14 +101,14 @@ def normalize_quality_rule_candidate(candidate):
 
 
 def validate_ai_quality_rule_candidate(candidate):
-    rule_type = candidate.get("rule_type")
-    if not rule_type:
+    rt = candidate.get("rule_type")
+    if not rt:
         return {"is_valid": False, "message": "Missing rule_type"}
-    if rule_type not in SUPPORTED_RULE_TYPES:
-        return {"is_valid": False, "message": f"Unsupported rule_type: {rule_type}"}
-    if rule_type in {"not_null", "unique", "accepted_values", "range_check", "regex_check", "freshness_check"} and not candidate.get("column"):
-        return {"is_valid": False, "message": f"Missing column for rule_type: {rule_type}"}
-    if rule_type == "unique_combination" and not candidate.get("columns"):
+    if rt not in SUPPORTED_RULE_TYPES:
+        return {"is_valid": False, "message": f"Unsupported rule_type: {rt}"}
+    if rt in {"not_null", "unique", "accepted_values", "range_check", "regex_check", "freshness_check"} and not candidate.get("column"):
+        return {"is_valid": False, "message": f"Missing column for rule_type: {rt}"}
+    if rt == "unique_combination" and not candidate.get("columns"):
         return {"is_valid": False, "message": "Missing columns for unique_combination"}
     return {"is_valid": True, "message": "ok"}
 
@@ -121,19 +116,20 @@ def validate_ai_quality_rule_candidate(candidate):
 def build_layman_rule_records(candidates, run_id, dataset_name, table_name):
     rows = []
     for i, c in enumerate(candidates):
-        rows.append(
-            {
-                "run_id": run_id,
-                "dataset_name": dataset_name,
-                "table_name": table_name,
-                "rule_id": c.get("rule_id") or f"AI_DQ_{i + 1:03d}",
-                "rule_type": c.get("rule_type"),
-                "layman_rule": c.get("layman_rule"),
-                "severity": c.get("severity", "warning"),
-                "confidence": c.get("confidence", "medium"),
-                "approval_status": c.get("approval_status", "candidate"),
-                "can_compile": validate_ai_quality_rule_candidate(c)["is_valid"],
-                "candidate_json": _jsonable(c),
-            }
-        )
+        can_compile = bool(c.get("can_compile")) if "can_compile" in c else validate_ai_quality_rule_candidate(c)["is_valid"]
+        rows.append({
+            "run_id": run_id,
+            "dataset_name": dataset_name,
+            "table_name": table_name,
+            "rule_id": c.get("rule_id") or f"AI_DQ_{i + 1:03d}",
+            "rule_type": c.get("rule_type"),
+            "layman_rule": c.get("layman_rule"),
+            "severity": c.get("severity", "warning"),
+            "confidence": c.get("confidence", "medium"),
+            "approval_status": c.get("approval_status", "candidate"),
+            "is_valid_candidate": c.get("is_valid_candidate", can_compile),
+            "validation_message": c.get("validation_message", "ok" if can_compile else "invalid candidate"),
+            "can_compile": can_compile,
+            "candidate_json": _jsonable(c),
+        })
     return rows

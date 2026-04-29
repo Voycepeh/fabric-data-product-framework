@@ -2,22 +2,35 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 import pandas as pd
 
 from .quality import _resolve_engine
+
+ROW_LEVEL_SUPPORTED = {"not_null", "regex_check", "accepted_values", "range_check", "unique", "unique_combination"}
+AGGREGATE_ONLY = {"row_count_min", "row_count_between", "freshness_check"}
 
 
 def _severity_bucket(severity: str) -> str:
     return "dq_errors" if str(severity).lower() == "critical" else "dq_warnings"
 
 
+def build_quarantine_rule_coverage_records(rules, run_id, dataset_name, table_name):
+    rows = []
+    for i, rule in enumerate(rules):
+        rt = rule.get("rule_type")
+        if rt in ROW_LEVEL_SUPPORTED:
+            status, message = "row_level_supported", "Rule evaluated at row level"
+        elif rt in AGGREGATE_ONLY:
+            status, message = "aggregate_only", "Rule is aggregate-level and not row-level executable"
+        else:
+            status, message = "unsupported", "Unsupported or unknown rule_type for quarantine row-level execution"
+        rows.append({"run_id": run_id, "dataset_name": dataset_name, "table_name": table_name, "rule_id": rule.get("rule_id", f"DQ{i + 1:03d}"), "rule_type": rt, "coverage_status": status, "coverage_message": message})
+    return rows
+
+
 def add_dq_failure_columns(df, rules, engine="auto"):
     resolved = _resolve_engine(df, engine)
-    if resolved == "spark":
-        return _add_spark(df, rules)
-    return _add_pandas(df, rules)
+    return _add_spark(df, rules) if resolved == "spark" else _add_pandas(df, rules)
 
 
 def split_valid_and_quarantine(df, rules, engine="auto"):
@@ -31,10 +44,7 @@ def split_valid_and_quarantine(df, rules, engine="auto"):
 
 def build_quarantine_summary_records(quarantine_df, run_id, dataset_name, table_name, engine="auto"):
     resolved = _resolve_engine(quarantine_df, engine)
-    if resolved == "spark":
-        q_count = quarantine_df.count()
-    else:
-        q_count = len(quarantine_df)
+    q_count = quarantine_df.count() if resolved == "spark" else len(quarantine_df)
     return [{"run_id": run_id, "dataset_name": dataset_name, "table_name": table_name, "quarantine_row_count": int(q_count), "engine": resolved}]
 
 
@@ -42,11 +52,15 @@ def _add_pandas(df: pd.DataFrame, rules):
     out = df.copy()
     out["dq_errors"] = [[] for _ in range(len(out))]
     out["dq_warnings"] = [[] for _ in range(len(out))]
+
     for i, rule in enumerate(rules):
-        msg = f"{rule.get('rule_id', f'DQ{i + 1:03d}')}: {rule.get('reason') or rule.get('rule_type')}"
+        rt = rule.get("rule_type")
+        if rt not in ROW_LEVEL_SUPPORTED:
+            continue
+        msg = f"{rule.get('rule_id', f'DQ{i + 1:03d}')}: {rule.get('reason') or rt}"
         bucket = _severity_bucket(rule.get("severity", "critical"))
         mask = pd.Series(False, index=out.index)
-        rt = rule.get("rule_type")
+
         if rt == "not_null":
             mask = out[rule["column"]].isna()
         elif rt == "regex_check":
@@ -60,8 +74,13 @@ def _add_pandas(df: pd.DataFrame, rules):
                 mask |= s.notna() & (s < rule["min_value"])
             if rule.get("max_value") is not None:
                 mask |= s.notna() & (s > rule["max_value"])
-        else:
-            continue
+        elif rt == "unique":
+            mask = out[rule["column"]].duplicated(keep=False) & out[rule["column"]].notna()
+        elif rt == "unique_combination":
+            cols = rule.get("columns", [])
+            if cols:
+                mask = out.duplicated(subset=cols, keep=False)
+
         for pos, failed in enumerate(mask.tolist()):
             if failed:
                 out.iat[pos, out.columns.get_loc(bucket)].append(msg)
@@ -73,9 +92,11 @@ def _add_spark(df, rules):
 
     out = df.withColumn("dq_errors", F.array().cast("array<string>")).withColumn("dq_warnings", F.array().cast("array<string>"))
     for i, rule in enumerate(rules):
-        msg = f"{rule.get('rule_id', f'DQ{i + 1:03d}')}: {rule.get('reason') or rule.get('rule_type')}"
-        bucket = _severity_bucket(rule.get("severity", "critical"))
         rt = rule.get("rule_type")
+        if rt not in ROW_LEVEL_SUPPORTED:
+            continue
+        msg = f"{rule.get('rule_id', f'DQ{i + 1:03d}')}: {rule.get('reason') or rt}"
+        bucket = _severity_bucket(rule.get("severity", "critical"))
         cond = None
         if rt == "not_null":
             cond = F.col(rule["column"]).isNull()
@@ -90,6 +111,19 @@ def _add_spark(df, rules):
             if rule.get("max_value") is not None:
                 cond = cond | (F.col(rule["column"]) > F.lit(rule["max_value"]))
             cond = F.col(rule["column"]).isNotNull() & cond
+        elif rt == "unique":
+            c = rule["column"]
+            dup = df.groupBy(c).count().filter((F.col(c).isNotNull()) & (F.col("count") > 1)).select(c)
+            cond = F.col(c).isNotNull() & F.col(c).isin([r[c] for r in dup.collect()])
+        elif rt == "unique_combination":
+            cols = rule.get("columns", [])
+            dup = df.groupBy(*cols).count().filter(F.col("count") > 1).select(*cols)
+            cond = F.lit(False)
+            for row in dup.collect():
+                row_cond = F.lit(True)
+                for c in cols:
+                    row_cond = row_cond & (F.col(c) == F.lit(row[c]))
+                cond = cond | row_cond
         if cond is None:
             continue
         out = out.withColumn(bucket, F.when(cond, F.array_union(F.col(bucket), F.array(F.lit(msg)))).otherwise(F.col(bucket)))
