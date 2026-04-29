@@ -1,20 +1,16 @@
-# AI in the Loop
+# AI-Assisted Steps
 
-AI helps reduce documentation and metadata burden across the data product lifecycle.
+AI is a support mechanism, not an accountable actor.
 
-## Where AI helps
+## Where AI can assist
 
-AI can:
-- draft business metadata
-- summarise profiling results
-- suggest data quality checks
-- recommend labels
-- draft contracts
-- generate lineage diagrams
-- prepare handover notes
+- Copilot in notebook can help draft EDA explanations, transformation summaries, lineage diagrams, DQ rule candidates, and handover notes.
+- Fabric AI functions may be used in notebook-layer workflows.
 
-## Accountability boundary
+## Approval and control boundary
 
-AI should not silently approve labels, contracts, DQ thresholds, business definitions, or production readiness.
+- AI output must be reviewed before being committed into contracts, rules, labels, or handover docs.
+- AI should not approve production readiness.
+- AI should not silently change pipeline logic.
 
-**AI assists; humans remain accountable.**
+**AI proposes. Humans approve. The framework validates and records.**
