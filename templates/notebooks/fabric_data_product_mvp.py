@@ -5,6 +5,7 @@ Copy into a Fabric notebook and wire the adapter functions below.
 
 # 1. Imports
 from fabric_data_product_framework.config import load_and_validate_dataset_contract
+from fabric_data_product_framework.contracts import assert_contracts_valid, build_contract_validation_records, validate_runtime_contracts
 from fabric_data_product_framework.drift import (
     assert_no_blocking_schema_drift,
     build_schema_snapshot,
@@ -20,6 +21,7 @@ from fabric_data_product_framework.metadata import (
 )
 from fabric_data_product_framework.profiling import flatten_profile_for_metadata, profile_dataframe
 from fabric_data_product_framework.quality import assert_quality_gate, build_quality_result_records, run_quality_rules
+from fabric_data_product_framework.run_summary import build_run_summary, build_run_summary_record, render_run_summary_markdown
 from fabric_data_product_framework.runtime import assert_notebook_name_valid, build_runtime_context
 from fabric_data_product_framework.technical_columns import add_loaded_at, add_pipeline_run_id, default_technical_columns
 
@@ -158,11 +160,23 @@ quality_records = build_quality_result_records(quality_result, run_id=ctx["run_i
 #     raise
 assert_quality_gate(quality_result)
 
-# 15. Write target only after gate passes
+
+
+# 15. Runtime contract enforcement
+contract_result = validate_runtime_contracts(
+    source_df=df_source,
+    output_df=df_output,
+    contract=contract,
+    engine="auto",
+)
+assert_contracts_valid(contract_result)
+contract_validation_records = build_contract_validation_records(contract_result, run_id=ctx["run_id"])
+
+# 16. Write target only after gate passes
 if not DRY_RUN and not PROFILE_ONLY:
     write_table(df_output, target_table_identifier, writer=fabric_table_writer, mode="overwrite")
 
-# 16. Read/profile output
+# 17. Read/profile output
 if DRY_RUN:
     df_written = df_output
 else:
@@ -177,7 +191,7 @@ output_profile_rows = flatten_profile_for_metadata(
     exclude_columns=default_technical_columns(),
 )
 
-# 17. Build metadata records
+# 18. Build metadata records
 dataset_run_row = build_dataset_run_record(
     run_id=ctx["run_id"],
     dataset_name=ctx["dataset_name"],
@@ -197,13 +211,30 @@ schema_drift_rows = build_schema_drift_records(
     table_stage="source",
 )
 
-# 18. Write metadata records
+# 19. Build final run summary
+run_summary = build_run_summary(
+    runtime_context=ctx,
+    contract=contract,
+    source_profile=source_profile,
+    output_profile=output_profile,
+    schema_drift_result=schema_drift_result,
+    quality_result=quality_result,
+    contract_validation_result=contract_result,
+    notes=["MVP notebook template run."],
+)
+summary_markdown = render_run_summary_markdown(run_summary)
+print(summary_markdown)
+run_summary_record = build_run_summary_record(run_summary)
+
+# 20. Write metadata records
 metadata_outputs = {
     "dataset_runs": [dataset_run_row],
     "column_profiles": source_profile_rows + output_profile_rows,
     "schema_snapshots": schema_snapshot_rows,
     "schema_drift_results": schema_drift_rows,
     "quality_results": quality_records,
+    "contract_validation_results": contract_validation_records,
+    "run_summaries": [run_summary_record],
 }
 metadata_table_mapping = {
     "dataset_runs": "metadata.dataset_runs",
@@ -211,6 +242,8 @@ metadata_table_mapping = {
     "schema_snapshots": "metadata.schema_snapshots",
     "schema_drift_results": "metadata.schema_drift_results",
     "quality_results": "metadata.quality_results",
+    "contract_validation_results": "metadata.contract_validation_results",
+    "run_summaries": "metadata.run_summaries",
 }
 if not DRY_RUN:
     write_multiple_metadata_outputs(
@@ -220,13 +253,3 @@ if not DRY_RUN:
         mode="append",
     )
 
-# 19. Build final run summary placeholder
-run_summary = {
-    "run_id": ctx["run_id"],
-    "dataset_name": ctx["dataset_name"],
-    "source_row_count": source_profile.get("row_count"),
-    "output_row_count": output_profile.get("row_count"),
-    "dry_run": DRY_RUN,
-    "profile_only": PROFILE_ONLY,
-}
-print(run_summary)

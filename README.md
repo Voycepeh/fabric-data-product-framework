@@ -73,3 +73,38 @@ See [docs/quick-start.md](docs/quick-start.md) for runnable examples and setup d
 
 ## Callable Function Reference
 See [src/README.md](src/README.md) for callable API references.
+
+
+## Runtime contract enforcement and run summary
+
+```python
+from fabric_data_product_framework.contracts import (
+    validate_runtime_contracts,
+    assert_contracts_valid,
+)
+
+contract_result = validate_runtime_contracts(
+    source_df=df_source,
+    output_df=df_output,
+    contract=contract,
+    engine="spark",
+)
+assert_contracts_valid(contract_result)
+
+from fabric_data_product_framework.run_summary import (
+    build_run_summary,
+    render_run_summary_markdown,
+)
+
+summary = build_run_summary(
+    runtime_context=ctx,
+    contract=contract,
+    source_profile=source_profile,
+    output_profile=output_profile,
+    quality_result=quality_result,
+    contract_validation_result=contract_result,
+)
+print(render_run_summary_markdown(summary))
+```
+
+See [docs/contract-enforcement.md](docs/contract-enforcement.md) and [docs/run-summary.md](docs/run-summary.md).
