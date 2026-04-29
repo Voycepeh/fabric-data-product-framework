@@ -7,6 +7,23 @@
 3. Schema snapshot and schema drift comparison
 4. Engine-aware dataframe API pattern for pandas, Spark, and auto mode
 5. Safe public examples and documentation structure
+6. Data quality rule execution
+7. AI-assisted DQ prompt, parse, validation, and compilation helpers
+8. AI-assisted transformation summary prompt, parse, and record helpers
+9. Row-level quarantine helper with partial rule coverage
+
+## Partially implemented
+
+1. Human approval pattern is documented, not a full approval workflow app/table yet
+2. Fabric AI provider call remains notebook-layer
+3. Quarantine is row-level for selected rules only
+
+## Planned
+
+1. Governance labeling checks
+2. AI context export
+3. Production dashboard schema
+4. Full row-level coverage or explicit aggregate-only handling for all rule types
 
 ## Proven in the Fabric notebook pattern
 
@@ -22,17 +39,6 @@
 10. Lakehouse write pattern
 11. Output profiling written to metadata table
 12. AI-assisted lineage prompt/template
-
-## Planned next
-
-1. Data drift checks
-2. Incremental partition safety checks
-3. Data quality rule execution
-4. Governance labeling checks
-5. Runtime data contract enforcement
-6. Automated lineage summary
-7. Run summary
-8. AI context export
 
 ## GitHub vs Fabric
 
