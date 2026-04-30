@@ -45,8 +45,18 @@ quality:
 drift:
   schema_enabled: true
   data_enabled: true
-  schema_policy: {}
-  data_policy: {}
+  schema_policy:
+    fail_on_missing_columns: true
+    fail_on_type_changes: true
+    allow_new_columns: false
+  data_policy:
+    partition_column: business_date
+    business_keys:
+      - order_id
+    watermark_column: updated_at
+    max_row_count_change_percent: 50
+  baseline_schema_table: fw_metadata.schema_snapshots
+  baseline_partition_table: fw_metadata.partition_snapshots
 
 governance:
   classify_columns: false
