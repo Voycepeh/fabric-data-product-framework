@@ -1,47 +1,54 @@
 # Fabric Data Product Framework
 
-A Microsoft Fabric-first framework for building governed, quality-checked, drift-aware, contract-validated, handover-ready data products in Fabric notebooks.
+A reusable Fabric-first notebook framework that turns raw/source data into documented, profiled, quality-checked, drift-aware, governed, AI-ready data products.
 
-## What this framework is
-A reusable framework and notebook pattern for standardizing the control-plane work around a dataset: profiling, drift checks, quality checks, contract validation, lineage, and run artifacts.
+## 1) What this framework is
+This project is a **metadata-first data contract workflow** for Microsoft Fabric notebooks. It is not just a pipeline template: profiling metadata and contract metadata drive repeatable checks, AI-assisted drafting, human approvals, and handover artefacts.
 
-## Why it exists
-Data teams repeatedly rebuild the same delivery controls. This framework keeps those controls consistent so practitioners can focus on business logic and interpretation.
+## 2) What problem it solves
+Data teams often rebuild quality checks, drift controls, governance steps, and run documentation in every notebook. This framework standardises those controls so teams can focus on business transformation logic while keeping governance and release readiness consistent.
 
-## Who it is for
-- Data practitioners and analysts who are comfortable with Python notebooks.
-- Junior-to-mid engineers who need a clear, testable Fabric operating model.
-- Teams that want AI assistance without removing human accountability.
+## 3) MVP lifecycle
+The canonical 13-step lifecycle is documented in [docs/lifecycle-operating-model.md](docs/lifecycle-operating-model.md), including the Mermaid flow and step-by-step responsibilities.
 
-## Three-lane operating model
-| Lane | Responsibility |
-|---|---|
-| Outside Fabric | Prepare purpose, approved usage, caveats, and supporting context before runtime. |
-| Inside Fabric: Human-guided | Configure parameters, interpret profiles, write transformations, review exceptions, approve outcomes. |
-| Inside Fabric: Framework-run | Run deterministic checks, enforce gates, log metadata, and produce handover artifacts. |
+## 4) Module capabilities
+Current capability status (implemented vs missing vs next build priorities) is maintained in [docs/capability-status.md](docs/capability-status.md).
 
-## Where AI fits
-AI supports drafting and summarisation inside the human-guided and framework-run lanes. It does not replace approval or framework gates.
+## 5) AI-in-the-loop responsibilities
+AI is used to **suggest, draft, explain, and accelerate**:
+- DQ rule candidates from profiling + context.
+- Sensitivity/governance draft labels from metadata.
+- Transformation and lineage summaries for handover.
 
-**Boundary:** AI proposes. Humans approve. The framework validates and records.
+AI does **not** own the data product lifecycle.
+
+## 6) What humans still own
+Humans remain accountable for:
+- Business purpose, approved usage, and consumer intent.
+- DQ rule approval (accept/edit/reject).
+- Sensitivity labels, masking decisions, and publish constraints.
+- Production promotion readiness.
+
+## 7) Current implementation status
+- Canonical status: [docs/capability-status.md](docs/capability-status.md)
+- Implementation detail: [docs/framework-status.md](docs/framework-status.md)
+- Callable APIs: [src/README.md](src/README.md)
+
+## 8) How to test the MVP end to end
+- Local smoke test: [docs/local-smoke-test.md](docs/local-smoke-test.md)
+- Fabric smoke test: [docs/fabric-smoke-test.md](docs/fabric-smoke-test.md)
+- Quick start notebooks/examples: [docs/quick-start.md](docs/quick-start.md), [examples/fabric_smoke_test/README.md](examples/fabric_smoke_test/README.md)
+
+## 9) Roadmap
+Roadmap and operating priorities:
+- [docs/capability-status.md](docs/capability-status.md)
+- [docs/product-plan.md](docs/product-plan.md)
 
 ## Start here
-- Lifecycle and notebook journey: [docs/lifecycle-operating-model.md](docs/lifecycle-operating-model.md)
-- AI workflow and guardrails: [docs/workflows/ai-generated-dq-rules.md](docs/workflows/ai-generated-dq-rules.md)
-- Capability status: [docs/capability-status.md](docs/capability-status.md)
-- Local testing: [docs/local-smoke-test.md](docs/local-smoke-test.md)
-- Fabric testing: [docs/fabric-smoke-test.md](docs/fabric-smoke-test.md)
+- Lifecycle and MVP flow: [docs/lifecycle-operating-model.md](docs/lifecycle-operating-model.md)
+- AI DQ workflow: [docs/workflows/ai-generated-dq-rules.md](docs/workflows/ai-generated-dq-rules.md)
+- AI transformation summary workflow: [docs/workflows/ai-transformation-summary.md](docs/workflows/ai-transformation-summary.md)
 - Function/API reference: [src/README.md](src/README.md)
-
-## Documentation map
-- [Getting started](docs/getting-started.md)
-- [Lifecycle operating model](docs/lifecycle-operating-model.md)
-- [Notebook structure](docs/notebook-structure.md)
-- [Contract enforcement](docs/contract-enforcement.md)
-- [Run summary](docs/run-summary.md)
-- [Lineage](docs/lineage.md)
-- [Public repo safety](docs/public-repo-safety.md)
-
 
 ## Callable Function Reference
 See [src/README.md](src/README.md) for callable APIs and minimal usage examples.
