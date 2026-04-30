@@ -146,6 +146,8 @@ Fabric notebook setup for AI mode:
 
 ```python
 %pip install openai pydantic
+```
+
 ## Governance classifier
 
 Functions from `src/fabric_data_product_framework/governance_classifier.py`.
