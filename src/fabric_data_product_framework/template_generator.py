@@ -33,6 +33,7 @@ def create_pipeline_notebook_template(
 
 # %%
 from fabric_data_product_framework.fabric_notebook import (
+    load_fabric_config,
     get_path,
     check_naming_convention,
     lakehouse_table_read,
@@ -42,8 +43,10 @@ from fabric_data_product_framework.fabric_notebook import (
     ODI_METADATA_LOGGER,
 )
 
-lh_in = get_path("{source_env}", "{source_target}")
-lh_out = get_path("{output_env}", "{output_target}")
+fabric_config = load_fabric_config("Files/configs/fabric_houses.yaml")
+
+lh_in = get_path("{source_env}", "{source_target}", config=fabric_config)
+lh_out = get_path("{output_env}", "{output_target}", config=fabric_config)
 check_naming_convention()
 
 # %% [markdown]
@@ -112,10 +115,18 @@ lakehouse_table_write(
     df_output,
     lh_out,
     output_table,
-    mode="overwrite",
-    partition_by="p_bucket",
-    repartition_by=("p_bucket",)
+    mode="overwrite"
 )
+
+# Optional for large tables after add_system_technical_columns creates p_bucket:
+# lakehouse_table_write(
+#     df_output,
+#     lh_out,
+#     output_table,
+#     mode="overwrite",
+#     partition_by="p_bucket",
+#     repartition_by=("p_bucket",)
+# )
 
 # %% [markdown]
 # # 12. Output profiling metadata
@@ -150,7 +161,7 @@ lakehouse_table_write(
 # # 15. AI Copilot prompt cells
 
 # %% [markdown]
-# **AI prompt: Transformation summary**  
+# **AI prompt: Transformation summary**
 # Ask Copilot to inspect the transformation code above and produce a concise transformation summary with:
 # - step name
 # - input dataframe
@@ -160,16 +171,16 @@ lakehouse_table_write(
 # - data quality risk
 
 # %% [markdown]
-# **AI prompt: Data lineage**  
+# **AI prompt: Data lineage**
 # Ask Copilot to identify important dataframes in this notebook and create a Mermaid lineage diagram.
 
 # %% [markdown]
-# **AI prompt: Data quality rules**  
+# **AI prompt: Data quality rules**
 # Ask Copilot to review the source profile, output profile, and business purpose, then propose layman data quality rules.
 # It must not invent rules without evidence. It should separate must fail rules from warning rules.
 
 # %% [markdown]
-# **AI prompt: Handover readiness**  
+# **AI prompt: Handover readiness**
 # Ask Copilot to review whether the notebook is ready for another analyst or junior engineer to take over.
 '''
 

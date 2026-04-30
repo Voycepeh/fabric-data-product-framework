@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any, Dict
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
+from pathlib import Path
 import uuid
 import tempfile
 import hashlib
@@ -46,8 +47,65 @@ EXAMPLE_CONFIG: Dict[str, Dict[str, Housepath]] = {
 }
 
 
-def get_path(env: str = DEFAULT_ENV, target: str = DEFAULT_TARGET, config: dict | None = None) -> Any:
-    active_config = config or EXAMPLE_CONFIG
+def load_fabric_config(path: str | Path) -> dict[str, dict[str, Housepath]]:
+    try:
+        import yaml
+    except ImportError as exc:
+        raise ImportError(
+            "PyYAML is required to load Fabric config files. Install with `pip install pyyaml`."
+        ) from exc
+
+    config_path = Path(path)
+    if not config_path.exists():
+        raise FileNotFoundError(f"Fabric config file not found: {config_path}")
+
+    raw = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
+    environments = raw.get("environments")
+    if not isinstance(environments, dict) or not environments:
+        raise ValueError("Fabric config must define a non-empty top-level 'environments' mapping.")
+
+    required = {"workspace_id", "house_id", "house_name", "root"}
+    parsed: dict[str, dict[str, Housepath]] = {}
+    for env_name, targets in environments.items():
+        if not isinstance(targets, dict) or not targets:
+            raise ValueError(f"Environment '{env_name}' must contain target mappings.")
+
+        parsed[env_name] = {}
+        for target_name, payload in targets.items():
+            if not isinstance(payload, dict):
+                raise ValueError(f"Target '{env_name}/{target_name}' must be a mapping.")
+            missing = required - set(payload.keys())
+            if missing:
+                missing_fields = ", ".join(sorted(missing))
+                raise ValueError(
+                    f"Target '{env_name}/{target_name}' is missing required fields: {missing_fields}."
+                )
+            parsed[env_name][target_name] = Housepath(
+                workspace_id=str(payload["workspace_id"]),
+                house_id=str(payload["house_id"]),
+                house_name=str(payload["house_name"]),
+                root=str(payload["root"]),
+            )
+
+    return parsed
+
+
+def get_path(
+    env: str = DEFAULT_ENV,
+    target: str = DEFAULT_TARGET,
+    config: dict | None = None,
+    use_example_config: bool = False,
+) -> Any:
+    if config is None:
+        if not use_example_config:
+            raise ValueError(
+                "No Fabric config was provided. Load one with load_fabric_config(...) "
+                "or pass use_example_config=True for documentation examples."
+            )
+        active_config = EXAMPLE_CONFIG
+    else:
+        active_config = config
+
     try:
         return active_config[env][target]
     except KeyError as exc:
@@ -451,30 +509,78 @@ def ODI_METADATA_LOGGER(df, tablename: str, exclude_columns=None, run_timestamp_
     return df_profile
 
 
-def transformation_summary(transformation_details):
-    if isinstance(transformation_details, str):
-        try:
-            transformation_details = ast.literal_eval(transformation_details)
-        except (ValueError, SyntaxError):
-            return transformation_details
+def transformation_summary(code: str):
+    tree = ast.parse(code)
+    steps: list[dict[str, str]] = []
 
-    if isinstance(transformation_details, dict):
-        lines = []
-        for key, value in transformation_details.items():
-            lines.append(f"- {key}: {value}")
-        return "\n".join(lines)
-
-    return str(transformation_details)
-
-
-def transformation_reasons(step_name=None, reason=None, context=None):
-    runtime_context = context or _get_fabric_runtime_context()
-    payload = {
-        "step_name": step_name,
-        "reason": reason,
-        "captured_at_utc": datetime.now(timezone.utc).isoformat(),
-        "run_date_local": (datetime.now(timezone.utc) + timedelta(hours=8)).date().isoformat(),
-        "notebook_name": runtime_context.get("currentNotebookName", "local_notebook"),
-        "run_hash": hashlib.sha256(f"{step_name}|{reason}".encode("utf-8")).hexdigest()[:16],
+    op_map = {
+        "select": "Select specific columns",
+        "withColumn": "Create or modify column",
+        "drop": "Drop columns",
+        "withColumnRenamed": "Rename column",
+        "join": "Join with another dataframe",
+        "dropDuplicates": "Drop duplicate rows",
+        "distinct": "Keep distinct rows",
+        "union": "Union with another dataframe",
+        "unionByName": "Union by name with another dataframe",
+        "dropna": "Drop rows with null values",
+        "fillna": "Fill null values",
+        "trim": "Trim whitespace",
     }
-    return payload
+
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+
+        if isinstance(node.func, ast.Attribute):
+            method = node.func.attr
+            if method in op_map:
+                steps.append({"step": len(steps) + 1, "summary": op_map[method]})
+            if method in {"when", "otherwise"}:
+                steps.append({"step": len(steps) + 1, "summary": "Conditional classification logic"})
+            if method == "split" and node.args:
+                for arg in node.args:
+                    if isinstance(arg, ast.Constant) and arg.value == "@":
+                        steps.append({"step": len(steps) + 1, "summary": "Split column by @ to derive domain"})
+                        break
+
+    if not steps:
+        steps.append({"step": 1, "summary": "No recognized transformation operations found"})
+
+    return pd.DataFrame(steps, columns=["step", "summary"])
+
+
+def transformation_reasons(pdf, reason, spark_session=None):
+    spark_obj = _get_spark(spark_session)
+    context = _get_fabric_runtime_context()
+
+    notebook_name = context.get("currentNotebookName", "local_notebook")
+    workspace_name = context.get("currentWorkspaceName", "")
+    user_name = context.get("userName", "local_user")
+
+    if isinstance(reason, str):
+        reasons = [reason] * len(pdf)
+    elif isinstance(reason, pd.Series):
+        reasons = reason.tolist()
+    else:
+        reasons = list(reason)
+
+    if len(reasons) != len(pdf):
+        raise ValueError("reason list length must match transformation_summary row count.")
+
+    code_id = hashlib.sha256("|".join(pdf["summary"].astype(str)).encode("utf-8")).hexdigest()[:16]
+    run_timestamp = datetime.now(timezone.utc).isoformat()
+
+    out_pdf = pdf.copy()
+    out_pdf["reason"] = reasons
+    out_pdf["notebook_name"] = notebook_name
+    out_pdf["workspace_name"] = workspace_name
+    out_pdf["user_name"] = user_name
+    out_pdf["code_id"] = code_id
+    out_pdf["run_timestamp"] = run_timestamp
+
+    out_pdf["step"] = out_pdf["step"].astype(int)
+    out_pdf = out_pdf[
+        ["step", "summary", "reason", "notebook_name", "workspace_name", "user_name", "code_id", "run_timestamp"]
+    ]
+    return spark_obj.createDataFrame(out_pdf)

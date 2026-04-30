@@ -36,3 +36,6 @@ secrets.*
 .DS_Store
 .vscode/
 .idea/
+configs/fabric_houses.yaml
+configs/*.local.yaml
+.env

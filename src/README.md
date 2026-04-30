@@ -273,4 +273,4 @@ The framework now includes legacy-compatible Fabric notebook helpers in `fabric_
 
 ## Notebook template generator
 
-Use `create_pipeline_notebook_template(...)` from `template_generator.py` to generate a cell-separated `.py` notebook template (`# %` and `# % [markdown]`) that follows the framework workflow and Copilot-friendly section-by-section authoring pattern.
+Use `create_pipeline_notebook_template(...)` from `template_generator.py` to generate a cell-separated `.py` notebook template (`# %%` and `# %% [markdown]`) that follows the framework workflow and Copilot-friendly section-by-section authoring pattern.

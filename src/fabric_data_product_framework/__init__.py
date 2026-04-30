@@ -7,6 +7,7 @@ from .fabric_notebook import (
     check_naming_convention,
     clean_datetime_columns,
     get_path,
+    load_fabric_config,
     lakehouse_csv_read,
     lakehouse_excel_read_as_spark,
     lakehouse_parquet_read_as_spark,
@@ -25,6 +26,7 @@ __version__ = "0.1.0"
 __all__ = [
     "Housepath",
     "get_path",
+    "load_fabric_config",
     "lakehouse_table_read",
     "lakehouse_table_write",
     "lakehouse_csv_read",
