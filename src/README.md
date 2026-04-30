@@ -66,7 +66,12 @@ Functions from `src/fabric_data_product_framework/profiling.py`.
 | `profile_column` | Profile one pandas series. | Column-level diagnostics. |
 | `profile_dataframe` | Profile a pandas or Spark dataframe. | Baseline source/output table profiling. |
 | `flatten_profile_for_metadata` | Flatten profile output into metadata record rows. | Persist profile results in metadata tables/files. |
+| `write_profile_metadata_rows` | Write flattened profile rows to Spark metadata tables via JSON normalization. | Fabric-safe profile metadata writes without manual schema handling. |
+| `profile_and_write_metadata` | Profile a dataframe and write metadata in one call. | Simplify source/output profiling notebooks. |
+| `profile_table_and_write_metadata` | Read a table, profile it, and write metadata in one call. | One-call Fabric smoke-test profiling flow. |
 | `summarize_profile` | Create a compact high-level profile summary. | Build quick observability summaries. |
+
+`write_profile_metadata_rows`, `profile_and_write_metadata`, and `profile_table_and_write_metadata` are Spark/Fabric convenience helpers for `saveAsTable` metadata sinks. For generic/custom sinks, use `metadata.write_metadata_records` with an injected writer adapter.
 
 ## Drift and incremental safety
 

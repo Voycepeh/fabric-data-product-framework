@@ -38,3 +38,23 @@ metadata_rows = flatten_profile_for_metadata(
     exclude_columns=default_technical_columns(),
 )
 ```
+
+## One-call Fabric metadata write
+
+Use `profile_table_and_write_metadata` to avoid manual chaining of `profile_dataframe` + `flatten_profile_for_metadata` + `spark.createDataFrame` + `saveAsTable`.
+
+```python
+from fabric_data_product_framework.profiling import profile_table_and_write_metadata
+
+profile_table_and_write_metadata(
+    spark=spark,
+    table_name="fw_smoke_source_orders",
+    dataset_name="framework_smoke_orders",
+    metadata_table="fw_metadata.source_profile_records",
+    run_id=RUN_ID,
+    table_stage="source",
+    mode="overwrite",
+)
+```
+
+These helpers are Spark/Fabric convenience APIs for `saveAsTable`-compatible metadata tables. For runtime-agnostic adapter flows, keep using `fabric_data_product_framework.metadata.write_metadata_records(...)` with an injected writer.

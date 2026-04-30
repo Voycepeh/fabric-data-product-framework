@@ -20,7 +20,11 @@ from fabric_data_product_framework.metadata import (
     build_schema_snapshot_records,
     write_multiple_metadata_outputs,
 )
-from fabric_data_product_framework.profiling import flatten_profile_for_metadata, profile_dataframe
+from fabric_data_product_framework.profiling import (
+    flatten_profile_for_metadata,
+    profile_and_write_metadata,
+    profile_dataframe,
+)
 from fabric_data_product_framework.quality import assert_quality_gate, build_quality_result_records, run_quality_rules
 from fabric_data_product_framework.run_summary import build_run_summary, build_run_summary_record, render_run_summary_markdown
 from fabric_data_product_framework.runtime import assert_notebook_name_valid, build_runtime_context
@@ -90,6 +94,17 @@ source_profile_rows = flatten_profile_for_metadata(
     table_stage="source",
     exclude_columns=default_technical_columns(),
 )
+# Optional one-call Fabric helper:
+# profile_and_write_metadata(
+#     spark=spark,
+#     df=df_source,
+#     dataset_name=ctx["dataset_name"],
+#     table_name=source_table_identifier,
+#     metadata_table="fw_metadata.source_profile_records",
+#     run_id=ctx["run_id"],
+#     table_stage="source",
+#     mode="append",
+# )
 
 # 10. Optional schema drift comparison
 # Replace baseline snapshot retrieval with your own metadata table read.
@@ -286,4 +301,3 @@ if not DRY_RUN:
         writer=metadata_writer,
         mode="append",
     )
-
