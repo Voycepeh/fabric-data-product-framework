@@ -358,7 +358,7 @@ Functions from `src/fabric_data_product_framework/data_contract.py`.
 | `load_data_contract` | Load a contract from YAML path or in-memory dict. | Notebook entrypoint for contract-first runs. |
 | `validate_data_contract_shape` | Validate required MVP contract sections/keys for orchestration. | Fail early when contract shape is incomplete. |
 | `build_runtime_context_from_contract` | Build run context (dataset/env/source/target/run_id) from contract with optional overrides. | Use before executing contract-driven steps. |
-| `run_data_product` | Orchestrate source read, profiling, snapshots, transform, technical columns, quality, quarantine, contract checks, lineage, summary, and gated write. | Main contract runner API. |
+| `run_data_product` | Orchestrate contract normalization, profiling, DQ workflow, schema drift, data drift, governance classification, contract validation, lineage, run summary, and gated write. | Main contract runner API. |
 | `assert_data_product_passed` | Raise if run result is not passed. | Simple post-run gate in notebooks/pipelines. |
 
 ```python
@@ -373,7 +373,7 @@ result = fw.run_data_product(
 fw.assert_data_product_passed(result)
 ```
 
-`run_data_product` assumes Spark/Fabric-compatible table access (`spark.table`, `saveAsTable`) and metadata sink tables declared under `contract["metadata"]`.
+`run_data_product` now coordinates profiling, DQ workflow, schema drift, data drift, governance classification, contract validation, lineage, run summary, and gated target writes. It assumes Spark/Fabric-compatible table access (`spark.table`, `saveAsTable`) and metadata sink tables declared under `contract["metadata"]`.
 
 This runner treats the pipeline as one contract execution unit (not a manual checklist of utility calls).
 

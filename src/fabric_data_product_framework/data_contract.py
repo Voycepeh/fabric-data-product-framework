@@ -8,12 +8,25 @@ from typing import Any
 
 from fabric_data_product_framework.config import load_dataset_contract
 from fabric_data_product_framework.contracts import build_contract_validation_records, validate_runtime_contracts
-from fabric_data_product_framework.drift import build_schema_snapshot
-from fabric_data_product_framework.incremental import build_partition_snapshot
+from fabric_data_product_framework.drift_checkers import (
+    build_and_write_partition_snapshot,
+    build_and_write_schema_snapshot,
+    check_partition_drift,
+    check_schema_drift,
+    load_latest_partition_snapshot,
+    load_latest_schema_snapshot,
+    summarize_drift_results,
+)
 from fabric_data_product_framework.lineage import build_lineage_records
-from fabric_data_product_framework.metadata import build_dataset_run_record, build_schema_snapshot_records, write_metadata_records
+from fabric_data_product_framework.metadata import build_dataset_run_record, write_metadata_records
 from fabric_data_product_framework.profiling import default_technical_columns, flatten_profile_for_metadata, profile_dataframe
 from fabric_data_product_framework.dq import run_dq_workflow
+from fabric_data_product_framework.governance_classifier import (
+    build_governance_classification_records,
+    classify_columns,
+    summarize_governance_classifications,
+    write_governance_classifications,
+)
 from fabric_data_product_framework.quality import build_quality_result_records
 from fabric_data_product_framework.quarantine import split_valid_and_quarantine
 from fabric_data_product_framework.run_summary import build_run_summary, build_run_summary_record
@@ -387,22 +400,29 @@ def run_data_product(spark, contract: dict | DataProductContract, transform=None
     mode = _refresh_mode(effective_contract)
     src_df = source_df if source_df is not None else spark.table(source_table)
     md = asdict(metadata)
+    if mode == "incremental" and n.source.partition_column and n.source.partition_column not in getattr(src_df, "columns", []):
+        return {"status": "failed", "can_continue": False, "errors": [f"Incremental partition column missing in source dataframe: {n.source.partition_column}"], "runtime_context": ctx}
 
     source_profile = profile_dataframe(src_df, dataset_name=dataset_name)
     if write_metadata:
         _write_records_spark(spark, flatten_profile_for_metadata(source_profile, source_table, ctx["run_id"], "source"), md["source_profile_table"])
-    source_schema_snapshot = build_schema_snapshot(src_df, dataset_name=dataset_name, table_name=source_table)
-    if write_metadata:
-        _write_records_spark(spark, build_schema_snapshot_records(source_schema_snapshot, run_id=ctx["run_id"], table_stage="source"), md["schema_snapshot_table"])
-
-    partition_snapshot = None
-    if mode == "incremental":
-        try:
-            partition_snapshot = build_partition_snapshot(src_df, dataset_name=dataset_name, table_name=source_table, partition_column=n.source.partition_column, business_keys=n.source.business_keys, watermark_column=n.source.watermark_column, run_id=ctx["run_id"], engine="auto")
-        except (ValueError, KeyError, TypeError) as exc:
-            return {"status": "failed", "can_continue": False, "errors": [f"Incremental partition snapshot failed: {exc}"], "runtime_context": ctx}
-        if write_metadata:
-            _write_records_spark(spark, partition_snapshot, md["partition_snapshot_table"])
+    schema_drift_result = {"status": "disabled", "can_continue": True}
+    schema_snapshot_write = None
+    schema_baseline_table = n.drift.baseline_schema_table or md.get("schema_snapshot_table")
+    if n.drift.schema_enabled:
+        baseline = load_latest_schema_snapshot(spark, schema_baseline_table, dataset_name=dataset_name, table_name=source_table) if schema_baseline_table else None
+        schema_drift_result = check_schema_drift(
+            df=src_df,
+            dataset_name=dataset_name,
+            table_name=source_table,
+            baseline_snapshot=baseline,
+            policy=n.drift.schema_policy,
+            engine="auto",
+        )
+        if write_metadata and md.get("schema_snapshot_table"):
+            schema_snapshot_write = build_and_write_schema_snapshot(
+                spark=spark, df=src_df, dataset_name=dataset_name, table_name=source_table, metadata_table=md["schema_snapshot_table"], run_id=ctx["run_id"], engine="auto"
+            )
 
     out_df = transform(src_df, ctx, effective_contract) if transform else src_df
     out_df = add_standard_technical_columns(out_df, run_id=ctx["run_id"], pipeline_name=dataset_name, environment=ctx["environment"], source_table=source_table, watermark_column=(n.source.watermark_column if n.source.watermark_column in getattr(out_df, "columns", []) else None), business_keys=n.source.business_keys)
@@ -410,6 +430,25 @@ def run_data_product(spark, contract: dict | DataProductContract, transform=None
     output_profile = profile_dataframe(out_df, dataset_name=dataset_name)
     if write_metadata:
         _write_records_spark(spark, flatten_profile_for_metadata(output_profile, target_table, ctx["run_id"], "output", exclude_columns=default_technical_columns()), md["output_profile_table"])
+
+    partition_column = n.drift.data_policy.get("partition_column") or n.source.partition_column
+    business_keys = list(n.drift.data_policy.get("business_keys") or n.source.business_keys)
+    watermark_column = n.drift.data_policy.get("watermark_column") or n.source.watermark_column
+    data_drift_result = {"status": "disabled", "can_continue": True}
+    partition_snapshot_write = None
+    if n.drift.data_enabled:
+        if not partition_column or not business_keys:
+            data_drift_result = {"status": "skipped", "can_continue": True, "message": "Data drift skipped due to missing partition_column or business_keys configuration."}
+        else:
+            baseline_partition_table = n.drift.baseline_partition_table or md.get("partition_snapshot_table")
+            partition_baseline = load_latest_partition_snapshot(spark, baseline_partition_table, dataset_name=dataset_name, table_name=source_table) if baseline_partition_table else None
+            data_drift_result = check_partition_drift(
+                df=out_df, dataset_name=dataset_name, table_name=target_table, partition_column=partition_column, business_keys=business_keys, watermark_column=watermark_column, baseline_snapshot=partition_baseline, policy=n.drift.data_policy, run_id=ctx["run_id"], engine="auto"
+            )
+            if write_metadata and md.get("partition_snapshot_table"):
+                partition_snapshot_write = build_and_write_partition_snapshot(
+                    spark=spark, df=out_df, dataset_name=dataset_name, table_name=target_table, metadata_table=md["partition_snapshot_table"], partition_column=partition_column, business_keys=business_keys, watermark_column=watermark_column, run_id=ctx["run_id"], engine="auto"
+                )
 
     dq_workflow = run_dq_workflow(
         spark=spark,
@@ -428,12 +467,35 @@ def run_data_product(spark, contract: dict | DataProductContract, transform=None
     if write_metadata:
         _write_records_spark(spark, build_quality_result_records(quality_result, run_id=ctx["run_id"]), md["quality_result_table"])
 
-    valid_df, quarantine_df = split_valid_and_quarantine(out_df, rules=rules, engine="auto")
-    quarantine_row_count = len(quarantine_df) if hasattr(quarantine_df, "__len__") else int(quarantine_df.count())
-    quarantine_written = False
-    if write_target and write_metadata and md.get("quarantine_table") and quarantine_row_count > 0:
-        _write_dataframe_to_table(spark, quarantine_df, md["quarantine_table"], mode="append")
-        quarantine_written = True
+    enforceable_rules = bool(rules)
+    quarantine = {"enabled": bool(n.quality.quarantine_enabled), "written": False}
+    valid_df, quarantine_df = out_df, None
+    quarantine_row_count = 0
+    valid_row_count = None
+    if n.quality.quarantine_enabled and enforceable_rules:
+        valid_df, quarantine_df = split_valid_and_quarantine(out_df, rules=rules, engine="auto")
+        quarantine_row_count = len(quarantine_df) if hasattr(quarantine_df, "__len__") else int(quarantine_df.count())
+        quarantine["row_count"] = quarantine_row_count
+        if write_target and write_metadata and md.get("quarantine_table") and quarantine_row_count > 0:
+            _write_dataframe_to_table(spark, quarantine_df, md["quarantine_table"], mode="append")
+            quarantine["written"] = True
+
+    governance = {"classifications": [], "records": [], "summary": {}, "metadata_table": n.governance.classification_table, "written": False}
+    if n.governance.classify_columns:
+        classifications = classify_columns(
+            profile=output_profile,
+            business_context={"dataset_name": dataset_name, "table_name": target_table},
+            rules=n.governance.rules,
+            dataset_name=dataset_name,
+            table_name=target_table,
+            run_id=ctx["run_id"],
+        )
+        gov_records = build_governance_classification_records(classifications, dataset_name=dataset_name, table_name=target_table, run_id=ctx["run_id"])
+        written = False
+        if write_metadata and n.governance.classification_table:
+            write_governance_classifications(spark, classifications=classifications, table_name=n.governance.classification_table, dataset_name=dataset_name, source_table=target_table, run_id=ctx["run_id"])
+            written = True
+        governance = {"classifications": classifications, "records": gov_records, "summary": summarize_governance_classifications(classifications), "metadata_table": n.governance.classification_table, "written": written}
 
     contract_result = validate_runtime_contracts(source_df=src_df, output_df=valid_df, contract=_runtime_validation_contract(n), engine="auto")
     if write_metadata:
@@ -447,7 +509,13 @@ def run_data_product(spark, contract: dict | DataProductContract, transform=None
     if write_metadata:
         _write_records_spark(spark, [build_run_summary_record(run_summary)], md["run_summary_table"])
 
-    can_continue = bool(quality_result.get("can_continue", True)) and bool(contract_result.get("can_continue", True))
+    drift_summary = summarize_drift_results(schema_drift_result=schema_drift_result, partition_drift_result=data_drift_result, profile_drift_result=None)
+    can_continue = (
+        bool(quality_result.get("can_continue", True))
+        and bool(contract_result.get("can_continue", True))
+        and bool(schema_drift_result.get("can_continue", True))
+        and bool(data_drift_result.get("can_continue", True))
+    )
     status = "passed" if can_continue else "failed"
     if write_target and can_continue:
         _write_dataframe_to_table(spark, valid_df, target_table, mode=n.target.mode)
@@ -456,7 +524,15 @@ def run_data_product(spark, contract: dict | DataProductContract, transform=None
     if write_metadata:
         _write_records_spark(spark, [dataset_run], md["dataset_runs_table"])
 
-    return {"status": status, "can_continue": can_continue, "runtime_context": ctx, "source_profile": source_profile, "output_profile": output_profile, "schema_snapshot": source_schema_snapshot, "partition_snapshot": partition_snapshot, "quality_result": quality_result, "dq_workflow": dq_workflow, "contract_validation_result": contract_result, "lineage_records": lineage_rows, "run_summary": run_summary, "dataset_run": dataset_run, "quarantine_written": quarantine_written, "quarantine_row_count": quarantine_row_count}
+    return {
+        "status": status, "can_continue": can_continue, "runtime_context": ctx, "contract": effective_contract,
+        "source_profile": source_profile, "output_profile": output_profile,
+        "drift": {"schema": schema_drift_result, "data": data_drift_result, "profile": None, "summary": drift_summary, "schema_snapshot_write": schema_snapshot_write, "partition_snapshot_write": partition_snapshot_write},
+        "dq_workflow": dq_workflow, "quality_result": quality_result, "quarantine": quarantine, "valid_row_count": valid_row_count, "quarantine_row_count": quarantine_row_count,
+        "governance": governance, "contract_validation_result": contract_result, "lineage": lineage_rows, "run_summary": run_summary,
+        "target_table": target_table, "written": bool(write_target and can_continue), "dataset_run_record": dataset_run,
+        "lineage_records": lineage_rows, "dataset_run": dataset_run, "quarantine_written": quarantine.get("written", False),
+    }
 
 
 def assert_data_product_passed(result: dict) -> None:

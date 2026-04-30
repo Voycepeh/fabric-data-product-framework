@@ -227,3 +227,30 @@ def test_incremental_validation_messages_reference_source_fields():
     errors = validate_data_contract_shape(c)
     assert "source.partition_column" in " | ".join(errors)
     assert "source.business_keys" in " | ".join(errors)
+
+
+def test_run_data_product_includes_dq_workflow_result():
+    spark = _FakeSpark(_source_df())
+    result = run_data_product(spark=spark, contract=_contract("full"), source_df=_source_df())
+    assert "dq_workflow" in result
+    assert "quality_result" in result["dq_workflow"]
+
+
+def test_run_data_product_calls_schema_drift_wrappers(monkeypatch):
+    spark = _FakeSpark(_source_df())
+    seen = {"check": 0}
+
+    monkeypatch.setattr("fabric_data_product_framework.data_contract.load_latest_schema_snapshot", lambda *args, **kwargs: None)
+
+    def _check_schema_drift(**kwargs):
+        seen["check"] += 1
+        return {"status": "no_baseline", "can_continue": True}
+
+    monkeypatch.setattr("fabric_data_product_framework.data_contract.check_schema_drift", _check_schema_drift)
+    monkeypatch.setattr("fabric_data_product_framework.data_contract.build_and_write_schema_snapshot", lambda **kwargs: {"written": True})
+
+    c = _contract("full")
+    c["drift"]["schema_enabled"] = True
+    result = run_data_product(spark=spark, contract=c, source_df=_source_df())
+    assert seen["check"] == 1
+    assert result["drift"]["schema"]["status"] == "no_baseline"
