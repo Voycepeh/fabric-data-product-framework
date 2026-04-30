@@ -116,12 +116,14 @@ def build_dq_rule_records(rules: list[dict], dataset_name: str, table_name: str,
         stored_status = rule.get("status")
         if not stored_status or stored_status == "candidate":
             stored_status = status
+        rule_for_json = dict(rule)
+        rule_for_json["status"] = stored_status
         rows.append({
-            "rule_id": _build_rule_id(rule), "dataset_name": dataset_name, "table_name": table_name,
-            "source_table": rule.get("source_table") or table_name, "column": rule.get("column"), "rule_type": rule.get("rule_type"),
-            "description": rule.get("description"), "severity": rule.get("severity", "warning"), "status": stored_status,
-            "generated_by": rule.get("generated_by", generated_by), "approved_by": rule.get("approved_by"), "approved_at": rule.get("approved_at"),
-            "run_id": run_id, "rule_json": json.dumps(rule, ensure_ascii=False), "created_at": created_at,
+            "rule_id": _build_rule_id(rule_for_json), "dataset_name": dataset_name, "table_name": table_name,
+            "source_table": rule_for_json.get("source_table") or table_name, "column": rule_for_json.get("column"), "rule_type": rule_for_json.get("rule_type"),
+            "description": rule_for_json.get("description"), "severity": rule_for_json.get("severity", "warning"), "status": stored_status,
+            "generated_by": rule_for_json.get("generated_by", generated_by), "approved_by": rule_for_json.get("approved_by"), "approved_at": rule_for_json.get("approved_at"),
+            "run_id": run_id, "rule_json": json.dumps(rule_for_json, ensure_ascii=False), "created_at": created_at,
         })
     return rows
 

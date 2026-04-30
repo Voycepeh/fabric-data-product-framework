@@ -175,3 +175,4 @@ def test_store_and_load_dq_rules_roundtrip_approved_status():
     store_dq_rules(spark, [{"rule_id": "r2", "rule_type": "not_null", "column": "x"}], "meta.dq_rules", dataset_name="orders", source_table="silver.orders", status="approved")
     loaded = load_dq_rules(spark, "meta.dq_rules", dataset_name="orders", source_table="silver.orders", status="approved")
     assert loaded[0]["rule_id"] == "r2"
+    assert loaded[0]["status"] == "approved"
