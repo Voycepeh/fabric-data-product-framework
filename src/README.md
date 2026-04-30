@@ -266,3 +266,11 @@ Functions from `src/fabric_data_product_framework/ai_lineage_summary.py`.
 | `build_transformation_summary_records` | Flatten candidates into metadata-ready records. | Persist reviewed summaries for handover/lineage tables. |
 
 See `docs/workflows/ai-transformation-summary.md` for the full workflow pattern.
+
+## Fabric notebook compatibility helpers
+
+The framework now includes legacy-compatible Fabric notebook helpers in `fabric_notebook.py`, preserving deployed helper names (for example `get_path`, `lakehouse_table_read`, `lakehouse_table_write`, `clean_datetime_columns`, `add_system_technical_columns`, and `ODI_METADATA_LOGGER`) to minimize notebook migration effort.
+
+## Notebook template generator
+
+Use `create_pipeline_notebook_template(...)` from `template_generator.py` to generate a cell-separated `.py` notebook template (`# %` and `# % [markdown]`) that follows the framework workflow and Copilot-friendly section-by-section authoring pattern.
