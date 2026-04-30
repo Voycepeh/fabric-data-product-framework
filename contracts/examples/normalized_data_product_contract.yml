@@ -35,12 +35,19 @@ target:
     - updated_at
 
 quality:
-  rules: []
+  rules:
+    - rule_id: order_id_not_null
+      column: order_id
+      rule_type: not_null
+      severity: critical
+      description: order_id must not be null
   generate_candidates: false
   use_rule_store: false
+  rule_store_table: fw_metadata.dq_rules
   rule_status: approved
   fail_on: critical
   quarantine_enabled: true
+  quarantine_table: fw_metadata.quarantine_summary
 
 drift:
   schema_enabled: true

@@ -17,6 +17,10 @@ dependencies = [
 dev = [
   "pytest>=8.0",
 ]
+fabric-ai = [
+  "openai>=1.0",
+  "pydantic>=2.0",
+]
 
 [tool.setuptools]
 package-dir = {"" = "src"}

@@ -13,7 +13,8 @@ from fabric_data_product_framework.incremental import build_partition_snapshot
 from fabric_data_product_framework.lineage import build_lineage_records
 from fabric_data_product_framework.metadata import build_dataset_run_record, build_schema_snapshot_records, write_metadata_records
 from fabric_data_product_framework.profiling import default_technical_columns, flatten_profile_for_metadata, profile_dataframe
-from fabric_data_product_framework.quality import build_quality_result_records, run_quality_rules
+from fabric_data_product_framework.dq import run_dq_workflow
+from fabric_data_product_framework.quality import build_quality_result_records
 from fabric_data_product_framework.quarantine import split_valid_and_quarantine
 from fabric_data_product_framework.run_summary import build_run_summary, build_run_summary_record
 from fabric_data_product_framework.runtime import build_runtime_context
@@ -54,6 +55,7 @@ class QualityContract:
     use_rule_store: bool = False
     rule_status: str = "approved"
     generate_candidates: bool = False
+    candidate_generation_method: str = "profile"
     fail_on: str = "critical"
     quarantine_enabled: bool = True
     quarantine_table: str | None = None
@@ -160,6 +162,7 @@ def build_quality_contract(config: dict) -> QualityContract:
         use_rule_store=bool(c.get("use_rule_store", False)),
         rule_status=str(c.get("rule_status") or "approved"),
         generate_candidates=bool(c.get("generate_candidates", False)),
+        candidate_generation_method=str(c.get("candidate_generation_method") or "profile"),
         fail_on=str(c.get("fail_on") or "critical"),
         quarantine_enabled=bool(c.get("quarantine_enabled", True)),
         quarantine_table=c.get("quarantine_table"),
@@ -408,8 +411,20 @@ def run_data_product(spark, contract: dict | DataProductContract, transform=None
     if write_metadata:
         _write_records_spark(spark, flatten_profile_for_metadata(output_profile, target_table, ctx["run_id"], "output", exclude_columns=default_technical_columns()), md["output_profile_table"])
 
-    rules = n.quality.rules
-    quality_result = run_quality_rules(out_df, rules, dataset_name=dataset_name, table_name=target_table, engine="auto")
+    dq_workflow = run_dq_workflow(
+        spark=spark,
+        df=out_df,
+        quality_contract=n.quality,
+        dataset_name=dataset_name,
+        table_name=target_table,
+        run_id=ctx["run_id"],
+        profile=output_profile,
+        metadata=None,
+        business_context=None,
+        engine="auto",
+    )
+    rules = dq_workflow["rules"]
+    quality_result = dq_workflow["quality_result"]
     if write_metadata:
         _write_records_spark(spark, build_quality_result_records(quality_result, run_id=ctx["run_id"]), md["quality_result_table"])
 
@@ -441,7 +456,7 @@ def run_data_product(spark, contract: dict | DataProductContract, transform=None
     if write_metadata:
         _write_records_spark(spark, [dataset_run], md["dataset_runs_table"])
 
-    return {"status": status, "can_continue": can_continue, "runtime_context": ctx, "source_profile": source_profile, "output_profile": output_profile, "schema_snapshot": source_schema_snapshot, "partition_snapshot": partition_snapshot, "quality_result": quality_result, "contract_validation_result": contract_result, "lineage_records": lineage_rows, "run_summary": run_summary, "dataset_run": dataset_run, "quarantine_written": quarantine_written, "quarantine_row_count": quarantine_row_count}
+    return {"status": status, "can_continue": can_continue, "runtime_context": ctx, "source_profile": source_profile, "output_profile": output_profile, "schema_snapshot": source_schema_snapshot, "partition_snapshot": partition_snapshot, "quality_result": quality_result, "dq_workflow": dq_workflow, "contract_validation_result": contract_result, "lineage_records": lineage_rows, "run_summary": run_summary, "dataset_run": dataset_run, "quarantine_written": quarantine_written, "quarantine_row_count": quarantine_row_count}
 
 
 def assert_data_product_passed(result: dict) -> None:

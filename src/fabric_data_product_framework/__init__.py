@@ -20,6 +20,16 @@ from .fabric_notebook import (
     warehouse_write,
 )
 from .template_generator import create_pipeline_notebook_template
+from .dq import (
+    build_dq_rule_records,
+    generate_dq_rule_candidates,
+    generate_dq_rule_candidates_with_fabric_ai,
+    load_dq_rules,
+    normalize_dq_rule,
+    normalize_dq_rules,
+    run_dq_rules,
+    run_dq_workflow,
+    store_dq_rules,
 from .drift_checkers import (
     build_and_write_partition_snapshot,
     build_and_write_schema_snapshot,
@@ -83,7 +93,15 @@ __all__ = [
     "transformation_summary",
     "transformation_reasons",
     "pass_if_yes_else_run",
-    "create_pipeline_notebook_template",
+    "create_pipeline_notebook_template",    "run_dq_workflow",
+    "run_dq_rules",
+    "load_dq_rules",
+    "store_dq_rules",
+    "build_dq_rule_records",
+    "normalize_dq_rules",
+    "normalize_dq_rule",
+    "generate_dq_rule_candidates",
+    "generate_dq_rule_candidates_with_fabric_ai",
     "classify_column",
     "classify_columns",
     "build_governance_classification_records",
