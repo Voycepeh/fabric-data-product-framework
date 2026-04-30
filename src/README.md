@@ -281,3 +281,80 @@ The framework now includes legacy-compatible Fabric notebook helpers in `fabric_
 Use `create_pipeline_notebook_template(...)` from `template_generator.py` to generate a cell-separated `.py` notebook template (`# %%` and `# %% [markdown]`) that follows the framework workflow and Copilot-friendly section-by-section authoring pattern.
 
 For Fabric house config loading guidance, see `docs/workflows/fabric-config.md`.
+
+## Contract-first orchestration
+
+Functions from `src/fabric_data_product_framework/data_contract.py`.
+
+| Function | Purpose | Typical use |
+|---|---|---|
+| `load_data_contract` | Load a contract from YAML path or in-memory dict. | Notebook entrypoint for contract-first runs. |
+| `validate_data_contract_shape` | Validate required MVP contract sections/keys for orchestration. | Fail early when contract shape is incomplete. |
+| `build_runtime_context_from_contract` | Build run context (dataset/env/source/target/run_id) from contract with optional overrides. | Use before executing contract-driven steps. |
+| `run_data_product` | Orchestrate source read, profiling, snapshots, transform, technical columns, quality, quarantine, contract checks, lineage, summary, and gated write. | Main contract runner API. |
+| `assert_data_product_passed` | Raise if run result is not passed. | Simple post-run gate in notebooks/pipelines. |
+
+```python
+import fabric_data_product_framework as fw
+
+contract = fw.load_data_contract("contracts/framework_mvp_orders.yml")
+result = fw.run_data_product(
+    spark=spark,
+    contract=contract,
+    transform=transform_orders,
+)
+fw.assert_data_product_passed(result)
+```
+
+`run_data_product` assumes Spark/Fabric-compatible table access (`spark.table`, `saveAsTable`) and metadata sink tables declared under `contract["metadata"]`.
+
+This runner treats the pipeline as one contract execution unit (not a manual checklist of utility calls).
+
+Minimal MVP contract shape:
+
+```yaml
+dataset:
+  name: orders
+  description: Orders product
+  owner: data.team@example.com
+  approved_usage: analytics
+environment:
+  name: dev
+  metadata_schema: meta
+refresh:
+  mode: full
+source:
+  table: bronze.orders
+  format: delta
+target:
+  table: silver.orders
+  mode: append
+  format: delta
+keys:
+  business_keys: [order_id]
+  watermark_column: updated_at
+  partition_column: order_date
+schema:
+  required_source_columns: [order_id, updated_at]
+  required_output_columns: [order_id, updated_at]
+quality:
+  rules: []
+drift:
+  schema_policy: {}
+  incremental_policy: {}
+metadata:
+  source_profile_table: meta.source_profile
+  output_profile_table: meta.output_profile
+  schema_snapshot_table: meta.schema_snapshot
+  partition_snapshot_table: meta.partition_snapshot
+  quality_result_table: meta.quality_result
+  quarantine_table: meta.quarantine
+  contract_validation_table: meta.contract_validation
+  lineage_table: meta.lineage
+  run_summary_table: meta.run_summary
+  dataset_runs_table: meta.dataset_runs
+```
+
+
+
+Use `full` for normal full rebuild datasets. Use `incremental` only when the dataset has partition/watermark logic and requires historical partition safety checks.

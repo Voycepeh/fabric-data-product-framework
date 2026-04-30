@@ -1,0 +1,134 @@
+from pathlib import Path
+
+import pandas as pd
+import pytest
+
+from fabric_data_product_framework.data_contract import (
+    assert_data_product_passed,
+    build_runtime_context_from_contract,
+    load_data_contract,
+    run_data_product,
+    validate_data_contract_shape,
+)
+
+
+class _FakeWriter:
+    def __init__(self, spark, df):
+        self.spark = spark
+        self.df = df
+        self._mode = "append"
+
+    def mode(self, mode):
+        self._mode = mode
+        return self
+
+    def saveAsTable(self, table):
+        self.spark.writes.append((table, self._mode, self.df.copy()))
+
+
+class _FakeSparkDF:
+    def __init__(self, spark, df):
+        self.spark = spark
+        self._df = df
+
+    @property
+    def write(self):
+        return _FakeWriter(self.spark, self._df)
+
+
+class _FakeSpark:
+    def __init__(self, source_df):
+        self.source_df = source_df
+        self.writes = []
+
+    def table(self, _):
+        return self.source_df.copy()
+
+    def createDataFrame(self, rows):
+        return _FakeSparkDF(self, pd.DataFrame(rows))
+
+
+def _contract(refresh_mode=None):
+    c = {
+        "dataset": {"name": "orders", "description": "desc", "owner": "owner", "approved_usage": "analytics"},
+        "environment": {"name": "dev", "metadata_schema": "meta"},
+        "source": {"table": "bronze.orders", "format": "delta"},
+        "target": {"table": "silver.orders", "mode": "append", "format": "delta"},
+        "keys": {"business_keys": ["order_id"], "watermark_column": "updated_at", "partition_column": "order_date"},
+        "schema": {"required_source_columns": ["order_id", "updated_at"], "required_output_columns": ["order_id", "updated_at"]},
+        "quality": {"rules": [{"rule_id": "DQ001", "rule_type": "not_null", "column": "order_id", "severity": "critical"}]},
+        "drift": {"schema_policy": {}, "incremental_policy": {}},
+        "metadata": {"source_profile_table": "meta.source_profile", "output_profile_table": "meta.output_profile", "schema_snapshot_table": "meta.schema_snapshot", "partition_snapshot_table": "meta.partition_snapshot", "quality_result_table": "meta.quality_result", "quarantine_table": "meta.quarantine", "contract_validation_table": "meta.contract_validation", "lineage_table": "meta.lineage", "run_summary_table": "meta.run_summary", "dataset_runs_table": "meta.dataset_runs"},
+    }
+    if refresh_mode is not None:
+        c["refresh"] = {"mode": refresh_mode}
+    return c
+
+
+def _source_df():
+    return pd.DataFrame([{"order_id": 1, "updated_at": "2026-01-01T00:00:00Z", "order_date": "2026-01-01", "amount": 10.0}, {"order_id": 2, "updated_at": "2026-01-01T00:00:00Z", "order_date": "2026-01-01", "amount": 20.0}])
+
+
+def test_validate_contract_full_no_partition_column_passes():
+    c = _contract("full")
+    del c["keys"]["partition_column"]
+    assert validate_data_contract_shape(c) == []
+
+
+def test_validate_contract_missing_mode_defaults_full():
+    c = _contract(None)
+    del c["keys"]["partition_column"]
+    assert validate_data_contract_shape(c) == []
+
+
+def test_incremental_missing_partition_fails_validation():
+    c = _contract("incremental")
+    del c["keys"]["partition_column"]
+    assert any("partition_column" in e for e in validate_data_contract_shape(c))
+
+
+def test_load_data_contract_accepts_dict_and_path(tmp_path: Path):
+    assert load_data_contract(_contract())["dataset"]["name"] == "orders"
+    f = tmp_path / "contract.yml"; f.write_text("dataset:\n  name: orders\n", encoding="utf-8")
+    assert load_data_contract(f)["dataset"]["name"] == "orders"
+
+
+def test_build_runtime_context_from_contract_uses_contract_fields():
+    ctx = build_runtime_context_from_contract(_contract(), overrides={"run_id": "run_123"})
+    assert (ctx["dataset_name"], ctx["environment"], ctx["run_id"]) == ("orders", "dev", "run_123")
+
+
+def test_assert_data_product_passed_raises_for_failed_status():
+    with pytest.raises(RuntimeError):
+        assert_data_product_passed({"status": "failed"})
+
+
+def test_incremental_invalid_partition_column_fails_runner_and_no_target_write():
+    spark = _FakeSpark(_source_df())
+    c = _contract("incremental")
+    c["keys"]["partition_column"] = "missing_partition"
+    result = run_data_product(spark=spark, contract=c, source_df=_source_df())
+    assert result["can_continue"] is False
+    assert "silver.orders" not in [t for t, _, _ in spark.writes]
+
+
+def test_legacy_write_false_disables_target_and_metadata():
+    spark = _FakeSpark(_source_df())
+    run_data_product(spark=spark, contract=_contract("full"), source_df=_source_df(), write=False)
+    assert spark.writes == []
+
+
+def test_write_flags_disable_quarantine_write_truthfully():
+    spark = _FakeSpark(_source_df())
+    bad = _source_df(); bad.loc[0, "order_id"] = None
+    result = run_data_product(spark=spark, contract=_contract("full"), source_df=bad, write_target=False, write_metadata=False)
+    assert result["quarantine_written"] is False
+
+
+def test_quality_metadata_rows_include_run_id():
+    spark = _FakeSpark(_source_df())
+    result = run_data_product(spark=spark, contract=_contract("full"), source_df=_source_df())
+    quality_writes = [df for table, _, df in spark.writes if table == "meta.quality_result"]
+    assert quality_writes
+    assert "run_id" in quality_writes[0].columns
+    assert result["quarantine_row_count"] >= 0

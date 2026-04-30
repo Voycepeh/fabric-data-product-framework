@@ -20,6 +20,13 @@ from .fabric_notebook import (
     warehouse_write,
 )
 from .template_generator import create_pipeline_notebook_template
+from .data_contract import (
+    assert_data_product_passed,
+    build_runtime_context_from_contract,
+    load_data_contract,
+    run_data_product,
+    validate_data_contract_shape,
+)
 
 __version__ = "0.1.0"
 
@@ -42,4 +49,9 @@ __all__ = [
     "transformation_reasons",
     "pass_if_yes_else_run",
     "create_pipeline_notebook_template",
+    "assert_data_product_passed",
+    "build_runtime_context_from_contract",
+    "load_data_contract",
+    "run_data_product",
+    "validate_data_contract_shape",
 ]
