@@ -31,6 +31,13 @@ from .drift_checkers import (
     summarize_drift_results,
 )
 
+from .governance_classifier import (
+    build_governance_classification_records,
+    classify_column,
+    classify_columns,
+    summarize_governance_classifications,
+    write_governance_classifications,
+)
 from .data_contract import (
     DataProductContract,
     DriftContract,
@@ -77,6 +84,11 @@ __all__ = [
     "transformation_reasons",
     "pass_if_yes_else_run",
     "create_pipeline_notebook_template",
+    "classify_column",
+    "classify_columns",
+    "build_governance_classification_records",
+    "write_governance_classifications",
+    "summarize_governance_classifications",
     "SourceContract",
     "TargetContract",
     "QualityContract",
