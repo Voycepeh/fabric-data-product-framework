@@ -1,6 +1,7 @@
 import pandas as pd
 
 from fabric_data_product_framework.data_contract import run_data_product
+import fabric_data_product_framework.dq as dq
 from fabric_data_product_framework.dq import (
     build_dq_rule_records,
     generate_dq_rule_candidates_with_fabric_ai,
@@ -65,6 +66,7 @@ class _FakeAI:
 
 
 def test_generate_dq_rule_candidates_with_fabric_ai_success(monkeypatch):
+    monkeypatch.setattr(dq, "_fabric_ai_dependencies_available", lambda: True)
     response = '[{"rule_id":"ai1","column":"order_id","rule_type":"not_null","severity":"critical","layman_rule":"order id required","rule_config":{}}]'
 
     monkeypatch.setattr(pd.DataFrame, "ai", property(lambda self: _FakeAI(response)), raising=False)
@@ -75,12 +77,23 @@ def test_generate_dq_rule_candidates_with_fabric_ai_success(monkeypatch):
 
 
 def test_generate_dq_rule_candidates_with_fabric_ai_missing_extension(monkeypatch):
+    monkeypatch.setattr(dq, "_fabric_ai_dependencies_available", lambda: True)
     monkeypatch.setattr(pd.DataFrame, "ai", property(lambda self: None), raising=False)
     try:
         generate_dq_rule_candidates_with_fabric_ai(profile={"columns": []})
         assert False, "Expected RuntimeError"
     except RuntimeError as exc:
-        assert "Fabric Runtime 1.3+" in str(exc)
+        assert "openai/pydantic runtime dependencies" in str(exc)
+
+
+def test_generate_dq_rule_candidates_with_fabric_ai_missing_dependencies(monkeypatch):
+    monkeypatch.setattr(dq, "_fabric_ai_dependencies_available", lambda: False)
+    monkeypatch.setattr(pd.DataFrame, "ai", property(lambda self: _FakeAI("[]")), raising=False)
+    try:
+        generate_dq_rule_candidates_with_fabric_ai(profile={"columns": []})
+        assert False, "Expected RuntimeError"
+    except RuntimeError as exc:
+        assert "Install the fabric-ai extra" in str(exc)
 
 def test_normalize_dq_rule_aliases():
     out = normalize_dq_rule({"id": "x", "rule_type": "not_empty", "field": "a", "allowed_values": ["x"], "min": 1})
@@ -153,6 +166,7 @@ def test_run_dq_workflow_stores_candidates_when_enabled():
 
 
 def test_run_dq_workflow_fabric_ai_stores_candidates_not_enforced(monkeypatch):
+    monkeypatch.setattr(dq, "_fabric_ai_dependencies_available", lambda: True)
     df = pd.DataFrame([{"order_id": 1}])
     spark = _FakeSpark(df)
     response = '[{"rule_id":"ai_not_null","column":"order_id","rule_type":"not_null","severity":"warning","layman_rule":"rule","rule_config":{}}]'

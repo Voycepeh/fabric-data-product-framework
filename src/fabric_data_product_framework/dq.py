@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib.util
 import json
 from datetime import datetime, timezone
 from typing import Any
@@ -23,6 +24,11 @@ def _build_rule_id(rule: dict[str, Any]) -> str:
 
 
 
+
+
+def _fabric_ai_dependencies_available() -> bool:
+    return importlib.util.find_spec("openai") is not None and importlib.util.find_spec("pydantic") is not None
+
 def generate_dq_rule_candidates_with_fabric_ai(
     profile,
     contract=None,
@@ -33,6 +39,12 @@ def generate_dq_rule_candidates_with_fabric_ai(
 ) -> list[dict]:
     """Generate DQ candidates using Fabric pandas AI extension (optional runtime feature)."""
     import pandas as pd
+
+    if not _fabric_ai_dependencies_available():
+        raise RuntimeError(
+            "Fabric AI candidate generation requires Microsoft Fabric AI functions plus openai/pydantic runtime dependencies. "
+            "Install the fabric-ai extra or run %pip install openai pydantic in the Fabric notebook."
+        )
 
     prompt = build_quality_rule_generation_prompt(
         profile=profile,
@@ -45,8 +57,8 @@ def generate_dq_rule_candidates_with_fabric_ai(
     ai = getattr(prompt_df, "ai", None)
     if ai is None or not hasattr(ai, "generate_response"):
         raise RuntimeError(
-            "Fabric AI functions are unavailable. generate_dq_rule_candidates_with_fabric_ai "
-            "requires Microsoft Fabric Runtime 1.3+ with AI functions configured."
+            "Fabric AI candidate generation requires Microsoft Fabric AI functions plus openai/pydantic runtime dependencies. "
+            "Install the fabric-ai extra or run %pip install openai pydantic in the Fabric notebook."
         )
 
     kwargs = {"prompt": prompt}

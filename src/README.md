@@ -118,6 +118,12 @@ Functions from `src/fabric_data_product_framework/dq.py`.
 
 Generated DQ candidates are stored for human review and are **not enforced** unless they are explicitly included in contract rules or loaded via enforceable rule-store status (for example, `approved`). `run_dq_workflow` defaults to `candidate_generation_method=profile`; set `candidate_generation_method=fabric_ai` to use optional Fabric AI candidate generation (Fabric Runtime 1.3+ with AI functions configured).
 
+Fabric notebook setup for AI mode:
+
+```python
+%pip install openai pydantic
+```
+
 ## Technical columns
 
 Functions from `src/fabric_data_product_framework/technical_columns.py`.
