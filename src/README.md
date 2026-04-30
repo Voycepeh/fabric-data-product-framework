@@ -100,6 +100,25 @@ Functions from `src/fabric_data_product_framework/quality.py`.
 | `assert_quality_gate` | Raise when quality result breaches configured fail threshold. | Enforce pass/fail quality gate. |
 | `build_quality_result_records` | Flatten quality result payload into metadata record rows. | Persist quality outcomes for audits/dashboards. |
 
+## Governance classifier
+
+Functions from `src/fabric_data_product_framework/governance_classifier.py`.
+
+| Function | Purpose | Typical use |
+|---|---|---|
+| `classify_column` | Suggest governance classification for one column using name/type/profile/context signals. | Unit-level review suggestions for sensitive fields. |
+| `classify_columns` | Classify many columns from profile-like dictionaries/lists without requiring Spark. | Produce review queue from source/output profile metadata. |
+| `build_governance_classification_records` | Flatten classification suggestions into metadata-ready records with JSON-safe evidence. | Persist suggested governance decisions for audit/review. |
+| `write_governance_classifications` | Write governance suggestion records to a metadata table via Spark writer adapter pattern. | Store run-time suggestions in Fabric metadata tables. |
+| `summarize_governance_classifications` | Build compact counts by class/action and review indicators. | Handover summaries and dashboard rollups. |
+
+```python
+from fabric_data_product_framework.governance_classifier import classify_columns, summarize_governance_classifications
+
+classifications = classify_columns(profile={"columns": [{"column_name": "customer_email", "data_type": "string"}]})
+summary = summarize_governance_classifications(classifications)
+```
+
 ## Technical columns
 
 Functions from `src/fabric_data_product_framework/technical_columns.py`.

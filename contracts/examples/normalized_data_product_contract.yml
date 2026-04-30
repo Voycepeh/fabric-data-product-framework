@@ -49,8 +49,18 @@ drift:
   data_policy: {}
 
 governance:
-  classify_columns: false
+  classify_columns: true
+  classification_table: fw_metadata.governance_classifications
   require_human_approval: true
+  rules:
+    - rule_id: staff_id_identifier
+      classification: identifier
+      action: restrict_access
+      patterns:
+        - staff_id
+        - employee_id
+      confidence: 0.95
+      reason: Staff identifiers require restricted access
 
 metadata:
   schema: fw_metadata
