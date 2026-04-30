@@ -280,6 +280,8 @@ def _spark_create_metadata_dataframe(spark, rows: list[dict]):
         item = dict(row)
         item["sample_values_json"] = json.dumps(to_jsonable(item.get("sample_values", [])))
         item["top_values_json"] = json.dumps(to_jsonable(item.get("top_values", [])))
+        item.pop("sample_values", None)
+        item.pop("top_values", None)
         normalized.append(to_jsonable(item))
     return spark.read.json(spark.sparkContext.parallelize([json.dumps(r) for r in normalized]))
 
@@ -313,7 +315,11 @@ def profile_and_write_metadata(
     sample_size: int = 5,
     top_n: int = 5,
 ) -> dict[str, Any]:
-    """Profile a dataframe and write flattened profiling metadata in one Fabric-friendly call."""
+    """Profile a dataframe and write flattened profiling metadata in one Fabric-friendly call.
+
+    This helper is a Spark/Fabric convenience API for saveAsTable-compatible metadata tables.
+    Use metadata.write_metadata_records for adapter-injected writer flows.
+    """
     profile = profile_dataframe(df=df, dataset_name=dataset_name, sample_size=sample_size, top_n=top_n, engine="auto")
     rows = flatten_profile_for_metadata(
         profile=profile,
@@ -339,7 +345,11 @@ def profile_table_and_write_metadata(
     sample_size: int = 5,
     top_n: int = 5,
 ) -> dict[str, Any]:
-    """Read a Spark table, profile it, and persist profile metadata with one API call."""
+    """Read a Spark table, profile it, and persist profile metadata with one API call.
+
+    This helper is a Spark/Fabric convenience API for saveAsTable-compatible metadata tables.
+    Use metadata.write_metadata_records for adapter-injected writer flows.
+    """
     df = spark.table(table_name)
     return profile_and_write_metadata(
         spark=spark,

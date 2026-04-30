@@ -71,6 +71,8 @@ Functions from `src/fabric_data_product_framework/profiling.py`.
 | `profile_table_and_write_metadata` | Read a table, profile it, and write metadata in one call. | One-call Fabric smoke-test profiling flow. |
 | `summarize_profile` | Create a compact high-level profile summary. | Build quick observability summaries. |
 
+`write_profile_metadata_rows`, `profile_and_write_metadata`, and `profile_table_and_write_metadata` are Spark/Fabric convenience helpers for `saveAsTable` metadata sinks. For generic/custom sinks, use `metadata.write_metadata_records` with an injected writer adapter.
+
 ## Drift and incremental safety
 
 Functions from `src/fabric_data_product_framework/drift.py` and `src/fabric_data_product_framework/incremental.py`.

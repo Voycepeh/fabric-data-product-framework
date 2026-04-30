@@ -56,3 +56,5 @@ profile_table_and_write_metadata(
     mode="overwrite",
 )
 ```
+
+These helpers are Spark/Fabric convenience APIs for `saveAsTable`-compatible metadata tables. For runtime-agnostic adapter flows, keep using `fabric_data_product_framework.metadata.write_metadata_records(...)` with an injected writer.

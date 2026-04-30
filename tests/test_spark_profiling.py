@@ -36,6 +36,7 @@ class FakeSparkDataFrame:
     def __init__(self):
         self.columns = ["id", "_pipeline_run_id"]
         self.schema = FakeSchema([FakeField("id", "int"), FakeField("_pipeline_run_id", "string")])
+        self.last_writer = None
 
     def count(self):
         return 3
@@ -56,7 +57,8 @@ class FakeSparkDataFrame:
 
     @property
     def write(self):
-        return FakeWrite()
+        self.last_writer = FakeWrite()
+        return self.last_writer
 
 
 class FakeCollect:
@@ -227,6 +229,25 @@ def test_write_profile_metadata_rows_uses_json_reader():
     out = write_profile_metadata_rows(spark=spark, metadata_rows=rows, metadata_table="fw.meta", mode="overwrite")
     assert out is not None
     assert spark.last_json_input is not None
+    assert out.last_writer is not None
+    assert out.last_writer._mode == "overwrite"
+    assert out.last_writer.saved_table == "fw.meta"
+
+
+def test_write_profile_metadata_rows_drops_nested_sample_and_top_values():
+    spark = FakeSparkSession()
+    rows = [
+        {"column_name": "id", "sample_values": [1, "two"], "top_values": [{"value": 1, "count": 2}]},
+        {"column_name": "status", "sample_values": ["open", 3], "top_values": [{"value": "open", "count": 1}]},
+    ]
+    write_profile_metadata_rows(spark=spark, metadata_rows=rows, metadata_table="fw.meta")
+    assert spark.last_json_input is not None
+    for payload in spark.last_json_input:
+        record = json.loads(payload)
+        assert "sample_values" not in record
+        assert "top_values" not in record
+        assert "sample_values_json" in record
+        assert "top_values_json" in record
 
 
 def test_profile_and_write_metadata_one_call():
