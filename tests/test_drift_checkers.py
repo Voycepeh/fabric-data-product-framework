@@ -3,6 +3,7 @@ import json
 import pandas as pd
 
 from fabric_data_product_framework import drift_checkers
+from fabric_data_product_framework.drift import default_schema_drift_policy
 
 
 class _FakeWriter:
@@ -63,6 +64,13 @@ def test_check_schema_drift_uses_existing_helpers(monkeypatch):
     assert out["status"] == "passed"
     assert calls == {"build": 1, "compare": 1}
 
+def test_check_schema_drift_preserves_warning_status(monkeypatch):
+    monkeypatch.setattr(drift_checkers, "build_schema_snapshot", lambda *args, **kwargs: {"columns": []})
+    monkeypatch.setattr(drift_checkers, "compare_schema_snapshots", lambda *args, **kwargs: {"status": "warning", "can_continue": True})
+    out = drift_checkers.check_schema_drift(object(), "ds", "tbl", baseline_snapshot={"columns": []}, engine="spark")
+    assert out["status"] == "warning"
+    assert out["can_continue"] is True
+
 
 def test_build_and_write_schema_snapshot_json_safe():
     spark = _FakeSpark()
@@ -92,6 +100,21 @@ def test_check_partition_drift_uses_existing_helpers(monkeypatch):
     out = drift_checkers.check_partition_drift(object(), "ds", "tbl", partition_column="p", business_keys=["id"], baseline_snapshot=[{"partition_value": "2026-01-01"}])
     assert out["status"] == "passed"
     assert calls == {"build": 1, "compare": 1}
+
+def test_check_partition_drift_preserves_warning_status(monkeypatch):
+    monkeypatch.setattr(drift_checkers, "build_partition_snapshot", lambda *args, **kwargs: [{"partition_value": "2026-01-01"}])
+    monkeypatch.setattr(drift_checkers, "compare_partition_snapshots", lambda *args, **kwargs: {"status": "warning", "can_continue": True})
+    out = drift_checkers.check_partition_drift(object(), "ds", "tbl", partition_column="p", business_keys=["id"], baseline_snapshot=[{"partition_value": "2026-01-01"}])
+    assert out["status"] == "warning"
+    assert out["can_continue"] is True
+
+def test_check_partition_drift_requires_business_keys():
+    try:
+        drift_checkers.check_partition_drift(object(), "ds", "tbl", partition_column="p", business_keys=None, baseline_snapshot=None)
+    except ValueError as exc:
+        assert "business_keys" in str(exc)
+    else:
+        raise AssertionError("Expected ValueError when business_keys is missing")
 
 
 def test_build_and_write_partition_snapshot_json_safe(monkeypatch):
@@ -130,3 +153,11 @@ def test_summarize_drift_results_failed_and_cannot_continue():
     )
     assert out["status"] == "failed"
     assert out["can_continue"] is False
+
+
+def test_contract_schema_policy_keys_match_helper_policy():
+    policy = default_schema_drift_policy()
+    assert "block_on_removed_column" in policy
+    assert "block_on_type_change" in policy
+    assert "warn_on_added_column" in policy
+    assert "require_approval_for_new_columns" in policy

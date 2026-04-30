@@ -46,15 +46,20 @@ drift:
   schema_enabled: true
   data_enabled: true
   schema_policy:
-    fail_on_missing_columns: true
-    fail_on_type_changes: true
-    allow_new_columns: false
+    block_on_removed_column: true
+    block_on_type_change: true
+    warn_on_added_column: true
+    require_approval_for_new_columns: true
   data_policy:
     partition_column: business_date
     business_keys:
       - order_id
     watermark_column: updated_at
-    max_row_count_change_percent: 50
+    block_on_historical_partition_change: true
+    closed_partition_grace_days: 1
+    allow_historical_changes: false
+    require_approval_for_historical_changes: true
+    run_mode: incremental
   baseline_schema_table: fw_metadata.schema_snapshots
   baseline_partition_table: fw_metadata.partition_snapshots
 

@@ -21,6 +21,11 @@ def _safe_spark_collect(df):
         return df.collect()
     return []
 
+def _is_missing_table_error(exc: Exception) -> bool:
+    text = str(exc).lower()
+    patterns = ["not found", "table or view not found", "no such table", "cannot resolve", "missing"]
+    return any(p in text for p in patterns)
+
 
 def _json_dumps(value) -> str:
     return json.dumps(to_jsonable(value), sort_keys=True)
@@ -49,7 +54,7 @@ def check_schema_drift(df, dataset_name: str, table_name: str, baseline_snapshot
         }
 
     comparison = compare_schema_snapshots(baseline_snapshot, current_snapshot, policy=policy or default_schema_drift_policy())
-    status = "failed" if not comparison.get("can_continue", True) else "passed"
+    status = str(comparison.get("status", "passed"))
     return {
         "dataset_name": dataset_name,
         "table_name": table_name,
@@ -80,9 +85,26 @@ def build_and_write_schema_snapshot(spark, df, dataset_name: str, table_name: st
 
 def load_latest_schema_snapshot(spark, metadata_table: str, dataset_name: str, table_name: str) -> dict | None:
     try:
-        rows = _safe_spark_collect(spark.table(metadata_table))
-    except Exception:
-        return None
+        df = spark.table(metadata_table)
+        if hasattr(df, "filter") and hasattr(df, "orderBy") and hasattr(df, "limit"):
+            from pyspark.sql import functions as F
+
+            df = (
+                df.filter(
+                    (F.col("dataset_name") == dataset_name)
+                    & (F.col("table_name") == table_name)
+                    & (F.col("snapshot_type") == "schema")
+                )
+                .orderBy(F.col("created_at").desc(), F.col("run_id").desc())
+                .limit(1)
+            )
+            rows = _safe_spark_collect(df)
+        else:
+            rows = _safe_spark_collect(df)
+    except Exception as exc:
+        if _is_missing_table_error(exc):
+            return None
+        raise
 
     matched = [r.asDict() if hasattr(r, "asDict") else dict(r) for r in rows if (r["dataset_name"] == dataset_name and r["table_name"] == table_name and r.get("snapshot_type") == "schema")]
     if not matched:
@@ -97,6 +119,8 @@ def load_latest_schema_snapshot(spark, metadata_table: str, dataset_name: str, t
 
 def check_partition_drift(df, dataset_name: str, table_name: str, partition_column: str, business_keys: list[str] | None = None, watermark_column: str | None = None, baseline_snapshot: list[dict] | dict | None = None, policy: dict | None = None, run_id: str | None = None, engine: str = "spark") -> dict:
     keys = business_keys or []
+    if not keys:
+        raise ValueError("business_keys must contain at least one column for partition drift checks.")
     current_snapshot = build_partition_snapshot(
         df,
         dataset_name=dataset_name,
@@ -121,7 +145,7 @@ def check_partition_drift(df, dataset_name: str, table_name: str, partition_colu
 
     baseline_rows = baseline_snapshot if isinstance(baseline_snapshot, list) else [baseline_snapshot]
     comparison = compare_partition_snapshots(baseline_rows, current_snapshot, policy=policy or default_incremental_safety_policy())
-    status = "failed" if not comparison.get("can_continue", True) else "passed"
+    status = str(comparison.get("status", "passed"))
     return {
         "dataset_name": dataset_name,
         "table_name": table_name,
@@ -136,6 +160,8 @@ def check_partition_drift(df, dataset_name: str, table_name: str, partition_colu
 
 def build_and_write_partition_snapshot(spark, df, dataset_name: str, table_name: str, metadata_table: str, partition_column: str, business_keys: list[str] | None = None, watermark_column: str | None = None, run_id: str | None = None, mode: str = "append", engine: str = "spark") -> dict:
     keys = business_keys or []
+    if not keys:
+        raise ValueError("business_keys must contain at least one column for partition snapshots.")
     snapshot = build_partition_snapshot(
         df,
         dataset_name=dataset_name,
@@ -165,9 +191,26 @@ def build_and_write_partition_snapshot(spark, df, dataset_name: str, table_name:
 
 def load_latest_partition_snapshot(spark, metadata_table: str, dataset_name: str, table_name: str) -> list[dict] | dict | None:
     try:
-        rows = _safe_spark_collect(spark.table(metadata_table))
-    except Exception:
-        return None
+        df = spark.table(metadata_table)
+        if hasattr(df, "filter") and hasattr(df, "orderBy") and hasattr(df, "limit"):
+            from pyspark.sql import functions as F
+
+            df = (
+                df.filter(
+                    (F.col("dataset_name") == dataset_name)
+                    & (F.col("table_name") == table_name)
+                    & (F.col("snapshot_type") == "partition")
+                )
+                .orderBy(F.col("created_at").desc(), F.col("run_id").desc())
+                .limit(1)
+            )
+            rows = _safe_spark_collect(df)
+        else:
+            rows = _safe_spark_collect(df)
+    except Exception as exc:
+        if _is_missing_table_error(exc):
+            return None
+        raise
     matched = [r.asDict() if hasattr(r, "asDict") else dict(r) for r in rows if (r["dataset_name"] == dataset_name and r["table_name"] == table_name and r.get("snapshot_type") == "partition")]
     if not matched:
         return None
