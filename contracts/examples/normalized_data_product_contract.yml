@@ -1,0 +1,66 @@
+dataset:
+  name: framework_mvp_orders
+  description: Example Fabric data product contract
+  owner: data_team
+  approved_usage: MVP testing only
+
+runtime:
+  environment: fabric_test
+  notebook_name: fabric_mvp_orders
+  pipeline_name: fabric_mvp_orders
+
+source:
+  type: table
+  table: fw_source.orders
+  required_columns:
+    - order_id
+    - customer_id
+    - amount
+    - business_date
+    - updated_at
+  business_keys:
+    - order_id
+  watermark_column: updated_at
+  partition_column: business_date
+
+target:
+  table: fw_curated.orders
+  mode: overwrite
+  format: delta
+  required_columns:
+    - order_id
+    - customer_id
+    - amount
+    - business_date
+    - updated_at
+
+quality:
+  rules: []
+  generate_candidates: false
+  use_rule_store: false
+  rule_status: approved
+  fail_on: critical
+  quarantine_enabled: true
+
+drift:
+  schema_enabled: true
+  data_enabled: true
+  schema_policy: {}
+  data_policy: {}
+
+governance:
+  classify_columns: false
+  require_human_approval: true
+
+metadata:
+  schema: fw_metadata
+  source_profile_table: fw_metadata.source_profile_records
+  output_profile_table: fw_metadata.output_profile_records
+  schema_snapshot_table: fw_metadata.schema_snapshots
+  partition_snapshot_table: fw_metadata.partition_snapshots
+  quality_result_table: fw_metadata.quality_results
+  quarantine_table: fw_metadata.quarantine_summary
+  contract_validation_table: fw_metadata.contract_validation_results
+  lineage_table: fw_metadata.lineage_records
+  run_summary_table: fw_metadata.run_summaries
+  dataset_runs_table: fw_metadata.dataset_runs
