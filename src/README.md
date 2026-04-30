@@ -307,3 +307,49 @@ fw.assert_data_product_passed(result)
 ```
 
 `run_data_product` assumes Spark/Fabric-compatible table access (`spark.table`, `saveAsTable`) and metadata sink tables declared under `contract["metadata"]`.
+
+This runner treats the pipeline as one contract execution unit (not a manual checklist of utility calls).
+
+Minimal MVP contract shape:
+
+```yaml
+dataset:
+  name: orders
+  description: Orders product
+  owner: data.team@example.com
+  approved_usage: analytics
+environment:
+  name: dev
+  metadata_schema: meta
+source:
+  table: bronze.orders
+  format: delta
+target:
+  table: silver.orders
+  mode: append
+  format: delta
+keys:
+  business_keys: [order_id]
+  watermark_column: updated_at
+  partition_column: order_date
+schema:
+  required_source_columns: [order_id, updated_at]
+  required_output_columns: [order_id, updated_at]
+quality:
+  rules: []
+drift:
+  schema_policy: {}
+  incremental_policy: {}
+metadata:
+  source_profile_table: meta.source_profile
+  output_profile_table: meta.output_profile
+  schema_snapshot_table: meta.schema_snapshot
+  partition_snapshot_table: meta.partition_snapshot
+  quality_result_table: meta.quality_result
+  quarantine_table: meta.quarantine
+  contract_validation_table: meta.contract_validation
+  lineage_table: meta.lineage
+  run_summary_table: meta.run_summary
+  dataset_runs_table: meta.dataset_runs
+```
+
