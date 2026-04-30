@@ -30,6 +30,23 @@ from .dq import (
     run_dq_rules,
     run_dq_workflow,
     store_dq_rules,
+from .drift_checkers import (
+    build_and_write_partition_snapshot,
+    build_and_write_schema_snapshot,
+    check_partition_drift,
+    check_profile_drift,
+    check_schema_drift,
+    load_latest_partition_snapshot,
+    load_latest_schema_snapshot,
+    summarize_drift_results,
+)
+
+from .governance_classifier import (
+    build_governance_classification_records,
+    classify_column,
+    classify_columns,
+    summarize_governance_classifications,
+    write_governance_classifications,
 )
 from .data_contract import (
     DataProductContract,
@@ -76,8 +93,7 @@ __all__ = [
     "transformation_summary",
     "transformation_reasons",
     "pass_if_yes_else_run",
-    "create_pipeline_notebook_template",
-    "run_dq_workflow",
+    "create_pipeline_notebook_template",    "run_dq_workflow",
     "run_dq_rules",
     "load_dq_rules",
     "store_dq_rules",
@@ -86,6 +102,11 @@ __all__ = [
     "normalize_dq_rule",
     "generate_dq_rule_candidates",
     "generate_dq_rule_candidates_with_fabric_ai",
+    "classify_column",
+    "classify_columns",
+    "build_governance_classification_records",
+    "write_governance_classifications",
+    "summarize_governance_classifications",
     "SourceContract",
     "TargetContract",
     "QualityContract",
@@ -108,4 +129,12 @@ __all__ = [
     "load_data_contract",
     "run_data_product",
     "validate_data_contract_shape",
+    "check_schema_drift",
+    "build_and_write_schema_snapshot",
+    "load_latest_schema_snapshot",
+    "check_partition_drift",
+    "build_and_write_partition_snapshot",
+    "load_latest_partition_snapshot",
+    "check_profile_drift",
+    "summarize_drift_results",
 ]

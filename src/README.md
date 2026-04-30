@@ -90,6 +90,30 @@ Functions from `src/fabric_data_product_framework/drift.py` and `src/fabric_data
 | `assert_incremental_safe` | Raise when incremental safety check fails. | Block unsafe writes. |
 | `build_incremental_safety_records` | Flatten incremental comparison into record rows. | Persist safety results in metadata sinks. |
 
+
+## Drift checker wrappers
+
+Functions from `src/fabric_data_product_framework/drift_checkers.py`.
+
+| Function | Purpose | Typical use |
+|---|---|---|
+| `check_schema_drift` | Build current schema snapshot and compare with optional baseline snapshot. | Contract-ready schema drift gate before transforms. |
+| `build_and_write_schema_snapshot` | Build schema snapshot and write JSON-safe metadata rows to a Spark table. | Persist latest schema baseline for future runs. |
+| `load_latest_schema_snapshot` | Load the latest schema snapshot JSON payload for a dataset/table from metadata. | Retrieve baseline prior to drift check. |
+| `check_partition_drift` | Build current partition snapshot and compare with optional baseline partition snapshot. | Incremental/data drift guard for historical partition changes. |
+| `build_and_write_partition_snapshot` | Build partition snapshot and write JSON-safe metadata rows to a Spark table. | Persist latest partition baseline for future runs. |
+| `load_latest_partition_snapshot` | Load the latest partition snapshot JSON payload for a dataset/table from metadata. | Retrieve partition baseline prior to drift check. |
+| `check_profile_drift` | Compare current profile against baseline profile using lightweight drift thresholds. | MVP-level data drift checks on row/null/distinct changes. |
+| `summarize_drift_results` | Merge schema/partition/profile drift outcomes into one execution summary status. | Produce one gate signal for orchestration. |
+
+```python
+from fabric_data_product_framework import check_schema_drift, summarize_drift_results
+
+schema_result = check_schema_drift(df, dataset_name="orders", table_name="sales", baseline_snapshot=None, engine="auto")
+overall = summarize_drift_results(schema_drift_result=schema_result)
+```
+
+
 ## Quality
 
 Functions from `src/fabric_data_product_framework/quality.py`.
@@ -122,6 +146,23 @@ Fabric notebook setup for AI mode:
 
 ```python
 %pip install openai pydantic
+## Governance classifier
+
+Functions from `src/fabric_data_product_framework/governance_classifier.py`.
+
+| Function | Purpose | Typical use |
+|---|---|---|
+| `classify_column` | Suggest governance classification for one column using name/type/profile/context signals. | Unit-level review suggestions for sensitive fields. |
+| `classify_columns` | Classify many columns from profile-like dictionaries/lists without requiring Spark. | Produce review queue from source/output profile metadata. |
+| `build_governance_classification_records` | Flatten classification suggestions into metadata-ready records with JSON-safe evidence. | Persist suggested governance decisions for audit/review. |
+| `write_governance_classifications` | Write governance suggestion records to a metadata table via Spark writer adapter pattern. | Store run-time suggestions in Fabric metadata tables. |
+| `summarize_governance_classifications` | Build compact counts by class/action and review indicators. | Handover summaries and dashboard rollups. |
+
+```python
+from fabric_data_product_framework.governance_classifier import classify_columns, summarize_governance_classifications
+
+classifications = classify_columns(profile={"columns": [{"column_name": "customer_email", "data_type": "string"}]})
+summary = summarize_governance_classifications(classifications)
 ```
 
 ## Technical columns
