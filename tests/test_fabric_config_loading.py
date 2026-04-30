@@ -51,9 +51,9 @@ environments:
         load_fabric_config(cfg)
 
 
-def test_get_path_without_config_uses_example_config():
-    p = get_path("Sandbox", "Source")
-    assert p.house_name == "SAMPLE_SOURCE"
+def test_get_path_without_config_raises():
+    with pytest.raises(ValueError):
+        get_path("Sandbox", "Source")
 
 
 def test_get_path_with_example_config():

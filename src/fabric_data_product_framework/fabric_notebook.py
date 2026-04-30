@@ -57,7 +57,11 @@ def load_fabric_config(path: str | Path) -> dict[str, dict[str, Housepath]]:
 
     config_path = Path(path)
     if not config_path.exists():
-        raise FileNotFoundError(f"Fabric config file not found: {config_path}")
+        path_str = str(path)
+        if path_str.startswith("Files/") or path_str.startswith("Files\\"):
+            config_path = Path("/lakehouse/default") / path_str
+        if not config_path.exists():
+            raise FileNotFoundError(f"Fabric config file not found: {path}")
 
     raw = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
     environments = raw.get("environments")
@@ -97,6 +101,11 @@ def get_path(
     use_example_config: bool = False,
 ) -> Any:
     if config is None:
+        if not use_example_config:
+            raise ValueError(
+                "No Fabric config was provided. Load one with load_fabric_config(...) "
+                "or pass use_example_config=True for documentation examples."
+            )
         active_config = EXAMPLE_CONFIG
     else:
         active_config = config
