@@ -1,0 +1,17 @@
+environments:
+  Sandbox:
+    Source:
+      workspace_id: "<workspace-id>"
+      house_id: "<lakehouse-id>"
+      house_name: "SAMPLE_SOURCE"
+      root: "abfss://<workspace-id>@onelake.dfs.fabric.microsoft.com/<lakehouse-id>"
+    Unified:
+      workspace_id: "<workspace-id>"
+      house_id: "<lakehouse-id>"
+      house_name: "SAMPLE_UNIFIED"
+      root: "abfss://<workspace-id>@onelake.dfs.fabric.microsoft.com/<lakehouse-id>"
+    Product:
+      workspace_id: "<workspace-id>"
+      house_id: "<lakehouse-id>"
+      house_name: "SAMPLE_PRODUCT"
+      root: "abfss://<workspace-id>@onelake.dfs.fabric.microsoft.com/<lakehouse-id>"
