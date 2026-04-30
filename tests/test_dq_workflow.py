@@ -3,6 +3,7 @@ import pandas as pd
 from fabric_data_product_framework.data_contract import run_data_product
 from fabric_data_product_framework.dq import (
     build_dq_rule_records,
+    generate_dq_rule_candidates_with_fabric_ai,
     load_dq_rules,
     normalize_dq_rule,
     normalize_dq_rules,
@@ -52,6 +53,34 @@ class _FakeSpark:
             return _FakeSparkDF(self, rows)
         return _FakeSparkDF(self, pd.DataFrame(rows))
 
+
+
+
+class _FakeAI:
+    def __init__(self, response):
+        self.response = response
+
+    def generate_response(self, **_kwargs):
+        return self.response
+
+
+def test_generate_dq_rule_candidates_with_fabric_ai_success(monkeypatch):
+    response = '[{"rule_id":"ai1","column":"order_id","rule_type":"not_null","severity":"critical","layman_rule":"order id required","rule_config":{}}]'
+
+    monkeypatch.setattr(pd.DataFrame, "ai", property(lambda self: _FakeAI(response)), raising=False)
+    out = generate_dq_rule_candidates_with_fabric_ai(profile={"columns": []}, dataset_name="orders", table_name="silver.orders")
+    assert out
+    assert out[0]["rule_id"] == "ai1"
+    assert out[0]["status"] == "candidate"
+
+
+def test_generate_dq_rule_candidates_with_fabric_ai_missing_extension(monkeypatch):
+    monkeypatch.setattr(pd.DataFrame, "ai", property(lambda self: None), raising=False)
+    try:
+        generate_dq_rule_candidates_with_fabric_ai(profile={"columns": []})
+        assert False, "Expected RuntimeError"
+    except RuntimeError as exc:
+        assert "Fabric Runtime 1.3+" in str(exc)
 
 def test_normalize_dq_rule_aliases():
     out = normalize_dq_rule({"id": "x", "rule_type": "not_empty", "field": "a", "allowed_values": ["x"], "min": 1})
@@ -120,6 +149,19 @@ def test_run_dq_workflow_stores_candidates_when_enabled():
     out = run_dq_workflow(spark, df, qc, "orders", "silver.orders", profile=profile, engine="pandas")
     assert out["stored_candidate_records"]
 
+
+
+
+def test_run_dq_workflow_fabric_ai_stores_candidates_not_enforced(monkeypatch):
+    df = pd.DataFrame([{"order_id": 1}])
+    spark = _FakeSpark(df)
+    response = '[{"rule_id":"ai_not_null","column":"order_id","rule_type":"not_null","severity":"warning","layman_rule":"rule","rule_config":{}}]'
+
+    monkeypatch.setattr(pd.DataFrame, "ai", property(lambda self: _FakeAI(response)), raising=False)
+    qc = {"rules": [], "generate_candidates": True, "candidate_generation_method": "fabric_ai", "rule_store_table": "meta.dq_rules", "fail_on": "critical"}
+    out = run_dq_workflow(spark, df, qc, "orders", "silver.orders", profile={"columns": []}, engine="pandas")
+    assert out["stored_candidate_records"]
+    assert out["enforceable_rule_count"] == 0
 
 def test_run_data_product_accepts_direct_quality_rules():
     source_df = pd.DataFrame([{"order_id": 1, "updated_at": "2026-01-01T00:00:00Z", "order_date": "2026-01-01"}])

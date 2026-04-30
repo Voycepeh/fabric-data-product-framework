@@ -106,7 +106,8 @@ Functions from `src/fabric_data_product_framework/dq.py`.
 
 | Function | Purpose | Typical use |
 |---|---|---|
-| `generate_dq_rule_candidates` | Build conservative candidate rules from profile/metadata/business context. | Suggest candidate rules prior to human approval. |
+| `generate_dq_rule_candidates` | Build conservative deterministic candidate rules from profile/metadata/business context. | Suggest profile-based candidate rules prior to human approval. |
+| `generate_dq_rule_candidates_with_fabric_ai` | Optionally call Microsoft Fabric `pandas.ai.generate_response` to propose candidate rules. | Use Fabric Runtime 1.3+ AI functions for AI-assisted candidate suggestions. |
 | `normalize_dq_rule` | Normalize rule aliases and defaults into executable DQ shape. | Clean AI-authored or hand-authored rules. |
 | `normalize_dq_rules` | Normalize a rule list safely (including `None`). | Prepare contract/store rule inputs for execution. |
 | `build_dq_rule_records` | Build rule-store metadata records with lifecycle fields and JSON payload. | Persist candidate/approved rules in metadata tables. |
@@ -115,7 +116,7 @@ Functions from `src/fabric_data_product_framework/dq.py`.
 | `run_dq_rules` | Execute normalized rules with fail-closed unsupported critical behavior. | Enforce DQ gate safely for direct rule lists. |
 | `run_dq_workflow` | Run contract-driven DQ flow (explicit rules, approved rule-store rules, candidate generation/storage, execution, gate). | Use from `run_data_product` and notebook orchestration. |
 
-Generated DQ candidates are stored for human review and are **not enforced** unless they are explicitly included in contract rules or loaded via enforceable rule-store status (for example, `approved`).
+Generated DQ candidates are stored for human review and are **not enforced** unless they are explicitly included in contract rules or loaded via enforceable rule-store status (for example, `approved`). `run_dq_workflow` defaults to `candidate_generation_method=profile`; set `candidate_generation_method=fabric_ai` to use optional Fabric AI candidate generation (Fabric Runtime 1.3+ with AI functions configured).
 
 ## Technical columns
 

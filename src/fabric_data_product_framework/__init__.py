@@ -23,6 +23,7 @@ from .template_generator import create_pipeline_notebook_template
 from .dq import (
     build_dq_rule_records,
     generate_dq_rule_candidates,
+    generate_dq_rule_candidates_with_fabric_ai,
     load_dq_rules,
     normalize_dq_rule,
     normalize_dq_rules,
@@ -84,6 +85,7 @@ __all__ = [
     "normalize_dq_rules",
     "normalize_dq_rule",
     "generate_dq_rule_candidates",
+    "generate_dq_rule_candidates_with_fabric_ai",
     "SourceContract",
     "TargetContract",
     "QualityContract",

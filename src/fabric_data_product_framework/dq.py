@@ -6,7 +6,10 @@ import json
 from datetime import datetime, timezone
 from typing import Any
 
-from .ai_quality_rules import parse_ai_quality_rule_candidates
+from .ai_quality_rules import (
+    build_quality_rule_generation_prompt,
+    parse_ai_quality_rule_candidates,
+)
 from .quality import SUPPORTED_RULE_TYPES, assert_quality_gate, run_quality_rules
 
 
@@ -18,6 +21,64 @@ def _build_rule_id(rule: dict[str, Any]) -> str:
     return str(rule.get("rule_id") or rule.get("name") or "DQ_RULE")
 
 
+
+
+def generate_dq_rule_candidates_with_fabric_ai(
+    profile,
+    contract=None,
+    business_context=None,
+    dataset_name=None,
+    table_name=None,
+    response_format=None,
+) -> list[dict]:
+    """Generate DQ candidates using Fabric pandas AI extension (optional runtime feature)."""
+    import pandas as pd
+
+    prompt = build_quality_rule_generation_prompt(
+        profile=profile,
+        contract=contract,
+        business_context=business_context,
+        table_name=table_name,
+        dataset_name=dataset_name,
+    )
+    prompt_df = pd.DataFrame([{"prompt": prompt}])
+    ai = getattr(prompt_df, "ai", None)
+    if ai is None or not hasattr(ai, "generate_response"):
+        raise RuntimeError(
+            "Fabric AI functions are unavailable. generate_dq_rule_candidates_with_fabric_ai "
+            "requires Microsoft Fabric Runtime 1.3+ with AI functions configured."
+        )
+
+    kwargs = {"prompt": prompt}
+    if response_format is not None:
+        kwargs["response_format"] = response_format
+    ai_response = ai.generate_response(**kwargs)
+    if isinstance(ai_response, pd.DataFrame):
+        raw_response = ai_response.iloc[0].to_dict() if len(ai_response) else "[]"
+    elif isinstance(ai_response, dict):
+        raw_response = ai_response.get("response") or ai_response.get("text") or ai_response
+    else:
+        raw_response = ai_response
+
+    parsed = parse_ai_quality_rule_candidates(raw_response)
+    out = []
+    for c in parsed.get("candidates", []):
+        rule = {
+            "rule_id": c.get("rule_id") or c.get("name"),
+            "table_name": table_name,
+            "column": c.get("column"),
+            "columns": c.get("columns"),
+            "rule_type": c.get("rule_type"),
+            "severity": c.get("severity", "warning"),
+            "description": c.get("layman_rule") or c.get("reason"),
+            "generated_by": "fabric_ai",
+            "status": "candidate",
+        }
+        cfg = c.get("rule_config") or {}
+        if isinstance(cfg, dict):
+            rule.update(cfg)
+        out.append(normalize_dq_rule(rule))
+    return out
 def generate_dq_rule_candidates(
     profile: dict,
     metadata: dict | None = None,
@@ -198,13 +259,23 @@ def run_dq_workflow(spark, df, quality_contract, dataset_name: str, table_name: 
     rule_store_table = getattr(qc, "rule_store_table", None) if not isinstance(qc, dict) else qc.get("rule_store_table")
     rule_status = getattr(qc, "rule_status", "approved") if not isinstance(qc, dict) else qc.get("rule_status", "approved")
     generate_candidates = bool(getattr(qc, "generate_candidates", False) if not isinstance(qc, dict) else qc.get("generate_candidates", False))
+    candidate_generation_method = getattr(qc, "candidate_generation_method", "profile") if not isinstance(qc, dict) else qc.get("candidate_generation_method", "profile")
     fail_on = getattr(qc, "fail_on", "critical") if not isinstance(qc, dict) else qc.get("fail_on", "critical")
 
     if use_store and rule_store_table:
         loaded_rules = load_dq_rules(spark, rule_store_table, dataset_name=dataset_name, source_table=table_name, status=rule_status)
 
     if generate_candidates:
-        generated_candidates = generate_dq_rule_candidates(profile or {}, metadata=metadata, business_context=business_context, dataset_name=dataset_name, table_name=table_name)
+        if str(candidate_generation_method).lower() == "fabric_ai":
+            generated_candidates = generate_dq_rule_candidates_with_fabric_ai(
+                profile=profile or {},
+                contract=getattr(qc, "__dict__", qc),
+                business_context=business_context,
+                dataset_name=dataset_name,
+                table_name=table_name,
+            )
+        else:
+            generated_candidates = generate_dq_rule_candidates(profile or {}, metadata=metadata, business_context=business_context, dataset_name=dataset_name, table_name=table_name)
         if rule_store_table:
             stored_candidate_records = store_dq_rules(spark, generated_candidates, rule_store_table, dataset_name=dataset_name, source_table=table_name, run_id=run_id, status="candidate")
 
