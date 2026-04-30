@@ -13,7 +13,8 @@ Use `configs/fabric_houses.example.yaml` as the public template.
 ## Where to store real config
 
 - In Fabric notebooks, store real config in Lakehouse Files and load it at runtime (for example `Files/configs/fabric_houses.yaml`).
-- For local development, use ignored files such as `configs/fabric_houses.yaml` or `configs/*.local.yaml`.
+- You can also store it in a secure internal workspace location and load it during notebook execution.
+- For local testing, copy the example file to `configs/fabric_houses.local.yaml` (already ignored).
 
 ## Runtime usage
 

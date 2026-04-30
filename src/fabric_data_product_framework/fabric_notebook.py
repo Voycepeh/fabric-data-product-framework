@@ -97,11 +97,6 @@ def get_path(
     use_example_config: bool = False,
 ) -> Any:
     if config is None:
-        if not use_example_config:
-            raise ValueError(
-                "No Fabric config was provided. Load one with load_fabric_config(...) "
-                "or pass use_example_config=True for documentation examples."
-            )
         active_config = EXAMPLE_CONFIG
     else:
         active_config = config
