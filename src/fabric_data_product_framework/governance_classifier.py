@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from collections import Counter
 from typing import Any
 
@@ -48,9 +49,33 @@ def _column_name(rec: dict) -> str:
     return str(rec.get("column_name") or rec.get("COLUMN_NAME") or rec.get("name") or rec.get("column") or "")
 
 
+def _tokenize_text(text: str) -> set[str]:
+    base = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", text or "")
+    tokens = [t for t in re.split(r"[^a-zA-Z0-9]+", base.lower()) if t]
+    return set(tokens)
+
+
+def _phrase_in_text(phrase: str, text: str) -> bool:
+    text_base = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", text or "")
+    phrase_base = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", phrase or "")
+    normalized_text = " ".join(t for t in re.split(r"[^a-zA-Z0-9]+", text_base.lower()) if t)
+    normalized_phrase = " ".join(t for t in re.split(r"[^a-zA-Z0-9]+", phrase_base.lower()) if t)
+    return bool(normalized_phrase) and normalized_phrase in normalized_text
+
+
 def _match_terms(text: str, terms: list[str]) -> list[str]:
-    lower = text.lower()
-    return [t for t in terms if t.lower() in lower]
+    tokens = _tokenize_text(text)
+    matched = []
+    token_variants = tokens | {t[:-1] for t in tokens if len(t) > 3 and t.endswith("s")}
+    for term in terms:
+        term_tokens = _tokenize_text(term)
+        if not term_tokens:
+            continue
+        if len(term_tokens) == 1 and next(iter(term_tokens)) in token_variants:
+            matched.append(term)
+        elif len(term_tokens) > 1 and term_tokens.issubset(tokens):
+            matched.append(term)
+    return matched
 
 
 def classify_column(
@@ -72,11 +97,24 @@ def classify_column(
     text_blob = " ".join(p for p in text_parts if p)
 
     matched_terms: list[str] = []
+    inferred_semantic_type = str(profile.get("inferred_semantic_type") or "").lower()
     matched_rule_ids: list[str] = []
     profile_signals: dict[str, Any] = {}
     business_signals: list[str] = []
 
     best = {"classification": "unknown", "confidence": 0.2, "reason": "No governance signal detected", "action": "review"}
+
+    semantic_map = {
+        "email": ("contact", 0.82, "Profile semantic type indicates contact data"),
+        "phone": ("contact", 0.8, "Profile semantic type indicates contact data"),
+        "person_name": ("personal_data", 0.8, "Profile semantic type indicates personal data"),
+        "identifier": ("identifier", 0.85, "Profile semantic type indicates identifier"),
+        "amount": ("financial", 0.8, "Profile semantic type indicates financial data"),
+        "free_text": ("sensitive_free_text", 0.72, "Profile semantic type indicates free text"),
+    }
+    if inferred_semantic_type in semantic_map:
+        cls, conf, reason = semantic_map[inferred_semantic_type]
+        best = {"classification": cls, "confidence": conf, "reason": reason, "action": DEFAULT_ACTION_BY_CLASSIFICATION.get(cls, "review")}
 
     for category, terms in DEFAULT_CLASSIFICATION_TERMS.items():
         matches = _match_terms(text_blob, terms)
@@ -101,7 +139,7 @@ def classify_column(
 
     for rule in rules or []:
         patterns = [str(p).lower() for p in (rule.get("patterns") or [])]
-        if any(p in text_blob.lower() for p in patterns):
+        if any(_phrase_in_text(p, text_blob) for p in patterns):
             matched_rule_ids.append(str(rule.get("rule_id") or ""))
             if (rule.get("confidence") or 0) >= best["confidence"]:
                 best = {
@@ -184,13 +222,23 @@ def build_governance_classification_records(classifications: list[dict], dataset
     return rows
 
 
+def _spark_create_governance_metadata_dataframe(spark, rows: list[dict]):
+    if not rows:
+        return None
+    normalized = [to_jsonable(dict(r)) for r in rows]
+    json_rows = [json.dumps(r, sort_keys=True) for r in normalized]
+    return spark.read.json(spark.sparkContext.parallelize(json_rows))
+
+
 def write_governance_classifications(spark, classifications: list[dict], table_name: str, dataset_name: str | None = None, source_table: str | None = None, run_id: str | None = None, status: str = "suggested", generated_by: str = "framework", mode: str = "append") -> list[dict]:
     dataset = dataset_name or "unknown"
     source = source_table or table_name
     records = build_governance_classification_records(classifications=classifications, dataset_name=dataset, table_name=source, run_id=run_id, status=status, generated_by=generated_by)
 
     def _spark_writer(rows, table_identifier, mode="append", **_):
-        df = spark.createDataFrame([to_jsonable(r) for r in rows])
+        df = _spark_create_governance_metadata_dataframe(spark, rows)
+        if df is None:
+            return None
         df.write.mode(mode).saveAsTable(table_identifier)
         return df
 

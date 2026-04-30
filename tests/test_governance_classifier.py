@@ -6,6 +6,7 @@ from fabric_data_product_framework.governance_classifier import (
     classify_columns,
     summarize_governance_classifications,
     write_governance_classifications,
+    _spark_create_governance_metadata_dataframe,
 )
 
 
@@ -109,10 +110,19 @@ def test_write_governance_classifications_with_fake_spark():
         def __init__(self):
             self.write = FakeWriter()
 
-    class FakeSpark:
-        def createDataFrame(self, rows):
-            captured["rows"] = rows
+    class FakeRead:
+        def json(self, rows):
+            captured["rows"] = [json.loads(r) for r in rows]
             return FakeDF()
+
+    class FakeSparkContext:
+        def parallelize(self, rows):
+            return rows
+
+    class FakeSpark:
+        def __init__(self):
+            self.read = FakeRead()
+            self.sparkContext = FakeSparkContext()
 
     recs = write_governance_classifications(
         spark=FakeSpark(),
@@ -124,3 +134,47 @@ def test_write_governance_classifications_with_fake_spark():
     assert recs
     assert captured["table"] == "fw_metadata.governance_classifications"
     assert captured["rows"][0]["column_name"] == "email"
+
+
+def test_inferred_semantic_type_drives_contact_for_generic_name():
+    r = classify_column("value", profile={"inferred_semantic_type": "email"})
+    assert r["suggested_classification"] == "contact"
+
+
+def test_token_matching_prevents_partial_false_positive():
+    r = classify_column("username")
+    assert r["suggested_classification"] != "personal_data"
+
+
+def test_spark_safe_json_writer_with_nullable_fields():
+    rows = build_governance_classification_records(
+        [classify_column("value", profile={"inferred_semantic_type": "email"})],
+        dataset_name="d",
+        table_name="t",
+        run_id=None,
+    )
+    rows[0]["approved_by"] = None
+    rows[0]["approved_at"] = None
+
+    captured = {}
+
+    class FakeRead:
+        def json(self, rdd):
+            captured["json_rows"] = list(rdd)
+            return type("DF", (), {})()
+
+    class FakeSparkContext:
+        def parallelize(self, rows):
+            return rows
+
+    class FakeSpark:
+        def __init__(self):
+            self.sparkContext = FakeSparkContext()
+            self.read = FakeRead()
+
+    df = _spark_create_governance_metadata_dataframe(FakeSpark(), rows)
+    assert df is not None
+    payload = json.loads(captured["json_rows"][0])
+    assert "run_id" in payload and payload["run_id"] is None
+    assert payload["approved_by"] is None
+    assert payload["approved_at"] is None
