@@ -254,3 +254,47 @@ def test_run_data_product_calls_schema_drift_wrappers(monkeypatch):
     result = run_data_product(spark=spark, contract=c, source_df=_source_df())
     assert seen["check"] == 1
     assert result["drift"]["schema"]["status"] == "no_baseline"
+
+
+def test_data_drift_second_run_uses_written_baseline(monkeypatch):
+    spark = _FakeSpark(_source_df())
+    c = _contract("full")
+    c["drift"]["data_enabled"] = True
+    c["drift"]["data_policy"] = {"partition_column": "order_date", "business_keys": ["order_id"], "watermark_column": "updated_at"}
+    state = {"baseline": None}
+
+    def _load_latest_partition_snapshot(_spark, _table, dataset_name, table_name):
+        assert table_name == "silver.orders"
+        return state["baseline"]
+
+    def _build_and_write_partition_snapshot(**kwargs):
+        state["baseline"] = [{"partition_value": "2026-01-01", "row_count": 2}]
+        return {"written": True, "snapshot": state["baseline"]}
+
+    def _check_partition_drift(**kwargs):
+        return {"status": "no_baseline" if kwargs.get("baseline_snapshot") is None else "passed", "can_continue": True}
+
+    monkeypatch.setattr("fabric_data_product_framework.data_contract.load_latest_partition_snapshot", _load_latest_partition_snapshot)
+    monkeypatch.setattr("fabric_data_product_framework.data_contract.build_and_write_partition_snapshot", _build_and_write_partition_snapshot)
+    monkeypatch.setattr("fabric_data_product_framework.data_contract.check_partition_drift", _check_partition_drift)
+
+    first = run_data_product(spark=spark, contract=c, source_df=_source_df())
+    second = run_data_product(spark=spark, contract=c, source_df=_source_df())
+    assert first["drift"]["data"]["status"] == "no_baseline"
+    assert second["drift"]["data"]["status"] == "passed"
+
+
+def test_data_drift_missing_column_fails_cleanly():
+    spark = _FakeSpark(_source_df())
+    c = _contract("full")
+    c["drift"]["data_enabled"] = True
+    c["drift"]["data_policy"] = {"partition_column": "order_date", "business_keys": ["order_id"], "watermark_column": "updated_at"}
+
+    def _drop_partition(df, _ctx, _contract):
+        return df.drop(columns=["order_date"])
+
+    result = run_data_product(spark=spark, contract=c, source_df=_source_df(), transform=_drop_partition)
+    assert result["status"] == "failed"
+    assert result["can_continue"] is False
+    assert "errors" in result
+    assert "runtime_context" in result

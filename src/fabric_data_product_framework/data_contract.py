@@ -440,8 +440,21 @@ def run_data_product(spark, contract: dict | DataProductContract, transform=None
         if not partition_column or not business_keys:
             data_drift_result = {"status": "skipped", "can_continue": True, "message": "Data drift skipped due to missing partition_column or business_keys configuration."}
         else:
+            out_cols_raw = getattr(out_df, "columns", None)
+            out_columns = set(list(out_cols_raw) if out_cols_raw is not None else [])
+            missing_cols = [partition_column] + list(business_keys)
+            if watermark_column:
+                missing_cols.append(watermark_column)
+            missing_cols = [c for c in missing_cols if c and c not in out_columns]
+            if missing_cols:
+                return {
+                    "status": "failed",
+                    "can_continue": False,
+                    "errors": [f"Data drift configuration columns missing in output dataframe: {', '.join(sorted(set(missing_cols)))}"],
+                    "runtime_context": ctx,
+                }
             baseline_partition_table = n.drift.baseline_partition_table or md.get("partition_snapshot_table")
-            partition_baseline = load_latest_partition_snapshot(spark, baseline_partition_table, dataset_name=dataset_name, table_name=source_table) if baseline_partition_table else None
+            partition_baseline = load_latest_partition_snapshot(spark, baseline_partition_table, dataset_name=dataset_name, table_name=target_table) if baseline_partition_table else None
             data_drift_result = check_partition_drift(
                 df=out_df, dataset_name=dataset_name, table_name=target_table, partition_column=partition_column, business_keys=business_keys, watermark_column=watermark_column, baseline_snapshot=partition_baseline, policy=n.drift.data_policy, run_id=ctx["run_id"], engine="auto"
             )
@@ -471,9 +484,10 @@ def run_data_product(spark, contract: dict | DataProductContract, transform=None
     quarantine = {"enabled": bool(n.quality.quarantine_enabled), "written": False}
     valid_df, quarantine_df = out_df, None
     quarantine_row_count = 0
-    valid_row_count = None
+    valid_row_count = output_profile.get("row_count")
     if n.quality.quarantine_enabled and enforceable_rules:
         valid_df, quarantine_df = split_valid_and_quarantine(out_df, rules=rules, engine="auto")
+        valid_row_count = len(valid_df) if hasattr(valid_df, "__len__") else int(valid_df.count())
         quarantine_row_count = len(quarantine_df) if hasattr(quarantine_df, "__len__") else int(quarantine_df.count())
         quarantine["row_count"] = quarantine_row_count
         if write_target and write_metadata and md.get("quarantine_table") and quarantine_row_count > 0:
