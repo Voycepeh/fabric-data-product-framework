@@ -321,6 +321,8 @@ dataset:
 environment:
   name: dev
   metadata_schema: meta
+refresh:
+  mode: full
 source:
   table: bronze.orders
   format: delta
@@ -353,3 +355,6 @@ metadata:
   dataset_runs_table: meta.dataset_runs
 ```
 
+
+
+Use `full` for normal full rebuild datasets. Use `incremental` only when the dataset has partition/watermark logic and requires historical partition safety checks.
