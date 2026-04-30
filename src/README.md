@@ -100,6 +100,21 @@ Functions from `src/fabric_data_product_framework/quality.py`.
 | `assert_quality_gate` | Raise when quality result breaches configured fail threshold. | Enforce pass/fail quality gate. |
 | `build_quality_result_records` | Flatten quality result payload into metadata record rows. | Persist quality outcomes for audits/dashboards. |
 
+## Contract-driven DQ workflow
+
+Functions from `src/fabric_data_product_framework/dq.py`.
+
+| Function | Purpose | Typical use |
+|---|---|---|
+| `generate_dq_rule_candidates` | Build conservative candidate rules from profile/metadata/business context. | Suggest candidate rules prior to human approval. |
+| `normalize_dq_rule` | Normalize rule aliases and defaults into executable DQ shape. | Clean AI-authored or hand-authored rules. |
+| `normalize_dq_rules` | Normalize a rule list safely (including `None`). | Prepare contract/store rule inputs for execution. |
+| `build_dq_rule_records` | Build rule-store metadata records with lifecycle fields and JSON payload. | Persist candidate/approved rules in metadata tables. |
+| `store_dq_rules` | Write normalized rule records to a Spark table. | Save candidate/approved rules for reuse. |
+| `load_dq_rules` | Load and parse rules from Spark table with status filters. | Fetch approved/active rules for contract runs. |
+| `run_dq_rules` | Execute normalized rules with fail-closed unsupported critical behavior. | Enforce DQ gate safely for direct rule lists. |
+| `run_dq_workflow` | Run contract-driven DQ flow (explicit rules, rule store, candidate generation, execution, gate). | Use from `run_data_product` and notebook orchestration. |
+
 ## Technical columns
 
 Functions from `src/fabric_data_product_framework/technical_columns.py`.
