@@ -7,6 +7,8 @@ from fabric_data_product_framework.data_contract import (
     assert_data_product_passed,
     build_runtime_context_from_contract,
     load_data_contract,
+    normalize_data_product_contract,
+    data_product_contract_to_dict,
     run_data_product,
     validate_data_contract_shape,
 )
@@ -88,9 +90,29 @@ def test_incremental_missing_partition_fails_validation():
 
 
 def test_load_data_contract_accepts_dict_and_path(tmp_path: Path):
-    assert load_data_contract(_contract())["dataset"]["name"] == "orders"
-    f = tmp_path / "contract.yml"; f.write_text("dataset:\n  name: orders\n", encoding="utf-8")
-    assert load_data_contract(f)["dataset"]["name"] == "orders"
+    assert load_data_contract(_contract()).dataset["name"] == "orders"
+    f = tmp_path / "contract.yml"
+    f.write_text(
+        "dataset:\n"
+        "  name: orders\n"
+        "source:\n"
+        "  table: raw.orders\n"
+        "target:\n"
+        "  table: curated.orders\n"
+        "metadata:\n"
+        "  source_profile_table: m.source_profile\n"
+        "  output_profile_table: m.output_profile\n"
+        "  schema_snapshot_table: m.schema_snapshot\n"
+        "  partition_snapshot_table: m.partition_snapshot\n"
+        "  quality_result_table: m.quality_result\n"
+        "  quarantine_table: m.quarantine\n"
+        "  contract_validation_table: m.contract_validation\n"
+        "  lineage_table: m.lineage\n"
+        "  run_summary_table: m.run_summary\n"
+        "  dataset_runs_table: m.dataset_runs\n",
+        encoding="utf-8",
+    )
+    assert load_data_contract(f).dataset["name"] == "orders"
 
 
 def test_build_runtime_context_from_contract_uses_contract_fields():
@@ -132,3 +154,38 @@ def test_quality_metadata_rows_include_run_id():
     assert quality_writes
     assert "run_id" in quality_writes[0].columns
     assert result["quarantine_row_count"] >= 0
+
+
+def test_normalize_minimal_contract_defaults_applied():
+    normalized = normalize_data_product_contract({"dataset": {"name": "orders"}, "source": {"table": "raw.orders"}, "target": {"table": "curated.orders"}})
+    assert normalized.runtime.dataset_name == "orders"
+    assert normalized.source.format == "delta"
+    assert normalized.target.mode == "append"
+
+
+def test_backward_compatibility_upstream_downstream_mapping():
+    normalized = normalize_data_product_contract({
+        "dataset": {"name": "orders"},
+        "source": {},
+        "target": {},
+        "upstream_contract": {"table_name": "raw.orders", "business_keys": ["order_id"], "required_columns": ["order_id"], "watermark_column": "updated_at"},
+        "downstream_contract": {"table_name": "curated.orders", "required_columns": ["order_id"]},
+        "metadata": _contract()["metadata"],
+    })
+    assert normalized.source.table == "raw.orders"
+    assert normalized.target.table == "curated.orders"
+    assert normalized.source.business_keys == ["order_id"]
+
+
+def test_data_product_contract_to_dict_is_plain_dict():
+    normalized = normalize_data_product_contract(_contract())
+    as_dict = data_product_contract_to_dict(normalized)
+    assert isinstance(as_dict, dict)
+    assert as_dict["source"]["table"] == "bronze.orders"
+
+
+def test_run_data_product_accepts_normalized_contract_object():
+    spark = _FakeSpark(_source_df())
+    normalized = normalize_data_product_contract(_contract("full"))
+    result = run_data_product(spark=spark, contract=normalized, source_df=_source_df())
+    assert result["status"] in {"passed", "failed"}

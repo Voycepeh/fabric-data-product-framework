@@ -358,3 +358,17 @@ metadata:
 
 
 Use `full` for normal full rebuild datasets. Use `incremental` only when the dataset has partition/watermark logic and requires historical partition safety checks.
+
+
+## Contract-first data product runner
+
+Functions from `src/fabric_data_product_framework/data_contract.py`.
+
+| Function | Purpose | Typical use |
+|---|---|---|
+| `load_data_contract` | Load YAML/dict input and normalize it into typed data product contract sections. | Keep one editable contract file while preserving Python/YAML friendliness. |
+| `normalize_data_product_contract` | Normalize loose/legacy contract dictionaries into sectioned typed objects. | Support backward-compatible migration from older `upstream_contract`/`downstream_contract` keys. |
+| `run_data_product` | Execute the contract-first runner using normalized source/target/quality/drift/metadata/runtime sections internally. | Run data products while keeping the user-facing API unchanged. |
+| `data_product_contract_to_dict` | Serialize normalized contract objects back to plain dictionaries. | Logging, testing, JSON/YAML export prep. |
+
+Note: users edit a single contract, and the framework normalizes it into typed sections that `run_data_product` consumes internally.
