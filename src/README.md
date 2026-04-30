@@ -113,7 +113,9 @@ Functions from `src/fabric_data_product_framework/dq.py`.
 | `store_dq_rules` | Write normalized rule records to a Spark table. | Save candidate/approved rules for reuse. |
 | `load_dq_rules` | Load and parse rules from Spark table with status filters. | Fetch approved/active rules for contract runs. |
 | `run_dq_rules` | Execute normalized rules with fail-closed unsupported critical behavior. | Enforce DQ gate safely for direct rule lists. |
-| `run_dq_workflow` | Run contract-driven DQ flow (explicit rules, rule store, candidate generation, execution, gate). | Use from `run_data_product` and notebook orchestration. |
+| `run_dq_workflow` | Run contract-driven DQ flow (explicit rules, approved rule-store rules, candidate generation/storage, execution, gate). | Use from `run_data_product` and notebook orchestration. |
+
+Generated DQ candidates are stored for human review and are **not enforced** unless they are explicitly included in contract rules or loaded via enforceable rule-store status (for example, `approved`).
 
 ## Technical columns
 

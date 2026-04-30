@@ -136,9 +136,42 @@ def test_run_data_product_accepts_direct_quality_rules():
     assert "quality_result" in result
 
 
+
+
+def test_run_dq_workflow_fails_closed_on_unsupported_critical_rule():
+    df = pd.DataFrame([{"order_id": 1}])
+    spark = _FakeSpark(df)
+    qc = {"rules": [{"rule_id": "bad", "rule_type": "typo_rule", "severity": "critical"}], "fail_on": "critical"}
+    out = run_dq_workflow(spark, df, qc, "orders", "silver.orders", engine="pandas")
+    assert out["quality_result"]["can_continue"] is False
+    assert out["gate_passed"] is False
+
+
+def test_run_data_product_fails_closed_on_unsupported_critical_rule():
+    source_df = pd.DataFrame([{"order_id": 1, "updated_at": "2026-01-01T00:00:00Z", "order_date": "2026-01-01"}])
+    spark = _FakeSpark(source_df)
+    contract = {
+        "dataset": {"name": "orders", "description": "d", "owner": "o", "approved_usage": "a"},
+        "source": {"table": "bronze.orders"},
+        "target": {"table": "silver.orders"},
+        "metadata": {"source_profile_table": "m.sp", "output_profile_table": "m.op", "schema_snapshot_table": "m.ss", "partition_snapshot_table": "m.ps", "quality_result_table": "m.qr", "quarantine_table": "m.qq", "contract_validation_table": "m.cv", "lineage_table": "m.li", "run_summary_table": "m.rs", "dataset_runs_table": "m.dr"},
+        "quality": {"rules": [{"rule_id": "bad", "rule_type": "typo_rule", "severity": "critical"}], "fail_on": "critical"},
+        "keys": {"business_keys": ["order_id"]},
+    }
+    result = run_data_product(spark=spark, contract=contract, source_df=source_df)
+    assert result["status"] == "failed"
+
 def test_store_and_load_dq_rules_roundtrip():
     df = pd.DataFrame([{"x": 1}])
     spark = _FakeSpark(df)
     store_dq_rules(spark, [{"rule_id": "r1", "rule_type": "not_null", "column": "x"}], "meta.dq_rules", dataset_name="orders", source_table="silver.orders")
     loaded = load_dq_rules(spark, "meta.dq_rules", dataset_name="orders", source_table="silver.orders", status="candidate")
     assert loaded[0]["rule_id"] == "r1"
+
+
+def test_store_and_load_dq_rules_roundtrip_approved_status():
+    df = pd.DataFrame([{"x": 1}])
+    spark = _FakeSpark(df)
+    store_dq_rules(spark, [{"rule_id": "r2", "rule_type": "not_null", "column": "x"}], "meta.dq_rules", dataset_name="orders", source_table="silver.orders", status="approved")
+    loaded = load_dq_rules(spark, "meta.dq_rules", dataset_name="orders", source_table="silver.orders", status="approved")
+    assert loaded[0]["rule_id"] == "r2"

@@ -113,10 +113,13 @@ def build_dq_rule_records(rules: list[dict], dataset_name: str, table_name: str,
     created_at = _now_iso()
     rows = []
     for rule in normalize_dq_rules(rules):
+        stored_status = rule.get("status")
+        if not stored_status or stored_status == "candidate":
+            stored_status = status
         rows.append({
             "rule_id": _build_rule_id(rule), "dataset_name": dataset_name, "table_name": table_name,
             "source_table": rule.get("source_table") or table_name, "column": rule.get("column"), "rule_type": rule.get("rule_type"),
-            "description": rule.get("description"), "severity": rule.get("severity", "warning"), "status": rule.get("status", status),
+            "description": rule.get("description"), "severity": rule.get("severity", "warning"), "status": stored_status,
             "generated_by": rule.get("generated_by", generated_by), "approved_by": rule.get("approved_by"), "approved_at": rule.get("approved_at"),
             "run_id": run_id, "rule_json": json.dumps(rule, ensure_ascii=False), "created_at": created_at,
         })
@@ -214,7 +217,7 @@ def run_dq_workflow(spark, df, quality_contract, dataset_name: str, table_name: 
             seen.add(rid)
         combined.append(nr)
 
-    quality_result = run_quality_rules(df, combined, dataset_name=dataset_name, table_name=table_name, engine=engine)
+    quality_result = run_dq_rules(df, combined, dataset_name=dataset_name, table_name=table_name, engine=engine, fail_on=fail_on)
     gate_passed = True
     gate_error = None
     try:
