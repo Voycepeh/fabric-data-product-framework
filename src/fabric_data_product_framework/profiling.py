@@ -271,6 +271,91 @@ def flatten_profile_for_metadata(profile: dict, table_name: str, run_id: str, ta
     return rows
 
 
+def _spark_create_metadata_dataframe(spark, rows: list[dict]):
+    """Create a Spark dataframe for metadata rows using explicit schema-safe JSON normalization."""
+    if not rows:
+        return None
+    normalized = []
+    for row in rows:
+        item = dict(row)
+        item["sample_values_json"] = json.dumps(to_jsonable(item.get("sample_values", [])))
+        item["top_values_json"] = json.dumps(to_jsonable(item.get("top_values", [])))
+        normalized.append(to_jsonable(item))
+    return spark.read.json(spark.sparkContext.parallelize([json.dumps(r) for r in normalized]))
+
+
+def write_profile_metadata_rows(
+    *,
+    spark,
+    metadata_rows: list[dict],
+    metadata_table: str,
+    mode: str = "append",
+):
+    """Write flattened profiling rows to a Fabric metadata table without schema inference pitfalls."""
+    df_rows = _spark_create_metadata_dataframe(spark, metadata_rows)
+    if df_rows is None:
+        return None
+    df_rows.write.mode(mode).saveAsTable(metadata_table)
+    return df_rows
+
+
+def profile_and_write_metadata(
+    *,
+    spark,
+    df,
+    dataset_name: str,
+    table_name: str,
+    metadata_table: str,
+    run_id: str,
+    table_stage: str,
+    mode: str = "append",
+    exclude_columns: list[str] | None = None,
+    sample_size: int = 5,
+    top_n: int = 5,
+) -> dict[str, Any]:
+    """Profile a dataframe and write flattened profiling metadata in one Fabric-friendly call."""
+    profile = profile_dataframe(df=df, dataset_name=dataset_name, sample_size=sample_size, top_n=top_n, engine="auto")
+    rows = flatten_profile_for_metadata(
+        profile=profile,
+        table_name=table_name,
+        run_id=run_id,
+        table_stage=table_stage,
+        exclude_columns=exclude_columns if exclude_columns is not None else default_technical_columns(),
+    )
+    written_df = write_profile_metadata_rows(spark=spark, metadata_rows=rows, metadata_table=metadata_table, mode=mode)
+    return {"profile": profile, "metadata_rows": rows, "written_df": written_df}
+
+
+def profile_table_and_write_metadata(
+    *,
+    spark,
+    table_name: str,
+    dataset_name: str,
+    metadata_table: str,
+    run_id: str,
+    table_stage: str,
+    mode: str = "append",
+    exclude_columns: list[str] | None = None,
+    sample_size: int = 5,
+    top_n: int = 5,
+) -> dict[str, Any]:
+    """Read a Spark table, profile it, and persist profile metadata with one API call."""
+    df = spark.table(table_name)
+    return profile_and_write_metadata(
+        spark=spark,
+        df=df,
+        dataset_name=dataset_name,
+        table_name=table_name,
+        metadata_table=metadata_table,
+        run_id=run_id,
+        table_stage=table_stage,
+        mode=mode,
+        exclude_columns=exclude_columns,
+        sample_size=sample_size,
+        top_n=top_n,
+    )
+
+
 def summarize_profile(profile: dict[str, Any]) -> dict[str, Any]:
     """Build a concise profile summary for run notes, reviews, and handover (steps 9/14).
 

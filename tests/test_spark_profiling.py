@@ -7,7 +7,10 @@ import pandas as pd
 from fabric_data_product_framework.profiling import (
     default_technical_columns,
     flatten_profile_for_metadata,
+    profile_and_write_metadata,
     profile_dataframe,
+    profile_table_and_write_metadata,
+    write_profile_metadata_rows,
 )
 
 
@@ -51,6 +54,10 @@ class FakeSparkDataFrame:
         values = [{col: 1, "count": 2}, {col: 2, "count": 1}] if col == "id" else [{col: "run1", "count": 1}, {col: "run2", "count": 1}]
         return FakeGroup(values)
 
+    @property
+    def write(self):
+        return FakeWrite()
+
 
 class FakeCollect:
     def __init__(self, rows):
@@ -84,6 +91,46 @@ class FakeGroup:
 
     def limit(self, n):
         return FakeCollect([FakeRow(r) for r in self.rows[:n]])
+
+
+class FakeWrite:
+    def __init__(self):
+        self._mode = None
+        self.saved_table = None
+
+    def mode(self, mode):
+        self._mode = mode
+        return self
+
+    def saveAsTable(self, table):
+        self.saved_table = table
+        return None
+
+
+class FakeSparkSession:
+    def __init__(self):
+        self.sparkContext = self
+        self.last_table = None
+        self.last_json_input = None
+
+    def parallelize(self, rows):
+        return rows
+
+    class _Reader:
+        def __init__(self, parent):
+            self.parent = parent
+
+        def json(self, rows):
+            self.parent.last_json_input = rows
+            return FakeSparkDataFrame()
+
+    @property
+    def read(self):
+        return self._Reader(self)
+
+    def table(self, table_name):
+        self.last_table = table_name
+        return FakeSparkDataFrame()
 
 
 class _FakeColExpr:
@@ -172,3 +219,44 @@ def test_spark_lazy_import_and_fake_profile_caps():
     assert prof["column_count"] == 2
     assert len(prof["columns"][0]["sample_values"]) == 1
     assert len(prof["columns"][0]["top_values"]) == 1
+
+
+def test_write_profile_metadata_rows_uses_json_reader():
+    spark = FakeSparkSession()
+    rows = [{"column_name": "id", "sample_values": [1], "top_values": [{"value": 1, "count": 2}]}]
+    out = write_profile_metadata_rows(spark=spark, metadata_rows=rows, metadata_table="fw.meta", mode="overwrite")
+    assert out is not None
+    assert spark.last_json_input is not None
+
+
+def test_profile_and_write_metadata_one_call():
+    _install_fake_pyspark()
+    spark = FakeSparkSession()
+    result = profile_and_write_metadata(
+        spark=spark,
+        df=FakeSparkDataFrame(),
+        dataset_name="framework_smoke_orders",
+        table_name="fw_smoke_source_orders",
+        metadata_table="fw_metadata.source_profile_records",
+        run_id="run-1",
+        table_stage="source",
+        mode="overwrite",
+    )
+    assert result["profile"]["engine"] == "spark"
+    assert len(result["metadata_rows"]) == 1
+
+
+def test_profile_table_and_write_metadata_reads_table_then_writes():
+    _install_fake_pyspark()
+    spark = FakeSparkSession()
+    result = profile_table_and_write_metadata(
+        spark=spark,
+        table_name="fw_smoke_source_orders",
+        dataset_name="framework_smoke_orders",
+        metadata_table="fw_metadata.source_profile_records",
+        run_id="run-1",
+        table_stage="source",
+        mode="overwrite",
+    )
+    assert spark.last_table == "fw_smoke_source_orders"
+    assert result["profile"]["dataset_name"] == "framework_smoke_orders"
