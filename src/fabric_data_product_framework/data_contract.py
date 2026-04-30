@@ -55,6 +55,7 @@ class QualityContract:
     use_rule_store: bool = False
     rule_status: str = "approved"
     generate_candidates: bool = False
+    candidate_generation_method: str = "profile"
     fail_on: str = "critical"
     quarantine_enabled: bool = True
     quarantine_table: str | None = None
@@ -161,6 +162,7 @@ def build_quality_contract(config: dict) -> QualityContract:
         use_rule_store=bool(c.get("use_rule_store", False)),
         rule_status=str(c.get("rule_status") or "approved"),
         generate_candidates=bool(c.get("generate_candidates", False)),
+        candidate_generation_method=str(c.get("candidate_generation_method") or "profile"),
         fail_on=str(c.get("fail_on") or "critical"),
         quarantine_enabled=bool(c.get("quarantine_enabled", True)),
         quarantine_table=c.get("quarantine_table"),

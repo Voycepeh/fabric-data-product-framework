@@ -1,6 +1,6 @@
 import pandas as pd
 
-from fabric_data_product_framework.data_contract import run_data_product
+from fabric_data_product_framework.data_contract import normalize_data_product_contract, run_data_product
 import fabric_data_product_framework.dq as dq
 from fabric_data_product_framework.dq import (
     build_dq_rule_records,
@@ -95,6 +95,25 @@ def test_generate_dq_rule_candidates_with_fabric_ai_missing_dependencies(monkeyp
     except RuntimeError as exc:
         assert "Install the fabric-ai extra" in str(exc)
 
+
+
+def test_contract_normalization_preserves_candidate_generation_method():
+    contract = normalize_data_product_contract({
+        "dataset": {"name": "orders"},
+        "source": {"table": "bronze.orders"},
+        "target": {"table": "silver.orders"},
+        "quality": {"candidate_generation_method": "fabric_ai"},
+    })
+    assert contract.quality.candidate_generation_method == "fabric_ai"
+
+
+def test_generate_dq_rule_candidates_with_fabric_ai_dataframe_response(monkeypatch):
+    monkeypatch.setattr(dq, "_fabric_ai_dependencies_available", lambda: True)
+    ai_df = pd.DataFrame([{"generated_response": '[{"rule_id":"ai_df","column":"order_id","rule_type":"not_null","severity":"warning","layman_rule":"df","rule_config":{}}]'}])
+    monkeypatch.setattr(pd.DataFrame, "ai", property(lambda self: _FakeAI(ai_df)), raising=False)
+    out = generate_dq_rule_candidates_with_fabric_ai(profile={"columns": []}, dataset_name="orders", table_name="silver.orders")
+    assert out[0]["rule_id"] == "ai_df"
+
 def test_normalize_dq_rule_aliases():
     out = normalize_dq_rule({"id": "x", "rule_type": "not_empty", "field": "a", "allowed_values": ["x"], "min": 1})
     assert out["rule_id"] == "x"
@@ -176,6 +195,29 @@ def test_run_dq_workflow_fabric_ai_stores_candidates_not_enforced(monkeypatch):
     out = run_dq_workflow(spark, df, qc, "orders", "silver.orders", profile={"columns": []}, engine="pandas")
     assert out["stored_candidate_records"]
     assert out["enforceable_rule_count"] == 0
+
+
+
+def test_run_data_product_uses_fabric_ai_candidate_mode(monkeypatch):
+    source_df = pd.DataFrame([{"order_id": 1, "updated_at": "2026-01-01T00:00:00Z", "order_date": "2026-01-01"}])
+    spark = _FakeSpark(source_df)
+    called = {"n": 0}
+
+    def _fake_ai(**_kwargs):
+        called["n"] += 1
+        return [{"rule_id": "ai1", "rule_type": "not_null", "column": "order_id", "severity": "warning"}]
+
+    monkeypatch.setattr(dq, "generate_dq_rule_candidates_with_fabric_ai", _fake_ai)
+    contract = {
+        "dataset": {"name": "orders", "description": "d", "owner": "o", "approved_usage": "a"},
+        "source": {"table": "bronze.orders"},
+        "target": {"table": "silver.orders"},
+        "metadata": {"source_profile_table": "m.sp", "output_profile_table": "m.op", "schema_snapshot_table": "m.ss", "partition_snapshot_table": "m.ps", "quality_result_table": "m.qr", "quarantine_table": "m.qq", "contract_validation_table": "m.cv", "lineage_table": "m.li", "run_summary_table": "m.rs", "dataset_runs_table": "m.dr"},
+        "quality": {"rules": [], "generate_candidates": True, "candidate_generation_method": "fabric_ai", "rule_store_table": "meta.dq_rules"},
+        "keys": {"business_keys": ["order_id"]},
+    }
+    run_data_product(spark=spark, contract=contract, source_df=source_df)
+    assert called["n"] == 1
 
 def test_run_data_product_accepts_direct_quality_rules():
     source_df = pd.DataFrame([{"order_id": 1, "updated_at": "2026-01-01T00:00:00Z", "order_date": "2026-01-01"}])
