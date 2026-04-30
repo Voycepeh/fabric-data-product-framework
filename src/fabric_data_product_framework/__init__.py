@@ -20,6 +20,17 @@ from .fabric_notebook import (
     warehouse_write,
 )
 from .template_generator import create_pipeline_notebook_template
+from .drift_checkers import (
+    build_and_write_partition_snapshot,
+    build_and_write_schema_snapshot,
+    check_partition_drift,
+    check_profile_drift,
+    check_schema_drift,
+    load_latest_partition_snapshot,
+    load_latest_schema_snapshot,
+    summarize_drift_results,
+)
+
 from .governance_classifier import (
     build_governance_classification_records,
     classify_column,
@@ -100,4 +111,12 @@ __all__ = [
     "load_data_contract",
     "run_data_product",
     "validate_data_contract_shape",
+    "check_schema_drift",
+    "build_and_write_schema_snapshot",
+    "load_latest_schema_snapshot",
+    "check_partition_drift",
+    "build_and_write_partition_snapshot",
+    "load_latest_partition_snapshot",
+    "check_profile_drift",
+    "summarize_drift_results",
 ]
