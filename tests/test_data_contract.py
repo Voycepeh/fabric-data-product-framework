@@ -91,6 +91,7 @@ def test_incremental_missing_partition_fails_validation():
 
 def test_load_data_contract_accepts_dict_and_path(tmp_path: Path):
     assert load_data_contract(_contract()).dataset["name"] == "orders"
+    assert load_data_contract(_contract())["dataset"]["name"] == "orders"
     f = tmp_path / "contract.yml"
     f.write_text(
         "dataset:\n"
@@ -189,3 +190,40 @@ def test_run_data_product_accepts_normalized_contract_object():
     normalized = normalize_data_product_contract(_contract("full"))
     result = run_data_product(spark=spark, contract=normalized, source_df=_source_df())
     assert result["status"] in {"passed", "failed"}
+
+
+def test_runtime_contract_uses_target_required_columns():
+    c = _contract("full")
+    c["target"]["required_columns"] = ["order_id", "updated_at", "missing_col"]
+    spark = _FakeSpark(_source_df())
+    result = run_data_product(spark=spark, contract=c, source_df=_source_df())
+    assert result["status"] == "failed"
+
+
+def test_data_product_contract_without_raw_builds_effective_contract():
+    normalized = normalize_data_product_contract(_contract("full"))
+    normalized.raw = {}
+    assert normalized["schema"]["required_output_columns"] == ["order_id", "updated_at"]
+    assert normalized["keys"]["business_keys"] == ["order_id"]
+
+
+def test_transform_receives_effective_normalized_contract():
+    seen = {}
+
+    def _transform(df, _ctx, contract):
+        seen["contract"] = contract
+        return df
+
+    spark = _FakeSpark(_source_df())
+    run_data_product(spark=spark, contract=_contract("full"), source_df=_source_df(), transform=_transform)
+    assert seen["contract"]["source"]["table"] == "bronze.orders"
+    assert "schema" in seen["contract"]
+
+
+def test_incremental_validation_messages_reference_source_fields():
+    c = _contract("incremental")
+    del c["keys"]["partition_column"]
+    c["keys"]["business_keys"] = []
+    errors = validate_data_contract_shape(c)
+    assert "source.partition_column" in " | ".join(errors)
+    assert "source.business_keys" in " | ".join(errors)

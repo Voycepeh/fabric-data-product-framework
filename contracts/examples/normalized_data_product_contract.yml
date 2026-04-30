@@ -27,6 +27,12 @@ target:
   table: fw_curated.orders
   mode: overwrite
   format: delta
+  required_columns:
+    - order_id
+    - customer_id
+    - amount
+    - business_date
+    - updated_at
 
 quality:
   rules: []

@@ -43,6 +43,7 @@ class TargetContract:
     format: str = "delta"
     mode: str = "append"
     partition_column: str | None = None
+    required_columns: list[str] = field(default_factory=list)
     write_options: dict[str, Any] = field(default_factory=dict)
 
 
@@ -114,6 +115,9 @@ class DataProductContract:
     runtime: RuntimeContract = field(default_factory=RuntimeContract)
     raw: dict[str, Any] = field(default_factory=dict)
 
+    def __getitem__(self, key: str) -> Any:
+        return _effective_contract_dict(self)[key]
+
 
 def _dict(config: dict | None) -> dict:
     return config if isinstance(config, dict) else {}
@@ -143,6 +147,7 @@ def build_target_contract(config: dict) -> TargetContract:
         format=str(c.get("format") or "delta"),
         mode=str(c.get("mode") or "append"),
         partition_column=c.get("partition_column"),
+        required_columns=list(c.get("required_columns") or []),
         write_options=dict(c.get("write_options") or {}),
     )
 
@@ -230,6 +235,7 @@ def normalize_data_product_contract(contract: dict | DataProductContract) -> Dat
 
     target_cfg = dict(raw.get("target") or {})
     target_cfg.setdefault("table", downstream.get("table_name"))
+    target_cfg.setdefault("required_columns", downstream.get("required_columns", (raw.get("schema") or {}).get("required_output_columns", [])))
 
     metadata_cfg = dict(raw.get("metadata") or {})
     metadata_cfg.setdefault("schema", raw.get("metadata_schema") or (raw.get("environment") or {}).get("metadata_schema") or "fw_metadata")
@@ -268,6 +274,33 @@ def data_product_contract_to_dict(contract: DataProductContract) -> dict:
     return asdict(contract)
 
 
+def _effective_contract_dict(contract: dict | DataProductContract) -> dict:
+    n = normalize_data_product_contract(contract)
+    raw = dict(n.raw) if n.raw else {}
+    effective = {
+        "dataset": dict(n.dataset),
+        "source": asdict(n.source),
+        "target": asdict(n.target),
+        "quality": asdict(n.quality),
+        "drift": asdict(n.drift),
+        "governance": asdict(n.governance),
+        "metadata": asdict(n.metadata),
+        "runtime": asdict(n.runtime),
+        "refresh": dict(raw.get("refresh") or {}),
+    }
+    effective["environment"] = dict(raw.get("environment") or {"name": n.runtime.environment, "metadata_schema": n.metadata.schema})
+    effective["keys"] = {
+        "business_keys": list(n.source.business_keys),
+        "watermark_column": n.source.watermark_column,
+        "partition_column": n.source.partition_column,
+    }
+    effective["schema"] = {
+        "required_source_columns": list(n.source.required_columns),
+        "required_output_columns": list(n.target.required_columns),
+    }
+    return effective
+
+
 def load_data_contract(path_or_dict: str | Path | dict) -> DataProductContract:
     raw = dict(path_or_dict) if isinstance(path_or_dict, dict) else load_dataset_contract(path_or_dict)
     return normalize_data_product_contract(raw)
@@ -279,7 +312,7 @@ def _refresh_mode(contract: dict) -> str:
 
 def validate_data_contract_shape(contract: dict | DataProductContract) -> list[str]:
     n = normalize_data_product_contract(contract)
-    raw = n.raw
+    raw = _effective_contract_dict(n)
     errors: list[str] = []
     if not n.dataset.get("name"):
         errors.append("Missing required key: dataset.name")
@@ -298,9 +331,9 @@ def validate_data_contract_shape(contract: dict | DataProductContract) -> list[s
         errors.append("Invalid refresh.mode. Expected one of: full, incremental, snapshot, append")
     if mode == "incremental":
         if not n.source.partition_column:
-            errors.append("Missing required key for incremental mode: keys.partition_column")
+            errors.append("Missing required key for incremental mode: source.partition_column")
         if not n.source.business_keys:
-            errors.append("Incremental mode requires non-empty keys.business_keys")
+            errors.append("Incremental mode requires non-empty source.business_keys")
     return errors
 
 
@@ -327,10 +360,10 @@ def _write_dataframe_to_table(spark, df, table: str, mode: str = "append") -> No
 
 def _runtime_validation_contract(contract: dict | DataProductContract) -> dict:
     n = normalize_data_product_contract(contract)
-    raw = dict(n.raw)
-    raw["contracts"] = raw.get("contracts") or {"upstream": {"expected_columns": n.source.required_columns}, "downstream": {"guaranteed_columns": (raw.get("downstream_contract") or {}).get("required_columns", (raw.get("schema") or {}).get("required_output_columns", []))}}
-    raw["refresh"] = raw.get("refresh") or {"watermark_column": n.source.watermark_column}
-    return raw
+    effective = _effective_contract_dict(n)
+    effective["contracts"] = {"upstream": {"expected_columns": n.source.required_columns}, "downstream": {"guaranteed_columns": n.target.required_columns}}
+    effective["refresh"] = effective.get("refresh") or {"watermark_column": n.source.watermark_column}
+    return effective
 
 
 def run_data_product(spark, contract: dict | DataProductContract, transform=None, source_df=None, write: bool | None = None, *, write_target: bool = True, write_metadata: bool = True) -> dict:
@@ -347,7 +380,8 @@ def run_data_product(spark, contract: dict | DataProductContract, transform=None
 
     ctx = build_runtime_context_from_contract(n)
     dataset_name, source_table, target_table, metadata = n.dataset["name"], n.source.table, n.target.table, n.metadata
-    mode = _refresh_mode(n.raw)
+    effective_contract = _effective_contract_dict(n)
+    mode = _refresh_mode(effective_contract)
     src_df = source_df if source_df is not None else spark.table(source_table)
     md = asdict(metadata)
 
@@ -367,7 +401,7 @@ def run_data_product(spark, contract: dict | DataProductContract, transform=None
         if write_metadata:
             _write_records_spark(spark, partition_snapshot, md["partition_snapshot_table"])
 
-    out_df = transform(src_df, ctx, n.raw) if transform else src_df
+    out_df = transform(src_df, ctx, effective_contract) if transform else src_df
     out_df = add_standard_technical_columns(out_df, run_id=ctx["run_id"], pipeline_name=dataset_name, environment=ctx["environment"], source_table=source_table, watermark_column=(n.source.watermark_column if n.source.watermark_column in getattr(out_df, "columns", []) else None), business_keys=n.source.business_keys)
 
     output_profile = profile_dataframe(out_df, dataset_name=dataset_name)
@@ -394,7 +428,7 @@ def run_data_product(spark, contract: dict | DataProductContract, transform=None
     if write_metadata and md.get("lineage_table"):
         _write_records_spark(spark, lineage_rows, md["lineage_table"])
 
-    run_summary = build_run_summary(runtime_context=ctx, contract=n.raw, source_profile=source_profile, output_profile=output_profile, quality_result=quality_result, contract_validation_result=contract_result)
+    run_summary = build_run_summary(runtime_context=ctx, contract=effective_contract, source_profile=source_profile, output_profile=output_profile, quality_result=quality_result, contract_validation_result=contract_result)
     if write_metadata:
         _write_records_spark(spark, [build_run_summary_record(run_summary)], md["run_summary_table"])
 

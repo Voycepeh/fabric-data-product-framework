@@ -372,3 +372,35 @@ Functions from `src/fabric_data_product_framework/data_contract.py`.
 | `data_product_contract_to_dict` | Serialize normalized contract objects back to plain dictionaries. | Logging, testing, JSON/YAML export prep. |
 
 Note: users edit a single contract, and the framework normalizes it into typed sections that `run_data_product` consumes internally.
+
+Normalized contract snippet:
+
+```yaml
+dataset:
+  name: orders
+source:
+  table: raw.orders
+target:
+  table: curated.orders
+  required_columns: [order_id, updated_at]
+metadata:
+  source_profile_table: meta.source_profile
+  output_profile_table: meta.output_profile
+  schema_snapshot_table: meta.schema_snapshot
+  partition_snapshot_table: meta.partition_snapshot
+  quality_result_table: meta.quality_result
+  quarantine_table: meta.quarantine
+  contract_validation_table: meta.contract_validation
+  lineage_table: meta.lineage
+  run_summary_table: meta.run_summary
+  dataset_runs_table: meta.dataset_runs
+```
+
+Legacy mapping note: `upstream_contract.table_name`/`required_columns` and `downstream_contract.table_name`/`required_columns` are mapped to normalized `source.*` and `target.*` fields.
+
+```python
+import fabric_data_product_framework as fw
+
+contract = fw.load_data_contract("contracts/examples/normalized_data_product_contract.yml")
+result = fw.run_data_product(spark=spark, contract=contract, transform=transform_orders)
+```
