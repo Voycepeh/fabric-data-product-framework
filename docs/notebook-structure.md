@@ -1,19 +1,14 @@
 # Notebook Structure
 
-Use a notebook split that is easy to teach, review, and hand over.
+Use this six-notebook split for a teachable and handover-friendly implementation.
 
-| Notebook | Purpose | Lane |
-| --- | --- | --- |
-| 00_governance_setup | Purpose, steward, usage, business metadata, labels, contract draft | Outside Fabric + Inside Fabric: Human-guided |
-| 01_source_profiling | Source declaration, source profile, metadata logging | Inside Fabric: Framework-run + Human-guided |
-| 02_eda_notes | Data quirks, caveats, assumptions, transformation rationale | Inside Fabric: Human-guided (AI-assisted optional) |
-| 03_pipeline_transform | Parameters, transformation logic, technical columns, write pattern, output profiling | Inside Fabric: Human-guided + Framework-run |
-| 04_checks_and_gates | Drift checks, incremental safety, DQ rules, contract validation | Inside Fabric: Framework-run + Human-guided |
-| 05_handover_export | Lineage, run summary, AI context export, final business metadata summary | Inside Fabric: Framework-run + Human-guided |
+| Notebook | Stable convention |
+| --- | --- |
+| `00_governance_setup` | Capture purpose, owner/steward, usage boundaries, and governance context. |
+| `01_source_and_profile` | Declare source data and run source profiling. |
+| `02_exploration_notes` | Record transformation rationale, caveats, and decisions. |
+| `03_transform_and_model` | Apply transformation logic and prepare outputs. |
+| `04_checks_and_gates` | Run DQ, drift, and incremental safety checks. |
+| `05_handover_export` | Export lineage, run summary, and handover context. |
 
-## Usage guidance
-
-- EDA notes should be a separate notebook.
-- Profiling, output profiling, metadata logging, and lineage capture are framework-run steps.
-- AI can assist with summaries, DQ rule candidates, label suggestions, and lineage drafts.
-- AI output must be reviewed before acceptance.
+For workflow steps and execution order, use [Quick Start](quick-start.md).

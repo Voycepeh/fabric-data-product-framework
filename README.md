@@ -83,8 +83,8 @@ Guide: [docs/UV_WHEEL_FABRIC_INSTALL_GUIDE.md](docs/UV_WHEEL_FABRIC_INSTALL_GUID
 ## Start here
 - Fabric notebook template: [templates/notebooks/fabric_data_product_mvp.md](templates/notebooks/fabric_data_product_mvp.md)
 - Fabric smoke-test checklist: [docs/fabric-smoke-test.md](docs/fabric-smoke-test.md)
-- Canonical MVP workflow: [docs/mvp-workflow.md](docs/mvp-workflow.md)
-- Lifecycle and sequence: [docs/lifecycle-operating-model.md](docs/lifecycle-operating-model.md)
+- Canonical MVP workflow runbook: [docs/quick-start.md](docs/quick-start.md)
+- Lifecycle and sequence (supporting context): [docs/lifecycle-operating-model.md](docs/lifecycle-operating-model.md)
 - Function reference: [generated function reference](docs/reference/index.md)
 - Notebook recipes: [docs/recipes/index.md](docs/recipes/index.md)
 - MVP wheel release checklist: [docs/recipes/mvp_wheel_release_checklist.md](docs/recipes/mvp_wheel_release_checklist.md)

@@ -1,10 +1,9 @@
 # Notebook Standard
 
-This page is intentionally concise.
+This page keeps only stable conventions.
 
-For the detailed lifecycle and lane ownership model, use:
-- [Lifecycle operating model](lifecycle-operating-model.md)
-- [Notebook structure](notebook-structure.md)
-- [AI-assisted steps](ai-in-the-loop.md)
+- Follow the six-notebook naming and ownership conventions in [Notebook Structure](notebook-structure.md).
+- Keep AI-generated content reviewable and explicitly human-approved.
+- Keep run artifacts reproducible (profiles, DQ results, lineage, handover outputs).
 
-For legacy notebook standards, prefer the six-notebook structure described in [Notebook structure](notebook-structure.md).
+For full run instructions, use [Quick Start](quick-start.md).
