@@ -1,14 +1,15 @@
 # API Reference
 
-Use `src/README.md` as the workflow and chaining guide for Fabric notebook implementation order.
-Use the generated API pages in this section as the function-level source of truth for current callable signatures and docstrings.
+Use `src/README.md` as the workflow-first callable map.
+Use the generated API pages in this section for callable signatures, parameters, returns, and examples.
 
 ## Modules
 
-- [Runtime](runtime.md)
-- [Profiling](profiling.md)
-- [Quality](quality.md)
+- [Fabric Notebook](fabric_notebook.md)
+- [Template Generator](template_generator.md)
+- [Lineage](lineage.md)
 - [DQ Workflow](dq.md)
 - [Governance](governance.md)
-- [Lineage](lineage.md)
-- [Contracts](contracts.md)
+- [Data Contract](contracts.md)
+- [Drift Checkers](drift_checkers.md)
+- [MVP Steps](mvp_steps.md)
