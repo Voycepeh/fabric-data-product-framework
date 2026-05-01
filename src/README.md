@@ -104,13 +104,14 @@ This page is organized around how functions are typically chained in notebook wo
 | Function | What it does | Use when | Typical next step |
 |---|---|---|---|
 | `run_data_product` | Executes contract-driven end-to-end workflow. | One-call orchestration path. | Review run summary + records |
-| `build_data_product_contract` | Parses raw dict to typed contract object. | Pre-validating contract sections. | `run_data_product` |
+| `normalize_data_product_contract` | Normalizes raw contract dictionaries into the typed contract object. | Pre-validating or inspecting contract structure before execution. | `run_data_product` |
 
 ### Template generation
 
 | Function | What it does | Use when | Typical next step |
 |---|---|---|---|
-| `generate_notebook_template` | Produces runnable starter notebook template text. | Bootstrapping new datasets. | Fill dataset-specific logic |
+| `create_pipeline_notebook_template` | Produces a pipeline-oriented starter notebook template. | Bootstrapping standard pipeline notebook scaffolding. | Fill dataset-specific logic |
+| `create_actual_data_mvp_template` | Produces an actual-data MVP notebook template. | Bootstrapping MVP-style Fabric notebook flows. | Connect source/target specifics and run checks |
 
 ## Minimal recipes
 
@@ -146,8 +147,16 @@ summary = build_run_summary(runtime_context=ctx, quality_result=quality_result, 
 
 ```python
 from fabric_data_product_framework.data_contract import run_data_product
+from fabric_data_product_framework.config import load_dataset_contract
 
-result = run_data_product(contract_path="examples/configs/sample_dataset_contract.yaml", source_df=df)
+contract = load_dataset_contract("examples/configs/sample_dataset_contract.yaml")
+result = run_data_product(
+    spark=spark,
+    contract=contract,
+    source_df=df,  # optional injection for controlled notebook/test runs
+    write_target=False,  # optional dry-run behavior
+    write_metadata=False,
+)
 print(result["run_summary"]["overall_status"])
 ```
 
