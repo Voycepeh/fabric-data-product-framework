@@ -33,4 +33,4 @@ The template keeps one contract lifecycle in a single notebook flow:
 
 - `templates/notebooks/README.md`
 - `docs/workflows/fabric-notebook-template.md`
-- `src/README.md`
+- Generated function reference: `docs/reference/`

@@ -11,11 +11,11 @@ Use this site as the **operating manual** for running and understanding the fram
 - **I want to understand the lifecycle** → [Canonical 13-step MVP lifecycle](lifecycle-operating-model.md)
 - **I want to understand the architecture** → [Architecture overview](architecture.md)
 - **I want to build a wheel and install in Fabric** → [UV wheel + Fabric install guide](UV_WHEEL_FABRIC_INSTALL_GUIDE.md)
-- **I want to inspect callable functions** → [API overview](api/index.md) and [generated callable reference](reference/)
+- **I want to inspect callable functions** → [Function Reference — generated list of callable framework functions.](reference/)
 
 ## Suggested flow for first-time users
 
 1. Run the [Quick Start](quick-start.md).
 2. Read the [lifecycle operating model](lifecycle-operating-model.md).
 3. Review the [architecture](architecture.md).
-4. Use the [callable/API reference](api/index.md) while adapting notebooks.
+4. Use the [function reference](reference/) while adapting notebooks.

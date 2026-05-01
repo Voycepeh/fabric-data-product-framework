@@ -129,5 +129,5 @@ print(summary_md)
 
 ## Related references
 
-- `src/README.md`
-- `docs/api/`
+- Generated function reference: `docs/reference/`
+- `docs/reference/`

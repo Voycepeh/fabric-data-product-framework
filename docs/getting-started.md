@@ -10,7 +10,7 @@ The framework provides reusable controls for:
 - Data-quality and contract validation.
 - Lineage records, run summary, and metadata-ready outputs.
 
-See callable functions in [../src/README.md](../src/README.md).
+See callable functions in [the generated function reference](reference/).
 
 ## Three-lane model (how to work)
 Use this operating split throughout your implementation:
