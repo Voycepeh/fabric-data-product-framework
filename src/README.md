@@ -272,6 +272,22 @@ summary = lineage.build_summary()
 print(build_transformation_summary_markdown(summary))
 ```
 
+## DQX-inspired Fabric workflow
+
+```python
+import fabric_data_product_framework as fw
+
+contract = fw.load_data_contract("contracts/examples/orders.yml")
+result = fw.run_data_product(
+    spark=spark,
+    contract=contract,
+    transform=transform_orders,
+)
+fw.assert_data_product_passed(result)
+```
+
+In this pattern, the notebook is the execution layer and the framework library owns reusable logic. Lakehouse and Warehouse tables own persisted metadata and monitoring outputs. Fabric AI functions and Microsoft Copilot can assist rule generation and summarization, but human approval remains required before enforcement.
+
 ## Scaffold modules
 
 These modules exist to reserve the framework structure, but do not expose public callable functions yet:
