@@ -77,6 +77,12 @@ See the step-by-step guide: [docs/setup/uv-wheel-and-fabric-environment.md](docs
 - Function reference: [src/README.md](src/README.md)
 - Capability status: [docs/capability-status.md](docs/capability-status.md)
 
+
+## Documentation site
+Rendered documentation is published on GitHub Pages at <https://voycepeh.github.io/fabric-data-product-framework/>.
+
+The files under `docs/api/` are source markdown files for mkdocstrings and are best viewed through the published docs site.
+
 ## Testing
 - Local tests: `python -m pytest`
 - Synthetic smoke example: `PYTHONPATH=src python examples/mvp_fabric_smoke_test.py`

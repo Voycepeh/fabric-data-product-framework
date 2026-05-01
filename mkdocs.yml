@@ -1,5 +1,6 @@
 site_name: Fabric Data Product Framework
 repo_url: https://github.com/Voycepeh/fabric-data-product-framework
+site_url: https://voycepeh.github.io/fabric-data-product-framework/
 theme:
   name: mkdocs
 nav:
