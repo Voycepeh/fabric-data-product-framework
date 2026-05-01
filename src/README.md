@@ -471,3 +471,18 @@ import fabric_data_product_framework as fw
 contract = fw.load_data_contract("contracts/examples/normalized_data_product_contract.yml")
 result = fw.run_data_product(spark=spark, contract=contract, transform=transform_orders)
 ```
+
+
+## Template generator
+
+Functions from `src/fabric_data_product_framework/template_generator.py`.
+
+| Function | Purpose | Typical use |
+|---|---|---|
+| `create_actual_data_mvp_template` | Generate a Fabric-ready actual-data MVP notebook template that uses the contract-first runner. | Bootstrap a new notebook where users only edit contract values and `transform`. |
+
+```python
+from fabric_data_product_framework import create_actual_data_mvp_template
+
+create_actual_data_mvp_template("examples/fabric_actual_data_mvp/actual_data_mvp_template.py")
+```

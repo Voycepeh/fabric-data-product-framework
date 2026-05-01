@@ -59,6 +59,7 @@ Humans remain accountable for:
 - Local smoke test: [docs/local-smoke-test.md](docs/local-smoke-test.md)
 - Fabric smoke test: [docs/fabric-smoke-test.md](docs/fabric-smoke-test.md)
 - Quick start notebooks/examples: [docs/quick-start.md](docs/quick-start.md), [examples/fabric_smoke_test/README.md](examples/fabric_smoke_test/README.md)
+- Run the actual-data MVP template: [docs/workflows/run-actual-data-mvp.md](docs/workflows/run-actual-data-mvp.md)
 
 ## 10) Roadmap
 Roadmap and operating priorities:
