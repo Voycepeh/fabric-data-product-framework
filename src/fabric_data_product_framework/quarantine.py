@@ -56,7 +56,23 @@ def add_dq_failure_columns(df, rules, engine="auto"):
 
 
 def split_valid_and_quarantine(df, rules, engine="auto"):
-    """Split dataframe into valid and quarantined partitions after DQ checks."""
+    """Split dataset into pipeline-safe rows and quarantined rows.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame or pyspark.sql.DataFrame
+        Input records to evaluate.
+    rules : list[dict]
+        Row-level executable rules.
+    engine : str, default "auto"
+        Execution engine selector.
+
+    Returns
+    -------
+    tuple
+        ``(valid_df, quarantine_df)`` where quarantine rows have at least one
+        critical row-level failure in ``dq_errors``.
+    """
     enriched = add_dq_failure_columns(df, rules, engine=engine)
     if _resolve_engine(enriched, engine) == "spark":
         from pyspark.sql import functions as F
@@ -68,8 +84,20 @@ def split_valid_and_quarantine(df, rules, engine="auto"):
 def build_quarantine_summary_records(quarantine_df, run_id, dataset_name, table_name, engine="auto"):
     """Build metadata rows summarizing quarantine volume for a pipeline run.
 
-    Returns records that can be written to metadata tables and surfaced in run
-    summaries for AI/human handover.
+    Parameters
+    ----------
+    quarantine_df : pandas.DataFrame or pyspark.sql.DataFrame
+        Quarantine partition returned by :func:`split_valid_and_quarantine`.
+    run_id, dataset_name, table_name : str
+        Run and dataset identifiers persisted with the summary.
+    engine : str, default "auto"
+        Execution engine selector.
+
+    Returns
+    -------
+    list[dict]
+        Metadata-table-ready summary records that can be surfaced in monitoring,
+        run summaries, and AI/human handover context.
     """
     resolved = _resolve_engine(quarantine_df, engine)
     q_count = quarantine_df.count() if resolved == "spark" else len(quarantine_df)

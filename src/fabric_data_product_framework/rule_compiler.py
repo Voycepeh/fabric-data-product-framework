@@ -96,5 +96,18 @@ def compile_layman_rules_to_quality_rules(candidates):
 
 
 def build_rule_registry_records(compiled_rules, run_id, dataset_name, table_name):
-    """Build metadata records for persisted compiled rule definitions."""
+    """Build metadata records for persisted compiled rule definitions.
+
+    Parameters
+    ----------
+    compiled_rules : list[dict]
+        Executable rules produced by ``compile_layman_rules_to_quality_rules``.
+    run_id, dataset_name, table_name : str
+        Context fields used for metadata persistence and traceability.
+
+    Returns
+    -------
+    list[dict]
+        Registry records suitable for writing to a Lakehouse metadata table.
+    """
     return [{"run_id": run_id, "dataset_name": dataset_name, "table_name": table_name, "rule_id": r.get("rule_id"), "rule_type": r.get("rule_type"), "severity": r.get("severity"), "column": r.get("column"), "columns": r.get("columns"), "reason": r.get("reason"), "rule_json": r} for r in compiled_rules]
