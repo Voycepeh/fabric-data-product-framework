@@ -42,35 +42,31 @@ def _write_metadata_rows(spark, metadata_table: str, records: list[dict], mode: 
 def check_schema_drift(df, dataset_name: str, table_name: str, baseline_snapshot: dict | None = None, policy: dict | None = None, engine: str = "spark") -> dict:
     """Check schema drift.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `check_schema_drift`.
 
     Parameters
     ----------
     df : Any
-    Description of `df`.
-    dataset_name : Any
-    Description of `dataset_name`.
-    table_name : Any
-    Description of `table_name`.
-    baseline_snapshot : Any
-    Description of `baseline_snapshot`.
-    policy : Any
-    Description of `policy`.
-    engine : Any
-    Description of `engine`.
+        Input value for `df`.
+    dataset_name : str
+        Input value for `dataset_name`.
+    table_name : str
+        Input value for `table_name`.
+    baseline_snapshot : dict | None, optional
+        Input value for `baseline_snapshot`.
+    policy : dict | None, optional
+        Input value for `policy`.
+    engine : str, optional
+        Input value for `engine`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `check_schema_drift`.
 
     Examples
     --------
-    >>> check_schema_drift(...)
+    >>> check_schema_drift(df, dataset_name)
     """
     current_snapshot = build_schema_snapshot(df, dataset_name=dataset_name, table_name=table_name, engine=engine)
     if baseline_snapshot is None:
@@ -102,39 +98,35 @@ def check_schema_drift(df, dataset_name: str, table_name: str, baseline_snapshot
 def build_and_write_schema_snapshot(spark, df, dataset_name: str, table_name: str, metadata_table: str, run_id: str | None = None, mode: str = "append", engine: str = "spark") -> dict:
     """Build and write schema snapshot.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_and_write_schema_snapshot`.
 
     Parameters
     ----------
     spark : Any
-    Description of `spark`.
+        Input value for `spark`.
     df : Any
-    Description of `df`.
-    dataset_name : Any
-    Description of `dataset_name`.
-    table_name : Any
-    Description of `table_name`.
-    metadata_table : Any
-    Description of `metadata_table`.
-    run_id : Any
-    Description of `run_id`.
-    mode : Any
-    Description of `mode`.
-    engine : Any
-    Description of `engine`.
+        Input value for `df`.
+    dataset_name : str
+        Input value for `dataset_name`.
+    table_name : str
+        Input value for `table_name`.
+    metadata_table : str
+        Input value for `metadata_table`.
+    run_id : str | None, optional
+        Input value for `run_id`.
+    mode : str, optional
+        Input value for `mode`.
+    engine : str, optional
+        Input value for `engine`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `build_and_write_schema_snapshot`.
 
     Examples
     --------
-    >>> build_and_write_schema_snapshot(...)
+    >>> build_and_write_schema_snapshot(spark, df)
     """
     snapshot = build_schema_snapshot(df, dataset_name=dataset_name, table_name=table_name, engine=engine)
     records = [
@@ -154,31 +146,27 @@ def build_and_write_schema_snapshot(spark, df, dataset_name: str, table_name: st
 def load_latest_schema_snapshot(spark, metadata_table: str, dataset_name: str, table_name: str) -> dict | None:
     """Load latest schema snapshot.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `load_latest_schema_snapshot`.
 
     Parameters
     ----------
     spark : Any
-    Description of `spark`.
-    metadata_table : Any
-    Description of `metadata_table`.
-    dataset_name : Any
-    Description of `dataset_name`.
-    table_name : Any
-    Description of `table_name`.
+        Input value for `spark`.
+    metadata_table : str
+        Input value for `metadata_table`.
+    dataset_name : str
+        Input value for `dataset_name`.
+    table_name : str
+        Input value for `table_name`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict | None
+        Output produced by `load_latest_schema_snapshot`.
 
     Examples
     --------
-    >>> load_latest_schema_snapshot(...)
+    >>> load_latest_schema_snapshot(spark, metadata_table)
     """
     try:
         df = spark.table(metadata_table)
@@ -216,43 +204,44 @@ def load_latest_schema_snapshot(spark, metadata_table: str, dataset_name: str, t
 def check_partition_drift(df, dataset_name: str, table_name: str, partition_column: str, business_keys: list[str] | None = None, watermark_column: str | None = None, baseline_snapshot: list[dict] | dict | None = None, policy: dict | None = None, run_id: str | None = None, engine: str = "spark") -> dict:
     """Check partition drift.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `check_partition_drift`.
 
     Parameters
     ----------
     df : Any
-    Description of `df`.
-    dataset_name : Any
-    Description of `dataset_name`.
-    table_name : Any
-    Description of `table_name`.
-    partition_column : Any
-    Description of `partition_column`.
-    business_keys : Any
-    Description of `business_keys`.
-    watermark_column : Any
-    Description of `watermark_column`.
-    baseline_snapshot : Any
-    Description of `baseline_snapshot`.
-    policy : Any
-    Description of `policy`.
-    run_id : Any
-    Description of `run_id`.
-    engine : Any
-    Description of `engine`.
+        Input value for `df`.
+    dataset_name : str
+        Input value for `dataset_name`.
+    table_name : str
+        Input value for `table_name`.
+    partition_column : str
+        Input value for `partition_column`.
+    business_keys : list[str] | None, optional
+        Input value for `business_keys`.
+    watermark_column : str | None, optional
+        Input value for `watermark_column`.
+    baseline_snapshot : list[dict] | dict | None, optional
+        Input value for `baseline_snapshot`.
+    policy : dict | None, optional
+        Input value for `policy`.
+    run_id : str | None, optional
+        Input value for `run_id`.
+    engine : str, optional
+        Input value for `engine`.
 
     Returns
     -------
-    result : Any
-    Returned value.
+    result : dict
+        Output produced by `check_partition_drift`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> check_partition_drift(...)
+    >>> check_partition_drift(df, dataset_name)
     """
     keys = business_keys or []
     if not keys:
@@ -297,45 +286,46 @@ def check_partition_drift(df, dataset_name: str, table_name: str, partition_colu
 def build_and_write_partition_snapshot(spark, df, dataset_name: str, table_name: str, metadata_table: str, partition_column: str, business_keys: list[str] | None = None, watermark_column: str | None = None, run_id: str | None = None, mode: str = "append", engine: str = "spark") -> dict:
     """Build and write partition snapshot.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_and_write_partition_snapshot`.
 
     Parameters
     ----------
     spark : Any
-    Description of `spark`.
+        Input value for `spark`.
     df : Any
-    Description of `df`.
-    dataset_name : Any
-    Description of `dataset_name`.
-    table_name : Any
-    Description of `table_name`.
-    metadata_table : Any
-    Description of `metadata_table`.
-    partition_column : Any
-    Description of `partition_column`.
-    business_keys : Any
-    Description of `business_keys`.
-    watermark_column : Any
-    Description of `watermark_column`.
-    run_id : Any
-    Description of `run_id`.
-    mode : Any
-    Description of `mode`.
-    engine : Any
-    Description of `engine`.
+        Input value for `df`.
+    dataset_name : str
+        Input value for `dataset_name`.
+    table_name : str
+        Input value for `table_name`.
+    metadata_table : str
+        Input value for `metadata_table`.
+    partition_column : str
+        Input value for `partition_column`.
+    business_keys : list[str] | None, optional
+        Input value for `business_keys`.
+    watermark_column : str | None, optional
+        Input value for `watermark_column`.
+    run_id : str | None, optional
+        Input value for `run_id`.
+    mode : str, optional
+        Input value for `mode`.
+    engine : str, optional
+        Input value for `engine`.
 
     Returns
     -------
-    result : Any
-    Returned value.
+    result : dict
+        Output produced by `build_and_write_partition_snapshot`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> build_and_write_partition_snapshot(...)
+    >>> build_and_write_partition_snapshot(spark, df)
     """
     keys = business_keys or []
     if not keys:
@@ -370,31 +360,27 @@ def build_and_write_partition_snapshot(spark, df, dataset_name: str, table_name:
 def load_latest_partition_snapshot(spark, metadata_table: str, dataset_name: str, table_name: str) -> list[dict] | dict | None:
     """Load latest partition snapshot.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `load_latest_partition_snapshot`.
 
     Parameters
     ----------
     spark : Any
-    Description of `spark`.
-    metadata_table : Any
-    Description of `metadata_table`.
-    dataset_name : Any
-    Description of `dataset_name`.
-    table_name : Any
-    Description of `table_name`.
+        Input value for `spark`.
+    metadata_table : str
+        Input value for `metadata_table`.
+    dataset_name : str
+        Input value for `dataset_name`.
+    table_name : str
+        Input value for `table_name`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : list[dict] | dict | None
+        Output produced by `load_latest_partition_snapshot`.
 
     Examples
     --------
-    >>> load_latest_partition_snapshot(...)
+    >>> load_latest_partition_snapshot(spark, metadata_table)
     """
     try:
         df = spark.table(metadata_table)
@@ -430,29 +416,25 @@ def load_latest_partition_snapshot(spark, metadata_table: str, dataset_name: str
 def check_profile_drift(current_profile: dict, baseline_profile: dict | None = None, policy: dict | None = None) -> dict:
     """Check profile drift.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `check_profile_drift`.
 
     Parameters
     ----------
-    current_profile : Any
-    Description of `current_profile`.
-    baseline_profile : Any
-    Description of `baseline_profile`.
-    policy : Any
-    Description of `policy`.
+    current_profile : dict
+        Input value for `current_profile`.
+    baseline_profile : dict | None, optional
+        Input value for `baseline_profile`.
+    policy : dict | None, optional
+        Input value for `policy`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `check_profile_drift`.
 
     Examples
     --------
-    >>> check_profile_drift(...)
+    >>> check_profile_drift(current_profile, baseline_profile)
     """
     active = {
         "max_row_count_change_percent": 50,
@@ -504,29 +486,25 @@ def check_profile_drift(current_profile: dict, baseline_profile: dict | None = N
 def summarize_drift_results(schema_drift_result: dict | None = None, partition_drift_result: dict | None = None, profile_drift_result: dict | None = None) -> dict:
     """Summarize drift results.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `summarize_drift_results`.
 
     Parameters
     ----------
-    schema_drift_result : Any
-    Description of `schema_drift_result`.
-    partition_drift_result : Any
-    Description of `partition_drift_result`.
-    profile_drift_result : Any
-    Description of `profile_drift_result`.
+    schema_drift_result : dict | None, optional
+        Input value for `schema_drift_result`.
+    partition_drift_result : dict | None, optional
+        Input value for `partition_drift_result`.
+    profile_drift_result : dict | None, optional
+        Input value for `profile_drift_result`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `summarize_drift_results`.
 
     Examples
     --------
-    >>> summarize_drift_results(...)
+    >>> summarize_drift_results(schema_drift_result, partition_drift_result)
     """
     results = {"schema": schema_drift_result, "partition": partition_drift_result, "profile": profile_drift_result}
     statuses = {k: (v or {}).get("status") for k, v in results.items()}

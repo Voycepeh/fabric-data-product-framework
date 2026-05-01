@@ -88,35 +88,31 @@ def classify_column(
 ) -> dict:
     """Classify column.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `classify_column`.
 
     Parameters
     ----------
-    column_name : Any
-    Description of `column_name`.
-    data_type : Any
-    Description of `data_type`.
-    profile : Any
-    Description of `profile`.
-    metadata : Any
-    Description of `metadata`.
-    business_context : Any
-    Description of `business_context`.
-    rules : Any
-    Description of `rules`.
+    column_name : str
+        Input value for `column_name`.
+    data_type : str | None, optional
+        Input value for `data_type`.
+    profile : dict | None, optional
+        Input value for `profile`.
+    metadata : dict | None, optional
+        Input value for `metadata`.
+    business_context : str | dict | None, optional
+        Input value for `business_context`.
+    rules : list[dict] | None, optional
+        Input value for `rules`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `classify_column`.
 
     Examples
     --------
-    >>> classify_column(...)
+    >>> classify_column(column_name, data_type)
     """
     profile = profile or {}
     metadata = metadata or {}
@@ -208,37 +204,33 @@ def classify_column(
 def classify_columns(profile: dict | list[dict], metadata: dict | list[dict] | None = None, business_context: str | dict | None = None, rules: list[dict] | None = None, dataset_name: str | None = None, table_name: str | None = None, run_id: str | None = None) -> list[dict]:
     """Classify columns.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `classify_columns`.
 
     Parameters
     ----------
-    profile : Any
-    Description of `profile`.
-    metadata : Any
-    Description of `metadata`.
-    business_context : Any
-    Description of `business_context`.
-    rules : Any
-    Description of `rules`.
-    dataset_name : Any
-    Description of `dataset_name`.
-    table_name : Any
-    Description of `table_name`.
-    run_id : Any
-    Description of `run_id`.
+    profile : dict | list[dict]
+        Input value for `profile`.
+    metadata : dict | list[dict] | None, optional
+        Input value for `metadata`.
+    business_context : str | dict | None, optional
+        Input value for `business_context`.
+    rules : list[dict] | None, optional
+        Input value for `rules`.
+    dataset_name : str | None, optional
+        Input value for `dataset_name`.
+    table_name : str | None, optional
+        Input value for `table_name`.
+    run_id : str | None, optional
+        Input value for `run_id`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : list[dict]
+        Output produced by `classify_columns`.
 
     Examples
     --------
-    >>> classify_columns(...)
+    >>> classify_columns(profile, metadata)
     """
     del dataset_name, table_name, run_id
     columns = _normalize_columns(profile)
@@ -263,35 +255,31 @@ def classify_columns(profile: dict | list[dict], metadata: dict | list[dict] | N
 def build_governance_classification_records(classifications: list[dict], dataset_name: str, table_name: str, run_id: str | None = None, status: str = "suggested", generated_by: str = "framework") -> list[dict]:
     """Build governance classification records.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_governance_classification_records`.
 
     Parameters
     ----------
-    classifications : Any
-    Description of `classifications`.
-    dataset_name : Any
-    Description of `dataset_name`.
-    table_name : Any
-    Description of `table_name`.
-    run_id : Any
-    Description of `run_id`.
-    status : Any
-    Description of `status`.
-    generated_by : Any
-    Description of `generated_by`.
+    classifications : list[dict]
+        Input value for `classifications`.
+    dataset_name : str
+        Input value for `dataset_name`.
+    table_name : str
+        Input value for `table_name`.
+    run_id : str | None, optional
+        Input value for `run_id`.
+    status : str, optional
+        Input value for `status`.
+    generated_by : str, optional
+        Input value for `generated_by`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : list[dict]
+        Output produced by `build_governance_classification_records`.
 
     Examples
     --------
-    >>> build_governance_classification_records(...)
+    >>> build_governance_classification_records(classifications, dataset_name)
     """
     rows = []
     for item in classifications:
@@ -329,41 +317,37 @@ def _spark_create_governance_metadata_dataframe(spark, rows: list[dict]):
 def write_governance_classifications(spark, classifications: list[dict], table_name: str, dataset_name: str | None = None, source_table: str | None = None, run_id: str | None = None, status: str = "suggested", generated_by: str = "framework", mode: str = "append") -> list[dict]:
     """Write governance classifications.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `write_governance_classifications`.
 
     Parameters
     ----------
     spark : Any
-    Description of `spark`.
-    classifications : Any
-    Description of `classifications`.
-    table_name : Any
-    Description of `table_name`.
-    dataset_name : Any
-    Description of `dataset_name`.
-    source_table : Any
-    Description of `source_table`.
-    run_id : Any
-    Description of `run_id`.
-    status : Any
-    Description of `status`.
-    generated_by : Any
-    Description of `generated_by`.
-    mode : Any
-    Description of `mode`.
+        Input value for `spark`.
+    classifications : list[dict]
+        Input value for `classifications`.
+    table_name : str
+        Input value for `table_name`.
+    dataset_name : str | None, optional
+        Input value for `dataset_name`.
+    source_table : str | None, optional
+        Input value for `source_table`.
+    run_id : str | None, optional
+        Input value for `run_id`.
+    status : str, optional
+        Input value for `status`.
+    generated_by : str, optional
+        Input value for `generated_by`.
+    mode : str, optional
+        Input value for `mode`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : list[dict]
+        Output produced by `write_governance_classifications`.
 
     Examples
     --------
-    >>> write_governance_classifications(...)
+    >>> write_governance_classifications(spark, classifications)
     """
     dataset = dataset_name or "unknown"
     source = source_table or table_name
@@ -383,25 +367,21 @@ def write_governance_classifications(spark, classifications: list[dict], table_n
 def summarize_governance_classifications(classifications: list[dict]) -> dict:
     """Summarize governance classifications.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `summarize_governance_classifications`.
 
     Parameters
     ----------
-    classifications : Any
-    Description of `classifications`.
+    classifications : list[dict]
+        Input value for `classifications`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `summarize_governance_classifications`.
 
     Examples
     --------
-    >>> summarize_governance_classifications(...)
+    >>> summarize_governance_classifications(classifications)
     """
     by_classification = Counter(c.get("suggested_classification", "unknown") for c in classifications)
     by_action = Counter(c.get("suggested_action", "review") for c in classifications)

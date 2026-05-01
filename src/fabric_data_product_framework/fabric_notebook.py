@@ -16,27 +16,12 @@ import pandas as pd
 class Housepath:
     """Housepath.
 
-    Documentation for API-reference generation in NumPy style.
-
-    Parameters
-    ----------
-    None
-    This callable does not require public parameters.
-
-    Returns
-    -------
-    None
-    This method updates state in place.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Public class used by the framework API for `Housepath`.
 
     Examples
     --------
-    >>> Housepath(...)
+    >>> Housepath(... )
     """
-    """Container for Lakehouse path roots used by Fabric notebook IO helpers."""
     workspace_id: str
     house_id: str
     house_name: str
@@ -73,25 +58,30 @@ EXAMPLE_CONFIG: Dict[str, Dict[str, Housepath]] = {
 def load_fabric_config(path: str | Path) -> dict[str, dict[str, Housepath]]:
     """Load fabric config.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `load_fabric_config`.
 
     Parameters
     ----------
-    path : Any
-    Description of `path`.
+    path : str | Path
+        Input value for `path`.
 
     Returns
     -------
-    result : Any
-    Returned value.
+    result : dict[str, dict[str, Housepath]]
+        Output produced by `load_fabric_config`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    FileNotFoundError
+        Raised when input validation or runtime checks fail.
+    ImportError
+        Raised when input validation or runtime checks fail.
+    ValueError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> load_fabric_config(...)
+    >>> load_fabric_config(path)
     """
     try:
         import yaml
@@ -147,31 +137,32 @@ def get_path(
 ) -> Any:
     """Get path.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `get_path`.
 
     Parameters
     ----------
-    env : Any
-    Description of `env`.
-    target : Any
-    Description of `target`.
-    config : Any
-    Description of `config`.
-    use_example_config : Any
-    Description of `use_example_config`.
+    env : str, optional
+        Input value for `env`.
+    target : str, optional
+        Input value for `target`.
+    config : dict | None, optional
+        Input value for `config`.
+    use_example_config : bool, optional
+        Input value for `use_example_config`.
 
     Returns
     -------
     result : Any
-    Returned value.
+        Output produced by `get_path`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> get_path(...)
+    >>> get_path(env, target)
     """
     if config is None:
         if not use_example_config:
@@ -204,29 +195,30 @@ def _get_spark(spark_session=None):
 def lakehouse_table_read(lh, tablename, spark_session=None):
     """Lakehouse table read.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `lakehouse_table_read`.
 
     Parameters
     ----------
     lh : Any
-    Description of `lh`.
+        Input value for `lh`.
     tablename : Any
-    Description of `tablename`.
-    spark_session : Any
-    Description of `spark_session`.
+        Input value for `tablename`.
+    spark_session : Any, optional
+        Input value for `spark_session`.
 
     Returns
     -------
     result : Any
-    Returned value.
+        Output produced by `lakehouse_table_read`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> lakehouse_table_read(...)
+    >>> lakehouse_table_read(lh, tablename)
     """
     if not getattr(lh, "root", None):
         raise ValueError("lh.root is required.")
@@ -248,37 +240,38 @@ def lakehouse_table_write(
 ):
     """Lakehouse table write.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `lakehouse_table_write`.
 
     Parameters
     ----------
     df : Any
-    Description of `df`.
+        Input value for `df`.
     lh : Any
-    Description of `lh`.
+        Input value for `lh`.
     tablename : Any
-    Description of `tablename`.
-    mode : Any
-    Description of `mode`.
-    partition_by : Any
-    Description of `partition_by`.
-    repartition_by : Any
-    Description of `repartition_by`.
-    overwrite_schema : Any
-    Description of `overwrite_schema`.
+        Input value for `tablename`.
+    mode : Any, optional
+        Input value for `mode`.
+    partition_by : Any, optional
+        Input value for `partition_by`.
+    repartition_by : Any, optional
+        Input value for `repartition_by`.
+    overwrite_schema : Any, optional
+        Input value for `overwrite_schema`.
 
     Returns
     -------
-    None
-    This method updates state in place.
+    result : None
+        Output produced by `lakehouse_table_write`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> lakehouse_table_write(...)
+    >>> lakehouse_table_write(df, lh)
     """
     if not getattr(lh, "root", None):
         raise ValueError("lh.root is required.")
@@ -319,31 +312,27 @@ def lakehouse_table_write(
 def lakehouse_csv_read(lh, relative_path, spark_session=None, header=True):
     """Lakehouse csv read.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `lakehouse_csv_read`.
 
     Parameters
     ----------
     lh : Any
-    Description of `lh`.
+        Input value for `lh`.
     relative_path : Any
-    Description of `relative_path`.
-    spark_session : Any
-    Description of `spark_session`.
-    header : Any
-    Description of `header`.
+        Input value for `relative_path`.
+    spark_session : Any, optional
+        Input value for `spark_session`.
+    header : Any, optional
+        Input value for `header`.
 
     Returns
     -------
     result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+        Output produced by `lakehouse_csv_read`.
 
     Examples
     --------
-    >>> lakehouse_csv_read(...)
+    >>> lakehouse_csv_read(lh, relative_path)
     """
     spark_obj = _get_spark(spark_session)
     path = f"{lh.root}/{relative_path}"
@@ -353,35 +342,31 @@ def lakehouse_csv_read(lh, relative_path, spark_session=None, header=True):
 def warehouse_read(env, target, schema, table, config=None, spark_session=None):
     """Warehouse read.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `warehouse_read`.
 
     Parameters
     ----------
     env : Any
-    Description of `env`.
+        Input value for `env`.
     target : Any
-    Description of `target`.
+        Input value for `target`.
     schema : Any
-    Description of `schema`.
+        Input value for `schema`.
     table : Any
-    Description of `table`.
-    config : Any
-    Description of `config`.
-    spark_session : Any
-    Description of `spark_session`.
+        Input value for `table`.
+    config : Any, optional
+        Input value for `config`.
+    spark_session : Any, optional
+        Input value for `spark_session`.
 
     Returns
     -------
     result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+        Output produced by `warehouse_read`.
 
     Examples
     --------
-    >>> warehouse_read(...)
+    >>> warehouse_read(env, target)
     """
     spark_obj = _get_spark(spark_session)
     p = get_path(env, target, config=config)
@@ -398,37 +383,33 @@ def warehouse_read(env, target, schema, table, config=None, spark_session=None):
 def warehouse_write(df, env, target, schema, table, mode="append", config=None):
     """Warehouse write.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `warehouse_write`.
 
     Parameters
     ----------
     df : Any
-    Description of `df`.
+        Input value for `df`.
     env : Any
-    Description of `env`.
+        Input value for `env`.
     target : Any
-    Description of `target`.
+        Input value for `target`.
     schema : Any
-    Description of `schema`.
+        Input value for `schema`.
     table : Any
-    Description of `table`.
-    mode : Any
-    Description of `mode`.
-    config : Any
-    Description of `config`.
+        Input value for `table`.
+    mode : Any, optional
+        Input value for `mode`.
+    config : Any, optional
+        Input value for `config`.
 
     Returns
     -------
-    None
-    This method updates state in place.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : None
+        Output produced by `warehouse_write`.
 
     Examples
     --------
-    >>> warehouse_write(...)
+    >>> warehouse_write(df, env)
     """
     p = get_path(env, target, config=config)
     import com.microsoft.spark.fabric
@@ -445,29 +426,25 @@ def warehouse_write(df, env, target, schema, table, mode="append", config=None):
 def single_file_ns_to_us(local_in_path, local_out_path, verbose=True):
     """Single file ns to us.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `single_file_ns_to_us`.
 
     Parameters
     ----------
     local_in_path : Any
-    Description of `local_in_path`.
+        Input value for `local_in_path`.
     local_out_path : Any
-    Description of `local_out_path`.
-    verbose : Any
-    Description of `verbose`.
+        Input value for `local_out_path`.
+    verbose : Any, optional
+        Input value for `verbose`.
 
     Returns
     -------
-    None
-    This method updates state in place.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : None
+        Output produced by `single_file_ns_to_us`.
 
     Examples
     --------
-    >>> single_file_ns_to_us(...)
+    >>> single_file_ns_to_us(local_in_path, local_out_path)
     """
     import pyarrow as pa
     import pyarrow.parquet as pq
@@ -493,31 +470,34 @@ def single_file_ns_to_us(local_in_path, local_out_path, verbose=True):
 def lakehouse_parquet_read_as_spark(lh, relative_path, verbose=True, spark_session=None):
     """Lakehouse parquet read as spark.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `lakehouse_parquet_read_as_spark`.
 
     Parameters
     ----------
     lh : Any
-    Description of `lh`.
+        Input value for `lh`.
     relative_path : Any
-    Description of `relative_path`.
-    verbose : Any
-    Description of `verbose`.
-    spark_session : Any
-    Description of `spark_session`.
+        Input value for `relative_path`.
+    verbose : Any, optional
+        Input value for `verbose`.
+    spark_session : Any, optional
+        Input value for `spark_session`.
 
     Returns
     -------
     result : Any
-    Returned value.
+        Output produced by `lakehouse_parquet_read_as_spark`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    RuntimeError
+        Raised when input validation or runtime checks fail.
+    ValueError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> lakehouse_parquet_read_as_spark(...)
+    >>> lakehouse_parquet_read_as_spark(lh, relative_path)
     """
     spark_obj = _get_spark(spark_session)
 
@@ -586,31 +566,32 @@ def lakehouse_parquet_read_as_spark(lh, relative_path, verbose=True, spark_sessi
 def lakehouse_excel_read_as_spark(lh, relative_path, sheet_name=0, spark_session=None):
     """Lakehouse excel read as spark.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `lakehouse_excel_read_as_spark`.
 
     Parameters
     ----------
     lh : Any
-    Description of `lh`.
+        Input value for `lh`.
     relative_path : Any
-    Description of `relative_path`.
-    sheet_name : Any
-    Description of `sheet_name`.
-    spark_session : Any
-    Description of `spark_session`.
+        Input value for `relative_path`.
+    sheet_name : Any, optional
+        Input value for `sheet_name`.
+    spark_session : Any, optional
+        Input value for `spark_session`.
 
     Returns
     -------
     result : Any
-    Returned value.
+        Output produced by `lakehouse_excel_read_as_spark`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    FileNotFoundError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> lakehouse_excel_read_as_spark(...)
+    >>> lakehouse_excel_read_as_spark(lh, relative_path)
     """
     spark_obj = _get_spark(spark_session)
     lakehouse_file_path = f"{lh.root}/{relative_path}"
@@ -655,29 +636,30 @@ def _get_fabric_runtime_context():
 def check_naming_convention(notebook_name=None, allowed_prefixes=None, fail_on_error=True):
     """Check naming convention.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `check_naming_convention`.
 
     Parameters
     ----------
-    notebook_name : Any
-    Description of `notebook_name`.
-    allowed_prefixes : Any
-    Description of `allowed_prefixes`.
-    fail_on_error : Any
-    Description of `fail_on_error`.
+    notebook_name : Any, optional
+        Input value for `notebook_name`.
+    allowed_prefixes : Any, optional
+        Input value for `allowed_prefixes`.
+    fail_on_error : Any, optional
+        Input value for `fail_on_error`.
 
     Returns
     -------
     result : Any
-    Returned value.
+        Output produced by `check_naming_convention`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> check_naming_convention(...)
+    >>> check_naming_convention(notebook_name, allowed_prefixes)
     """
     prefixes = allowed_prefixes or NOTEBOOK_PREFIX_LIST
 
@@ -724,33 +706,34 @@ def check_naming_convention(notebook_name=None, allowed_prefixes=None, fail_on_e
 def clean_datetime_columns(df, datetime_col, prefix, tz_region="Asia/Singapore", time_block_col="TIME_BLOCK_30_MIN"):
     """Clean datetime columns.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `clean_datetime_columns`.
 
     Parameters
     ----------
     df : Any
-    Description of `df`.
+        Input value for `df`.
     datetime_col : Any
-    Description of `datetime_col`.
+        Input value for `datetime_col`.
     prefix : Any
-    Description of `prefix`.
-    tz_region : Any
-    Description of `tz_region`.
-    time_block_col : Any
-    Description of `time_block_col`.
+        Input value for `prefix`.
+    tz_region : Any, optional
+        Input value for `tz_region`.
+    time_block_col : Any, optional
+        Input value for `time_block_col`.
 
     Returns
     -------
     result : Any
-    Returned value.
+        Output produced by `clean_datetime_columns`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> clean_datetime_columns(...)
+    >>> clean_datetime_columns(df, datetime_col)
     """
     if datetime_col not in df.columns:
         raise ValueError(f"Column not found: {datetime_col}")
@@ -779,35 +762,36 @@ def clean_datetime_columns(df, datetime_col, prefix, tz_region="Asia/Singapore",
 def add_system_technical_columns(df, hash_col, bucket_size=512, run_id=None, notebook_name=None, loaded_by=None):
     """Add system technical columns.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `add_system_technical_columns`.
 
     Parameters
     ----------
     df : Any
-    Description of `df`.
+        Input value for `df`.
     hash_col : Any
-    Description of `hash_col`.
-    bucket_size : Any
-    Description of `bucket_size`.
-    run_id : Any
-    Description of `run_id`.
-    notebook_name : Any
-    Description of `notebook_name`.
-    loaded_by : Any
-    Description of `loaded_by`.
+        Input value for `hash_col`.
+    bucket_size : Any, optional
+        Input value for `bucket_size`.
+    run_id : Any, optional
+        Input value for `run_id`.
+    notebook_name : Any, optional
+        Input value for `notebook_name`.
+    loaded_by : Any, optional
+        Input value for `loaded_by`.
 
     Returns
     -------
     result : Any
-    Returned value.
+        Output produced by `add_system_technical_columns`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> add_system_technical_columns(...)
+    >>> add_system_technical_columns(df, hash_col)
     """
     if hash_col not in df.columns:
         raise ValueError(f"Column not found: {hash_col}")
@@ -842,27 +826,23 @@ def add_system_technical_columns(df, hash_col, bucket_size=512, run_id=None, not
 def pass_if_yes_else_run(condition, code):
     """Pass if yes else run.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `pass_if_yes_else_run`.
 
     Parameters
     ----------
     condition : Any
-    Description of `condition`.
+        Input value for `condition`.
     code : Any
-    Description of `code`.
+        Input value for `code`.
 
     Returns
     -------
     result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+        Output produced by `pass_if_yes_else_run`.
 
     Examples
     --------
-    >>> pass_if_yes_else_run(...)
+    >>> pass_if_yes_else_run(condition, code)
     """
     if str(condition).lower() == "yes":
         return None
@@ -873,31 +853,32 @@ def pass_if_yes_else_run(condition, code):
 def ODI_METADATA_LOGGER(df, tablename: str, exclude_columns=None, run_timestamp_timezone="Asia/Singapore"):
     """Odi metadata logger.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `ODI_METADATA_LOGGER`.
 
     Parameters
     ----------
     df : Any
-    Description of `df`.
-    tablename : Any
-    Description of `tablename`.
-    exclude_columns : Any
-    Description of `exclude_columns`.
-    run_timestamp_timezone : Any
-    Description of `run_timestamp_timezone`.
+        Input value for `df`.
+    tablename : str
+        Input value for `tablename`.
+    exclude_columns : Any, optional
+        Input value for `exclude_columns`.
+    run_timestamp_timezone : Any, optional
+        Input value for `run_timestamp_timezone`.
 
     Returns
     -------
     result : Any
-    Returned value.
+        Output produced by `ODI_METADATA_LOGGER`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> ODI_METADATA_LOGGER(...)
+    >>> ODI_METADATA_LOGGER(df, tablename)
     """
     from pyspark.sql import functions as F
 
@@ -965,25 +946,21 @@ def ODI_METADATA_LOGGER(df, tablename: str, exclude_columns=None, run_timestamp_
 def transformation_summary(code: str):
     """Transformation summary.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `transformation_summary`.
 
     Parameters
     ----------
-    code : Any
-    Description of `code`.
+    code : str
+        Input value for `code`.
 
     Returns
     -------
     result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+        Output produced by `transformation_summary`.
 
     Examples
     --------
-    >>> transformation_summary(...)
+    >>> transformation_summary(code)
     """
     tree = ast.parse(code)
     steps: list[dict[str, str]] = []
@@ -1028,29 +1005,30 @@ def transformation_summary(code: str):
 def transformation_reasons(pdf, reason, spark_session=None):
     """Transformation reasons.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `transformation_reasons`.
 
     Parameters
     ----------
     pdf : Any
-    Description of `pdf`.
+        Input value for `pdf`.
     reason : Any
-    Description of `reason`.
-    spark_session : Any
-    Description of `spark_session`.
+        Input value for `reason`.
+    spark_session : Any, optional
+        Input value for `spark_session`.
 
     Returns
     -------
     result : Any
-    Returned value.
+        Output produced by `transformation_reasons`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> transformation_reasons(...)
+    >>> transformation_reasons(pdf, reason)
     """
     spark_obj = _get_spark(spark_session)
     context = _get_fabric_runtime_context()

@@ -17,43 +17,39 @@ def _status_of(section: dict | None) -> str:
 def build_run_summary(*, runtime_context: dict, contract: dict | None = None, source_profile: dict | None = None, output_profile: dict | None = None, schema_drift_result: dict | None = None, incremental_safety_result: dict | None = None, quality_result: dict | None = None, contract_validation_result: dict | None = None, lineage_summary: dict | None = None, notes: list[str] | None = None) -> dict:
     """Build run summary.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_run_summary`.
 
     Parameters
     ----------
-    runtime_context : Any
-    Description of `runtime_context`.
-    contract : Any
-    Description of `contract`.
-    source_profile : Any
-    Description of `source_profile`.
-    output_profile : Any
-    Description of `output_profile`.
-    schema_drift_result : Any
-    Description of `schema_drift_result`.
-    incremental_safety_result : Any
-    Description of `incremental_safety_result`.
-    quality_result : Any
-    Description of `quality_result`.
-    contract_validation_result : Any
-    Description of `contract_validation_result`.
-    lineage_summary : Any
-    Description of `lineage_summary`.
-    notes : Any
-    Description of `notes`.
+    runtime_context : dict
+        Input value for `runtime_context`.
+    contract : dict | None, optional
+        Input value for `contract`.
+    source_profile : dict | None, optional
+        Input value for `source_profile`.
+    output_profile : dict | None, optional
+        Input value for `output_profile`.
+    schema_drift_result : dict | None, optional
+        Input value for `schema_drift_result`.
+    incremental_safety_result : dict | None, optional
+        Input value for `incremental_safety_result`.
+    quality_result : dict | None, optional
+        Input value for `quality_result`.
+    contract_validation_result : dict | None, optional
+        Input value for `contract_validation_result`.
+    lineage_summary : dict | None, optional
+        Input value for `lineage_summary`.
+    notes : list[str] | None, optional
+        Input value for `notes`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `build_run_summary`.
 
     Examples
     --------
-    >>> build_run_summary(...)
+    >>> build_run_summary(runtime_context, contract)
     """
     sections = {"purpose": (contract or {}).get("dataset", {}).get("purpose"), "source_profile": source_profile, "output_profile": output_profile, "schema_drift": schema_drift_result, "incremental_safety": incremental_safety_result, "quality": quality_result, "contracts": contract_validation_result, "lineage": lineage_summary, "notes": notes or []}
     not_provided_sections = [k for k in SECTION_KEYS if sections.get(k) is None]
@@ -74,25 +70,21 @@ def build_run_summary(*, runtime_context: dict, contract: dict | None = None, so
 def render_run_summary_markdown(summary: dict) -> str:
     """Render run summary markdown.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `render_run_summary_markdown`.
 
     Parameters
     ----------
-    summary : Any
-    Description of `summary`.
+    summary : dict
+        Input value for `summary`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : str
+        Output produced by `render_run_summary_markdown`.
 
     Examples
     --------
-    >>> render_run_summary_markdown(...)
+    >>> render_run_summary_markdown(summary)
     """
     s = summary.get("sections", {})
     lines = [f"# Run Summary — {summary.get('dataset_name', 'unknown')}", f"- Run ID: `{summary.get('run_id', 'unknown')}`", f"- Environment: `{summary.get('environment', 'unknown')}`", f"- Overall status: **{summary.get('overall_status', 'unknown')}**", "", "## Run Context", f"- Source table: `{summary.get('source_table', 'unknown')}`", f"- Target table: `{summary.get('target_table', 'unknown')}`", f"- Started at (UTC): `{summary.get('started_at_utc', 'unknown')}`", "", "## Dataset Purpose", f"{s.get('purpose') or 'Not provided.'}", "", "## Section Status", f"- Schema drift: **{_status_of(s.get('schema_drift'))}**", f"- Incremental safety: **{_status_of(s.get('incremental_safety'))}**", f"- Quality: **{_status_of(s.get('quality'))}**", f"- Contracts: **{_status_of(s.get('contracts'))}**"]
@@ -110,25 +102,21 @@ def render_run_summary_markdown(summary: dict) -> str:
 def build_run_summary_record(summary: dict) -> dict:
     """Build run summary record.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_run_summary_record`.
 
     Parameters
     ----------
-    summary : Any
-    Description of `summary`.
+    summary : dict
+        Input value for `summary`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `build_run_summary_record`.
 
     Examples
     --------
-    >>> build_run_summary_record(...)
+    >>> build_run_summary_record(summary)
     """
     sections = summary.get("sections", {})
     return {"run_id": summary.get("run_id"), "dataset_name": summary.get("dataset_name"), "environment": summary.get("environment"), "source_table": summary.get("source_table"), "target_table": summary.get("target_table"), "overall_status": summary.get("overall_status"), "can_continue": summary.get("can_continue"), "generated_at_utc": summary.get("generated_at_utc"), "source_row_count": (sections.get("source_profile") or {}).get("row_count"), "output_row_count": (sections.get("output_profile") or {}).get("row_count"), "schema_drift_status": _status_of(sections.get("schema_drift")), "incremental_safety_status": _status_of(sections.get("incremental_safety")), "quality_status": _status_of(sections.get("quality")), "contract_status": _status_of(sections.get("contracts")), "action_item_count": len(summary.get("action_items", [])), "summary_markdown": render_run_summary_markdown(summary)}

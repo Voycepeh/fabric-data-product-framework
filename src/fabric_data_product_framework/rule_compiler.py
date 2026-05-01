@@ -20,25 +20,21 @@ def _skipped(candidate, message):
 def compile_layman_rule_to_quality_rule(candidate):
     """Compile layman rule to quality rule.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `compile_layman_rule_to_quality_rule`.
 
     Parameters
     ----------
     candidate : Any
-    Description of `candidate`.
+        Input value for `candidate`.
 
     Returns
     -------
     result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+        Output produced by `compile_layman_rule_to_quality_rule`.
 
     Examples
     --------
-    >>> compile_layman_rule_to_quality_rule(...)
+    >>> compile_layman_rule_to_quality_rule(candidate)
     """
     rule_type = str(candidate.get("rule_type", "")).strip().lower()
     if rule_type not in SUPPORTED_RULE_TYPES:
@@ -90,41 +86,51 @@ def compile_layman_rule_to_quality_rule(candidate):
 
 
 def compile_layman_rules_to_quality_rules(candidates):
-    """Compile many reviewed layman candidates into executable quality rules.
+    """Compile layman rules to quality rules.
+
+    Use this callable to support the framework workflow step implemented by `compile_layman_rules_to_quality_rules`.
 
     Parameters
     ----------
-    candidates : list[dict]
-        Candidate rules from AI or manual authoring.
+    candidates : Any
+        Input value for `candidates`.
 
     Returns
     -------
-    dict
-        Dictionary containing ``compiled_rules``, per-candidate ``records``, and
-        summary counts (total/compiled/skipped).
+    result : Any
+        Output produced by `compile_layman_rules_to_quality_rules`.
 
-    Notes
-    -----
-    This step is the bridge between AI suggestion and deterministic execution.
-    Compiled output should be approved before production use.
+    Examples
+    --------
+    >>> compile_layman_rules_to_quality_rules(candidates)
     """
     records = [compile_layman_rule_to_quality_rule(c) for c in candidates]
     return {"compiled_rules": [r["quality_rule"] for r in records if r["status"] == "compiled"], "records": records, "summary": {"total": len(records), "compiled": sum(r["status"] == "compiled" for r in records), "skipped": sum(r["status"] == "skipped" for r in records)}}
 
 
 def build_rule_registry_records(compiled_rules, run_id, dataset_name, table_name):
-    """Build metadata records for persisted compiled rule definitions.
+    """Build rule registry records.
+
+    Use this callable to support the framework workflow step implemented by `build_rule_registry_records`.
 
     Parameters
     ----------
-    compiled_rules : list[dict]
-        Executable rules produced by ``compile_layman_rules_to_quality_rules``.
-    run_id, dataset_name, table_name : str
-        Context fields used for metadata persistence and traceability.
+    compiled_rules : Any
+        Input value for `compiled_rules`.
+    run_id : Any
+        Input value for `run_id`.
+    dataset_name : Any
+        Input value for `dataset_name`.
+    table_name : Any
+        Input value for `table_name`.
 
     Returns
     -------
-    list[dict]
-        Registry records suitable for writing to a Lakehouse metadata table.
+    result : Any
+        Output produced by `build_rule_registry_records`.
+
+    Examples
+    --------
+    >>> build_rule_registry_records(compiled_rules, run_id)
     """
     return [{"run_id": run_id, "dataset_name": dataset_name, "table_name": table_name, "rule_id": r.get("rule_id"), "rule_type": r.get("rule_type"), "severity": r.get("severity"), "column": r.get("column"), "columns": r.get("columns"), "reason": r.get("reason"), "rule_json": r} for r in compiled_rules]

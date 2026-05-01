@@ -17,31 +17,27 @@ def _severity_bucket(severity: str) -> str:
 def build_quarantine_rule_coverage_records(rules, run_id, dataset_name, table_name):
     """Build quarantine rule coverage records.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_quarantine_rule_coverage_records`.
 
     Parameters
     ----------
     rules : Any
-    Description of `rules`.
+        Input value for `rules`.
     run_id : Any
-    Description of `run_id`.
+        Input value for `run_id`.
     dataset_name : Any
-    Description of `dataset_name`.
+        Input value for `dataset_name`.
     table_name : Any
-    Description of `table_name`.
+        Input value for `table_name`.
 
     Returns
     -------
     result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+        Output produced by `build_quarantine_rule_coverage_records`.
 
     Examples
     --------
-    >>> build_quarantine_rule_coverage_records(...)
+    >>> build_quarantine_rule_coverage_records(rules, run_id)
     """
     rows = []
     for i, rule in enumerate(rules):
@@ -57,48 +53,54 @@ def build_quarantine_rule_coverage_records(rules, run_id, dataset_name, table_na
 
 
 def add_dq_failure_columns(df, rules, engine="auto"):
-    """Annotate dataframe rows with rule-level failure arrays.
+    """Add dq failure columns.
+
+    Use this callable to support the framework workflow step implemented by `add_dq_failure_columns`.
 
     Parameters
     ----------
-    df : pandas.DataFrame or pyspark.sql.DataFrame
-        Input dataset to annotate.
-    rules : list[dict]
-        Executable quality rules with ``rule_type`` and ``severity`` fields.
-    engine : str, default "auto"
-        ``pandas``, ``spark``, or ``auto``.
+    df : Any
+        Input value for `df`.
+    rules : Any
+        Input value for `rules`.
+    engine : Any, optional
+        Input value for `engine`.
 
     Returns
     -------
-    DataFrame
-        Input dataframe plus ``dq_errors`` and ``dq_warnings`` columns.
+    result : Any
+        Output produced by `add_dq_failure_columns`.
 
-    Notes
-    -----
-    This function supports row-level quarantine handoff. Aggregate-only rules
-    are excluded from row annotations by design.
+    Examples
+    --------
+    >>> add_dq_failure_columns(df, rules)
     """
     resolved = _resolve_engine(df, engine)
     return _add_spark(df, rules) if resolved == "spark" else _add_pandas(df, rules)
 
 
 def split_valid_and_quarantine(df, rules, engine="auto"):
-    """Split dataset into pipeline-safe rows and quarantined rows.
+    """Split valid and quarantine.
+
+    Use this callable to support the framework workflow step implemented by `split_valid_and_quarantine`.
 
     Parameters
     ----------
-    df : pandas.DataFrame or pyspark.sql.DataFrame
-        Input records to evaluate.
-    rules : list[dict]
-        Row-level executable rules.
-    engine : str, default "auto"
-        Execution engine selector.
+    df : Any
+        Input value for `df`.
+    rules : Any
+        Input value for `rules`.
+    engine : Any, optional
+        Input value for `engine`.
 
     Returns
     -------
-    tuple
-        ``(valid_df, quarantine_df)`` where quarantine rows have at least one
-        critical row-level failure in ``dq_errors``.
+    result : Any
+        Output produced by `split_valid_and_quarantine`.
+
+    Examples
+    --------
+    >>> split_valid_and_quarantine(df, rules)
     """
     enriched = add_dq_failure_columns(df, rules, engine=engine)
     if _resolve_engine(enriched, engine) == "spark":
@@ -109,22 +111,31 @@ def split_valid_and_quarantine(df, rules, engine="auto"):
 
 
 def build_quarantine_summary_records(quarantine_df, run_id, dataset_name, table_name, engine="auto"):
-    """Build metadata rows summarizing quarantine volume for a pipeline run.
+    """Build quarantine summary records.
+
+    Use this callable to support the framework workflow step implemented by `build_quarantine_summary_records`.
 
     Parameters
     ----------
-    quarantine_df : pandas.DataFrame or pyspark.sql.DataFrame
-        Quarantine partition returned by :func:`split_valid_and_quarantine`.
-    run_id, dataset_name, table_name : str
-        Run and dataset identifiers persisted with the summary.
-    engine : str, default "auto"
-        Execution engine selector.
+    quarantine_df : Any
+        Input value for `quarantine_df`.
+    run_id : Any
+        Input value for `run_id`.
+    dataset_name : Any
+        Input value for `dataset_name`.
+    table_name : Any
+        Input value for `table_name`.
+    engine : Any, optional
+        Input value for `engine`.
 
     Returns
     -------
-    list[dict]
-        Metadata-table-ready summary records that can be surfaced in monitoring,
-        run summaries, and AI/human handover context.
+    result : Any
+        Output produced by `build_quarantine_summary_records`.
+
+    Examples
+    --------
+    >>> build_quarantine_summary_records(quarantine_df, run_id)
     """
     resolved = _resolve_engine(quarantine_df, engine)
     q_count = quarantine_df.count() if resolved == "spark" else len(quarantine_df)

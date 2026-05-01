@@ -33,31 +33,27 @@ def _jsonable(value: Any) -> Any:
 def build_transformation_summary_prompt_context(lineage_summary, code_snippets=None, runtime_metrics=None, business_context=None):
     """Build transformation summary prompt context.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_transformation_summary_prompt_context`.
 
     Parameters
     ----------
     lineage_summary : Any
-    Description of `lineage_summary`.
-    code_snippets : Any
-    Description of `code_snippets`.
-    runtime_metrics : Any
-    Description of `runtime_metrics`.
-    business_context : Any
-    Description of `business_context`.
+        Input value for `lineage_summary`.
+    code_snippets : Any, optional
+        Input value for `code_snippets`.
+    runtime_metrics : Any, optional
+        Input value for `runtime_metrics`.
+    business_context : Any, optional
+        Input value for `business_context`.
 
     Returns
     -------
     result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+        Output produced by `build_transformation_summary_prompt_context`.
 
     Examples
     --------
-    >>> build_transformation_summary_prompt_context(...)
+    >>> build_transformation_summary_prompt_context(lineage_summary, code_snippets)
     """
     return {
         "lineage_summary": _jsonable(lineage_summary or {}),
@@ -74,31 +70,27 @@ def build_transformation_summary_prompt_context(lineage_summary, code_snippets=N
 def build_transformation_summary_generation_prompt(lineage_summary, code_snippets=None, runtime_metrics=None, business_context=None):
     """Build transformation summary generation prompt.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_transformation_summary_generation_prompt`.
 
     Parameters
     ----------
     lineage_summary : Any
-    Description of `lineage_summary`.
-    code_snippets : Any
-    Description of `code_snippets`.
-    runtime_metrics : Any
-    Description of `runtime_metrics`.
-    business_context : Any
-    Description of `business_context`.
+        Input value for `lineage_summary`.
+    code_snippets : Any, optional
+        Input value for `code_snippets`.
+    runtime_metrics : Any, optional
+        Input value for `runtime_metrics`.
+    business_context : Any, optional
+        Input value for `business_context`.
 
     Returns
     -------
     result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+        Output produced by `build_transformation_summary_generation_prompt`.
 
     Examples
     --------
-    >>> build_transformation_summary_generation_prompt(...)
+    >>> build_transformation_summary_generation_prompt(lineage_summary, code_snippets)
     """
     context = build_transformation_summary_prompt_context(lineage_summary, code_snippets, runtime_metrics, business_context)
     return (
@@ -119,25 +111,21 @@ def _strip_fences(text: str) -> str:
 def normalize_transformation_summary_candidate(candidate):
     """Normalize transformation summary candidate.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `normalize_transformation_summary_candidate`.
 
     Parameters
     ----------
     candidate : Any
-    Description of `candidate`.
+        Input value for `candidate`.
 
     Returns
     -------
     result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+        Output produced by `normalize_transformation_summary_candidate`.
 
     Examples
     --------
-    >>> normalize_transformation_summary_candidate(...)
+    >>> normalize_transformation_summary_candidate(candidate)
     """
     known = {k: candidate.get(k) for k in REQUIRED_FIELDS if k in candidate}
     metadata = {k: v for k, v in candidate.items() if k not in REQUIRED_FIELDS}
@@ -151,25 +139,21 @@ def normalize_transformation_summary_candidate(candidate):
 def parse_ai_transformation_summaries(raw_response):
     """Parse ai transformation summaries.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `parse_ai_transformation_summaries`.
 
     Parameters
     ----------
     raw_response : Any
-    Description of `raw_response`.
+        Input value for `raw_response`.
 
     Returns
     -------
     result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+        Output produced by `parse_ai_transformation_summaries`.
 
     Examples
     --------
-    >>> parse_ai_transformation_summaries(...)
+    >>> parse_ai_transformation_summaries(raw_response)
     """
     try:
         payload = json.loads(_strip_fences(raw_response)) if isinstance(raw_response, str) else raw_response
@@ -193,31 +177,27 @@ def parse_ai_transformation_summaries(raw_response):
 def build_transformation_summary_records(candidates, run_id, dataset_name, table_name):
     """Build transformation summary records.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_transformation_summary_records`.
 
     Parameters
     ----------
     candidates : Any
-    Description of `candidates`.
+        Input value for `candidates`.
     run_id : Any
-    Description of `run_id`.
+        Input value for `run_id`.
     dataset_name : Any
-    Description of `dataset_name`.
+        Input value for `dataset_name`.
     table_name : Any
-    Description of `table_name`.
+        Input value for `table_name`.
 
     Returns
     -------
     result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+        Output produced by `build_transformation_summary_records`.
 
     Examples
     --------
-    >>> build_transformation_summary_records(...)
+    >>> build_transformation_summary_records(candidates, run_id)
     """
     return [
         {

@@ -27,25 +27,21 @@ REQUIRED_HANDOVER_PACK_KEYS = ["profile", "dq", "governance", "lineage", "run_su
 def get_mvp_step_registry() -> list[dict[str, Any]]:
     """Get mvp step registry.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `get_mvp_step_registry`.
 
     Parameters
     ----------
     None
-    This callable does not require public parameters.
+        This callable does not require user-provided parameters.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : list[dict[str, Any]]
+        Output produced by `get_mvp_step_registry`.
 
     Examples
     --------
-    >>> get_mvp_step_registry(...)
+    >>> get_mvp_step_registry()
     """
     return deepcopy(MVP_STEPS)
 
@@ -53,25 +49,21 @@ def get_mvp_step_registry() -> list[dict[str, Any]]:
 def validate_mvp_artifacts(artifacts: dict[str, Any]) -> dict[str, Any]:
     """Validate mvp artifacts.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `validate_mvp_artifacts`.
 
     Parameters
     ----------
-    artifacts : Any
-    Description of `artifacts`.
+    artifacts : dict[str, Any]
+        Input value for `artifacts`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict[str, Any]
+        Output produced by `validate_mvp_artifacts`.
 
     Examples
     --------
-    >>> validate_mvp_artifacts(...)
+    >>> validate_mvp_artifacts(artifacts)
     """
     expected_top_level = sorted({a for s in MVP_STEPS for a in s["output_artifacts"]})
     missing_top_level = [name for name in expected_top_level if name not in artifacts]

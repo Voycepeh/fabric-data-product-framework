@@ -13,27 +13,12 @@ from jsonschema import Draft202012Validator
 class DatasetContractValidationError(Exception):
     """Datasetcontractvalidationerror.
 
-    Documentation for API-reference generation in NumPy style.
-
-    Parameters
-    ----------
-    None
-    This callable does not require public parameters.
-
-    Returns
-    -------
-    None
-    This method updates state in place.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Public class used by the framework API for `DatasetContractValidationError`.
 
     Examples
     --------
-    >>> DatasetContractValidationError(...)
+    >>> DatasetContractValidationError(... )
     """
-    """Raised when strict dataset contract validation fails."""
 
 
 def _default_schema_text() -> str:
@@ -60,25 +45,21 @@ def _format_error_path(error_path: list[object], message: str, validator: str) -
 def load_dataset_contract(path: str | Path) -> dict:
     """Load dataset contract.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `load_dataset_contract`.
 
     Parameters
     ----------
-    path : Any
-    Description of `path`.
+    path : str | Path
+        Input value for `path`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `load_dataset_contract`.
 
     Examples
     --------
-    >>> load_dataset_contract(...)
+    >>> load_dataset_contract(path)
     """
     contract_path = Path(path)
     with contract_path.open("r", encoding="utf-8") as handle:
@@ -105,27 +86,23 @@ def _load_schema(schema_path: str | Path | None = None) -> dict:
 def validate_dataset_contract(contract: dict, schema_path: str | Path | None = None) -> list[str]:
     """Validate dataset contract.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `validate_dataset_contract`.
 
     Parameters
     ----------
-    contract : Any
-    Description of `contract`.
-    schema_path : Any
-    Description of `schema_path`.
+    contract : dict
+        Input value for `contract`.
+    schema_path : str | Path | None, optional
+        Input value for `schema_path`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : list[str]
+        Output produced by `validate_dataset_contract`.
 
     Examples
     --------
-    >>> validate_dataset_contract(...)
+    >>> validate_dataset_contract(contract, schema_path)
     """
     schema = _load_schema(schema_path=schema_path)
 
@@ -143,27 +120,28 @@ def validate_dataset_contract(contract: dict, schema_path: str | Path | None = N
 def assert_valid_dataset_contract(contract: dict, schema_path: str | Path | None = None) -> None:
     """Assert valid dataset contract.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `assert_valid_dataset_contract`.
 
     Parameters
     ----------
-    contract : Any
-    Description of `contract`.
-    schema_path : Any
-    Description of `schema_path`.
+    contract : dict
+        Input value for `contract`.
+    schema_path : str | Path | None, optional
+        Input value for `schema_path`.
 
     Returns
     -------
-    None
-    This method updates state in place.
+    result : None
+        Output produced by `assert_valid_dataset_contract`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    DatasetContractValidationError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> assert_valid_dataset_contract(...)
+    >>> assert_valid_dataset_contract(contract, schema_path)
     """
     errors = validate_dataset_contract(contract, schema_path=schema_path)
     if errors:
@@ -177,27 +155,23 @@ def load_and_validate_dataset_contract(
 ) -> tuple[dict, list[str]]:
     """Load and validate dataset contract.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `load_and_validate_dataset_contract`.
 
     Parameters
     ----------
-    path : Any
-    Description of `path`.
-    schema_path : Any
-    Description of `schema_path`.
+    path : str | Path
+        Input value for `path`.
+    schema_path : str | Path | None, optional
+        Input value for `schema_path`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : tuple[dict, list[str]]
+        Output produced by `load_and_validate_dataset_contract`.
 
     Examples
     --------
-    >>> load_and_validate_dataset_contract(...)
+    >>> load_and_validate_dataset_contract(path, schema_path)
     """
     contract = load_dataset_contract(path)
     errors = validate_dataset_contract(contract, schema_path=schema_path)

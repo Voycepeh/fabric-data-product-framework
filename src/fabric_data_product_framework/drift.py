@@ -9,53 +9,23 @@ import hashlib
 class SchemaDriftError(Exception):
     """Schemadrifterror.
 
-    Documentation for API-reference generation in NumPy style.
-
-    Parameters
-    ----------
-    None
-    This callable does not require public parameters.
-
-    Returns
-    -------
-    None
-    This method updates state in place.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Public class used by the framework API for `SchemaDriftError`.
 
     Examples
     --------
-    >>> SchemaDriftError(...)
+    >>> SchemaDriftError(... )
     """
-    """Raised when schema drift contains blocking changes."""
 
 
 class UnsupportedDataFrameEngineError(Exception):
     """Unsupporteddataframeengineerror.
 
-    Documentation for API-reference generation in NumPy style.
-
-    Parameters
-    ----------
-    None
-    This callable does not require public parameters.
-
-    Returns
-    -------
-    None
-    This method updates state in place.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Public class used by the framework API for `UnsupportedDataFrameEngineError`.
 
     Examples
     --------
-    >>> UnsupportedDataFrameEngineError(...)
+    >>> UnsupportedDataFrameEngineError(... )
     """
-    """Raised when schema snapshotting cannot identify a supported dataframe engine."""
 
 
 VALID_ENGINES = {"auto", "pandas", "spark"}
@@ -64,25 +34,21 @@ VALID_ENGINES = {"auto", "pandas", "spark"}
 def default_schema_drift_policy() -> dict:
     """Default schema drift policy.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `default_schema_drift_policy`.
 
     Parameters
     ----------
     None
-    This callable does not require public parameters.
+        This callable does not require user-provided parameters.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `default_schema_drift_policy`.
 
     Examples
     --------
-    >>> default_schema_drift_policy(...)
+    >>> default_schema_drift_policy()
     """
     return {
         "block_on_removed_column": True,
@@ -97,25 +63,26 @@ def default_schema_drift_policy() -> dict:
 def detect_dataframe_engine(df) -> str:
     """Detect dataframe engine.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `detect_dataframe_engine`.
 
     Parameters
     ----------
     df : Any
-    Description of `df`.
+        Input value for `df`.
 
     Returns
     -------
-    result : Any
-    Returned value.
+    result : str
+        Output produced by `detect_dataframe_engine`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    UnsupportedDataFrameEngineError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> detect_dataframe_engine(...)
+    >>> detect_dataframe_engine(df)
     """
     module_name = type(df).__module__
     if module_name.startswith("pandas") and hasattr(df, "dtypes") and hasattr(df, "columns"):
@@ -189,31 +156,34 @@ def _build_spark_schema_snapshot(df, dataset_name: str, table_name: str) -> dict
 def build_schema_snapshot(df, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "auto") -> dict:
     """Build schema snapshot.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_schema_snapshot`.
 
     Parameters
     ----------
     df : Any
-    Description of `df`.
-    dataset_name : Any
-    Description of `dataset_name`.
-    table_name : Any
-    Description of `table_name`.
-    engine : Any
-    Description of `engine`.
+        Input value for `df`.
+    dataset_name : str, optional
+        Input value for `dataset_name`.
+    table_name : str, optional
+        Input value for `table_name`.
+    engine : str, optional
+        Input value for `engine`.
 
     Returns
     -------
-    result : Any
-    Returned value.
+    result : dict
+        Output produced by `build_schema_snapshot`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    UnsupportedDataFrameEngineError
+        Raised when input validation or runtime checks fail.
+    ValueError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> build_schema_snapshot(...)
+    >>> build_schema_snapshot(df, dataset_name)
     """
     if engine not in VALID_ENGINES:
         raise ValueError(f"Unsupported engine '{engine}'. Expected one of: {sorted(VALID_ENGINES)}")
@@ -239,29 +209,25 @@ def _resolve_change_behavior(is_warning: bool, is_blocking: bool) -> tuple[str, 
 def compare_schema_snapshots(baseline_snapshot: dict, current_snapshot: dict, policy: dict | None = None) -> dict:
     """Compare schema snapshots.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `compare_schema_snapshots`.
 
     Parameters
     ----------
-    baseline_snapshot : Any
-    Description of `baseline_snapshot`.
-    current_snapshot : Any
-    Description of `current_snapshot`.
-    policy : Any
-    Description of `policy`.
+    baseline_snapshot : dict
+        Input value for `baseline_snapshot`.
+    current_snapshot : dict
+        Input value for `current_snapshot`.
+    policy : dict | None, optional
+        Input value for `policy`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `compare_schema_snapshots`.
 
     Examples
     --------
-    >>> compare_schema_snapshots(...)
+    >>> compare_schema_snapshots(baseline_snapshot, current_snapshot)
     """
     active_policy = {**default_schema_drift_policy(), **(policy or {})}
 
@@ -337,25 +303,26 @@ def compare_schema_snapshots(baseline_snapshot: dict, current_snapshot: dict, po
 def assert_no_blocking_schema_drift(result: dict) -> None:
     """Assert no blocking schema drift.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `assert_no_blocking_schema_drift`.
 
     Parameters
     ----------
-    result : Any
-    Description of `result`.
+    result : dict
+        Input value for `result`.
 
     Returns
     -------
-    None
-    This method updates state in place.
+    result : None
+        Output produced by `assert_no_blocking_schema_drift`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    SchemaDriftError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> assert_no_blocking_schema_drift(...)
+    >>> assert_no_blocking_schema_drift(result)
     """
     if not bool(result.get("can_continue", True)):
         raise SchemaDriftError("Blocking schema drift detected.")

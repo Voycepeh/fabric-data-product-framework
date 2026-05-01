@@ -16,27 +16,12 @@ SEVERITY_TO_ACTION = {"info": "warn", "warning": "warn", "critical": "block"}
 class ContractValidationError(Exception):
     """Contractvalidationerror.
 
-    Documentation for API-reference generation in NumPy style.
-
-    Parameters
-    ----------
-    None
-    This callable does not require public parameters.
-
-    Returns
-    -------
-    None
-    This method updates state in place.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Public class used by the framework API for `ContractValidationError`.
 
     Examples
     --------
-    >>> ContractValidationError(...)
+    >>> ContractValidationError(... )
     """
-    """Raised when runtime contract validation has blocking failures."""
 
 
 def _json_safe(value: Any) -> Any:
@@ -73,37 +58,33 @@ def _parse_freshness_timedelta(value: str | None) -> timedelta | None:
 def validate_required_columns(df, expected_columns: list[str], *, dataset_name: str = "unknown", table_name: str = "unknown", check_name: str = "required_columns", severity: str = "critical", engine: str = "auto") -> dict:
     """Validate required columns.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `validate_required_columns`.
 
     Parameters
     ----------
     df : Any
-    Description of `df`.
-    expected_columns : Any
-    Description of `expected_columns`.
-    dataset_name : Any
-    Description of `dataset_name`.
-    table_name : Any
-    Description of `table_name`.
-    check_name : Any
-    Description of `check_name`.
-    severity : Any
-    Description of `severity`.
-    engine : Any
-    Description of `engine`.
+        Input value for `df`.
+    expected_columns : list[str]
+        Input value for `expected_columns`.
+    dataset_name : str, optional
+        Input value for `dataset_name`.
+    table_name : str, optional
+        Input value for `table_name`.
+    check_name : str, optional
+        Input value for `check_name`.
+    severity : str, optional
+        Input value for `severity`.
+    engine : str, optional
+        Input value for `engine`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `validate_required_columns`.
 
     Examples
     --------
-    >>> validate_required_columns(...)
+    >>> validate_required_columns(df, expected_columns)
     """
     resolved = _resolve_engine(df, engine)
     actual_columns = list(df.columns) if resolved in {"pandas", "spark"} else []
@@ -117,35 +98,31 @@ def validate_required_columns(df, expected_columns: list[str], *, dataset_name: 
 def validate_grain(df, business_keys: list[str], *, dataset_name: str = "unknown", table_name: str = "unknown", severity: str = "critical", engine: str = "auto") -> dict:
     """Validate grain.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `validate_grain`.
 
     Parameters
     ----------
     df : Any
-    Description of `df`.
-    business_keys : Any
-    Description of `business_keys`.
-    dataset_name : Any
-    Description of `dataset_name`.
-    table_name : Any
-    Description of `table_name`.
-    severity : Any
-    Description of `severity`.
-    engine : Any
-    Description of `engine`.
+        Input value for `df`.
+    business_keys : list[str]
+        Input value for `business_keys`.
+    dataset_name : str, optional
+        Input value for `dataset_name`.
+    table_name : str, optional
+        Input value for `table_name`.
+    severity : str, optional
+        Input value for `severity`.
+    engine : str, optional
+        Input value for `engine`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `validate_grain`.
 
     Examples
     --------
-    >>> validate_grain(...)
+    >>> validate_grain(df, business_keys)
     """
     resolved = _resolve_engine(df, engine)
     missing = [k for k in business_keys if k not in getattr(df, "columns", [])]
@@ -183,39 +160,35 @@ def validate_grain(df, business_keys: list[str], *, dataset_name: str = "unknown
 def validate_freshness(df, watermark_column: str, *, max_age_days: int | None = None, max_age_timedelta: timedelta | None = None, dataset_name: str = "unknown", table_name: str = "unknown", severity: str = "critical", engine: str = "auto") -> dict:
     """Validate freshness.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `validate_freshness`.
 
     Parameters
     ----------
     df : Any
-    Description of `df`.
-    watermark_column : Any
-    Description of `watermark_column`.
-    max_age_days : Any
-    Description of `max_age_days`.
-    max_age_timedelta : Any
-    Description of `max_age_timedelta`.
-    dataset_name : Any
-    Description of `dataset_name`.
-    table_name : Any
-    Description of `table_name`.
-    severity : Any
-    Description of `severity`.
-    engine : Any
-    Description of `engine`.
+        Input value for `df`.
+    watermark_column : str
+        Input value for `watermark_column`.
+    max_age_days : int | None, optional
+        Input value for `max_age_days`.
+    max_age_timedelta : timedelta | None, optional
+        Input value for `max_age_timedelta`.
+    dataset_name : str, optional
+        Input value for `dataset_name`.
+    table_name : str, optional
+        Input value for `table_name`.
+    severity : str, optional
+        Input value for `severity`.
+    engine : str, optional
+        Input value for `engine`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `validate_freshness`.
 
     Examples
     --------
-    >>> validate_freshness(...)
+    >>> validate_freshness(df, watermark_column)
     """
     resolved = _resolve_engine(df, engine)
     threshold = max_age_timedelta if max_age_timedelta is not None else (timedelta(days=max_age_days) if max_age_days is not None else None)
@@ -251,33 +224,29 @@ def _combine_contract_checks(dataset_name: str, table_name: str, contract_type: 
 def validate_upstream_contract(df, contract: dict, *, dataset_name: str | None = None, table_name: str | None = None, engine: str = "auto") -> dict:
     """Validate upstream contract.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `validate_upstream_contract`.
 
     Parameters
     ----------
     df : Any
-    Description of `df`.
-    contract : Any
-    Description of `contract`.
-    dataset_name : Any
-    Description of `dataset_name`.
-    table_name : Any
-    Description of `table_name`.
-    engine : Any
-    Description of `engine`.
+        Input value for `df`.
+    contract : dict
+        Input value for `contract`.
+    dataset_name : str | None, optional
+        Input value for `dataset_name`.
+    table_name : str | None, optional
+        Input value for `table_name`.
+    engine : str, optional
+        Input value for `engine`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `validate_upstream_contract`.
 
     Examples
     --------
-    >>> validate_upstream_contract(...)
+    >>> validate_upstream_contract(df, contract)
     """
     dataset_name = dataset_name or contract.get("dataset", {}).get("name", "unknown")
     table_name = table_name or contract.get("source", {}).get("table", "unknown")
@@ -293,33 +262,29 @@ def validate_upstream_contract(df, contract: dict, *, dataset_name: str | None =
 def validate_downstream_contract(df, contract: dict, *, dataset_name: str | None = None, table_name: str | None = None, engine: str = "auto") -> dict:
     """Validate downstream contract.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `validate_downstream_contract`.
 
     Parameters
     ----------
     df : Any
-    Description of `df`.
-    contract : Any
-    Description of `contract`.
-    dataset_name : Any
-    Description of `dataset_name`.
-    table_name : Any
-    Description of `table_name`.
-    engine : Any
-    Description of `engine`.
+        Input value for `df`.
+    contract : dict
+        Input value for `contract`.
+    dataset_name : str | None, optional
+        Input value for `dataset_name`.
+    table_name : str | None, optional
+        Input value for `table_name`.
+    engine : str, optional
+        Input value for `engine`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `validate_downstream_contract`.
 
     Examples
     --------
-    >>> validate_downstream_contract(...)
+    >>> validate_downstream_contract(df, contract)
     """
     dataset_name = dataset_name or contract.get("dataset", {}).get("name", "unknown")
     table_name = table_name or contract.get("target", {}).get("table", "unknown")
@@ -331,31 +296,27 @@ def validate_downstream_contract(df, contract: dict, *, dataset_name: str | None
 def validate_runtime_contracts(*, source_df=None, output_df=None, contract: dict, engine: str = "auto") -> dict:
     """Validate runtime contracts.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `validate_runtime_contracts`.
 
     Parameters
     ----------
-    source_df : Any
-    Description of `source_df`.
-    output_df : Any
-    Description of `output_df`.
-    contract : Any
-    Description of `contract`.
-    engine : Any
-    Description of `engine`.
+    source_df : Any, optional
+        Input value for `source_df`.
+    output_df : Any, optional
+        Input value for `output_df`.
+    contract : dict
+        Input value for `contract`.
+    engine : str, optional
+        Input value for `engine`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `validate_runtime_contracts`.
 
     Examples
     --------
-    >>> validate_runtime_contracts(...)
+    >>> validate_runtime_contracts(source_df, output_df)
     """
     results = []
     if source_df is not None:
@@ -374,25 +335,26 @@ def validate_runtime_contracts(*, source_df=None, output_df=None, contract: dict
 def assert_contracts_valid(result: dict) -> None:
     """Assert contracts valid.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `assert_contracts_valid`.
 
     Parameters
     ----------
-    result : Any
-    Description of `result`.
+    result : dict
+        Input value for `result`.
 
     Returns
     -------
-    None
-    This method updates state in place.
+    result : None
+        Output produced by `assert_contracts_valid`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    ContractValidationError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> assert_contracts_valid(...)
+    >>> assert_contracts_valid(result)
     """
     if not result.get("can_continue", False):
         raise ContractValidationError("Contract validation returned blocking failures")
@@ -401,27 +363,23 @@ def assert_contracts_valid(result: dict) -> None:
 def build_contract_validation_records(result: dict, *, run_id: str) -> list[dict]:
     """Build contract validation records.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_contract_validation_records`.
 
     Parameters
     ----------
-    result : Any
-    Description of `result`.
-    run_id : Any
-    Description of `run_id`.
+    result : dict
+        Input value for `result`.
+    run_id : str
+        Input value for `run_id`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : list[dict]
+        Output produced by `build_contract_validation_records`.
 
     Examples
     --------
-    >>> build_contract_validation_records(...)
+    >>> build_contract_validation_records(result, run_id)
     """
     records: list[dict] = []
     for section in result.get("results", []):

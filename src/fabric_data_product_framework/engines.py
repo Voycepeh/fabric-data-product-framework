@@ -13,51 +13,37 @@ SUPPORTED_ENGINES = {"auto", "pandas", "spark"}
 class UnsupportedDataFrameEngineError(TypeError):
     """Unsupporteddataframeengineerror.
 
-    Documentation for API-reference generation in NumPy style.
-
-    Parameters
-    ----------
-    None
-    This callable does not require public parameters.
-
-    Returns
-    -------
-    None
-    This method updates state in place.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Public class used by the framework API for `UnsupportedDataFrameEngineError`.
 
     Examples
     --------
-    >>> UnsupportedDataFrameEngineError(...)
+    >>> UnsupportedDataFrameEngineError(... )
     """
-    """Raised when a dataframe type cannot be mapped to a supported engine."""
 
 
 def validate_engine(engine: str) -> str:
     """Validate engine.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `validate_engine`.
 
     Parameters
     ----------
-    engine : Any
-    Description of `engine`.
+    engine : str
+        Input value for `engine`.
 
     Returns
     -------
-    result : Any
-    Returned value.
+    result : str
+        Output produced by `validate_engine`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> validate_engine(...)
+    >>> validate_engine(engine)
     """
     normalized = (engine or "").strip().lower()
     if normalized not in SUPPORTED_ENGINES:
@@ -68,25 +54,26 @@ def validate_engine(engine: str) -> str:
 def detect_dataframe_engine(df: Any) -> str:
     """Detect dataframe engine.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `detect_dataframe_engine`.
 
     Parameters
     ----------
     df : Any
-    Description of `df`.
+        Input value for `df`.
 
     Returns
     -------
-    result : Any
-    Returned value.
+    result : str
+        Output produced by `detect_dataframe_engine`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    UnsupportedDataFrameEngineError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> detect_dataframe_engine(...)
+    >>> detect_dataframe_engine(df)
     """
     if isinstance(df, pd.DataFrame):
         return "pandas"

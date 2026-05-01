@@ -23,45 +23,41 @@ def build_dataset_run_record(
 ) -> dict:
     """Build dataset run record.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_dataset_run_record`.
 
     Parameters
     ----------
-    run_id : Any
-    Description of `run_id`.
-    dataset_name : Any
-    Description of `dataset_name`.
-    environment : Any
-    Description of `environment`.
-    source_table : Any
-    Description of `source_table`.
-    target_table : Any
-    Description of `target_table`.
-    status : Any
-    Description of `status`.
-    started_at_utc : Any
-    Description of `started_at_utc`.
-    ended_at_utc : Any
-    Description of `ended_at_utc`.
-    row_count_source : Any
-    Description of `row_count_source`.
-    row_count_output : Any
-    Description of `row_count_output`.
-    notes : Any
-    Description of `notes`.
+    run_id : str
+        Input value for `run_id`.
+    dataset_name : str
+        Input value for `dataset_name`.
+    environment : str
+        Input value for `environment`.
+    source_table : str
+        Input value for `source_table`.
+    target_table : str
+        Input value for `target_table`.
+    status : str, optional
+        Input value for `status`.
+    started_at_utc : str | None, optional
+        Input value for `started_at_utc`.
+    ended_at_utc : str | None, optional
+        Input value for `ended_at_utc`.
+    row_count_source : int | None, optional
+        Input value for `row_count_source`.
+    row_count_output : int | None, optional
+        Input value for `row_count_output`.
+    notes : str | None, optional
+        Input value for `notes`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `build_dataset_run_record`.
 
     Examples
     --------
-    >>> build_dataset_run_record(...)
+    >>> build_dataset_run_record(run_id, dataset_name)
     """
     return to_jsonable(
         {
@@ -83,29 +79,25 @@ def build_dataset_run_record(
 def build_schema_snapshot_records(snapshot: dict, *, run_id: str, table_stage: str) -> list[dict]:
     """Build schema snapshot records.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_schema_snapshot_records`.
 
     Parameters
     ----------
-    snapshot : Any
-    Description of `snapshot`.
-    run_id : Any
-    Description of `run_id`.
-    table_stage : Any
-    Description of `table_stage`.
+    snapshot : dict
+        Input value for `snapshot`.
+    run_id : str
+        Input value for `run_id`.
+    table_stage : str
+        Input value for `table_stage`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : list[dict]
+        Output produced by `build_schema_snapshot_records`.
 
     Examples
     --------
-    >>> build_schema_snapshot_records(...)
+    >>> build_schema_snapshot_records(snapshot, run_id)
     """
     base = {
         "run_id": run_id,
@@ -133,29 +125,25 @@ def build_schema_snapshot_records(snapshot: dict, *, run_id: str, table_stage: s
 def build_schema_drift_records(drift_result: dict, *, run_id: str, table_stage: str) -> list[dict]:
     """Build schema drift records.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_schema_drift_records`.
 
     Parameters
     ----------
-    drift_result : Any
-    Description of `drift_result`.
-    run_id : Any
-    Description of `run_id`.
-    table_stage : Any
-    Description of `table_stage`.
+    drift_result : dict
+        Input value for `drift_result`.
+    run_id : str
+        Input value for `run_id`.
+    table_stage : str
+        Input value for `table_stage`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : list[dict]
+        Output produced by `build_schema_drift_records`.
 
     Examples
     --------
-    >>> build_schema_drift_records(...)
+    >>> build_schema_drift_records(drift_result, run_id)
     """
     base = {
         "run_id": run_id,
@@ -211,33 +199,29 @@ def build_quality_result_records(
 ) -> list[dict]:
     """Build quality result records.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_quality_result_records`.
 
     Parameters
     ----------
-    quality_result : Any
-    Description of `quality_result`.
-    run_id : Any
-    Description of `run_id`.
-    dataset_name : Any
-    Description of `dataset_name`.
-    table_name : Any
-    Description of `table_name`.
-    table_stage : Any
-    Description of `table_stage`.
+    quality_result : dict | list[dict]
+        Input value for `quality_result`.
+    run_id : str
+        Input value for `run_id`.
+    dataset_name : str
+        Input value for `dataset_name`.
+    table_name : str
+        Input value for `table_name`.
+    table_stage : str
+        Input value for `table_stage`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : list[dict]
+        Output produced by `build_quality_result_records`.
 
     Examples
     --------
-    >>> build_quality_result_records(...)
+    >>> build_quality_result_records(quality_result, run_id)
     """
     results: list[dict[str, Any]]
     if isinstance(quality_result, dict):
@@ -273,31 +257,32 @@ def build_quality_result_records(
 def write_metadata_records(records: list[dict], table_identifier: str, writer=None, mode: str = "append", **options):
     """Write metadata records.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `write_metadata_records`.
 
     Parameters
     ----------
-    records : Any
-    Description of `records`.
-    table_identifier : Any
-    Description of `table_identifier`.
-    writer : Any
-    Description of `writer`.
-    mode : Any
-    Description of `mode`.
+    records : list[dict]
+        Input value for `records`.
+    table_identifier : str
+        Input value for `table_identifier`.
+    writer : Any, optional
+        Input value for `writer`.
+    mode : str, optional
+        Input value for `mode`.
 
     Returns
     -------
     result : Any
-    Returned value.
+        Output produced by `write_metadata_records`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    NotImplementedError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> write_metadata_records(...)
+    >>> write_metadata_records(records, table_identifier)
     """
     if not records:
         return None
@@ -317,31 +302,32 @@ def write_multiple_metadata_outputs(
 ) -> dict:
     """Write multiple metadata outputs.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `write_multiple_metadata_outputs`.
 
     Parameters
     ----------
-    outputs : Any
-    Description of `outputs`.
-    table_mapping : Any
-    Description of `table_mapping`.
-    writer : Any
-    Description of `writer`.
-    mode : Any
-    Description of `mode`.
+    outputs : dict[str, list[dict]]
+        Input value for `outputs`.
+    table_mapping : dict[str, str]
+        Input value for `table_mapping`.
+    writer : Any, optional
+        Input value for `writer`.
+    mode : str, optional
+        Input value for `mode`.
 
     Returns
     -------
-    result : Any
-    Returned value.
+    result : dict
+        Output produced by `write_multiple_metadata_outputs`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> write_multiple_metadata_outputs(...)
+    >>> write_multiple_metadata_outputs(outputs, table_mapping)
     """
     results = {}
     for output_name, records in outputs.items():

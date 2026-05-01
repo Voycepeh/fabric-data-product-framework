@@ -40,27 +40,12 @@ _ALLOWED_REFRESH_MODES = {"full", "incremental", "snapshot", "append"}
 class SourceContract:
     """Sourcecontract.
 
-    Documentation for API-reference generation in NumPy style.
-
-    Parameters
-    ----------
-    None
-    This callable does not require public parameters.
-
-    Returns
-    -------
-    None
-    This method updates state in place.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Public class used by the framework API for `SourceContract`.
 
     Examples
     --------
-    >>> SourceContract(...)
+    >>> SourceContract(... )
     """
-    """Source-side contract settings for ingestion and validation."""
     name: str | None = None
     type: str = "table"
     table: str | None = None
@@ -77,27 +62,12 @@ class SourceContract:
 class TargetContract:
     """Targetcontract.
 
-    Documentation for API-reference generation in NumPy style.
-
-    Parameters
-    ----------
-    None
-    This callable does not require public parameters.
-
-    Returns
-    -------
-    None
-    This method updates state in place.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Public class used by the framework API for `TargetContract`.
 
     Examples
     --------
-    >>> TargetContract(...)
+    >>> TargetContract(... )
     """
-    """Target write contract settings for curated outputs."""
     table: str | None = None
     path: str | None = None
     format: str = "delta"
@@ -111,27 +81,12 @@ class TargetContract:
 class QualityContract:
     """Qualitycontract.
 
-    Documentation for API-reference generation in NumPy style.
-
-    Parameters
-    ----------
-    None
-    This callable does not require public parameters.
-
-    Returns
-    -------
-    None
-    This method updates state in place.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Public class used by the framework API for `QualityContract`.
 
     Examples
     --------
-    >>> QualityContract(...)
+    >>> QualityContract(... )
     """
-    """Quality workflow configuration including rule-store and gating behavior."""
     rules: list[dict[str, Any]] = field(default_factory=list)
     rule_store_table: str | None = None
     use_rule_store: bool = False
@@ -147,27 +102,12 @@ class QualityContract:
 class DriftContract:
     """Driftcontract.
 
-    Documentation for API-reference generation in NumPy style.
-
-    Parameters
-    ----------
-    None
-    This callable does not require public parameters.
-
-    Returns
-    -------
-    None
-    This method updates state in place.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Public class used by the framework API for `DriftContract`.
 
     Examples
     --------
-    >>> DriftContract(...)
+    >>> DriftContract(... )
     """
-    """Schema/data drift policy and baseline table references."""
     schema_enabled: bool = True
     data_enabled: bool = False
     schema_policy: dict[str, Any] = field(default_factory=dict)
@@ -180,27 +120,12 @@ class DriftContract:
 class GovernanceContract:
     """Governancecontract.
 
-    Documentation for API-reference generation in NumPy style.
-
-    Parameters
-    ----------
-    None
-    This callable does not require public parameters.
-
-    Returns
-    -------
-    None
-    This method updates state in place.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Public class used by the framework API for `GovernanceContract`.
 
     Examples
     --------
-    >>> GovernanceContract(...)
+    >>> GovernanceContract(... )
     """
-    """Governance classification policy for sensitive columns and review."""
     classify_columns: bool = False
     classification_table: str | None = None
     require_human_approval: bool = True
@@ -211,27 +136,12 @@ class GovernanceContract:
 class MetadataContract:
     """Metadatacontract.
 
-    Documentation for API-reference generation in NumPy style.
-
-    Parameters
-    ----------
-    None
-    This callable does not require public parameters.
-
-    Returns
-    -------
-    None
-    This method updates state in place.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Public class used by the framework API for `MetadataContract`.
 
     Examples
     --------
-    >>> MetadataContract(...)
+    >>> MetadataContract(... )
     """
-    """Metadata table destinations used across the pipeline lifecycle."""
     schema: str = "fw_metadata"
     source_profile_table: str | None = None
     output_profile_table: str | None = None
@@ -250,27 +160,12 @@ class MetadataContract:
 class RuntimeContract:
     """Runtimecontract.
 
-    Documentation for API-reference generation in NumPy style.
-
-    Parameters
-    ----------
-    None
-    This callable does not require public parameters.
-
-    Returns
-    -------
-    None
-    This method updates state in place.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Public class used by the framework API for `RuntimeContract`.
 
     Examples
     --------
-    >>> RuntimeContract(...)
+    >>> RuntimeContract(... )
     """
-    """Runtime context defaults such as dataset, environment, and naming."""
     dataset_name: str = ""
     environment: str = "fabric"
     notebook_name: str | None = None
@@ -283,27 +178,12 @@ class RuntimeContract:
 class DataProductContract:
     """Dataproductcontract.
 
-    Documentation for API-reference generation in NumPy style.
-
-    Parameters
-    ----------
-    None
-    This callable does not require public parameters.
-
-    Returns
-    -------
-    None
-    This method updates state in place.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Public class used by the framework API for `DataProductContract`.
 
     Examples
     --------
-    >>> DataProductContract(...)
+    >>> DataProductContract(... )
     """
-    """Top-level contract model used by ``run_data_product`` orchestration."""
     dataset: dict[str, Any] = field(default_factory=dict)
     source: SourceContract = field(default_factory=SourceContract)
     target: TargetContract = field(default_factory=TargetContract)
@@ -326,25 +206,21 @@ def _dict(config: dict | None) -> dict:
 def build_source_contract(config: dict) -> SourceContract:
     """Build source contract.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_source_contract`.
 
     Parameters
     ----------
-    config : Any
-    Description of `config`.
+    config : dict
+        Input value for `config`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : SourceContract
+        Output produced by `build_source_contract`.
 
     Examples
     --------
-    >>> build_source_contract(...)
+    >>> build_source_contract(config)
     """
     c = _dict(config)
     return SourceContract(
@@ -364,25 +240,21 @@ def build_source_contract(config: dict) -> SourceContract:
 def build_target_contract(config: dict) -> TargetContract:
     """Build target contract.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_target_contract`.
 
     Parameters
     ----------
-    config : Any
-    Description of `config`.
+    config : dict
+        Input value for `config`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : TargetContract
+        Output produced by `build_target_contract`.
 
     Examples
     --------
-    >>> build_target_contract(...)
+    >>> build_target_contract(config)
     """
     c = _dict(config)
     return TargetContract(
@@ -399,25 +271,21 @@ def build_target_contract(config: dict) -> TargetContract:
 def build_quality_contract(config: dict) -> QualityContract:
     """Build quality contract.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_quality_contract`.
 
     Parameters
     ----------
-    config : Any
-    Description of `config`.
+    config : dict
+        Input value for `config`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : QualityContract
+        Output produced by `build_quality_contract`.
 
     Examples
     --------
-    >>> build_quality_contract(...)
+    >>> build_quality_contract(config)
     """
     c = _dict(config)
     return QualityContract(
@@ -436,25 +304,21 @@ def build_quality_contract(config: dict) -> QualityContract:
 def build_drift_contract(config: dict) -> DriftContract:
     """Build drift contract.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_drift_contract`.
 
     Parameters
     ----------
-    config : Any
-    Description of `config`.
+    config : dict
+        Input value for `config`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : DriftContract
+        Output produced by `build_drift_contract`.
 
     Examples
     --------
-    >>> build_drift_contract(...)
+    >>> build_drift_contract(config)
     """
     c = _dict(config)
     return DriftContract(
@@ -470,25 +334,21 @@ def build_drift_contract(config: dict) -> DriftContract:
 def build_governance_contract(config: dict) -> GovernanceContract:
     """Build governance contract.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_governance_contract`.
 
     Parameters
     ----------
-    config : Any
-    Description of `config`.
+    config : dict
+        Input value for `config`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : GovernanceContract
+        Output produced by `build_governance_contract`.
 
     Examples
     --------
-    >>> build_governance_contract(...)
+    >>> build_governance_contract(config)
     """
     c = _dict(config)
     return GovernanceContract(
@@ -502,25 +362,21 @@ def build_governance_contract(config: dict) -> GovernanceContract:
 def build_metadata_contract(config: dict) -> MetadataContract:
     """Build metadata contract.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_metadata_contract`.
 
     Parameters
     ----------
-    config : Any
-    Description of `config`.
+    config : dict
+        Input value for `config`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : MetadataContract
+        Output produced by `build_metadata_contract`.
 
     Examples
     --------
-    >>> build_metadata_contract(...)
+    >>> build_metadata_contract(config)
     """
     c = _dict(config)
     return MetadataContract(
@@ -542,25 +398,21 @@ def build_metadata_contract(config: dict) -> MetadataContract:
 def build_runtime_contract(config: dict) -> RuntimeContract:
     """Build runtime contract.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_runtime_contract`.
 
     Parameters
     ----------
-    config : Any
-    Description of `config`.
+    config : dict
+        Input value for `config`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : RuntimeContract
+        Output produced by `build_runtime_contract`.
 
     Examples
     --------
-    >>> build_runtime_contract(...)
+    >>> build_runtime_contract(config)
     """
     c = _dict(config)
     return RuntimeContract(
@@ -576,25 +428,21 @@ def build_runtime_contract(config: dict) -> RuntimeContract:
 def normalize_data_product_contract(contract: dict | DataProductContract) -> DataProductContract:
     """Normalize data product contract.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `normalize_data_product_contract`.
 
     Parameters
     ----------
-    contract : Any
-    Description of `contract`.
+    contract : dict | DataProductContract
+        Input value for `contract`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : DataProductContract
+        Output produced by `normalize_data_product_contract`.
 
     Examples
     --------
-    >>> normalize_data_product_contract(...)
+    >>> normalize_data_product_contract(contract)
     """
     if isinstance(contract, DataProductContract):
         return contract
@@ -650,25 +498,21 @@ def normalize_data_product_contract(contract: dict | DataProductContract) -> Dat
 def data_product_contract_to_dict(contract: DataProductContract) -> dict:
     """Data product contract to dict.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `data_product_contract_to_dict`.
 
     Parameters
     ----------
-    contract : Any
-    Description of `contract`.
+    contract : DataProductContract
+        Input value for `contract`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `data_product_contract_to_dict`.
 
     Examples
     --------
-    >>> data_product_contract_to_dict(...)
+    >>> data_product_contract_to_dict(contract)
     """
     return asdict(contract)
 
@@ -703,25 +547,21 @@ def _effective_contract_dict(contract: dict | DataProductContract) -> dict:
 def load_data_contract(path_or_dict: str | Path | dict) -> DataProductContract:
     """Load data contract.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `load_data_contract`.
 
     Parameters
     ----------
-    path_or_dict : Any
-    Description of `path_or_dict`.
+    path_or_dict : str | Path | dict
+        Input value for `path_or_dict`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : DataProductContract
+        Output produced by `load_data_contract`.
 
     Examples
     --------
-    >>> load_data_contract(...)
+    >>> load_data_contract(path_or_dict)
     """
     raw = dict(path_or_dict) if isinstance(path_or_dict, dict) else load_dataset_contract(path_or_dict)
     return normalize_data_product_contract(raw)
@@ -734,25 +574,21 @@ def _refresh_mode(contract: dict) -> str:
 def validate_data_contract_shape(contract: dict | DataProductContract) -> list[str]:
     """Validate data contract shape.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `validate_data_contract_shape`.
 
     Parameters
     ----------
-    contract : Any
-    Description of `contract`.
+    contract : dict | DataProductContract
+        Input value for `contract`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : list[str]
+        Output produced by `validate_data_contract_shape`.
 
     Examples
     --------
-    >>> validate_data_contract_shape(...)
+    >>> validate_data_contract_shape(contract)
     """
     n = normalize_data_product_contract(contract)
     raw = _effective_contract_dict(n)
@@ -783,27 +619,23 @@ def validate_data_contract_shape(contract: dict | DataProductContract) -> list[s
 def build_runtime_context_from_contract(contract: dict | DataProductContract, overrides: dict | None = None) -> dict:
     """Build runtime context from contract.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_runtime_context_from_contract`.
 
     Parameters
     ----------
-    contract : Any
-    Description of `contract`.
-    overrides : Any
-    Description of `overrides`.
+    contract : dict | DataProductContract
+        Input value for `contract`.
+    overrides : dict | None, optional
+        Input value for `overrides`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `build_runtime_context_from_contract`.
 
     Examples
     --------
-    >>> build_runtime_context_from_contract(...)
+    >>> build_runtime_context_from_contract(contract, overrides)
     """
     n = normalize_data_product_contract(contract)
     context = build_runtime_context(dataset_name=n.dataset.get("name", ""), environment=n.runtime.environment, source_table=n.source.table or "", target_table=n.target.table or "", notebook_name=n.runtime.notebook_name, run_id=(overrides or {}).get("run_id"))
@@ -836,37 +668,33 @@ def _runtime_validation_contract(contract: dict | DataProductContract) -> dict:
 def run_data_product(spark, contract: dict | DataProductContract, transform=None, source_df=None, write: bool | None = None, *, write_target: bool = True, write_metadata: bool = True) -> dict:
     """Run data product.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `run_data_product`.
 
     Parameters
     ----------
     spark : Any
-    Description of `spark`.
-    contract : Any
-    Description of `contract`.
-    transform : Any
-    Description of `transform`.
-    source_df : Any
-    Description of `source_df`.
-    write : Any
-    Description of `write`.
-    write_target : Any
-    Description of `write_target`.
-    write_metadata : Any
-    Description of `write_metadata`.
+        Input value for `spark`.
+    contract : dict | DataProductContract
+        Input value for `contract`.
+    transform : Any, optional
+        Input value for `transform`.
+    source_df : Any, optional
+        Input value for `source_df`.
+    write : bool | None, optional
+        Input value for `write`.
+    write_target : bool, optional
+        Input value for `write_target`.
+    write_metadata : bool, optional
+        Input value for `write_metadata`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `run_data_product`.
 
     Examples
     --------
-    >>> run_data_product(...)
+    >>> run_data_product(spark, contract)
     """
     n = normalize_data_product_contract(contract)
     if write is False:
@@ -1037,25 +865,26 @@ def run_data_product(spark, contract: dict | DataProductContract, transform=None
 def assert_data_product_passed(result: dict) -> None:
     """Assert data product passed.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `assert_data_product_passed`.
 
     Parameters
     ----------
-    result : Any
-    Description of `result`.
+    result : dict
+        Input value for `result`.
 
     Returns
     -------
-    None
-    This method updates state in place.
+    result : None
+        Output produced by `assert_data_product_passed`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    RuntimeError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> assert_data_product_passed(...)
+    >>> assert_data_product_passed(result)
     """
     if result.get("status") != "passed":
         raise RuntimeError("Data product run failed contract/quality gates")

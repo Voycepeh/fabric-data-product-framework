@@ -12,29 +12,30 @@ def build_table_identifier(
 ) -> str:
     """Build table identifier.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_table_identifier`.
 
     Parameters
     ----------
-    lakehouse : Any
-    Description of `lakehouse`.
-    schema : Any
-    Description of `schema`.
-    table : Any
-    Description of `table`.
+    lakehouse : str | None, optional
+        Input value for `lakehouse`.
+    schema : str | None, optional
+        Input value for `schema`.
+    table : str | None, optional
+        Input value for `table`.
 
     Returns
     -------
-    result : Any
-    Returned value.
+    result : str
+        Output produced by `build_table_identifier`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> build_table_identifier(...)
+    >>> build_table_identifier(lakehouse, schema)
     """
     parts = [part for part in [lakehouse, schema, table] if part]
     if not parts:
@@ -45,27 +46,28 @@ def build_table_identifier(
 def read_table(table_identifier: str, reader=None):
     """Read table.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `read_table`.
 
     Parameters
     ----------
-    table_identifier : Any
-    Description of `table_identifier`.
-    reader : Any
-    Description of `reader`.
+    table_identifier : str
+        Input value for `table_identifier`.
+    reader : Any, optional
+        Input value for `reader`.
 
     Returns
     -------
     result : Any
-    Returned value.
+        Output produced by `read_table`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    NotImplementedError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> read_table(...)
+    >>> read_table(table_identifier, reader)
     """
     if reader is None:
         raise NotImplementedError(
@@ -77,25 +79,26 @@ def read_table(table_identifier: str, reader=None):
 def validate_write_mode(mode: str) -> str:
     """Validate write mode.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `validate_write_mode`.
 
     Parameters
     ----------
-    mode : Any
-    Description of `mode`.
+    mode : str
+        Input value for `mode`.
 
     Returns
     -------
-    result : Any
-    Returned value.
+    result : str
+        Output produced by `validate_write_mode`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> validate_write_mode(...)
+    >>> validate_write_mode(mode)
     """
     normalized_mode = (mode or "").strip().lower()
     if normalized_mode not in VALID_WRITE_MODES:
@@ -106,31 +109,32 @@ def validate_write_mode(mode: str) -> str:
 def write_table(df, table_identifier: str, writer=None, mode: str = "append", **options):
     """Write table.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `write_table`.
 
     Parameters
     ----------
     df : Any
-    Description of `df`.
-    table_identifier : Any
-    Description of `table_identifier`.
-    writer : Any
-    Description of `writer`.
-    mode : Any
-    Description of `mode`.
+        Input value for `df`.
+    table_identifier : str
+        Input value for `table_identifier`.
+    writer : Any, optional
+        Input value for `writer`.
+    mode : str, optional
+        Input value for `mode`.
 
     Returns
     -------
     result : Any
-    Returned value.
+        Output produced by `write_table`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    NotImplementedError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> write_table(...)
+    >>> write_table(df, table_identifier)
     """
     normalized_mode = validate_write_mode(mode)
     if writer is None:

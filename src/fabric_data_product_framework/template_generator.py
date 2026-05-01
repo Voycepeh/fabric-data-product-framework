@@ -17,43 +17,44 @@ def create_pipeline_notebook_template(
 ):
     """Create pipeline notebook template.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `create_pipeline_notebook_template`.
 
     Parameters
     ----------
     output_path : Any
-    Description of `output_path`.
-    dataset_name : Any
-    Description of `dataset_name`.
-    source_table : Any
-    Description of `source_table`.
-    output_table : Any
-    Description of `output_table`.
-    source_env : Any
-    Description of `source_env`.
-    source_target : Any
-    Description of `source_target`.
-    output_env : Any
-    Description of `output_env`.
-    output_target : Any
-    Description of `output_target`.
-    include_ai_prompts : Any
-    Description of `include_ai_prompts`.
-    overwrite : Any
-    Description of `overwrite`.
+        Input value for `output_path`.
+    dataset_name : Any, optional
+        Input value for `dataset_name`.
+    source_table : Any, optional
+        Input value for `source_table`.
+    output_table : Any, optional
+        Input value for `output_table`.
+    source_env : Any, optional
+        Input value for `source_env`.
+    source_target : Any, optional
+        Input value for `source_target`.
+    output_env : Any, optional
+        Input value for `output_env`.
+    output_target : Any, optional
+        Input value for `output_target`.
+    include_ai_prompts : Any, optional
+        Input value for `include_ai_prompts`.
+    overwrite : Any, optional
+        Input value for `overwrite`.
 
     Returns
     -------
     result : Any
-    Returned value.
+        Output produced by `create_pipeline_notebook_template`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    FileExistsError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> create_pipeline_notebook_template(...)
+    >>> create_pipeline_notebook_template(output_path, dataset_name)
     """
     path = Path(output_path)
     if path.exists() and not overwrite:
@@ -263,27 +264,23 @@ def create_actual_data_mvp_template(
 ) -> str:
     """Create actual data mvp template.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `create_actual_data_mvp_template`.
 
     Parameters
     ----------
-    output_path : Any
-    Description of `output_path`.
-    contract_path : Any
-    Description of `contract_path`.
+    output_path : str
+        Input value for `output_path`.
+    contract_path : str, optional
+        Input value for `contract_path`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : str
+        Output produced by `create_actual_data_mvp_template`.
 
     Examples
     --------
-    >>> create_actual_data_mvp_template(...)
+    >>> create_actual_data_mvp_template(output_path, contract_path)
     """
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)

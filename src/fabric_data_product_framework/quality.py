@@ -27,27 +27,12 @@ SEVERITY_TO_ACTION = {"info": "allow", "warning": "warn", "critical": "block"}
 class DataQualityError(Exception):
     """Dataqualityerror.
 
-    Documentation for API-reference generation in NumPy style.
-
-    Parameters
-    ----------
-    None
-    This callable does not require public parameters.
-
-    Returns
-    -------
-    None
-    This method updates state in place.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Public class used by the framework API for `DataQualityError`.
 
     Examples
     --------
-    >>> DataQualityError(...)
+    >>> DataQualityError(... )
     """
-    """Raised when data quality gate fails."""
 
 
 def _now_iso() -> str:
@@ -216,33 +201,29 @@ def _spark_rule(df: Any, rule: dict[str, Any], row_count: int) -> tuple[int, int
 def run_quality_rules(df: Any, rules: list[dict], *, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "auto") -> dict:
     """Run quality rules.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `run_quality_rules`.
 
     Parameters
     ----------
     df : Any
-    Description of `df`.
-    rules : Any
-    Description of `rules`.
-    dataset_name : Any
-    Description of `dataset_name`.
-    table_name : Any
-    Description of `table_name`.
-    engine : Any
-    Description of `engine`.
+        Input value for `df`.
+    rules : list[dict]
+        Input value for `rules`.
+    dataset_name : str, optional
+        Input value for `dataset_name`.
+    table_name : str, optional
+        Input value for `table_name`.
+    engine : str, optional
+        Input value for `engine`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : dict
+        Output produced by `run_quality_rules`.
 
     Examples
     --------
-    >>> run_quality_rules(...)
+    >>> run_quality_rules(df, rules)
     """
     resolved_engine = _resolve_engine(df, engine)
     row_count = len(df) if resolved_engine == "pandas" else df.count()
@@ -334,27 +315,30 @@ def run_quality_rules(df: Any, rules: list[dict], *, dataset_name: str = "unknow
 def assert_quality_gate(result: dict, fail_on: str = "critical") -> None:
     """Assert quality gate.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `assert_quality_gate`.
 
     Parameters
     ----------
-    result : Any
-    Description of `result`.
-    fail_on : Any
-    Description of `fail_on`.
+    result : dict
+        Input value for `result`.
+    fail_on : str, optional
+        Input value for `fail_on`.
 
     Returns
     -------
-    None
-    This method updates state in place.
+    result : None
+        Output produced by `assert_quality_gate`.
 
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    Raises
+    ------
+    DataQualityError
+        Raised when input validation or runtime checks fail.
+    ValueError
+        Raised when input validation or runtime checks fail.
 
     Examples
     --------
-    >>> assert_quality_gate(...)
+    >>> assert_quality_gate(result, fail_on)
     """
     if fail_on != "critical":
         raise ValueError("Only fail_on='critical' is supported in MVP")
@@ -365,27 +349,23 @@ def assert_quality_gate(result: dict, fail_on: str = "critical") -> None:
 def build_quality_result_records(result: dict, *, run_id: str) -> list[dict]:
     """Build quality result records.
 
-    Documentation for API-reference generation in NumPy style.
+    Use this callable to support the framework workflow step implemented by `build_quality_result_records`.
 
     Parameters
     ----------
-    result : Any
-    Description of `result`.
-    run_id : Any
-    Description of `run_id`.
+    result : dict
+        Input value for `result`.
+    run_id : str
+        Input value for `run_id`.
 
     Returns
     -------
-    result : Any
-    Returned value.
-
-    Notes
-    -----
-    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+    result : list[dict]
+        Output produced by `build_quality_result_records`.
 
     Examples
     --------
-    >>> build_quality_result_records(...)
+    >>> build_quality_result_records(result, run_id)
     """
     rows = []
     for r in result.get("results", []):
