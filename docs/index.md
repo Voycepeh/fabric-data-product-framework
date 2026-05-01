@@ -14,3 +14,5 @@ Build production-friendly data products in Microsoft Fabric with reusable notebo
 - [Module API Overview](api/index.md)
 - [Lifecycle operating model](lifecycle-operating-model.md)
 - [Architecture overview](architecture.md)
+
+- [Notebook recipes](recipes/index.md)

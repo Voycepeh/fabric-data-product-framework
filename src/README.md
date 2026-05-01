@@ -7,6 +7,17 @@ This page is the workflow-first callable function map for `fabric_data_product_f
 > Click any function name to view its generated API documentation, including signature, parameters, returns, and examples.
 > Links in this map point to one rendered GitHub Pages page per public callable.
 
+
+## Notebook recipe map
+
+Use these copy-paste runnable recipe docs to apply the callable groups end to end:
+
+- [Recipe index](../docs/recipes/index.md)
+- [Local-safe smoke](../docs/recipes/local-safe-smoke.md)
+- [Fabric dry run](../docs/recipes/fabric-dry-run.md)
+- [Contract-first one call](../docs/recipes/contract-first-one-call.md)
+- [Full metadata chaining](../docs/recipes/profile-dq-governance-lineage-handover.md)
+
 ## Public callable surface source of truth
 
 The public callable surface below is aligned to `src/fabric_data_product_framework/__init__.py` (`__all__`).
