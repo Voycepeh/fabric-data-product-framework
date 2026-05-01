@@ -81,6 +81,11 @@ Rendered documentation is published on GitHub Pages at <https://voycepeh.github.
 
 The files under `docs/api/` are source markdown files for mkdocstrings and are best viewed through the published docs site.
 
+## Build documentation locally
+- `python -m pip install -e "[dev,docs]"`
+- `python -m mkdocs build`
+- `python -m mkdocs serve`
+
 ## Testing
 - Local tests: `python -m pytest`
 - Synthetic smoke example: `PYTHONPATH=src python examples/mvp_fabric_smoke_test.py`
