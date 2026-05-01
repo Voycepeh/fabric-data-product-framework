@@ -26,6 +26,7 @@ class TransformationStep:
 
 
 def _clean_list(values: list[str] | None) -> list[str]:
+    """Normalize optional string lists by dropping blank values."""
     return [str(v) for v in (values or []) if str(v).strip()]
 
 
@@ -40,6 +41,7 @@ def _unique(values: list[str]) -> list[str]:
 
 
 def _safe_node_id(raw: str, prefix: str = "node") -> str:
+    """Create Mermaid/graph-safe node identifiers from free-text names."""
     cleaned = re.sub(r"[^0-9a-zA-Z_]+", "_", (raw or "").strip())
     cleaned = re.sub(r"_+", "_", cleaned).strip("_")
     return f"{prefix}_{cleaned or 'unknown'}"
@@ -48,6 +50,7 @@ def _safe_node_id(raw: str, prefix: str = "node") -> str:
 
 
 class LineageRecorder:
+    """Collect transformation steps and render lineage-friendly summaries."""
     def __init__(self, dataset_name: str, run_id: str | None = None, source_tables: list[str] | None = None, target_table: str | None = None) -> None:
         self.dataset_name = dataset_name
         self.run_id = run_id
@@ -139,6 +142,7 @@ def build_transformation_summary_markdown(summary: dict, *, include_mermaid: boo
 
 
 def build_lineage_prompt_context(*, dataset_name: str, source_tables: list[str], target_table: str, transformation_steps: list[dict], eda_notes: str | None = None) -> str:
+    """Build grounded context text for lineage-oriented Copilot prompting."""
     lines = [
         "Use this context to draft or review a lineage explanation.",
         "Do not invent transformations not listed here.",
@@ -162,6 +166,7 @@ def build_lineage_prompt_context(*, dataset_name: str, source_tables: list[str],
     lines.extend(["", "## EDA Notes", eda_notes or "Not provided."])
     return "\n".join(lines)
 def get_fabric_copilot_lineage_prompt() -> str:
+    """Return the default instruction block for Fabric Copilot lineage drafting."""
     return """You are assisting with notebook-level lineage inside a Microsoft Fabric notebook.\nscan the entire current Fabric notebook before answering: inspect markdown, comments, section headers, EDA notes, and Python code cells.\nInspect Spark and Pandas DataFrame assignments and transformations including reads, writes, joins, filters, select/selectExpr, withColumn, groupBy, aggregations, unions, drops, renames, window functions, lakehouse reads, warehouse reads, file reads, table writes, and final outputs.\nIdentify only meaningful lineage steps. Ignore temporary diagnostics unless they affect final output. Infer the business/analytical reason from notebook context when possible.\nReturn ONLY valid Python code that defines lineage_steps = [...] using this exact schema and field names:\n\nlineage_steps = [\n    {\n        \"source\": \"<source dataframe/table/file>\",\n        \"target\": \"<target dataframe/table/file>\",\n        \"transformation\": \"<short technical summary>\",\n        \"reason\": \"<business or analytical reason>\",\n        \"source_type\": \"<dataframe|lakehouse_table|warehouse_table|file|unknown>\",\n        \"target_type\": \"<dataframe|lakehouse_table|warehouse_table|file|unknown>\",\n        \"confidence\": \"<high|medium|low>\",\n        \"notes\": \"<optional review note>\"\n    }\n]\n\nUse \"Needs human review\" if the reason cannot be inferred confidently.\nDo not invent business context. For Fabric notebook rendering, use matplotlib + networkx and avoid Mermaid.\nThis output must be reviewed by a human before approval and storage.\n"""
 
 

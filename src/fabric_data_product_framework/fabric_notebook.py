@@ -48,6 +48,7 @@ EXAMPLE_CONFIG: Dict[str, Dict[str, Housepath]] = {
 
 
 def load_fabric_config(path: str | Path) -> dict[str, dict[str, Housepath]]:
+    """Load Fabric environment/target lakehouse mappings from YAML."""
     try:
         import yaml
     except ImportError as exc:
@@ -100,6 +101,7 @@ def get_path(
     config: dict | None = None,
     use_example_config: bool = False,
 ) -> Any:
+    """Resolve a ``Housepath`` for a given environment and target."""
     if config is None:
         if not use_example_config:
             raise ValueError(
@@ -129,6 +131,7 @@ def _get_spark(spark_session=None):
 
 
 def lakehouse_table_read(lh, tablename, spark_session=None):
+    """Read a Delta table from a configured Lakehouse path."""
     if not getattr(lh, "root", None):
         raise ValueError("lh.root is required.")
     if not tablename:
@@ -147,6 +150,7 @@ def lakehouse_table_write(
     repartition_by=None,
     overwrite_schema=True,
 ):
+    """Write a Spark DataFrame to a Delta table under Lakehouse ``Tables``."""
     if not getattr(lh, "root", None):
         raise ValueError("lh.root is required.")
     if not tablename:
@@ -184,12 +188,14 @@ def lakehouse_table_write(
 
 
 def lakehouse_csv_read(lh, relative_path, spark_session=None, header=True):
+    """Read a CSV file from Lakehouse ``Files`` relative path."""
     spark_obj = _get_spark(spark_session)
     path = f"{lh.root}/{relative_path}"
     return spark_obj.read.option("header", header).csv(path)
 
 
 def warehouse_read(env, target, schema, table, config=None, spark_session=None):
+    """Read a Fabric Warehouse table using workspace-aware connector options."""
     spark_obj = _get_spark(spark_session)
     p = get_path(env, target, config=config)
     import com.microsoft.spark.fabric
@@ -203,6 +209,7 @@ def warehouse_read(env, target, schema, table, config=None, spark_session=None):
 
 
 def warehouse_write(df, env, target, schema, table, mode="append", config=None):
+    """Write to a Fabric Warehouse table via the Fabric Spark connector."""
     p = get_path(env, target, config=config)
     import com.microsoft.spark.fabric
     from com.microsoft.spark.fabric.Constants import Constants

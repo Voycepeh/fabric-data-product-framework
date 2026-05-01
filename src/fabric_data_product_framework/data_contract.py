@@ -135,10 +135,12 @@ class DataProductContract:
 
 
 def _dict(config: dict | None) -> dict:
+    """Return a dictionary or an empty default for optional config fragments."""
     return config if isinstance(config, dict) else {}
 
 
 def build_source_contract(config: dict) -> SourceContract:
+    """Build a typed ``SourceContract`` from raw contract configuration."""
     c = _dict(config)
     return SourceContract(
         name=c.get("name"),
@@ -155,6 +157,7 @@ def build_source_contract(config: dict) -> SourceContract:
 
 
 def build_target_contract(config: dict) -> TargetContract:
+    """Build a typed ``TargetContract`` from raw contract configuration."""
     c = _dict(config)
     return TargetContract(
         table=c.get("table"),
@@ -168,6 +171,7 @@ def build_target_contract(config: dict) -> TargetContract:
 
 
 def build_quality_contract(config: dict) -> QualityContract:
+    """Build a typed ``QualityContract`` from raw contract configuration."""
     c = _dict(config)
     return QualityContract(
         rules=list(c.get("rules") or []),
@@ -183,6 +187,7 @@ def build_quality_contract(config: dict) -> QualityContract:
 
 
 def build_drift_contract(config: dict) -> DriftContract:
+    """Build a typed ``DriftContract`` from raw contract configuration."""
     c = _dict(config)
     return DriftContract(
         schema_enabled=bool(c.get("schema_enabled", True)),
@@ -195,6 +200,7 @@ def build_drift_contract(config: dict) -> DriftContract:
 
 
 def build_governance_contract(config: dict) -> GovernanceContract:
+    """Build a typed ``GovernanceContract`` from raw contract configuration."""
     c = _dict(config)
     return GovernanceContract(
         classify_columns=bool(c.get("classify_columns", False)),
@@ -205,6 +211,7 @@ def build_governance_contract(config: dict) -> GovernanceContract:
 
 
 def build_metadata_contract(config: dict) -> MetadataContract:
+    """Build a typed ``MetadataContract`` from raw contract configuration."""
     c = _dict(config)
     return MetadataContract(
         schema=str(c.get("schema") or "fw_metadata"),
@@ -223,6 +230,7 @@ def build_metadata_contract(config: dict) -> MetadataContract:
 
 
 def build_runtime_contract(config: dict) -> RuntimeContract:
+    """Build a typed ``RuntimeContract`` from raw contract configuration."""
     c = _dict(config)
     return RuntimeContract(
         dataset_name=str(c.get("dataset_name") or ""),

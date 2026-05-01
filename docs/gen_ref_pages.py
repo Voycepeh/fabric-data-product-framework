@@ -40,6 +40,7 @@ for section, items in symbols_by_section.items():
             fd.write(f"::: {dotted_path}\n")
             fd.write("    options:\n")
             fd.write("      show_root_heading: false\n")
+            fd.write("      show_source: true\n")
 
 with mkdocs_gen_files.open("reference/index.md", "w") as fd:
     fd.write("# Callable Reference\n\n")
