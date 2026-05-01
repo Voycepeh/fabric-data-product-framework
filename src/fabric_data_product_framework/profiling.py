@@ -204,10 +204,23 @@ def _profile_spark_dataframe(df, dataset_name: str = "unknown", sample_size: int
 
 
 def profile_dataframe(df, dataset_name: str = "unknown", sample_size: int = 5, top_n: int = 5, engine: str = "auto") -> dict[str, Any]:
-    """Profile a pandas or Spark dataframe without collecting Spark data to pandas (steps 4/9).
+    """Profile a pandas or Spark dataframe into a JSON-safe summary payload.
 
-    Use ``engine='auto'`` for detection. Returns a JSON-safe dataframe profile
-    including row, column, and per-column statistics.
+    Args:
+        df: Input pandas or Spark dataframe.
+        dataset_name: Dataset label stored in the output profile.
+        sample_size: Max non-null sample values to keep per column.
+        top_n: Max frequency values to keep per column.
+        engine: ``auto``, ``pandas``, or ``spark``.
+
+    Returns:
+        Dataframe profile dictionary with table-level and column-level metrics.
+
+    Runtime compatibility:
+        Supports local pandas and Fabric Spark; avoids Spark-to-pandas conversion.
+
+    Example:
+        >>> profile = profile_dataframe(df, dataset_name="orders", engine="auto")
     """
     selected_engine = validate_engine(engine)
     if selected_engine == "auto":
