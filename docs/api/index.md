@@ -1,21 +1,11 @@
 # API Reference
 
-Use `src/README.md` as the workflow-first callable map.
-Use the generated API pages in this section for callable signatures, parameters, returns, and examples.
+Use this section for module overviews, then open the **Reference** section for one-page-per-callable API docs generated from `fabric_data_product_framework.__all__`.
 
-## Public callable modules
+## Quick navigation
 
-- [Fabric Notebook](fabric_notebook.md)
-- [Template Generator](template_generator.md)
-- [Lineage](lineage.md)
-- [DQ Workflow](dq.md)
-- [Governance](governance.md)
-- [Data Contract](contracts.md)
-- [Drift Checkers](drift_checkers.md)
-- [MVP Steps](mvp_steps.md)
-
-## Additional module docs (internal / legacy)
-
-- [Runtime](runtime.md)
-- [Profiling](profiling.md)
-- [Quality](quality.md)
+- [Callable reference home](../reference/)
+- [Fabric notebook callables](../reference/fabric_notebook/)
+- [Runtime callables](../reference/runtime/)
+- [Governance callables](../reference/governance/)
+- [Data contract callables](../reference/contracts/)
