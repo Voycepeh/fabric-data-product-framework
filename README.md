@@ -9,6 +9,27 @@ A metadata-first, AI-in-the-loop, Fabric-first notebook framework for building d
 - Metadata, profile results, DQ rules, governance labels, lineage, and run summaries become reusable contract artifacts.
 - AI proposes; humans approve; the framework validates, logs, and packages artifacts.
 
+## Visual overview
+
+These visuals summarize the user benefits, workflow improvement, and canonical MVP flow.
+
+### What users get
+![Framework benefits](docs/assets/framework-benefits.png)
+
+### Before vs after
+![Before and after](docs/assets/before-after.png)
+
+### MVP flow
+![MVP flow](docs/assets/mvp-flow.png)
+
+## Start here:
+- Docs homepage: <https://voycepeh.github.io/fabric-data-product-framework/>
+- Quick Start runbook: [docs/quick-start.md](docs/quick-start.md)
+- Canonical lifecycle: [docs/lifecycle-operating-model.md](docs/lifecycle-operating-model.md)
+- Architecture: [docs/architecture.md](docs/architecture.md)
+- Build and install in Fabric guide: [docs/UV_WHEEL_FABRIC_INSTALL_GUIDE.md](docs/UV_WHEEL_FABRIC_INSTALL_GUIDE.md)
+- List of available function: [generated function reference](docs/reference/index.md)
+
 ## What problems it solves
 
 | Problem | Framework response |
@@ -25,27 +46,6 @@ This framework is inspired by [Databricks Labs DQX](https://databrickslabs.githu
 
 This repository adapts that pattern to Microsoft Fabric notebooks, Lakehouse/Warehouse, Fabric AI functions, and Copilot-style workflows.
 
-## Visual overview
-
-These visuals summarize the user benefits, workflow improvement, and canonical MVP flow.
-
-### What users get
-![Framework benefits](docs/assets/framework-benefits.png)
-
-### Before vs after
-![Before and after](docs/assets/before-after.png)
-
-### MVP flow
-![MVP flow](docs/assets/mvp-flow.png)
-
 ## How does AI comes into play?
 AI helps draft DQ rules, sensitivity labels, lineage, transformation summaries, and handover notes.
 We do it via creating functions within this framework that allow us to prompt the native [AI function](https://learn.microsoft.com/en-us/fabric/data-science/ai-functions/overview?tabs=pandas-pyspark%2Cpandas) or standardize prompts that we manually generate and paste into copilot.
-
-Start here:
-- Docs homepage: <https://voycepeh.github.io/fabric-data-product-framework/>
-- Quick Start runbook: [docs/quick-start.md](docs/quick-start.md)
-- Canonical lifecycle: [docs/lifecycle-operating-model.md](docs/lifecycle-operating-model.md)
-- Architecture: [docs/architecture.md](docs/architecture.md)
-- Build and install in Fabric guide: [docs/UV_WHEEL_FABRIC_INSTALL_GUIDE.md](docs/UV_WHEEL_FABRIC_INSTALL_GUIDE.md)
-- List of available function: [generated function reference](docs/reference/index.md)
