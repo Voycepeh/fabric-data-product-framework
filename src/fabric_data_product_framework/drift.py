@@ -7,10 +7,54 @@ import hashlib
 
 
 class SchemaDriftError(Exception):
+    """Schemadrifterror.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    None
+    This callable does not require public parameters.
+
+    Returns
+    -------
+    None
+    This method updates state in place.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> SchemaDriftError(...)
+    """
     """Raised when schema drift contains blocking changes."""
 
 
 class UnsupportedDataFrameEngineError(Exception):
+    """Unsupporteddataframeengineerror.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    None
+    This callable does not require public parameters.
+
+    Returns
+    -------
+    None
+    This method updates state in place.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> UnsupportedDataFrameEngineError(...)
+    """
     """Raised when schema snapshotting cannot identify a supported dataframe engine."""
 
 
@@ -18,7 +62,28 @@ VALID_ENGINES = {"auto", "pandas", "spark"}
 
 
 def default_schema_drift_policy() -> dict:
-    """Return default schema drift policy used for pre-transform safety checks (step 5)."""
+    """Default schema drift policy.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    None
+    This callable does not require public parameters.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> default_schema_drift_policy(...)
+    """
     return {
         "block_on_removed_column": True,
         "block_on_type_change": True,
@@ -30,7 +95,28 @@ def default_schema_drift_policy() -> dict:
 
 
 def detect_dataframe_engine(df) -> str:
-    """Detect pandas or Spark dataframe type for schema snapshot helpers (step 5)."""
+    """Detect dataframe engine.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    df : Any
+    Description of `df`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> detect_dataframe_engine(...)
+    """
     module_name = type(df).__module__
     if module_name.startswith("pandas") and hasattr(df, "dtypes") and hasattr(df, "columns"):
         return "pandas"
@@ -101,9 +187,33 @@ def _build_spark_schema_snapshot(df, dataset_name: str, table_name: str) -> dict
 
 
 def build_schema_snapshot(df, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "auto") -> dict:
-    """Create a schema snapshot for baseline/current comparison before transforms (step 5).
+    """Build schema snapshot.
 
-    Returns dataset/table/column structure details. Supports pandas and Spark.
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    df : Any
+    Description of `df`.
+    dataset_name : Any
+    Description of `dataset_name`.
+    table_name : Any
+    Description of `table_name`.
+    engine : Any
+    Description of `engine`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> build_schema_snapshot(...)
     """
     if engine not in VALID_ENGINES:
         raise ValueError(f"Unsupported engine '{engine}'. Expected one of: {sorted(VALID_ENGINES)}")
@@ -127,7 +237,32 @@ def _resolve_change_behavior(is_warning: bool, is_blocking: bool) -> tuple[str, 
 
 
 def compare_schema_snapshots(baseline_snapshot: dict, current_snapshot: dict, policy: dict | None = None) -> dict:
-    """Compare baseline and current schema snapshots and classify drift actions (step 5)."""
+    """Compare schema snapshots.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    baseline_snapshot : Any
+    Description of `baseline_snapshot`.
+    current_snapshot : Any
+    Description of `current_snapshot`.
+    policy : Any
+    Description of `policy`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> compare_schema_snapshots(...)
+    """
     active_policy = {**default_schema_drift_policy(), **(policy or {})}
 
     baseline_columns = {col["column_name"]: col for col in baseline_snapshot.get("columns", [])}
@@ -200,6 +335,27 @@ def compare_schema_snapshots(baseline_snapshot: dict, current_snapshot: dict, po
 
 
 def assert_no_blocking_schema_drift(result: dict) -> None:
-    """Raise ``SchemaDriftError`` when drift comparison contains blocking changes (step 5 gate)."""
+    """Assert no blocking schema drift.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    result : Any
+    Description of `result`.
+
+    Returns
+    -------
+    None
+    This method updates state in place.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> assert_no_blocking_schema_drift(...)
+    """
     if not bool(result.get("can_continue", True)):
         raise SchemaDriftError("Blocking schema drift detected.")

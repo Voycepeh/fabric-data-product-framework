@@ -21,7 +21,48 @@ def build_dataset_run_record(
     row_count_output: int | None = None,
     notes: str | None = None,
 ) -> dict:
-    """Build a dataset-level run record for status tracking and handover exports (step 14)."""
+    """Build dataset run record.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    run_id : Any
+    Description of `run_id`.
+    dataset_name : Any
+    Description of `dataset_name`.
+    environment : Any
+    Description of `environment`.
+    source_table : Any
+    Description of `source_table`.
+    target_table : Any
+    Description of `target_table`.
+    status : Any
+    Description of `status`.
+    started_at_utc : Any
+    Description of `started_at_utc`.
+    ended_at_utc : Any
+    Description of `ended_at_utc`.
+    row_count_source : Any
+    Description of `row_count_source`.
+    row_count_output : Any
+    Description of `row_count_output`.
+    notes : Any
+    Description of `notes`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> build_dataset_run_record(...)
+    """
     return to_jsonable(
         {
             "run_id": run_id,
@@ -40,7 +81,32 @@ def build_dataset_run_record(
 
 
 def build_schema_snapshot_records(snapshot: dict, *, run_id: str, table_stage: str) -> list[dict]:
-    """Convert schema snapshot output into row records for metadata tables (step 5)."""
+    """Build schema snapshot records.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    snapshot : Any
+    Description of `snapshot`.
+    run_id : Any
+    Description of `run_id`.
+    table_stage : Any
+    Description of `table_stage`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> build_schema_snapshot_records(...)
+    """
     base = {
         "run_id": run_id,
         "dataset_name": snapshot.get("dataset_name"),
@@ -65,7 +131,32 @@ def build_schema_snapshot_records(snapshot: dict, *, run_id: str, table_stage: s
 
 
 def build_schema_drift_records(drift_result: dict, *, run_id: str, table_stage: str) -> list[dict]:
-    """Convert schema drift comparison results into metadata rows (step 5 gate logging)."""
+    """Build schema drift records.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    drift_result : Any
+    Description of `drift_result`.
+    run_id : Any
+    Description of `run_id`.
+    table_stage : Any
+    Description of `table_stage`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> build_schema_drift_records(...)
+    """
     base = {
         "run_id": run_id,
         "dataset_name": drift_result.get("dataset_name"),
@@ -118,7 +209,36 @@ def build_quality_result_records(
     table_name: str,
     table_stage: str,
 ) -> list[dict]:
-    """Normalize quality rule outputs into metadata rows for quality reporting (step 10)."""
+    """Build quality result records.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    quality_result : Any
+    Description of `quality_result`.
+    run_id : Any
+    Description of `run_id`.
+    dataset_name : Any
+    Description of `dataset_name`.
+    table_name : Any
+    Description of `table_name`.
+    table_stage : Any
+    Description of `table_stage`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> build_quality_result_records(...)
+    """
     results: list[dict[str, Any]]
     if isinstance(quality_result, dict):
         results = list(quality_result.get("results", []))
@@ -151,9 +271,33 @@ def build_quality_result_records(
 
 
 def write_metadata_records(records: list[dict], table_identifier: str, writer=None, mode: str = "append", **options):
-    """Write metadata rows via an injected writer adapter (steps 4/5/9/10/14).
+    """Write metadata records.
 
-    Safety: this module does not hardcode runtime-specific writers; callers must inject one.
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    records : Any
+    Description of `records`.
+    table_identifier : Any
+    Description of `table_identifier`.
+    writer : Any
+    Description of `writer`.
+    mode : Any
+    Description of `mode`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> write_metadata_records(...)
     """
     if not records:
         return None
@@ -171,7 +315,34 @@ def write_multiple_metadata_outputs(
     mode: str = "append",
     **options,
 ) -> dict:
-    """Write multiple named metadata outputs using a name-to-table mapping and shared writer."""
+    """Write multiple metadata outputs.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    outputs : Any
+    Description of `outputs`.
+    table_mapping : Any
+    Description of `table_mapping`.
+    writer : Any
+    Description of `writer`.
+    mode : Any
+    Description of `mode`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> write_multiple_metadata_outputs(...)
+    """
     results = {}
     for output_name, records in outputs.items():
         if not records:

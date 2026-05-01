@@ -8,25 +8,79 @@ from uuid import uuid4
 
 
 class NotebookNamingError(ValueError):
+    """Notebooknamingerror.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    None
+    This callable does not require public parameters.
+
+    Returns
+    -------
+    None
+    This method updates state in place.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> NotebookNamingError(...)
+    """
     """Raised when a notebook name does not follow allowed naming conventions."""
 
 
 def get_current_timestamp_utc() -> str:
-    """Return the current UTC timestamp in ISO-8601 format."""
+    """Get current timestamp utc.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    None
+    This callable does not require public parameters.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> get_current_timestamp_utc(...)
+    """
     return datetime.now(timezone.utc).isoformat()
 
 
 def generate_run_id(prefix: str = "run") -> str:
-    """Generate a normalized run identifier for notebook executions.
+    """Generate run id.
 
-    Args:
-        prefix: Logical run prefix (for example ``ingest`` or dataset name).
+    Documentation for API-reference generation in NumPy style.
 
-    Returns:
-        Run id shaped as ``<prefix>_<UTC timestamp>_<short uuid>``.
+    Parameters
+    ----------
+    prefix : Any
+    Description of `prefix`.
 
-    Runtime:
-        Local-safe and Fabric-safe (pure Python).
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> generate_run_id(...)
     """
     normalized_prefix = normalize_name(prefix) or "run"
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
@@ -35,28 +89,57 @@ def generate_run_id(prefix: str = "run") -> str:
 
 
 def normalize_name(value: str) -> str:
-    """Normalize a name for public-safe runtime usage."""
+    """Normalize name.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    value : Any
+    Description of `value`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> normalize_name(...)
+    """
     normalized = re.sub(r"[^a-z0-9_]+", "_", (value or "").strip().lower().replace(" ", "_"))
     normalized = re.sub(r"_+", "_", normalized).strip("_")
     return normalized
 
 
 def validate_notebook_name(name: str, allowed_prefixes: list[str]) -> list[str]:
-    """Validate a notebook name against framework naming gates.
+    """Validate notebook name.
 
-    Args:
-        name: Notebook name to validate.
-        allowed_prefixes: Allowed name prefixes such as ``["nb_", "dp_"]``.
+    Documentation for API-reference generation in NumPy style.
 
-    Returns:
-        List of validation error messages; an empty list means valid.
+    Parameters
+    ----------
+    name : Any
+    Description of `name`.
+    allowed_prefixes : Any
+    Description of `allowed_prefixes`.
 
-    Side effects:
-        None.
+    Returns
+    -------
+    result : Any
+    Returned value.
 
-    Example:
-        >>> validate_notebook_name(name="nb_orders_ingest", allowed_prefixes=["nb_"])
-        []
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> validate_notebook_name(...)
     """
     errors: list[str] = []
     normalized_name = (name or "").strip()
@@ -83,7 +166,30 @@ def validate_notebook_name(name: str, allowed_prefixes: list[str]) -> list[str]:
 
 
 def assert_notebook_name_valid(name: str, allowed_prefixes: list[str]) -> None:
-    """Raise NotebookNamingError when notebook name validation fails."""
+    """Assert notebook name valid.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    name : Any
+    Description of `name`.
+    allowed_prefixes : Any
+    Description of `allowed_prefixes`.
+
+    Returns
+    -------
+    None
+    This method updates state in place.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> assert_notebook_name_valid(...)
+    """
     errors = validate_notebook_name(name=name, allowed_prefixes=allowed_prefixes)
     if errors:
         raise NotebookNamingError(" ".join(errors))
@@ -97,24 +203,37 @@ def build_runtime_context(
     notebook_name: str | None = None,
     run_id: str | None = None,
 ) -> dict:
-    """Build a JSON-safe runtime context used by downstream workflow steps.
+    """Build runtime context.
 
-    Args:
-        dataset_name: Logical dataset name.
-        environment: Execution environment label (for example ``dev`` or ``fabric``).
-        source_table: Source table identifier.
-        target_table: Target table identifier.
-        notebook_name: Optional notebook name for traceability.
-        run_id: Optional precomputed run id; autogenerated when omitted.
+    Documentation for API-reference generation in NumPy style.
 
-    Returns:
-        Dictionary containing run metadata and UTC start timestamp.
+    Parameters
+    ----------
+    dataset_name : Any
+    Description of `dataset_name`.
+    environment : Any
+    Description of `environment`.
+    source_table : Any
+    Description of `source_table`.
+    target_table : Any
+    Description of `target_table`.
+    notebook_name : Any
+    Description of `notebook_name`.
+    run_id : Any
+    Description of `run_id`.
 
-    Runtime:
-        Local-safe and Fabric-safe.
+    Returns
+    -------
+    result : Any
+    Returned value.
 
-    Typical next step:
-        Use this context when calling profiling, drift, quality, and run summary helpers.
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> build_runtime_context(...)
     """
     return {
         "dataset_name": str(dataset_name),

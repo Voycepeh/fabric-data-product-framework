@@ -11,11 +11,54 @@ SUPPORTED_ENGINES = {"auto", "pandas", "spark"}
 
 
 class UnsupportedDataFrameEngineError(TypeError):
+    """Unsupporteddataframeengineerror.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    None
+    This callable does not require public parameters.
+
+    Returns
+    -------
+    None
+    This method updates state in place.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> UnsupportedDataFrameEngineError(...)
+    """
     """Raised when a dataframe type cannot be mapped to a supported engine."""
 
 
 def validate_engine(engine: str) -> str:
-    """Validate and normalize an engine selector."""
+    """Validate engine.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    engine : Any
+    Description of `engine`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> validate_engine(...)
+    """
     normalized = (engine or "").strip().lower()
     if normalized not in SUPPORTED_ENGINES:
         raise ValueError(f"Unsupported engine '{engine}'. Expected one of: auto, pandas, spark.")
@@ -23,7 +66,28 @@ def validate_engine(engine: str) -> str:
 
 
 def detect_dataframe_engine(df: Any) -> str:
-    """Detect whether an input dataframe is pandas or Spark-like."""
+    """Detect dataframe engine.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    df : Any
+    Description of `df`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> detect_dataframe_engine(...)
+    """
     if isinstance(df, pd.DataFrame):
         return "pandas"
 

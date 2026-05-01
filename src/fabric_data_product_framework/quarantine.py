@@ -15,7 +15,34 @@ def _severity_bucket(severity: str) -> str:
 
 
 def build_quarantine_rule_coverage_records(rules, run_id, dataset_name, table_name):
-    """Summarize whether each rule can run at row-level for quarantine splits."""
+    """Build quarantine rule coverage records.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    rules : Any
+    Description of `rules`.
+    run_id : Any
+    Description of `run_id`.
+    dataset_name : Any
+    Description of `dataset_name`.
+    table_name : Any
+    Description of `table_name`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> build_quarantine_rule_coverage_records(...)
+    """
     rows = []
     for i, rule in enumerate(rules):
         rt = rule.get("rule_type")

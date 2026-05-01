@@ -18,10 +18,27 @@ def _skipped(candidate, message):
 
 
 def compile_layman_rule_to_quality_rule(candidate):
-    """Compile one AI layman-rule candidate into an executable quality rule.
+    """Compile layman rule to quality rule.
 
-    Returns a record that marks the candidate as compiled or skipped, so
-    notebook users can review why a rule was accepted or rejected.
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    candidate : Any
+    Description of `candidate`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> compile_layman_rule_to_quality_rule(...)
     """
     rule_type = str(candidate.get("rule_type", "")).strip().lower()
     if rule_type not in SUPPORTED_RULE_TYPES:

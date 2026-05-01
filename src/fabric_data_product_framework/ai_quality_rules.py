@@ -103,9 +103,27 @@ def _strip_json_fences(text: str) -> str:
 
 
 def parse_ai_quality_rule_candidates(raw_response):
-    """Parse and validate AI-generated DQ candidate JSON arrays.
+    """Parse ai quality rule candidates.
 
-    Returns normalized candidate records with per-candidate validation flags.
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    raw_response : Any
+    Description of `raw_response`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> parse_ai_quality_rule_candidates(...)
     """
     try:
         parsed = json.loads(_strip_json_fences(raw_response)) if isinstance(raw_response, str) else raw_response
@@ -160,12 +178,27 @@ def normalize_quality_rule_candidate(candidate):
 
 
 def validate_ai_quality_rule_candidate(candidate):
-    """Validate whether a candidate can be safely compiled to executable checks.
+    """Validate ai quality rule candidate.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    candidate : Any
+    Description of `candidate`.
 
     Returns
     -------
-    dict
-        Validation result with ``is_valid`` and ``message`` fields.
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> validate_ai_quality_rule_candidate(...)
     """
     rt = candidate.get("rule_type")
     if not rt:

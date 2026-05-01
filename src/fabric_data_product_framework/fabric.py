@@ -10,11 +10,31 @@ def build_table_identifier(
     schema: str | None = None,
     table: str | None = None,
 ) -> str:
-    """Build a table identifier as ``table``, ``schema.table``, or ``lakehouse.schema.table``.
+    """Build table identifier.
 
-    Example:
-        >>> build_table_identifier(schema="silver", table="orders")
-        'silver.orders'
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    lakehouse : Any
+    Description of `lakehouse`.
+    schema : Any
+    Description of `schema`.
+    table : Any
+    Description of `table`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> build_table_identifier(...)
     """
     parts = [part for part in [lakehouse, schema, table] if part]
     if not parts:
@@ -23,10 +43,29 @@ def build_table_identifier(
 
 
 def read_table(table_identifier: str, reader=None):
-    """Read a table through an injected Fabric-compatible reader adapter.
+    """Read table.
 
-    Runtime:
-        Fabric runtime required for real Lakehouse access; local-safe for adapter tests.
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    table_identifier : Any
+    Description of `table_identifier`.
+    reader : Any
+    Description of `reader`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> read_table(...)
     """
     if reader is None:
         raise NotImplementedError(
@@ -36,7 +75,28 @@ def read_table(table_identifier: str, reader=None):
 
 
 def validate_write_mode(mode: str) -> str:
-    """Validate and normalize write mode."""
+    """Validate write mode.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    mode : Any
+    Description of `mode`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> validate_write_mode(...)
+    """
     normalized_mode = (mode or "").strip().lower()
     if normalized_mode not in VALID_WRITE_MODES:
         raise ValueError("Invalid write mode. Expected one of: append, overwrite, merge.")
@@ -44,12 +104,33 @@ def validate_write_mode(mode: str) -> str:
 
 
 def write_table(df, table_identifier: str, writer=None, mode: str = "append", **options):
-    """Write a dataframe through an injected Fabric-compatible writer adapter.
+    """Write table.
 
-    Typical next step is building run summary + metadata records for handover.
+    Documentation for API-reference generation in NumPy style.
 
-    Side effects:
-        Delegates persistence to the injected ``writer`` callable.
+    Parameters
+    ----------
+    df : Any
+    Description of `df`.
+    table_identifier : Any
+    Description of `table_identifier`.
+    writer : Any
+    Description of `writer`.
+    mode : Any
+    Description of `mode`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> write_table(...)
     """
     normalized_mode = validate_write_mode(mode)
     if writer is None:

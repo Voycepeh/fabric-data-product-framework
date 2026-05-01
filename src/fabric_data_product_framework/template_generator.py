@@ -15,7 +15,46 @@ def create_pipeline_notebook_template(
     include_ai_prompts=True,
     overwrite=False,
 ):
-    """Create a runnable Fabric notebook template for pipeline-style development."""
+    """Create pipeline notebook template.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    output_path : Any
+    Description of `output_path`.
+    dataset_name : Any
+    Description of `dataset_name`.
+    source_table : Any
+    Description of `source_table`.
+    output_table : Any
+    Description of `output_table`.
+    source_env : Any
+    Description of `source_env`.
+    source_target : Any
+    Description of `source_target`.
+    output_env : Any
+    Description of `output_env`.
+    output_target : Any
+    Description of `output_target`.
+    include_ai_prompts : Any
+    Description of `include_ai_prompts`.
+    overwrite : Any
+    Description of `overwrite`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> create_pipeline_notebook_template(...)
+    """
     path = Path(output_path)
     if path.exists() and not overwrite:
         raise FileExistsError(f"Output already exists: {path}")
@@ -222,7 +261,30 @@ def create_actual_data_mvp_template(
     output_path: str,
     contract_path: str = "contracts/examples/actual_data_mvp_contract.yml",
 ) -> str:
-    """Create the end-to-end "actual data MVP" notebook template."""
+    """Create actual data mvp template.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    output_path : Any
+    Description of `output_path`.
+    contract_path : Any
+    Description of `contract_path`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> create_actual_data_mvp_template(...)
+    """
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     content = f'''# %% [markdown]

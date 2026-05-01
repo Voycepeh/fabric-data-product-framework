@@ -21,6 +21,28 @@ PHONE_RE = re.compile(r"^[+()\-\s0-9]{7,}$")
 
 @dataclass
 class ColumnProfile:
+    """Columnprofile.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    None
+    This callable does not require public parameters.
+
+    Returns
+    -------
+    None
+    This method updates state in place.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> ColumnProfile(...)
+    """
     """Column-level profile metrics used for DQ suggestion and metadata writes."""
     column_name: str
     data_type: str
@@ -41,6 +63,28 @@ class ColumnProfile:
 
 @dataclass
 class DataFrameProfile:
+    """Dataframeprofile.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    None
+    This callable does not require public parameters.
+
+    Returns
+    -------
+    None
+    This method updates state in place.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> DataFrameProfile(...)
+    """
     """Table-level profile payload containing row metrics and column profiles."""
     dataset_name: str
     engine: str
@@ -53,10 +97,27 @@ class DataFrameProfile:
 
 
 def to_jsonable(value: Any) -> Any:
-    """Convert values to JSON-safe primitives for lifecycle metadata writes (steps 4/9/14).
+    """To jsonable.
 
-    Supports pandas and Spark value objects; this helper never triggers Spark-to-pandas conversion.
-    Returns a JSON-serializable value (or nested structure).
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    value : Any
+    Description of `value`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> to_jsonable(...)
     """
     if value is None:
         return None
@@ -87,10 +148,29 @@ def to_jsonable(value: Any) -> Any:
 
 
 def infer_semantic_type(column_name: str, sample_values: list[Any]) -> str:
-    """Infer a lightweight semantic label for profiling columns in steps 4 and 9.
+    """Infer semantic type.
 
-    Uses column name hints plus sample values. Supports pandas and Spark profiles
-    because inputs are plain Python values. Returns a semantic type string.
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    column_name : Any
+    Description of `column_name`.
+    sample_values : Any
+    Description of `sample_values`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> infer_semantic_type(...)
     """
     name = (column_name or "").lower()
     values = [str(v).strip() for v in sample_values if v is not None and str(v).strip()]
@@ -128,10 +208,31 @@ def _is_spark_date_like_type(data_type: str) -> bool:
 
 
 def profile_column(series: pd.Series, sample_size: int = 5, top_n: int = 5) -> dict[str, Any]:
-    """Profile a single pandas column for source/output checks (steps 4 and 9).
+    """Profile column.
 
-    Args include sample_size/top_n for hover-friendly summaries. Returns one
-    JSON-safe column profile dictionary. Pandas only.
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    series : Any
+    Description of `series`.
+    sample_size : Any
+    Description of `sample_size`.
+    top_n : Any
+    Description of `top_n`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> profile_column(...)
     """
     row_count = int(series.shape[0])
     non_null = int(series.notna().sum())
@@ -206,23 +307,35 @@ def _profile_spark_dataframe(df, dataset_name: str = "unknown", sample_size: int
 
 
 def profile_dataframe(df, dataset_name: str = "unknown", sample_size: int = 5, top_n: int = 5, engine: str = "auto") -> dict[str, Any]:
-    """Profile a pandas or Spark dataframe into a JSON-safe summary payload.
+    """Profile dataframe.
 
-    Args:
-        df: Input pandas or Spark dataframe.
-        dataset_name: Dataset label stored in the output profile.
-        sample_size: Max non-null sample values to keep per column.
-        top_n: Max frequency values to keep per column.
-        engine: ``auto``, ``pandas``, or ``spark``.
+    Documentation for API-reference generation in NumPy style.
 
-    Returns:
-        Dataframe profile dictionary with table-level and column-level metrics.
+    Parameters
+    ----------
+    df : Any
+    Description of `df`.
+    dataset_name : Any
+    Description of `dataset_name`.
+    sample_size : Any
+    Description of `sample_size`.
+    top_n : Any
+    Description of `top_n`.
+    engine : Any
+    Description of `engine`.
 
-    Runtime compatibility:
-        Supports local pandas and Fabric Spark; avoids Spark-to-pandas conversion.
+    Returns
+    -------
+    result : Any
+    Returned value.
 
-    Example:
-        >>> profile = profile_dataframe(df, dataset_name="orders", engine="auto")
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> profile_dataframe(...)
     """
     selected_engine = validate_engine(engine)
     if selected_engine == "auto":
@@ -238,18 +351,61 @@ def profile_dataframe(df, dataset_name: str = "unknown", sample_size: int = 5, t
 
 
 def default_technical_columns() -> list[str]:
-    """Return standard technical column names to exclude from business profiling.
+    """Default technical columns.
 
-    Typically used during metadata shaping in steps 8 and 9. Engine-agnostic.
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    None
+    This callable does not require public parameters.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> default_technical_columns(...)
     """
     return ["_pipeline_run_id", "_pipeline_name", "_pipeline_environment", "_source_system", "_source_table", "_source_extract_timestamp", "_record_loaded_timestamp", "_record_updated_timestamp", "_effective_start_datetime", "_effective_end_datetime", "_is_current", "_row_hash", "_business_key_hash", "_watermark_value", "pipeline_run_id", "loaded_at", "run_ingest_id", "ingest_run_id"]
 
 
 def flatten_profile_for_metadata(profile: dict, table_name: str, run_id: str, table_stage: str, exclude_columns: list[str] | None = None) -> list[dict]:
-    """Flatten profile output to metadata table rows for stages such as source/output (steps 4/9/14).
+    """Flatten profile for metadata.
 
-    Key args: ``run_id``, ``table_name``, ``table_stage`` and optional excludes.
-    Returns one record per column. Engine support: pandas and Spark profile inputs.
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    profile : Any
+    Description of `profile`.
+    table_name : Any
+    Description of `table_name`.
+    run_id : Any
+    Description of `run_id`.
+    table_stage : Any
+    Description of `table_stage`.
+    exclude_columns : Any
+    Description of `exclude_columns`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> flatten_profile_for_metadata(...)
     """
     excluded = set(exclude_columns or [])
     rows = []
@@ -308,7 +464,34 @@ def write_profile_metadata_rows(
     metadata_table: str,
     mode: str = "append",
 ):
-    """Write flattened profiling rows to a Fabric metadata table without schema inference pitfalls."""
+    """Write profile metadata rows.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    spark : Any
+    Description of `spark`.
+    metadata_rows : Any
+    Description of `metadata_rows`.
+    metadata_table : Any
+    Description of `metadata_table`.
+    mode : Any
+    Description of `mode`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> write_profile_metadata_rows(...)
+    """
     df_rows = _spark_create_metadata_dataframe(spark, metadata_rows)
     if df_rows is None:
         return None
@@ -330,10 +513,47 @@ def profile_and_write_metadata(
     sample_size: int = 5,
     top_n: int = 5,
 ) -> dict[str, Any]:
-    """Profile a dataframe and write flattened profiling metadata in one Fabric-friendly call.
+    """Profile and write metadata.
 
-    This helper is a Spark/Fabric convenience API for saveAsTable-compatible metadata tables.
-    Use metadata.write_metadata_records for adapter-injected writer flows.
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    spark : Any
+    Description of `spark`.
+    df : Any
+    Description of `df`.
+    dataset_name : Any
+    Description of `dataset_name`.
+    table_name : Any
+    Description of `table_name`.
+    metadata_table : Any
+    Description of `metadata_table`.
+    run_id : Any
+    Description of `run_id`.
+    table_stage : Any
+    Description of `table_stage`.
+    mode : Any
+    Description of `mode`.
+    exclude_columns : Any
+    Description of `exclude_columns`.
+    sample_size : Any
+    Description of `sample_size`.
+    top_n : Any
+    Description of `top_n`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> profile_and_write_metadata(...)
     """
     profile = profile_dataframe(df=df, dataset_name=dataset_name, sample_size=sample_size, top_n=top_n, engine="auto")
     rows = flatten_profile_for_metadata(
@@ -360,10 +580,45 @@ def profile_table_and_write_metadata(
     sample_size: int = 5,
     top_n: int = 5,
 ) -> dict[str, Any]:
-    """Read a Spark table, profile it, and persist profile metadata with one API call.
+    """Profile table and write metadata.
 
-    This helper is a Spark/Fabric convenience API for saveAsTable-compatible metadata tables.
-    Use metadata.write_metadata_records for adapter-injected writer flows.
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    spark : Any
+    Description of `spark`.
+    table_name : Any
+    Description of `table_name`.
+    dataset_name : Any
+    Description of `dataset_name`.
+    metadata_table : Any
+    Description of `metadata_table`.
+    run_id : Any
+    Description of `run_id`.
+    table_stage : Any
+    Description of `table_stage`.
+    mode : Any
+    Description of `mode`.
+    exclude_columns : Any
+    Description of `exclude_columns`.
+    sample_size : Any
+    Description of `sample_size`.
+    top_n : Any
+    Description of `top_n`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> profile_table_and_write_metadata(...)
     """
     df = spark.table(table_name)
     return profile_and_write_metadata(
@@ -382,10 +637,27 @@ def profile_table_and_write_metadata(
 
 
 def summarize_profile(profile: dict[str, Any]) -> dict[str, Any]:
-    """Build a concise profile summary for run notes, reviews, and handover (steps 9/14).
+    """Summarize profile.
 
-    Returns dataset-level indicators such as null columns and likely sensitive fields.
-    Engine-agnostic because input is already profile JSON.
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    profile : Any
+    Description of `profile`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> summarize_profile(...)
     """
     columns = profile.get("columns", [])
     likely_sensitive = [c.get("column_name") for c in columns if c.get("inferred_semantic_type") in {"email", "phone", "person_name"}]

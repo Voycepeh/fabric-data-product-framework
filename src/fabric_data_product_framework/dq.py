@@ -62,21 +62,37 @@ def generate_dq_rule_candidates_with_fabric_ai(
     table_name=None,
     response_format=None,
 ) -> list[dict]:
-    """Generate candidate DQ rules with Fabric AI notebook integration.
+    """Generate dq rule candidates with fabric ai.
 
-    Args:
-        profile: Profile payload from ``profile_dataframe``.
-        contract: Optional contract section to improve prompt grounding.
-        business_context: Optional business context string/dict.
-        dataset_name: Dataset name for prompt and outputs.
-        table_name: Table name for prompt and outputs.
-        response_format: Optional Fabric AI response format argument.
+    Documentation for API-reference generation in NumPy style.
 
-    Returns:
-        List of normalized candidate rules.
+    Parameters
+    ----------
+    profile : Any
+    Description of `profile`.
+    contract : Any
+    Description of `contract`.
+    business_context : Any
+    Description of `business_context`.
+    dataset_name : Any
+    Description of `dataset_name`.
+    table_name : Any
+    Description of `table_name`.
+    response_format : Any
+    Description of `response_format`.
 
-    Runtime compatibility:
-        Fabric notebook runtime with Fabric AI + ``openai``/``pydantic`` installed.
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> generate_dq_rule_candidates_with_fabric_ai(...)
     """
     import pandas as pd
 
@@ -133,10 +149,35 @@ def generate_dq_rule_candidates(
     dataset_name: str | None = None,
     table_name: str | None = None,
 ) -> list[dict]:
-    """Generate conservative candidate DQ rules from profile and optional metadata.
+    """Generate dq rule candidates.
 
-    These candidates are review-first suggestions; typical next step is human approval
-    and storage before enforcement.
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    profile : Any
+    Description of `profile`.
+    metadata : Any
+    Description of `metadata`.
+    business_context : Any
+    Description of `business_context`.
+    dataset_name : Any
+    Description of `dataset_name`.
+    table_name : Any
+    Description of `table_name`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> generate_dq_rule_candidates(...)
     """
     profile = profile or {}
     metadata = metadata or {}
@@ -175,10 +216,27 @@ def generate_dq_rule_candidates(
 
 
 def normalize_dq_rule(rule: dict) -> dict:
-    """Normalize one DQ rule dictionary into framework-compatible keys.
+    """Normalize dq rule.
 
-    Example:
-        >>> normalize_dq_rule({"name": "id_not_null", "field": "id", "rule_type": "not_empty"})
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    rule : Any
+    Description of `rule`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> normalize_dq_rule(...)
     """
     r = dict(rule or {})
     if "rule_id" not in r:
@@ -308,7 +366,44 @@ def build_dq_rule_records(rules: list[dict], dataset_name: str, table_name: str,
 
 
 def store_dq_rules(spark, rules: list[dict], table_name: str, dataset_name: str | None = None, source_table: str | None = None, run_id: str | None = None, status: str = "candidate", generated_by: str = "framework", mode: str = "append") -> list[dict]:
-    """Persist normalized DQ rules to a Spark table using JSON-safe rows."""
+    """Store dq rules.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    spark : Any
+    Description of `spark`.
+    rules : Any
+    Description of `rules`.
+    table_name : Any
+    Description of `table_name`.
+    dataset_name : Any
+    Description of `dataset_name`.
+    source_table : Any
+    Description of `source_table`.
+    run_id : Any
+    Description of `run_id`.
+    status : Any
+    Description of `status`.
+    generated_by : Any
+    Description of `generated_by`.
+    mode : Any
+    Description of `mode`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> store_dq_rules(...)
+    """
     ds = dataset_name or "unknown"
     st = source_table or "unknown"
     records = build_dq_rule_records(rules, dataset_name=ds, table_name=st, run_id=run_id, status=status, generated_by=generated_by)
@@ -318,7 +413,36 @@ def store_dq_rules(spark, rules: list[dict], table_name: str, dataset_name: str 
 
 
 def load_dq_rules(spark, table_name: str, dataset_name: str | None = None, source_table: str | None = None, status: str | list[str] = "approved") -> list[dict]:
-    """Load approved DQ rules from storage, honoring optional filters."""
+    """Load dq rules.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    spark : Any
+    Description of `spark`.
+    table_name : Any
+    Description of `table_name`.
+    dataset_name : Any
+    Description of `dataset_name`.
+    source_table : Any
+    Description of `source_table`.
+    status : Any
+    Description of `status`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> load_dq_rules(...)
+    """
     rows = spark.table(table_name)
     if dataset_name is not None:
         rows = rows[rows["dataset_name"] == dataset_name] if hasattr(rows, "__getitem__") and "dataset_name" in rows.columns else rows
@@ -399,13 +523,45 @@ def run_dq_rules(df, rules: list[dict], dataset_name: str, table_name: str, engi
 
 
 def run_dq_workflow(spark, df, quality_contract, dataset_name: str, table_name: str, run_id: str | None = None, profile: dict | None = None, metadata: dict | None = None, business_context: str | dict | None = None, engine: str = "spark") -> dict:
-    """Execute end-to-end contract-driven DQ workflow for notebook orchestration.
+    """Run dq workflow.
 
-    Typical chain:
-        ``profile_dataframe`` -> ``run_dq_workflow`` -> write returned records to metadata tables.
-    Flow:
-        load approved rules (optional), generate/store candidates (optional),
-        execute enforceable rules, then evaluate gate status.
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    spark : Any
+    Description of `spark`.
+    df : Any
+    Description of `df`.
+    quality_contract : Any
+    Description of `quality_contract`.
+    dataset_name : Any
+    Description of `dataset_name`.
+    table_name : Any
+    Description of `table_name`.
+    run_id : Any
+    Description of `run_id`.
+    profile : Any
+    Description of `profile`.
+    metadata : Any
+    Description of `metadata`.
+    business_context : Any
+    Description of `business_context`.
+    engine : Any
+    Description of `engine`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> run_dq_workflow(...)
     """
     qc = quality_contract
     explicit_rules = list(getattr(qc, "rules", None) or (qc.get("rules") if isinstance(qc, dict) else []) or [])

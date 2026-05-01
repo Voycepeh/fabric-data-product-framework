@@ -12,10 +12,27 @@ from fabric_data_product_framework.engines import detect_dataframe_engine, valid
 
 
 def default_technical_columns() -> list[str]:
-    """Return the framework's default technical/audit column names (step 8).
+    """Default technical columns.
 
-    Use this list when excluding technical fields from profiling or hashing logic.
-    Engine support: pandas and Spark.
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    None
+    This callable does not require public parameters.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> default_technical_columns(...)
     """
     return [
         "_pipeline_run_id",
@@ -67,7 +84,34 @@ def _hash_row(values: list[Any]) -> str:
 
 
 def add_literal_column(df, column_name: str, value, engine: str = "auto"):
-    """Add a constant column to pandas/Spark dataframes during enrichment (step 8)."""
+    """Add literal column.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    df : Any
+    Description of `df`.
+    column_name : Any
+    Description of `column_name`.
+    value : Any
+    Description of `value`.
+    engine : Any
+    Description of `engine`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> add_literal_column(...)
+    """
     selected_engine = _resolve_engine(df, engine)
     if selected_engine == "pandas":
         out = df.copy()
@@ -80,12 +124,70 @@ def add_literal_column(df, column_name: str, value, engine: str = "auto"):
 
 
 def add_pipeline_run_id(df, run_id: str, column_name: str = "_pipeline_run_id", engine: str = "auto"):
-    """Stamp a run id column for traceability across lifecycle outputs (steps 2/8/14)."""
+    """Add pipeline run id.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    df : Any
+    Description of `df`.
+    run_id : Any
+    Description of `run_id`.
+    column_name : Any
+    Description of `column_name`.
+    engine : Any
+    Description of `engine`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> add_pipeline_run_id(...)
+    """
     return add_literal_column(df, column_name=column_name, value=run_id, engine=engine)
 
 
 def add_pipeline_metadata(df, *, run_id: str, pipeline_name: str | None = None, environment: str | None = None, column_prefix: str = "_", engine: str = "auto"):
-    """Add pipeline-level metadata columns such as run id, name, and environment (step 8)."""
+    """Add pipeline metadata.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    df : Any
+    Description of `df`.
+    run_id : Any
+    Description of `run_id`.
+    pipeline_name : Any
+    Description of `pipeline_name`.
+    environment : Any
+    Description of `environment`.
+    column_prefix : Any
+    Description of `column_prefix`.
+    engine : Any
+    Description of `engine`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> add_pipeline_metadata(...)
+    """
     out = add_pipeline_run_id(df, run_id=run_id, column_name=f"{column_prefix}pipeline_run_id", engine=engine)
     if pipeline_name is not None:
         out = add_literal_column(out, column_name=f"{column_prefix}pipeline_name", value=pipeline_name, engine=engine)
@@ -95,7 +197,38 @@ def add_pipeline_metadata(df, *, run_id: str, pipeline_name: str | None = None, 
 
 
 def add_source_metadata(df, *, source_system: str | None = None, source_table: str | None = None, source_extract_timestamp: str | None = None, column_prefix: str = "_", engine: str = "auto"):
-    """Add source lineage metadata columns for ingestion transparency (steps 3/8/13)."""
+    """Add source metadata.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    df : Any
+    Description of `df`.
+    source_system : Any
+    Description of `source_system`.
+    source_table : Any
+    Description of `source_table`.
+    source_extract_timestamp : Any
+    Description of `source_extract_timestamp`.
+    column_prefix : Any
+    Description of `column_prefix`.
+    engine : Any
+    Description of `engine`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> add_source_metadata(...)
+    """
     out = df
     if source_system is not None:
         out = add_literal_column(out, column_name=f"{column_prefix}source_system", value=source_system, engine=engine)
@@ -107,7 +240,34 @@ def add_source_metadata(df, *, source_system: str | None = None, source_table: s
 
 
 def add_loaded_at(df, timestamp: str | None = None, column_name: str = "_record_loaded_timestamp", engine: str = "auto"):
-    """Add record load timestamp in UTC-compatible format for auditability (step 8)."""
+    """Add loaded at.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    df : Any
+    Description of `df`.
+    timestamp : Any
+    Description of `timestamp`.
+    column_name : Any
+    Description of `column_name`.
+    engine : Any
+    Description of `engine`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> add_loaded_at(...)
+    """
     selected_engine = _resolve_engine(df, engine)
     if timestamp is not None:
         return add_literal_column(df, column_name=column_name, value=timestamp, engine=selected_engine)
@@ -121,7 +281,34 @@ def add_loaded_at(df, timestamp: str | None = None, column_name: str = "_record_
 
 
 def add_watermark_value(df, watermark_column: str, output_column: str = "_watermark_value", engine: str = "auto"):
-    """Copy a business watermark into a standard technical column (steps 5/8)."""
+    """Add watermark value.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    df : Any
+    Description of `df`.
+    watermark_column : Any
+    Description of `watermark_column`.
+    output_column : Any
+    Description of `output_column`.
+    engine : Any
+    Description of `engine`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> add_watermark_value(...)
+    """
     _assert_columns_exist(df, [watermark_column])
     selected_engine = _resolve_engine(df, engine)
     if selected_engine == "pandas":
@@ -135,7 +322,34 @@ def add_watermark_value(df, watermark_column: str, output_column: str = "_waterm
 
 
 def add_row_hash(df, columns: list[str] | None = None, output_column: str = "_row_hash", engine: str = "auto"):
-    """Add a row-level SHA256 hash from selected columns for change detection (steps 5/8)."""
+    """Add row hash.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    df : Any
+    Description of `df`.
+    columns : Any
+    Description of `columns`.
+    output_column : Any
+    Description of `output_column`.
+    engine : Any
+    Description of `engine`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> add_row_hash(...)
+    """
     selected_engine = _resolve_engine(df, engine)
     columns = columns or _non_technical_columns(df)
     _assert_columns_exist(df, columns)
@@ -150,7 +364,34 @@ def add_row_hash(df, columns: list[str] | None = None, output_column: str = "_ro
 
 
 def add_business_key_hash(df, business_keys: list[str], output_column: str = "_business_key_hash", engine: str = "auto"):
-    """Add a SHA256 hash from declared business keys for incremental safety (steps 5/8)."""
+    """Add business key hash.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    df : Any
+    Description of `df`.
+    business_keys : Any
+    Description of `business_keys`.
+    output_column : Any
+    Description of `output_column`.
+    engine : Any
+    Description of `engine`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> add_business_key_hash(...)
+    """
     _assert_columns_exist(df, business_keys)
     selected_engine = _resolve_engine(df, engine)
     if selected_engine == "pandas":
@@ -164,10 +405,43 @@ def add_business_key_hash(df, business_keys: list[str], output_column: str = "_b
 
 
 def add_datetime_parts(df, datetime_column: str, *, timezone: str = "Asia/Singapore", prefix: str | None = None, include_date: bool = True, include_time: bool = True, include_hour: bool = True, include_30_min_block: bool = True, engine: str = "auto"):
-    """Derive date/time helper columns from a UTC datetime column.
+    """Add datetime parts.
 
-    Common gating behavior:
-        Raises ``ValueError`` when ``datetime_column`` is missing.
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    df : Any
+    Description of `df`.
+    datetime_column : Any
+    Description of `datetime_column`.
+    timezone : Any
+    Description of `timezone`.
+    prefix : Any
+    Description of `prefix`.
+    include_date : Any
+    Description of `include_date`.
+    include_time : Any
+    Description of `include_time`.
+    include_hour : Any
+    Description of `include_hour`.
+    include_30_min_block : Any
+    Description of `include_30_min_block`.
+    engine : Any
+    Description of `engine`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> add_datetime_parts(...)
     """
     _assert_columns_exist(df, [datetime_column])
     selected_engine = _resolve_engine(df, engine)
@@ -206,13 +480,47 @@ def add_datetime_parts(df, datetime_column: str, *, timezone: str = "Asia/Singap
 
 
 def add_standard_technical_columns(df, *, run_id: str, pipeline_name: str | None = None, environment: str | None = None, source_system: str | None = None, source_table: str | None = None, source_extract_timestamp: str | None = None, watermark_column: str | None = None, business_keys: list[str] | None = None, add_hash: bool = True, engine: str = "auto"):
-    """Apply the standard technical column bundle used before persistence (step 8).
+    """Add standard technical columns.
 
-    Key args include ``run_id``, optional ``business_keys``, and optional source details.
-    Returns the transformed dataframe. Supports pandas and Spark without Spark-to-pandas conversion.
+    Documentation for API-reference generation in NumPy style.
 
-    Example:
-        >>> out = add_standard_technical_columns(df, run_id="run_001", business_keys=["id"], engine="pandas")
+    Parameters
+    ----------
+    df : Any
+    Description of `df`.
+    run_id : Any
+    Description of `run_id`.
+    pipeline_name : Any
+    Description of `pipeline_name`.
+    environment : Any
+    Description of `environment`.
+    source_system : Any
+    Description of `source_system`.
+    source_table : Any
+    Description of `source_table`.
+    source_extract_timestamp : Any
+    Description of `source_extract_timestamp`.
+    watermark_column : Any
+    Description of `watermark_column`.
+    business_keys : Any
+    Description of `business_keys`.
+    add_hash : Any
+    Description of `add_hash`.
+    engine : Any
+    Description of `engine`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> add_standard_technical_columns(...)
     """
     out = add_pipeline_metadata(df, run_id=run_id, pipeline_name=pipeline_name, environment=environment, engine=engine)
     out = add_source_metadata(out, source_system=source_system, source_table=source_table, source_extract_timestamp=source_extract_timestamp, engine=engine)

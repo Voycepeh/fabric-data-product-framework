@@ -25,6 +25,28 @@ SEVERITY_TO_ACTION = {"info": "allow", "warning": "warn", "critical": "block"}
 
 
 class DataQualityError(Exception):
+    """Dataqualityerror.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    None
+    This callable does not require public parameters.
+
+    Returns
+    -------
+    None
+    This method updates state in place.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> DataQualityError(...)
+    """
     """Raised when data quality gate fails."""
 
 
@@ -192,16 +214,35 @@ def _spark_rule(df: Any, rule: dict[str, Any], row_count: int) -> tuple[int, int
 
 
 def run_quality_rules(df: Any, rules: list[dict], *, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "auto") -> dict:
-    """Execute supported quality rules against pandas/Spark dataframes.
+    """Run quality rules.
 
-    Returns:
-        Quality result payload with per-rule outcomes and gate status.
+    Documentation for API-reference generation in NumPy style.
 
-    Runtime:
-        Local-safe for pandas and Fabric/Spark compatible for distributed runs.
+    Parameters
+    ----------
+    df : Any
+    Description of `df`.
+    rules : Any
+    Description of `rules`.
+    dataset_name : Any
+    Description of `dataset_name`.
+    table_name : Any
+    Description of `table_name`.
+    engine : Any
+    Description of `engine`.
 
-    Example:
-        >>> result = run_quality_rules(df, rules, dataset_name="orders", table_name="silver.orders")
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> run_quality_rules(...)
     """
     resolved_engine = _resolve_engine(df, engine)
     row_count = len(df) if resolved_engine == "pandas" else df.count()
@@ -291,11 +332,29 @@ def run_quality_rules(df: Any, rules: list[dict], *, dataset_name: str = "unknow
 
 
 def assert_quality_gate(result: dict, fail_on: str = "critical") -> None:
-    """Raise ``DataQualityError`` when the quality result blocks pipeline progression.
+    """Assert quality gate.
 
-    Args:
-        result: Payload returned by ``run_quality_rules``.
-        fail_on: Gate mode; MVP currently supports only ``"critical"``.
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    result : Any
+    Description of `result`.
+    fail_on : Any
+    Description of `fail_on`.
+
+    Returns
+    -------
+    None
+    This method updates state in place.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> assert_quality_gate(...)
     """
     if fail_on != "critical":
         raise ValueError("Only fail_on='critical' is supported in MVP")
@@ -304,7 +363,30 @@ def assert_quality_gate(result: dict, fail_on: str = "critical") -> None:
 
 
 def build_quality_result_records(result: dict, *, run_id: str) -> list[dict]:
-    """Flatten rule execution results into metadata-table-ready quality records."""
+    """Build quality result records.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    result : Any
+    Description of `result`.
+    run_id : Any
+    Description of `run_id`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> build_quality_result_records(...)
+    """
     rows = []
     for r in result.get("results", []):
         rows.append(

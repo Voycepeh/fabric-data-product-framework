@@ -86,7 +86,38 @@ def classify_column(
     business_context: str | dict | None = None,
     rules: list[dict] | None = None,
 ) -> dict:
-    """Classify one column into framework governance categories with deterministic evidence."""
+    """Classify column.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    column_name : Any
+    Description of `column_name`.
+    data_type : Any
+    Description of `data_type`.
+    profile : Any
+    Description of `profile`.
+    metadata : Any
+    Description of `metadata`.
+    business_context : Any
+    Description of `business_context`.
+    rules : Any
+    Description of `rules`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> classify_column(...)
+    """
     profile = profile or {}
     metadata = metadata or {}
     text_parts = [column_name, str(metadata.get("description") or ""), str(metadata.get("business_term") or "")]
@@ -175,14 +206,39 @@ def classify_column(
 
 
 def classify_columns(profile: dict | list[dict], metadata: dict | list[dict] | None = None, business_context: str | dict | None = None, rules: list[dict] | None = None, dataset_name: str | None = None, table_name: str | None = None, run_id: str | None = None) -> list[dict]:
-    """Classify columns from profile-like inputs into governance suggestions.
+    """Classify columns.
 
-    Runtime:
-        Local-safe and Spark-independent. Typical next step is persisting review
-        suggestions with ``write_governance_classifications``.
+    Documentation for API-reference generation in NumPy style.
 
-    Example:
-        >>> classify_columns(profile, dataset_name="orders", table_name="silver.orders")
+    Parameters
+    ----------
+    profile : Any
+    Description of `profile`.
+    metadata : Any
+    Description of `metadata`.
+    business_context : Any
+    Description of `business_context`.
+    rules : Any
+    Description of `rules`.
+    dataset_name : Any
+    Description of `dataset_name`.
+    table_name : Any
+    Description of `table_name`.
+    run_id : Any
+    Description of `run_id`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> classify_columns(...)
     """
     del dataset_name, table_name, run_id
     columns = _normalize_columns(profile)
@@ -205,7 +261,38 @@ def classify_columns(profile: dict | list[dict], metadata: dict | list[dict] | N
 
 
 def build_governance_classification_records(classifications: list[dict], dataset_name: str, table_name: str, run_id: str | None = None, status: str = "suggested", generated_by: str = "framework") -> list[dict]:
-    """Convert column classifications into governance metadata records."""
+    """Build governance classification records.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    classifications : Any
+    Description of `classifications`.
+    dataset_name : Any
+    Description of `dataset_name`.
+    table_name : Any
+    Description of `table_name`.
+    run_id : Any
+    Description of `run_id`.
+    status : Any
+    Description of `status`.
+    generated_by : Any
+    Description of `generated_by`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> build_governance_classification_records(...)
+    """
     rows = []
     for item in classifications:
         safe_item = to_jsonable(item)
@@ -240,10 +327,43 @@ def _spark_create_governance_metadata_dataframe(spark, rows: list[dict]):
 
 
 def write_governance_classifications(spark, classifications: list[dict], table_name: str, dataset_name: str | None = None, source_table: str | None = None, run_id: str | None = None, status: str = "suggested", generated_by: str = "framework", mode: str = "append") -> list[dict]:
-    """Persist governance classifications to a Spark metadata table.
+    """Write governance classifications.
 
-    Side effects:
-        Writes records to ``table_name`` using ``saveAsTable``.
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    spark : Any
+    Description of `spark`.
+    classifications : Any
+    Description of `classifications`.
+    table_name : Any
+    Description of `table_name`.
+    dataset_name : Any
+    Description of `dataset_name`.
+    source_table : Any
+    Description of `source_table`.
+    run_id : Any
+    Description of `run_id`.
+    status : Any
+    Description of `status`.
+    generated_by : Any
+    Description of `generated_by`.
+    mode : Any
+    Description of `mode`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> write_governance_classifications(...)
     """
     dataset = dataset_name or "unknown"
     source = source_table or table_name
@@ -261,7 +381,28 @@ def write_governance_classifications(spark, classifications: list[dict], table_n
 
 
 def summarize_governance_classifications(classifications: list[dict]) -> dict:
-    """Summarize classification output for notebook/runtime reporting."""
+    """Summarize governance classifications.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    classifications : Any
+    Description of `classifications`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> summarize_governance_classifications(...)
+    """
     by_classification = Counter(c.get("suggested_classification", "unknown") for c in classifications)
     by_action = Counter(c.get("suggested_action", "review") for c in classifications)
     review_required_count = sum(1 for c in classifications if c.get("suggested_action") in {"review", "restrict_access", "mask_or_tokenize", "classify_in_catalog"})

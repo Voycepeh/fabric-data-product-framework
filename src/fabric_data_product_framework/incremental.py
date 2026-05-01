@@ -11,11 +11,54 @@ from fabric_data_product_framework.profiling import to_jsonable
 
 
 class IncrementalSafetyError(Exception):
+    """Incrementalsafetyerror.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    None
+    This callable does not require public parameters.
+
+    Returns
+    -------
+    None
+    This method updates state in place.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> IncrementalSafetyError(...)
+    """
     """Raised when incremental safety checks detect blocking historical changes."""
 
 
 def default_incremental_safety_policy() -> dict:
-    """Return default incremental partition safety policy for lifecycle step 5 checks."""
+    """Default incremental safety policy.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    None
+    This callable does not require public parameters.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> default_incremental_safety_policy(...)
+    """
     return {
         "block_on_historical_partition_change": True,
         "closed_partition_grace_days": 1,
@@ -129,10 +172,41 @@ def _build_spark_partition_snapshot(df, *, dataset_name: str, table_name: str, p
 
 
 def build_partition_snapshot(df, *, dataset_name: str = "unknown", table_name: str = "unknown", partition_column: str, business_keys: list[str], watermark_column: str | None = None, run_id: str | None = None, engine: str = "auto") -> list[dict]:
-    """Build per-partition snapshots for incremental safety validation (step 5).
+    """Build partition snapshot.
 
-    Requires ``partition_column`` and ``business_keys``. Returns partition records.
-    Supports pandas and Spark without Spark-to-pandas conversion.
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    df : Any
+    Description of `df`.
+    dataset_name : Any
+    Description of `dataset_name`.
+    table_name : Any
+    Description of `table_name`.
+    partition_column : Any
+    Description of `partition_column`.
+    business_keys : Any
+    Description of `business_keys`.
+    watermark_column : Any
+    Description of `watermark_column`.
+    run_id : Any
+    Description of `run_id`.
+    engine : Any
+    Description of `engine`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> build_partition_snapshot(...)
     """
     selected_engine = validate_engine(engine)
     if selected_engine == "auto":
@@ -169,7 +243,32 @@ def _is_closed_partition(partition_value: Any, grace_days: int) -> bool:
 
 
 def compare_partition_snapshots(baseline_snapshots: list[dict], current_snapshots: list[dict], policy: dict | None = None) -> dict:
-    """Compare baseline/current partition snapshots and classify historical-change risk (step 5)."""
+    """Compare partition snapshots.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    baseline_snapshots : Any
+    Description of `baseline_snapshots`.
+    current_snapshots : Any
+    Description of `current_snapshots`.
+    policy : Any
+    Description of `policy`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> compare_partition_snapshots(...)
+    """
     active_policy = {**default_incremental_safety_policy(), **(policy or {})}
     baseline = {str(s.get("partition_value")): s for s in baseline_snapshots}
     current = {str(s.get("partition_value")): s for s in current_snapshots}
@@ -214,13 +313,61 @@ def compare_partition_snapshots(baseline_snapshots: list[dict], current_snapshot
 
 
 def assert_incremental_safe(result: dict) -> None:
-    """Raise ``IncrementalSafetyError`` when incremental comparison has blocking changes."""
+    """Assert incremental safe.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    result : Any
+    Description of `result`.
+
+    Returns
+    -------
+    None
+    This method updates state in place.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> assert_incremental_safe(...)
+    """
     if not bool(result.get("can_continue", True)):
         raise IncrementalSafetyError("Blocking incremental partition safety changes detected.")
 
 
 def build_incremental_safety_records(result: dict, *, run_id: str, dataset_name: str, table_name: str) -> list[dict]:
-    """Flatten incremental safety outcomes into metadata rows for run tracking (steps 5/14)."""
+    """Build incremental safety records.
+
+    Documentation for API-reference generation in NumPy style.
+
+    Parameters
+    ----------
+    result : Any
+    Description of `result`.
+    run_id : Any
+    Description of `run_id`.
+    dataset_name : Any
+    Description of `dataset_name`.
+    table_name : Any
+    Description of `table_name`.
+
+    Returns
+    -------
+    result : Any
+    Returned value.
+
+    Notes
+    -----
+    Fabric notebook runtime may be required for Spark-based paths. Local Python execution is supported for pure-Python paths.
+
+    Examples
+    --------
+    >>> build_incremental_safety_records(...)
+    """
     changes = result.get("changes", []) or [
         {
             "drift_type": "none",
