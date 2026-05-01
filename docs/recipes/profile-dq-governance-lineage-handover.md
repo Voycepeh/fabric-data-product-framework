@@ -34,9 +34,7 @@ dq_result = run_dq_workflow(
     quality_contract,
     dataset_name=dataset_name,
     table_name=table_name,
-    run_id=run_id,
-    profile=profile,
-    engine="spark",
+    run_id=run_id
 )
 
 classifications = classify_columns(profile=profile, dataset_name=dataset_name, table_name=table_name, run_id=run_id)

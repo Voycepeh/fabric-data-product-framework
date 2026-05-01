@@ -44,9 +44,7 @@ dq_result = run_dq_workflow(
     df,
     quality_contract,
     dataset_name="sales_orders",
-    table_name=source_table,
-    profile=profile,
-    engine="spark",
+    table_name=source_table
 )
 
 classifications = classify_columns(profile=profile, dataset_name="sales_orders", table_name=source_table)
