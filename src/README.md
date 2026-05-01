@@ -502,3 +502,13 @@ from fabric_data_product_framework import create_actual_data_mvp_template
 
 create_actual_data_mvp_template("examples/fabric_actual_data_mvp/actual_data_mvp_template.py")
 ```
+
+## MVP workflow registry
+
+Functions from `src/fabric_data_product_framework/mvp_steps.py`.
+
+| Function | Purpose | Typical use |
+|---|---|---|
+| `MVP_STEPS` | Canonical 13-step MVP registry as code. | Keep docs/tests aligned to one ordered source of truth. |
+| `get_mvp_step_registry` | Return copy of MVP registry for notebooks/tests. | Render workflow tables/checklists without hardcoding. |
+| `validate_mvp_artifacts` | Validate whether expected MVP artifacts are present. | Smoke-check handover completeness in local/Fabric runs. |
