@@ -1,26 +1,22 @@
-# Notebook Templates
+# Notebook templates
 
-This folder stores reusable Microsoft Fabric notebook templates that consume
-approved metadata and contracts.
+This folder contains reusable notebook starters for Microsoft Fabric workflows.
 
-## Included starter
+## Included files
 
-- `fabric_data_product_mvp.py`: copy-pasteable Fabric MVP notebook starter
-  aligned to the 13-step workflow.
-- `fabric_data_product_mvp.md`: usage guide for the starter with safety and
-  customization notes.
+- `fabric_data_product_mvp.py`: primary MVP starter notebook template.
+- `fabric_data_product_mvp.md`: usage notes aligned to the 13-step MVP flow.
 
-## MVP starter guarantees
+## Design goals
 
-- Starts with a clear parameter block.
-- Defaults to `DRY_RUN = True` to avoid accidental production writes.
-- Includes local/Fabric-safe synthetic sample branch for first execution.
-- Includes an explicit marker where users replace transformation logic.
-- Keeps the sequence: profile → DQ → governance → lineage → handover.
-- Provides concrete Copilot prompt blocks for DQ, governance, lineage, and
-  handover.
-- Ends with a final run summary cell.
-- Clarifies "human fills this in" vs "framework generates this."
+- Keep a DRY_RUN-first setup for safe initial execution.
+- Keep profile -> DQ -> governance -> lineage -> handover sequence explicit.
+- Keep clear separation between human-authored logic and framework outputs.
+- Keep notebook content copy-pasteable and readable in raw GitHub view.
 
-Use metadata-driven parameters so notebook behavior stays consistent across
-all domains.
+## Suggested usage
+
+1. Start with the local-safe recipe from `docs/recipes/local-safe-smoke.md`.
+2. Move to `fabric_data_product_mvp.py` in a Fabric notebook.
+3. Replace reader/writer stubs and transformation logic.
+4. Keep validation and governance review checkpoints before enabling writes.

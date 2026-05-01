@@ -1,24 +1,18 @@
-# Full metadata chaining recipe
+# Profile to DQ to governance to lineage to handover
 
 ## Purpose
 
-Chain profiling, contract-driven DQ workflow, governance, drift summaries,
-and lineage records to produce handover-ready artifacts.
-
-## When to use it
-
-- End-to-end MVP run demos.
-- Metadata artifact generation for operations handover.
-- Validating notebook lifecycle outputs in one execution path.
+Use this recipe for a full metadata-first execution path that produces
+handover-ready artifacts.
 
 ## Required inputs
 
-- Spark DataFrame `transformed_df`.
 - Spark session `spark`.
-- Quality contract object/dict.
-- Baseline profile dictionary for drift comparison.
+- Spark DataFrame `transformed_df`.
+- Quality contract dictionary.
+- Optional baseline profile for drift checks.
 
-## Copy-paste code
+## Example
 
 ```python
 from fabric_data_product_framework.dq import run_dq_workflow
@@ -41,7 +35,11 @@ dataset_name = "sales_orders"
 table_name = "silver_sales_orders"
 run_id = "fabric-run-001"
 
-profile = profile_dataframe(transformed_df, dataset_name=dataset_name, engine="spark")
+profile = profile_dataframe(
+    transformed_df,
+    dataset_name=dataset_name,
+    engine="spark",
+)
 
 dq_result = run_dq_workflow(
     spark,
@@ -57,6 +55,7 @@ classifications = classify_columns(
     table_name=table_name,
     run_id=run_id,
 )
+
 governance_records = build_governance_classification_records(
     classifications,
     dataset_name=dataset_name,
@@ -64,8 +63,14 @@ governance_records = build_governance_classification_records(
     run_id=run_id,
 )
 
-profile_drift = check_profile_drift(current_profile=profile, baseline_profile=baseline_profile)
-drift_summary = summarize_drift_results(profile_drift_result=profile_drift)
+profile_drift = check_profile_drift(
+    current_profile=profile,
+    baseline_profile=baseline_profile,
+)
+
+drift_summary = summarize_drift_results(
+    profile_drift_result=profile_drift,
+)
 
 steps = [
     {
@@ -85,6 +90,7 @@ steps = [
         "description": "Apply quality contract rules",
     },
 ]
+
 lineage_records = build_lineage_records(
     dataset_name=dataset_name,
     run_id=run_id,
@@ -92,6 +98,7 @@ lineage_records = build_lineage_records(
     target_table=table_name,
     transformation_steps=steps,
 )
+
 lineage_mermaid = generate_mermaid_lineage(
     source_tables=["bronze_sales_orders"],
     target_table=table_name,
@@ -108,6 +115,7 @@ summary = {
     "columns_used": ["order_id", "customer_id", "amount"],
     "columns_created": ["order_total", "dq_status"],
 }
+
 summary_md = build_transformation_summary_markdown(summary)
 
 artifacts = {
@@ -119,24 +127,20 @@ artifacts = {
     "lineage_mermaid": lineage_mermaid,
     "transformation_summary_markdown": summary_md,
 }
+
 print(artifacts)
 ```
 
 ## Expected output
 
 - Profile output for transformed data.
-- DQ workflow result with gate status and per-rule records.
-- Governance records and profile drift summary.
-- Lineage records plus Mermaid and markdown transformation summary artifacts.
+- DQ workflow results and status.
+- Governance records and drift summary.
+- Lineage records and Mermaid lineage text.
+- Markdown transformation summary.
 
 ## Common failures
 
-- Missing `spark` session for DQ workflow.
-- `quality_contract` omitted required rule details.
-- `baseline_profile` not available for drift comparison.
-
-## Related function groups
-
-See [src/README.md](../../src/README.md) sections: Profiling,
-Data quality workflow, Governance classification, Drift checks and snapshots,
-and Lineage and transformation summaries.
+- Spark session missing.
+- Invalid or incomplete quality contract.
+- Missing baseline profile when drift comparison is enabled.

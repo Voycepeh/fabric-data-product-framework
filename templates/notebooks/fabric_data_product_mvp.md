@@ -1,73 +1,43 @@
 # Fabric data product MVP notebook template
 
-This page explains how to use
-`templates/notebooks/fabric_data_product_mvp.py` as a safe,
-copy-pasteable starter for Microsoft Fabric.
+This guide explains how to use `fabric_data_product_mvp.py` as a readable,
+copy-paste starter for a Fabric-first MVP workflow.
 
-The default mode is `DRY_RUN = True`, so a first run does not write
-production outputs.
+## 13-step MVP alignment
 
-## Recommended first-run path
+The starter aligns to the same high-level sequence:
 
-1. Open `templates/notebooks/fabric_data_product_mvp.py`.
-2. Create a new Fabric notebook.
-3. Copy/paste the template into Fabric.
-4. Confirm the parameter block keeps `DRY_RUN = True`.
-5. Run all cells to validate this sequence:
-   profile → DQ → governance → lineage → handover.
-6. Replace the transformation section marker with domain logic.
-7. Replace Fabric adapters (`fabric_reader`, `fabric_writer`) only after
-   dry run succeeds.
+1. Define data product context and runtime parameters.
+2. Read source data safely.
+3. Profile source data.
+4. Explore and inspect source quality.
+5. Explain transformation intent.
+6. Apply transformation logic.
+7. Produce output DataFrame.
+8. Generate and run DQ checks.
+9. Perform human review on DQ outcomes.
+10. Generate governance suggestions.
+11. Perform human governance approvals.
+12. Generate lineage and transformation summary artifacts.
+13. Produce handover-ready outputs.
 
-## What the template covers (13-step sequence)
+## Safety defaults
 
-1. Define data product.
-2. Setup config and environment.
-3. Declare source and ingest data.
-4. Profile source and capture metadata.
-5. Explore data.
-6. Explain transformation logic.
-7. Build transformation pipeline (replace-section marker included).
-8. AI generate DQ rules (Copilot prompt block included).
-9. Human review DQ rules.
-10. AI suggest sensitivity labels (Copilot prompt block included).
-11. Human review and governance gate.
-12. AI generated lineage and transformation summary
-    (Copilot prompt block included).
-13. Handover framework pack (Copilot prompt block included)
-    plus final run summary cell.
+- `DRY_RUN = True` by default.
+- Writer stub skips writes in dry-run mode.
+- Reader/writer stubs must be replaced intentionally.
 
-## Parameter and safety behavior
+## How to use
 
-The starter has a clear parameter block at the top:
+1. Copy the starter into a Fabric notebook.
+2. Keep `DRY_RUN = True` for first execution.
+3. Replace `fabric_reader()` with your source read logic.
+4. Replace `transform()` with your transformation logic.
+5. Replace `fabric_writer()` only after validating dry-run behavior.
+6. Run end-to-end and review profile, DQ, governance, and lineage outputs.
 
-- `DRY_RUN` (default `True`)
-- `ENVIRONMENT`
-- `RUN_ID`
-- `SOURCE_TABLE`
-- `TARGET_TABLE`
-- `NOTEBOOK_NAME`
-- `APPROVED_USAGE`
-
-Safety defaults:
-
-- In dry run, source data is synthetic and local/Fabric-safe.
-- In dry run, output stays in-memory (no production write).
-- Production-like reads/writes require explicit replacement of adapter
-  placeholders.
-
-## Human vs framework responsibilities
-
-The template includes a dedicated section clarifying responsibilities:
-
-- **Human fills this in**: business context, source/target bindings,
-  transformation logic, and approvals.
-- **Framework generates this**: profiles, DQ execution outputs,
-  governance suggestions, lineage shape, and validation checks.
-
-## Related pages
+## Related references
 
 - `templates/notebooks/README.md`
-- `docs/fabric-smoke-test.md`
-- `docs/mvp-workflow.md`
+- `docs/recipes/index.md`
 - `src/README.md`

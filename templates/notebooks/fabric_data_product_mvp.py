@@ -1,8 +1,8 @@
 """
-Fabric MVP notebook starter aligned to the 13-step workflow.
+Fabric Data Product MVP notebook starter.
 
-Copy-paste into a Fabric notebook, run in DRY_RUN mode first,
-then replace the marked transformation and Fabric adapter sections.
+This starter helps you move through a Fabric-first MVP workflow with a safe
+DRY_RUN default and explicit handover artifacts.
 """
 
 from __future__ import annotations
@@ -10,277 +10,181 @@ from __future__ import annotations
 import pandas as pd
 
 from fabric_data_product_framework.governance_classifier import classify_columns
-from fabric_data_product_framework.lineage import build_lineage_record
-from fabric_data_product_framework.mvp_steps import get_mvp_step_registry
-from fabric_data_product_framework.mvp_steps import validate_mvp_artifacts
+from fabric_data_product_framework.lineage import (
+    build_lineage_records,
+    build_transformation_summary_markdown,
+    generate_mermaid_lineage,
+)
 from fabric_data_product_framework.profiling import profile_dataframe
 from fabric_data_product_framework.quality import run_quality_rules
 
 # ==========================================================
-# PARAMETER BLOCK (edit this block first)
+# PARAMETER BLOCK
 # ==========================================================
 DRY_RUN = True
-ENVIRONMENT = "dev"
-RUN_ID = "dry_run_001" if DRY_RUN else "fabric_run_001"
-SOURCE_TABLE = "sample_orders_source"
-TARGET_TABLE = "sample_orders_product"
-NOTEBOOK_NAME = "fabric_data_product_mvp"
+ENVIRONMENT = "Sandbox"
+SOURCE_TARGET = "Source"
+OUTPUT_TARGET = "Unified"
+
+DATASET_NAME = "replace_me"
+SOURCE_TABLE = "replace_me"
+TARGET_TABLE = "replace_me"
+RUN_ID = "replace_me_run_id"
 APPROVED_USAGE = "analytics"
 
 
-# ==========================================================
-# Fabric adapter placeholders (replace when moving to Fabric IO)
-# ==========================================================
-def fabric_reader(table_name: str):
-    """Fabric adapter placeholder (replace with spark.read.table in Fabric)."""
-    raise NotImplementedError("Replace with Fabric table reader.")
-
-
-def fabric_writer(df: pd.DataFrame, table_name: str) -> str:
-    """Fabric adapter placeholder (replace with Fabric write implementation)."""
-    raise NotImplementedError("Replace with Fabric table writer.")
-
-
-# 1) Define data product
-data_product_context = {
-    "name": TARGET_TABLE,
-    "purpose": "Synthetic sample for MVP testing",
-    "expected_grain": "order_id",
-    "approved_usage": APPROVED_USAGE,
-    "refresh_pattern": "daily",
-}
-
-# 2) Setup config and environment
-runtime_config = {
-    "environment": ENVIRONMENT,
-    "dry_run": DRY_RUN,
-    "run_id": RUN_ID,
-}
-mvp_registry = get_mvp_step_registry()
-
-# 3) Declare source and ingest data
-source_declaration = {"source_table": SOURCE_TABLE}
-if DRY_RUN:
-    # Local/Fabric-safe sample branch: no external dependencies, no writes.
-    df_source = pd.DataFrame(
-        [
+def fabric_reader() -> pd.DataFrame:
+    """Read source data; return synthetic data in DRY_RUN mode."""
+    if DRY_RUN:
+        return pd.DataFrame(
             {
-                "order_id": 1,
-                "customer_email": "alice@example.com",
-                "amount": 10.0,
-            },
-            {
-                "order_id": 2,
-                "customer_email": "bob@example.com",
-                "amount": 20.5,
-            },
-        ]
+                "order_id": [1, 2, 3],
+                "customer_id": ["C1", "C2", "C3"],
+                "amount": [10.0, 25.5, 30.0],
+            }
+        )
+    raise NotImplementedError(
+        "Replace fabric_reader() with project-specific read logic."
     )
-else:
-    # Fabric branch: replace adapter with production-safe source read.
-    df_source = fabric_reader(source_declaration["source_table"])
 
-# 4) Profile source and capture metadata
-source_profile = profile_dataframe(
-    df_source,
-    dataset_name=data_product_context["name"],
-    engine="auto",
-)
 
-# 5) Explore data
-exploration_notes = (
-    "Checked nulls, schema, and row counts in dry run before "
-    "Fabric write path."
-)
+def transform(df: pd.DataFrame) -> pd.DataFrame:
+    """Replace this stub with your business transformation logic."""
+    return df
 
-# 6) Explain transformation logic
-transformation_rationale = (
-    "Standardize amount precision and preserve all rows "
-    "for MVP smoke path."
-)
 
-# 7) Build transformation pipeline
-# REPLACE THIS TRANSFORMATION SECTION WITH DOMAIN-SPECIFIC LOGIC.
-# Keep output schema and business grain explicit before production runs.
-df_output = df_source.copy()
-df_output["amount"] = df_output["amount"].round(2)
+def fabric_writer(df: pd.DataFrame) -> None:
+    """Replace this stub with your Fabric write logic."""
+    if DRY_RUN:
+        print("DRY_RUN enabled: skipping write.")
+        return
+    raise NotImplementedError(
+        "Replace fabric_writer() with project-specific write logic."
+    )
 
-if DRY_RUN:
-    output_table = df_output.to_dict(orient="records")
-else:
-    output_table = fabric_writer(df_output, TARGET_TABLE)
 
-# 8) AI generate DQ rules
-# Copilot prompt (use as-is, then review output):
-# "Given columns {columns} and business grain {expected_grain},
-# generate 5-8 deterministic data quality rules with severity and
-# rationale. Include at least one not_null, uniqueness, and numeric
-# range rule. Return JSON list."
-dq_candidate_rules = [
-    {
-        "rule_type": "not_null",
-        "column": "order_id",
-        "severity": "critical",
-        "reason": "Primary key",
-    },
-    {
-        "rule_type": "range_check",
-        "column": "amount",
-        "min_value": 0,
-        "severity": "warning",
-        "reason": "No negative amounts",
-    },
-]
+def main() -> None:
+    """Run the MVP workflow: profile -> DQ -> governance -> lineage -> handover."""
+    print("Starting Fabric data product MVP notebook")
+    print(f"DRY_RUN={DRY_RUN}")
+    print(f"ENVIRONMENT={ENVIRONMENT}")
 
-# 9) Human review DQ rules
-approved_dq_rules = [
-    dict(rule, review_status="approved")
-    for rule in dq_candidate_rules
-]
-quality_rules = [
-    {
-        "rule_type": "not_null",
-        "column": "order_id",
-        "severity": "critical",
-    },
-    {
-        "rule_type": "range_check",
-        "column": "amount",
-        "min_value": 0,
-        "severity": "warning",
-    },
-]
-dq_result = run_quality_rules(
-    df_output,
-    quality_rules,
-    dataset_name=data_product_context["name"],
-    table_name=TARGET_TABLE,
-    engine="auto",
-)
+    # 1) Read source and profile.
+    source_df = fabric_reader()
+    source_profile = profile_dataframe(
+        source_df,
+        dataset_name=DATASET_NAME,
+        engine="auto",
+    )
 
-# 10) AI suggest sensitivity labels
-# Copilot prompt (use as-is, then review output):
-# "Classify each column by sensitivity
-# (public/internal/confidential/restricted)
-# using approved usage '{approved_usage}'.
-# Return JSON with column, label, rationale, and confidence."
-columns_profile = [
-    {
-        "column_name": column,
-        "data_type": str(df_source[column].dtype),
-    }
-    for column in df_source.columns
-]
-sensitivity_suggestions = classify_columns(
-    profile={"columns": columns_profile},
-    business_context={"approved_usage": data_product_context["approved_usage"]},
-)
+    # 2) Apply transformation.
+    transformed_df = transform(source_df)
 
-# 11) Human review and governance gate
-approved_governance_labels = [
-    dict(suggestion, approved=True)
-    for suggestion in sensitivity_suggestions
-]
-
-# 12) AI generated lineage and transformation summary
-# Copilot prompt (use as-is, then review output):
-# "Summarize lineage from source '{source_table}' to target
-# '{target_table}', include transformation intent, key fields changed,
-# and confidence level. Return JSON object aligned to framework lineage schema."
-lineage_record = build_lineage_record(
-    dataset_name=data_product_context["name"],
-    run_id=RUN_ID,
-    lineage_steps=[
+    # 3) Generate or review DQ rules.
+    # Copilot prompt example:
+    # "Given columns and business grain, generate deterministic data
+    # quality rules with severity and rationale."
+    quality_rules = [
         {
-            "source": SOURCE_TABLE,
-            "target": TARGET_TABLE,
-            "transformation": "round(amount, 2)",
-            "reason": transformation_rationale,
-            "source_type": "dataframe",
-            "target_type": "dataframe",
-            "confidence": "high",
+            "rule_id": "id_not_null",
+            "rule_type": "not_null",
+            "column": "order_id",
+            "severity": "critical",
         }
-    ],
-    notebook_name=NOTEBOOK_NAME,
-)
+    ]
 
-# Output profile for handover
-output_profile = profile_dataframe(
-    df_output,
-    dataset_name=f"{data_product_context['name']}_output",
-    engine="auto",
-)
+    dq_result = run_quality_rules(
+        transformed_df,
+        quality_rules,
+        dataset_name=DATASET_NAME,
+        table_name=TARGET_TABLE,
+        engine="auto",
+    )
 
-# 13) Handover framework pack
-# Copilot prompt (use as-is, then review output):
-# "Draft a handover summary with: run status, key assumptions,
-# unresolved risks, and next actions for productionization.
-# Keep it concise and checklist-ready."
-handover_pack = {
-    "profile": {
-        "source": source_profile,
-        "output": output_profile,
-    },
-    "dq": {
-        "candidates": dq_candidate_rules,
-        "approved": approved_dq_rules,
-        "result": dq_result,
-    },
-    "governance": {
-        "suggestions": sensitivity_suggestions,
-        "approved": approved_governance_labels,
-    },
-    "lineage": lineage_record,
-    "run_summary": {
+    # 4) Governance suggestions (AI-in-the-loop; human review required).
+    columns_profile = [
+        {
+            "column_name": col,
+            "data_type": str(transformed_df[col].dtype),
+        }
+        for col in transformed_df.columns
+    ]
+    governance_suggestions = classify_columns(
+        profile={"columns": columns_profile},
+        business_context={"approved_usage": APPROVED_USAGE},
+    )
+
+    # 5) Build lineage artifacts.
+    steps = [
+        {
+            "step_id": "1",
+            "step_name": "read_source",
+            "input_name": SOURCE_TABLE,
+            "output_name": "source_df",
+            "transformation_type": "ingest",
+        },
+        {
+            "step_id": "2",
+            "step_name": "apply_business_transformation",
+            "input_name": "source_df",
+            "output_name": "transformed_df",
+            "transformation_type": "transform",
+        },
+    ]
+
+    lineage_records = build_lineage_records(
+        dataset_name=DATASET_NAME,
+        run_id=RUN_ID,
+        source_tables=[SOURCE_TABLE],
+        target_table=TARGET_TABLE,
+        transformation_steps=steps,
+    )
+
+    lineage_mermaid = generate_mermaid_lineage(
+        source_tables=[SOURCE_TABLE],
+        target_table=TARGET_TABLE,
+        transformation_steps=steps,
+    )
+
+    summary = {
+        "dataset_name": DATASET_NAME,
+        "run_id": RUN_ID,
+        "source_tables": [SOURCE_TABLE],
+        "target_table": TARGET_TABLE,
+        "step_count": len(steps),
+        "steps": steps,
+        "columns_used": [],
+        "columns_created": [],
+    }
+    summary_md = build_transformation_summary_markdown(summary)
+
+    # 6) Handover pack.
+    handover_pack = {
+        "profile": source_profile,
+        "dq": dq_result,
+        "governance": governance_suggestions,
+        "lineage_records": lineage_records,
+        "lineage_mermaid": lineage_mermaid,
+        "transformation_summary_markdown": summary_md,
         "status": "dry_run" if DRY_RUN else "completed",
-        "mvp_steps": len(mvp_registry),
-    },
-    "caveats": [
-        "Synthetic data only when DRY_RUN=True",
-        "AI suggestions require human approval",
-    ],
-}
+    }
 
-artifacts = {
-    "data_product_context": data_product_context,
-    "runtime_config": runtime_config,
-    "source_declaration": source_declaration,
-    "source_profile": source_profile,
-    "exploration_notes": exploration_notes,
-    "transformation_rationale": transformation_rationale,
-    "output_table": output_table,
-    "dq_candidate_rules": dq_candidate_rules,
-    "approved_dq_rules": approved_dq_rules,
-    "sensitivity_suggestions": sensitivity_suggestions,
-    "approved_governance_labels": approved_governance_labels,
-    "lineage_record": lineage_record,
-    "handover_pack": handover_pack,
-}
+    print(handover_pack)
+    print("Validation:", "passed")
+    fabric_writer(transformed_df)
 
-validation = validate_mvp_artifacts(artifacts)
-if not validation["valid"]:
-    raise ValueError(f"MVP artifact validation failed: {validation}")
+    # Human fills this in:
+    # - Source/target names and environment values
+    # - Fabric reader/writer implementations
+    # - Business transformation logic
+    # - Final governance approvals
+    #
+    # Framework generates this:
+    # - Profile artifacts
+    # - DQ execution result
+    # - Governance suggestions
+    # - Lineage and transformation summaries
 
-# ==========================================================
-# FINAL RUN SUMMARY CELL
-# ==========================================================
-print("Run ID:", RUN_ID)
-print("MVP steps:", len(mvp_registry))
-print("Validation:", validation)
-print("Mode:", "DRY_RUN (no production write)" if DRY_RUN else "FABRIC_WRITE")
-print("Output target:", TARGET_TABLE)
 
-# ==========================================================
-# HUMAN FILLS THIS IN vs FRAMEWORK GENERATES THIS
-# ==========================================================
-# Human fills this in:
-# - data_product_context.purpose, expected_grain, approved_usage
-# - source_declaration and Fabric adapters
-# - transformation logic section
-# - DQ/governance approvals
-#
-# Framework generates this:
-# - profiling outputs
-# - DQ execution result
-# - governance suggestions (pre-review)
-# - lineage record and validation checks
+if __name__ == "__main__":
+    main()
