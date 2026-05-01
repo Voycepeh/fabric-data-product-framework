@@ -50,7 +50,7 @@ Many Fabric projects duplicate the same lifecycle work (profiling, drift checks,
 
 The MVP provides:
 
-- Public documentation for product direction and notebook lifecycle
+- Public documentation for product direction and the canonical 13-step MVP lifecycle
 - Initial architecture and metadata model proposal
 - Synthetic dataset contract example
 - Minimal Python package scaffold and placeholder modules

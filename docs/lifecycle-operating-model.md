@@ -1,6 +1,15 @@
 # Lifecycle Operating Model
 
-Canonical order for the MVP workflow in this metadata-first, AI-in-the-loop, Fabric-first framework.
+This page defines the **canonical 13-step MVP lifecycle** for the framework.
+
+## Reader mental model
+
+- **Humans** define purpose, approve business meaning, review AI outputs, and accept governance/DQ decisions.
+- The **framework** runs reusable profiling, validation, drift, DQ, metadata, lineage, and handover utilities.
+- **AI** proposes DQ rules, sensitivity labels, lineage, transformation summaries, and documentation from structured context.
+- **Fabric** executes notebooks and stores data/metadata outputs.
+
+AI proposes. Humans approve. The framework validates, logs, and packages artifacts.
 
 ```mermaid
 flowchart TD
@@ -32,5 +41,3 @@ flowchart TD
     class B,C,D,G,M framework;
     class H,J,L ai;
 ```
-
-AI proposes. Humans approve. The framework validates, logs, and produces handover artifacts.

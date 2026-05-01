@@ -63,6 +63,18 @@ AI helps draft DQ rules, sensitivity labels, lineage, transformation summaries, 
 
 Humans still approve business meaning, DQ thresholds, sensitivity classification, governance gates, and release readiness.
 
+## Documentation map
+- **README (this page):** high-level overview and quick orientation.
+- **GitHub Pages docs:** detailed operating manual, runbooks, architecture/lifecycle detail, and generated callable reference.
+
+Start with:
+- Docs homepage: <https://voycepeh.github.io/fabric-data-product-framework/>
+- Quick Start runbook: [docs/quick-start.md](docs/quick-start.md)
+- Canonical lifecycle: [docs/lifecycle-operating-model.md](docs/lifecycle-operating-model.md)
+- Architecture: [docs/architecture.md](docs/architecture.md)
+- UV wheel + Fabric install guide: [docs/UV_WHEEL_FABRIC_INSTALL_GUIDE.md](docs/UV_WHEEL_FABRIC_INSTALL_GUIDE.md)
+- Callable/API reference: [src/README.md](src/README.md) and [docs/api/index.md](docs/api/index.md)
+
 ## Build and install in Fabric
 This framework can be packaged as a wheel with `uv` and installed into a Microsoft Fabric Environment so notebooks import reusable framework code instead of copy-pasting helper cells. After attaching the Environment, run the MVP notebook template end to end.
 

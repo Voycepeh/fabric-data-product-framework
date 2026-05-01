@@ -1,19 +1,21 @@
-# Fabric Data Product Framework
+# Documentation Portal
 
-Build production-friendly data products in Microsoft Fabric with reusable notebook patterns, contract-first controls, and handover-ready artifacts.
+Use this site as the **operating manual** for running and understanding the framework.
 
-## Start here
+- The root [README](../README.md) is the **high-level repository overview**.
+- This GitHub Pages site is the **detailed guide** for testing, operating, and extending the canonical 13-step MVP lifecycle in Fabric.
 
-1. Follow [Quick Start](quick-start.md).
-2. Review architecture and lifecycle docs.
-3. Use the rendered [Callable Reference](reference/) for one page per public function/class.
+## Choose your path
 
-## Core paths
+- **I want to test the MVP in Fabric** → [Quick Start runbook](quick-start.md)
+- **I want to understand the lifecycle** → [Canonical 13-step MVP lifecycle](lifecycle-operating-model.md)
+- **I want to understand the architecture** → [Architecture overview](architecture.md)
+- **I want to build a wheel and install in Fabric** → [UV wheel + Fabric install guide](UV_WHEEL_FABRIC_INSTALL_GUIDE.md)
+- **I want to inspect callable functions** → [API overview](api/index.md) and [generated callable reference](reference/)
 
-- [Callable Reference](reference/)
-- [Module API Overview](api/index.md)
-- [Lifecycle operating model](lifecycle-operating-model.md)
-- [Architecture overview](architecture.md)
+## Suggested flow for first-time users
 
-- [Notebook recipes](recipes/index.md)
-- [UV wheel build and Fabric install guide](UV_WHEEL_FABRIC_INSTALL_GUIDE.md)
+1. Run the [Quick Start](quick-start.md).
+2. Read the [lifecycle operating model](lifecycle-operating-model.md).
+3. Review the [architecture](architecture.md).
+4. Use the [callable/API reference](api/index.md) while adapting notebooks.
