@@ -157,6 +157,7 @@ dq_rules = [
     {"rule_id": "order_id_required", "rule_type": "not_null", "column": "order_id", "severity": "critical"},
     {"rule_id": "order_id_unique", "rule_type": "unique", "column": "order_id", "severity": "critical"},
     {"rule_id": "customer_id_required", "rule_type": "not_null", "column": "customer_id", "severity": "critical"},
+    {"rule_id": "customer_email_required", "rule_type": "not_null", "column": "customer_email", "severity": "warning"},
     {
         "rule_id": "order_status_valid",
         "rule_type": "accepted_values",
