@@ -2,6 +2,8 @@
 
 This page lists the main callable functions intended to be imported from `fabric_data_product_framework`.
 
+Use this page after the root `README.md` and the Fabric notebook template to understand which callable functions are available and how they fit into notebook workflows.
+
 
 ## Execution scope quick reference
 
