@@ -94,7 +94,12 @@ else:
 # deterministic data quality rules with severity and rationale. Include at
 # least one not_null, uniqueness, and numeric range rule. Return JSON list."
 dq_candidate_rules = [
-    {"rule_type": "not_null", "column": "order_id", "severity": "critical", "reason": "Primary key"},
+    {
+        "rule_type": "not_null",
+        "column": "order_id",
+        "severity": "critical",
+        "reason": "Primary key",
+    },
     {
         "rule_type": "range_check",
         "column": "amount",
@@ -124,7 +129,12 @@ dq_result = run_quality_rules(
 # using approved usage '{approved_usage}'. Return JSON with column, label,
 # rationale, and confidence."
 sensitivity_suggestions = classify_columns(
-    profile={"columns": [{"column_name": c, "data_type": str(df_source[c].dtype)} for c in df_source.columns]},
+    profile={
+        "columns": [
+            {"column_name": c, "data_type": str(df_source[c].dtype)}
+            for c in df_source.columns
+        ]
+    },
     business_context={"approved_usage": data_product_context["approved_usage"]},
 )
 
@@ -154,7 +164,11 @@ lineage_record = build_lineage_record(
 )
 
 # Output profile for handover
-output_profile = profile_dataframe(df_output, dataset_name=f"{data_product_context['name']}_output", engine="auto")
+output_profile = profile_dataframe(
+    df_output,
+    dataset_name=f"{data_product_context['name']}_output",
+    engine="auto",
+)
 
 # 13 Handover framework pack
 # Copilot prompt (use as-is, then review output):
