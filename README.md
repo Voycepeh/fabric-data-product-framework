@@ -75,6 +75,7 @@ See the step-by-step guide: [docs/setup/uv-wheel-and-fabric-environment.md](docs
 - Canonical MVP workflow: [docs/mvp-workflow.md](docs/mvp-workflow.md)
 - Lifecycle and sequence: [docs/lifecycle-operating-model.md](docs/lifecycle-operating-model.md)
 - Function reference: [src/README.md](src/README.md)
+- Notebook recipes: [docs/recipes/index.md](docs/recipes/index.md)
 - Capability status: [docs/capability-status.md](docs/capability-status.md)
 
 
