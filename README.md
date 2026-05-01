@@ -63,7 +63,6 @@ AI helps draft DQ rules, sensitivity labels, lineage, transformation summaries, 
 
 Humans still approve business meaning, DQ thresholds, sensitivity classification, governance gates, and release readiness.
 
-
 ## Recommended setup: install as a Fabric Environment wheel
 For MVP testing, build the framework as a wheel using uv, upload the wheel to a Microsoft Fabric Environment, attach the Environment to the template notebook, then run the notebook end to end against real data.
 
@@ -76,7 +75,6 @@ See the step-by-step guide: [docs/setup/uv-wheel-and-fabric-environment.md](docs
 - Lifecycle and sequence: [docs/lifecycle-operating-model.md](docs/lifecycle-operating-model.md)
 - Function reference: [src/README.md](src/README.md)
 - Capability status: [docs/capability-status.md](docs/capability-status.md)
-
 
 ## Documentation site
 Rendered documentation is published on GitHub Pages at <https://voycepeh.github.io/fabric-data-product-framework/>.
