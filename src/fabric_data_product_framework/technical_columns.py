@@ -164,7 +164,11 @@ def add_business_key_hash(df, business_keys: list[str], output_column: str = "_b
 
 
 def add_datetime_parts(df, datetime_column: str, *, timezone: str = "Asia/Singapore", prefix: str | None = None, include_date: bool = True, include_time: bool = True, include_hour: bool = True, include_30_min_block: bool = True, engine: str = "auto"):
-    """Derive date/time helper columns from a UTC datetime column (step 8)."""
+    """Derive date/time helper columns from a UTC datetime column.
+
+    Common gating behavior:
+        Raises ``ValueError`` when ``datetime_column`` is missing.
+    """
     _assert_columns_exist(df, [datetime_column])
     selected_engine = _resolve_engine(df, engine)
     col_prefix = prefix or datetime_column
@@ -206,6 +210,9 @@ def add_standard_technical_columns(df, *, run_id: str, pipeline_name: str | None
 
     Key args include ``run_id``, optional ``business_keys``, and optional source details.
     Returns the transformed dataframe. Supports pandas and Spark without Spark-to-pandas conversion.
+
+    Example:
+        >>> out = add_standard_technical_columns(df, run_id="run_001", business_keys=["id"], engine="pandas")
     """
     out = add_pipeline_metadata(df, run_id=run_id, pipeline_name=pipeline_name, environment=environment, engine=engine)
     out = add_source_metadata(out, source_system=source_system, source_table=source_table, source_extract_timestamp=source_extract_timestamp, engine=engine)

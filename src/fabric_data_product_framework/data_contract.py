@@ -235,6 +235,11 @@ def build_runtime_contract(config: dict) -> RuntimeContract:
 
 
 def normalize_data_product_contract(contract: dict | DataProductContract) -> DataProductContract:
+    """Normalize a raw dict/dataclass contract into ``DataProductContract``.
+
+    Typical next step:
+        Build runtime context and run the orchestration flow with ``run_data_product``.
+    """
     if isinstance(contract, DataProductContract):
         return contract
     raw = dict(contract)
@@ -318,6 +323,7 @@ def _effective_contract_dict(contract: dict | DataProductContract) -> dict:
 
 
 def load_data_contract(path_or_dict: str | Path | dict) -> DataProductContract:
+    """Load and normalize a contract from path or in-memory dictionary."""
     raw = dict(path_or_dict) if isinstance(path_or_dict, dict) else load_dataset_contract(path_or_dict)
     return normalize_data_product_contract(raw)
 

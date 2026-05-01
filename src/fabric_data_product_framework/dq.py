@@ -62,7 +62,22 @@ def generate_dq_rule_candidates_with_fabric_ai(
     table_name=None,
     response_format=None,
 ) -> list[dict]:
-    """Generate DQ candidates using Fabric pandas AI extension (optional runtime feature)."""
+    """Generate candidate DQ rules with Fabric AI notebook integration.
+
+    Args:
+        profile: Profile payload from ``profile_dataframe``.
+        contract: Optional contract section to improve prompt grounding.
+        business_context: Optional business context string/dict.
+        dataset_name: Dataset name for prompt and outputs.
+        table_name: Table name for prompt and outputs.
+        response_format: Optional Fabric AI response format argument.
+
+    Returns:
+        List of normalized candidate rules.
+
+    Runtime compatibility:
+        Fabric notebook runtime with Fabric AI + ``openai``/``pydantic`` installed.
+    """
     import pandas as pd
 
     if not _fabric_ai_dependencies_available():
@@ -160,6 +175,11 @@ def generate_dq_rule_candidates(
 
 
 def normalize_dq_rule(rule: dict) -> dict:
+    """Normalize one DQ rule dictionary into framework-compatible keys.
+
+    Example:
+        >>> normalize_dq_rule({"name": "id_not_null", "field": "id", "rule_type": "not_empty"})
+    """
     r = dict(rule or {})
     if "rule_id" not in r:
         r["rule_id"] = r.get("id") or r.get("name") or "DQ_RULE"
@@ -286,6 +306,11 @@ def run_dq_rules(df, rules: list[dict], dataset_name: str, table_name: str, engi
 
 
 def run_dq_workflow(spark, df, quality_contract, dataset_name: str, table_name: str, run_id: str | None = None, profile: dict | None = None, metadata: dict | None = None, business_context: str | dict | None = None, engine: str = "spark") -> dict:
+    """Execute end-to-end DQ workflow: load/generate rules, run checks, gate, and package outputs.
+
+    Typical chain:
+        ``profile_dataframe`` -> ``run_dq_workflow`` -> write returned records to metadata tables.
+    """
     """Run end-to-end contract-driven DQ workflow for notebook orchestration.
 
     Flow: load approved rules (optional), generate/store candidates (optional),

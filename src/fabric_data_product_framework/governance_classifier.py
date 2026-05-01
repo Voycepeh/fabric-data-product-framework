@@ -180,6 +180,9 @@ def classify_columns(profile: dict | list[dict], metadata: dict | list[dict] | N
     Runtime:
         Local-safe and Spark-independent. Typical next step is persisting review
         suggestions with ``write_governance_classifications``.
+
+    Example:
+        >>> classify_columns(profile, dataset_name="orders", table_name="silver.orders")
     """
     del dataset_name, table_name, run_id
     columns = _normalize_columns(profile)
@@ -236,6 +239,11 @@ def _spark_create_governance_metadata_dataframe(spark, rows: list[dict]):
 
 
 def write_governance_classifications(spark, classifications: list[dict], table_name: str, dataset_name: str | None = None, source_table: str | None = None, run_id: str | None = None, status: str = "suggested", generated_by: str = "framework", mode: str = "append") -> list[dict]:
+    """Persist governance classifications to a Spark metadata table.
+
+    Side effects:
+        Writes records to ``table_name`` using ``saveAsTable``.
+    """
     dataset = dataset_name or "unknown"
     source = source_table or table_name
     records = build_governance_classification_records(classifications=classifications, dataset_name=dataset, table_name=source, run_id=run_id, status=status, generated_by=generated_by)

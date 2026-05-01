@@ -69,6 +69,11 @@ class LineageRecorder:
 
 
 def generate_mermaid_lineage(*, source_tables: list[str], target_table: str, transformation_steps: list[dict], graph_direction: str = "LR") -> str:
+    """Generate a Mermaid flowchart from lineage step records.
+
+    Returns:
+        Mermaid graph text suitable for markdown fences.
+    """
     direction = graph_direction if graph_direction in {"LR", "TD", "RL", "BT"} else "LR"
     lines = [f"flowchart {direction}"]
     steps = transformation_steps or []
@@ -100,6 +105,11 @@ def generate_mermaid_lineage(*, source_tables: list[str], target_table: str, tra
 
 
 def build_transformation_summary_markdown(summary: dict, *, include_mermaid: bool = True) -> str:
+    """Render lineage summary content as notebook-friendly markdown.
+
+    Typical next step:
+        Store this markdown in handover notes or run summary artifacts.
+    """
     steps = summary.get("steps", []) or []
     lines = [
         f"## Transformation Summary — {summary.get('dataset_name', 'unknown')}",
@@ -248,6 +258,7 @@ def build_lineage_records(*, dataset_name: str, run_id: str, source_tables: list
 
 
 def build_lineage_record(*, dataset_name: str, run_id: str | None = None, lineage_steps: list[dict] | None = None, notebook_name: str | None = None, workspace_name: str | None = None, created_by: str | None = None) -> list[dict]:
+    """Build normalized lineage records from notebook-captured lineage steps."""
     if lineage_steps is None:
         raise ValueError("lineage_steps is required. Use get_fabric_copilot_lineage_prompt() to generate notebook lineage steps via Fabric Copilot.")
     return build_lineage_record_from_steps(dataset_name, lineage_steps, run_id, notebook_name, workspace_name, created_by)
