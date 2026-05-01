@@ -3,6 +3,7 @@
 This page is the workflow-first callable function map for `fabric_data_product_framework`.
 
 > Click any function name to view its generated API documentation, including signature, parameters, returns, and examples.
+> Links in this map intentionally point to module-level API pages (not per-function anchors) to avoid broken-anchor maintenance.
 
 ## Public callable surface source of truth
 
