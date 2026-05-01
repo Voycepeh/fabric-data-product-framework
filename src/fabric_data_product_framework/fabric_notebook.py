@@ -14,6 +14,7 @@ import pandas as pd
 
 @dataclass(frozen=True)
 class Housepath:
+    """Container for Lakehouse path roots used by Fabric notebook IO helpers."""
     workspace_id: str
     house_id: str
     house_name: str
@@ -223,6 +224,7 @@ def warehouse_write(df, env, target, schema, table, mode="append", config=None):
 
 
 def single_file_ns_to_us(local_in_path, local_out_path, verbose=True):
+    """Normalize parquet timestamp units for single-file local interoperability."""
     import pyarrow as pa
     import pyarrow.parquet as pq
 
@@ -245,6 +247,7 @@ def single_file_ns_to_us(local_in_path, local_out_path, verbose=True):
 
 
 def lakehouse_parquet_read_as_spark(lh, relative_path, verbose=True, spark_session=None):
+    """Read parquet from a Lakehouse path into Spark with local fallback support."""
     spark_obj = _get_spark(spark_session)
 
     orig_spark_path = "Files/" + relative_path
@@ -310,6 +313,7 @@ def lakehouse_parquet_read_as_spark(lh, relative_path, verbose=True, spark_sessi
 
 
 def lakehouse_excel_read_as_spark(lh, relative_path, sheet_name=0, spark_session=None):
+    """Read Excel from Lakehouse Files into Spark using a pandas bridge."""
     spark_obj = _get_spark(spark_session)
     lakehouse_file_path = f"{lh.root}/{relative_path}"
 
@@ -351,6 +355,7 @@ def _get_fabric_runtime_context():
 
 
 def check_naming_convention(notebook_name=None, allowed_prefixes=None, fail_on_error=True):
+    """Validate notebook naming conventions for lifecycle governance checks."""
     prefixes = allowed_prefixes or NOTEBOOK_PREFIX_LIST
 
     if notebook_name is None:
@@ -394,6 +399,7 @@ def check_naming_convention(notebook_name=None, allowed_prefixes=None, fail_on_e
 
 
 def clean_datetime_columns(df, datetime_col, prefix, tz_region="Asia/Singapore", time_block_col="TIME_BLOCK_30_MIN"):
+    """Add standard datetime derivative columns for downstream analytics."""
     if datetime_col not in df.columns:
         raise ValueError(f"Column not found: {datetime_col}")
 
@@ -419,6 +425,7 @@ def clean_datetime_columns(df, datetime_col, prefix, tz_region="Asia/Singapore",
 
 
 def add_system_technical_columns(df, hash_col, bucket_size=512, run_id=None, notebook_name=None, loaded_by=None):
+    """Append common technical columns for traceability and incremental processing."""
     if hash_col not in df.columns:
         raise ValueError(f"Column not found: {hash_col}")
 
@@ -450,6 +457,7 @@ def add_system_technical_columns(df, hash_col, bucket_size=512, run_id=None, not
 
 
 def pass_if_yes_else_run(condition, code):
+    """Execute code only when ``condition`` is not an affirmative answer."""
     if str(condition).lower() == "yes":
         return None
     exec(code)
@@ -457,6 +465,7 @@ def pass_if_yes_else_run(condition, code):
 
 
 def ODI_METADATA_LOGGER(df, tablename: str, exclude_columns=None, run_timestamp_timezone="Asia/Singapore"):
+    """Generate ODI-style metadata records from a Spark dataframe schema/profile."""
     from pyspark.sql import functions as F
 
     technicalcol = {
@@ -521,6 +530,7 @@ def ODI_METADATA_LOGGER(df, tablename: str, exclude_columns=None, run_timestamp_
 
 
 def transformation_summary(code: str):
+    """Extract concise transformation statements from notebook code text."""
     tree = ast.parse(code)
     steps: list[dict[str, str]] = []
 
@@ -562,6 +572,7 @@ def transformation_summary(code: str):
 
 
 def transformation_reasons(pdf, reason, spark_session=None):
+    """Append a human-readable transformation reason column to pandas/Spark data."""
     spark_obj = _get_spark(spark_session)
     context = _get_fabric_runtime_context()
 

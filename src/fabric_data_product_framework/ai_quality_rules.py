@@ -26,6 +26,7 @@ def _jsonable(value: Any) -> Any:
 
 
 def build_quality_rule_prompt_context(profile, contract=None, business_context=None, table_name=None, dataset_name=None):
+    """Build JSON-safe context for AI DQ rule suggestion prompts."""
     profile = profile or {}
     return {
         "dataset_name": dataset_name or profile.get("dataset_name", "unknown"),
@@ -39,6 +40,7 @@ def build_quality_rule_prompt_context(profile, contract=None, business_context=N
 
 
 def build_quality_rule_generation_prompt(profile, contract=None, business_context=None, table_name=None, dataset_name=None):
+    """Create the final prompt text used to generate conservative DQ candidates."""
     context = build_quality_rule_prompt_context(profile, contract, business_context, table_name, dataset_name)
     return (
         "You are generating conservative data quality rule candidates for Fabric data product workflows.\n"
@@ -61,6 +63,10 @@ def _strip_json_fences(text: str) -> str:
 
 
 def parse_ai_quality_rule_candidates(raw_response):
+    """Parse and validate AI-generated DQ candidate JSON arrays.
+
+    Returns normalized candidate records with per-candidate validation flags.
+    """
     try:
         parsed = json.loads(_strip_json_fences(raw_response)) if isinstance(raw_response, str) else raw_response
     except Exception as exc:
@@ -87,6 +93,7 @@ def parse_ai_quality_rule_candidates(raw_response):
 
 
 def normalize_quality_rule_candidate(candidate):
+    """Normalize one AI rule candidate to the framework candidate schema."""
     out = {k: v for k, v in candidate.items() if k in SUPPORTED_CANDIDATE_FIELDS}
     out["rule_type"] = str(out.get("rule_type", "")).strip().lower()
     out["severity"] = str(out.get("severity", "warning")).strip().lower() or "warning"
@@ -101,6 +108,7 @@ def normalize_quality_rule_candidate(candidate):
 
 
 def validate_ai_quality_rule_candidate(candidate):
+    """Validate whether a candidate has enough fields to compile to a DQ rule."""
     rt = candidate.get("rule_type")
     if not rt:
         return {"is_valid": False, "message": "Missing rule_type"}
@@ -114,6 +122,7 @@ def validate_ai_quality_rule_candidate(candidate):
 
 
 def build_layman_rule_records(candidates, run_id, dataset_name, table_name):
+    """Build metadata rows for layman-rule candidate review and approval."""
     rows = []
     for i, c in enumerate(candidates):
         can_compile = bool(c.get("can_compile")) if "can_compile" in c else validate_ai_quality_rule_candidate(c)["is_valid"]

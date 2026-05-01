@@ -15,6 +15,7 @@ def _severity_bucket(severity: str) -> str:
 
 
 def build_quarantine_rule_coverage_records(rules, run_id, dataset_name, table_name):
+    """Summarize whether each rule can run at row-level for quarantine splits."""
     rows = []
     for i, rule in enumerate(rules):
         rt = rule.get("rule_type")
@@ -29,11 +30,13 @@ def build_quarantine_rule_coverage_records(rules, run_id, dataset_name, table_na
 
 
 def add_dq_failure_columns(df, rules, engine="auto"):
+    """Annotate rows with ``dq_errors`` and ``dq_warnings`` based on DQ rules."""
     resolved = _resolve_engine(df, engine)
     return _add_spark(df, rules) if resolved == "spark" else _add_pandas(df, rules)
 
 
 def split_valid_and_quarantine(df, rules, engine="auto"):
+    """Split enriched dataframe into valid rows and quarantine rows."""
     enriched = add_dq_failure_columns(df, rules, engine=engine)
     if _resolve_engine(enriched, engine) == "spark":
         from pyspark.sql import functions as F
@@ -43,6 +46,7 @@ def split_valid_and_quarantine(df, rules, engine="auto"):
 
 
 def build_quarantine_summary_records(quarantine_df, run_id, dataset_name, table_name, engine="auto"):
+    """Build quarantine volume summary records for metadata tables."""
     resolved = _resolve_engine(quarantine_df, engine)
     q_count = quarantine_df.count() if resolved == "spark" else len(quarantine_df)
     return [{"run_id": run_id, "dataset_name": dataset_name, "table_name": table_name, "quarantine_row_count": int(q_count), "engine": resolved}]

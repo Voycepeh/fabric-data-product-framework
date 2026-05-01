@@ -18,6 +18,11 @@ def _skipped(candidate, message):
 
 
 def compile_layman_rule_to_quality_rule(candidate):
+    """Compile one AI layman-rule candidate into an executable quality rule.
+
+    Returns a record that marks the candidate as compiled or skipped, so
+    notebook users can review why a rule was accepted or rejected.
+    """
     rule_type = str(candidate.get("rule_type", "")).strip().lower()
     if rule_type not in SUPPORTED_RULE_TYPES:
         return _skipped(candidate, f"Unsupported rule_type: {rule_type}")
@@ -68,9 +73,11 @@ def compile_layman_rule_to_quality_rule(candidate):
 
 
 def compile_layman_rules_to_quality_rules(candidates):
+    """Batch-compile layman candidates and return compiled rules + summary stats."""
     records = [compile_layman_rule_to_quality_rule(c) for c in candidates]
     return {"compiled_rules": [r["quality_rule"] for r in records if r["status"] == "compiled"], "records": records, "summary": {"total": len(records), "compiled": sum(r["status"] == "compiled" for r in records), "skipped": sum(r["status"] == "skipped" for r in records)}}
 
 
 def build_rule_registry_records(compiled_rules, run_id, dataset_name, table_name):
+    """Build metadata rows for storing compiled executable rule definitions."""
     return [{"run_id": run_id, "dataset_name": dataset_name, "table_name": table_name, "rule_id": r.get("rule_id"), "rule_type": r.get("rule_type"), "severity": r.get("severity"), "column": r.get("column"), "columns": r.get("columns"), "reason": r.get("reason"), "rule_json": r} for r in compiled_rules]

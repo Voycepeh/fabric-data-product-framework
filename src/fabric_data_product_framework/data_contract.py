@@ -38,6 +38,7 @@ _ALLOWED_REFRESH_MODES = {"full", "incremental", "snapshot", "append"}
 
 @dataclass
 class SourceContract:
+    """Source-side contract settings for ingestion and validation."""
     name: str | None = None
     type: str = "table"
     table: str | None = None
@@ -52,6 +53,7 @@ class SourceContract:
 
 @dataclass
 class TargetContract:
+    """Target write contract settings for curated outputs."""
     table: str | None = None
     path: str | None = None
     format: str = "delta"
@@ -63,6 +65,7 @@ class TargetContract:
 
 @dataclass
 class QualityContract:
+    """Quality workflow configuration including rule-store and gating behavior."""
     rules: list[dict[str, Any]] = field(default_factory=list)
     rule_store_table: str | None = None
     use_rule_store: bool = False
@@ -76,6 +79,7 @@ class QualityContract:
 
 @dataclass
 class DriftContract:
+    """Schema/data drift policy and baseline table references."""
     schema_enabled: bool = True
     data_enabled: bool = False
     schema_policy: dict[str, Any] = field(default_factory=dict)
@@ -86,6 +90,7 @@ class DriftContract:
 
 @dataclass
 class GovernanceContract:
+    """Governance classification policy for sensitive columns and review."""
     classify_columns: bool = False
     classification_table: str | None = None
     require_human_approval: bool = True
@@ -94,6 +99,7 @@ class GovernanceContract:
 
 @dataclass
 class MetadataContract:
+    """Metadata table destinations used across the pipeline lifecycle."""
     schema: str = "fw_metadata"
     source_profile_table: str | None = None
     output_profile_table: str | None = None
@@ -110,6 +116,7 @@ class MetadataContract:
 
 @dataclass
 class RuntimeContract:
+    """Runtime context defaults such as dataset, environment, and naming."""
     dataset_name: str = ""
     environment: str = "fabric"
     notebook_name: str | None = None
@@ -120,6 +127,7 @@ class RuntimeContract:
 
 @dataclass
 class DataProductContract:
+    """Top-level contract model used by ``run_data_product`` orchestration."""
     dataset: dict[str, Any] = field(default_factory=dict)
     source: SourceContract = field(default_factory=SourceContract)
     target: TargetContract = field(default_factory=TargetContract)
@@ -300,6 +308,7 @@ def normalize_data_product_contract(contract: dict | DataProductContract) -> Dat
 
 
 def data_product_contract_to_dict(contract: DataProductContract) -> dict:
+    """Convert a typed data product contract to a serializable dictionary."""
     return asdict(contract)
 
 
@@ -341,6 +350,7 @@ def _refresh_mode(contract: dict) -> str:
 
 
 def validate_data_contract_shape(contract: dict | DataProductContract) -> list[str]:
+    """Validate required top-level contract fields and return shape errors."""
     n = normalize_data_product_contract(contract)
     raw = _effective_contract_dict(n)
     errors: list[str] = []
@@ -368,6 +378,7 @@ def validate_data_contract_shape(contract: dict | DataProductContract) -> list[s
 
 
 def build_runtime_context_from_contract(contract: dict | DataProductContract, overrides: dict | None = None) -> dict:
+    """Build runtime context from contract values with optional notebook overrides."""
     n = normalize_data_product_contract(contract)
     context = build_runtime_context(dataset_name=n.dataset.get("name", ""), environment=n.runtime.environment, source_table=n.source.table or "", target_table=n.target.table or "", notebook_name=n.runtime.notebook_name, run_id=(overrides or {}).get("run_id"))
     if overrides:
@@ -575,5 +586,6 @@ def run_data_product(spark, contract: dict | DataProductContract, transform=None
 
 
 def assert_data_product_passed(result: dict) -> None:
+    """Raise ``RuntimeError`` when a contract-driven run is blocking/failed."""
     if result.get("status") != "passed":
         raise RuntimeError("Data product run failed contract/quality gates")
