@@ -63,6 +63,12 @@ AI helps draft DQ rules, sensitivity labels, lineage, transformation summaries, 
 
 Humans still approve business meaning, DQ thresholds, sensitivity classification, governance gates, and release readiness.
 
+
+## Recommended setup: install as a Fabric Environment wheel
+For MVP testing, build the framework as a wheel using uv, upload the wheel to a Microsoft Fabric Environment, attach the Environment to the template notebook, then run the notebook end to end against real data.
+
+See the step-by-step guide: [docs/setup/uv-wheel-and-fabric-environment.md](docs/setup/uv-wheel-and-fabric-environment.md).
+
 ## Start here
 - Fabric notebook template: [templates/notebooks/fabric_data_product_mvp.md](templates/notebooks/fabric_data_product_mvp.md)
 - Fabric smoke-test checklist: [docs/fabric-smoke-test.md](docs/fabric-smoke-test.md)

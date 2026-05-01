@@ -26,6 +26,30 @@ The template aligns to the current 13-step MVP workflow:
 12. AI generated lineage and transformation summary
 13. Handover framework pack
 
+
+## Preferred packaged setup (Fabric Environment)
+Use package imports as the default path when running notebooks attached to a Fabric Environment:
+
+```python
+from fabric_data_product_framework import (
+    get_path,
+    lakehouse_table_read,
+    lakehouse_table_write,
+    ODI_METADATA_LOGGER,
+    clean_datetime_columns,
+    add_system_technical_columns,
+    check_naming_convention,
+)
+```
+
+Development fallback while editing helpers directly in Fabric:
+
+```python
+# %run 00_config
+```
+
+Use the packaged import for repeatable onboarding, validation, and handover. Use `%run 00_config` only as a temporary early-development fallback when changing helper function internals in-notebook.
+
 ## Adapter replacement points
 The current template includes one placeholder adapter that you replace when moving from synthetic dry-run to real Fabric reads:
 - `fabric_reader(table_name: str)`
