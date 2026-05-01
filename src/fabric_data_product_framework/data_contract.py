@@ -206,17 +206,17 @@ def _dict(config: dict | None) -> dict:
 def build_source_contract(config: dict) -> SourceContract:
     """Build source contract.
 
-    Use this callable to support the framework workflow step implemented by `build_source_contract`.
+    Execute `build_source_contract`.
 
     Parameters
     ----------
     config : dict
-        Input value for `config`.
+        Value for `config`.
 
     Returns
     -------
     result : SourceContract
-        Output produced by `build_source_contract`.
+        Result returned by `build_source_contract`.
 
     Examples
     --------
@@ -240,17 +240,17 @@ def build_source_contract(config: dict) -> SourceContract:
 def build_target_contract(config: dict) -> TargetContract:
     """Build target contract.
 
-    Use this callable to support the framework workflow step implemented by `build_target_contract`.
+    Execute `build_target_contract`.
 
     Parameters
     ----------
     config : dict
-        Input value for `config`.
+        Value for `config`.
 
     Returns
     -------
     result : TargetContract
-        Output produced by `build_target_contract`.
+        Result returned by `build_target_contract`.
 
     Examples
     --------
@@ -271,17 +271,17 @@ def build_target_contract(config: dict) -> TargetContract:
 def build_quality_contract(config: dict) -> QualityContract:
     """Build quality contract.
 
-    Use this callable to support the framework workflow step implemented by `build_quality_contract`.
+    Execute `build_quality_contract`.
 
     Parameters
     ----------
     config : dict
-        Input value for `config`.
+        Value for `config`.
 
     Returns
     -------
     result : QualityContract
-        Output produced by `build_quality_contract`.
+        Result returned by `build_quality_contract`.
 
     Examples
     --------
@@ -304,17 +304,17 @@ def build_quality_contract(config: dict) -> QualityContract:
 def build_drift_contract(config: dict) -> DriftContract:
     """Build drift contract.
 
-    Use this callable to support the framework workflow step implemented by `build_drift_contract`.
+    Execute `build_drift_contract`.
 
     Parameters
     ----------
     config : dict
-        Input value for `config`.
+        Value for `config`.
 
     Returns
     -------
     result : DriftContract
-        Output produced by `build_drift_contract`.
+        Result returned by `build_drift_contract`.
 
     Examples
     --------
@@ -334,17 +334,17 @@ def build_drift_contract(config: dict) -> DriftContract:
 def build_governance_contract(config: dict) -> GovernanceContract:
     """Build governance contract.
 
-    Use this callable to support the framework workflow step implemented by `build_governance_contract`.
+    Execute `build_governance_contract`.
 
     Parameters
     ----------
     config : dict
-        Input value for `config`.
+        Value for `config`.
 
     Returns
     -------
     result : GovernanceContract
-        Output produced by `build_governance_contract`.
+        Result returned by `build_governance_contract`.
 
     Examples
     --------
@@ -362,17 +362,17 @@ def build_governance_contract(config: dict) -> GovernanceContract:
 def build_metadata_contract(config: dict) -> MetadataContract:
     """Build metadata contract.
 
-    Use this callable to support the framework workflow step implemented by `build_metadata_contract`.
+    Execute `build_metadata_contract`.
 
     Parameters
     ----------
     config : dict
-        Input value for `config`.
+        Value for `config`.
 
     Returns
     -------
     result : MetadataContract
-        Output produced by `build_metadata_contract`.
+        Result returned by `build_metadata_contract`.
 
     Examples
     --------
@@ -398,17 +398,17 @@ def build_metadata_contract(config: dict) -> MetadataContract:
 def build_runtime_contract(config: dict) -> RuntimeContract:
     """Build runtime contract.
 
-    Use this callable to support the framework workflow step implemented by `build_runtime_contract`.
+    Execute `build_runtime_contract`.
 
     Parameters
     ----------
     config : dict
-        Input value for `config`.
+        Value for `config`.
 
     Returns
     -------
     result : RuntimeContract
-        Output produced by `build_runtime_contract`.
+        Result returned by `build_runtime_contract`.
 
     Examples
     --------
@@ -428,17 +428,17 @@ def build_runtime_contract(config: dict) -> RuntimeContract:
 def normalize_data_product_contract(contract: dict | DataProductContract) -> DataProductContract:
     """Normalize data product contract.
 
-    Use this callable to support the framework workflow step implemented by `normalize_data_product_contract`.
+    Execute `normalize_data_product_contract`.
 
     Parameters
     ----------
     contract : dict | DataProductContract
-        Input value for `contract`.
+        Value for `contract`.
 
     Returns
     -------
     result : DataProductContract
-        Output produced by `normalize_data_product_contract`.
+        Result returned by `normalize_data_product_contract`.
 
     Examples
     --------
@@ -498,17 +498,17 @@ def normalize_data_product_contract(contract: dict | DataProductContract) -> Dat
 def data_product_contract_to_dict(contract: DataProductContract) -> dict:
     """Data product contract to dict.
 
-    Use this callable to support the framework workflow step implemented by `data_product_contract_to_dict`.
+    Execute `data_product_contract_to_dict`.
 
     Parameters
     ----------
     contract : DataProductContract
-        Input value for `contract`.
+        Value for `contract`.
 
     Returns
     -------
     result : dict
-        Output produced by `data_product_contract_to_dict`.
+        Result returned by `data_product_contract_to_dict`.
 
     Examples
     --------
@@ -547,17 +547,17 @@ def _effective_contract_dict(contract: dict | DataProductContract) -> dict:
 def load_data_contract(path_or_dict: str | Path | dict) -> DataProductContract:
     """Load data contract.
 
-    Use this callable to support the framework workflow step implemented by `load_data_contract`.
+    Execute `load_data_contract`.
 
     Parameters
     ----------
     path_or_dict : str | Path | dict
-        Input value for `path_or_dict`.
+        Value for `path_or_dict`.
 
     Returns
     -------
     result : DataProductContract
-        Output produced by `load_data_contract`.
+        Result returned by `load_data_contract`.
 
     Examples
     --------
@@ -574,17 +574,17 @@ def _refresh_mode(contract: dict) -> str:
 def validate_data_contract_shape(contract: dict | DataProductContract) -> list[str]:
     """Validate data contract shape.
 
-    Use this callable to support the framework workflow step implemented by `validate_data_contract_shape`.
+    Execute `validate_data_contract_shape`.
 
     Parameters
     ----------
     contract : dict | DataProductContract
-        Input value for `contract`.
+        Value for `contract`.
 
     Returns
     -------
     result : list[str]
-        Output produced by `validate_data_contract_shape`.
+        Result returned by `validate_data_contract_shape`.
 
     Examples
     --------
@@ -619,19 +619,19 @@ def validate_data_contract_shape(contract: dict | DataProductContract) -> list[s
 def build_runtime_context_from_contract(contract: dict | DataProductContract, overrides: dict | None = None) -> dict:
     """Build runtime context from contract.
 
-    Use this callable to support the framework workflow step implemented by `build_runtime_context_from_contract`.
+    Execute `build_runtime_context_from_contract`.
 
     Parameters
     ----------
     contract : dict | DataProductContract
-        Input value for `contract`.
+        Value for `contract`.
     overrides : dict | None, optional
-        Input value for `overrides`.
+        Value for `overrides`.
 
     Returns
     -------
     result : dict
-        Output produced by `build_runtime_context_from_contract`.
+        Result returned by `build_runtime_context_from_contract`.
 
     Examples
     --------
@@ -668,29 +668,29 @@ def _runtime_validation_contract(contract: dict | DataProductContract) -> dict:
 def run_data_product(spark, contract: dict | DataProductContract, transform=None, source_df=None, write: bool | None = None, *, write_target: bool = True, write_metadata: bool = True) -> dict:
     """Run data product.
 
-    Use this callable to support the framework workflow step implemented by `run_data_product`.
+    Execute `run_data_product`.
 
     Parameters
     ----------
     spark : Any
-        Input value for `spark`.
+        Value for `spark`.
     contract : dict | DataProductContract
-        Input value for `contract`.
+        Value for `contract`.
     transform : Any, optional
-        Input value for `transform`.
+        Value for `transform`.
     source_df : Any, optional
-        Input value for `source_df`.
+        Value for `source_df`.
     write : bool | None, optional
-        Input value for `write`.
+        Value for `write`.
     write_target : bool, optional
-        Input value for `write_target`.
+        Value for `write_target`.
     write_metadata : bool, optional
-        Input value for `write_metadata`.
+        Value for `write_metadata`.
 
     Returns
     -------
     result : dict
-        Output produced by `run_data_product`.
+        Result returned by `run_data_product`.
 
     Examples
     --------
@@ -865,17 +865,17 @@ def run_data_product(spark, contract: dict | DataProductContract, transform=None
 def assert_data_product_passed(result: dict) -> None:
     """Assert data product passed.
 
-    Use this callable to support the framework workflow step implemented by `assert_data_product_passed`.
+    Execute `assert_data_product_passed`.
 
     Parameters
     ----------
     result : dict
-        Input value for `result`.
+        Value for `result`.
 
     Returns
     -------
     result : None
-        Output produced by `assert_data_product_passed`.
+        Result returned by `assert_data_product_passed`.
 
     Raises
     ------

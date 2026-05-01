@@ -24,17 +24,17 @@ class UnsupportedDataFrameEngineError(TypeError):
 def validate_engine(engine: str) -> str:
     """Validate engine.
 
-    Use this callable to support the framework workflow step implemented by `validate_engine`.
+    Execute `validate_engine`.
 
     Parameters
     ----------
     engine : str
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : str
-        Output produced by `validate_engine`.
+        Result returned by `validate_engine`.
 
     Raises
     ------
@@ -54,17 +54,17 @@ def validate_engine(engine: str) -> str:
 def detect_dataframe_engine(df: Any) -> str:
     """Detect dataframe engine.
 
-    Use this callable to support the framework workflow step implemented by `detect_dataframe_engine`.
+    Execute `detect_dataframe_engine`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
 
     Returns
     -------
     result : str
-        Output produced by `detect_dataframe_engine`.
+        Result returned by `detect_dataframe_engine`.
 
     Raises
     ------

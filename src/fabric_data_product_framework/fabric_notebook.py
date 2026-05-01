@@ -58,17 +58,17 @@ EXAMPLE_CONFIG: Dict[str, Dict[str, Housepath]] = {
 def load_fabric_config(path: str | Path) -> dict[str, dict[str, Housepath]]:
     """Load fabric config.
 
-    Use this callable to support the framework workflow step implemented by `load_fabric_config`.
+    Execute `load_fabric_config`.
 
     Parameters
     ----------
     path : str | Path
-        Input value for `path`.
+        Value for `path`.
 
     Returns
     -------
     result : dict[str, dict[str, Housepath]]
-        Output produced by `load_fabric_config`.
+        Result returned by `load_fabric_config`.
 
     Raises
     ------
@@ -137,23 +137,23 @@ def get_path(
 ) -> Any:
     """Get path.
 
-    Use this callable to support the framework workflow step implemented by `get_path`.
+    Execute `get_path`.
 
     Parameters
     ----------
     env : str, optional
-        Input value for `env`.
+        Value for `env`.
     target : str, optional
-        Input value for `target`.
+        Value for `target`.
     config : dict | None, optional
-        Input value for `config`.
+        Value for `config`.
     use_example_config : bool, optional
-        Input value for `use_example_config`.
+        Value for `use_example_config`.
 
     Returns
     -------
     result : Any
-        Output produced by `get_path`.
+        Result returned by `get_path`.
 
     Raises
     ------
@@ -195,21 +195,21 @@ def _get_spark(spark_session=None):
 def lakehouse_table_read(lh, tablename, spark_session=None):
     """Lakehouse table read.
 
-    Use this callable to support the framework workflow step implemented by `lakehouse_table_read`.
+    Execute `lakehouse_table_read`.
 
     Parameters
     ----------
     lh : Any
-        Input value for `lh`.
+        Value for `lh`.
     tablename : Any
-        Input value for `tablename`.
+        Value for `tablename`.
     spark_session : Any, optional
-        Input value for `spark_session`.
+        Value for `spark_session`.
 
     Returns
     -------
     result : Any
-        Output produced by `lakehouse_table_read`.
+        Result returned by `lakehouse_table_read`.
 
     Raises
     ------
@@ -240,29 +240,29 @@ def lakehouse_table_write(
 ):
     """Lakehouse table write.
 
-    Use this callable to support the framework workflow step implemented by `lakehouse_table_write`.
+    Execute `lakehouse_table_write`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     lh : Any
-        Input value for `lh`.
+        Value for `lh`.
     tablename : Any
-        Input value for `tablename`.
+        Value for `tablename`.
     mode : Any, optional
-        Input value for `mode`.
+        Value for `mode`.
     partition_by : Any, optional
-        Input value for `partition_by`.
+        Value for `partition_by`.
     repartition_by : Any, optional
-        Input value for `repartition_by`.
+        Value for `repartition_by`.
     overwrite_schema : Any, optional
-        Input value for `overwrite_schema`.
+        Value for `overwrite_schema`.
 
     Returns
     -------
     result : None
-        Output produced by `lakehouse_table_write`.
+        Result returned by `lakehouse_table_write`.
 
     Raises
     ------
@@ -312,23 +312,23 @@ def lakehouse_table_write(
 def lakehouse_csv_read(lh, relative_path, spark_session=None, header=True):
     """Lakehouse csv read.
 
-    Use this callable to support the framework workflow step implemented by `lakehouse_csv_read`.
+    Execute `lakehouse_csv_read`.
 
     Parameters
     ----------
     lh : Any
-        Input value for `lh`.
+        Value for `lh`.
     relative_path : Any
-        Input value for `relative_path`.
+        Value for `relative_path`.
     spark_session : Any, optional
-        Input value for `spark_session`.
+        Value for `spark_session`.
     header : Any, optional
-        Input value for `header`.
+        Value for `header`.
 
     Returns
     -------
     result : Any
-        Output produced by `lakehouse_csv_read`.
+        Result returned by `lakehouse_csv_read`.
 
     Examples
     --------
@@ -342,27 +342,27 @@ def lakehouse_csv_read(lh, relative_path, spark_session=None, header=True):
 def warehouse_read(env, target, schema, table, config=None, spark_session=None):
     """Warehouse read.
 
-    Use this callable to support the framework workflow step implemented by `warehouse_read`.
+    Execute `warehouse_read`.
 
     Parameters
     ----------
     env : Any
-        Input value for `env`.
+        Value for `env`.
     target : Any
-        Input value for `target`.
+        Value for `target`.
     schema : Any
-        Input value for `schema`.
+        Value for `schema`.
     table : Any
-        Input value for `table`.
+        Value for `table`.
     config : Any, optional
-        Input value for `config`.
+        Value for `config`.
     spark_session : Any, optional
-        Input value for `spark_session`.
+        Value for `spark_session`.
 
     Returns
     -------
     result : Any
-        Output produced by `warehouse_read`.
+        Result returned by `warehouse_read`.
 
     Examples
     --------
@@ -383,29 +383,29 @@ def warehouse_read(env, target, schema, table, config=None, spark_session=None):
 def warehouse_write(df, env, target, schema, table, mode="append", config=None):
     """Warehouse write.
 
-    Use this callable to support the framework workflow step implemented by `warehouse_write`.
+    Execute `warehouse_write`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     env : Any
-        Input value for `env`.
+        Value for `env`.
     target : Any
-        Input value for `target`.
+        Value for `target`.
     schema : Any
-        Input value for `schema`.
+        Value for `schema`.
     table : Any
-        Input value for `table`.
+        Value for `table`.
     mode : Any, optional
-        Input value for `mode`.
+        Value for `mode`.
     config : Any, optional
-        Input value for `config`.
+        Value for `config`.
 
     Returns
     -------
     result : None
-        Output produced by `warehouse_write`.
+        Result returned by `warehouse_write`.
 
     Examples
     --------
@@ -426,21 +426,21 @@ def warehouse_write(df, env, target, schema, table, mode="append", config=None):
 def single_file_ns_to_us(local_in_path, local_out_path, verbose=True):
     """Single file ns to us.
 
-    Use this callable to support the framework workflow step implemented by `single_file_ns_to_us`.
+    Execute `single_file_ns_to_us`.
 
     Parameters
     ----------
     local_in_path : Any
-        Input value for `local_in_path`.
+        Value for `local_in_path`.
     local_out_path : Any
-        Input value for `local_out_path`.
+        Value for `local_out_path`.
     verbose : Any, optional
-        Input value for `verbose`.
+        Value for `verbose`.
 
     Returns
     -------
     result : None
-        Output produced by `single_file_ns_to_us`.
+        Result returned by `single_file_ns_to_us`.
 
     Examples
     --------
@@ -470,23 +470,23 @@ def single_file_ns_to_us(local_in_path, local_out_path, verbose=True):
 def lakehouse_parquet_read_as_spark(lh, relative_path, verbose=True, spark_session=None):
     """Lakehouse parquet read as spark.
 
-    Use this callable to support the framework workflow step implemented by `lakehouse_parquet_read_as_spark`.
+    Execute `lakehouse_parquet_read_as_spark`.
 
     Parameters
     ----------
     lh : Any
-        Input value for `lh`.
+        Value for `lh`.
     relative_path : Any
-        Input value for `relative_path`.
+        Value for `relative_path`.
     verbose : Any, optional
-        Input value for `verbose`.
+        Value for `verbose`.
     spark_session : Any, optional
-        Input value for `spark_session`.
+        Value for `spark_session`.
 
     Returns
     -------
     result : Any
-        Output produced by `lakehouse_parquet_read_as_spark`.
+        Result returned by `lakehouse_parquet_read_as_spark`.
 
     Raises
     ------
@@ -566,23 +566,23 @@ def lakehouse_parquet_read_as_spark(lh, relative_path, verbose=True, spark_sessi
 def lakehouse_excel_read_as_spark(lh, relative_path, sheet_name=0, spark_session=None):
     """Lakehouse excel read as spark.
 
-    Use this callable to support the framework workflow step implemented by `lakehouse_excel_read_as_spark`.
+    Execute `lakehouse_excel_read_as_spark`.
 
     Parameters
     ----------
     lh : Any
-        Input value for `lh`.
+        Value for `lh`.
     relative_path : Any
-        Input value for `relative_path`.
+        Value for `relative_path`.
     sheet_name : Any, optional
-        Input value for `sheet_name`.
+        Value for `sheet_name`.
     spark_session : Any, optional
-        Input value for `spark_session`.
+        Value for `spark_session`.
 
     Returns
     -------
     result : Any
-        Output produced by `lakehouse_excel_read_as_spark`.
+        Result returned by `lakehouse_excel_read_as_spark`.
 
     Raises
     ------
@@ -636,21 +636,21 @@ def _get_fabric_runtime_context():
 def check_naming_convention(notebook_name=None, allowed_prefixes=None, fail_on_error=True):
     """Check naming convention.
 
-    Use this callable to support the framework workflow step implemented by `check_naming_convention`.
+    Execute `check_naming_convention`.
 
     Parameters
     ----------
     notebook_name : Any, optional
-        Input value for `notebook_name`.
+        Value for `notebook_name`.
     allowed_prefixes : Any, optional
-        Input value for `allowed_prefixes`.
+        Value for `allowed_prefixes`.
     fail_on_error : Any, optional
-        Input value for `fail_on_error`.
+        Value for `fail_on_error`.
 
     Returns
     -------
     result : Any
-        Output produced by `check_naming_convention`.
+        Result returned by `check_naming_convention`.
 
     Raises
     ------
@@ -706,25 +706,25 @@ def check_naming_convention(notebook_name=None, allowed_prefixes=None, fail_on_e
 def clean_datetime_columns(df, datetime_col, prefix, tz_region="Asia/Singapore", time_block_col="TIME_BLOCK_30_MIN"):
     """Clean datetime columns.
 
-    Use this callable to support the framework workflow step implemented by `clean_datetime_columns`.
+    Execute `clean_datetime_columns`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     datetime_col : Any
-        Input value for `datetime_col`.
+        Value for `datetime_col`.
     prefix : Any
-        Input value for `prefix`.
+        Value for `prefix`.
     tz_region : Any, optional
-        Input value for `tz_region`.
+        Value for `tz_region`.
     time_block_col : Any, optional
-        Input value for `time_block_col`.
+        Value for `time_block_col`.
 
     Returns
     -------
     result : Any
-        Output produced by `clean_datetime_columns`.
+        Result returned by `clean_datetime_columns`.
 
     Raises
     ------
@@ -762,27 +762,27 @@ def clean_datetime_columns(df, datetime_col, prefix, tz_region="Asia/Singapore",
 def add_system_technical_columns(df, hash_col, bucket_size=512, run_id=None, notebook_name=None, loaded_by=None):
     """Add system technical columns.
 
-    Use this callable to support the framework workflow step implemented by `add_system_technical_columns`.
+    Execute `add_system_technical_columns`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     hash_col : Any
-        Input value for `hash_col`.
+        Value for `hash_col`.
     bucket_size : Any, optional
-        Input value for `bucket_size`.
+        Value for `bucket_size`.
     run_id : Any, optional
-        Input value for `run_id`.
+        Value for `run_id`.
     notebook_name : Any, optional
-        Input value for `notebook_name`.
+        Value for `notebook_name`.
     loaded_by : Any, optional
-        Input value for `loaded_by`.
+        Value for `loaded_by`.
 
     Returns
     -------
     result : Any
-        Output produced by `add_system_technical_columns`.
+        Result returned by `add_system_technical_columns`.
 
     Raises
     ------
@@ -826,19 +826,19 @@ def add_system_technical_columns(df, hash_col, bucket_size=512, run_id=None, not
 def pass_if_yes_else_run(condition, code):
     """Pass if yes else run.
 
-    Use this callable to support the framework workflow step implemented by `pass_if_yes_else_run`.
+    Execute `pass_if_yes_else_run`.
 
     Parameters
     ----------
     condition : Any
-        Input value for `condition`.
+        Value for `condition`.
     code : Any
-        Input value for `code`.
+        Value for `code`.
 
     Returns
     -------
     result : Any
-        Output produced by `pass_if_yes_else_run`.
+        Result returned by `pass_if_yes_else_run`.
 
     Examples
     --------
@@ -853,23 +853,23 @@ def pass_if_yes_else_run(condition, code):
 def ODI_METADATA_LOGGER(df, tablename: str, exclude_columns=None, run_timestamp_timezone="Asia/Singapore"):
     """Odi metadata logger.
 
-    Use this callable to support the framework workflow step implemented by `ODI_METADATA_LOGGER`.
+    Execute `ODI_METADATA_LOGGER`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     tablename : str
-        Input value for `tablename`.
+        Value for `tablename`.
     exclude_columns : Any, optional
-        Input value for `exclude_columns`.
+        Value for `exclude_columns`.
     run_timestamp_timezone : Any, optional
-        Input value for `run_timestamp_timezone`.
+        Value for `run_timestamp_timezone`.
 
     Returns
     -------
     result : Any
-        Output produced by `ODI_METADATA_LOGGER`.
+        Result returned by `ODI_METADATA_LOGGER`.
 
     Raises
     ------
@@ -946,17 +946,17 @@ def ODI_METADATA_LOGGER(df, tablename: str, exclude_columns=None, run_timestamp_
 def transformation_summary(code: str):
     """Transformation summary.
 
-    Use this callable to support the framework workflow step implemented by `transformation_summary`.
+    Execute `transformation_summary`.
 
     Parameters
     ----------
     code : str
-        Input value for `code`.
+        Value for `code`.
 
     Returns
     -------
     result : Any
-        Output produced by `transformation_summary`.
+        Result returned by `transformation_summary`.
 
     Examples
     --------
@@ -1005,21 +1005,21 @@ def transformation_summary(code: str):
 def transformation_reasons(pdf, reason, spark_session=None):
     """Transformation reasons.
 
-    Use this callable to support the framework workflow step implemented by `transformation_reasons`.
+    Execute `transformation_reasons`.
 
     Parameters
     ----------
     pdf : Any
-        Input value for `pdf`.
+        Value for `pdf`.
     reason : Any
-        Input value for `reason`.
+        Value for `reason`.
     spark_session : Any, optional
-        Input value for `spark_session`.
+        Value for `spark_session`.
 
     Returns
     -------
     result : Any
-        Output produced by `transformation_reasons`.
+        Result returned by `transformation_reasons`.
 
     Raises
     ------

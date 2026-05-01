@@ -27,7 +27,7 @@ REQUIRED_HANDOVER_PACK_KEYS = ["profile", "dq", "governance", "lineage", "run_su
 def get_mvp_step_registry() -> list[dict[str, Any]]:
     """Get mvp step registry.
 
-    Use this callable to support the framework workflow step implemented by `get_mvp_step_registry`.
+    Execute `get_mvp_step_registry`.
 
     Parameters
     ----------
@@ -37,7 +37,7 @@ def get_mvp_step_registry() -> list[dict[str, Any]]:
     Returns
     -------
     result : list[dict[str, Any]]
-        Output produced by `get_mvp_step_registry`.
+        Result returned by `get_mvp_step_registry`.
 
     Examples
     --------
@@ -49,17 +49,17 @@ def get_mvp_step_registry() -> list[dict[str, Any]]:
 def validate_mvp_artifacts(artifacts: dict[str, Any]) -> dict[str, Any]:
     """Validate mvp artifacts.
 
-    Use this callable to support the framework workflow step implemented by `validate_mvp_artifacts`.
+    Execute `validate_mvp_artifacts`.
 
     Parameters
     ----------
     artifacts : dict[str, Any]
-        Input value for `artifacts`.
+        Value for `artifacts`.
 
     Returns
     -------
     result : dict[str, Any]
-        Output produced by `validate_mvp_artifacts`.
+        Result returned by `validate_mvp_artifacts`.
 
     Examples
     --------

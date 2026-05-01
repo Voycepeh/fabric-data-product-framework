@@ -17,23 +17,23 @@ def _severity_bucket(severity: str) -> str:
 def build_quarantine_rule_coverage_records(rules, run_id, dataset_name, table_name):
     """Build quarantine rule coverage records.
 
-    Use this callable to support the framework workflow step implemented by `build_quarantine_rule_coverage_records`.
+    Execute `build_quarantine_rule_coverage_records`.
 
     Parameters
     ----------
     rules : Any
-        Input value for `rules`.
+        Value for `rules`.
     run_id : Any
-        Input value for `run_id`.
+        Value for `run_id`.
     dataset_name : Any
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : Any
-        Input value for `table_name`.
+        Value for `table_name`.
 
     Returns
     -------
     result : Any
-        Output produced by `build_quarantine_rule_coverage_records`.
+        Result returned by `build_quarantine_rule_coverage_records`.
 
     Examples
     --------
@@ -55,21 +55,21 @@ def build_quarantine_rule_coverage_records(rules, run_id, dataset_name, table_na
 def add_dq_failure_columns(df, rules, engine="auto"):
     """Add dq failure columns.
 
-    Use this callable to support the framework workflow step implemented by `add_dq_failure_columns`.
+    Execute `add_dq_failure_columns`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     rules : Any
-        Input value for `rules`.
+        Value for `rules`.
     engine : Any, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : Any
-        Output produced by `add_dq_failure_columns`.
+        Result returned by `add_dq_failure_columns`.
 
     Examples
     --------
@@ -82,21 +82,21 @@ def add_dq_failure_columns(df, rules, engine="auto"):
 def split_valid_and_quarantine(df, rules, engine="auto"):
     """Split valid and quarantine.
 
-    Use this callable to support the framework workflow step implemented by `split_valid_and_quarantine`.
+    Execute `split_valid_and_quarantine`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     rules : Any
-        Input value for `rules`.
+        Value for `rules`.
     engine : Any, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : Any
-        Output produced by `split_valid_and_quarantine`.
+        Result returned by `split_valid_and_quarantine`.
 
     Examples
     --------
@@ -113,25 +113,25 @@ def split_valid_and_quarantine(df, rules, engine="auto"):
 def build_quarantine_summary_records(quarantine_df, run_id, dataset_name, table_name, engine="auto"):
     """Build quarantine summary records.
 
-    Use this callable to support the framework workflow step implemented by `build_quarantine_summary_records`.
+    Execute `build_quarantine_summary_records`.
 
     Parameters
     ----------
     quarantine_df : Any
-        Input value for `quarantine_df`.
+        Value for `quarantine_df`.
     run_id : Any
-        Input value for `run_id`.
+        Value for `run_id`.
     dataset_name : Any
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : Any
-        Input value for `table_name`.
+        Value for `table_name`.
     engine : Any, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : Any
-        Output produced by `build_quarantine_summary_records`.
+        Result returned by `build_quarantine_summary_records`.
 
     Examples
     --------

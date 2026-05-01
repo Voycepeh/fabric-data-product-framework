@@ -31,29 +31,27 @@ def _jsonable(value: Any) -> Any:
 
 
 def build_transformation_summary_prompt_context(lineage_summary, code_snippets=None, runtime_metrics=None, business_context=None):
-    """Build transformation summary prompt context.
-
-    Use this callable to support the framework workflow step implemented by `build_transformation_summary_prompt_context`.
+    """Build the AI prompt context payload for transformation summaries.
 
     Parameters
     ----------
-    lineage_summary : Any
-        Input value for `lineage_summary`.
-    code_snippets : Any, optional
-        Input value for `code_snippets`.
-    runtime_metrics : Any, optional
-        Input value for `runtime_metrics`.
-    business_context : Any, optional
-        Input value for `business_context`.
+    lineage_summary : dict
+        Lineage summary payload describing transformation steps and data flow.
+    code_snippets : list[str] or list[dict], optional
+        Optional source snippets or extracted transformation code fragments used
+        as evidence for the summary.
+    runtime_metrics : dict, optional
+        Optional runtime statistics such as row counts, durations, or resource
+        usage that help ground the generated text.
+    business_context : dict, optional
+        Optional business explanation or stakeholder notes that should shape the
+        non-technical summary.
 
     Returns
     -------
-    result : Any
-        Output produced by `build_transformation_summary_prompt_context`.
-
-    Examples
-    --------
-    >>> build_transformation_summary_prompt_context(lineage_summary, code_snippets)
+    dict
+        Context dictionary with keys ``lineage_summary``, ``code_snippets``,
+        ``runtime_metrics``, ``business_context``, and ``instructions``.
     """
     return {
         "lineage_summary": _jsonable(lineage_summary or {}),
@@ -70,23 +68,23 @@ def build_transformation_summary_prompt_context(lineage_summary, code_snippets=N
 def build_transformation_summary_generation_prompt(lineage_summary, code_snippets=None, runtime_metrics=None, business_context=None):
     """Build transformation summary generation prompt.
 
-    Use this callable to support the framework workflow step implemented by `build_transformation_summary_generation_prompt`.
+    Execute `build_transformation_summary_generation_prompt`.
 
     Parameters
     ----------
     lineage_summary : Any
-        Input value for `lineage_summary`.
+        Value for `lineage_summary`.
     code_snippets : Any, optional
-        Input value for `code_snippets`.
+        Value for `code_snippets`.
     runtime_metrics : Any, optional
-        Input value for `runtime_metrics`.
+        Value for `runtime_metrics`.
     business_context : Any, optional
-        Input value for `business_context`.
+        Value for `business_context`.
 
     Returns
     -------
     result : Any
-        Output produced by `build_transformation_summary_generation_prompt`.
+        Result returned by `build_transformation_summary_generation_prompt`.
 
     Examples
     --------
@@ -109,23 +107,19 @@ def _strip_fences(text: str) -> str:
 
 
 def normalize_transformation_summary_candidate(candidate):
-    """Normalize transformation summary candidate.
-
-    Use this callable to support the framework workflow step implemented by `normalize_transformation_summary_candidate`.
+    """Normalize one AI-generated transformation summary object.
 
     Parameters
     ----------
-    candidate : Any
-        Input value for `candidate`.
+    candidate : dict
+        Mapping parsed from an AI response for a single transformation step.
 
     Returns
     -------
-    result : Any
-        Output produced by `normalize_transformation_summary_candidate`.
-
-    Examples
-    --------
-    >>> normalize_transformation_summary_candidate(candidate)
+    dict
+        Normalized summary record where required fields are preserved, default
+        values are set for ``approval_status`` and ``confidence``, evidence is
+        coerced to a list, and unknown fields are moved under ``metadata``.
     """
     known = {k: candidate.get(k) for k in REQUIRED_FIELDS if k in candidate}
     metadata = {k: v for k, v in candidate.items() if k not in REQUIRED_FIELDS}
@@ -137,23 +131,20 @@ def normalize_transformation_summary_candidate(candidate):
 
 
 def parse_ai_transformation_summaries(raw_response):
-    """Parse ai transformation summaries.
-
-    Use this callable to support the framework workflow step implemented by `parse_ai_transformation_summaries`.
+    """Parse and validate AI output for transformation summaries.
 
     Parameters
     ----------
-    raw_response : Any
-        Input value for `raw_response`.
+    raw_response : str or list[dict] or dict
+        JSON string (optionally fenced with ```json ... ```), or an already
+        parsed payload returned by an AI client.
 
     Returns
     -------
-    result : Any
-        Output produced by `parse_ai_transformation_summaries`.
-
-    Examples
-    --------
-    >>> parse_ai_transformation_summaries(raw_response)
+    dict
+        Validation payload with keys:
+        ``ok`` (bool), ``candidates`` (list[dict]), and ``errors`` (list[str]).
+        Candidate objects are normalized before field validation.
     """
     try:
         payload = json.loads(_strip_fences(raw_response)) if isinstance(raw_response, str) else raw_response
@@ -177,23 +168,23 @@ def parse_ai_transformation_summaries(raw_response):
 def build_transformation_summary_records(candidates, run_id, dataset_name, table_name):
     """Build transformation summary records.
 
-    Use this callable to support the framework workflow step implemented by `build_transformation_summary_records`.
+    Execute `build_transformation_summary_records`.
 
     Parameters
     ----------
     candidates : Any
-        Input value for `candidates`.
+        Value for `candidates`.
     run_id : Any
-        Input value for `run_id`.
+        Value for `run_id`.
     dataset_name : Any
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : Any
-        Input value for `table_name`.
+        Value for `table_name`.
 
     Returns
     -------
     result : Any
-        Output produced by `build_transformation_summary_records`.
+        Result returned by `build_transformation_summary_records`.
 
     Examples
     --------

@@ -64,27 +64,27 @@ def generate_dq_rule_candidates_with_fabric_ai(
 ) -> list[dict]:
     """Generate dq rule candidates with fabric ai.
 
-    Use this callable to support the framework workflow step implemented by `generate_dq_rule_candidates_with_fabric_ai`.
+    Execute `generate_dq_rule_candidates_with_fabric_ai`.
 
     Parameters
     ----------
     profile : Any
-        Input value for `profile`.
+        Value for `profile`.
     contract : Any, optional
-        Input value for `contract`.
+        Value for `contract`.
     business_context : Any, optional
-        Input value for `business_context`.
+        Value for `business_context`.
     dataset_name : Any, optional
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : Any, optional
-        Input value for `table_name`.
+        Value for `table_name`.
     response_format : Any, optional
-        Input value for `response_format`.
+        Value for `response_format`.
 
     Returns
     -------
     result : list[dict]
-        Output produced by `generate_dq_rule_candidates_with_fabric_ai`.
+        Result returned by `generate_dq_rule_candidates_with_fabric_ai`.
 
     Raises
     ------
@@ -152,25 +152,25 @@ def generate_dq_rule_candidates(
 ) -> list[dict]:
     """Generate dq rule candidates.
 
-    Use this callable to support the framework workflow step implemented by `generate_dq_rule_candidates`.
+    Execute `generate_dq_rule_candidates`.
 
     Parameters
     ----------
     profile : dict
-        Input value for `profile`.
+        Value for `profile`.
     metadata : dict | None, optional
-        Input value for `metadata`.
+        Value for `metadata`.
     business_context : str | dict | None, optional
-        Input value for `business_context`.
+        Value for `business_context`.
     dataset_name : str | None, optional
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str | None, optional
-        Input value for `table_name`.
+        Value for `table_name`.
 
     Returns
     -------
     result : list[dict]
-        Output produced by `generate_dq_rule_candidates`.
+        Result returned by `generate_dq_rule_candidates`.
 
     Examples
     --------
@@ -215,17 +215,17 @@ def generate_dq_rule_candidates(
 def normalize_dq_rule(rule: dict) -> dict:
     """Normalize dq rule.
 
-    Use this callable to support the framework workflow step implemented by `normalize_dq_rule`.
+    Execute `normalize_dq_rule`.
 
     Parameters
     ----------
     rule : dict
-        Input value for `rule`.
+        Value for `rule`.
 
     Returns
     -------
     result : dict
-        Output produced by `normalize_dq_rule`.
+        Result returned by `normalize_dq_rule`.
 
     Examples
     --------
@@ -276,17 +276,17 @@ def normalize_dq_rule(rule: dict) -> dict:
 def normalize_dq_rules(rules: list[dict] | None) -> list[dict]:
     """Normalize dq rules.
 
-    Use this callable to support the framework workflow step implemented by `normalize_dq_rules`.
+    Execute `normalize_dq_rules`.
 
     Parameters
     ----------
     rules : list[dict] | None
-        Input value for `rules`.
+        Value for `rules`.
 
     Returns
     -------
     result : list[dict]
-        Output produced by `normalize_dq_rules`.
+        Result returned by `normalize_dq_rules`.
 
     Examples
     --------
@@ -298,27 +298,27 @@ def normalize_dq_rules(rules: list[dict] | None) -> list[dict]:
 def build_dq_rule_records(rules: list[dict], dataset_name: str, table_name: str, run_id: str | None = None, status: str = "candidate", generated_by: str = "framework") -> list[dict]:
     """Build dq rule records.
 
-    Use this callable to support the framework workflow step implemented by `build_dq_rule_records`.
+    Execute `build_dq_rule_records`.
 
     Parameters
     ----------
     rules : list[dict]
-        Input value for `rules`.
+        Value for `rules`.
     dataset_name : str
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str
-        Input value for `table_name`.
+        Value for `table_name`.
     run_id : str | None, optional
-        Input value for `run_id`.
+        Value for `run_id`.
     status : str, optional
-        Input value for `status`.
+        Value for `status`.
     generated_by : str, optional
-        Input value for `generated_by`.
+        Value for `generated_by`.
 
     Returns
     -------
     result : list[dict]
-        Output produced by `build_dq_rule_records`.
+        Result returned by `build_dq_rule_records`.
 
     Examples
     --------
@@ -345,33 +345,33 @@ def build_dq_rule_records(rules: list[dict], dataset_name: str, table_name: str,
 def store_dq_rules(spark, rules: list[dict], table_name: str, dataset_name: str | None = None, source_table: str | None = None, run_id: str | None = None, status: str = "candidate", generated_by: str = "framework", mode: str = "append") -> list[dict]:
     """Store dq rules.
 
-    Use this callable to support the framework workflow step implemented by `store_dq_rules`.
+    Execute `store_dq_rules`.
 
     Parameters
     ----------
     spark : Any
-        Input value for `spark`.
+        Value for `spark`.
     rules : list[dict]
-        Input value for `rules`.
+        Value for `rules`.
     table_name : str
-        Input value for `table_name`.
+        Value for `table_name`.
     dataset_name : str | None, optional
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     source_table : str | None, optional
-        Input value for `source_table`.
+        Value for `source_table`.
     run_id : str | None, optional
-        Input value for `run_id`.
+        Value for `run_id`.
     status : str, optional
-        Input value for `status`.
+        Value for `status`.
     generated_by : str, optional
-        Input value for `generated_by`.
+        Value for `generated_by`.
     mode : str, optional
-        Input value for `mode`.
+        Value for `mode`.
 
     Returns
     -------
     result : list[dict]
-        Output produced by `store_dq_rules`.
+        Result returned by `store_dq_rules`.
 
     Examples
     --------
@@ -388,25 +388,25 @@ def store_dq_rules(spark, rules: list[dict], table_name: str, dataset_name: str 
 def load_dq_rules(spark, table_name: str, dataset_name: str | None = None, source_table: str | None = None, status: str | list[str] = "approved") -> list[dict]:
     """Load dq rules.
 
-    Use this callable to support the framework workflow step implemented by `load_dq_rules`.
+    Execute `load_dq_rules`.
 
     Parameters
     ----------
     spark : Any
-        Input value for `spark`.
+        Value for `spark`.
     table_name : str
-        Input value for `table_name`.
+        Value for `table_name`.
     dataset_name : str | None, optional
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     source_table : str | None, optional
-        Input value for `source_table`.
+        Value for `source_table`.
     status : str | list[str], optional
-        Input value for `status`.
+        Value for `status`.
 
     Returns
     -------
     result : list[dict]
-        Output produced by `load_dq_rules`.
+        Result returned by `load_dq_rules`.
 
     Examples
     --------
@@ -442,27 +442,27 @@ def load_dq_rules(spark, table_name: str, dataset_name: str | None = None, sourc
 def run_dq_rules(df, rules: list[dict], dataset_name: str, table_name: str, engine: str = "spark", fail_on: str = "critical") -> dict:
     """Run dq rules.
 
-    Use this callable to support the framework workflow step implemented by `run_dq_rules`.
+    Execute `run_dq_rules`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     rules : list[dict]
-        Input value for `rules`.
+        Value for `rules`.
     dataset_name : str
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str
-        Input value for `table_name`.
+        Value for `table_name`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
     fail_on : str, optional
-        Input value for `fail_on`.
+        Value for `fail_on`.
 
     Returns
     -------
     result : dict
-        Output produced by `run_dq_rules`.
+        Result returned by `run_dq_rules`.
 
     Examples
     --------
@@ -492,35 +492,35 @@ def run_dq_rules(df, rules: list[dict], dataset_name: str, table_name: str, engi
 def run_dq_workflow(spark, df, quality_contract, dataset_name: str, table_name: str, run_id: str | None = None, profile: dict | None = None, metadata: dict | None = None, business_context: str | dict | None = None, engine: str = "spark") -> dict:
     """Run dq workflow.
 
-    Use this callable to support the framework workflow step implemented by `run_dq_workflow`.
+    Execute `run_dq_workflow`.
 
     Parameters
     ----------
     spark : Any
-        Input value for `spark`.
+        Value for `spark`.
     df : Any
-        Input value for `df`.
+        Value for `df`.
     quality_contract : Any
-        Input value for `quality_contract`.
+        Value for `quality_contract`.
     dataset_name : str
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str
-        Input value for `table_name`.
+        Value for `table_name`.
     run_id : str | None, optional
-        Input value for `run_id`.
+        Value for `run_id`.
     profile : dict | None, optional
-        Input value for `profile`.
+        Value for `profile`.
     metadata : dict | None, optional
-        Input value for `metadata`.
+        Value for `metadata`.
     business_context : str | dict | None, optional
-        Input value for `business_context`.
+        Value for `business_context`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : dict
-        Output produced by `run_dq_workflow`.
+        Result returned by `run_dq_workflow`.
 
     Examples
     --------

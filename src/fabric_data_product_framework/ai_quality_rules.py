@@ -28,25 +28,25 @@ def _jsonable(value: Any) -> Any:
 def build_quality_rule_prompt_context(profile, contract=None, business_context=None, table_name=None, dataset_name=None):
     """Build quality rule prompt context.
 
-    Use this callable to support the framework workflow step implemented by `build_quality_rule_prompt_context`.
+    Execute `build_quality_rule_prompt_context`.
 
     Parameters
     ----------
     profile : Any
-        Input value for `profile`.
+        Value for `profile`.
     contract : Any, optional
-        Input value for `contract`.
+        Value for `contract`.
     business_context : Any, optional
-        Input value for `business_context`.
+        Value for `business_context`.
     table_name : Any, optional
-        Input value for `table_name`.
+        Value for `table_name`.
     dataset_name : Any, optional
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
 
     Returns
     -------
     result : Any
-        Output produced by `build_quality_rule_prompt_context`.
+        Result returned by `build_quality_rule_prompt_context`.
 
     Examples
     --------
@@ -67,25 +67,25 @@ def build_quality_rule_prompt_context(profile, contract=None, business_context=N
 def build_quality_rule_generation_prompt(profile, contract=None, business_context=None, table_name=None, dataset_name=None):
     """Build quality rule generation prompt.
 
-    Use this callable to support the framework workflow step implemented by `build_quality_rule_generation_prompt`.
+    Execute `build_quality_rule_generation_prompt`.
 
     Parameters
     ----------
     profile : Any
-        Input value for `profile`.
+        Value for `profile`.
     contract : Any, optional
-        Input value for `contract`.
+        Value for `contract`.
     business_context : Any, optional
-        Input value for `business_context`.
+        Value for `business_context`.
     table_name : Any, optional
-        Input value for `table_name`.
+        Value for `table_name`.
     dataset_name : Any, optional
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
 
     Returns
     -------
     result : Any
-        Output produced by `build_quality_rule_generation_prompt`.
+        Result returned by `build_quality_rule_generation_prompt`.
 
     Examples
     --------
@@ -115,17 +115,17 @@ def _strip_json_fences(text: str) -> str:
 def parse_ai_quality_rule_candidates(raw_response):
     """Parse ai quality rule candidates.
 
-    Use this callable to support the framework workflow step implemented by `parse_ai_quality_rule_candidates`.
+    Execute `parse_ai_quality_rule_candidates`.
 
     Parameters
     ----------
     raw_response : Any
-        Input value for `raw_response`.
+        Value for `raw_response`.
 
     Returns
     -------
     result : Any
-        Output produced by `parse_ai_quality_rule_candidates`.
+        Result returned by `parse_ai_quality_rule_candidates`.
 
     Examples
     --------
@@ -159,17 +159,17 @@ def parse_ai_quality_rule_candidates(raw_response):
 def normalize_quality_rule_candidate(candidate):
     """Normalize quality rule candidate.
 
-    Use this callable to support the framework workflow step implemented by `normalize_quality_rule_candidate`.
+    Execute `normalize_quality_rule_candidate`.
 
     Parameters
     ----------
     candidate : Any
-        Input value for `candidate`.
+        Value for `candidate`.
 
     Returns
     -------
     result : Any
-        Output produced by `normalize_quality_rule_candidate`.
+        Result returned by `normalize_quality_rule_candidate`.
 
     Examples
     --------
@@ -191,17 +191,17 @@ def normalize_quality_rule_candidate(candidate):
 def validate_ai_quality_rule_candidate(candidate):
     """Validate ai quality rule candidate.
 
-    Use this callable to support the framework workflow step implemented by `validate_ai_quality_rule_candidate`.
+    Execute `validate_ai_quality_rule_candidate`.
 
     Parameters
     ----------
     candidate : Any
-        Input value for `candidate`.
+        Value for `candidate`.
 
     Returns
     -------
     result : Any
-        Output produced by `validate_ai_quality_rule_candidate`.
+        Result returned by `validate_ai_quality_rule_candidate`.
 
     Examples
     --------
@@ -222,23 +222,23 @@ def validate_ai_quality_rule_candidate(candidate):
 def build_layman_rule_records(candidates, run_id, dataset_name, table_name):
     """Build layman rule records.
 
-    Use this callable to support the framework workflow step implemented by `build_layman_rule_records`.
+    Execute `build_layman_rule_records`.
 
     Parameters
     ----------
     candidates : Any
-        Input value for `candidates`.
+        Value for `candidates`.
     run_id : Any
-        Input value for `run_id`.
+        Value for `run_id`.
     dataset_name : Any
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : Any
-        Input value for `table_name`.
+        Value for `table_name`.
 
     Returns
     -------
     result : Any
-        Output produced by `build_layman_rule_records`.
+        Result returned by `build_layman_rule_records`.
 
     Examples
     --------

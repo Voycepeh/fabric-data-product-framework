@@ -42,27 +42,27 @@ def _write_metadata_rows(spark, metadata_table: str, records: list[dict], mode: 
 def check_schema_drift(df, dataset_name: str, table_name: str, baseline_snapshot: dict | None = None, policy: dict | None = None, engine: str = "spark") -> dict:
     """Check schema drift.
 
-    Use this callable to support the framework workflow step implemented by `check_schema_drift`.
+    Execute `check_schema_drift`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     dataset_name : str
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str
-        Input value for `table_name`.
+        Value for `table_name`.
     baseline_snapshot : dict | None, optional
-        Input value for `baseline_snapshot`.
+        Value for `baseline_snapshot`.
     policy : dict | None, optional
-        Input value for `policy`.
+        Value for `policy`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : dict
-        Output produced by `check_schema_drift`.
+        Result returned by `check_schema_drift`.
 
     Examples
     --------
@@ -98,31 +98,31 @@ def check_schema_drift(df, dataset_name: str, table_name: str, baseline_snapshot
 def build_and_write_schema_snapshot(spark, df, dataset_name: str, table_name: str, metadata_table: str, run_id: str | None = None, mode: str = "append", engine: str = "spark") -> dict:
     """Build and write schema snapshot.
 
-    Use this callable to support the framework workflow step implemented by `build_and_write_schema_snapshot`.
+    Execute `build_and_write_schema_snapshot`.
 
     Parameters
     ----------
     spark : Any
-        Input value for `spark`.
+        Value for `spark`.
     df : Any
-        Input value for `df`.
+        Value for `df`.
     dataset_name : str
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str
-        Input value for `table_name`.
+        Value for `table_name`.
     metadata_table : str
-        Input value for `metadata_table`.
+        Value for `metadata_table`.
     run_id : str | None, optional
-        Input value for `run_id`.
+        Value for `run_id`.
     mode : str, optional
-        Input value for `mode`.
+        Value for `mode`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : dict
-        Output produced by `build_and_write_schema_snapshot`.
+        Result returned by `build_and_write_schema_snapshot`.
 
     Examples
     --------
@@ -146,23 +146,23 @@ def build_and_write_schema_snapshot(spark, df, dataset_name: str, table_name: st
 def load_latest_schema_snapshot(spark, metadata_table: str, dataset_name: str, table_name: str) -> dict | None:
     """Load latest schema snapshot.
 
-    Use this callable to support the framework workflow step implemented by `load_latest_schema_snapshot`.
+    Execute `load_latest_schema_snapshot`.
 
     Parameters
     ----------
     spark : Any
-        Input value for `spark`.
+        Value for `spark`.
     metadata_table : str
-        Input value for `metadata_table`.
+        Value for `metadata_table`.
     dataset_name : str
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str
-        Input value for `table_name`.
+        Value for `table_name`.
 
     Returns
     -------
     result : dict | None
-        Output produced by `load_latest_schema_snapshot`.
+        Result returned by `load_latest_schema_snapshot`.
 
     Examples
     --------
@@ -204,35 +204,35 @@ def load_latest_schema_snapshot(spark, metadata_table: str, dataset_name: str, t
 def check_partition_drift(df, dataset_name: str, table_name: str, partition_column: str, business_keys: list[str] | None = None, watermark_column: str | None = None, baseline_snapshot: list[dict] | dict | None = None, policy: dict | None = None, run_id: str | None = None, engine: str = "spark") -> dict:
     """Check partition drift.
 
-    Use this callable to support the framework workflow step implemented by `check_partition_drift`.
+    Execute `check_partition_drift`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     dataset_name : str
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str
-        Input value for `table_name`.
+        Value for `table_name`.
     partition_column : str
-        Input value for `partition_column`.
+        Value for `partition_column`.
     business_keys : list[str] | None, optional
-        Input value for `business_keys`.
+        Value for `business_keys`.
     watermark_column : str | None, optional
-        Input value for `watermark_column`.
+        Value for `watermark_column`.
     baseline_snapshot : list[dict] | dict | None, optional
-        Input value for `baseline_snapshot`.
+        Value for `baseline_snapshot`.
     policy : dict | None, optional
-        Input value for `policy`.
+        Value for `policy`.
     run_id : str | None, optional
-        Input value for `run_id`.
+        Value for `run_id`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : dict
-        Output produced by `check_partition_drift`.
+        Result returned by `check_partition_drift`.
 
     Raises
     ------
@@ -286,37 +286,37 @@ def check_partition_drift(df, dataset_name: str, table_name: str, partition_colu
 def build_and_write_partition_snapshot(spark, df, dataset_name: str, table_name: str, metadata_table: str, partition_column: str, business_keys: list[str] | None = None, watermark_column: str | None = None, run_id: str | None = None, mode: str = "append", engine: str = "spark") -> dict:
     """Build and write partition snapshot.
 
-    Use this callable to support the framework workflow step implemented by `build_and_write_partition_snapshot`.
+    Execute `build_and_write_partition_snapshot`.
 
     Parameters
     ----------
     spark : Any
-        Input value for `spark`.
+        Value for `spark`.
     df : Any
-        Input value for `df`.
+        Value for `df`.
     dataset_name : str
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str
-        Input value for `table_name`.
+        Value for `table_name`.
     metadata_table : str
-        Input value for `metadata_table`.
+        Value for `metadata_table`.
     partition_column : str
-        Input value for `partition_column`.
+        Value for `partition_column`.
     business_keys : list[str] | None, optional
-        Input value for `business_keys`.
+        Value for `business_keys`.
     watermark_column : str | None, optional
-        Input value for `watermark_column`.
+        Value for `watermark_column`.
     run_id : str | None, optional
-        Input value for `run_id`.
+        Value for `run_id`.
     mode : str, optional
-        Input value for `mode`.
+        Value for `mode`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : dict
-        Output produced by `build_and_write_partition_snapshot`.
+        Result returned by `build_and_write_partition_snapshot`.
 
     Raises
     ------
@@ -360,23 +360,23 @@ def build_and_write_partition_snapshot(spark, df, dataset_name: str, table_name:
 def load_latest_partition_snapshot(spark, metadata_table: str, dataset_name: str, table_name: str) -> list[dict] | dict | None:
     """Load latest partition snapshot.
 
-    Use this callable to support the framework workflow step implemented by `load_latest_partition_snapshot`.
+    Execute `load_latest_partition_snapshot`.
 
     Parameters
     ----------
     spark : Any
-        Input value for `spark`.
+        Value for `spark`.
     metadata_table : str
-        Input value for `metadata_table`.
+        Value for `metadata_table`.
     dataset_name : str
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str
-        Input value for `table_name`.
+        Value for `table_name`.
 
     Returns
     -------
     result : list[dict] | dict | None
-        Output produced by `load_latest_partition_snapshot`.
+        Result returned by `load_latest_partition_snapshot`.
 
     Examples
     --------
@@ -416,21 +416,21 @@ def load_latest_partition_snapshot(spark, metadata_table: str, dataset_name: str
 def check_profile_drift(current_profile: dict, baseline_profile: dict | None = None, policy: dict | None = None) -> dict:
     """Check profile drift.
 
-    Use this callable to support the framework workflow step implemented by `check_profile_drift`.
+    Execute `check_profile_drift`.
 
     Parameters
     ----------
     current_profile : dict
-        Input value for `current_profile`.
+        Value for `current_profile`.
     baseline_profile : dict | None, optional
-        Input value for `baseline_profile`.
+        Value for `baseline_profile`.
     policy : dict | None, optional
-        Input value for `policy`.
+        Value for `policy`.
 
     Returns
     -------
     result : dict
-        Output produced by `check_profile_drift`.
+        Result returned by `check_profile_drift`.
 
     Examples
     --------
@@ -486,21 +486,21 @@ def check_profile_drift(current_profile: dict, baseline_profile: dict | None = N
 def summarize_drift_results(schema_drift_result: dict | None = None, partition_drift_result: dict | None = None, profile_drift_result: dict | None = None) -> dict:
     """Summarize drift results.
 
-    Use this callable to support the framework workflow step implemented by `summarize_drift_results`.
+    Execute `summarize_drift_results`.
 
     Parameters
     ----------
     schema_drift_result : dict | None, optional
-        Input value for `schema_drift_result`.
+        Value for `schema_drift_result`.
     partition_drift_result : dict | None, optional
-        Input value for `partition_drift_result`.
+        Value for `partition_drift_result`.
     profile_drift_result : dict | None, optional
-        Input value for `profile_drift_result`.
+        Value for `profile_drift_result`.
 
     Returns
     -------
     result : dict
-        Output produced by `summarize_drift_results`.
+        Result returned by `summarize_drift_results`.
 
     Examples
     --------

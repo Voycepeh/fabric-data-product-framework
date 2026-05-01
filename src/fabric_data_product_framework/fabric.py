@@ -12,21 +12,21 @@ def build_table_identifier(
 ) -> str:
     """Build table identifier.
 
-    Use this callable to support the framework workflow step implemented by `build_table_identifier`.
+    Execute `build_table_identifier`.
 
     Parameters
     ----------
     lakehouse : str | None, optional
-        Input value for `lakehouse`.
+        Value for `lakehouse`.
     schema : str | None, optional
-        Input value for `schema`.
+        Value for `schema`.
     table : str | None, optional
-        Input value for `table`.
+        Value for `table`.
 
     Returns
     -------
     result : str
-        Output produced by `build_table_identifier`.
+        Result returned by `build_table_identifier`.
 
     Raises
     ------
@@ -46,19 +46,19 @@ def build_table_identifier(
 def read_table(table_identifier: str, reader=None):
     """Read table.
 
-    Use this callable to support the framework workflow step implemented by `read_table`.
+    Execute `read_table`.
 
     Parameters
     ----------
     table_identifier : str
-        Input value for `table_identifier`.
+        Value for `table_identifier`.
     reader : Any, optional
-        Input value for `reader`.
+        Value for `reader`.
 
     Returns
     -------
     result : Any
-        Output produced by `read_table`.
+        Result returned by `read_table`.
 
     Raises
     ------
@@ -79,17 +79,17 @@ def read_table(table_identifier: str, reader=None):
 def validate_write_mode(mode: str) -> str:
     """Validate write mode.
 
-    Use this callable to support the framework workflow step implemented by `validate_write_mode`.
+    Execute `validate_write_mode`.
 
     Parameters
     ----------
     mode : str
-        Input value for `mode`.
+        Value for `mode`.
 
     Returns
     -------
     result : str
-        Output produced by `validate_write_mode`.
+        Result returned by `validate_write_mode`.
 
     Raises
     ------
@@ -109,23 +109,23 @@ def validate_write_mode(mode: str) -> str:
 def write_table(df, table_identifier: str, writer=None, mode: str = "append", **options):
     """Write table.
 
-    Use this callable to support the framework workflow step implemented by `write_table`.
+    Execute `write_table`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     table_identifier : str
-        Input value for `table_identifier`.
+        Value for `table_identifier`.
     writer : Any, optional
-        Input value for `writer`.
+        Value for `writer`.
     mode : str, optional
-        Input value for `mode`.
+        Value for `mode`.
 
     Returns
     -------
     result : Any
-        Output produced by `write_table`.
+        Result returned by `write_table`.
 
     Raises
     ------

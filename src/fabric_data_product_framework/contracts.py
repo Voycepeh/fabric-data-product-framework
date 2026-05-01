@@ -58,29 +58,29 @@ def _parse_freshness_timedelta(value: str | None) -> timedelta | None:
 def validate_required_columns(df, expected_columns: list[str], *, dataset_name: str = "unknown", table_name: str = "unknown", check_name: str = "required_columns", severity: str = "critical", engine: str = "auto") -> dict:
     """Validate required columns.
 
-    Use this callable to support the framework workflow step implemented by `validate_required_columns`.
+    Execute `validate_required_columns`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     expected_columns : list[str]
-        Input value for `expected_columns`.
+        Value for `expected_columns`.
     dataset_name : str, optional
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str, optional
-        Input value for `table_name`.
+        Value for `table_name`.
     check_name : str, optional
-        Input value for `check_name`.
+        Value for `check_name`.
     severity : str, optional
-        Input value for `severity`.
+        Value for `severity`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : dict
-        Output produced by `validate_required_columns`.
+        Result returned by `validate_required_columns`.
 
     Examples
     --------
@@ -98,27 +98,27 @@ def validate_required_columns(df, expected_columns: list[str], *, dataset_name: 
 def validate_grain(df, business_keys: list[str], *, dataset_name: str = "unknown", table_name: str = "unknown", severity: str = "critical", engine: str = "auto") -> dict:
     """Validate grain.
 
-    Use this callable to support the framework workflow step implemented by `validate_grain`.
+    Execute `validate_grain`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     business_keys : list[str]
-        Input value for `business_keys`.
+        Value for `business_keys`.
     dataset_name : str, optional
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str, optional
-        Input value for `table_name`.
+        Value for `table_name`.
     severity : str, optional
-        Input value for `severity`.
+        Value for `severity`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : dict
-        Output produced by `validate_grain`.
+        Result returned by `validate_grain`.
 
     Examples
     --------
@@ -160,31 +160,31 @@ def validate_grain(df, business_keys: list[str], *, dataset_name: str = "unknown
 def validate_freshness(df, watermark_column: str, *, max_age_days: int | None = None, max_age_timedelta: timedelta | None = None, dataset_name: str = "unknown", table_name: str = "unknown", severity: str = "critical", engine: str = "auto") -> dict:
     """Validate freshness.
 
-    Use this callable to support the framework workflow step implemented by `validate_freshness`.
+    Execute `validate_freshness`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     watermark_column : str
-        Input value for `watermark_column`.
+        Value for `watermark_column`.
     max_age_days : int | None, optional
-        Input value for `max_age_days`.
+        Value for `max_age_days`.
     max_age_timedelta : timedelta | None, optional
-        Input value for `max_age_timedelta`.
+        Value for `max_age_timedelta`.
     dataset_name : str, optional
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str, optional
-        Input value for `table_name`.
+        Value for `table_name`.
     severity : str, optional
-        Input value for `severity`.
+        Value for `severity`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : dict
-        Output produced by `validate_freshness`.
+        Result returned by `validate_freshness`.
 
     Examples
     --------
@@ -224,25 +224,25 @@ def _combine_contract_checks(dataset_name: str, table_name: str, contract_type: 
 def validate_upstream_contract(df, contract: dict, *, dataset_name: str | None = None, table_name: str | None = None, engine: str = "auto") -> dict:
     """Validate upstream contract.
 
-    Use this callable to support the framework workflow step implemented by `validate_upstream_contract`.
+    Execute `validate_upstream_contract`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     contract : dict
-        Input value for `contract`.
+        Value for `contract`.
     dataset_name : str | None, optional
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str | None, optional
-        Input value for `table_name`.
+        Value for `table_name`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : dict
-        Output produced by `validate_upstream_contract`.
+        Result returned by `validate_upstream_contract`.
 
     Examples
     --------
@@ -262,25 +262,25 @@ def validate_upstream_contract(df, contract: dict, *, dataset_name: str | None =
 def validate_downstream_contract(df, contract: dict, *, dataset_name: str | None = None, table_name: str | None = None, engine: str = "auto") -> dict:
     """Validate downstream contract.
 
-    Use this callable to support the framework workflow step implemented by `validate_downstream_contract`.
+    Execute `validate_downstream_contract`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     contract : dict
-        Input value for `contract`.
+        Value for `contract`.
     dataset_name : str | None, optional
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str | None, optional
-        Input value for `table_name`.
+        Value for `table_name`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : dict
-        Output produced by `validate_downstream_contract`.
+        Result returned by `validate_downstream_contract`.
 
     Examples
     --------
@@ -296,23 +296,23 @@ def validate_downstream_contract(df, contract: dict, *, dataset_name: str | None
 def validate_runtime_contracts(*, source_df=None, output_df=None, contract: dict, engine: str = "auto") -> dict:
     """Validate runtime contracts.
 
-    Use this callable to support the framework workflow step implemented by `validate_runtime_contracts`.
+    Execute `validate_runtime_contracts`.
 
     Parameters
     ----------
     source_df : Any, optional
-        Input value for `source_df`.
+        Value for `source_df`.
     output_df : Any, optional
-        Input value for `output_df`.
+        Value for `output_df`.
     contract : dict
-        Input value for `contract`.
+        Value for `contract`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : dict
-        Output produced by `validate_runtime_contracts`.
+        Result returned by `validate_runtime_contracts`.
 
     Examples
     --------
@@ -335,17 +335,17 @@ def validate_runtime_contracts(*, source_df=None, output_df=None, contract: dict
 def assert_contracts_valid(result: dict) -> None:
     """Assert contracts valid.
 
-    Use this callable to support the framework workflow step implemented by `assert_contracts_valid`.
+    Execute `assert_contracts_valid`.
 
     Parameters
     ----------
     result : dict
-        Input value for `result`.
+        Value for `result`.
 
     Returns
     -------
     result : None
-        Output produced by `assert_contracts_valid`.
+        Result returned by `assert_contracts_valid`.
 
     Raises
     ------
@@ -363,19 +363,19 @@ def assert_contracts_valid(result: dict) -> None:
 def build_contract_validation_records(result: dict, *, run_id: str) -> list[dict]:
     """Build contract validation records.
 
-    Use this callable to support the framework workflow step implemented by `build_contract_validation_records`.
+    Execute `build_contract_validation_records`.
 
     Parameters
     ----------
     result : dict
-        Input value for `result`.
+        Value for `result`.
     run_id : str
-        Input value for `run_id`.
+        Value for `run_id`.
 
     Returns
     -------
     result : list[dict]
-        Output produced by `build_contract_validation_records`.
+        Result returned by `build_contract_validation_records`.
 
     Examples
     --------

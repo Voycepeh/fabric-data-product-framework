@@ -69,17 +69,17 @@ class DataFrameProfile:
 def to_jsonable(value: Any) -> Any:
     """To jsonable.
 
-    Use this callable to support the framework workflow step implemented by `to_jsonable`.
+    Execute `to_jsonable`.
 
     Parameters
     ----------
     value : Any
-        Input value for `value`.
+        Value for `value`.
 
     Returns
     -------
     result : Any
-        Output produced by `to_jsonable`.
+        Result returned by `to_jsonable`.
 
     Examples
     --------
@@ -116,19 +116,19 @@ def to_jsonable(value: Any) -> Any:
 def infer_semantic_type(column_name: str, sample_values: list[Any]) -> str:
     """Infer semantic type.
 
-    Use this callable to support the framework workflow step implemented by `infer_semantic_type`.
+    Execute `infer_semantic_type`.
 
     Parameters
     ----------
     column_name : str
-        Input value for `column_name`.
+        Value for `column_name`.
     sample_values : list[Any]
-        Input value for `sample_values`.
+        Value for `sample_values`.
 
     Returns
     -------
     result : str
-        Output produced by `infer_semantic_type`.
+        Result returned by `infer_semantic_type`.
 
     Examples
     --------
@@ -172,21 +172,21 @@ def _is_spark_date_like_type(data_type: str) -> bool:
 def profile_column(series: pd.Series, sample_size: int = 5, top_n: int = 5) -> dict[str, Any]:
     """Profile column.
 
-    Use this callable to support the framework workflow step implemented by `profile_column`.
+    Execute `profile_column`.
 
     Parameters
     ----------
     series : pd.Series
-        Input value for `series`.
+        Value for `series`.
     sample_size : int, optional
-        Input value for `sample_size`.
+        Value for `sample_size`.
     top_n : int, optional
-        Input value for `top_n`.
+        Value for `top_n`.
 
     Returns
     -------
     result : dict[str, Any]
-        Output produced by `profile_column`.
+        Result returned by `profile_column`.
 
     Examples
     --------
@@ -267,25 +267,25 @@ def _profile_spark_dataframe(df, dataset_name: str = "unknown", sample_size: int
 def profile_dataframe(df, dataset_name: str = "unknown", sample_size: int = 5, top_n: int = 5, engine: str = "auto") -> dict[str, Any]:
     """Profile dataframe.
 
-    Use this callable to support the framework workflow step implemented by `profile_dataframe`.
+    Execute `profile_dataframe`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     dataset_name : str, optional
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     sample_size : int, optional
-        Input value for `sample_size`.
+        Value for `sample_size`.
     top_n : int, optional
-        Input value for `top_n`.
+        Value for `top_n`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : dict[str, Any]
-        Output produced by `profile_dataframe`.
+        Result returned by `profile_dataframe`.
 
     Examples
     --------
@@ -307,7 +307,7 @@ def profile_dataframe(df, dataset_name: str = "unknown", sample_size: int = 5, t
 def default_technical_columns() -> list[str]:
     """Default technical columns.
 
-    Use this callable to support the framework workflow step implemented by `default_technical_columns`.
+    Execute `default_technical_columns`.
 
     Parameters
     ----------
@@ -317,7 +317,7 @@ def default_technical_columns() -> list[str]:
     Returns
     -------
     result : list[str]
-        Output produced by `default_technical_columns`.
+        Result returned by `default_technical_columns`.
 
     Examples
     --------
@@ -329,25 +329,25 @@ def default_technical_columns() -> list[str]:
 def flatten_profile_for_metadata(profile: dict, table_name: str, run_id: str, table_stage: str, exclude_columns: list[str] | None = None) -> list[dict]:
     """Flatten profile for metadata.
 
-    Use this callable to support the framework workflow step implemented by `flatten_profile_for_metadata`.
+    Execute `flatten_profile_for_metadata`.
 
     Parameters
     ----------
     profile : dict
-        Input value for `profile`.
+        Value for `profile`.
     table_name : str
-        Input value for `table_name`.
+        Value for `table_name`.
     run_id : str
-        Input value for `run_id`.
+        Value for `run_id`.
     table_stage : str
-        Input value for `table_stage`.
+        Value for `table_stage`.
     exclude_columns : list[str] | None, optional
-        Input value for `exclude_columns`.
+        Value for `exclude_columns`.
 
     Returns
     -------
     result : list[dict]
-        Output produced by `flatten_profile_for_metadata`.
+        Result returned by `flatten_profile_for_metadata`.
 
     Examples
     --------
@@ -412,23 +412,23 @@ def write_profile_metadata_rows(
 ):
     """Write profile metadata rows.
 
-    Use this callable to support the framework workflow step implemented by `write_profile_metadata_rows`.
+    Execute `write_profile_metadata_rows`.
 
     Parameters
     ----------
     spark : Any
-        Input value for `spark`.
+        Value for `spark`.
     metadata_rows : list[dict]
-        Input value for `metadata_rows`.
+        Value for `metadata_rows`.
     metadata_table : str
-        Input value for `metadata_table`.
+        Value for `metadata_table`.
     mode : str, optional
-        Input value for `mode`.
+        Value for `mode`.
 
     Returns
     -------
     result : Any
-        Output produced by `write_profile_metadata_rows`.
+        Result returned by `write_profile_metadata_rows`.
 
     Examples
     --------
@@ -457,37 +457,37 @@ def profile_and_write_metadata(
 ) -> dict[str, Any]:
     """Profile and write metadata.
 
-    Use this callable to support the framework workflow step implemented by `profile_and_write_metadata`.
+    Execute `profile_and_write_metadata`.
 
     Parameters
     ----------
     spark : Any
-        Input value for `spark`.
+        Value for `spark`.
     df : Any
-        Input value for `df`.
+        Value for `df`.
     dataset_name : str
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str
-        Input value for `table_name`.
+        Value for `table_name`.
     metadata_table : str
-        Input value for `metadata_table`.
+        Value for `metadata_table`.
     run_id : str
-        Input value for `run_id`.
+        Value for `run_id`.
     table_stage : str
-        Input value for `table_stage`.
+        Value for `table_stage`.
     mode : str, optional
-        Input value for `mode`.
+        Value for `mode`.
     exclude_columns : list[str] | None, optional
-        Input value for `exclude_columns`.
+        Value for `exclude_columns`.
     sample_size : int, optional
-        Input value for `sample_size`.
+        Value for `sample_size`.
     top_n : int, optional
-        Input value for `top_n`.
+        Value for `top_n`.
 
     Returns
     -------
     result : dict[str, Any]
-        Output produced by `profile_and_write_metadata`.
+        Result returned by `profile_and_write_metadata`.
 
     Examples
     --------
@@ -520,35 +520,35 @@ def profile_table_and_write_metadata(
 ) -> dict[str, Any]:
     """Profile table and write metadata.
 
-    Use this callable to support the framework workflow step implemented by `profile_table_and_write_metadata`.
+    Execute `profile_table_and_write_metadata`.
 
     Parameters
     ----------
     spark : Any
-        Input value for `spark`.
+        Value for `spark`.
     table_name : str
-        Input value for `table_name`.
+        Value for `table_name`.
     dataset_name : str
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     metadata_table : str
-        Input value for `metadata_table`.
+        Value for `metadata_table`.
     run_id : str
-        Input value for `run_id`.
+        Value for `run_id`.
     table_stage : str
-        Input value for `table_stage`.
+        Value for `table_stage`.
     mode : str, optional
-        Input value for `mode`.
+        Value for `mode`.
     exclude_columns : list[str] | None, optional
-        Input value for `exclude_columns`.
+        Value for `exclude_columns`.
     sample_size : int, optional
-        Input value for `sample_size`.
+        Value for `sample_size`.
     top_n : int, optional
-        Input value for `top_n`.
+        Value for `top_n`.
 
     Returns
     -------
     result : dict[str, Any]
-        Output produced by `profile_table_and_write_metadata`.
+        Result returned by `profile_table_and_write_metadata`.
 
     Examples
     --------
@@ -573,17 +573,17 @@ def profile_table_and_write_metadata(
 def summarize_profile(profile: dict[str, Any]) -> dict[str, Any]:
     """Summarize profile.
 
-    Use this callable to support the framework workflow step implemented by `summarize_profile`.
+    Execute `summarize_profile`.
 
     Parameters
     ----------
     profile : dict[str, Any]
-        Input value for `profile`.
+        Value for `profile`.
 
     Returns
     -------
     result : dict[str, Any]
-        Output produced by `summarize_profile`.
+        Result returned by `summarize_profile`.
 
     Examples
     --------

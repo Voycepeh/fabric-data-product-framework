@@ -23,37 +23,37 @@ def build_dataset_run_record(
 ) -> dict:
     """Build dataset run record.
 
-    Use this callable to support the framework workflow step implemented by `build_dataset_run_record`.
+    Execute `build_dataset_run_record`.
 
     Parameters
     ----------
     run_id : str
-        Input value for `run_id`.
+        Value for `run_id`.
     dataset_name : str
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     environment : str
-        Input value for `environment`.
+        Value for `environment`.
     source_table : str
-        Input value for `source_table`.
+        Value for `source_table`.
     target_table : str
-        Input value for `target_table`.
+        Value for `target_table`.
     status : str, optional
-        Input value for `status`.
+        Value for `status`.
     started_at_utc : str | None, optional
-        Input value for `started_at_utc`.
+        Value for `started_at_utc`.
     ended_at_utc : str | None, optional
-        Input value for `ended_at_utc`.
+        Value for `ended_at_utc`.
     row_count_source : int | None, optional
-        Input value for `row_count_source`.
+        Value for `row_count_source`.
     row_count_output : int | None, optional
-        Input value for `row_count_output`.
+        Value for `row_count_output`.
     notes : str | None, optional
-        Input value for `notes`.
+        Value for `notes`.
 
     Returns
     -------
     result : dict
-        Output produced by `build_dataset_run_record`.
+        Result returned by `build_dataset_run_record`.
 
     Examples
     --------
@@ -79,21 +79,21 @@ def build_dataset_run_record(
 def build_schema_snapshot_records(snapshot: dict, *, run_id: str, table_stage: str) -> list[dict]:
     """Build schema snapshot records.
 
-    Use this callable to support the framework workflow step implemented by `build_schema_snapshot_records`.
+    Execute `build_schema_snapshot_records`.
 
     Parameters
     ----------
     snapshot : dict
-        Input value for `snapshot`.
+        Value for `snapshot`.
     run_id : str
-        Input value for `run_id`.
+        Value for `run_id`.
     table_stage : str
-        Input value for `table_stage`.
+        Value for `table_stage`.
 
     Returns
     -------
     result : list[dict]
-        Output produced by `build_schema_snapshot_records`.
+        Result returned by `build_schema_snapshot_records`.
 
     Examples
     --------
@@ -125,21 +125,21 @@ def build_schema_snapshot_records(snapshot: dict, *, run_id: str, table_stage: s
 def build_schema_drift_records(drift_result: dict, *, run_id: str, table_stage: str) -> list[dict]:
     """Build schema drift records.
 
-    Use this callable to support the framework workflow step implemented by `build_schema_drift_records`.
+    Execute `build_schema_drift_records`.
 
     Parameters
     ----------
     drift_result : dict
-        Input value for `drift_result`.
+        Value for `drift_result`.
     run_id : str
-        Input value for `run_id`.
+        Value for `run_id`.
     table_stage : str
-        Input value for `table_stage`.
+        Value for `table_stage`.
 
     Returns
     -------
     result : list[dict]
-        Output produced by `build_schema_drift_records`.
+        Result returned by `build_schema_drift_records`.
 
     Examples
     --------
@@ -199,25 +199,25 @@ def build_quality_result_records(
 ) -> list[dict]:
     """Build quality result records.
 
-    Use this callable to support the framework workflow step implemented by `build_quality_result_records`.
+    Execute `build_quality_result_records`.
 
     Parameters
     ----------
     quality_result : dict | list[dict]
-        Input value for `quality_result`.
+        Value for `quality_result`.
     run_id : str
-        Input value for `run_id`.
+        Value for `run_id`.
     dataset_name : str
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str
-        Input value for `table_name`.
+        Value for `table_name`.
     table_stage : str
-        Input value for `table_stage`.
+        Value for `table_stage`.
 
     Returns
     -------
     result : list[dict]
-        Output produced by `build_quality_result_records`.
+        Result returned by `build_quality_result_records`.
 
     Examples
     --------
@@ -257,23 +257,23 @@ def build_quality_result_records(
 def write_metadata_records(records: list[dict], table_identifier: str, writer=None, mode: str = "append", **options):
     """Write metadata records.
 
-    Use this callable to support the framework workflow step implemented by `write_metadata_records`.
+    Execute `write_metadata_records`.
 
     Parameters
     ----------
     records : list[dict]
-        Input value for `records`.
+        Value for `records`.
     table_identifier : str
-        Input value for `table_identifier`.
+        Value for `table_identifier`.
     writer : Any, optional
-        Input value for `writer`.
+        Value for `writer`.
     mode : str, optional
-        Input value for `mode`.
+        Value for `mode`.
 
     Returns
     -------
     result : Any
-        Output produced by `write_metadata_records`.
+        Result returned by `write_metadata_records`.
 
     Raises
     ------
@@ -302,23 +302,23 @@ def write_multiple_metadata_outputs(
 ) -> dict:
     """Write multiple metadata outputs.
 
-    Use this callable to support the framework workflow step implemented by `write_multiple_metadata_outputs`.
+    Execute `write_multiple_metadata_outputs`.
 
     Parameters
     ----------
     outputs : dict[str, list[dict]]
-        Input value for `outputs`.
+        Value for `outputs`.
     table_mapping : dict[str, str]
-        Input value for `table_mapping`.
+        Value for `table_mapping`.
     writer : Any, optional
-        Input value for `writer`.
+        Value for `writer`.
     mode : str, optional
-        Input value for `mode`.
+        Value for `mode`.
 
     Returns
     -------
     result : dict
-        Output produced by `write_multiple_metadata_outputs`.
+        Result returned by `write_multiple_metadata_outputs`.
 
     Raises
     ------

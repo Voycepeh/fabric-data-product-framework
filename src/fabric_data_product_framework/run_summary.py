@@ -17,35 +17,35 @@ def _status_of(section: dict | None) -> str:
 def build_run_summary(*, runtime_context: dict, contract: dict | None = None, source_profile: dict | None = None, output_profile: dict | None = None, schema_drift_result: dict | None = None, incremental_safety_result: dict | None = None, quality_result: dict | None = None, contract_validation_result: dict | None = None, lineage_summary: dict | None = None, notes: list[str] | None = None) -> dict:
     """Build run summary.
 
-    Use this callable to support the framework workflow step implemented by `build_run_summary`.
+    Execute `build_run_summary`.
 
     Parameters
     ----------
     runtime_context : dict
-        Input value for `runtime_context`.
+        Value for `runtime_context`.
     contract : dict | None, optional
-        Input value for `contract`.
+        Value for `contract`.
     source_profile : dict | None, optional
-        Input value for `source_profile`.
+        Value for `source_profile`.
     output_profile : dict | None, optional
-        Input value for `output_profile`.
+        Value for `output_profile`.
     schema_drift_result : dict | None, optional
-        Input value for `schema_drift_result`.
+        Value for `schema_drift_result`.
     incremental_safety_result : dict | None, optional
-        Input value for `incremental_safety_result`.
+        Value for `incremental_safety_result`.
     quality_result : dict | None, optional
-        Input value for `quality_result`.
+        Value for `quality_result`.
     contract_validation_result : dict | None, optional
-        Input value for `contract_validation_result`.
+        Value for `contract_validation_result`.
     lineage_summary : dict | None, optional
-        Input value for `lineage_summary`.
+        Value for `lineage_summary`.
     notes : list[str] | None, optional
-        Input value for `notes`.
+        Value for `notes`.
 
     Returns
     -------
     result : dict
-        Output produced by `build_run_summary`.
+        Result returned by `build_run_summary`.
 
     Examples
     --------
@@ -70,17 +70,17 @@ def build_run_summary(*, runtime_context: dict, contract: dict | None = None, so
 def render_run_summary_markdown(summary: dict) -> str:
     """Render run summary markdown.
 
-    Use this callable to support the framework workflow step implemented by `render_run_summary_markdown`.
+    Execute `render_run_summary_markdown`.
 
     Parameters
     ----------
     summary : dict
-        Input value for `summary`.
+        Value for `summary`.
 
     Returns
     -------
     result : str
-        Output produced by `render_run_summary_markdown`.
+        Result returned by `render_run_summary_markdown`.
 
     Examples
     --------
@@ -102,17 +102,17 @@ def render_run_summary_markdown(summary: dict) -> str:
 def build_run_summary_record(summary: dict) -> dict:
     """Build run summary record.
 
-    Use this callable to support the framework workflow step implemented by `build_run_summary_record`.
+    Execute `build_run_summary_record`.
 
     Parameters
     ----------
     summary : dict
-        Input value for `summary`.
+        Value for `summary`.
 
     Returns
     -------
     result : dict
-        Output produced by `build_run_summary_record`.
+        Result returned by `build_run_summary_record`.
 
     Examples
     --------

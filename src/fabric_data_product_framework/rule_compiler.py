@@ -20,17 +20,17 @@ def _skipped(candidate, message):
 def compile_layman_rule_to_quality_rule(candidate):
     """Compile layman rule to quality rule.
 
-    Use this callable to support the framework workflow step implemented by `compile_layman_rule_to_quality_rule`.
+    Execute `compile_layman_rule_to_quality_rule`.
 
     Parameters
     ----------
     candidate : Any
-        Input value for `candidate`.
+        Value for `candidate`.
 
     Returns
     -------
     result : Any
-        Output produced by `compile_layman_rule_to_quality_rule`.
+        Result returned by `compile_layman_rule_to_quality_rule`.
 
     Examples
     --------
@@ -88,17 +88,17 @@ def compile_layman_rule_to_quality_rule(candidate):
 def compile_layman_rules_to_quality_rules(candidates):
     """Compile layman rules to quality rules.
 
-    Use this callable to support the framework workflow step implemented by `compile_layman_rules_to_quality_rules`.
+    Execute `compile_layman_rules_to_quality_rules`.
 
     Parameters
     ----------
     candidates : Any
-        Input value for `candidates`.
+        Value for `candidates`.
 
     Returns
     -------
     result : Any
-        Output produced by `compile_layman_rules_to_quality_rules`.
+        Result returned by `compile_layman_rules_to_quality_rules`.
 
     Examples
     --------
@@ -111,23 +111,23 @@ def compile_layman_rules_to_quality_rules(candidates):
 def build_rule_registry_records(compiled_rules, run_id, dataset_name, table_name):
     """Build rule registry records.
 
-    Use this callable to support the framework workflow step implemented by `build_rule_registry_records`.
+    Execute `build_rule_registry_records`.
 
     Parameters
     ----------
     compiled_rules : Any
-        Input value for `compiled_rules`.
+        Value for `compiled_rules`.
     run_id : Any
-        Input value for `run_id`.
+        Value for `run_id`.
     dataset_name : Any
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : Any
-        Input value for `table_name`.
+        Value for `table_name`.
 
     Returns
     -------
     result : Any
-        Output produced by `build_rule_registry_records`.
+        Result returned by `build_rule_registry_records`.
 
     Examples
     --------

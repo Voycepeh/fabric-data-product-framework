@@ -88,27 +88,27 @@ def classify_column(
 ) -> dict:
     """Classify column.
 
-    Use this callable to support the framework workflow step implemented by `classify_column`.
+    Execute `classify_column`.
 
     Parameters
     ----------
     column_name : str
-        Input value for `column_name`.
+        Value for `column_name`.
     data_type : str | None, optional
-        Input value for `data_type`.
+        Value for `data_type`.
     profile : dict | None, optional
-        Input value for `profile`.
+        Value for `profile`.
     metadata : dict | None, optional
-        Input value for `metadata`.
+        Value for `metadata`.
     business_context : str | dict | None, optional
-        Input value for `business_context`.
+        Value for `business_context`.
     rules : list[dict] | None, optional
-        Input value for `rules`.
+        Value for `rules`.
 
     Returns
     -------
     result : dict
-        Output produced by `classify_column`.
+        Result returned by `classify_column`.
 
     Examples
     --------
@@ -204,29 +204,29 @@ def classify_column(
 def classify_columns(profile: dict | list[dict], metadata: dict | list[dict] | None = None, business_context: str | dict | None = None, rules: list[dict] | None = None, dataset_name: str | None = None, table_name: str | None = None, run_id: str | None = None) -> list[dict]:
     """Classify columns.
 
-    Use this callable to support the framework workflow step implemented by `classify_columns`.
+    Execute `classify_columns`.
 
     Parameters
     ----------
     profile : dict | list[dict]
-        Input value for `profile`.
+        Value for `profile`.
     metadata : dict | list[dict] | None, optional
-        Input value for `metadata`.
+        Value for `metadata`.
     business_context : str | dict | None, optional
-        Input value for `business_context`.
+        Value for `business_context`.
     rules : list[dict] | None, optional
-        Input value for `rules`.
+        Value for `rules`.
     dataset_name : str | None, optional
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str | None, optional
-        Input value for `table_name`.
+        Value for `table_name`.
     run_id : str | None, optional
-        Input value for `run_id`.
+        Value for `run_id`.
 
     Returns
     -------
     result : list[dict]
-        Output produced by `classify_columns`.
+        Result returned by `classify_columns`.
 
     Examples
     --------
@@ -255,27 +255,27 @@ def classify_columns(profile: dict | list[dict], metadata: dict | list[dict] | N
 def build_governance_classification_records(classifications: list[dict], dataset_name: str, table_name: str, run_id: str | None = None, status: str = "suggested", generated_by: str = "framework") -> list[dict]:
     """Build governance classification records.
 
-    Use this callable to support the framework workflow step implemented by `build_governance_classification_records`.
+    Execute `build_governance_classification_records`.
 
     Parameters
     ----------
     classifications : list[dict]
-        Input value for `classifications`.
+        Value for `classifications`.
     dataset_name : str
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str
-        Input value for `table_name`.
+        Value for `table_name`.
     run_id : str | None, optional
-        Input value for `run_id`.
+        Value for `run_id`.
     status : str, optional
-        Input value for `status`.
+        Value for `status`.
     generated_by : str, optional
-        Input value for `generated_by`.
+        Value for `generated_by`.
 
     Returns
     -------
     result : list[dict]
-        Output produced by `build_governance_classification_records`.
+        Result returned by `build_governance_classification_records`.
 
     Examples
     --------
@@ -317,33 +317,33 @@ def _spark_create_governance_metadata_dataframe(spark, rows: list[dict]):
 def write_governance_classifications(spark, classifications: list[dict], table_name: str, dataset_name: str | None = None, source_table: str | None = None, run_id: str | None = None, status: str = "suggested", generated_by: str = "framework", mode: str = "append") -> list[dict]:
     """Write governance classifications.
 
-    Use this callable to support the framework workflow step implemented by `write_governance_classifications`.
+    Execute `write_governance_classifications`.
 
     Parameters
     ----------
     spark : Any
-        Input value for `spark`.
+        Value for `spark`.
     classifications : list[dict]
-        Input value for `classifications`.
+        Value for `classifications`.
     table_name : str
-        Input value for `table_name`.
+        Value for `table_name`.
     dataset_name : str | None, optional
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     source_table : str | None, optional
-        Input value for `source_table`.
+        Value for `source_table`.
     run_id : str | None, optional
-        Input value for `run_id`.
+        Value for `run_id`.
     status : str, optional
-        Input value for `status`.
+        Value for `status`.
     generated_by : str, optional
-        Input value for `generated_by`.
+        Value for `generated_by`.
     mode : str, optional
-        Input value for `mode`.
+        Value for `mode`.
 
     Returns
     -------
     result : list[dict]
-        Output produced by `write_governance_classifications`.
+        Result returned by `write_governance_classifications`.
 
     Examples
     --------
@@ -367,17 +367,17 @@ def write_governance_classifications(spark, classifications: list[dict], table_n
 def summarize_governance_classifications(classifications: list[dict]) -> dict:
     """Summarize governance classifications.
 
-    Use this callable to support the framework workflow step implemented by `summarize_governance_classifications`.
+    Execute `summarize_governance_classifications`.
 
     Parameters
     ----------
     classifications : list[dict]
-        Input value for `classifications`.
+        Value for `classifications`.
 
     Returns
     -------
     result : dict
-        Output produced by `summarize_governance_classifications`.
+        Result returned by `summarize_governance_classifications`.
 
     Examples
     --------

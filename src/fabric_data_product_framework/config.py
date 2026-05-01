@@ -45,17 +45,17 @@ def _format_error_path(error_path: list[object], message: str, validator: str) -
 def load_dataset_contract(path: str | Path) -> dict:
     """Load dataset contract.
 
-    Use this callable to support the framework workflow step implemented by `load_dataset_contract`.
+    Execute `load_dataset_contract`.
 
     Parameters
     ----------
     path : str | Path
-        Input value for `path`.
+        Value for `path`.
 
     Returns
     -------
     result : dict
-        Output produced by `load_dataset_contract`.
+        Result returned by `load_dataset_contract`.
 
     Examples
     --------
@@ -86,19 +86,19 @@ def _load_schema(schema_path: str | Path | None = None) -> dict:
 def validate_dataset_contract(contract: dict, schema_path: str | Path | None = None) -> list[str]:
     """Validate dataset contract.
 
-    Use this callable to support the framework workflow step implemented by `validate_dataset_contract`.
+    Execute `validate_dataset_contract`.
 
     Parameters
     ----------
     contract : dict
-        Input value for `contract`.
+        Value for `contract`.
     schema_path : str | Path | None, optional
-        Input value for `schema_path`.
+        Value for `schema_path`.
 
     Returns
     -------
     result : list[str]
-        Output produced by `validate_dataset_contract`.
+        Result returned by `validate_dataset_contract`.
 
     Examples
     --------
@@ -120,19 +120,19 @@ def validate_dataset_contract(contract: dict, schema_path: str | Path | None = N
 def assert_valid_dataset_contract(contract: dict, schema_path: str | Path | None = None) -> None:
     """Assert valid dataset contract.
 
-    Use this callable to support the framework workflow step implemented by `assert_valid_dataset_contract`.
+    Execute `assert_valid_dataset_contract`.
 
     Parameters
     ----------
     contract : dict
-        Input value for `contract`.
+        Value for `contract`.
     schema_path : str | Path | None, optional
-        Input value for `schema_path`.
+        Value for `schema_path`.
 
     Returns
     -------
     result : None
-        Output produced by `assert_valid_dataset_contract`.
+        Result returned by `assert_valid_dataset_contract`.
 
     Raises
     ------
@@ -155,19 +155,19 @@ def load_and_validate_dataset_contract(
 ) -> tuple[dict, list[str]]:
     """Load and validate dataset contract.
 
-    Use this callable to support the framework workflow step implemented by `load_and_validate_dataset_contract`.
+    Execute `load_and_validate_dataset_contract`.
 
     Parameters
     ----------
     path : str | Path
-        Input value for `path`.
+        Value for `path`.
     schema_path : str | Path | None, optional
-        Input value for `schema_path`.
+        Value for `schema_path`.
 
     Returns
     -------
     result : tuple[dict, list[str]]
-        Output produced by `load_and_validate_dataset_contract`.
+        Result returned by `load_and_validate_dataset_contract`.
 
     Examples
     --------

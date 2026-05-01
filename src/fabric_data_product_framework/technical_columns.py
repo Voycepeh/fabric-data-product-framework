@@ -14,7 +14,7 @@ from fabric_data_product_framework.engines import detect_dataframe_engine, valid
 def default_technical_columns() -> list[str]:
     """Default technical columns.
 
-    Use this callable to support the framework workflow step implemented by `default_technical_columns`.
+    Execute `default_technical_columns`.
 
     Parameters
     ----------
@@ -24,7 +24,7 @@ def default_technical_columns() -> list[str]:
     Returns
     -------
     result : list[str]
-        Output produced by `default_technical_columns`.
+        Result returned by `default_technical_columns`.
 
     Examples
     --------
@@ -82,23 +82,23 @@ def _hash_row(values: list[Any]) -> str:
 def add_literal_column(df, column_name: str, value, engine: str = "auto"):
     """Add literal column.
 
-    Use this callable to support the framework workflow step implemented by `add_literal_column`.
+    Execute `add_literal_column`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     column_name : str
-        Input value for `column_name`.
+        Value for `column_name`.
     value : Any
-        Input value for `value`.
+        Value for `value`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : Any
-        Output produced by `add_literal_column`.
+        Result returned by `add_literal_column`.
 
     Examples
     --------
@@ -118,23 +118,23 @@ def add_literal_column(df, column_name: str, value, engine: str = "auto"):
 def add_pipeline_run_id(df, run_id: str, column_name: str = "_pipeline_run_id", engine: str = "auto"):
     """Add pipeline run id.
 
-    Use this callable to support the framework workflow step implemented by `add_pipeline_run_id`.
+    Execute `add_pipeline_run_id`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     run_id : str
-        Input value for `run_id`.
+        Value for `run_id`.
     column_name : str, optional
-        Input value for `column_name`.
+        Value for `column_name`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : Any
-        Output produced by `add_pipeline_run_id`.
+        Result returned by `add_pipeline_run_id`.
 
     Examples
     --------
@@ -146,27 +146,27 @@ def add_pipeline_run_id(df, run_id: str, column_name: str = "_pipeline_run_id", 
 def add_pipeline_metadata(df, *, run_id: str, pipeline_name: str | None = None, environment: str | None = None, column_prefix: str = "_", engine: str = "auto"):
     """Add pipeline metadata.
 
-    Use this callable to support the framework workflow step implemented by `add_pipeline_metadata`.
+    Execute `add_pipeline_metadata`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     run_id : str
-        Input value for `run_id`.
+        Value for `run_id`.
     pipeline_name : str | None, optional
-        Input value for `pipeline_name`.
+        Value for `pipeline_name`.
     environment : str | None, optional
-        Input value for `environment`.
+        Value for `environment`.
     column_prefix : str, optional
-        Input value for `column_prefix`.
+        Value for `column_prefix`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : Any
-        Output produced by `add_pipeline_metadata`.
+        Result returned by `add_pipeline_metadata`.
 
     Examples
     --------
@@ -183,27 +183,27 @@ def add_pipeline_metadata(df, *, run_id: str, pipeline_name: str | None = None, 
 def add_source_metadata(df, *, source_system: str | None = None, source_table: str | None = None, source_extract_timestamp: str | None = None, column_prefix: str = "_", engine: str = "auto"):
     """Add source metadata.
 
-    Use this callable to support the framework workflow step implemented by `add_source_metadata`.
+    Execute `add_source_metadata`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     source_system : str | None, optional
-        Input value for `source_system`.
+        Value for `source_system`.
     source_table : str | None, optional
-        Input value for `source_table`.
+        Value for `source_table`.
     source_extract_timestamp : str | None, optional
-        Input value for `source_extract_timestamp`.
+        Value for `source_extract_timestamp`.
     column_prefix : str, optional
-        Input value for `column_prefix`.
+        Value for `column_prefix`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : Any
-        Output produced by `add_source_metadata`.
+        Result returned by `add_source_metadata`.
 
     Examples
     --------
@@ -222,23 +222,23 @@ def add_source_metadata(df, *, source_system: str | None = None, source_table: s
 def add_loaded_at(df, timestamp: str | None = None, column_name: str = "_record_loaded_timestamp", engine: str = "auto"):
     """Add loaded at.
 
-    Use this callable to support the framework workflow step implemented by `add_loaded_at`.
+    Execute `add_loaded_at`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     timestamp : str | None, optional
-        Input value for `timestamp`.
+        Value for `timestamp`.
     column_name : str, optional
-        Input value for `column_name`.
+        Value for `column_name`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : Any
-        Output produced by `add_loaded_at`.
+        Result returned by `add_loaded_at`.
 
     Examples
     --------
@@ -259,23 +259,23 @@ def add_loaded_at(df, timestamp: str | None = None, column_name: str = "_record_
 def add_watermark_value(df, watermark_column: str, output_column: str = "_watermark_value", engine: str = "auto"):
     """Add watermark value.
 
-    Use this callable to support the framework workflow step implemented by `add_watermark_value`.
+    Execute `add_watermark_value`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     watermark_column : str
-        Input value for `watermark_column`.
+        Value for `watermark_column`.
     output_column : str, optional
-        Input value for `output_column`.
+        Value for `output_column`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : Any
-        Output produced by `add_watermark_value`.
+        Result returned by `add_watermark_value`.
 
     Examples
     --------
@@ -296,23 +296,23 @@ def add_watermark_value(df, watermark_column: str, output_column: str = "_waterm
 def add_row_hash(df, columns: list[str] | None = None, output_column: str = "_row_hash", engine: str = "auto"):
     """Add row hash.
 
-    Use this callable to support the framework workflow step implemented by `add_row_hash`.
+    Execute `add_row_hash`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     columns : list[str] | None, optional
-        Input value for `columns`.
+        Value for `columns`.
     output_column : str, optional
-        Input value for `output_column`.
+        Value for `output_column`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : Any
-        Output produced by `add_row_hash`.
+        Result returned by `add_row_hash`.
 
     Examples
     --------
@@ -334,23 +334,23 @@ def add_row_hash(df, columns: list[str] | None = None, output_column: str = "_ro
 def add_business_key_hash(df, business_keys: list[str], output_column: str = "_business_key_hash", engine: str = "auto"):
     """Add business key hash.
 
-    Use this callable to support the framework workflow step implemented by `add_business_key_hash`.
+    Execute `add_business_key_hash`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     business_keys : list[str]
-        Input value for `business_keys`.
+        Value for `business_keys`.
     output_column : str, optional
-        Input value for `output_column`.
+        Value for `output_column`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : Any
-        Output produced by `add_business_key_hash`.
+        Result returned by `add_business_key_hash`.
 
     Examples
     --------
@@ -371,33 +371,33 @@ def add_business_key_hash(df, business_keys: list[str], output_column: str = "_b
 def add_datetime_parts(df, datetime_column: str, *, timezone: str = "Asia/Singapore", prefix: str | None = None, include_date: bool = True, include_time: bool = True, include_hour: bool = True, include_30_min_block: bool = True, engine: str = "auto"):
     """Add datetime parts.
 
-    Use this callable to support the framework workflow step implemented by `add_datetime_parts`.
+    Execute `add_datetime_parts`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     datetime_column : str
-        Input value for `datetime_column`.
+        Value for `datetime_column`.
     timezone : str, optional
-        Input value for `timezone`.
+        Value for `timezone`.
     prefix : str | None, optional
-        Input value for `prefix`.
+        Value for `prefix`.
     include_date : bool, optional
-        Input value for `include_date`.
+        Value for `include_date`.
     include_time : bool, optional
-        Input value for `include_time`.
+        Value for `include_time`.
     include_hour : bool, optional
-        Input value for `include_hour`.
+        Value for `include_hour`.
     include_30_min_block : bool, optional
-        Input value for `include_30_min_block`.
+        Value for `include_30_min_block`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : Any
-        Output produced by `add_datetime_parts`.
+        Result returned by `add_datetime_parts`.
 
     Examples
     --------
@@ -442,37 +442,37 @@ def add_datetime_parts(df, datetime_column: str, *, timezone: str = "Asia/Singap
 def add_standard_technical_columns(df, *, run_id: str, pipeline_name: str | None = None, environment: str | None = None, source_system: str | None = None, source_table: str | None = None, source_extract_timestamp: str | None = None, watermark_column: str | None = None, business_keys: list[str] | None = None, add_hash: bool = True, engine: str = "auto"):
     """Add standard technical columns.
 
-    Use this callable to support the framework workflow step implemented by `add_standard_technical_columns`.
+    Execute `add_standard_technical_columns`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     run_id : str
-        Input value for `run_id`.
+        Value for `run_id`.
     pipeline_name : str | None, optional
-        Input value for `pipeline_name`.
+        Value for `pipeline_name`.
     environment : str | None, optional
-        Input value for `environment`.
+        Value for `environment`.
     source_system : str | None, optional
-        Input value for `source_system`.
+        Value for `source_system`.
     source_table : str | None, optional
-        Input value for `source_table`.
+        Value for `source_table`.
     source_extract_timestamp : str | None, optional
-        Input value for `source_extract_timestamp`.
+        Value for `source_extract_timestamp`.
     watermark_column : str | None, optional
-        Input value for `watermark_column`.
+        Value for `watermark_column`.
     business_keys : list[str] | None, optional
-        Input value for `business_keys`.
+        Value for `business_keys`.
     add_hash : bool, optional
-        Input value for `add_hash`.
+        Value for `add_hash`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : Any
-        Output produced by `add_standard_technical_columns`.
+        Result returned by `add_standard_technical_columns`.
 
     Examples
     --------

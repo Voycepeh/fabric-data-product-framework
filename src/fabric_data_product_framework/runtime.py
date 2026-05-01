@@ -21,7 +21,7 @@ class NotebookNamingError(ValueError):
 def get_current_timestamp_utc() -> str:
     """Get current timestamp utc.
 
-    Use this callable to support the framework workflow step implemented by `get_current_timestamp_utc`.
+    Execute `get_current_timestamp_utc`.
 
     Parameters
     ----------
@@ -31,7 +31,7 @@ def get_current_timestamp_utc() -> str:
     Returns
     -------
     result : str
-        Output produced by `get_current_timestamp_utc`.
+        Result returned by `get_current_timestamp_utc`.
 
     Examples
     --------
@@ -43,17 +43,17 @@ def get_current_timestamp_utc() -> str:
 def generate_run_id(prefix: str = "run") -> str:
     """Generate run id.
 
-    Use this callable to support the framework workflow step implemented by `generate_run_id`.
+    Execute `generate_run_id`.
 
     Parameters
     ----------
     prefix : str, optional
-        Input value for `prefix`.
+        Value for `prefix`.
 
     Returns
     -------
     result : str
-        Output produced by `generate_run_id`.
+        Result returned by `generate_run_id`.
 
     Examples
     --------
@@ -68,17 +68,17 @@ def generate_run_id(prefix: str = "run") -> str:
 def normalize_name(value: str) -> str:
     """Normalize name.
 
-    Use this callable to support the framework workflow step implemented by `normalize_name`.
+    Execute `normalize_name`.
 
     Parameters
     ----------
     value : str
-        Input value for `value`.
+        Value for `value`.
 
     Returns
     -------
     result : str
-        Output produced by `normalize_name`.
+        Result returned by `normalize_name`.
 
     Examples
     --------
@@ -92,19 +92,19 @@ def normalize_name(value: str) -> str:
 def validate_notebook_name(name: str, allowed_prefixes: list[str]) -> list[str]:
     """Validate notebook name.
 
-    Use this callable to support the framework workflow step implemented by `validate_notebook_name`.
+    Execute `validate_notebook_name`.
 
     Parameters
     ----------
     name : str
-        Input value for `name`.
+        Value for `name`.
     allowed_prefixes : list[str]
-        Input value for `allowed_prefixes`.
+        Value for `allowed_prefixes`.
 
     Returns
     -------
     result : list[str]
-        Output produced by `validate_notebook_name`.
+        Result returned by `validate_notebook_name`.
 
     Examples
     --------
@@ -137,19 +137,19 @@ def validate_notebook_name(name: str, allowed_prefixes: list[str]) -> list[str]:
 def assert_notebook_name_valid(name: str, allowed_prefixes: list[str]) -> None:
     """Assert notebook name valid.
 
-    Use this callable to support the framework workflow step implemented by `assert_notebook_name_valid`.
+    Execute `assert_notebook_name_valid`.
 
     Parameters
     ----------
     name : str
-        Input value for `name`.
+        Value for `name`.
     allowed_prefixes : list[str]
-        Input value for `allowed_prefixes`.
+        Value for `allowed_prefixes`.
 
     Returns
     -------
     result : None
-        Output produced by `assert_notebook_name_valid`.
+        Result returned by `assert_notebook_name_valid`.
 
     Raises
     ------
@@ -175,27 +175,27 @@ def build_runtime_context(
 ) -> dict:
     """Build runtime context.
 
-    Use this callable to support the framework workflow step implemented by `build_runtime_context`.
+    Execute `build_runtime_context`.
 
     Parameters
     ----------
     dataset_name : str
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     environment : str
-        Input value for `environment`.
+        Value for `environment`.
     source_table : str
-        Input value for `source_table`.
+        Value for `source_table`.
     target_table : str
-        Input value for `target_table`.
+        Value for `target_table`.
     notebook_name : str | None, optional
-        Input value for `notebook_name`.
+        Value for `notebook_name`.
     run_id : str | None, optional
-        Input value for `run_id`.
+        Value for `run_id`.
 
     Returns
     -------
     result : dict
-        Output produced by `build_runtime_context`.
+        Result returned by `build_runtime_context`.
 
     Examples
     --------

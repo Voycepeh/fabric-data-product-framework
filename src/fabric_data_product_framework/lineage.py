@@ -76,37 +76,37 @@ class LineageRecorder:
     def add_step(self, *, step_id: str, step_name: str, input_name: str, output_name: str, description: str, reason: str, transformation_type: str = "custom", columns_used: list[str] | None = None, columns_created: list[str] | None = None, business_impact: str | None = None, notes: str | None = None) -> dict:
         """Add step.
 
-        Use this callable to support the framework workflow step implemented by `add_step`.
+        Execute `add_step`.
 
         Parameters
         ----------
         step_id : str
-            Input value for `step_id`.
+            Value for `step_id`.
         step_name : str
-            Input value for `step_name`.
+            Value for `step_name`.
         input_name : str
-            Input value for `input_name`.
+            Value for `input_name`.
         output_name : str
-            Input value for `output_name`.
+            Value for `output_name`.
         description : str
-            Input value for `description`.
+            Value for `description`.
         reason : str
-            Input value for `reason`.
+            Value for `reason`.
         transformation_type : str, optional
-            Input value for `transformation_type`.
+            Value for `transformation_type`.
         columns_used : list[str] | None, optional
-            Input value for `columns_used`.
+            Value for `columns_used`.
         columns_created : list[str] | None, optional
-            Input value for `columns_created`.
+            Value for `columns_created`.
         business_impact : str | None, optional
-            Input value for `business_impact`.
+            Value for `business_impact`.
         notes : str | None, optional
-            Input value for `notes`.
+            Value for `notes`.
 
         Returns
         -------
         result : dict
-            Output produced by `add_step`.
+            Result returned by `add_step`.
 
         Examples
         --------
@@ -119,7 +119,7 @@ class LineageRecorder:
     def to_records(self) -> list[dict]:
         """To records.
 
-        Use this callable to support the framework workflow step implemented by `to_records`.
+        Execute `to_records`.
 
         Parameters
         ----------
@@ -129,7 +129,7 @@ class LineageRecorder:
         Returns
         -------
         result : list[dict]
-            Output produced by `to_records`.
+            Result returned by `to_records`.
 
         Examples
         --------
@@ -140,7 +140,7 @@ class LineageRecorder:
     def build_summary(self) -> dict:
         """Build summary.
 
-        Use this callable to support the framework workflow step implemented by `build_summary`.
+        Execute `build_summary`.
 
         Parameters
         ----------
@@ -150,7 +150,7 @@ class LineageRecorder:
         Returns
         -------
         result : dict
-            Output produced by `build_summary`.
+            Result returned by `build_summary`.
 
         Examples
         --------
@@ -163,23 +163,23 @@ class LineageRecorder:
 def generate_mermaid_lineage(*, source_tables: list[str], target_table: str, transformation_steps: list[dict], graph_direction: str = "LR") -> str:
     """Generate mermaid lineage.
 
-    Use this callable to support the framework workflow step implemented by `generate_mermaid_lineage`.
+    Execute `generate_mermaid_lineage`.
 
     Parameters
     ----------
     source_tables : list[str]
-        Input value for `source_tables`.
+        Value for `source_tables`.
     target_table : str
-        Input value for `target_table`.
+        Value for `target_table`.
     transformation_steps : list[dict]
-        Input value for `transformation_steps`.
+        Value for `transformation_steps`.
     graph_direction : str, optional
-        Input value for `graph_direction`.
+        Value for `graph_direction`.
 
     Returns
     -------
     result : str
-        Output produced by `generate_mermaid_lineage`.
+        Result returned by `generate_mermaid_lineage`.
 
     Examples
     --------
@@ -218,19 +218,19 @@ def generate_mermaid_lineage(*, source_tables: list[str], target_table: str, tra
 def build_transformation_summary_markdown(summary: dict, *, include_mermaid: bool = True) -> str:
     """Build transformation summary markdown.
 
-    Use this callable to support the framework workflow step implemented by `build_transformation_summary_markdown`.
+    Execute `build_transformation_summary_markdown`.
 
     Parameters
     ----------
     summary : dict
-        Input value for `summary`.
+        Value for `summary`.
     include_mermaid : bool, optional
-        Input value for `include_mermaid`.
+        Value for `include_mermaid`.
 
     Returns
     -------
     result : str
-        Output produced by `build_transformation_summary_markdown`.
+        Result returned by `build_transformation_summary_markdown`.
 
     Examples
     --------
@@ -267,25 +267,25 @@ def build_transformation_summary_markdown(summary: dict, *, include_mermaid: boo
 def build_lineage_prompt_context(*, dataset_name: str, source_tables: list[str], target_table: str, transformation_steps: list[dict], eda_notes: str | None = None) -> str:
     """Build lineage prompt context.
 
-    Use this callable to support the framework workflow step implemented by `build_lineage_prompt_context`.
+    Execute `build_lineage_prompt_context`.
 
     Parameters
     ----------
     dataset_name : str
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     source_tables : list[str]
-        Input value for `source_tables`.
+        Value for `source_tables`.
     target_table : str
-        Input value for `target_table`.
+        Value for `target_table`.
     transformation_steps : list[dict]
-        Input value for `transformation_steps`.
+        Value for `transformation_steps`.
     eda_notes : str | None, optional
-        Input value for `eda_notes`.
+        Value for `eda_notes`.
 
     Returns
     -------
     result : str
-        Output produced by `build_lineage_prompt_context`.
+        Result returned by `build_lineage_prompt_context`.
 
     Examples
     --------
@@ -316,7 +316,7 @@ def build_lineage_prompt_context(*, dataset_name: str, source_tables: list[str],
 def get_fabric_copilot_lineage_prompt() -> str:
     """Get fabric copilot lineage prompt.
 
-    Use this callable to support the framework workflow step implemented by `get_fabric_copilot_lineage_prompt`.
+    Execute `get_fabric_copilot_lineage_prompt`.
 
     Parameters
     ----------
@@ -326,7 +326,7 @@ def get_fabric_copilot_lineage_prompt() -> str:
     Returns
     -------
     result : str
-        Output produced by `get_fabric_copilot_lineage_prompt`.
+        Result returned by `get_fabric_copilot_lineage_prompt`.
 
     Examples
     --------
@@ -338,17 +338,17 @@ def get_fabric_copilot_lineage_prompt() -> str:
 def validate_lineage_steps(lineage_steps) -> dict:
     """Validate lineage steps.
 
-    Use this callable to support the framework workflow step implemented by `validate_lineage_steps`.
+    Execute `validate_lineage_steps`.
 
     Parameters
     ----------
     lineage_steps : Any
-        Input value for `lineage_steps`.
+        Value for `lineage_steps`.
 
     Returns
     -------
     result : dict
-        Output produced by `validate_lineage_steps`.
+        Result returned by `validate_lineage_steps`.
 
     Examples
     --------
@@ -417,27 +417,27 @@ def validate_lineage_steps(lineage_steps) -> dict:
 def build_lineage_record_from_steps(dataset_name, lineage_steps, run_id=None, notebook_name=None, workspace_name=None, created_by=None) -> list[dict]:
     """Build lineage record from steps.
 
-    Use this callable to support the framework workflow step implemented by `build_lineage_record_from_steps`.
+    Execute `build_lineage_record_from_steps`.
 
     Parameters
     ----------
     dataset_name : Any
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     lineage_steps : Any
-        Input value for `lineage_steps`.
+        Value for `lineage_steps`.
     run_id : Any, optional
-        Input value for `run_id`.
+        Value for `run_id`.
     notebook_name : Any, optional
-        Input value for `notebook_name`.
+        Value for `notebook_name`.
     workspace_name : Any, optional
-        Input value for `workspace_name`.
+        Value for `workspace_name`.
     created_by : Any, optional
-        Input value for `created_by`.
+        Value for `created_by`.
 
     Returns
     -------
     result : list[dict]
-        Output produced by `build_lineage_record_from_steps`.
+        Result returned by `build_lineage_record_from_steps`.
 
     Raises
     ------
@@ -477,25 +477,25 @@ def build_lineage_record_from_steps(dataset_name, lineage_steps, run_id=None, no
 def build_lineage_records(*, dataset_name: str, run_id: str, source_tables: list[str], target_table: str, transformation_steps: list[dict]) -> list[dict]:
     """Build lineage records.
 
-    Use this callable to support the framework workflow step implemented by `build_lineage_records`.
+    Execute `build_lineage_records`.
 
     Parameters
     ----------
     dataset_name : str
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     run_id : str
-        Input value for `run_id`.
+        Value for `run_id`.
     source_tables : list[str]
-        Input value for `source_tables`.
+        Value for `source_tables`.
     target_table : str
-        Input value for `target_table`.
+        Value for `target_table`.
     transformation_steps : list[dict]
-        Input value for `transformation_steps`.
+        Value for `transformation_steps`.
 
     Returns
     -------
     result : list[dict]
-        Output produced by `build_lineage_records`.
+        Result returned by `build_lineage_records`.
 
     Examples
     --------
@@ -507,27 +507,27 @@ def build_lineage_records(*, dataset_name: str, run_id: str, source_tables: list
 def build_lineage_record(*, dataset_name: str, run_id: str | None = None, lineage_steps: list[dict] | None = None, notebook_name: str | None = None, workspace_name: str | None = None, created_by: str | None = None) -> list[dict]:
     """Build lineage record.
 
-    Use this callable to support the framework workflow step implemented by `build_lineage_record`.
+    Execute `build_lineage_record`.
 
     Parameters
     ----------
     dataset_name : str
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     run_id : str | None, optional
-        Input value for `run_id`.
+        Value for `run_id`.
     lineage_steps : list[dict] | None, optional
-        Input value for `lineage_steps`.
+        Value for `lineage_steps`.
     notebook_name : str | None, optional
-        Input value for `notebook_name`.
+        Value for `notebook_name`.
     workspace_name : str | None, optional
-        Input value for `workspace_name`.
+        Value for `workspace_name`.
     created_by : str | None, optional
-        Input value for `created_by`.
+        Value for `created_by`.
 
     Returns
     -------
     result : list[dict]
-        Output produced by `build_lineage_record`.
+        Result returned by `build_lineage_record`.
 
     Raises
     ------
@@ -546,19 +546,19 @@ def build_lineage_record(*, dataset_name: str, run_id: str | None = None, lineag
 def plot_lineage_networkx(lineage_steps_or_record, title=None):
     """Plot lineage networkx.
 
-    Use this callable to support the framework workflow step implemented by `plot_lineage_networkx`.
+    Execute `plot_lineage_networkx`.
 
     Parameters
     ----------
     lineage_steps_or_record : Any
-        Input value for `lineage_steps_or_record`.
+        Value for `lineage_steps_or_record`.
     title : Any, optional
-        Input value for `title`.
+        Value for `title`.
 
     Returns
     -------
     result : Any
-        Output produced by `plot_lineage_networkx`.
+        Result returned by `plot_lineage_networkx`.
 
     Raises
     ------

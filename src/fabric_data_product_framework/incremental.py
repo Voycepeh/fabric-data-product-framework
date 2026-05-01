@@ -24,7 +24,7 @@ class IncrementalSafetyError(Exception):
 def default_incremental_safety_policy() -> dict:
     """Default incremental safety policy.
 
-    Use this callable to support the framework workflow step implemented by `default_incremental_safety_policy`.
+    Execute `default_incremental_safety_policy`.
 
     Parameters
     ----------
@@ -34,7 +34,7 @@ def default_incremental_safety_policy() -> dict:
     Returns
     -------
     result : dict
-        Output produced by `default_incremental_safety_policy`.
+        Result returned by `default_incremental_safety_policy`.
 
     Examples
     --------
@@ -155,31 +155,31 @@ def _build_spark_partition_snapshot(df, *, dataset_name: str, table_name: str, p
 def build_partition_snapshot(df, *, dataset_name: str = "unknown", table_name: str = "unknown", partition_column: str, business_keys: list[str], watermark_column: str | None = None, run_id: str | None = None, engine: str = "auto") -> list[dict]:
     """Build partition snapshot.
 
-    Use this callable to support the framework workflow step implemented by `build_partition_snapshot`.
+    Execute `build_partition_snapshot`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     dataset_name : str, optional
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str, optional
-        Input value for `table_name`.
+        Value for `table_name`.
     partition_column : str
-        Input value for `partition_column`.
+        Value for `partition_column`.
     business_keys : list[str]
-        Input value for `business_keys`.
+        Value for `business_keys`.
     watermark_column : str | None, optional
-        Input value for `watermark_column`.
+        Value for `watermark_column`.
     run_id : str | None, optional
-        Input value for `run_id`.
+        Value for `run_id`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : list[dict]
-        Output produced by `build_partition_snapshot`.
+        Result returned by `build_partition_snapshot`.
 
     Raises
     ------
@@ -227,21 +227,21 @@ def _is_closed_partition(partition_value: Any, grace_days: int) -> bool:
 def compare_partition_snapshots(baseline_snapshots: list[dict], current_snapshots: list[dict], policy: dict | None = None) -> dict:
     """Compare partition snapshots.
 
-    Use this callable to support the framework workflow step implemented by `compare_partition_snapshots`.
+    Execute `compare_partition_snapshots`.
 
     Parameters
     ----------
     baseline_snapshots : list[dict]
-        Input value for `baseline_snapshots`.
+        Value for `baseline_snapshots`.
     current_snapshots : list[dict]
-        Input value for `current_snapshots`.
+        Value for `current_snapshots`.
     policy : dict | None, optional
-        Input value for `policy`.
+        Value for `policy`.
 
     Returns
     -------
     result : dict
-        Output produced by `compare_partition_snapshots`.
+        Result returned by `compare_partition_snapshots`.
 
     Examples
     --------
@@ -293,17 +293,17 @@ def compare_partition_snapshots(baseline_snapshots: list[dict], current_snapshot
 def assert_incremental_safe(result: dict) -> None:
     """Assert incremental safe.
 
-    Use this callable to support the framework workflow step implemented by `assert_incremental_safe`.
+    Execute `assert_incremental_safe`.
 
     Parameters
     ----------
     result : dict
-        Input value for `result`.
+        Value for `result`.
 
     Returns
     -------
     result : None
-        Output produced by `assert_incremental_safe`.
+        Result returned by `assert_incremental_safe`.
 
     Raises
     ------
@@ -321,23 +321,23 @@ def assert_incremental_safe(result: dict) -> None:
 def build_incremental_safety_records(result: dict, *, run_id: str, dataset_name: str, table_name: str) -> list[dict]:
     """Build incremental safety records.
 
-    Use this callable to support the framework workflow step implemented by `build_incremental_safety_records`.
+    Execute `build_incremental_safety_records`.
 
     Parameters
     ----------
     result : dict
-        Input value for `result`.
+        Value for `result`.
     run_id : str
-        Input value for `run_id`.
+        Value for `run_id`.
     dataset_name : str
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str
-        Input value for `table_name`.
+        Value for `table_name`.
 
     Returns
     -------
     result : list[dict]
-        Output produced by `build_incremental_safety_records`.
+        Result returned by `build_incremental_safety_records`.
 
     Examples
     --------

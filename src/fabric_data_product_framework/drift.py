@@ -34,7 +34,7 @@ VALID_ENGINES = {"auto", "pandas", "spark"}
 def default_schema_drift_policy() -> dict:
     """Default schema drift policy.
 
-    Use this callable to support the framework workflow step implemented by `default_schema_drift_policy`.
+    Execute `default_schema_drift_policy`.
 
     Parameters
     ----------
@@ -44,7 +44,7 @@ def default_schema_drift_policy() -> dict:
     Returns
     -------
     result : dict
-        Output produced by `default_schema_drift_policy`.
+        Result returned by `default_schema_drift_policy`.
 
     Examples
     --------
@@ -63,17 +63,17 @@ def default_schema_drift_policy() -> dict:
 def detect_dataframe_engine(df) -> str:
     """Detect dataframe engine.
 
-    Use this callable to support the framework workflow step implemented by `detect_dataframe_engine`.
+    Execute `detect_dataframe_engine`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
 
     Returns
     -------
     result : str
-        Output produced by `detect_dataframe_engine`.
+        Result returned by `detect_dataframe_engine`.
 
     Raises
     ------
@@ -156,23 +156,23 @@ def _build_spark_schema_snapshot(df, dataset_name: str, table_name: str) -> dict
 def build_schema_snapshot(df, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "auto") -> dict:
     """Build schema snapshot.
 
-    Use this callable to support the framework workflow step implemented by `build_schema_snapshot`.
+    Execute `build_schema_snapshot`.
 
     Parameters
     ----------
     df : Any
-        Input value for `df`.
+        Value for `df`.
     dataset_name : str, optional
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     table_name : str, optional
-        Input value for `table_name`.
+        Value for `table_name`.
     engine : str, optional
-        Input value for `engine`.
+        Value for `engine`.
 
     Returns
     -------
     result : dict
-        Output produced by `build_schema_snapshot`.
+        Result returned by `build_schema_snapshot`.
 
     Raises
     ------
@@ -209,21 +209,21 @@ def _resolve_change_behavior(is_warning: bool, is_blocking: bool) -> tuple[str, 
 def compare_schema_snapshots(baseline_snapshot: dict, current_snapshot: dict, policy: dict | None = None) -> dict:
     """Compare schema snapshots.
 
-    Use this callable to support the framework workflow step implemented by `compare_schema_snapshots`.
+    Execute `compare_schema_snapshots`.
 
     Parameters
     ----------
     baseline_snapshot : dict
-        Input value for `baseline_snapshot`.
+        Value for `baseline_snapshot`.
     current_snapshot : dict
-        Input value for `current_snapshot`.
+        Value for `current_snapshot`.
     policy : dict | None, optional
-        Input value for `policy`.
+        Value for `policy`.
 
     Returns
     -------
     result : dict
-        Output produced by `compare_schema_snapshots`.
+        Result returned by `compare_schema_snapshots`.
 
     Examples
     --------
@@ -303,17 +303,17 @@ def compare_schema_snapshots(baseline_snapshot: dict, current_snapshot: dict, po
 def assert_no_blocking_schema_drift(result: dict) -> None:
     """Assert no blocking schema drift.
 
-    Use this callable to support the framework workflow step implemented by `assert_no_blocking_schema_drift`.
+    Execute `assert_no_blocking_schema_drift`.
 
     Parameters
     ----------
     result : dict
-        Input value for `result`.
+        Value for `result`.
 
     Returns
     -------
     result : None
-        Output produced by `assert_no_blocking_schema_drift`.
+        Result returned by `assert_no_blocking_schema_drift`.
 
     Raises
     ------

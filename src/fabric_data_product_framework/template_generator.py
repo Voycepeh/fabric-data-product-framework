@@ -17,35 +17,35 @@ def create_pipeline_notebook_template(
 ):
     """Create pipeline notebook template.
 
-    Use this callable to support the framework workflow step implemented by `create_pipeline_notebook_template`.
+    Execute `create_pipeline_notebook_template`.
 
     Parameters
     ----------
     output_path : Any
-        Input value for `output_path`.
+        Value for `output_path`.
     dataset_name : Any, optional
-        Input value for `dataset_name`.
+        Value for `dataset_name`.
     source_table : Any, optional
-        Input value for `source_table`.
+        Value for `source_table`.
     output_table : Any, optional
-        Input value for `output_table`.
+        Value for `output_table`.
     source_env : Any, optional
-        Input value for `source_env`.
+        Value for `source_env`.
     source_target : Any, optional
-        Input value for `source_target`.
+        Value for `source_target`.
     output_env : Any, optional
-        Input value for `output_env`.
+        Value for `output_env`.
     output_target : Any, optional
-        Input value for `output_target`.
+        Value for `output_target`.
     include_ai_prompts : Any, optional
-        Input value for `include_ai_prompts`.
+        Value for `include_ai_prompts`.
     overwrite : Any, optional
-        Input value for `overwrite`.
+        Value for `overwrite`.
 
     Returns
     -------
     result : Any
-        Output produced by `create_pipeline_notebook_template`.
+        Result returned by `create_pipeline_notebook_template`.
 
     Raises
     ------
@@ -264,19 +264,19 @@ def create_actual_data_mvp_template(
 ) -> str:
     """Create actual data mvp template.
 
-    Use this callable to support the framework workflow step implemented by `create_actual_data_mvp_template`.
+    Execute `create_actual_data_mvp_template`.
 
     Parameters
     ----------
     output_path : str
-        Input value for `output_path`.
+        Value for `output_path`.
     contract_path : str, optional
-        Input value for `contract_path`.
+        Value for `contract_path`.
 
     Returns
     -------
     result : str
-        Output produced by `create_actual_data_mvp_template`.
+        Result returned by `create_actual_data_mvp_template`.
 
     Examples
     --------
