@@ -35,7 +35,10 @@ Use one contract + one transform function to run the full framework flow on a re
 ## 6) How to interpret result sections
 - `status` / `written`: overall gate result and final write outcome.
 - `run_summary`: high-level run metadata and gate rollup.
-- `dq_workflow_summary`, `drift_summary`, `governance_summary`, `quarantine_summary`: subsystem outcomes.
+- `dq_workflow`: DQ rule generation, loaded rules, quality result, and gate result.
+- `drift.summary`: schema/data drift rollup.
+- `governance.summary`: column classification suggestion rollup.
+- `quarantine`: quarantine status, row count, and write status.
 
 ## 7) Common first-run behavior
 - Drift checks can report `no_baseline`; first run should not fail solely due to missing baseline snapshots.
