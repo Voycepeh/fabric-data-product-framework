@@ -75,6 +75,7 @@ Guide: [docs/UV_WHEEL_FABRIC_INSTALL_GUIDE.md](docs/UV_WHEEL_FABRIC_INSTALL_GUID
 - Lifecycle and sequence: [docs/lifecycle-operating-model.md](docs/lifecycle-operating-model.md)
 - Function reference: [src/README.md](src/README.md)
 - Notebook recipes: [docs/recipes/index.md](docs/recipes/index.md)
+- MVP wheel release checklist: [docs/recipes/mvp_wheel_release_checklist.md](docs/recipes/mvp_wheel_release_checklist.md)
 - Capability status: [docs/capability-status.md](docs/capability-status.md)
 
 ## Documentation site
