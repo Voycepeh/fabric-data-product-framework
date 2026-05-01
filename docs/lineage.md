@@ -1,72 +1,61 @@
-# Lineage recorder and transformation summaries
+# AI-assisted notebook lineage
 
-## Why lineage matters
+Lineage in this framework is **not hard coded** and **not manually authored from scratch**.
 
-Execution logs show **what ran**, but they rarely explain **why changes were made**. A lightweight lineage record helps teams track source-to-target flow, business intent, and transformation impact in a handover-friendly way.
+Workflow:
+1. User runs their Fabric notebook.
+2. User calls `get_fabric_copilot_lineage_prompt()` and pastes the prompt into Fabric Copilot.
+3. Copilot scans the entire notebook and returns Python code with `lineage_steps = [...]`.
+4. User runs that generated cell.
+5. Framework validates with `validate_lineage_steps(...)`.
+6. Framework builds a structured record with `build_lineage_record_from_steps(...)`.
+7. Framework renders notebook lineage with `plot_lineage_networkx(...)` (matplotlib + networkx).
+8. Human reviews low-confidence/unknown/ambiguous items.
+9. Approved lineage is stored as metadata or exported as JSON.
 
-## Code execution vs explanation
+## Actor split
 
-- Execution gives technical outcomes (row counts, schemas, checks).
-- Explanation gives context (reasoning, business impact, decision notes).
-- This module captures both in JSON-safe records that are metadata-table friendly.
+- **AI / Fabric Copilot**: scans notebook and drafts `lineage_steps`, including transformation summary and reason from code, markdown, and comments.
+- **Framework**: provides schema + prompt, validates generated lineage, renders the diagram, and prepares metadata-ready records.
+- **Human**: reviews low-confidence/"Needs human review" entries, corrects issues, and approves final lineage.
 
-## Manual recorder pattern
+## Important scope clarification
 
-Use `LineageRecorder` during transformation steps. Record only notable changes (filtering, joins, derived fields, deduplication), not every cell.
+- Microsoft Fabric native lineage view is useful for **workspace item-level dependencies**.
+- This framework lineage is **notebook-level transformation lineage** (DataFrame/table/file flow inside notebook logic).
+- Mermaid can be used in GitHub documentation when useful, but Fabric notebook lineage rendering should use matplotlib + networkx.
+
+## Minimal runnable pattern
 
 ```python
-from fabric_data_product_framework.lineage import (
-    LineageRecorder,
-    generate_mermaid_lineage,
-    build_transformation_summary_markdown,
-)
+import fabric_data_product_framework as fw
 
-lineage = LineageRecorder(
-    dataset_name=ctx["dataset_name"],
-    run_id=ctx["run_id"],
-    source_tables=[ctx["source_table"]],
-    target_table=ctx["target_table"],
-)
+prompt = fw.get_fabric_copilot_lineage_prompt()
+print(prompt)
 
-lineage.add_step(
-    step_id="T001",
-    step_name="Filter active records",
-    input_name="df_source",
-    output_name="df_active",
-    description="Keep only active records.",
-    reason="Downstream reporting should exclude inactive records.",
-    transformation_type="filter",
-    columns_used=["status"],
-)
+# Paste Copilot output here
+lineage_steps = []
 
-lineage.add_step(
-    step_id="T002",
-    step_name="Derive reporting date",
-    input_name="df_active",
-    output_name="df_output",
-    description="Create reporting_date from updated_at.",
-    reason="Reports need a stable date field for filtering.",
-    transformation_type="derive_column",
-    columns_used=["updated_at"],
-    columns_created=["reporting_date"],
-)
+validation = fw.validate_lineage_steps(lineage_steps)
+display(validation)
 
-summary = lineage.build_summary()
-print(build_transformation_summary_markdown(summary))
+lineage_record = fw.build_lineage_record_from_steps(
+    dataset_name=DATASET_NAME,
+    lineage_steps=lineage_steps,
+    run_id=RUN_ID,
+)
+display(lineage_record)
+
+fw.plot_lineage_networkx(lineage_record, title=f"{DATASET_NAME} Notebook Lineage")
 ```
 
-## Handover support
+## Plotting dependencies
 
-The summary markdown and mermaid output give junior engineers or analysts a fast way to understand the transformation path and rationale without reverse engineering notebook cells.
+`plot_lineage_networkx(...)` requires `matplotlib` and `networkx`.
 
-## AI-assisted lineage review (without AI API calls)
+- In many Fabric notebook runtimes these may already exist.
+- For local usage, install optional lineage extras:
 
-`build_lineage_prompt_context` generates prompt-ready markdown for Copilot/AI-assisted review. It includes strict guidance not to invent transformations and keeps all facts sourced from recorded steps.
-
-## Future evolution
-
-This design intentionally stays manual-first. It can later connect to automated notebook/code analysis while preserving today’s notebook-friendly workflow.
-
-## Metadata integration
-
-Use `build_lineage_records` to convert steps into one-record-per-step rows that can be written to lineage metadata tables alongside run summaries and quality outputs.
+```bash
+pip install "fabric-data-product-framework[lineage]"
+```

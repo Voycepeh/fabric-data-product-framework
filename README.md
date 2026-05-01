@@ -63,6 +63,7 @@ AI is used to **suggest, draft, explain, and accelerate**:
 - DQ rule candidates from profiling + context.
 - Sensitivity/governance draft labels from metadata.
 - Transformation and lineage summaries for handover.
+- AI-assisted notebook lineage: Copilot drafts lineage steps, framework validates/renders, human approves.
 
 AI does **not** own the data product lifecycle.
 

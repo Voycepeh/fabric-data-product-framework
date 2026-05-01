@@ -6,6 +6,10 @@ from fabric_data_product_framework.lineage import (
     build_lineage_records,
     build_transformation_summary_markdown,
     generate_mermaid_lineage,
+    get_fabric_copilot_lineage_prompt,
+    build_lineage_record_from_steps,
+    plot_lineage_networkx,
+    validate_lineage_steps,
 )
 
 
@@ -115,3 +119,79 @@ def test_lineage_outputs_are_json_serializable() -> None:
     json.dumps(summary)
     json.dumps(records)
     json.dumps(context)
+
+
+def test_validate_lineage_steps_accepts_valid_steps() -> None:
+    steps = [{"source": "raw_orders", "target": "clean_orders", "transformation": "Clean required columns and standardize amount", "reason": "Prepare source for validation and analytics", "source_type": "dataframe", "target_type": "dataframe", "confidence": "high", "notes": ""}]
+    out = validate_lineage_steps(steps)
+    assert out["is_valid"] is True
+    assert out["review_required"] is False
+
+
+def test_validate_lineage_steps_rejects_missing_fields() -> None:
+    out = validate_lineage_steps([{"source": "raw_orders", "source_type": "dataframe", "target_type": "dataframe", "confidence": "high", "reason": "x"}])
+    assert out["is_valid"] is False
+    assert out["errors"]
+
+
+def test_validate_lineage_steps_flags_low_confidence_review() -> None:
+    out = validate_lineage_steps([{"source": "raw_orders", "target": "clean_orders", "transformation": "Filter", "reason": "Prepare", "source_type": "dataframe", "target_type": "dataframe", "confidence": "low"}])
+    assert out["is_valid"] is True
+    assert out["review_required"] is True
+    assert out["warnings"]
+
+
+def test_validate_lineage_steps_flags_unknown_type_review() -> None:
+    out = validate_lineage_steps([{"source": "raw_orders", "target": "clean_orders", "transformation": "Filter", "reason": "Prepare", "source_type": "unknown", "target_type": "dataframe", "confidence": "high"}])
+    assert out["review_required"] is True
+
+
+def test_build_lineage_record_from_steps_uses_custom_dataset() -> None:
+    steps = [{"source": "a", "target": "b", "transformation": "join", "reason": "analytics", "source_type": "dataframe", "target_type": "dataframe", "confidence": "high"}]
+    rows = build_lineage_record_from_steps("custom_dataset", steps, run_id="run-001")
+    assert rows[0]["dataset_name"] == "custom_dataset"
+    assert "framework_smoke_orders" not in str(rows)
+
+
+def test_get_fabric_copilot_lineage_prompt_contains_required_terms() -> None:
+    prompt = get_fabric_copilot_lineage_prompt()
+    for term in ["Fabric notebook", "scan the entire", "lineage_steps", "Spark", "Pandas", "DataFrame", "markdown", "comments", "reads", "writes", "joins", "filters", "withColumn", "groupBy", "confidence", "Needs human review", "matplotlib", "networkx", "avoid Mermaid", "human"]:
+        assert term in prompt
+
+
+def test_plot_lineage_networkx_returns_graph() -> None:
+    steps = [{"source": "raw_orders", "target": "clean_orders", "transformation": "filter", "reason": "analytics", "source_type": "dataframe", "target_type": "dataframe", "confidence": "high"}]
+    try:
+        g, _, _ = plot_lineage_networkx(steps)
+        assert g.number_of_nodes() == 2
+        assert g.number_of_edges() == 1
+    except ImportError as ex:
+        assert "matplotlib" in str(ex) or "networkx" in str(ex)
+
+
+def test_validate_lineage_steps_rejects_empty_list() -> None:
+    out = validate_lineage_steps([])
+    assert out["is_valid"] is False
+    assert out["review_required"] is True
+    assert "cannot be empty" in out["errors"][0]
+
+
+def test_transformation_summary_markdown_preserves_detail_fields() -> None:
+    recorder = LineageRecorder("sales_dataset", run_id="run-001", source_tables=["src.sales"], target_table="curated.sales")
+    recorder.add_step(**_sample_step())
+    markdown = build_transformation_summary_markdown(recorder.build_summary(), include_mermaid=False)
+    for expected in ["Source tables:", "Target table:", "Step count:", "Columns used:", "Columns created:", "Business impact:"]:
+        assert expected in markdown
+
+
+def test_lineage_prompt_context_includes_columns_fields() -> None:
+    context = build_lineage_prompt_context(
+        dataset_name="sales_dataset",
+        source_tables=["src.sales"],
+        target_table="curated.sales",
+        transformation_steps=[_sample_step()],
+        eda_notes="Null checks passed.",
+    )
+    assert "Columns used:" in context
+    assert "Columns created:" in context
+    assert "EDA Notes" in context

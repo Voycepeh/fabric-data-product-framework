@@ -47,3 +47,38 @@ def test_actual_data_mvp_assets_exist_and_contain_runner_calls(tmp_path: Path):
     assert 'result.get("drift_summary")' not in generated_text
     assert 'result.get("governance_summary")' not in generated_text
     assert 'result.get("quarantine_summary")' not in generated_text
+
+
+from fabric_data_product_framework.template_generator import create_pipeline_notebook_template
+
+
+def test_pipeline_template_lineage_calls_are_namespaced_and_defined(tmp_path: Path):
+    out = tmp_path / "pipeline_template.py"
+    create_pipeline_notebook_template(str(out), dataset_name="orders")
+    text = out.read_text(encoding="utf-8")
+    assert "import fabric_data_product_framework as fw" in text
+    assert "fw.get_fabric_copilot_lineage_prompt()" in text
+    assert "fw.validate_lineage_steps(lineage_steps)" in text
+    assert "fw.build_lineage_record_from_steps" in text
+    assert "fw.plot_lineage_networkx" in text
+
+
+def test_pipeline_template_no_undefined_dataset_or_run_vars(tmp_path: Path):
+    out = tmp_path / "pipeline_template_defined_vars.py"
+    create_pipeline_notebook_template(str(out), dataset_name="orders")
+    text = out.read_text(encoding="utf-8")
+    assert "DATASET_NAME" not in text
+    assert "RUN_ID" not in text
+    assert 'dataset_name = "orders"' in text
+    assert "run_id = None" in text
+
+
+def test_generated_actual_data_mvp_contains_ai_assisted_lineage_section(tmp_path: Path):
+    generated = tmp_path / "generated_actual_data_mvp_lineage.py"
+    create_actual_data_mvp_template(str(generated))
+    text = generated.read_text(encoding="utf-8")
+    assert "fw.get_fabric_copilot_lineage_prompt()" in text
+    assert "lineage_steps = [" in text
+    assert "fw.validate_lineage_steps(lineage_steps)" in text
+    assert "fw.build_lineage_record_from_steps(" in text
+    assert "fw.plot_lineage_networkx(" in text

@@ -20,6 +20,18 @@ from .fabric_notebook import (
     warehouse_write,
 )
 from .template_generator import create_actual_data_mvp_template, create_pipeline_notebook_template
+from .lineage import (
+    LineageRecorder,
+    build_lineage_prompt_context,
+    build_lineage_record,
+    build_lineage_record_from_steps,
+    build_lineage_records,
+    build_transformation_summary_markdown,
+    generate_mermaid_lineage,
+    get_fabric_copilot_lineage_prompt,
+    plot_lineage_networkx,
+    validate_lineage_steps,
+)
 from .dq import (
     build_dq_rule_records,
     generate_dq_rule_candidates,
@@ -97,6 +109,16 @@ __all__ = [
     "pass_if_yes_else_run",
     "create_pipeline_notebook_template",
     "create_actual_data_mvp_template",
+    "validate_lineage_steps",
+    "plot_lineage_networkx",
+    "get_fabric_copilot_lineage_prompt",
+    "generate_mermaid_lineage",
+    "build_transformation_summary_markdown",
+    "build_lineage_records",
+    "build_lineage_record_from_steps",
+    "build_lineage_record",
+    "build_lineage_prompt_context",
+    "LineageRecorder",
     "run_dq_workflow",
     "run_dq_rules",
     "load_dq_rules",
