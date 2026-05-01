@@ -62,6 +62,7 @@ from .governance_classifier import (
     summarize_governance_classifications,
     write_governance_classifications,
 )
+from .mvp_steps import MVP_STEPS, get_mvp_step_registry, validate_mvp_artifacts
 from .data_contract import (
     DataProductContract,
     DriftContract,
@@ -163,4 +164,7 @@ __all__ = [
     "load_latest_partition_snapshot",
     "check_profile_drift",
     "summarize_drift_results",
+    "MVP_STEPS",
+    "get_mvp_step_registry",
+    "validate_mvp_artifacts",
 ]

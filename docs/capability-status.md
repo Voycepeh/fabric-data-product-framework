@@ -1,44 +1,19 @@
-# Capability Status
+# Capability Status (MVP order)
 
-This page is the canonical status view for framework capabilities, gaps, and next priorities.
+Status values: **Implemented**, **Partial**, **Pattern only**, **Not implemented**.
 
-## Module capability status (MVP)
-
-| Capability area | Current status | What exists now | What is missing | Build next |
-|---|---|---|---|---|
-| Product definition + run configuration | Implemented (core) | Notebook/runtime helpers, Fabric config loading, naming/runtime guardrails. | Rich policy packs for steward/usage approval workflows. | Add explicit policy templates for product sign-off and publish constraints. |
-| Source contract declaration | Implemented (core) | Contract schema + validation helpers and example contract assets. | Stronger contract versioning/change-log helpers. | Add contract version diff utility and release note generator. |
-| Ingest + profiling metadata | Implemented (core) | pandas/Spark-aware profiling and metadata record generation. | Profile registry/history querying helpers. | Add profile history compare API and baseline retrieval helpers. |
-| AI-suggested DQ rules | Implemented (MVP) | AI prompt/parse helpers for DQ candidate generation and normalisation. | First-class approval registry API and scoring/rationale persistence. | Add approval-state model and reviewer audit metadata helpers. |
-| Human-reviewed DQ contract | Pattern/template | Documented review pattern and rule compiler integration. | Opinionated workflow tooling for approve/edit/reject lifecycle. | Add lightweight approval workflow notebook utilities. |
-| DQ execution gates | Implemented (core) | Rule execution, gate summaries, and run summary integration. | Wider rule-type coverage and richer exception routing. | Expand rules + quarantine patterns and add policy presets. |
-| Schema drift checks | Implemented (core) | Schema snapshot and diff helpers with gate-ready output. | Automated mitigation playbooks and remediation recommendations. | Add drift action hints and configurable response policies. |
-| Data drift + incremental safety | Implemented (core) | Incremental helpers and safety comparisons for runtime checks. | Broader statistical drift detectors and seasonal baseline handling. | Extend drift metrics and threshold templates by domain pattern. |
-| Sensitivity/governance classification | Partial | Governance module scaffolding and metadata structures. | Full AI suggestion + human approval + enforcement pipeline. | Implement sensitivity suggestion helpers and governance gate checks. |
-| Transform & explain | Partial | AI transformation summary workflow and run artefact capture. | Structured transformation rationale schema enforcement. | Add rationale schema validator + publish-ready summary formatter. |
-| Standardise & write output | Implemented (core) | Technical/audit column helpers and Fabric write patterns. | More built-in partition strategy templates. | Add partition strategy presets and validation checks. |
-| Validate output + handover pack | Implemented (core) | Run summary, lineage record builders, handover package guidance. | One-command handover bundle export utilities. | Add packaged export helper for summaries, lineage, DQ, governance notes. |
-| Promote / consume readiness | Partial | Lifecycle docs and run artefacts that support promotion review. | Explicit promotion checklist automation and release gate scoring. | Add promotion-readiness checklist utility with pass/warn/fail scoring. |
-
-## Notes
-- “Implemented” means callable framework utilities are available in `src/`.
-- “Partial” means some building blocks exist, but end-to-end workflow automation is incomplete.
-- “Pattern/template” means the approach is documented, but not fully productised in code yet.
-
-Implementation-oriented detail remains in [framework-status.md](framework-status.md).
-
-## DQX-inspired capability mapping
-
-| DQX-inspired capability | Current Fabric framework capability | Status | Next improvement |
-|---|---|---|---|
-| Profiling and rule candidate generation | Profiling utilities and deterministic candidate generation are available as notebook-callable framework functions. | Implemented (core) | Add stronger profile-history retrieval and candidate rationale persistence. |
-| AI-assisted quality rule generation | Fabric AI-assisted generation path exists via framework wrapper over Fabric AI functions with human review expected. | Implemented (MVP) | Strengthen response scoring, parser hardening, and reviewer audit fields. |
-| Quality rule definition and storage | Rule normalization, record building, and metadata table storage patterns are available. | Implemented (core) | Add richer lifecycle states and approval audit model. |
-| Applying quality checks | Rule execution and quality gate checks are available and integrated with run summary patterns. | Implemented (core) | Expand supported rule types and policy templates. |
-| Valid and quarantine row routing | Helpers exist to annotate failures and split valid/quarantine outputs. | Implemented (core) | Add standardized quarantine reason taxonomy and SLA handling fields. |
-| Summary metrics | Quality/run summary record builders exist for centralized metadata storage. | Implemented (core) | Add monitoring-ready flattened metric views and benchmark thresholds. |
-| At-rest checks | Supported as a notebook execution pattern using persisted baselines, metadata tables, and run_data_product workflow steps. | Partial (pattern) | Add more opinionated templates for recurring at-rest validation jobs. |
-| In-transit checks | Supported as an execution pattern in notebook flow before/after transform and before publish gates. | Partial (pattern) | Add packaged gate presets by data product criticality tier. |
-| Workflow or no-code execution equivalent | Notebook-first execution exists; no one-for-one no-code equivalent is implemented today. | Not implemented | Add Fabric Pipeline / Data Factory orchestration templates and examples. |
-| Dashboard and monitoring | Metadata is reporting-ready through Lakehouse/Warehouse patterns; dashboard assets are not yet shipped. | Partial | Publish starter Power BI template and Warehouse monitoring views. |
-| Production best practices | Core controls exist, but release rigor is not fully codified. | Partial | Add promotion checklist, rule approval audit trail, and environment setup guide. |
+| MVP step | Status | Notes |
+|---|---|---|
+| 1. Define data product | Pattern only | Driven by notebook/documentation pattern and context artifacts. |
+| 2. Setup config and environment | Implemented | Runtime/context helpers and config loaders exist in `src/`. |
+| 3. Declare source and ingest data | Implemented | Fabric adapter and ingest helpers are available. |
+| 4. Profile source and capture metadata | Implemented | Profiling and metadata flatten/write helpers are available. |
+| 5. Explore data | Pattern only | Human-led exploration notes pattern is documented. |
+| 6. Explain transformation logic | Partial | Rationale/summary helpers exist; structured enforcement is limited. |
+| 7. Build transformation pipeline | Pattern only | Notebook pattern + helpers; full opinionated pipeline module not packaged. |
+| 8. AI generate DQ rules | Implemented | Candidate generation helpers exist, including Fabric AI-assisted path. |
+| 9. Human review DQ rules | Pattern only | Review/approval flow documented; workflow tooling is lightweight. |
+| 10. AI suggest sensitivity labels | Partial | Governance classification helpers exist but end-to-end AI review pipeline is incomplete. |
+| 11. Human review and governance gate | Partial | Governance review artifacts/gates are possible but not fully productized. |
+| 12. AI generated lineage and transformation summary | Partial | Lineage + transformation summary functions exist with human validation expected. |
+| 13. Handover framework pack | Partial | Core summary/lineage artifacts exist; one-command full export remains partial. |
