@@ -10,7 +10,12 @@ def build_table_identifier(
     schema: str | None = None,
     table: str | None = None,
 ) -> str:
-    """Build a table identifier as table, schema.table, or lakehouse.schema.table."""
+    """Build a table identifier as ``table``, ``schema.table``, or ``lakehouse.schema.table``.
+
+    Example:
+        >>> build_table_identifier(schema="silver", table="orders")
+        'silver.orders'
+    """
     parts = [part for part in [lakehouse, schema, table] if part]
     if not parts:
         raise ValueError("At least one identifier component is required (table, schema.table, or lakehouse.schema.table).")
@@ -42,6 +47,9 @@ def write_table(df, table_identifier: str, writer=None, mode: str = "append", **
     """Write a dataframe through an injected Fabric-compatible writer adapter.
 
     Typical next step is building run summary + metadata records for handover.
+
+    Side effects:
+        Delegates persistence to the injected ``writer`` callable.
     """
     normalized_mode = validate_write_mode(mode)
     if writer is None:

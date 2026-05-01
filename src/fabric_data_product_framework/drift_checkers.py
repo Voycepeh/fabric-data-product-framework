@@ -40,6 +40,11 @@ def _write_metadata_rows(spark, metadata_table: str, records: list[dict], mode: 
 
 
 def check_schema_drift(df, dataset_name: str, table_name: str, baseline_snapshot: dict | None = None, policy: dict | None = None, engine: str = "spark") -> dict:
+    """Compare current schema snapshot with baseline and return drift decision payload.
+
+    Typical next step:
+        Use ``can_continue`` and ``status`` to decide whether to block writes.
+    """
     current_snapshot = build_schema_snapshot(df, dataset_name=dataset_name, table_name=table_name, engine=engine)
     if baseline_snapshot is None:
         return {
@@ -118,6 +123,11 @@ def load_latest_schema_snapshot(spark, metadata_table: str, dataset_name: str, t
 
 
 def check_partition_drift(df, dataset_name: str, table_name: str, partition_column: str, business_keys: list[str] | None = None, watermark_column: str | None = None, baseline_snapshot: list[dict] | dict | None = None, policy: dict | None = None, run_id: str | None = None, engine: str = "spark") -> dict:
+    """Check partition-level drift for incremental pipelines using business-key snapshots.
+
+    Common failure behavior:
+        Raises ``ValueError`` when ``business_keys`` is empty.
+    """
     keys = business_keys or []
     if not keys:
         raise ValueError("business_keys must contain at least one column for partition drift checks.")

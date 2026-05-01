@@ -67,10 +67,20 @@ def _load_schema(schema_path: str | Path | None = None) -> dict:
 
 
 def validate_dataset_contract(contract: dict, schema_path: str | Path | None = None) -> list[str]:
-    """Validate contract content against schema and return human-readable errors.
+    """Validate a dataset contract dictionary against the configured schema.
+
+    Args:
+        contract: Contract payload already loaded into a dictionary.
+        schema_path: Optional schema path; uses packaged default when omitted.
+
+    Returns:
+        List of formatted validation errors. Empty means valid.
 
     Runtime:
         Local-safe and Fabric-safe.
+
+    Typical next step:
+        Gate execution with ``assert_valid_dataset_contract`` when errors are not allowed.
     """
     schema = _load_schema(schema_path=schema_path)
 
@@ -97,10 +107,13 @@ def load_and_validate_dataset_contract(
     path: str | Path,
     schema_path: str | Path | None = None,
 ) -> tuple[dict, list[str]]:
-    """Load and validate contract in one call for notebook entrypoint checks.
+    """Load a contract file and validate it in one notebook-entrypoint call.
 
     Returns:
         Tuple of ``(contract, errors)``. Continue only when ``errors`` is empty.
+
+    Example:
+        >>> contract, errors = load_and_validate_dataset_contract("contracts/orders.yaml")
     """
     contract = load_dataset_contract(path)
     errors = validate_dataset_contract(contract, schema_path=schema_path)

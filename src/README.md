@@ -3,6 +3,7 @@
 This page explains the main callable functions exposed by `fabric_data_product_framework`.
 Read the root `README.md` and Fabric notebook template docs first.
 This page is organized around how functions are typically chained in notebook workflows.
+Detailed function-level documentation is progressively being standardized in docstrings and mirrored in `docs/api/`.
 
 ## Typical notebook chaining order
 

@@ -199,6 +199,9 @@ def run_quality_rules(df: Any, rules: list[dict], *, dataset_name: str = "unknow
 
     Runtime:
         Local-safe for pandas and Fabric/Spark compatible for distributed runs.
+
+    Example:
+        >>> result = run_quality_rules(df, rules, dataset_name="orders", table_name="silver.orders")
     """
     resolved_engine = _resolve_engine(df, engine)
     row_count = len(df) if resolved_engine == "pandas" else df.count()
@@ -288,6 +291,12 @@ def run_quality_rules(df: Any, rules: list[dict], *, dataset_name: str = "unknow
 
 
 def assert_quality_gate(result: dict, fail_on: str = "critical") -> None:
+    """Raise ``DataQualityError`` when the quality result blocks pipeline progression.
+
+    Args:
+        result: Payload returned by ``run_quality_rules``.
+        fail_on: Gate mode; MVP currently supports only ``"critical"``.
+    """
     if fail_on != "critical":
         raise ValueError("Only fail_on='critical' is supported in MVP")
     if not result.get("can_continue", True):
