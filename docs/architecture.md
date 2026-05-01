@@ -1,46 +1,82 @@
 # Architecture Overview
 
-This page describes framework components and runtime flow. For process sequencing, use the [canonical 13-step MVP lifecycle](lifecycle-operating-model.md).
+## Purpose of this page
 
-## Core architecture positions
+This page explains how the framework hangs together at system level: what each component does, why it exists, and how the pieces interact in Microsoft Fabric.
 
-- **GitHub source of truth:** code, templates, contracts, docs, and version history are managed in GitHub.
-- **Python package / wheel:** reusable framework utilities are packaged and installed into Fabric Environments.
-- **Fabric notebook execution:** practitioners run the MVP notebook template with project-specific parameters.
-- **Lakehouse / warehouse outputs:** transformed business outputs are written to target data stores.
-- **Metadata tables:** profiling, drift, DQ, governance, lineage, and run summaries are persisted for observability and handover.
-- **Dataset and pipeline contracts:** contract-first checks validate expected structure and operating rules.
-- **AI/Copilot assistant:** AI consumes structured context and proposes DQ rules, labels, lineage, and documentation artifacts for human approval.
+It does **not** duplicate run instructions.
+
+- For the end-to-end execution sequence, use [Quick Start](quick-start.md).
+- For callable function and code-level details, use [Function Reference](reference/SUMMARY.md).
+
+## Core architecture in plain language
+
+The framework runs as a connected flow:
+
+1. **GitHub source code and templates** define the reusable framework patterns and starter notebook assets.
+2. A **Python package / wheel** packages reusable framework capabilities.
+3. The package is installed into a **Fabric Environment**.
+4. A practitioner runs the **MVP notebook template** in Fabric.
+5. The notebook reads **source data in Lakehouse/Warehouse**.
+6. The framework performs **profiling and metadata capture**.
+7. **AI-assisted suggestions** are generated for DQ rules, governance labels, lineage notes, and run summaries.
+8. A **human review and approval** step confirms business meaning, governance, and release suitability.
+9. **Validation gates** enforce data product expectations.
+10. Approved runs write **output tables**.
+11. The framework produces a **run summary and handover pack** for downstream ownership.
+
+## Actor responsibilities
+
+| Actor | Primary responsibilities |
+|---|---|
+| Technical practitioner | Configuration, source declaration, transformations, and run validation in Fabric notebooks. |
+| Functional/business owner | Business purpose confirmation, approved usage context, business rule decisions, and data sensitivity review. |
+| AI/Copilot | Proposes DQ rules, governance labels, lineage notes, summaries, and handover notes from structured metadata. |
+| Framework | Executes reusable checks, logging, metadata capture, validation gates, and packaging helpers. |
+| Fabric | Runs notebooks, hosts environments, and persists outputs and metadata assets. |
 
 ## System flow
 
 ```mermaid
-flowchart LR
-    GH[GitHub Repository\nCode + Docs + Contracts] --> PKG[Python Package / Wheel]
-    PKG --> FAB[Microsoft Fabric\nNotebook Execution]
-    FAB --> OUT[Lakehouse / Warehouse\nData Outputs]
-    FAB --> META[Metadata Tables\nProfiles + Drift + DQ + Governance + Lineage + Run Summary]
-    FAB --> CONTRACTS[Dataset Contracts / Pipeline Contracts\nValidation Results]
-    META --> AI[AI/Copilot\nConsumes Structured Context]
-    CONTRACTS --> AI
-    AI --> PROP[Proposed DQ, Labels, Lineage,\nTransformation Summaries, Handover Notes]
-    PROP --> HUMAN[Human Review + Approval]
-    HUMAN --> HANDOVER[Handover Artifacts]
+flowchart TD
+    GH[GitHub source code and templates] --> PKG[Python package / wheel]
+    PKG --> ENV[Fabric Environment]
+    ENV --> NB[MVP notebook template]
+    NB --> SRC[Source data in Lakehouse/Warehouse]
+    SRC --> PROF[Profiling and metadata capture]
+    PROF --> AI[AI-assisted DQ/governance/lineage suggestions]
+    AI --> HUMAN[Human review and approval]
+    HUMAN --> GATES[Validation gates]
+    GATES --> OUT[Output tables]
+    OUT --> HANDOVER[Run summary and handover pack]
+
+    HUMAN -->|Refine guidance| AI
 ```
 
-## Metadata model reference
+## Metadata architecture
 
-```mermaid
-erDiagram
-    metadata_dataset_runs ||--o{ metadata_source_profiles : has
-    metadata_dataset_runs ||--o{ metadata_column_profiles : has
-    metadata_dataset_runs ||--o{ metadata_schema_snapshots : records
-    metadata_schema_snapshots ||--o{ metadata_schema_drift_results : compared_to
-    metadata_dataset_runs ||--o{ metadata_partition_snapshots : records
-    metadata_partition_snapshots ||--o{ metadata_data_drift_results : compared_to
-    metadata_dataset_runs ||--o{ metadata_transformation_steps : logs
-    metadata_dataset_runs ||--o{ metadata_lineage : captures
-    metadata_dataset_runs ||--o{ metadata_dq_results : validates
-    metadata_dataset_runs ||--o{ metadata_governance_labels : tags
-    metadata_dataset_runs ||--o{ metadata_contract_validation_results : checks
-```
+Metadata tables are the operational memory of the data product. They preserve what happened during a run and provide evidence for support, auditability, and handover.
+
+The metadata model captures:
+
+- source profiles
+- output profiles
+- schema drift results
+- data drift and partition checks
+- DQ rules and DQ results
+- governance labels
+- lineage records
+- transformation summaries
+- run summaries and handover exports
+
+## Data product contract expectations
+
+The framework treats the data product as having an explicit contract: expected source shape, freshness assumptions, quality rules, governance expectations, output targets, and handover evidence.
+
+In this architecture, contracts are operating and validation expectations for the data product lifecycle, enforced through reusable checks and human approvals rather than a standalone module-first workflow.
+
+## Relationship to Quick Start
+
+Architecture explains **why the components exist and how they work together**.
+
+Quick Start explains **the exact steps to run the MVP**.
