@@ -25,6 +25,19 @@ This framework is inspired by Databricks Labs DQX patterns (profiling, quality r
 
 This repository adapts that pattern to Microsoft Fabric notebooks, Lakehouse/Warehouse, Fabric AI functions, and Copilot-style workflows.
 
+## Visual overview
+
+These visuals summarize the user benefits, workflow improvement, and canonical MVP flow.
+
+### What users get
+![Framework benefits](docs/assets/framework-benefits.png)
+
+### Before vs after
+![Before and after](docs/assets/before-after.png)
+
+### MVP flow
+![MVP flow](docs/assets/mvp-flow.png)
+
 ## MVP workflow
 1. Define data product
 2. Setup config and environment
