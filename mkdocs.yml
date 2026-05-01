@@ -1,0 +1,22 @@
+site_name: Fabric Data Product Framework
+repo_url: https://github.com/Voycepeh/fabric-data-product-framework
+theme:
+  name: mkdocs
+nav:
+  - Home: api/index.md
+  - API:
+      - Runtime: api/runtime.md
+      - Profiling: api/profiling.md
+      - Quality: api/quality.md
+      - DQ Workflow: api/dq.md
+      - Governance: api/governance.md
+      - Lineage: api/lineage.md
+      - Contracts: api/contracts.md
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: false
+            show_signature_annotations: true
