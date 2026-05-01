@@ -10,7 +10,8 @@ import pandas as pd
 
 from fabric_data_product_framework.governance_classifier import classify_columns
 from fabric_data_product_framework.lineage import build_lineage_record
-from fabric_data_product_framework.mvp_steps import get_mvp_step_registry, validate_mvp_artifacts
+from fabric_data_product_framework.mvp_steps import get_mvp_step_registry
+from fabric_data_product_framework.mvp_steps import validate_mvp_artifacts
 from fabric_data_product_framework.profiling import profile_dataframe
 from fabric_data_product_framework.quality import run_quality_rules
 
@@ -49,7 +50,11 @@ data_product_context = {
 }
 
 # 2 Setup config and environment
-runtime_config = {"environment": ENVIRONMENT, "dry_run": DRY_RUN, "run_id": RUN_ID}
+runtime_config = {
+    "environment": ENVIRONMENT,
+    "dry_run": DRY_RUN,
+    "run_id": RUN_ID,
+}
 mvp_registry = get_mvp_step_registry()
 
 # 3 Declare source and ingest data
@@ -58,8 +63,16 @@ if DRY_RUN:
     # Local/Fabric-safe sample branch: no external dependencies, no writes.
     df_source = pd.DataFrame(
         [
-            {"order_id": 1, "customer_email": "alice@example.com", "amount": 10.0},
-            {"order_id": 2, "customer_email": "bob@example.com", "amount": 20.5},
+            {
+                "order_id": 1,
+                "customer_email": "alice@example.com",
+                "amount": 10.0,
+            },
+            {
+                "order_id": 2,
+                "customer_email": "bob@example.com",
+                "amount": 20.5,
+            },
         ]
     )
 else:
@@ -67,7 +80,11 @@ else:
     df_source = fabric_reader(source_declaration["source_table"])
 
 # 4 Profile source and capture metadata
-source_profile = profile_dataframe(df_source, dataset_name=data_product_context["name"], engine="auto")
+source_profile = profile_dataframe(
+    df_source,
+    dataset_name=data_product_context["name"],
+    engine="auto",
+)
 
 # 5 Explore data
 exploration_notes = "Checked nulls, schema, and row counts in dry run before Fabric write path."
@@ -110,10 +127,19 @@ dq_candidate_rules = [
 ]
 
 # 9 Human review DQ rules
-approved_dq_rules = [dict(r, review_status="approved") for r in dq_candidate_rules]
+approved_dq_rules = [dict(rule, review_status="approved") for rule in dq_candidate_rules]
 quality_rules = [
-    {"rule_type": "not_null", "column": "order_id", "severity": "critical"},
-    {"rule_type": "range_check", "column": "amount", "min_value": 0, "severity": "warning"},
+    {
+        "rule_type": "not_null",
+        "column": "order_id",
+        "severity": "critical",
+    },
+    {
+        "rule_type": "range_check",
+        "column": "amount",
+        "min_value": 0,
+        "severity": "warning",
+    },
 ]
 dq_result = run_quality_rules(
     df_output,
@@ -128,18 +154,22 @@ dq_result = run_quality_rules(
 # "Classify each column by sensitivity (public/internal/confidential/restricted)
 # using approved usage '{approved_usage}'. Return JSON with column, label,
 # rationale, and confidence."
+columns_profile = [
+    {
+        "column_name": column,
+        "data_type": str(df_source[column].dtype),
+    }
+    for column in df_source.columns
+]
 sensitivity_suggestions = classify_columns(
-    profile={
-        "columns": [
-            {"column_name": c, "data_type": str(df_source[c].dtype)}
-            for c in df_source.columns
-        ]
-    },
+    profile={"columns": columns_profile},
     business_context={"approved_usage": data_product_context["approved_usage"]},
 )
 
 # 11 Human review and governance gate
-approved_governance_labels = [dict(item, approved=True) for item in sensitivity_suggestions]
+approved_governance_labels = [
+    dict(suggestion, approved=True) for suggestion in sensitivity_suggestions
+]
 
 # 12 AI generated lineage and transformation summary
 # Copilot prompt (use as-is, then review output):
@@ -175,12 +205,28 @@ output_profile = profile_dataframe(
 # "Draft a handover summary with: run status, key assumptions, unresolved risks,
 # and next actions for productionization. Keep it concise and checklist-ready."
 handover_pack = {
-    "profile": {"source": source_profile, "output": output_profile},
-    "dq": {"candidates": dq_candidate_rules, "approved": approved_dq_rules, "result": dq_result},
-    "governance": {"suggestions": sensitivity_suggestions, "approved": approved_governance_labels},
+    "profile": {
+        "source": source_profile,
+        "output": output_profile,
+    },
+    "dq": {
+        "candidates": dq_candidate_rules,
+        "approved": approved_dq_rules,
+        "result": dq_result,
+    },
+    "governance": {
+        "suggestions": sensitivity_suggestions,
+        "approved": approved_governance_labels,
+    },
     "lineage": lineage_record,
-    "run_summary": {"status": "dry_run" if DRY_RUN else "completed", "mvp_steps": len(mvp_registry)},
-    "caveats": ["Synthetic data only when DRY_RUN=True", "AI suggestions require human approval"],
+    "run_summary": {
+        "status": "dry_run" if DRY_RUN else "completed",
+        "mvp_steps": len(mvp_registry),
+    },
+    "caveats": [
+        "Synthetic data only when DRY_RUN=True",
+        "AI suggestions require human approval",
+    ],
 }
 
 artifacts = {
