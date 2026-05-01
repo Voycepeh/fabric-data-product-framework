@@ -73,6 +73,7 @@ def check_schema_drift(df, dataset_name: str, table_name: str, baseline_snapshot
 
 
 def build_and_write_schema_snapshot(spark, df, dataset_name: str, table_name: str, metadata_table: str, run_id: str | None = None, mode: str = "append", engine: str = "spark") -> dict:
+    """Capture and persist a schema snapshot for future drift comparison."""
     snapshot = build_schema_snapshot(df, dataset_name=dataset_name, table_name=table_name, engine=engine)
     records = [
         {
@@ -89,6 +90,7 @@ def build_and_write_schema_snapshot(spark, df, dataset_name: str, table_name: st
 
 
 def load_latest_schema_snapshot(spark, metadata_table: str, dataset_name: str, table_name: str) -> dict | None:
+    """Load the most recent schema baseline snapshot from metadata storage."""
     try:
         df = spark.table(metadata_table)
         if hasattr(df, "filter") and hasattr(df, "orderBy") and hasattr(df, "limit"):
@@ -169,6 +171,7 @@ def check_partition_drift(df, dataset_name: str, table_name: str, partition_colu
 
 
 def build_and_write_partition_snapshot(spark, df, dataset_name: str, table_name: str, metadata_table: str, partition_column: str, business_keys: list[str] | None = None, watermark_column: str | None = None, run_id: str | None = None, mode: str = "append", engine: str = "spark") -> dict:
+    """Capture and persist partition-level baseline statistics."""
     keys = business_keys or []
     if not keys:
         raise ValueError("business_keys must contain at least one column for partition snapshots.")
@@ -200,6 +203,7 @@ def build_and_write_partition_snapshot(spark, df, dataset_name: str, table_name:
 
 
 def load_latest_partition_snapshot(spark, metadata_table: str, dataset_name: str, table_name: str) -> list[dict] | dict | None:
+    """Load latest partition baseline rows for drift checks."""
     try:
         df = spark.table(metadata_table)
         if hasattr(df, "filter") and hasattr(df, "orderBy") and hasattr(df, "limit"):
@@ -232,6 +236,7 @@ def load_latest_partition_snapshot(spark, metadata_table: str, dataset_name: str
 
 
 def check_profile_drift(current_profile: dict, baseline_profile: dict | None = None, policy: dict | None = None) -> dict:
+    """Compare profile metrics against baseline thresholds and report drift."""
     active = {
         "max_row_count_change_percent": 50,
         "max_null_percent_change_points": 20,

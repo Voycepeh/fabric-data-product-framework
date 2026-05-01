@@ -223,10 +223,12 @@ def normalize_dq_rule(rule: dict) -> dict:
 
 
 def normalize_dq_rules(rules: list[dict] | None) -> list[dict]:
+    """Normalize and filter raw rule payloads into executable DQ rules."""
     return [normalize_dq_rule(r) for r in (rules or [])]
 
 
 def build_dq_rule_records(rules: list[dict], dataset_name: str, table_name: str, run_id: str | None = None, status: str = "candidate", generated_by: str = "framework") -> list[dict]:
+    """Build metadata-table-friendly DQ rule records for persistence."""
     created_at = _now_iso()
     rows = []
     for rule in normalize_dq_rules(rules):
@@ -246,6 +248,7 @@ def build_dq_rule_records(rules: list[dict], dataset_name: str, table_name: str,
 
 
 def store_dq_rules(spark, rules: list[dict], table_name: str, dataset_name: str | None = None, source_table: str | None = None, run_id: str | None = None, status: str = "candidate", generated_by: str = "framework", mode: str = "append") -> list[dict]:
+    """Persist normalized DQ rules to a Spark table using JSON-safe rows."""
     ds = dataset_name or "unknown"
     st = source_table or "unknown"
     records = build_dq_rule_records(rules, dataset_name=ds, table_name=st, run_id=run_id, status=status, generated_by=generated_by)
@@ -255,6 +258,7 @@ def store_dq_rules(spark, rules: list[dict], table_name: str, dataset_name: str 
 
 
 def load_dq_rules(spark, table_name: str, dataset_name: str | None = None, source_table: str | None = None, status: str | list[str] = "approved") -> list[dict]:
+    """Load approved DQ rules from storage, honoring optional filters."""
     rows = spark.table(table_name)
     if dataset_name is not None:
         rows = rows[rows["dataset_name"] == dataset_name] if hasattr(rows, "__getitem__") and "dataset_name" in rows.columns else rows

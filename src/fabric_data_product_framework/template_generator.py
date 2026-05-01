@@ -15,6 +15,7 @@ def create_pipeline_notebook_template(
     include_ai_prompts=True,
     overwrite=False,
 ):
+    """Create a runnable Fabric notebook template for pipeline-style development."""
     path = Path(output_path)
     if path.exists() and not overwrite:
         raise FileExistsError(f"Output already exists: {path}")
@@ -221,6 +222,7 @@ def create_actual_data_mvp_template(
     output_path: str,
     contract_path: str = "contracts/examples/actual_data_mvp_contract.yml",
 ) -> str:
+    """Create the end-to-end "actual data MVP" notebook template."""
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     content = f'''# %% [markdown]

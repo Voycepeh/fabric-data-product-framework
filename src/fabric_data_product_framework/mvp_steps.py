@@ -25,10 +25,12 @@ REQUIRED_HANDOVER_PACK_KEYS = ["profile", "dq", "governance", "lineage", "run_su
 
 
 def get_mvp_step_registry() -> list[dict[str, Any]]:
+    """Return a defensive copy of the canonical MVP step registry."""
     return deepcopy(MVP_STEPS)
 
 
 def validate_mvp_artifacts(artifacts: dict[str, Any]) -> dict[str, Any]:
+    """Validate whether collected artifacts satisfy the MVP handover contract."""
     expected_top_level = sorted({a for s in MVP_STEPS for a in s["output_artifacts"]})
     missing_top_level = [name for name in expected_top_level if name not in artifacts]
     invalid_fields: list[dict[str, str]] = []
