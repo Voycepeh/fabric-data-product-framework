@@ -5,6 +5,14 @@ A reusable Fabric-first notebook framework that turns raw/source data into docum
 ## 1) What this framework is
 This project is a **metadata-first data contract workflow** for Microsoft Fabric notebooks. It is not just a pipeline template: profiling metadata and contract metadata drive repeatable checks, AI-assisted drafting, human approvals, and handover artefacts.
 
+## Relationship to Databricks Labs DQX
+This framework takes architectural inspiration from Databricks Labs DQX, especially the pattern of profiling data, generating quality rule candidates, storing quality checks, applying checks, quarantining failures, and collecting summary metrics.
+It is not a fork, clone, or replacement for DQX.
+It is a Microsoft Fabric-native adaptation for teams working in Fabric Lakehouse, Warehouse, notebooks, Fabric environments, Fabric AI functions, and Microsoft Copilot.
+Because Microsoft Fabric does not currently provide an exact one-for-one DQX implementation, this repo implements the same style of workflow using Fabric-native building blocks.
+
+Architecture detail: [docs/architecture/dqx-inspired-fabric-native-dq.md](docs/architecture/dqx-inspired-fabric-native-dq.md)
+
 ## 2) What problem it solves
 Data teams often rebuild quality checks, drift controls, governance steps, and run documentation in every notebook. This framework standardises those controls so teams can focus on business transformation logic while keeping governance and release readiness consistent.
 
