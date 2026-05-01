@@ -24,3 +24,13 @@ This folder contains reusable notebook starters for Microsoft Fabric workflows.
 ## Package-based usage in Fabric
 
 For reusable notebook execution, build and upload the framework wheel to a Fabric Environment first, then attach that Environment to your notebook and import from `fabric_data_product_framework`. Prefer this over long-term `%run 00_config`-style helper sharing, which can remain only as a legacy fallback during migration.
+
+
+## How to test the MVP template
+
+1. Install the framework wheel using the PR 68 packaging/install guide, then attach that Environment to your Fabric notebook.
+2. Open `fabric_data_product_mvp.py` and keep `USE_SAMPLE_DATA=True` and `ENABLE_FABRIC_WRITES=False` for the first run.
+3. Run all cells end to end.
+4. Review source/output profile summaries, DQ rule candidates and results, governance suggestions, lineage artifacts, run summary, and final gate status.
+5. Switch to actual Fabric source/target tables only after sample mode passes and human reviewers approve DQ/governance decisions.
+6. Enable writes only after confirming target table names and release readiness.

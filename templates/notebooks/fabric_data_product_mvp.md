@@ -1,43 +1,36 @@
 # Fabric data product MVP notebook template
 
-This guide explains how to use `fabric_data_product_mvp.py` as a readable,
-copy-paste starter for a Fabric-first MVP workflow.
+This guide explains how to use `fabric_data_product_mvp.py` as a runnable, end-to-end Fabric MVP flow after attaching an Environment with the installed framework wheel.
 
-## 13-step MVP alignment
+## Lifecycle flow (run-all)
 
-The starter aligns to the same high-level sequence:
+The template keeps one contract lifecycle in a single notebook flow:
 
-1. Define data product context and runtime parameters.
-2. Read source data safely.
-3. Profile source data.
-4. Explore and inspect source quality.
-5. Explain transformation intent.
-6. Apply transformation logic.
-7. Produce output DataFrame.
-8. Generate and run DQ checks.
-9. Perform human review on DQ outcomes.
-10. Generate governance suggestions.
-11. Perform human governance approvals.
-12. Generate lineage and transformation summary artifacts.
-13. Produce handover-ready outputs.
+1. Package and environment verification.
+2. Runtime parameters (safe defaults).
+3. Source declaration (sample mode by default).
+4. Source profiling and metadata preview.
+5. AI-assisted DQ rule candidates (with deterministic fallback).
+6. Human approval checkpoint for DQ rules.
+7. DQ validation and failure summary.
+8. Drift guard checkpoints (baseline + compare model).
+9. Transformation and technical columns.
+10. Output profiling.
+11. Governance classification suggestions (human approval required).
+12. Lineage records and transformation summary.
+13. Target write gate (disabled by default).
+14. Run summary and AI handover context export.
+15. Final release gate (`READY_FOR_FABRIC_WRITE` / `NOT_READY`).
 
 ## Safety defaults
 
-- `DRY_RUN = True` by default.
-- Writer stub skips writes in dry-run mode.
-- Reader/writer stubs must be replaced intentionally.
-
-## How to use
-
-1. Copy the starter into a Fabric notebook.
-2. Keep `DRY_RUN = True` for first execution.
-3. Replace `fabric_reader()` with your source read logic.
-4. Replace `transform()` with your transformation logic.
-5. Replace `fabric_writer()` only after validating dry-run behavior.
-6. Run end-to-end and review profile, DQ, governance, and lineage outputs.
+- `USE_SAMPLE_DATA = True` by default.
+- `ENABLE_FABRIC_WRITES = False` by default.
+- AI-assisted flags default to `False` and deterministic fallback behavior remains runnable.
+- Human approval remains explicit for DQ thresholds, governance labels, and release readiness.
 
 ## Related references
 
 - `templates/notebooks/README.md`
-- `docs/recipes/index.md`
+- `docs/workflows/fabric-notebook-template.md`
 - `src/README.md`
