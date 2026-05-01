@@ -18,7 +18,15 @@ theme:
 
 nav:
   - Home: index.md
-  - API:
+  - Quick Start: quick-start.md
+  - MVP Workflow: mvp-workflow.md
+  - Lifecycle Operating Model: lifecycle-operating-model.md
+  - Architecture: architecture.md
+  - Fabric Smoke Test: fabric-smoke-test.md
+  - UV Wheel + Fabric Install Guide: UV_WHEEL_FABRIC_INSTALL_GUIDE.md
+  - Recipes: recipes/index.md
+  - Capability Status: capability-status.md
+  - API Reference:
       - API Overview: api/index.md
       - Public callable modules:
           - Fabric Notebook: api/fabric_notebook.md

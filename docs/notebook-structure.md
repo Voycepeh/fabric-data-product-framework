@@ -1,19 +1,19 @@
-# Notebook Structure
+# Notebook Structure (Supporting Pattern)
 
-Use a notebook split that is easy to teach, review, and hand over.
+This page documents one optional notebook organization pattern.
 
-| Notebook | Purpose | Lane |
+It is **not** a separate lifecycle and does not replace the canonical 13-step flow.
+Always align execution and evidence to [MVP Workflow](mvp-workflow.md).
+
+## Optional split pattern
+
+| Notebook | Typical purpose | Maps to MVP steps |
 | --- | --- | --- |
-| 00_governance_setup | Purpose, steward, usage, business metadata, labels, contract draft | Outside Fabric + Inside Fabric: Human-guided |
-| 01_source_profiling | Source declaration, source profile, metadata logging | Inside Fabric: Framework-run + Human-guided |
-| 02_eda_notes | Data quirks, caveats, assumptions, transformation rationale | Inside Fabric: Human-guided (AI-assisted optional) |
-| 03_pipeline_transform | Parameters, transformation logic, technical columns, write pattern, output profiling | Inside Fabric: Human-guided + Framework-run |
-| 04_checks_and_gates | Drift checks, incremental safety, DQ rules, contract validation | Inside Fabric: Framework-run + Human-guided |
-| 05_handover_export | Lineage, run summary, AI context export, final business metadata summary | Inside Fabric: Framework-run + Human-guided |
+| 00_governance_setup | Purpose, steward, usage context | 1, 2 |
+| 01_source_profiling | Source declaration and profiling | 3, 4 |
+| 02_eda_notes | Exploration and transformation rationale | 5, 6 |
+| 03_pipeline_transform | Transformation logic and output build | 7 |
+| 04_checks_and_gates | DQ, governance, and gate evidence | 8, 9, 10, 11 |
+| 05_handover_export | Lineage and handover outputs | 12, 13 |
 
-## Usage guidance
-
-- EDA notes should be a separate notebook.
-- Profiling, output profiling, metadata logging, and lineage capture are framework-run steps.
-- AI can assist with summaries, DQ rule candidates, label suggestions, and lineage drafts.
-- AI output must be reviewed before acceptance.
+Use this only when helpful for team handover; Quick Start remains the primary onboarding path.

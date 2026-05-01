@@ -1,6 +1,8 @@
-# Notebook recipes
+# Recipes
 
-These recipes show practical ways to test and use the framework.
+Recipes are **supporting references** for focused tasks.
+
+They do not replace the canonical onboarding path. Start with [Quick Start](../quick-start.md).
 
 ## Available recipes
 
@@ -10,17 +12,3 @@ These recipes show practical ways to test and use the framework.
 - [MVP wheel release checklist](mvp_wheel_release_checklist.md)
 - [Contract-first one-call execution](contract-first-one-call.md)
 - [Profile to DQ to governance to lineage to handover](profile-dq-governance-lineage-handover.md)
-
-## How to use these recipes
-
-1. Start with the local-safe smoke path if you want the fastest low-risk test.
-2. Use the Fabric dry run path when validating setup inside Fabric.
-3. Use the contract-first path when your contract is already defined.
-4. Use the full chaining path when you want the metadata-first
-   AI-in-the-loop workflow.
-
-## Related references
-
-- `src/README.md`
-- `templates/notebooks/fabric_data_product_mvp.py`
-- Generated API reference pages in `docs/api/`

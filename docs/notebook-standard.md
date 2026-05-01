@@ -1,10 +1,11 @@
 # Notebook Standard
 
-This page is intentionally concise.
+This page is a supporting reference only.
 
-For the detailed lifecycle and lane ownership model, use:
-- [Lifecycle operating model](lifecycle-operating-model.md)
-- [Notebook structure](notebook-structure.md)
-- [AI-assisted steps](ai-in-the-loop.md)
+The canonical lifecycle is the 13-step MVP workflow:
 
-For legacy notebook standards, prefer the six-notebook structure described in [Notebook structure](notebook-structure.md).
+- [Quick Start](quick-start.md)
+- [MVP Workflow](mvp-workflow.md)
+- [Lifecycle Operating Model](lifecycle-operating-model.md)
+
+If you maintain older notebook layouts, treat them as implementation variants and map them back to the same 13 canonical steps.
