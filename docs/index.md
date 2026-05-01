@@ -1,9 +1,16 @@
 # Fabric Data Product Framework
 
-The Fabric Data Product Framework is a practical Python framework for building and operating data products in Microsoft Fabric with reusable contracts, quality checks, lineage, and delivery templates.
+Build production-friendly data products in Microsoft Fabric with reusable notebook patterns, contract-first controls, and handover-ready artifacts.
 
 ## Start here
 
-- [API reference](api/index.md)
-- [GitHub repository](https://github.com/Voycepeh/fabric-data-product-framework)
-- [Function reference (`src/README.md`)](https://github.com/Voycepeh/fabric-data-product-framework/blob/main/src/README.md)
+1. Follow [Quick Start](quick-start.md).
+2. Review architecture and lifecycle docs.
+3. Use the rendered [Callable Reference](reference/) for one page per public function/class.
+
+## Core paths
+
+- [Callable Reference](reference/)
+- [Module API Overview](api/index.md)
+- [Lifecycle operating model](lifecycle-operating-model.md)
+- [Architecture overview](architecture.md)
