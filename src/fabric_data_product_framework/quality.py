@@ -192,6 +192,14 @@ def _spark_rule(df: Any, rule: dict[str, Any], row_count: int) -> tuple[int, int
 
 
 def run_quality_rules(df: Any, rules: list[dict], *, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "auto") -> dict:
+    """Execute supported quality rules against pandas/Spark dataframes.
+
+    Returns:
+        Quality result payload with per-rule outcomes and gate status.
+
+    Runtime:
+        Local-safe for pandas and Fabric/Spark compatible for distributed runs.
+    """
     resolved_engine = _resolve_engine(df, engine)
     row_count = len(df) if resolved_engine == "pandas" else df.count()
     results = []

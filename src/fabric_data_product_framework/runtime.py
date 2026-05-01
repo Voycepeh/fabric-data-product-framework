@@ -17,7 +17,17 @@ def get_current_timestamp_utc() -> str:
 
 
 def generate_run_id(prefix: str = "run") -> str:
-    """Generate a deterministic-format run id using UTC timestamp and short UUID."""
+    """Generate a normalized run identifier for notebook executions.
+
+    Args:
+        prefix: Logical run prefix (for example ``ingest`` or dataset name).
+
+    Returns:
+        Run id shaped as ``<prefix>_<UTC timestamp>_<short uuid>``.
+
+    Runtime:
+        Local-safe and Fabric-safe (pure Python).
+    """
     normalized_prefix = normalize_name(prefix) or "run"
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     short_uuid = uuid4().hex[:8]
@@ -72,7 +82,11 @@ def build_runtime_context(
     notebook_name: str | None = None,
     run_id: str | None = None,
 ) -> dict:
-    """Build a JSON-safe runtime context used by notebook orchestration patterns."""
+    """Build a JSON-safe runtime context shared across notebook workflow stages.
+
+    Returns a dictionary with dataset, environment, source/target tables, generated
+    timestamps, and run id. Typical next step is source read + profiling.
+    """
     return {
         "dataset_name": str(dataset_name),
         "environment": str(environment),
