@@ -63,13 +63,13 @@ output_table = df_output.to_dict(orient="records") if DRY_RUN else "written_in_f
 
 # 8 AI generate DQ rules (deterministic fallback for local run)
 dq_candidate_rules = [
-    {"rule_type": "not_null", "column": "order_id", "severity": "high", "reason": "Primary key"},
-    {"rule_type": "min", "column": "amount", "value": 0, "severity": "medium", "reason": "No negative amounts"},
+    {"rule_type": "not_null", "column": "order_id", "severity": "critical", "reason": "Primary key"},
+    {"rule_type": "range_check", "column": "amount", "min_value": 0, "severity": "warning", "reason": "No negative amounts"},
 ]
 
 # 9 Human review DQ rules
 approved_dq_rules = [dict(r, review_status="approved") for r in dq_candidate_rules]
-quality_rules = [{"type": "not_null", "column": "order_id"}, {"type": "min", "column": "amount", "value": 0}]
+quality_rules = [{"rule_type": "not_null", "column": "order_id", "severity": "critical"}, {"rule_type": "range_check", "column": "amount", "min_value": 0, "severity": "warning"}]
 dq_result = run_quality_rules(df_output, quality_rules, dataset_name=data_product_context["name"], table_name="sample_orders_product", engine="auto")
 
 # 10 AI suggest sensitivity labels (local heuristic via governance classifier)

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from copy import deepcopy
 from typing import Any
 
 MVP_STEPS = [
@@ -24,7 +25,7 @@ REQUIRED_HANDOVER_PACK_KEYS = ["profile", "dq", "governance", "lineage", "run_su
 
 
 def get_mvp_step_registry() -> list[dict[str, Any]]:
-    return [dict(step) for step in MVP_STEPS]
+    return deepcopy(MVP_STEPS)
 
 
 def validate_mvp_artifacts(artifacts: dict[str, Any]) -> dict[str, Any]:
@@ -51,6 +52,7 @@ def validate_mvp_artifacts(artifacts: dict[str, Any]) -> dict[str, Any]:
     valid = not missing_top_level and not invalid_fields and not missing_handover_keys
     return {
         "valid": valid,
+        "is_valid": valid,
         "expected_top_level_artifacts": expected_top_level,
         "missing_top_level_artifacts": missing_top_level,
         "invalid_fields": invalid_fields,

@@ -51,16 +51,16 @@ AI helps draft DQ rules, sensitivity labels, lineage, transformation summaries, 
 Humans still approve business meaning, DQ thresholds, sensitivity classification, governance gates, and release readiness.
 
 ## Start here
-- Lifecycle and sequence: `docs/lifecycle-operating-model.md`
-- Canonical MVP workflow: `docs/mvp-workflow.md`
-- Fabric smoke-test checklist: `docs/fabric-smoke-test.md`
-- Capability status: `docs/capability-status.md`
-- Function reference: `src/README.md`
+- Lifecycle and sequence: [docs/lifecycle-operating-model.md](docs/lifecycle-operating-model.md)
+- Canonical MVP workflow: [docs/mvp-workflow.md](docs/mvp-workflow.md)
+- Fabric smoke-test checklist: [docs/fabric-smoke-test.md](docs/fabric-smoke-test.md)
+- Capability status: [docs/capability-status.md](docs/capability-status.md)
+- Function reference: [src/README.md](src/README.md)
 
 ## Testing
 - Local tests: `python -m pytest`
 - Synthetic smoke example: `PYTHONPATH=src python examples/mvp_fabric_smoke_test.py`
-- Fabric test path: `docs/fabric-smoke-test.md`
+- Fabric test path: [docs/fabric-smoke-test.md](docs/fabric-smoke-test.md)
 
 ## Callable Function Reference
-See `src/README.md`.
+See [src/README.md](src/README.md).
