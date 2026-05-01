@@ -88,8 +88,7 @@ print(summary)
 ## Common failures
 
 - Config not found: check the `load_fabric_config(...)` file path.
-- Spark session missing: run in Fabric notebook or pass `spark_session`
-  explicitly.
+- Spark session missing: run in Fabric notebook or pass `spark_session` explicitly.
 - Invalid quality contract fields or unsupported rule types.
 
 ## Related function groups

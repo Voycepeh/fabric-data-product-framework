@@ -124,8 +124,7 @@ print(mermaid)
 ## Common failures
 
 - Import errors: ensure `PYTHONPATH=src`.
-- Rule payload errors: each rule must include valid `rule_type` keys
-  supported by `run_quality_rules`.
+- Rule payload errors: each rule must include valid `rule_type` keys supported by `run_quality_rules`.
 - Governance input mismatch: pass `profile=...` (not raw column list).
 
 ## Related function groups

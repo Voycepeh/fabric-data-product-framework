@@ -5,10 +5,8 @@ consume approved metadata and contracts.
 
 ## Included starter
 
-- `fabric_data_product_mvp.py`: copy-pasteable Fabric MVP notebook starter
-  aligned to the 13-step workflow.
-- `fabric_data_product_mvp.md`: usage guide for the starter with safety
-  and customization notes.
+- `fabric_data_product_mvp.py`: copy-pasteable Fabric MVP notebook starter aligned to the 13-step workflow.
+- `fabric_data_product_mvp.md`: usage guide for the starter with safety and customization notes.
 
 ## MVP starter guarantees
 
@@ -17,8 +15,7 @@ consume approved metadata and contracts.
 - Includes local/Fabric-safe synthetic sample branch for first execution.
 - Includes an explicit marker where users replace transformation logic.
 - Keeps the sequence: profile → DQ → governance → lineage → handover.
-- Provides concrete Copilot prompt blocks for DQ, governance, lineage,
-  and handover.
+- Provides concrete Copilot prompt blocks for DQ, governance, lineage, and handover.
 - Ends with a final run summary cell.
 - Clarifies "human fills this in" vs "framework generates this."
 
