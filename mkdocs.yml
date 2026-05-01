@@ -17,6 +17,7 @@ plugins:
   - mkdocstrings:
       handlers:
         python:
+          paths: [src]
           options:
             show_source: false
             show_signature_annotations: true
