@@ -1,21 +1,24 @@
 # Notebook recipes
 
-These recipes are copy-paste notebook patterns aligned to the current public callables in [src/README.md](../../src/README.md).
+These recipes show practical ways to test and use the framework.
 
-## Recipe list
+## Available recipes
 
-- [Local-safe smoke recipe](local-safe-smoke.md): local pandas-safe profile, quality, governance, drift, and lineage smoke flow.
-- [Fabric dry run recipe](fabric-dry-run.md): Fabric Lakehouse read/write with Spark DQ workflow and governance summary.
-- [Contract-first one-call recipe](contract-first-one-call.md): run contract-driven execution via `run_data_product`.
-- [Full metadata chaining recipe](profile-dq-governance-lineage-handover.md): profile → DQ workflow → governance → drift → lineage artifacts in one path.
+- [Local-safe smoke path](local-safe-smoke.md)
+- [Fabric dry run path](fabric-dry-run.md)
+- [Contract-first one-call execution](contract-first-one-call.md)
+- [Profile to DQ to governance to lineage to handover](profile-dq-governance-lineage-handover.md)
 
-## Function groups used
+## How to use these recipes
 
-- Profiling: `profile_dataframe`, `summarize_profile`
-- Data quality: `run_quality_rules` (local-safe), `run_dq_workflow` (Fabric/Spark)
-- Governance: `classify_columns`, `summarize_governance_classifications`, `build_governance_classification_records`
-- Contracts: `load_data_contract`, `validate_data_contract_shape`, `run_data_product`, `assert_data_product_passed`
-- Drift: `check_profile_drift`, `summarize_drift_results`
-- Lineage: `build_lineage_records`, `generate_mermaid_lineage`, `build_transformation_summary_markdown`
+1. Start with the local-safe smoke path if you want the fastest low-risk test.
+2. Use the Fabric dry run path when validating setup inside Fabric.
+3. Use the contract-first path when your contract is already defined.
+4. Use the full chaining path when you want the metadata-first
+   AI-in-the-loop workflow.
 
-See full callable details in [src/README.md](../../src/README.md).
+## Related references
+
+- `src/README.md`
+- `templates/notebooks/fabric_data_product_mvp.py`
+- Generated API reference pages in `docs/api/`

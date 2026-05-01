@@ -1,99 +1,133 @@
-# Local-safe smoke recipe
+# Local-safe smoke path
 
 ## Purpose
-Quick local smoke test of profiling, quality checks, governance classification input shaping, drift checks, and lineage record generation without Fabric-only dependencies.
 
-## When to use it
-- First-time repo validation.
-- CI-style sanity checks.
-- Teaching the framework workflow with small in-memory pandas data.
+Use this recipe to test framework logic locally with a small in-memory dataset
+and without Fabric lakehouse reads or writes.
 
 ## Required inputs
-- Python environment with project dependencies.
-- A small pandas DataFrame.
-- A minimal quality rule list.
 
-## Copy-paste code
+- Python environment with project dependencies installed.
+- Small pandas DataFrame.
+- No Fabric runtime required.
+
+## Example
+
 ```python
 import pandas as pd
-from fabric_data_product_framework.profiling import profile_dataframe, summarize_profile
-from fabric_data_product_framework.quality import run_quality_rules
-from fabric_data_product_framework.governance_classifier import classify_columns
-from fabric_data_product_framework.drift_checkers import check_profile_drift, summarize_drift_results
-from fabric_data_product_framework.lineage import build_lineage_records, generate_mermaid_lineage
 
-source_df = pd.DataFrame(
-    [
-        {"order_id": 1, "customer_email": "a@example.com", "amount": 10.5},
-        {"order_id": 2, "customer_email": "b@example.com", "amount": 11.0},
-    ]
+from fabric_data_product_framework.lineage import (
+    build_lineage_records,
+    build_transformation_summary_markdown,
+    generate_mermaid_lineage,
+)
+from fabric_data_product_framework.profiling import profile_dataframe
+from fabric_data_product_framework.quality import run_quality_rules
+
+dataset_name = "orders_local"
+table_name = "orders"
+run_id = "local-smoke-001"
+
+df = pd.DataFrame(
+    {
+        "order_id": [1, 2, 3],
+        "customer_id": ["C1", "C2", "C3"],
+        "amount": [10.0, 25.5, 30.0],
+    }
 )
 
-profile = profile_dataframe(source_df, dataset_name="orders_local", engine="pandas")
-print(summarize_profile(profile))
+profile = profile_dataframe(df, dataset_name=dataset_name, engine="pandas")
 
 rules = [
-    {"rule_id": "not_null_order_id", "rule_type": "not_null", "column": "order_id", "severity": "critical"},
-    {"rule_id": "amount_non_negative", "rule_type": "range_check", "column": "amount", "min_value": 0, "severity": "warning"},
+    {
+        "rule_id": "order_id_not_null",
+        "rule_type": "not_null",
+        "column": "order_id",
+        "severity": "critical",
+    },
+    {
+        "rule_id": "amount_not_null",
+        "rule_type": "not_null",
+        "column": "amount",
+        "severity": "warning",
+    },
 ]
-quality_result = run_quality_rules(source_df, rules, dataset_name="orders_local", table_name="local.orders", engine="pandas")
 
-classifications = classify_columns(
-    profile=profile,
-    dataset_name="orders_local",
-    table_name="local.orders",
+dq_result = run_quality_rules(
+    df,
+    rules,
+    dataset_name=dataset_name,
+    table_name=f"local.{table_name}",
+    engine="pandas",
 )
-
-profile_drift = check_profile_drift(current_profile=profile, baseline_profile=profile)
-drift_summary = summarize_drift_results(profile_drift_result=profile_drift)
 
 steps = [
     {
         "step_id": "1",
-        "step_name": "ingest",
-        "input_name": "orders_raw",
-        "output_name": "orders_local",
+        "step_name": "ingest_local_dataframe",
+        "input_name": "inline_dataframe",
+        "output_name": "orders_local_df",
         "transformation_type": "ingest",
     },
     {
         "step_id": "2",
-        "step_name": "quality",
-        "input_name": "orders_local",
-        "output_name": "quality_result",
+        "step_name": "run_local_quality_checks",
+        "input_name": "orders_local_df",
+        "output_name": "dq_result",
         "transformation_type": "quality",
     },
 ]
 
 lineage_records = build_lineage_records(
-    dataset_name="orders_local",
-    run_id="local-smoke-001",
-    source_tables=["local.orders_raw"],
-    target_table="local.orders",
-    transformation_steps=steps,
-)
-mermaid = generate_mermaid_lineage(
-    source_tables=["local.orders_raw"],
-    target_table="local.orders",
+    dataset_name=dataset_name,
+    run_id=run_id,
+    source_tables=["local.inline_dataframe"],
+    target_table=f"local.{table_name}",
     transformation_steps=steps,
 )
 
-print(quality_result["status"])
-print(classifications)
-print(drift_summary)
+summary = {
+    "dataset_name": dataset_name,
+    "run_id": run_id,
+    "source_tables": ["local.inline_dataframe"],
+    "target_table": f"local.{table_name}",
+    "step_count": len(steps),
+    "steps": steps,
+    "columns_used": ["order_id", "customer_id", "amount"],
+    "columns_created": [],
+}
+
+mermaid = generate_mermaid_lineage(
+    source_tables=["local.inline_dataframe"],
+    target_table=f"local.{table_name}",
+    transformation_steps=steps,
+)
+
+summary_md = build_transformation_summary_markdown(summary)
+
+print(profile)
+print(dq_result)
+print(lineage_records)
 print(mermaid)
+print(summary_md)
 ```
 
 ## Expected output
-- Profile dictionary plus human-readable profile summary.
-- Quality status (`passed`/`failed`) and per-rule outcomes.
-- Governance classification suggestions.
-- Profile drift summary dictionary.
-- Lineage records and Mermaid diagram text.
+
+- Profile summary for the sample DataFrame.
+- Data quality results for the small rule set.
+- Lineage records for the local smoke path.
+- Mermaid text for quick lineage inspection.
+- Markdown transformation summary.
 
 ## Common failures
-- Import errors: ensure `PYTHONPATH=src`.
-- Rule payload errors: each rule must include valid `rule_type` keys supported by `run_quality_rules`.
-- Governance input mismatch: pass `profile=...` (not raw column list).
 
-## Related function groups
-See [src/README.md](../../src/README.md) sections: Profiling, Data quality workflow, Governance classification, Drift checks and snapshots, and Lineage and transformation summaries.
+- Import errors usually mean the project is not installed or `PYTHONPATH=src`
+  is not set.
+- Wrong DQ helper usage usually means a Spark/Fabric workflow function was
+  used instead of the local-safe rule runner.
+
+## Related references
+
+- `src/README.md`
+- `docs/api/`
