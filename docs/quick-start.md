@@ -1,30 +1,60 @@
-# Quick Start
+# Quick Start (MVP Runbook)
 
-Use this page when you want the shortest path to run the framework end to end.  
-For full onboarding detail, see [getting-started.md](getting-started.md).
+Use this runbook to execute the canonical 13-step MVP lifecycle end to end in Microsoft Fabric.
 
-## 1) Prepare outside Fabric
-- Confirm business purpose, steward, approved usage, and caveats.
-- Prepare supporting inputs (mapping/reference data and required metadata).
+For detailed wheel packaging commands, see the [UV wheel and Fabric environment guide](UV_WHEEL_FABRIC_INSTALL_GUIDE.md).
 
-## 2) Run local smoke test
+## 1) Local setup
+
+1. Clone the repo and create your environment.
+2. Install dependencies (project standard).
+3. Confirm you can run Python and `uv` in your shell.
+
+## 2) Run smoke tests locally
+
 ```bash
-python -m compileall src tests
-PYTHONPATH=src pytest -q
+uv run python -m compileall src tests
+uv run python -m pytest -q
 ```
 
-## 3) Run minimal Fabric notebook flow
-1. Open the framework notebook/template in Fabric.
-2. Set runtime parameters and declare source inputs.
-3. Run profiling/drift/contract + DQ checks.
-4. Apply transformation logic and review outcomes.
-5. Review run summary, lineage, and handover artifacts.
+## 3) Build the wheel
 
-See [fabric-smoke-test.md](fabric-smoke-test.md) for step-by-step Fabric validation.
+```bash
+uv build
+```
 
-## 4) Use the lifecycle model
-- Lane overview: [README.md](../README.md#lane-handoff-overview)
-- Full 13-step lifecycle: [lifecycle-operating-model.md](lifecycle-operating-model.md)
+Use the generated wheel from `dist/` for Fabric Environment upload.
 
-## 5) Function/API reference
-See [src/README.md](../src/README.md) for callable function usage.
+## 4) Upload wheel into Fabric
+
+1. In Microsoft Fabric, open your target **Environment**.
+2. Upload the wheel artifact from `dist/`.
+3. Publish/update the Environment.
+4. Attach the Environment to the MVP notebook.
+
+For exact UI steps and troubleshooting, use the [UV wheel and Fabric environment guide](UV_WHEEL_FABRIC_INSTALL_GUIDE.md).
+
+## 5) Run the MVP notebook template
+
+1. Open the framework MVP notebook template in Fabric.
+2. Set runtime/config parameters for your dataset.
+3. Run the notebook flow (profile, validate, transform, and publish outputs).
+
+Related workflow docs:
+- [Fabric notebook template workflow](workflows/fabric-notebook-template.md)
+- [Fabric smoke test checklist](fabric-smoke-test.md)
+
+## 6) Review generated outputs
+
+After execution, review:
+
+- Metadata and profiling artifacts.
+- Data quality results and accepted rules.
+- Schema/data drift checks.
+- Governance/sensitivity decisions.
+- Lineage and transformation summaries.
+- Handover package artifacts.
+
+## Expected output
+
+A successful run should leave you with a reproducible Fabric notebook execution plus persisted metadata, DQ/governance/drift evidence, lineage context, and handover-ready artifacts aligned to the canonical 13-step MVP lifecycle.
