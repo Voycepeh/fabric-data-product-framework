@@ -16,3 +16,4 @@ Build production-friendly data products in Microsoft Fabric with reusable notebo
 - [Architecture overview](architecture.md)
 
 - [Notebook recipes](recipes/index.md)
+- [UV wheel build and Fabric install guide](UV_WHEEL_FABRIC_INSTALL_GUIDE.md)
