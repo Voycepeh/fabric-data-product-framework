@@ -100,11 +100,26 @@ def generate_mermaid_lineage(*, source_tables: list[str], target_table: str, tra
 
 
 def build_transformation_summary_markdown(summary: dict, *, include_mermaid: bool = True) -> str:
-    lines = [f"## Transformation Summary — {summary.get('dataset_name','unknown')}", f"- Run ID: `{summary.get('run_id') or 'not_provided'}`", "", "### Steps"]
     steps = summary.get("steps", []) or []
+    lines = [
+        f"## Transformation Summary — {summary.get('dataset_name', 'unknown')}",
+        f"- Run ID: `{summary.get('run_id') or 'not_provided'}`",
+        f"- Source tables: `{', '.join(summary.get('source_tables', []) or ['not_provided'])}`",
+        f"- Target table: `{summary.get('target_table') or 'not_provided'}`",
+        f"- Step count: `{summary.get('step_count', len(steps))}`",
+        f"- Columns used: `{', '.join(summary.get('columns_used', []) or ['none'])}`",
+        f"- Columns created: `{', '.join(summary.get('columns_created', []) or ['none'])}`",
+        "",
+        "### Steps",
+    ]
     if steps:
         for step in steps:
-            lines.extend([f"- **{step.get('step_id', 'step')} — {step.get('step_name', 'Unnamed')}**", f"  - Reason: {step.get('reason', 'not_provided')}", f"  - Description: {step.get('description', 'not_provided')}"])
+            lines.extend([
+                f"- **{step.get('step_id', 'step')} — {step.get('step_name', 'Unnamed')}**",
+                f"  - Reason: {step.get('reason', 'not_provided')}",
+                f"  - Description: {step.get('description', 'not_provided')}",
+                f"  - Business impact: {step.get('business_impact') or 'not_provided'}",
+            ])
     else:
         lines.append("- No transformation steps recorded.")
     if include_mermaid:
@@ -114,10 +129,24 @@ def build_transformation_summary_markdown(summary: dict, *, include_mermaid: boo
 
 
 def build_lineage_prompt_context(*, dataset_name: str, source_tables: list[str], target_table: str, transformation_steps: list[dict], eda_notes: str | None = None) -> str:
-    lines = ["Use this context to draft or review a lineage explanation.", "Do not invent transformations not listed here.", "", f"- Dataset: `{dataset_name}`", f"- Source tables: `{', '.join(_clean_list(source_tables) or ['not_provided'])}`", f"- Target table: `{target_table}`", "", "## Transformation Steps"]
+    lines = [
+        "Use this context to draft or review a lineage explanation.",
+        "Do not invent transformations not listed here.",
+        "",
+        f"- Dataset: `{dataset_name}`",
+        f"- Source tables: `{', '.join(_clean_list(source_tables) or ['not_provided'])}`",
+        f"- Target table: `{target_table}`",
+        "",
+        "## Transformation Steps",
+    ]
     if transformation_steps:
         for step in transformation_steps:
-            lines.extend([f"- **{step.get('step_id', 'step')} — {step.get('step_name', 'Unnamed step')}**", f"  - Reason: {step.get('reason', 'not_provided')}"])
+            lines.extend([
+                f"- **{step.get('step_id', 'step')} — {step.get('step_name', 'Unnamed step')}**",
+                f"  - Reason: {step.get('reason', 'not_provided')}",
+                f"  - Columns used: {', '.join(_clean_list(step.get('columns_used')) or ['none'])}",
+                f"  - Columns created: {', '.join(_clean_list(step.get('columns_created')) or ['none'])}",
+            ])
     else:
         lines.append("- No transformation steps were recorded.")
     lines.extend(["", "## EDA Notes", eda_notes or "Not provided."])
@@ -134,6 +163,13 @@ def validate_lineage_steps(lineage_steps) -> dict:
 
     if not isinstance(lineage_steps, list):
         return {"is_valid": False, "errors": ["lineage_steps must be a list."], "warnings": [], "review_required": True}
+    if len(lineage_steps) == 0:
+        return {
+            "is_valid": False,
+            "errors": ["lineage_steps cannot be empty. Paste Copilot generated lineage_steps first."],
+            "warnings": [],
+            "review_required": True,
+        }
 
     for idx, step in enumerate(lineage_steps, start=1):
         if not isinstance(step, dict):

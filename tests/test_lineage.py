@@ -167,3 +167,31 @@ def test_plot_lineage_networkx_returns_graph() -> None:
         assert g.number_of_edges() == 1
     except ImportError as ex:
         assert "matplotlib" in str(ex) or "networkx" in str(ex)
+
+
+def test_validate_lineage_steps_rejects_empty_list() -> None:
+    out = validate_lineage_steps([])
+    assert out["is_valid"] is False
+    assert out["review_required"] is True
+    assert "cannot be empty" in out["errors"][0]
+
+
+def test_transformation_summary_markdown_preserves_detail_fields() -> None:
+    recorder = LineageRecorder("sales_dataset", run_id="run-001", source_tables=["src.sales"], target_table="curated.sales")
+    recorder.add_step(**_sample_step())
+    markdown = build_transformation_summary_markdown(recorder.build_summary(), include_mermaid=False)
+    for expected in ["Source tables:", "Target table:", "Step count:", "Columns used:", "Columns created:", "Business impact:"]:
+        assert expected in markdown
+
+
+def test_lineage_prompt_context_includes_columns_fields() -> None:
+    context = build_lineage_prompt_context(
+        dataset_name="sales_dataset",
+        source_tables=["src.sales"],
+        target_table="curated.sales",
+        transformation_steps=[_sample_step()],
+        eda_notes="Null checks passed.",
+    )
+    assert "Columns used:" in context
+    assert "Columns created:" in context
+    assert "EDA Notes" in context

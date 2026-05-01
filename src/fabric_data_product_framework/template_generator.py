@@ -32,6 +32,9 @@ def create_pipeline_notebook_template(
 # # 3. Configuration and setup
 
 # %%
+import fabric_data_product_framework as fw
+
+# %%
 from fabric_data_product_framework.fabric_notebook import (
     load_fabric_config,
     get_path,
@@ -55,6 +58,8 @@ check_naming_convention()
 # %%
 source_table = "{source_table}"
 output_table = "{output_table}"
+dataset_name = "{dataset_name}"
+run_id = None
 
 # %% [markdown]
 # # 5. Source ingestion
@@ -151,7 +156,7 @@ lakehouse_table_write(
 # Copilot scans the notebook and drafts lineage_steps. Framework validates and renders lineage.
 
 # %%
-prompt = get_fabric_copilot_lineage_prompt()
+prompt = fw.get_fabric_copilot_lineage_prompt()
 print(prompt)
 
 # %% [markdown]
@@ -163,15 +168,15 @@ lineage_steps = [
 ]
 
 # %%
-lineage_validation = validate_lineage_steps(lineage_steps)
+lineage_validation = fw.validate_lineage_steps(lineage_steps)
 display(lineage_validation)
 
 # %%
-lineage_record = build_lineage_record_from_steps(dataset_name=DATASET_NAME, lineage_steps=lineage_steps, run_id=RUN_ID)
+lineage_record = fw.build_lineage_record_from_steps(dataset_name=dataset_name, lineage_steps=lineage_steps, run_id=run_id)
 display(lineage_record)
 
 # %%
-plot_lineage_networkx(lineage_record, title=f"{DATASET_NAME} Notebook Lineage")
+fw.plot_lineage_networkx(lineage_record, title=f"{dataset_name} Notebook Lineage")
 
 # %% [markdown]
 # # 14. Run summary and handover notes
@@ -290,6 +295,47 @@ print(result.get("quarantine"))
 
 # %%
 fw.assert_data_product_passed(result)
+
+# %% [markdown]
+# # 9. AI-assisted notebook lineage
+# Copilot drafts lineage_steps by scanning this notebook; framework validates/renders;
+# human reviews low-confidence or ambiguous items before storage.
+
+# %%
+prompt = fw.get_fabric_copilot_lineage_prompt()
+print(prompt)
+
+# %% [markdown]
+# Paste the printed prompt into Fabric Copilot. It should return only Python code assigning
+# lineage_steps = [...]. Paste that output into the next cell.
+
+# %%
+lineage_steps = [
+    # Copilot generated steps go here.
+]
+
+# %%
+lineage_validation = fw.validate_lineage_steps(lineage_steps)
+display(lineage_validation)
+
+# %%
+lineage_record = fw.build_lineage_record_from_steps(
+    dataset_name=contract.dataset.name,
+    lineage_steps=lineage_steps,
+    run_id=result.get("run_id"),
+    notebook_name="actual_data_mvp_template",
+)
+display(lineage_record)
+
+# %%
+fw.plot_lineage_networkx(
+    lineage_record,
+    title=f"{{contract.dataset.name}} Notebook Lineage",
+)
+
+# %% [markdown]
+# Optional storage: write lineage_record with your metadata utility/table pattern after review.
+# TODO: add table write call in your environment once metadata table conventions are finalized.
 '''
     path.write_text(content, encoding="utf-8")
     return str(path)

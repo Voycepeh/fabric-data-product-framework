@@ -48,3 +48,14 @@ display(lineage_record)
 
 fw.plot_lineage_networkx(lineage_record, title=f"{DATASET_NAME} Notebook Lineage")
 ```
+
+## Plotting dependencies
+
+`plot_lineage_networkx(...)` requires `matplotlib` and `networkx`.
+
+- In many Fabric notebook runtimes these may already exist.
+- For local usage, install optional lineage extras:
+
+```bash
+pip install "fabric-data-product-framework[lineage]"
+```
