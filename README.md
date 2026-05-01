@@ -78,6 +78,9 @@ Roadmap and operating priorities:
 - Lifecycle and MVP flow: [docs/lifecycle-operating-model.md](docs/lifecycle-operating-model.md)
 - AI DQ workflow: [docs/workflows/ai-generated-dq-rules.md](docs/workflows/ai-generated-dq-rules.md)
 - AI transformation summary workflow: [docs/workflows/ai-transformation-summary.md](docs/workflows/ai-transformation-summary.md)
+- Fabric-native storage model: [docs/architecture/storage-model.md](docs/architecture/storage-model.md)
+- Fabric Environment custom library setup: [docs/workflows/fabric-environment-library-setup.md](docs/workflows/fabric-environment-library-setup.md)
+- Credits: [docs/credits.md](docs/credits.md)
 - Function/API reference: [src/README.md](src/README.md)
 
 ## Callable Function Reference

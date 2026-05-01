@@ -11,7 +11,7 @@ This is the canonical AI workflow doc for data quality rule generation.
 | Layer | Responsibility |
 |---|---|
 | Fabric Copilot | Notebook/code/prompt authoring assistance for practitioners. |
-| Fabric AI functions (execution-time, where available) | Generate candidate DQ rules from explicit prompt context using `ai.generate_response` and summarize artifacts using `ai.summarize`. |
+| Fabric AI functions, where available in the configured Fabric Runtime | Generate candidate DQ rules from explicit prompt context using `ai.generate_response` and summarize artifacts using `ai.summarize`. Availability is runtime and tenant configuration dependent. |
 | Framework code | Build evidence context, parse outputs, validate shape, compile approved rules, execute checks, persist artifacts. |
 | Human reviewer | Approve/reject AI candidates and decide whether a rule should be enforced. |
 
@@ -54,12 +54,13 @@ flowchart TD
 
 ## Fabric-native AI execution guidance
 
-1. Preferred AI execution path is Fabric AI functions.
+1. Preferred AI execution path is Fabric AI functions, where available in the configured Fabric Runtime.
 2. Use `ai.generate_response` for candidate DQ rules built from profile evidence, metadata context, and business context.
 3. Use `ai.summarize` for transformation summaries, run summaries, and handover-friendly descriptions.
 4. Use Microsoft Copilot for notebook authoring assistance and human-in-the-loop drafting.
 5. The framework should build prompt context, parse AI responses, validate candidate shape, and store candidates for review.
 6. Humans must approve candidates before enforcement.
-7. Core enterprise flow should not require external internet access or external OpenAI endpoints.
+7. Availability of `ai.generate_response` and `ai.summarize` is runtime and tenant configuration dependent.
+8. Core enterprise flow should not require external internet access or external OpenAI endpoints.
 
 `generate_dq_rule_candidates_with_fabric_ai` is the framework wrapper that orchestrates prompt construction and candidate parsing around Fabric-native AI functions.

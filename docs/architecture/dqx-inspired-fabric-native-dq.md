@@ -36,7 +36,7 @@ The implementation uses Microsoft Fabric building blocks:
 - Fabric Environments to install and pin the framework and dependencies.
 - Lakehouse tables for raw, curated, metadata, quality, and quarantine records.
 - Warehouse-facing views/tables for SQL monitoring and Power BI.
-- Fabric AI functions (`ai.generate_response`, `ai.summarize`) and Microsoft Copilot for approved AI-assisted steps.
+- Fabric AI functions, where available in the configured Fabric Runtime, and Microsoft Copilot for approved AI-assisted steps.
 
 ## Why this is an adaptation for Microsoft Fabric
 
@@ -70,7 +70,7 @@ flowchart TD
     PROF --> META[Lakehouse metadata tables]
     META --> AICTX[AI context package]
 
-    AICTX --> FABAI[Fabric AI functions: ai.generate_response and ai.summarize]
+    AICTX --> FABAI[Fabric AI functions, where available in the configured Fabric Runtime]
     AICTX --> COPILOT[Microsoft Copilot in Fabric notebooks]
 
     FABAI --> DQCAND[DQ rule candidates]
@@ -93,3 +93,17 @@ flowchart TD
 
     WH --> PBI[Power BI monitoring and handover dashboards]
 ```
+
+## How this evolves the original notebook template
+
+The original notebook pattern typically included manual sections for:
+1. environment/setup checks and package setup,
+2. source profiling,
+3. exploratory data analysis notes,
+4. transformation logic,
+5. technical-column handling,
+6. output writes,
+7. output metadata logging, and
+8. Copilot-assisted lineage prompts.
+
+This framework reframes those manual notebook sections into a reusable framework/library pattern with persisted metadata, a managed DQ rule lifecycle, AI-assisted summaries, and explicit human approval checkpoints before enforcement and publish readiness.

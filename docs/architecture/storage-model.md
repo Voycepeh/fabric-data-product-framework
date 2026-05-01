@@ -22,6 +22,8 @@ JSON payload columns are acceptable for flexible metadata and evolving structure
 
 ## Warehouse layer
 
+The Warehouse is a SQL-friendly monitoring and serving layer. It does not mean every curated Lakehouse table must be physically duplicated into Warehouse. Use Warehouse views/tables where SQL-first access, governance monitoring, or Power BI semantic modelling benefits from it.
+
 Consumption and monitoring surface:
 1. SQL-friendly reporting views over metadata tables.
 2. Governance and DQ monitoring views.
