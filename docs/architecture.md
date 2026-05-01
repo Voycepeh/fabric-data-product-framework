@@ -11,7 +11,7 @@ It does **not** duplicate run instructions.
 
 ## Core architecture in plain language
 
-The framework runs as a connected flow:
+The framework operates as a connected system flow:
 
 1. **GitHub source code and templates** define the reusable framework patterns and starter notebook assets.
 2. A **Python package / wheel** packages reusable framework capabilities.
@@ -73,7 +73,7 @@ The metadata model captures:
 
 The framework treats the data product as having an explicit contract: expected source shape, freshness assumptions, quality rules, governance expectations, output targets, and handover evidence.
 
-In this architecture, contracts are operating and validation expectations for the data product lifecycle, enforced through reusable checks and human approvals rather than a standalone module-first workflow.
+In this architecture, contracts are operating and validation expectations for the data product, enforced through reusable checks and human approvals rather than a standalone module.
 
 ## Relationship to Quick Start
 
