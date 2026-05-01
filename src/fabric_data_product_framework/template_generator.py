@@ -147,8 +147,31 @@ lakehouse_table_write(
 )
 
 # %% [markdown]
-# # 13. Lineage and transformation summary
-# Document key steps and business reasons.
+# # 13. AI-assisted notebook lineage
+# Copilot scans the notebook and drafts lineage_steps. Framework validates and renders lineage.
+
+# %%
+prompt = get_fabric_copilot_lineage_prompt()
+print(prompt)
+
+# %% [markdown]
+# Paste the prompt into Fabric Copilot, then paste returned Python code in the next cell.
+
+# %%
+lineage_steps = [
+    # Copilot generated steps go here.
+]
+
+# %%
+lineage_validation = validate_lineage_steps(lineage_steps)
+display(lineage_validation)
+
+# %%
+lineage_record = build_lineage_record_from_steps(dataset_name=DATASET_NAME, lineage_steps=lineage_steps, run_id=RUN_ID)
+display(lineage_record)
+
+# %%
+plot_lineage_networkx(lineage_record, title=f"{DATASET_NAME} Notebook Lineage")
 
 # %% [markdown]
 # # 14. Run summary and handover notes
@@ -172,7 +195,7 @@ lakehouse_table_write(
 
 # %% [markdown]
 # **AI prompt: Data lineage**
-# Ask Copilot to identify important dataframes in this notebook and create a Mermaid lineage diagram.
+# Ask Copilot to identify important dataframes in this notebook and draft lineage_steps using the framework schema. Avoid Mermaid and keep low-confidence items marked for human review.
 
 # %% [markdown]
 # **AI prompt: Data quality rules**

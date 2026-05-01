@@ -103,8 +103,49 @@ print("quarantine:", result.get("quarantine"))
 # %%
 fw.assert_data_product_passed(result)
 
+
 # %% [markdown]
-# # 9. Metadata tables (optional inspection)
+# # 9. AI-assisted notebook lineage
+#
+# Copilot drafts lineage_steps by scanning this notebook; framework validates/renders;
+# human reviews only low-confidence or ambiguous items before storage.
+
+# %%
+prompt = fw.get_fabric_copilot_lineage_prompt()
+print(prompt)
+
+# %% [markdown]
+# Paste the printed prompt into Fabric Copilot. It should return only Python code assigning
+# lineage_steps = [...]. Paste that output into the next cell.
+
+# %%
+# Paste Copilot-generated lineage_steps below.
+lineage_steps = [
+    # Copilot generated steps go here.
+]
+
+# %%
+lineage_validation = fw.validate_lineage_steps(lineage_steps)
+display(lineage_validation)
+
+# %%
+lineage_record = fw.build_lineage_record_from_steps(
+    dataset_name=contract.dataset.name,
+    lineage_steps=lineage_steps,
+    run_id=result.get("run_id"),
+    notebook_name="actual_data_mvp_template",
+)
+display(lineage_record)
+
+# %%
+fw.plot_lineage_networkx(lineage_record, title=f"{contract.dataset.name} Notebook Lineage")
+
+# %% [markdown]
+# Optional storage: write lineage_record with your metadata utility/table pattern after review.
+# TODO: add table write call in your environment once metadata table conventions are finalized.
+
+# %% [markdown]
+# # 10. Metadata tables (optional inspection)
 
 # %%
 metadata_tables = []
@@ -133,7 +174,7 @@ for table_name in metadata_tables:
         print(f"Skipping {table_name}: {ex}")
 
 # %% [markdown]
-# # 10. Notes for production scheduling
+# # 11. Notes for production scheduling
 #
 # - Freeze or remove exploratory preview cells before scheduling.
 # - Keep `transform` deterministic.
