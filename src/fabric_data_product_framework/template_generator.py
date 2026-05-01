@@ -257,10 +257,10 @@ result = fw.run_data_product(
 print(result.get("status"))
 print(result.get("written"))
 print(result.get("run_summary"))
-print(result.get("dq_workflow_summary"))
-print(result.get("drift_summary"))
-print(result.get("governance_summary"))
-print(result.get("quarantine_summary"))
+print(result.get("dq_workflow"))
+print((result.get("drift") or {{}}).get("summary"))
+print((result.get("governance") or {{}}).get("summary"))
+print(result.get("quarantine"))
 
 # %% [markdown]
 # # 8. Assert gates

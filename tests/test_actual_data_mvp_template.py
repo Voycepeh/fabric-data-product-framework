@@ -20,9 +20,15 @@ def test_actual_data_mvp_assets_exist_and_contain_runner_calls(tmp_path: Path):
     assert "fw.run_data_product" in notebook_text
     assert "fw.assert_data_product_passed" in notebook_text
     assert "def transform" in notebook_text
+    assert "meta.classification_table" not in notebook_text
+    assert "governance.classification_table" in notebook_text or 'getattr(governance, "classification_table"' in notebook_text
 
     assert "workspace" not in notebook_text.lower()
     assert "workspace" not in contract_text.lower()
+    assert 'result.get("dq_workflow_summary")' not in notebook_text
+    assert 'result.get("drift_summary")' not in notebook_text
+    assert 'result.get("governance_summary")' not in notebook_text
+    assert 'result.get("quarantine_summary")' not in notebook_text
 
     for section in ["dataset:", "runtime:", "source:", "target:", "quality:", "drift:", "governance:", "metadata:"]:
         assert section in contract_text
@@ -37,3 +43,7 @@ def test_actual_data_mvp_assets_exist_and_contain_runner_calls(tmp_path: Path):
     assert "fw.load_data_contract" in generated_text
     assert "fw.run_data_product" in generated_text
     assert "fw.assert_data_product_passed" in generated_text
+    assert 'result.get("dq_workflow_summary")' not in generated_text
+    assert 'result.get("drift_summary")' not in generated_text
+    assert 'result.get("governance_summary")' not in generated_text
+    assert 'result.get("quarantine_summary")' not in generated_text

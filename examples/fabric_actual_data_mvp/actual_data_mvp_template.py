@@ -87,12 +87,12 @@ if run_summary:
     print("run_summary:", run_summary)
 
 for key in [
-    "dq_workflow_summary",
-    "drift_summary",
-    "governance_summary",
-    "quarantine_summary",
+    "dq_workflow",
 ]:
     print(f"{key}:", result.get(key))
+print("drift_summary:", (result.get("drift") or {}).get("summary"))
+print("governance_summary:", (result.get("governance") or {}).get("summary"))
+print("quarantine:", result.get("quarantine"))
 
 # %% [markdown]
 # # 8. Assert gates
@@ -109,6 +109,7 @@ fw.assert_data_product_passed(result)
 # %%
 metadata_tables = []
 meta = getattr(contract, "metadata", None)
+governance = getattr(contract, "governance", None)
 if meta:
     metadata_tables = [
         meta.source_profile_table,
@@ -116,7 +117,7 @@ if meta:
         meta.schema_snapshot_table,
         meta.partition_snapshot_table,
         meta.quality_result_table,
-        meta.classification_table,
+        getattr(governance, "classification_table", None),
         meta.contract_validation_table,
         meta.run_summary_table,
         meta.dataset_runs_table,
