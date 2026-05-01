@@ -30,13 +30,33 @@ def build_quarantine_rule_coverage_records(rules, run_id, dataset_name, table_na
 
 
 def add_dq_failure_columns(df, rules, engine="auto"):
-    """Annotate rows with ``dq_errors`` and ``dq_warnings`` based on DQ rules."""
+    """Annotate dataframe rows with rule-level failure arrays.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame or pyspark.sql.DataFrame
+        Input dataset to annotate.
+    rules : list[dict]
+        Executable quality rules with ``rule_type`` and ``severity`` fields.
+    engine : str, default "auto"
+        ``pandas``, ``spark``, or ``auto``.
+
+    Returns
+    -------
+    DataFrame
+        Input dataframe plus ``dq_errors`` and ``dq_warnings`` columns.
+
+    Notes
+    -----
+    This function supports row-level quarantine handoff. Aggregate-only rules
+    are excluded from row annotations by design.
+    """
     resolved = _resolve_engine(df, engine)
     return _add_spark(df, rules) if resolved == "spark" else _add_pandas(df, rules)
 
 
 def split_valid_and_quarantine(df, rules, engine="auto"):
-    """Split enriched dataframe into valid rows and quarantine rows."""
+    """Split dataframe into valid and quarantined partitions after DQ checks."""
     enriched = add_dq_failure_columns(df, rules, engine=engine)
     if _resolve_engine(enriched, engine) == "spark":
         from pyspark.sql import functions as F
@@ -46,7 +66,11 @@ def split_valid_and_quarantine(df, rules, engine="auto"):
 
 
 def build_quarantine_summary_records(quarantine_df, run_id, dataset_name, table_name, engine="auto"):
-    """Build quarantine volume summary records for metadata tables."""
+    """Build metadata rows summarizing quarantine volume for a pipeline run.
+
+    Returns records that can be written to metadata tables and surfaced in run
+    summaries for AI/human handover.
+    """
     resolved = _resolve_engine(quarantine_df, engine)
     q_count = quarantine_df.count() if resolved == "spark" else len(quarantine_df)
     return [{"run_id": run_id, "dataset_name": dataset_name, "table_name": table_name, "quarantine_row_count": int(q_count), "engine": resolved}]

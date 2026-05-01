@@ -73,11 +73,28 @@ def compile_layman_rule_to_quality_rule(candidate):
 
 
 def compile_layman_rules_to_quality_rules(candidates):
-    """Batch-compile layman candidates and return compiled rules + summary stats."""
+    """Compile many reviewed layman candidates into executable quality rules.
+
+    Parameters
+    ----------
+    candidates : list[dict]
+        Candidate rules from AI or manual authoring.
+
+    Returns
+    -------
+    dict
+        Dictionary containing ``compiled_rules``, per-candidate ``records``, and
+        summary counts (total/compiled/skipped).
+
+    Notes
+    -----
+    This step is the bridge between AI suggestion and deterministic execution.
+    Compiled output should be approved before production use.
+    """
     records = [compile_layman_rule_to_quality_rule(c) for c in candidates]
     return {"compiled_rules": [r["quality_rule"] for r in records if r["status"] == "compiled"], "records": records, "summary": {"total": len(records), "compiled": sum(r["status"] == "compiled" for r in records), "skipped": sum(r["status"] == "skipped" for r in records)}}
 
 
 def build_rule_registry_records(compiled_rules, run_id, dataset_name, table_name):
-    """Build metadata rows for storing compiled executable rule definitions."""
+    """Build metadata records for persisted compiled rule definitions."""
     return [{"run_id": run_id, "dataset_name": dataset_name, "table_name": table_name, "rule_id": r.get("rule_id"), "rule_type": r.get("rule_type"), "severity": r.get("severity"), "column": r.get("column"), "columns": r.get("columns"), "reason": r.get("reason"), "rule_json": r} for r in compiled_rules]

@@ -26,7 +26,30 @@ def _jsonable(value: Any) -> Any:
 
 
 def build_quality_rule_prompt_context(profile, contract=None, business_context=None, table_name=None, dataset_name=None):
-    """Build JSON-safe context for AI DQ rule suggestion prompts."""
+    """Build a JSON-safe context object for AI-assisted DQ rule suggestion.
+
+    Parameters
+    ----------
+    profile : dict
+        Profiling payload (typically from ``profile_dataframe``) containing
+        column-level evidence such as nulls, distinct counts, and sample values.
+    contract : dict | None, optional
+        Optional contract fragment used to ground candidate suggestions.
+    business_context : str | dict | None, optional
+        Optional plain-language context explaining business intent.
+    table_name, dataset_name : str | None, optional
+        Optional names persisted in the returned prompt context.
+
+    Returns
+    -------
+    dict
+        JSON-safe prompt context for AI candidate generation.
+
+    Notes
+    -----
+    This helper prepares context only. Candidate rules still require human review
+    and approval before compilation and production pipeline gating.
+    """
     profile = profile or {}
     return {
         "dataset_name": dataset_name or profile.get("dataset_name", "unknown"),
@@ -40,7 +63,7 @@ def build_quality_rule_prompt_context(profile, contract=None, business_context=N
 
 
 def build_quality_rule_generation_prompt(profile, contract=None, business_context=None, table_name=None, dataset_name=None):
-    """Create the final prompt text used to generate conservative DQ candidates."""
+    """Create a deterministic prompt string for candidate-rule generation."""
     context = build_quality_rule_prompt_context(profile, contract, business_context, table_name, dataset_name)
     return (
         "You are generating conservative data quality rule candidates for Fabric data product workflows.\n"
@@ -93,7 +116,11 @@ def parse_ai_quality_rule_candidates(raw_response):
 
 
 def normalize_quality_rule_candidate(candidate):
-    """Normalize one AI rule candidate to the framework candidate schema."""
+    """Normalize one AI candidate to the framework review schema.
+
+    Returns a candidate with normalized ``rule_type``, ``severity``,
+    ``confidence``, ``approval_status``, and a dict ``rule_config``.
+    """
     out = {k: v for k, v in candidate.items() if k in SUPPORTED_CANDIDATE_FIELDS}
     out["rule_type"] = str(out.get("rule_type", "")).strip().lower()
     out["severity"] = str(out.get("severity", "warning")).strip().lower() or "warning"
@@ -108,7 +135,7 @@ def normalize_quality_rule_candidate(candidate):
 
 
 def validate_ai_quality_rule_candidate(candidate):
-    """Validate whether a candidate has enough fields to compile to a DQ rule."""
+    """Validate whether a candidate can be safely compiled to executable checks."""
     rt = candidate.get("rule_type")
     if not rt:
         return {"is_valid": False, "message": "Missing rule_type"}
@@ -122,7 +149,11 @@ def validate_ai_quality_rule_candidate(candidate):
 
 
 def build_layman_rule_records(candidates, run_id, dataset_name, table_name):
-    """Build metadata rows for layman-rule candidate review and approval."""
+    """Build metadata-table records for candidate review and steward approval.
+
+    The output is intended for AI/human handover and audit trails before
+    candidate rules are compiled into deterministic quality checks.
+    """
     rows = []
     for i, c in enumerate(candidates):
         can_compile = bool(c.get("can_compile")) if "can_compile" in c else validate_ai_quality_rule_candidate(c)["is_valid"]
