@@ -1,8 +1,8 @@
 # Fabric data product MVP notebook template
 
 This page explains how to use
-`templates/notebooks/fabric_data_product_mvp.py`
-as a safe, copy-pasteable starter for Microsoft Fabric.
+`templates/notebooks/fabric_data_product_mvp.py` as a safe,
+copy-pasteable starter for Microsoft Fabric.
 
 The default mode is `DRY_RUN = True`, so a first run does not write
 production outputs.
@@ -53,14 +53,17 @@ Safety defaults:
 
 - In dry run, source data is synthetic and local/Fabric-safe.
 - In dry run, output stays in-memory (no production write).
-- Production-like reads/writes require explicit replacement of adapter placeholders.
+- Production-like reads/writes require explicit replacement of adapter
+  placeholders.
 
 ## Human vs framework responsibilities
 
 The template includes a dedicated section clarifying responsibilities:
 
-- **Human fills this in**: business context, source/target bindings, transformation logic, and approvals.
-- **Framework generates this**: profiles, DQ execution outputs, governance suggestions, lineage shape, and validation checks.
+- **Human fills this in**: business context, source/target bindings,
+  transformation logic, and approvals.
+- **Framework generates this**: profiles, DQ execution outputs,
+  governance suggestions, lineage shape, and validation checks.
 
 ## Related pages
 
