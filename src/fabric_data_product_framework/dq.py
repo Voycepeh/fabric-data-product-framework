@@ -223,12 +223,72 @@ def normalize_dq_rule(rule: dict) -> dict:
 
 
 def normalize_dq_rules(rules: list[dict] | None) -> list[dict]:
-    """Normalize and filter raw rule payloads into executable DQ rules."""
+    """Normalize a list of DQ rule dictionaries into framework-ready rules.
+
+    Parameters
+    ----------
+    rules : list[dict] | None
+        Raw rule payloads from notebooks, YAML/JSON config, or AI-generated
+        candidates.
+
+    Returns
+    -------
+    list[dict]
+        Normalized rule objects with consistent keys such as ``rule_id``,
+        ``rule_type``, ``severity``, and ``status``.
+
+    Notes
+    -----
+    This helper is safe for direct notebook use and also used internally by
+    rule execution and metadata persistence helpers.
+    """
     return [normalize_dq_rule(r) for r in (rules or [])]
 
 
 def build_dq_rule_records(rules: list[dict], dataset_name: str, table_name: str, run_id: str | None = None, status: str = "candidate", generated_by: str = "framework") -> list[dict]:
-    """Build metadata-table-friendly DQ rule records for persistence."""
+    """Convert normalized DQ rules into metadata-table-friendly persistence rows.
+
+    This function solves the handover problem between rule authoring and rule
+    governance by producing records that can be stored in a Lakehouse metadata
+    table and reviewed by stewards before enforcement.
+
+    Parameters
+    ----------
+    rules : list[dict]
+        Candidate or approved DQ rules.
+    dataset_name : str
+        Logical dataset name associated with the rule set.
+    table_name : str
+        Source table that the rules apply to.
+    run_id : str | None, optional
+        Pipeline run identifier for traceability.
+    status : str, default "candidate"
+        Default status used when a rule does not already provide one.
+    generated_by : str, default "framework"
+        Default generator marker if not present on individual rules.
+
+    Returns
+    -------
+    list[dict]
+        Rows containing fields such as ``rule_id``, ``source_table``,
+        ``description``, ``generated_by``, ``run_id``, ``status``, and
+        ``rule_json`` for full-fidelity storage.
+
+    Notes
+    -----
+    - If an input rule has ``status="approved"``, that status is preserved.
+    - Rules with missing status are treated as ``candidate`` unless overridden.
+    - ``rule_json`` stores the full normalized rule for replay/audit.
+
+    Examples
+    --------
+    >>> rules = [
+    ...   {"rule_id": "order_id_not_null", "column": "order_id", "rule_type": "not_null"},
+    ...   {"rule_id": "status_in_set", "column": "status", "rule_type": "accepted_values", "accepted_values": ["NEW", "DONE"], "status": "approved"},
+    ... ]
+    >>> build_dq_rule_records(rules, dataset_name="sales", table_name="bronze_orders", run_id="run_001")[0]["status"]
+    'candidate'
+    """
     created_at = _now_iso()
     rows = []
     for rule in normalize_dq_rules(rules):
@@ -287,7 +347,36 @@ def load_dq_rules(spark, table_name: str, dataset_name: str | None = None, sourc
 
 
 def run_dq_rules(df, rules: list[dict], dataset_name: str, table_name: str, engine: str = "spark", fail_on: str = "critical") -> dict:
-    """Normalize and execute DQ rules, then apply fail-closed unsupported-rule handling."""
+    """Evaluate DQ rules and return pass/fail results with pipeline actions.
+
+    Parameters
+    ----------
+    df : Any
+        Pandas or Spark dataframe to validate.
+    rules : list[dict]
+        Executable rules, usually approved rules from metadata storage.
+    dataset_name : str
+        Dataset identifier used in result metadata.
+    table_name : str
+        Table identifier used in result metadata.
+    engine : str, default "spark"
+        Execution engine name.
+    fail_on : str, default "critical"
+        Quality gate level interpreted by downstream gate assertions.
+
+    Returns
+    -------
+    dict
+        Aggregate quality result with per-rule outcomes. ``status="failed"``
+        and ``can_continue=False`` indicate pipeline-blocking failures.
+
+    Notes
+    -----
+    Severity controls expected action semantics:
+    - ``critical`` failures should block a pipeline.
+    - ``warning`` failures should warn but allow continuation.
+    - ``info`` failures are informational.
+    """
     normalized = normalize_dq_rules(rules)
     result = run_quality_rules(df, normalized, dataset_name=dataset_name, table_name=table_name, engine=engine)
     supported = sorted(SUPPORTED_RULE_TYPES)

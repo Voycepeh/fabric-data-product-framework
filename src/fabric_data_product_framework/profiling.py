@@ -21,6 +21,7 @@ PHONE_RE = re.compile(r"^[+()\-\s0-9]{7,}$")
 
 @dataclass
 class ColumnProfile:
+    """Column-level profile metrics used for DQ suggestion and metadata writes."""
     column_name: str
     data_type: str
     non_null_count: int
@@ -40,6 +41,7 @@ class ColumnProfile:
 
 @dataclass
 class DataFrameProfile:
+    """Table-level profile payload containing row metrics and column profiles."""
     dataset_name: str
     engine: str
     row_count: int

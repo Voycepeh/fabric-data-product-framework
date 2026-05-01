@@ -12,6 +12,7 @@ _ALLOWED_CONFIDENCE = {"high", "medium", "low"}
 
 @dataclass
 class TransformationStep:
+    """Structured transformation step for lineage records and handover text."""
     step_id: str
     step_name: str
     input_name: str
@@ -171,6 +172,11 @@ def get_fabric_copilot_lineage_prompt() -> str:
 
 
 def validate_lineage_steps(lineage_steps) -> dict:
+    """Validate AI/manual lineage steps before metadata persistence.
+
+    Enforces required fields and flags low-confidence or unknown lineage values
+    for human steward review.
+    """
     errors: list[str] = []
     warnings: list[str] = []
     review_required = False
@@ -232,6 +238,7 @@ def validate_lineage_steps(lineage_steps) -> dict:
 
 
 def build_lineage_record_from_steps(dataset_name, lineage_steps, run_id=None, notebook_name=None, workspace_name=None, created_by=None) -> list[dict]:
+    """Convert validated lineage steps into machine-readable metadata rows."""
     validation = validate_lineage_steps(lineage_steps)
     if not validation["is_valid"]:
         raise ValueError(f"Invalid lineage_steps: {validation['errors']}")
@@ -259,6 +266,7 @@ def build_lineage_record_from_steps(dataset_name, lineage_steps, run_id=None, no
 
 
 def build_lineage_records(*, dataset_name: str, run_id: str, source_tables: list[str], target_table: str, transformation_steps: list[dict]) -> list[dict]:
+    """Build canonical lineage records from structured transformation steps."""
     return [{"run_id": run_id, "dataset_name": dataset_name, "source_tables": _clean_list(source_tables), "target_table": target_table, "step_id": step.get("step_id"), "step_name": step.get("step_name"), "input_name": step.get("input_name"), "output_name": step.get("output_name"), "transformation_type": step.get("transformation_type", "custom"), "columns_used": _clean_list(step.get("columns_used")), "columns_created": _clean_list(step.get("columns_created")), "description": step.get("description"), "reason": step.get("reason"), "business_impact": step.get("business_impact"), "notes": step.get("notes")} for step in (transformation_steps or [])]
 
 
@@ -270,6 +278,7 @@ def build_lineage_record(*, dataset_name: str, run_id: str | None = None, lineag
 
 
 def plot_lineage_networkx(lineage_steps_or_record, title=None):
+    """Render lineage steps as a NetworkX diagram for notebook review."""
     try:
         import matplotlib.pyplot as plt
     except Exception as ex:
