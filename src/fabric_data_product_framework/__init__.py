@@ -19,7 +19,7 @@ from .fabric_notebook import (
     warehouse_read,
     warehouse_write,
 )
-from .template_generator import create_pipeline_notebook_template
+from .template_generator import create_actual_data_mvp_template, create_pipeline_notebook_template
 from .dq import (
     build_dq_rule_records,
     generate_dq_rule_candidates,
@@ -96,6 +96,7 @@ __all__ = [
     "transformation_reasons",
     "pass_if_yes_else_run",
     "create_pipeline_notebook_template",
+    "create_actual_data_mvp_template",
     "run_dq_workflow",
     "run_dq_rules",
     "load_dq_rules",

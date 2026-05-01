@@ -187,3 +187,86 @@ lakehouse_table_write(
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
     return str(path)
+
+
+def create_actual_data_mvp_template(
+    output_path: str,
+    contract_path: str = "contracts/examples/actual_data_mvp_contract.yml",
+) -> str:
+    path = Path(output_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    content = f'''# %% [markdown]
+# # 1. Introduction
+# This notebook runs one data product contract end to end.
+#
+# Edit only the contract and `transform(df, ctx)` function.
+# The framework handles profiling, DQ, drift, governance suggestions, quarantine,
+# contract validation, lineage, run summary, metadata writes, and gated target writes.
+
+# %% [markdown]
+# # 2. Setup
+
+# %%
+import fabric_data_product_framework as fw
+from pyspark.sql import functions as F
+
+# %% [markdown]
+# # 3. Load contract
+
+# %%
+CONTRACT_PATH = "{contract_path}"
+contract = fw.load_data_contract(CONTRACT_PATH)
+if hasattr(fw, "data_product_contract_to_dict"):
+    display(fw.data_product_contract_to_dict(contract))
+
+# %% [markdown]
+# # 4. Optional source preview
+
+# %%
+source_df = spark.table(contract.source.table)
+display(source_df.limit(10))
+
+# %% [markdown]
+# # 5. Business transformation
+
+# %%
+def transform(df, ctx):
+    # return df.withColumn("ingest_date", F.current_date())
+    # return df.select("col_a", "col_b")
+    # return df.withColumnRenamed("old_name", "new_name")
+    # return df.filter(F.col("status") == F.lit("active"))
+    # other_df = spark.table("REPLACE_WITH_OPTIONAL_JOIN_TABLE")
+    # df = df.join(other_df, on="REPLACE_WITH_KEY_COLUMN", how="left")
+    # df = df.withColumn("event_ts", F.to_timestamp("event_ts"))
+    return df
+
+# %% [markdown]
+# # 6. Run full framework
+
+# %%
+result = fw.run_data_product(
+    spark=spark,
+    contract=contract,
+    transform=transform,
+)
+
+# %% [markdown]
+# # 7. Inspect result
+
+# %%
+print(result.get("status"))
+print(result.get("written"))
+print(result.get("run_summary"))
+print(result.get("dq_workflow"))
+print((result.get("drift") or {{}}).get("summary"))
+print((result.get("governance") or {{}}).get("summary"))
+print(result.get("quarantine"))
+
+# %% [markdown]
+# # 8. Assert gates
+
+# %%
+fw.assert_data_product_passed(result)
+'''
+    path.write_text(content, encoding="utf-8")
+    return str(path)
