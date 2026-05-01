@@ -14,11 +14,34 @@ PUBLIC_SYMBOLS = list(getattr(pkg, "__all__", []))
 MODULE_LABEL_OVERRIDES = {
     "governance_classifier": "governance",
     "data_contract": "contracts",
+    "dq": "dq_workflow",
 }
 
 SYMBOL_SECTION_OVERRIDES = {
     "MVP_STEPS": "mvp_steps",
 }
+
+SECTION_DISPLAY_NAMES = {
+    "fabric_notebook": "Fabric Notebook",
+    "template_generator": "Template Generator",
+    "lineage": "Lineage",
+    "dq_workflow": "DQ Workflow",
+    "governance": "Governance",
+    "contracts": "Contracts",
+    "drift_checkers": "Drift Checkers",
+    "mvp_steps": "MVP Steps",
+}
+
+SECTION_ORDER = [
+    "fabric_notebook",
+    "template_generator",
+    "lineage",
+    "dq_workflow",
+    "governance",
+    "contracts",
+    "drift_checkers",
+    "mvp_steps",
+]
 
 symbols_by_section: dict[str, list[tuple[str, str]]] = defaultdict(list)
 
@@ -42,17 +65,29 @@ for section, items in symbols_by_section.items():
             fd.write("      show_root_heading: false\n")
             fd.write("      show_source: true\n")
 
+ordered_sections = [section for section in SECTION_ORDER if section in symbols_by_section]
+remaining_sections = sorted(set(symbols_by_section) - set(ordered_sections))
+all_sections = ordered_sections + remaining_sections
+
 with mkdocs_gen_files.open("reference/index.md", "w") as fd:
     fd.write("# Callable Reference\n\n")
     fd.write(
-        "Generated API pages for each public callable in "
-        "`fabric_data_product_framework.__all__`.\n"
+        "These callable reference pages are generated from "
+        "`fabric_data_product_framework.__all__`.\n\n"
     )
+    fd.write("Browse callables by section:\n\n")
+
+    for section in all_sections:
+        pretty = SECTION_DISPLAY_NAMES.get(section, section.replace("_", " ").title())
+        fd.write(f"## {pretty}\n\n")
+        for symbol, _ in symbols_by_section[section]:
+            fd.write(f"- [`{symbol}`]({section}/{symbol}.md)\n")
+        fd.write("\n")
 
 with mkdocs_gen_files.open("reference/SUMMARY.md", "w") as fd:
     fd.write("- [Reference Home](index.md)\n")
-    for section in sorted(symbols_by_section):
-        pretty = section.replace("_", " ").title()
+    for section in all_sections:
+        pretty = SECTION_DISPLAY_NAMES.get(section, section.replace("_", " ").title())
         fd.write(f"- {pretty}\n")
-        for symbol, _ in sorted(symbols_by_section[section], key=lambda item: item[0].lower()):
+        for symbol, _ in symbols_by_section[section]:
             fd.write(f"  - [{symbol}]({section}/{symbol}.md)\n")
