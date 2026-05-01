@@ -4,7 +4,7 @@ site_url: https://voycepeh.github.io/fabric-data-product-framework/
 theme:
   name: mkdocs
 nav:
-  - Home: api/index.md
+  - Home: index.md
   - API:
       - Public callable modules:
           - Fabric Notebook: api/fabric_notebook.md
