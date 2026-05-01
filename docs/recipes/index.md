@@ -23,4 +23,4 @@ These recipes show practical ways to test and use the framework.
 
 - `src/README.md`
 - `templates/notebooks/fabric_data_product_mvp.py`
-- Generated API reference pages in `docs/api/`
+- Generated function reference pages in `docs/reference/`

@@ -26,36 +26,19 @@ The public callable surface below is aligned to `src/fabric_data_product_framewo
 
 ### 1) Fabric notebook runtime, IO, and metadata
 
-API page: [`docs/api/fabric_notebook.md`](https://voycepeh.github.io/fabric-data-product-framework/api/fabric_notebook/)
+Function reference: [`/reference/`](https://voycepeh.github.io/fabric-data-product-framework/reference/)
 
-- [`Housepath`](https://voycepeh.github.io/fabric-data-product-framework/reference/fabric_notebook/Housepath/)
-- [`get_path`](https://voycepeh.github.io/fabric-data-product-framework/reference/fabric_notebook/get_path/)
-- [`load_fabric_config`](https://voycepeh.github.io/fabric-data-product-framework/reference/fabric_notebook/load_fabric_config/)
-- [`lakehouse_table_read`](https://voycepeh.github.io/fabric-data-product-framework/reference/fabric_notebook/lakehouse_table_read/)
-- [`lakehouse_table_write`](https://voycepeh.github.io/fabric-data-product-framework/reference/fabric_notebook/lakehouse_table_write/)
-- [`lakehouse_csv_read`](https://voycepeh.github.io/fabric-data-product-framework/reference/fabric_notebook/lakehouse_csv_read/)
-- [`lakehouse_parquet_read_as_spark`](https://voycepeh.github.io/fabric-data-product-framework/reference/fabric_notebook/lakehouse_parquet_read_as_spark/)
-- [`lakehouse_excel_read_as_spark`](https://voycepeh.github.io/fabric-data-product-framework/reference/fabric_notebook/lakehouse_excel_read_as_spark/)
-- [`warehouse_read`](https://voycepeh.github.io/fabric-data-product-framework/reference/fabric_notebook/warehouse_read/)
-- [`warehouse_write`](https://voycepeh.github.io/fabric-data-product-framework/reference/fabric_notebook/warehouse_write/)
-- [`check_naming_convention`](https://voycepeh.github.io/fabric-data-product-framework/reference/fabric_notebook/check_naming_convention/)
-- [`clean_datetime_columns`](https://voycepeh.github.io/fabric-data-product-framework/reference/fabric_notebook/clean_datetime_columns/)
-- [`add_system_technical_columns`](https://voycepeh.github.io/fabric-data-product-framework/reference/fabric_notebook/add_system_technical_columns/)
-- [`ODI_METADATA_LOGGER`](https://voycepeh.github.io/fabric-data-product-framework/reference/fabric_notebook/ODI_METADATA_LOGGER/)
-- [`transformation_summary`](https://voycepeh.github.io/fabric-data-product-framework/reference/fabric_notebook/transformation_summary/)
-- [`transformation_reasons`](https://voycepeh.github.io/fabric-data-product-framework/reference/fabric_notebook/transformation_reasons/)
-- [`pass_if_yes_else_run`](https://voycepeh.github.io/fabric-data-product-framework/reference/fabric_notebook/pass_if_yes_else_run/)
 
 ### 2) Template generation
 
-API page: [`docs/api/template_generator.md`](https://voycepeh.github.io/fabric-data-product-framework/api/template_generator/)
+Function reference: [`/reference/`](https://voycepeh.github.io/fabric-data-product-framework/reference/)
 
 - [`create_pipeline_notebook_template`](https://voycepeh.github.io/fabric-data-product-framework/reference/template_generator/create_pipeline_notebook_template/)
 - [`create_actual_data_mvp_template`](https://voycepeh.github.io/fabric-data-product-framework/reference/template_generator/create_actual_data_mvp_template/)
 
 ### 3) Lineage and transformation summaries
 
-API page: [`docs/api/lineage.md`](https://voycepeh.github.io/fabric-data-product-framework/api/lineage/)
+Function reference: [`/reference/`](https://voycepeh.github.io/fabric-data-product-framework/reference/)
 
 - [`validate_lineage_steps`](https://voycepeh.github.io/fabric-data-product-framework/reference/lineage/validate_lineage_steps/)
 - [`plot_lineage_networkx`](https://voycepeh.github.io/fabric-data-product-framework/reference/lineage/plot_lineage_networkx/)
@@ -70,7 +53,7 @@ API page: [`docs/api/lineage.md`](https://voycepeh.github.io/fabric-data-product
 
 ### 4) Data quality workflow
 
-API page: [`docs/api/dq.md`](https://voycepeh.github.io/fabric-data-product-framework/api/dq/)
+Function reference: [`/reference/`](https://voycepeh.github.io/fabric-data-product-framework/reference/)
 
 - [`run_dq_workflow`](https://voycepeh.github.io/fabric-data-product-framework/reference/dq/run_dq_workflow/)
 - [`run_dq_rules`](https://voycepeh.github.io/fabric-data-product-framework/reference/dq/run_dq_rules/)
@@ -84,44 +67,17 @@ API page: [`docs/api/dq.md`](https://voycepeh.github.io/fabric-data-product-fram
 
 ### 5) Governance classification
 
-API page: [`docs/api/governance.md`](https://voycepeh.github.io/fabric-data-product-framework/api/governance/)
+Function reference: [`/reference/`](https://voycepeh.github.io/fabric-data-product-framework/reference/)
 
-- [`classify_column`](https://voycepeh.github.io/fabric-data-product-framework/reference/governance/classify_column/)
-- [`classify_columns`](https://voycepeh.github.io/fabric-data-product-framework/reference/governance/classify_columns/)
-- [`build_governance_classification_records`](https://voycepeh.github.io/fabric-data-product-framework/reference/governance/build_governance_classification_records/)
-- [`write_governance_classifications`](https://voycepeh.github.io/fabric-data-product-framework/reference/governance/write_governance_classifications/)
-- [`summarize_governance_classifications`](https://voycepeh.github.io/fabric-data-product-framework/reference/governance/summarize_governance_classifications/)
 
 ### 6) Contract-first orchestration and contract models
 
-API page: [`docs/api/contracts.md`](https://voycepeh.github.io/fabric-data-product-framework/api/contracts/)
+Function reference: [`/reference/`](https://voycepeh.github.io/fabric-data-product-framework/reference/)
 
-- [`SourceContract`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/SourceContract/)
-- [`TargetContract`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/TargetContract/)
-- [`QualityContract`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/QualityContract/)
-- [`DriftContract`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/DriftContract/)
-- [`GovernanceContract`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/GovernanceContract/)
-- [`MetadataContract`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/MetadataContract/)
-- [`RuntimeContract`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/RuntimeContract/)
-- [`DataProductContract`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/DataProductContract/)
-- [`build_source_contract`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/build_source_contract/)
-- [`build_target_contract`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/build_target_contract/)
-- [`build_quality_contract`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/build_quality_contract/)
-- [`build_drift_contract`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/build_drift_contract/)
-- [`build_governance_contract`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/build_governance_contract/)
-- [`build_metadata_contract`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/build_metadata_contract/)
-- [`build_runtime_contract`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/build_runtime_contract/)
-- [`normalize_data_product_contract`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/normalize_data_product_contract/)
-- [`data_product_contract_to_dict`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/data_product_contract_to_dict/)
-- [`assert_data_product_passed`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/assert_data_product_passed/)
-- [`build_runtime_context_from_contract`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/build_runtime_context_from_contract/)
-- [`load_data_contract`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/load_data_contract/)
-- [`run_data_product`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/run_data_product/)
-- [`validate_data_contract_shape`](https://voycepeh.github.io/fabric-data-product-framework/reference/contracts/validate_data_contract_shape/)
 
 ### 7) Drift checks and snapshots
 
-API page: [`docs/api/drift_checkers.md`](https://voycepeh.github.io/fabric-data-product-framework/api/drift_checkers/)
+Function reference: [`/reference/`](https://voycepeh.github.io/fabric-data-product-framework/reference/)
 
 - [`check_schema_drift`](https://voycepeh.github.io/fabric-data-product-framework/reference/drift_checkers/check_schema_drift/)
 - [`build_and_write_schema_snapshot`](https://voycepeh.github.io/fabric-data-product-framework/reference/drift_checkers/build_and_write_schema_snapshot/)
@@ -134,7 +90,7 @@ API page: [`docs/api/drift_checkers.md`](https://voycepeh.github.io/fabric-data-
 
 ### 8) MVP step registry
 
-API page: [`docs/api/mvp_steps.md`](https://voycepeh.github.io/fabric-data-product-framework/api/mvp_steps/)
+Function reference: [`/reference/`](https://voycepeh.github.io/fabric-data-product-framework/reference/)
 
 - [`MVP_STEPS`](https://voycepeh.github.io/fabric-data-product-framework/reference/mvp_steps/MVP_STEPS/)
 - [`get_mvp_step_registry`](https://voycepeh.github.io/fabric-data-product-framework/reference/mvp_steps/get_mvp_step_registry/)

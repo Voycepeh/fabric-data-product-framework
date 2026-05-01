@@ -130,4 +130,4 @@ print(summary_md)
 ## Related references
 
 - `src/README.md`
-- `docs/api/`
+- `docs/reference/`
