@@ -118,7 +118,11 @@ def generate_dq_rule_candidates(
     dataset_name: str | None = None,
     table_name: str | None = None,
 ) -> list[dict]:
-    """Generate conservative DQ candidate rules from profiling/metadata context."""
+    """Generate conservative candidate DQ rules from profile and optional metadata.
+
+    These candidates are review-first suggestions; typical next step is human approval
+    and storage before enforcement.
+    """
     profile = profile or {}
     metadata = metadata or {}
     candidates: list[dict[str, Any]] = []
@@ -259,6 +263,7 @@ def load_dq_rules(spark, table_name: str, dataset_name: str | None = None, sourc
 
 
 def run_dq_rules(df, rules: list[dict], dataset_name: str, table_name: str, engine: str = "spark", fail_on: str = "critical") -> dict:
+    """Normalize and execute DQ rules, then apply fail-closed unsupported-rule handling."""
     normalized = normalize_dq_rules(rules)
     result = run_quality_rules(df, normalized, dataset_name=dataset_name, table_name=table_name, engine=engine)
     supported = sorted(SUPPORTED_RULE_TYPES)
@@ -281,6 +286,11 @@ def run_dq_rules(df, rules: list[dict], dataset_name: str, table_name: str, engi
 
 
 def run_dq_workflow(spark, df, quality_contract, dataset_name: str, table_name: str, run_id: str | None = None, profile: dict | None = None, metadata: dict | None = None, business_context: str | dict | None = None, engine: str = "spark") -> dict:
+    """Run end-to-end contract-driven DQ workflow for notebook orchestration.
+
+    Flow: load approved rules (optional), generate/store candidates (optional),
+    execute enforceable rules, then evaluate gate status.
+    """
     qc = quality_contract
     explicit_rules = list(getattr(qc, "rules", None) or (qc.get("rules") if isinstance(qc, dict) else []) or [])
     loaded_rules: list[dict] = []

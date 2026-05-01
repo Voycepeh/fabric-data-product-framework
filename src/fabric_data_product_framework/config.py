@@ -36,7 +36,14 @@ def _format_error_path(error_path: list[object], message: str, validator: str) -
 
 
 def load_dataset_contract(path: str | Path) -> dict:
-    """Load a dataset contract YAML file from disk."""
+    """Load a dataset contract YAML file from disk.
+
+    Args:
+        path: Path to YAML contract.
+
+    Returns:
+        Parsed contract dictionary.
+    """
     contract_path = Path(path)
     with contract_path.open("r", encoding="utf-8") as handle:
         loaded = yaml.safe_load(handle)
@@ -60,7 +67,11 @@ def _load_schema(schema_path: str | Path | None = None) -> dict:
 
 
 def validate_dataset_contract(contract: dict, schema_path: str | Path | None = None) -> list[str]:
-    """Validate a dataset contract dictionary against the JSON Schema."""
+    """Validate contract content against schema and return human-readable errors.
+
+    Runtime:
+        Local-safe and Fabric-safe.
+    """
     schema = _load_schema(schema_path=schema_path)
 
     validator = Draft202012Validator(schema)
@@ -86,7 +97,11 @@ def load_and_validate_dataset_contract(
     path: str | Path,
     schema_path: str | Path | None = None,
 ) -> tuple[dict, list[str]]:
-    """Load a dataset contract file and validate it against the JSON Schema."""
+    """Load and validate contract in one call for notebook entrypoint checks.
+
+    Returns:
+        Tuple of ``(contract, errors)``. Continue only when ``errors`` is empty.
+    """
     contract = load_dataset_contract(path)
     errors = validate_dataset_contract(contract, schema_path=schema_path)
     return contract, errors

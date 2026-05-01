@@ -175,7 +175,12 @@ def classify_column(
 
 
 def classify_columns(profile: dict | list[dict], metadata: dict | list[dict] | None = None, business_context: str | dict | None = None, rules: list[dict] | None = None, dataset_name: str | None = None, table_name: str | None = None, run_id: str | None = None) -> list[dict]:
-    """Classify all columns from a profile-like structure."""
+    """Classify columns from profile-like inputs into governance suggestions.
+
+    Runtime:
+        Local-safe and Spark-independent. Typical next step is persisting review
+        suggestions with ``write_governance_classifications``.
+    """
     del dataset_name, table_name, run_id
     columns = _normalize_columns(profile)
     meta_lookup: dict[str, dict] = {}

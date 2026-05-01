@@ -383,6 +383,17 @@ def _runtime_validation_contract(contract: dict | DataProductContract) -> dict:
 
 
 def run_data_product(spark, contract: dict | DataProductContract, transform=None, source_df=None, write: bool | None = None, *, write_target: bool = True, write_metadata: bool = True) -> dict:
+    """Execute contract-first end-to-end workflow for a Fabric data product.
+
+    Args:
+        spark: Active Spark session (Fabric runtime expected for IO writes).
+        contract: Raw contract dictionary or normalized contract dataclass.
+        transform: Optional callable ``transform(df, runtime_context, contract_dict)``.
+        source_df: Optional injected source dataframe for testing/notebook chaining.
+
+    Returns:
+        Dictionary containing runtime context, validation/drift/quality outputs, and run summary.
+    """
     n = normalize_data_product_contract(contract)
     if write is False:
         write_target = False

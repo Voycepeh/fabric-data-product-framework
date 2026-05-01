@@ -18,7 +18,11 @@ def build_table_identifier(
 
 
 def read_table(table_identifier: str, reader=None):
-    """Read a table via an injected reader function."""
+    """Read a table through an injected Fabric-compatible reader adapter.
+
+    Runtime:
+        Fabric runtime required for real Lakehouse access; local-safe for adapter tests.
+    """
     if reader is None:
         raise NotImplementedError(
             "No table reader provided. Inject a Fabric-compatible reader function, for example a notebook helper wrapper."
@@ -35,7 +39,10 @@ def validate_write_mode(mode: str) -> str:
 
 
 def write_table(df, table_identifier: str, writer=None, mode: str = "append", **options):
-    """Write a table via an injected writer function."""
+    """Write a dataframe through an injected Fabric-compatible writer adapter.
+
+    Typical next step is building run summary + metadata records for handover.
+    """
     normalized_mode = validate_write_mode(mode)
     if writer is None:
         raise NotImplementedError(
