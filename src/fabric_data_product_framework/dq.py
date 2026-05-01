@@ -306,15 +306,13 @@ def run_dq_rules(df, rules: list[dict], dataset_name: str, table_name: str, engi
 
 
 def run_dq_workflow(spark, df, quality_contract, dataset_name: str, table_name: str, run_id: str | None = None, profile: dict | None = None, metadata: dict | None = None, business_context: str | dict | None = None, engine: str = "spark") -> dict:
-    """Execute end-to-end DQ workflow: load/generate rules, run checks, gate, and package outputs.
+    """Execute end-to-end contract-driven DQ workflow for notebook orchestration.
 
     Typical chain:
         ``profile_dataframe`` -> ``run_dq_workflow`` -> write returned records to metadata tables.
-    """
-    """Run end-to-end contract-driven DQ workflow for notebook orchestration.
-
-    Flow: load approved rules (optional), generate/store candidates (optional),
-    execute enforceable rules, then evaluate gate status.
+    Flow:
+        load approved rules (optional), generate/store candidates (optional),
+        execute enforceable rules, then evaluate gate status.
     """
     qc = quality_contract
     explicit_rules = list(getattr(qc, "rules", None) or (qc.get("rules") if isinstance(qc, dict) else []) or [])
