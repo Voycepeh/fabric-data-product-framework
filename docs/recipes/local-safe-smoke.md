@@ -47,23 +47,34 @@ classifications = classify_columns(
 profile_drift = check_profile_drift(current_profile=profile, baseline_profile=profile)
 drift_summary = summarize_drift_results(profile_drift_result=profile_drift)
 
+steps = [
+    {
+        "step_id": "1",
+        "step_name": "ingest",
+        "input_name": "orders_raw",
+        "output_name": "orders_local",
+        "transformation_type": "ingest",
+    },
+    {
+        "step_id": "2",
+        "step_name": "quality",
+        "input_name": "orders_local",
+        "output_name": "quality_result",
+        "transformation_type": "quality",
+    },
+]
+
 lineage_records = build_lineage_records(
     dataset_name="orders_local",
     run_id="local-smoke-001",
     source_tables=["local.orders_raw"],
     target_table="local.orders",
-    transformation_steps=[
-        {"step_id": "1", "step_name": "ingest", "input_name": "orders_raw", "output_name": "orders_local", "transformation_type": "ingest"},
-        {"step_id": "2", "step_name": "quality", "input_name": "orders_local", "output_name": "quality_result", "transformation_type": "quality"},
-    ],
+    transformation_steps=steps,
 )
 mermaid = generate_mermaid_lineage(
     source_tables=["local.orders_raw"],
     target_table="local.orders",
-    transformation_steps=[
-        {"step_id": "1", "step_name": "ingest"},
-        {"step_id": "2", "step_name": "quality"},
-    ],
+    transformation_steps=steps,
 )
 
 print(quality_result["status"])
