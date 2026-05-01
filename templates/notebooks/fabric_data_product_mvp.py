@@ -1,7 +1,8 @@
-"""Fabric MVP notebook starter aligned to the 13-step workflow.
+"""
+Fabric MVP notebook starter aligned to the 13-step workflow.
 
-Copy-paste into a Fabric notebook, run in DRY_RUN mode first, then
-replace the marked transformation and Fabric adapter sections.
+Copy-paste into a Fabric notebook, run in DRY_RUN mode first,
+then replace the marked transformation and Fabric adapter sections.
 """
 
 from __future__ import annotations
@@ -18,7 +19,7 @@ from fabric_data_product_framework.quality import run_quality_rules
 # ==========================================================
 # PARAMETER BLOCK (edit this block first)
 # ==========================================================
-DRY_RUN = True  # Safe default: prevents production writes.
+DRY_RUN = True
 ENVIRONMENT = "dev"
 RUN_ID = "dry_run_001" if DRY_RUN else "fabric_run_001"
 SOURCE_TABLE = "sample_orders_source"
@@ -40,7 +41,7 @@ def fabric_writer(df: pd.DataFrame, table_name: str) -> str:
     raise NotImplementedError("Replace with Fabric table writer.")
 
 
-# 1 Define data product
+# 1) Define data product
 data_product_context = {
     "name": TARGET_TABLE,
     "purpose": "Synthetic sample for MVP testing",
@@ -49,7 +50,7 @@ data_product_context = {
     "refresh_pattern": "daily",
 }
 
-# 2 Setup config and environment
+# 2) Setup config and environment
 runtime_config = {
     "environment": ENVIRONMENT,
     "dry_run": DRY_RUN,
@@ -57,7 +58,7 @@ runtime_config = {
 }
 mvp_registry = get_mvp_step_registry()
 
-# 3 Declare source and ingest data
+# 3) Declare source and ingest data
 source_declaration = {"source_table": SOURCE_TABLE}
 if DRY_RUN:
     # Local/Fabric-safe sample branch: no external dependencies, no writes.
@@ -79,24 +80,28 @@ else:
     # Fabric branch: replace adapter with production-safe source read.
     df_source = fabric_reader(source_declaration["source_table"])
 
-# 4 Profile source and capture metadata
+# 4) Profile source and capture metadata
 source_profile = profile_dataframe(
     df_source,
     dataset_name=data_product_context["name"],
     engine="auto",
 )
 
-# 5 Explore data
-exploration_notes = "Checked nulls, schema, and row counts in dry run before Fabric write path."
+# 5) Explore data
+exploration_notes = (
+    "Checked nulls, schema, and row counts in dry run before "
+    "Fabric write path."
+)
 
-# 6 Explain transformation logic
-transformation_rationale = "Standardize amount precision and preserve all rows for MVP smoke path."
+# 6) Explain transformation logic
+transformation_rationale = (
+    "Standardize amount precision and preserve all rows "
+    "for MVP smoke path."
+)
 
-# 7 Build transformation pipeline
-# ------------------------------------------------------------------
+# 7) Build transformation pipeline
 # REPLACE THIS TRANSFORMATION SECTION WITH DOMAIN-SPECIFIC LOGIC.
 # Keep output schema and business grain explicit before production runs.
-# ------------------------------------------------------------------
 df_output = df_source.copy()
 df_output["amount"] = df_output["amount"].round(2)
 
@@ -105,11 +110,12 @@ if DRY_RUN:
 else:
     output_table = fabric_writer(df_output, TARGET_TABLE)
 
-# 8 AI generate DQ rules
+# 8) AI generate DQ rules
 # Copilot prompt (use as-is, then review output):
-# "Given columns {columns} and business grain {expected_grain}, generate 5-8
-# deterministic data quality rules with severity and rationale. Include at
-# least one not_null, uniqueness, and numeric range rule. Return JSON list."
+# "Given columns {columns} and business grain {expected_grain},
+# generate 5-8 deterministic data quality rules with severity and
+# rationale. Include at least one not_null, uniqueness, and numeric
+# range rule. Return JSON list."
 dq_candidate_rules = [
     {
         "rule_type": "not_null",
@@ -126,8 +132,11 @@ dq_candidate_rules = [
     },
 ]
 
-# 9 Human review DQ rules
-approved_dq_rules = [dict(rule, review_status="approved") for rule in dq_candidate_rules]
+# 9) Human review DQ rules
+approved_dq_rules = [
+    dict(rule, review_status="approved")
+    for rule in dq_candidate_rules
+]
 quality_rules = [
     {
         "rule_type": "not_null",
@@ -149,11 +158,12 @@ dq_result = run_quality_rules(
     engine="auto",
 )
 
-# 10 AI suggest sensitivity labels
+# 10) AI suggest sensitivity labels
 # Copilot prompt (use as-is, then review output):
-# "Classify each column by sensitivity (public/internal/confidential/restricted)
-# using approved usage '{approved_usage}'. Return JSON with column, label,
-# rationale, and confidence."
+# "Classify each column by sensitivity
+# (public/internal/confidential/restricted)
+# using approved usage '{approved_usage}'.
+# Return JSON with column, label, rationale, and confidence."
 columns_profile = [
     {
         "column_name": column,
@@ -166,16 +176,17 @@ sensitivity_suggestions = classify_columns(
     business_context={"approved_usage": data_product_context["approved_usage"]},
 )
 
-# 11 Human review and governance gate
+# 11) Human review and governance gate
 approved_governance_labels = [
-    dict(suggestion, approved=True) for suggestion in sensitivity_suggestions
+    dict(suggestion, approved=True)
+    for suggestion in sensitivity_suggestions
 ]
 
-# 12 AI generated lineage and transformation summary
+# 12) AI generated lineage and transformation summary
 # Copilot prompt (use as-is, then review output):
-# "Summarize lineage from source '{source_table}' to target '{target_table}',
-# include transformation intent, key fields changed, and confidence level.
-# Return JSON object aligned to framework lineage schema."
+# "Summarize lineage from source '{source_table}' to target
+# '{target_table}', include transformation intent, key fields changed,
+# and confidence level. Return JSON object aligned to framework lineage schema."
 lineage_record = build_lineage_record(
     dataset_name=data_product_context["name"],
     run_id=RUN_ID,
@@ -200,10 +211,11 @@ output_profile = profile_dataframe(
     engine="auto",
 )
 
-# 13 Handover framework pack
+# 13) Handover framework pack
 # Copilot prompt (use as-is, then review output):
-# "Draft a handover summary with: run status, key assumptions, unresolved risks,
-# and next actions for productionization. Keep it concise and checklist-ready."
+# "Draft a handover summary with: run status, key assumptions,
+# unresolved risks, and next actions for productionization.
+# Keep it concise and checklist-ready."
 handover_pack = {
     "profile": {
         "source": source_profile,
