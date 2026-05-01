@@ -64,11 +64,12 @@ AI helps draft DQ rules, sensitivity labels, lineage, transformation summaries, 
 Humans still approve business meaning, DQ thresholds, sensitivity classification, governance gates, and release readiness.
 
 ## Start here
-- Lifecycle and sequence: [docs/lifecycle-operating-model.md](docs/lifecycle-operating-model.md)
-- Canonical MVP workflow: [docs/mvp-workflow.md](docs/mvp-workflow.md)
+- Fabric notebook template: [templates/notebooks/fabric_data_product_mvp.md](templates/notebooks/fabric_data_product_mvp.md)
 - Fabric smoke-test checklist: [docs/fabric-smoke-test.md](docs/fabric-smoke-test.md)
-- Capability status: [docs/capability-status.md](docs/capability-status.md)
+- Canonical MVP workflow: [docs/mvp-workflow.md](docs/mvp-workflow.md)
+- Lifecycle and sequence: [docs/lifecycle-operating-model.md](docs/lifecycle-operating-model.md)
 - Function reference: [src/README.md](src/README.md)
+- Capability status: [docs/capability-status.md](docs/capability-status.md)
 
 ## Testing
 - Local tests: `python -m pytest`

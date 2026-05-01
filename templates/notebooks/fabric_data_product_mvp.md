@@ -1,57 +1,61 @@
 # Fabric data product MVP notebook template
 
-Use `templates/notebooks/fabric_data_product_mvp.py` as a copy/paste starter for Microsoft Fabric notebooks.
+This page explains how to use `templates/notebooks/fabric_data_product_mvp.py` as the starter for testing the framework in Microsoft Fabric. Recommended first run is DRY_RUN with synthetic data.
 
-## How to use
+## Recommended first-run path
+1. Open `templates/notebooks/fabric_data_product_mvp.py`
+2. Create a new Fabric notebook
+3. Copy/paste the template into Fabric
+4. Run it in DRY_RUN mode first
+5. Validate outputs using `docs/fabric-smoke-test.md`
+6. Replace placeholder reader/writer adapters only after the dry run works
 
-1. Create a new Fabric notebook.
-2. Copy the template script into notebook cells (or import it as a `.py` notebook source).
-3. Replace `DATASET_CONTRACT_PATH` with your contract file path.
-4. Set the notebook parameters (`WORKSPACE`, `LAKEHOUSE`, `SOURCE_TABLE`, `TARGET_TABLE`, `ENVIRONMENT`, `DRY_RUN`, `PROFILE_ONLY`).
+## What the template covers
+The template aligns to the current 13-step MVP workflow:
+1. Define data product
+2. Setup config and environment
+3. Declare source and ingest data
+4. Profile source and capture metadata
+5. Explore data
+6. Explain transformation logic
+7. Build transformation pipeline
+8. AI generate DQ rules
+9. Human review DQ rules
+10. AI suggest sensitivity labels
+11. Human review and governance gate
+12. AI generated lineage and transformation summary
+13. Handover framework pack
 
-## Wire adapters
+## Adapter replacement points
+The current template includes one placeholder adapter that you replace when moving from synthetic dry-run to real Fabric reads:
+- `fabric_reader(table_name: str)`
 
-Replace placeholder adapters with your implementation:
-- `fabric_reader(table_identifier)`
-- `fabric_table_writer(df, table_identifier, mode="append", **options)`
-- `metadata_writer(records, table_identifier, mode="append", **options)`
+The template currently keeps writes in-memory via `output_table` (`written_in_fabric` marker when not in dry run), so add your own Fabric write path in the transformation/output section after dry-run validation.
 
-This keeps the framework generic and portable.
+## How to customize safely
+- Keep the synthetic/default dry-run path first.
+- Then swap source read for real Fabric source.
+- Then add real target write.
+- Then connect metadata outputs if needed.
+- Keep AI outputs human-reviewed before production use.
 
-## Where to implement transformations
+## Expected outputs
+The template assembles these main artifacts:
+- `data_product_context`
+- `runtime_config`
+- `source_declaration`
+- `source_profile`
+- `exploration_notes`
+- `transformation_rationale`
+- `output_table`
+- `dq_candidate_rules`
+- `approved_dq_rules`
+- `sensitivity_suggestions`
+- `approved_governance_labels`
+- `lineage_record`
+- `handover_pack`
 
-Edit only the user block:
-
-- `# USER TRANSFORMATION START`
-- `# USER TRANSFORMATION END`
-
-Keep EDA/debug-only cells out of scheduled runs (freeze or remove them).
-
-## Metadata output mapping
-
-`write_multiple_metadata_outputs` writes each output key to a mapped table:
-- `dataset_runs`
-- `column_profiles`
-- `schema_snapshots`
-- `schema_drift_results`
-- `quality_results` (optional for future use)
-
-Adjust `metadata_table_mapping` to your environment.
-
-## Dry run and profile-only modes
-
-- `DRY_RUN=True`: skips target writes and metadata writes.
-- `PROFILE_ONLY=True`: bypasses transformation logic and profiles source-like output.
-
-## Lifecycle alignment
-
-The template maps directly to the 14-stage framework lifecycle from contract validation through metadata outputs and run summary.
-
-## How to run the first Fabric smoke test
-
-For a runnable first validation path, use:
+## Related pages
 - `docs/fabric-smoke-test.md`
-- `docs/metadata-table-bootstrap.md`
-- `examples/fabric_smoke_test/`
-
-Start in dry-run mode, validate metadata outputs, and only then enable target writes.
+- `docs/mvp-workflow.md`
+- `src/README.md`
