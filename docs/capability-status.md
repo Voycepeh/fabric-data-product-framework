@@ -26,3 +26,19 @@ This page is the canonical status view for framework capabilities, gaps, and nex
 - “Pattern/template” means the approach is documented, but not fully productised in code yet.
 
 Implementation-oriented detail remains in [framework-status.md](framework-status.md).
+
+## DQX-inspired capability mapping
+
+| DQX-inspired capability | Current Fabric framework capability | Status | Next improvement |
+|---|---|---|---|
+| Profiling and rule candidate generation | Profiling utilities and deterministic candidate generation are available as notebook-callable framework functions. | Implemented (core) | Add stronger profile-history retrieval and candidate rationale persistence. |
+| AI-assisted quality rule generation | Fabric AI-assisted generation path exists via framework wrapper over Fabric AI functions with human review expected. | Implemented (MVP) | Strengthen response scoring, parser hardening, and reviewer audit fields. |
+| Quality rule definition and storage | Rule normalization, record building, and metadata table storage patterns are available. | Implemented (core) | Add richer lifecycle states and approval audit model. |
+| Applying quality checks | Rule execution and quality gate checks are available and integrated with run summary patterns. | Implemented (core) | Expand supported rule types and policy templates. |
+| Valid and quarantine row routing | Helpers exist to annotate failures and split valid/quarantine outputs. | Implemented (core) | Add standardized quarantine reason taxonomy and SLA handling fields. |
+| Summary metrics | Quality/run summary record builders exist for centralized metadata storage. | Implemented (core) | Add monitoring-ready flattened metric views and benchmark thresholds. |
+| At-rest checks | Supported as a notebook execution pattern using persisted baselines, metadata tables, and run_data_product workflow steps. | Partial (pattern) | Add more opinionated templates for recurring at-rest validation jobs. |
+| In-transit checks | Supported as an execution pattern in notebook flow before/after transform and before publish gates. | Partial (pattern) | Add packaged gate presets by data product criticality tier. |
+| Workflow or no-code execution equivalent | Notebook-first execution exists; no one-for-one no-code equivalent is implemented today. | Not implemented | Add Fabric Pipeline / Data Factory orchestration templates and examples. |
+| Dashboard and monitoring | Metadata is reporting-ready through Lakehouse/Warehouse patterns; dashboard assets are not yet shipped. | Partial | Publish starter Power BI template and Warehouse monitoring views. |
+| Production best practices | Core controls exist, but release rigor is not fully codified. | Partial | Add promotion checklist, rule approval audit trail, and environment setup guide. |
