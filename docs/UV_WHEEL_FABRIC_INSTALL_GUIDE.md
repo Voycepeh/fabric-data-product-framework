@@ -65,7 +65,10 @@ For Fabric notebook environments, upload the `.whl` artifact.
 
 ## Versioning before rebuild
 
-Package version is defined in `pyproject.toml` under `[project].version`.
+Package version currently needs to stay aligned between:
+
+- `pyproject.toml` under `[project].version`
+- `src/fabric_data_product_framework/__init__.py` in `__version__`
 
 Recommended versioning practice for this framework:
 
@@ -111,7 +114,7 @@ import fabric_data_product_framework as fdpf
 
 print("Package loaded:", fdpf.__name__)
 print("Module path:", fdpf.__file__)
-print("Has __version__:", hasattr(fdpf, "__version__"))
+print("Package version:", getattr(fdpf, "__version__", "unknown"))
 ```
 
 ```python
@@ -162,6 +165,7 @@ For long-term maintainability, prefer package imports from `fabric_data_product_
 - **Missing dependencies:** check `pyproject.toml` dependencies and rebuild/re-upload.
 - **Runtime dependency conflict in Fabric:** review Fabric Environment libraries (custom/public) for conflicting versions.
 - **Wheel built before version bump:** increment version, rebuild, re-upload, publish, restart.
+- **Imported version is not the version you expected:** ensure both `pyproject.toml` and `src/fabric_data_product_framework/__init__.py` were bumped, rebuild the wheel, re-upload it, publish the Environment, and restart the notebook session.
 - **Local tests pass but Fabric calls fail:** some runtime behavior depends on Fabric-only execution context and must be validated in Fabric.
 
 ## Recommended release checklist
