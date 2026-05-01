@@ -5,13 +5,19 @@ theme:
 nav:
   - Home: api/index.md
   - API:
-      - Runtime: api/runtime.md
-      - Profiling: api/profiling.md
-      - Quality: api/quality.md
-      - DQ Workflow: api/dq.md
-      - Governance: api/governance.md
-      - Lineage: api/lineage.md
-      - Contracts: api/contracts.md
+      - Public callable modules:
+          - Fabric Notebook: api/fabric_notebook.md
+          - Template Generator: api/template_generator.md
+          - Lineage: api/lineage.md
+          - DQ Workflow: api/dq.md
+          - Governance: api/governance.md
+          - Data Contract: api/contracts.md
+          - Drift Checkers: api/drift_checkers.md
+          - MVP Steps: api/mvp_steps.md
+      - Additional module docs (internal / legacy):
+          - Runtime: api/runtime.md
+          - Profiling: api/profiling.md
+          - Quality: api/quality.md
 plugins:
   - search
   - mkdocstrings:
