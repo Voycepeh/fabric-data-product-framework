@@ -16,4 +16,4 @@ def test_mvp_template_executes_in_dry_run_mode():
         check=False,
     )
     assert result.returncode == 0, result.stderr
-    assert "Validation:" in result.stdout
+    assert "FINAL STATUS:" in result.stdout
