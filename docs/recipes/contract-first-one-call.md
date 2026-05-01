@@ -1,20 +1,20 @@
 # Contract-first one-call recipe
 
 ## Purpose
-Execute the data product using one primary callable (`run_data_product`) driven by a contract file.
+Execute the data product from a contract using `run_data_product` with explicit contract validation and gate assertion.
 
 ## When to use it
 - Standardized runs for handover and reproducibility.
-- Enforcing contract-first controls.
-- Reducing notebook orchestration boilerplate.
+- Contract-first governance and quality enforcement.
+- Minimal orchestration notebooks.
 
 ## Required inputs
-- A valid dataset contract YAML.
-- Runtime context (paths/engine/options) as required by the contract.
+- Active Spark session (`spark`) when source data is read by Spark.
+- A valid data product contract YAML.
 
 ## Copy-paste code
 ```python
-from fabric_data_product_framework.contracts import (
+from fabric_data_product_framework import (
     load_data_contract,
     validate_data_contract_shape,
     run_data_product,
@@ -23,23 +23,26 @@ from fabric_data_product_framework.contracts import (
 
 contract_path = "contracts/examples/normalized_data_product_contract.yml"
 contract = load_data_contract(contract_path)
-validate_data_contract_shape(contract)
+errors = validate_data_contract_shape(contract)
+if errors:
+    raise ValueError(f"Contract shape errors: {errors}")
 
-result = run_data_product(contract=contract)
+result = run_data_product(spark, contract)
 assert_data_product_passed(result)
 
-print(result)
+print(result["status"])
+print(result.get("run_id"))
 ```
 
 ## Expected output
-- Contract loads and validates against expected shape.
-- Execution returns structured run results with artifact references.
-- `assert_data_product_passed` succeeds for passing runs.
+- Contract loads and passes shape validation.
+- `run_data_product` returns structured execution result.
+- `assert_data_product_passed` raises no exception for successful runs.
 
 ## Common failures
-- Contract schema validation errors.
-- Missing contract-required runtime fields.
-- Downstream DQ or drift failures causing run status to fail.
+- Contract schema/shape errors.
+- Missing runtime/source settings required by the contract.
+- Downstream quality/drift failures causing blocked status.
 
 ## Related function groups
 See [src/README.md](../../src/README.md) section: Contract-first orchestration and contract models.
