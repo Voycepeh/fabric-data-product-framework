@@ -1,11 +1,25 @@
 site_name: Fabric Data Product Framework
 repo_url: https://github.com/Voycepeh/fabric-data-product-framework
 site_url: https://voycepeh.github.io/fabric-data-product-framework/
+
 theme:
-  name: mkdocs
+  name: material
+  language: en
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - toc.follow
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+
 nav:
   - Home: index.md
   - API:
+      - API Overview: api/index.md
       - Public callable modules:
           - Fabric Notebook: api/fabric_notebook.md
           - Template Generator: api/template_generator.md
@@ -19,6 +33,14 @@ nav:
           - Runtime: api/runtime.md
           - Profiling: api/profiling.md
           - Quality: api/quality.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.superfences
+
 plugins:
   - search
   - mkdocstrings:
@@ -27,4 +49,9 @@ plugins:
           paths: [src]
           options:
             show_source: false
-            show_signature_annotations: true
+            show_signature_annotations: false
+            separate_signature: true
+            members_order: source
+            show_root_heading: false
+            show_root_toc_entry: false
+            show_if_no_docstring: true
