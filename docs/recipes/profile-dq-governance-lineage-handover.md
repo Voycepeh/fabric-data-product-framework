@@ -40,7 +40,12 @@ dq_result = run_dq_workflow(
 )
 
 classifications = classify_columns(profile=profile, dataset_name=dataset_name, table_name=table_name, run_id=run_id)
-governance_records = build_governance_classification_records(classifications)
+governance_records = build_governance_classification_records(
+    classifications,
+    dataset_name=dataset_name,
+    table_name=table_name,
+    run_id=run_id,
+)
 
 profile_drift = check_profile_drift(current_profile=profile, baseline_profile=baseline_profile)
 drift_summary = summarize_drift_results(profile_drift_result=profile_drift)
@@ -56,8 +61,23 @@ lineage_records = build_lineage_records(
     target_table=table_name,
     transformation_steps=steps,
 )
-lineage_mermaid = generate_mermaid_lineage(lineage_records)
-summary_md = build_transformation_summary_markdown(steps)
+lineage_mermaid = generate_mermaid_lineage(
+    source_tables=["bronze_sales_orders"],
+    target_table=table_name,
+    transformation_steps=steps,
+)
+
+summary = {
+    "dataset_name": dataset_name,
+    "run_id": run_id,
+    "source_tables": ["bronze_sales_orders"],
+    "target_table": table_name,
+    "step_count": len(steps),
+    "steps": steps,
+    "columns_used": ["order_id", "customer_id", "amount"],
+    "columns_created": ["order_total", "dq_status"],
+}
+summary_md = build_transformation_summary_markdown(summary)
 
 artifacts = {
     "profile": profile,

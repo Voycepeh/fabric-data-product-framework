@@ -57,7 +57,14 @@ lineage_records = build_lineage_records(
         {"step_id": "2", "step_name": "quality", "input_name": "orders_local", "output_name": "quality_result", "transformation_type": "quality"},
     ],
 )
-mermaid = generate_mermaid_lineage(lineage_records)
+mermaid = generate_mermaid_lineage(
+    source_tables=["local.orders_raw"],
+    target_table="local.orders",
+    transformation_steps=[
+        {"step_id": "1", "step_name": "ingest"},
+        {"step_id": "2", "step_name": "quality"},
+    ],
+)
 
 print(quality_result["status"])
 print(classifications)
