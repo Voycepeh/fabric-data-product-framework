@@ -26,6 +26,10 @@ fabric-ai = [
   "openai>=1.0",
   "pydantic>=2.0",
 ]
+docs = [
+  "mkdocs>=1.6",
+  "mkdocstrings[python]>=0.30",
+]
 
 [tool.setuptools]
 package-dir = {"" = "src"}

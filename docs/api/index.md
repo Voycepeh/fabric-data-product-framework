@@ -1,12 +1,10 @@
-# API Reference (Scaffold)
+# API Reference
 
-This section is reserved for function-level API reference pages.
+Use `src/README.md` as the workflow and chaining guide for Fabric notebook implementation order.
+Use the generated API pages in this section as the function-level source of truth for current callable signatures and docstrings.
 
-Current status:
-- Lightweight scaffold only (no full docs-site rollout).
-- Source code docstrings are the primary source of truth.
+## Modules
 
-Modules:
 - [Runtime](runtime.md)
 - [Profiling](profiling.md)
 - [Quality](quality.md)
