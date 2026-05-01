@@ -31,6 +31,7 @@ def _jsonable(value: Any) -> Any:
 
 
 def build_transformation_summary_prompt_context(lineage_summary, code_snippets=None, runtime_metrics=None, business_context=None):
+    """Build grounded context used for AI transformation-summary generation."""
     return {
         "lineage_summary": _jsonable(lineage_summary or {}),
         "code_snippets": _jsonable(code_snippets or []),
@@ -44,6 +45,7 @@ def build_transformation_summary_prompt_context(lineage_summary, code_snippets=N
 
 
 def build_transformation_summary_generation_prompt(lineage_summary, code_snippets=None, runtime_metrics=None, business_context=None):
+    """Create prompt text for generating human-readable transformation summaries."""
     context = build_transformation_summary_prompt_context(lineage_summary, code_snippets, runtime_metrics, business_context)
     return (
         "Generate transformation summaries as JSON array only (no markdown). "
@@ -61,6 +63,7 @@ def _strip_fences(text: str) -> str:
 
 
 def normalize_transformation_summary_candidate(candidate):
+    """Normalize one AI transformation-summary object to framework keys."""
     known = {k: candidate.get(k) for k in REQUIRED_FIELDS if k in candidate}
     metadata = {k: v for k, v in candidate.items() if k not in REQUIRED_FIELDS}
     known["approval_status"] = str(known.get("approval_status", "candidate")).lower() or "candidate"
@@ -71,6 +74,7 @@ def normalize_transformation_summary_candidate(candidate):
 
 
 def parse_ai_transformation_summaries(raw_response):
+    """Parse and validate AI response payload into approved summary candidates."""
     try:
         payload = json.loads(_strip_fences(raw_response)) if isinstance(raw_response, str) else raw_response
     except Exception as exc:
@@ -91,6 +95,7 @@ def parse_ai_transformation_summaries(raw_response):
 
 
 def build_transformation_summary_records(candidates, run_id, dataset_name, table_name):
+    """Convert summary candidates into metadata-table-ready records."""
     return [
         {
             "run_id": run_id,

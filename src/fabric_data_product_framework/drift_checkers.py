@@ -285,6 +285,12 @@ def check_profile_drift(current_profile: dict, baseline_profile: dict | None = N
 
 
 def summarize_drift_results(schema_drift_result: dict | None = None, partition_drift_result: dict | None = None, profile_drift_result: dict | None = None) -> dict:
+    """Build a single drift verdict for run summaries and pipeline gating.
+
+    Combines schema, partition/incremental, and profile drift outputs into a
+    compact machine-readable summary suitable for metadata persistence and AI
+    handover context.
+    """
     results = {"schema": schema_drift_result, "partition": partition_drift_result, "profile": profile_drift_result}
     statuses = {k: (v or {}).get("status") for k, v in results.items()}
     failed = [k for k, v in results.items() if v and (v.get("status") == "failed" or not v.get("can_continue", True))]

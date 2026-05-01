@@ -49,6 +49,11 @@ def _parse_freshness_timedelta(value: str | None) -> timedelta | None:
 
 
 def validate_required_columns(df, expected_columns: list[str], *, dataset_name: str = "unknown", table_name: str = "unknown", check_name: str = "required_columns", severity: str = "critical", engine: str = "auto") -> dict:
+    """Check that a dataframe contains all contract-required columns.
+
+    Used directly in notebooks and internally by contract validators to guard
+    downstream transformations from schema surprises.
+    """
     resolved = _resolve_engine(df, engine)
     actual_columns = list(df.columns) if resolved in {"pandas", "spark"} else []
     missing = [c for c in expected_columns if c not in actual_columns]
@@ -59,6 +64,12 @@ def validate_required_columns(df, expected_columns: list[str], *, dataset_name: 
 
 
 def validate_grain(df, business_keys: list[str], *, dataset_name: str = "unknown", table_name: str = "unknown", severity: str = "critical", engine: str = "auto") -> dict:
+    """Validate business grain uniqueness for contract enforcement.
+
+    A failed grain check means duplicate business-key rows were detected and
+    should typically block curation/publish pipeline stages when severity is
+    ``critical``.
+    """
     resolved = _resolve_engine(df, engine)
     missing = [k for k in business_keys if k not in getattr(df, "columns", [])]
     if missing:
@@ -93,6 +104,11 @@ def validate_grain(df, business_keys: list[str], *, dataset_name: str = "unknown
 
 
 def validate_freshness(df, watermark_column: str, *, max_age_days: int | None = None, max_age_timedelta: timedelta | None = None, dataset_name: str = "unknown", table_name: str = "unknown", severity: str = "critical", engine: str = "auto") -> dict:
+    """Validate source recency against a configured freshness threshold.
+
+    Returns a check result dict suitable for metadata persistence and run
+    summaries. If no threshold is supplied, the check is skipped.
+    """
     resolved = _resolve_engine(df, engine)
     threshold = max_age_timedelta if max_age_timedelta is not None else (timedelta(days=max_age_days) if max_age_days is not None else None)
     if threshold is None:
@@ -125,6 +141,7 @@ def _combine_contract_checks(dataset_name: str, table_name: str, contract_type: 
 
 
 def validate_upstream_contract(df, contract: dict, *, dataset_name: str | None = None, table_name: str | None = None, engine: str = "auto") -> dict:
+    """Run upstream contract checks (required columns and optional freshness)."""
     dataset_name = dataset_name or contract.get("dataset", {}).get("name", "unknown")
     table_name = table_name or contract.get("source", {}).get("table", "unknown")
     up = contract.get("contracts", {}).get("upstream", {})
@@ -137,6 +154,7 @@ def validate_upstream_contract(df, contract: dict, *, dataset_name: str | None =
 
 
 def validate_downstream_contract(df, contract: dict, *, dataset_name: str | None = None, table_name: str | None = None, engine: str = "auto") -> dict:
+    """Run downstream contract checks (guaranteed columns and grain)."""
     dataset_name = dataset_name or contract.get("dataset", {}).get("name", "unknown")
     table_name = table_name or contract.get("target", {}).get("table", "unknown")
     down = contract.get("contracts", {}).get("downstream", {})
@@ -145,6 +163,11 @@ def validate_downstream_contract(df, contract: dict, *, dataset_name: str | None
 
 
 def validate_runtime_contracts(*, source_df=None, output_df=None, contract: dict, engine: str = "auto") -> dict:
+    """Run source/output contract checks and build a lifecycle-level verdict.
+
+    The output is machine-readable for metadata tables and also compact enough
+    for AI/human handover summaries in Fabric notebooks.
+    """
     results = []
     if source_df is not None:
         results.append(validate_upstream_contract(source_df, contract, engine=engine))
@@ -160,11 +183,13 @@ def validate_runtime_contracts(*, source_df=None, output_df=None, contract: dict
 
 
 def assert_contracts_valid(result: dict) -> None:
+    """Raise ``ContractValidationError`` when contract results are blocking."""
     if not result.get("can_continue", False):
         raise ContractValidationError("Contract validation returned blocking failures")
 
 
 def build_contract_validation_records(result: dict, *, run_id: str) -> list[dict]:
+    """Flatten contract validation output into metadata table records."""
     records: list[dict] = []
     for section in result.get("results", []):
         for check in section.get("checks", []):

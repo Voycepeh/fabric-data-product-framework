@@ -304,6 +304,7 @@ def assert_quality_gate(result: dict, fail_on: str = "critical") -> None:
 
 
 def build_quality_result_records(result: dict, *, run_id: str) -> list[dict]:
+    """Flatten rule execution results into metadata-table-ready quality records."""
     rows = []
     for r in result.get("results", []):
         rows.append(
