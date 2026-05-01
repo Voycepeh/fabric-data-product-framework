@@ -21,7 +21,7 @@ from fabric_data_product_framework.lineage import (
     build_transformation_summary_markdown,
     generate_mermaid_lineage,
 )
-from fabric_data_product_framework.profiling import profile_dataframe
+from fabric_data_product_framework.profiling import profile_dataframe, summarize_profile
 from fabric_data_product_framework.quality import run_quality_rules
 
 # ==========================================================
@@ -69,7 +69,7 @@ def load_source_dataframe() -> pd.DataFrame:
                     "customer_id": "CUST-001",
                     "customer_email": "alice@example.com",
                     "order_amount": 120.50,
-                    "order_status": "new",
+                    "order_status": "NEW",
                     "business_date": "2026-04-28",
                     "updated_at": "2026-04-28T08:00:00Z",
                 },
@@ -78,7 +78,7 @@ def load_source_dataframe() -> pd.DataFrame:
                     "customer_id": "CUST-002",
                     "customer_email": None,  # DQ issue: null email
                     "order_amount": 55.00,
-                    "order_status": "processing",
+                    "order_status": "PROCESSING",
                     "business_date": "2026-04-28",
                     "updated_at": "2026-04-28T08:05:00Z",
                 },
@@ -87,7 +87,7 @@ def load_source_dataframe() -> pd.DataFrame:
                     "customer_id": "CUST-003",
                     "customer_email": "chris@example.com",
                     "order_amount": -15.00,  # DQ issue: negative amount
-                    "order_status": "completed",
+                    "order_status": "COMPLETED",
                     "business_date": "2026-04-28",
                     "updated_at": "2026-04-28T08:10:00Z",
                 },
@@ -96,16 +96,40 @@ def load_source_dataframe() -> pd.DataFrame:
                     "customer_id": "CUST-004",
                     "customer_email": "dee@example.com",
                     "order_amount": 88.00,
-                    "order_status": "unknown",  # DQ issue: invalid status
+                    "order_status": "UNKNOWN",  # DQ issue: invalid status
                     "business_date": "2026-04-28",
                     "updated_at": "2026-04-28T08:20:00Z",
                 },
             ]
         )
 
+    # Replace this block with your Fabric/Spark read path when running real data.
+    # Example (Fabric notebook):
+    #   source_spark_df = spark.table(SOURCE_TABLE)
+    #   return source_spark_df.toPandas()
+    # or keep data in Spark and adapt downstream calls to Spark engine helpers.
     raise NotImplementedError(
-        "Set USE_SAMPLE_DATA=False only after replacing this with Fabric table/lakehouse read logic."
+        "USE_SAMPLE_DATA=False requires project-specific Fabric read logic (for example, spark.table(SOURCE_TABLE))."
     )
+
+
+
+def write_metadata_artifact(table_name: str, artifact_name: str, payload: object) -> None:
+    if ENABLE_FABRIC_WRITES:
+        raise NotImplementedError(
+            f"ENABLE_FABRIC_WRITES=True but no Fabric writer configured for {artifact_name} -> {table_name}."
+        )
+    print(f"[SAFE MODE] {artifact_name} preview only; no write to {table_name}.")
+    print(str(payload)[:1200])
+
+
+def write_target_dataframe(table_name: str, df: pd.DataFrame) -> None:
+    if ENABLE_FABRIC_WRITES:
+        raise NotImplementedError(
+            f"ENABLE_FABRIC_WRITES=True but no Fabric target writer configured for {table_name}."
+        )
+    print(f"[SAFE MODE] Target preview only; no write to {table_name}. row_count={len(df)}")
+    print(df.head(10))
 
 
 source_df = load_source_dataframe()
@@ -115,13 +139,10 @@ print("Source rows:", len(source_df))
 # 3) Source profiling
 # ==========================================================
 source_profile = profile_dataframe(source_df, dataset_name=DATASET_NAME, engine="pandas")
-print("Source profile summary:", json.dumps(source_profile.get("summary", {}), indent=2, default=str))
+source_profile_summary = summarize_profile(source_profile)
+print("Source profile summary:", json.dumps(source_profile_summary, indent=2, default=str))
 
-if ENABLE_FABRIC_WRITES:
-    print(f"[WRITE ENABLED] Persist source metadata rows to: {METADATA_TABLE}")
-else:
-    print("[SAFE MODE] Metadata preview only; no Fabric write.")
-    print(json.dumps(source_profile, indent=2, default=str)[:3000])
+write_metadata_artifact(METADATA_TABLE, "source_profile", source_profile)
 
 # ==========================================================
 # 4) AI-assisted DQ rule candidate generation
@@ -174,8 +195,8 @@ failed_rules = [r for r in dq_result["results"] if r.get("status") == "failed"]
 print("Failed rule count:", len(failed_rules))
 print("Failed rule preview:", json.dumps(failed_rules[:3], indent=2, default=str))
 
-if ENABLE_FABRIC_WRITES:
-    print(f"[WRITE ENABLED] Persist DQ results to: {DQ_RESULT_TABLE} and rules to: {DQ_RULE_TABLE}")
+write_metadata_artifact(DQ_RULE_TABLE, "dq_rules", APPROVED_DQ_RULES)
+write_metadata_artifact(DQ_RESULT_TABLE, "dq_result", dq_result)
 
 # ==========================================================
 # 7) Drift guard placeholders (explicit lifecycle behavior)
@@ -219,8 +240,9 @@ valid_df["_record_loaded_timestamp"] = datetime.now(timezone.utc)
 # 10) Output profiling
 # ==========================================================
 output_profile = profile_dataframe(valid_df, dataset_name=f"{DATASET_NAME}_output", engine="pandas")
+output_profile_summary = summarize_profile(output_profile)
 print("Output rows:", len(valid_df))
-print("Output profile summary:", output_profile.get("summary", {}))
+print("Output profile summary:", output_profile_summary)
 
 # ==========================================================
 # 11) Governance classification (AI visible, human approval explicit)
@@ -268,17 +290,12 @@ if ENABLE_AI_ASSISTED_LINEAGE:
     print("[AI LINEAGE] AI can scan notebook and propose lineage; approved lineage is what gets stored.")
 
 LINEAGE_RECORDED = True
-if ENABLE_FABRIC_WRITES:
-    print(f"[WRITE ENABLED] Persist lineage to: {LINEAGE_TABLE}")
+write_metadata_artifact(LINEAGE_TABLE, "lineage_records", lineage_records)
 
 # ==========================================================
 # 13) Target write (safe by default)
 # ==========================================================
-if ENABLE_FABRIC_WRITES:
-    print(f"[WRITE ENABLED] Write {len(valid_df)} rows to target table: {TARGET_TABLE}")
-else:
-    print(f"[SAFE MODE] ENABLE_FABRIC_WRITES=False. Skipping write to {TARGET_TABLE}")
-    print(valid_df.head(10))
+write_target_dataframe(TARGET_TABLE, valid_df)
 
 # ==========================================================
 # 14) Run summary and AI handoff export
@@ -313,7 +330,7 @@ ai_handoff_context = {
         "target_stage": TARGET_STAGE,
         "environment": ENVIRONMENT,
     },
-    "source_profile_summary": source_profile.get("summary", {}),
+    "source_profile_summary": source_profile_summary,
     "approved_dq_rules": APPROVED_DQ_RULES,
     "dq_results_summary": dq_result.get("summary", {}),
     "drift_summary": {"status": drift_status, "critical_drift_detected": critical_drift_detected},
@@ -330,8 +347,7 @@ print(json.dumps(run_summary, indent=2, default=str))
 print("AI HANDOFF CONTEXT")
 print(json.dumps(ai_handoff_context, indent=2, default=str)[:6000])
 
-if ENABLE_FABRIC_WRITES:
-    print(f"[WRITE ENABLED] Persist run summary to: {RUN_SUMMARY_TABLE}")
+write_metadata_artifact(RUN_SUMMARY_TABLE, "run_summary", run_summary)
 
 # ==========================================================
 # 15) Final release gate
