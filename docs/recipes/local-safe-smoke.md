@@ -129,5 +129,5 @@ print(summary_md)
 
 ## Related references
 
-- `src/README.md`
-- `docs/api/`
+- `docs/index.md`
+- `docs/reference/` (generated at build time)

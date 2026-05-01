@@ -21,20 +21,15 @@ Guide agent/Codex contributions for this repository so changes stay reusable, pu
 
 - Keep root `README.md` concise as the entry point only.
 - Put lifecycle/operating behavior in `docs/`.
-- Put callable API reference in `src/README.md`.
+- Use generated `/reference/` pages as the public callable reference; keep `src/README.md` developer-focused.
 - Update `docs/` when lifecycle or architecture behavior changes.
-- Update `src/README.md` when public APIs in `src/` change.
+- Update `/reference/` generation inputs and developer notes when public APIs in `src/` change.
 - Keep examples in `examples/` runnable and teachable for Python users.
 - Use links to detailed docs instead of duplicating long explanations across multiple files.
 
 ## PR expectations
 
-- If a PR adds or changes a public function in `src/`, update `src/README.md` with:
-  - function name
-  - purpose
-  - minimal usage example
-  - expected input/output behavior
-  - Fabric-specific assumptions
+- If a PR adds or changes a public function in `src/`, ensure generated `/reference/` docs remain accurate and update developer-facing notes where useful.
 - Update root `README.md` only for top-level journey/navigation changes.
 
 ## Testing expectations

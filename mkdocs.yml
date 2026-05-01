@@ -26,22 +26,7 @@ nav:
   - UV Wheel + Fabric Install Guide: UV_WHEEL_FABRIC_INSTALL_GUIDE.md
   - Recipes: recipes/index.md
   - Capability Status: capability-status.md
-  - API Reference:
-      - API Overview: api/index.md
-      - Public callable modules:
-          - Fabric Notebook: api/fabric_notebook.md
-          - Template Generator: api/template_generator.md
-          - Lineage: api/lineage.md
-          - DQ Workflow: api/dq.md
-          - Governance: api/governance.md
-          - Data Contract: api/contracts.md
-          - Drift Checkers: api/drift_checkers.md
-          - MVP Steps: api/mvp_steps.md
-      - Additional module docs (internal / legacy):
-          - Runtime: api/runtime.md
-          - Profiling: api/profiling.md
-          - Quality: api/quality.md
-  - Reference: reference/SUMMARY.md
+  - Function Reference: reference/SUMMARY.md
 
 markdown_extensions:
   - admonition

@@ -67,4 +67,4 @@ Confirm artifacts for profile, DQ, governance, lineage, run summary, and handove
 - [Recipes](recipes/index.md)
 - [Architecture](architecture.md)
 - [Capability Status](capability-status.md)
-- [API Overview](api/index.md)
+- [Function Reference](reference/SUMMARY.md)
