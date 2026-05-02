@@ -19,7 +19,6 @@ theme:
 nav:
   - Home: index.md
   - Quick Start: quick-start.md
-  - Getting Started: getting-started.md
   - Notebook Conventions:
       - Notebook Structure: notebook-structure.md
       - Notebook Standard: notebook-standard.md
