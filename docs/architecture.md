@@ -1,14 +1,5 @@
 # Architecture Overview
 
-## Purpose of this page
-
-This page explains how the framework hangs together at system level: what each component does, why it exists, and how the pieces interact in Microsoft Fabric.
-
-It does **not** duplicate run instructions.
-
-- For the end-to-end execution sequence, use [Quick Start](quick-start.md).
-- For callable function and code-level details, use [Function Reference](reference/SUMMARY.md).
-
 ## Core architecture in plain language
 
 The framework operates as a connected system flow:
@@ -68,15 +59,3 @@ The metadata model captures:
 - lineage records
 - transformation summaries
 - run summaries and handover exports
-
-## Data product contract expectations
-
-The framework treats the data product as having an explicit contract: expected source shape, freshness assumptions, quality rules, governance expectations, output targets, and handover evidence.
-
-In this architecture, contracts are operating and validation expectations for the data product, enforced through reusable checks and human approvals rather than a standalone module.
-
-## Relationship to Quick Start
-
-Architecture explains **why the components exist and how they work together**.
-
-Quick Start explains **the exact steps to run the MVP**.
