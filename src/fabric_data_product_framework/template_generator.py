@@ -82,9 +82,12 @@ from fabric_data_product_framework.fabric_io import (
     check_naming_convention,
     lakehouse_table_read,
     lakehouse_table_write,
-    clean_datetime_columns,
-    add_system_technical_columns,
     ODI_METADATA_LOGGER,
+)
+from fabric_data_product_framework.technical_columns import (
+    add_audit_columns,
+    add_datetime_features,
+    add_hash_columns,
 )
 
 fabric_config = load_fabric_config(CONFIG)
@@ -141,13 +144,23 @@ df_output = df_source
 
 # %%
 # Example only. Change EVENT_START_DTM and BUSINESS_KEY to real columns.
-# df_output = clean_datetime_columns(
+# df_output = add_datetime_features(
 #     df_output,
-#     datetime_col="EVENT_START_DTM",
-#     tz_region="Asia/Singapore",
+#     datetime_column="EVENT_START_DTM",
+#     timezone="Asia/Singapore",
 #     prefix="EVENT"
 # )
-# df_output = add_system_technical_columns(df_output, "BUSINESS_KEY")
+# df_output = add_audit_columns(
+#     df_output,
+#     pipeline_name=dataset_name,
+#     environment="Sandbox",
+#     source_table=source_table,
+#     bucket_column="BUSINESS_KEY",
+# )
+# df_output = add_hash_columns(
+#     df_output,
+#     business_keys=["BUSINESS_KEY"],
+# )
 
 # %% [markdown]
 # # 10. Data quality rules placeholder
@@ -164,14 +177,14 @@ lakehouse_table_write(
     mode="overwrite"
 )
 
-# Optional for large tables after add_system_technical_columns creates p_bucket:
+# Optional for large tables after add_audit_columns creates _partition_bucket:
 # lakehouse_table_write(
 #     df_output,
 #     lh_out,
 #     output_table,
 #     mode="overwrite",
-#     partition_by="p_bucket",
-#     repartition_by=("p_bucket",)
+#     partition_by="_partition_bucket",
+#     repartition_by=("_partition_bucket",)
 # )
 
 # %% [markdown]

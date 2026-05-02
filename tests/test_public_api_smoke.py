@@ -17,3 +17,12 @@ def test_mvp_step_registry_and_artifact_validation():
     result = validate_mvp_artifacts({"runtime_context": {}, "source_profile": {}})
     assert result["valid"] is False
     assert "run_summary" in result["missing_artifacts"]
+
+
+def test_technical_columns_entrypoints_on_root_package():
+    import fabric_data_product_framework as fw
+
+    assert hasattr(fw, "add_audit_columns")
+    assert hasattr(fw, "add_datetime_features")
+    assert hasattr(fw, "add_hash_columns")
+    assert hasattr(fw, "default_technical_columns")

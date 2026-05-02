@@ -9,6 +9,65 @@ from __future__ import annotations
 
 from typing import Any
 
+import pandas as pd
+
+from fabric_data_product_framework.engines import detect_dataframe_engine, validate_engine
+from fabric_data_product_framework.technical_columns import default_technical_columns
+
+
+EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
+PHONE_RE = re.compile(r"^[+()\-\s0-9]{7,}$")
+
+
+@dataclass
+class ColumnProfile:
+    """Columnprofile.
+
+    Public class used by the framework API for `ColumnProfile`.
+
+    Examples
+    --------
+    >>> ColumnProfile(... )
+    """
+    column_name: str
+    data_type: str
+    non_null_count: int
+    null_count: int
+    null_pct: float
+    distinct_count: int
+    distinct_pct: float
+    sample_values: list[Any]
+    min_value: Any
+    max_value: Any
+    mean_value: float | None
+    median_value: float | None
+    std_value: float | None
+    top_values: list[dict[str, Any]]
+    inferred_semantic_type: str
+
+
+@dataclass
+class DataFrameProfile:
+    """Dataframeprofile.
+
+    Public class used by the framework API for `DataFrameProfile`.
+
+    Examples
+    --------
+    >>> DataFrameProfile(... )
+    """
+    dataset_name: str
+    engine: str
+    row_count: int
+    column_count: int
+    duplicate_row_count: int | None
+    duplicate_row_pct: float | None
+    columns: list[dict[str, Any]]
+    generated_at: str
+
+
+def to_jsonable(value: Any) -> Any:
+    """To jsonable.
 
 def default_technical_columns() -> list[str]:
     """Return the default technical/audit columns excluded from profiling.

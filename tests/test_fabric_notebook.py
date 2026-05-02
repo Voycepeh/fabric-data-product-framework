@@ -3,14 +3,13 @@ import pytest
 from fabric_data_product_framework.fabric_io import (
     Housepath,
     ODI_METADATA_LOGGER,
-    add_system_technical_columns,
     check_naming_convention,
-    clean_datetime_columns,
     get_path,
     lakehouse_table_read,
     lakehouse_table_write,
 )
 
+from fabric_data_product_framework.technical_columns import add_audit_columns, add_datetime_features
 
 class FakeWriter:
     def __init__(self):
@@ -119,20 +118,20 @@ def test_lakehouse_table_read_builds_path():
     assert spark.read.loaded_path.endswith("/Tables/MY_TABLE")
 
 
-def test_add_system_technical_columns_validates_missing_hash_col_early():
+def test_add_audit_columns_validates_missing_bucket_col_early():
     class DF:
         columns = ["x"]
 
     with pytest.raises(ValueError):
-        add_system_technical_columns(DF(), "missing")
+        add_audit_columns(DF(), bucket_column="missing", engine="pandas")
 
 
-def test_clean_datetime_columns_validates_missing_col_early():
+def test_add_datetime_features_validates_missing_col_early():
     class DF:
         columns = ["x"]
 
     with pytest.raises(ValueError):
-        clean_datetime_columns(DF(), datetime_col="missing", prefix="EVENT")
+        add_datetime_features(DF(), datetime_column="missing", prefix="EVENT", engine="pandas")
 
 
 def test_odi_metadata_logger_importable():
