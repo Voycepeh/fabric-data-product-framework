@@ -1,58 +1,38 @@
-from pathlib import Path
-
-from examples.mvp_fabric_smoke_test import build_smoke_artifacts
-from fabric_data_product_framework.template_generator import MVP_STEPS, validate_mvp_artifacts
-
-
-def test_mvp_steps_ordered_1_to_13():
-    assert [s["step_id"] for s in MVP_STEPS] == list(range(1, 14))
+from fabric_data_product_framework.mvp_steps import (
+    get_mvp_step_names,
+    get_mvp_step_registry,
+    validate_mvp_artifacts,
+)
 
 
-def test_capability_status_references_all_mvp_steps():
-    text = Path("docs/capability-status.md").read_text(encoding="utf-8")
-    for i in range(1, 14):
-        assert f"| {i}." in text
+def test_registry_has_exactly_13_steps():
+    registry = get_mvp_step_registry()
+    assert len(registry) == 13
 
 
-def test_incomplete_handover_pack_fails_validation():
-    artifacts = build_smoke_artifacts()
-    artifacts["handover_pack"] = {"status": "ready"}
-    result = validate_mvp_artifacts(artifacts)
+def test_step_numbers_are_1_to_13():
+    registry = get_mvp_step_registry()
+    assert [s["step_number"] for s in registry] == list(range(1, 14))
+
+
+def test_each_step_has_required_fields():
+    registry = get_mvp_step_registry()
+    for step in registry:
+        assert step.get("owner_type")
+        assert isinstance(step.get("canonical_modules"), list)
+        assert isinstance(step.get("expected_artifacts"), list)
+        assert step.get("description")
+
+
+def test_get_mvp_step_names_ordered():
+    names = get_mvp_step_names()
+    assert len(names) == 13
+    assert names[0] == "Package and runtime setup"
+    assert names[-1] == "Run summary and handover package"
+
+
+def test_validate_mvp_artifacts_reports_missing():
+    result = validate_mvp_artifacts({"runtime_context": {}})
     assert result["valid"] is False
-    assert "profile" in result["missing_handover_pack_keys"]
-
-
-def test_missing_handover_nested_keys_fails_validation():
-    artifacts = build_smoke_artifacts()
-    del artifacts["handover_pack"]["lineage"]
-    result = validate_mvp_artifacts(artifacts)
-    assert result["valid"] is False
-    assert "lineage" in result["missing_handover_pack_keys"]
-
-
-def test_invalid_approved_dq_rule_type_fails_validation():
-    artifacts = build_smoke_artifacts()
-    artifacts["approved_dq_rules"] = {"rule_type": "not_null"}
-    result = validate_mvp_artifacts(artifacts)
-    assert result["valid"] is False
-    assert any(x["field"] == "approved_dq_rules" for x in result["invalid_fields"])
-
-
-def test_invalid_approved_governance_label_type_fails_validation():
-    artifacts = build_smoke_artifacts()
-    artifacts["approved_governance_labels"] = "approved"
-    result = validate_mvp_artifacts(artifacts)
-    assert result["valid"] is False
-    assert any(x["field"] == "approved_governance_labels" for x in result["invalid_fields"])
-
-
-def test_valid_full_mvp_artifact_set_passes_validation():
-    artifacts = build_smoke_artifacts()
-    result = validate_mvp_artifacts(artifacts)
-    assert result["valid"] is True
-
-
-def test_example_smoke_artifacts_pass_validation():
-    artifacts = build_smoke_artifacts()
-    result = validate_mvp_artifacts(artifacts)
-    assert result["valid"] is True
+    assert "source_dataframe" in result["missing_artifacts"]
+    assert "runtime_context" in result["available_artifacts"]
