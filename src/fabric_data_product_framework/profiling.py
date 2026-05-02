@@ -13,6 +13,7 @@ from typing import Any
 import pandas as pd
 
 from fabric_data_product_framework.engines import detect_dataframe_engine, validate_engine
+from fabric_data_product_framework.technical_columns import default_technical_columns
 
 
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
@@ -302,28 +303,6 @@ def profile_dataframe(df, dataset_name: str = "unknown", sample_size: int = 5, t
     duplicate_row_pct = round((duplicate_row_count / row_count) * 100.0, 4) if row_count else 0.0
     cols = [profile_column(df[c], sample_size=sample_size, top_n=top_n) for c in df.columns]
     return to_jsonable(asdict(DataFrameProfile(dataset_name=dataset_name, engine="pandas", row_count=row_count, column_count=column_count, duplicate_row_count=duplicate_row_count, duplicate_row_pct=duplicate_row_pct, columns=cols, generated_at=datetime.utcnow().replace(microsecond=0).isoformat() + "Z")))
-
-
-def default_technical_columns() -> list[str]:
-    """Default technical columns.
-
-    Run `default_technical_columns`.
-
-    Parameters
-    ----------
-    None
-        This callable does not require user-provided parameters.
-
-    Returns
-    -------
-    result : list[str]
-        Return value from `default_technical_columns`.
-
-    Examples
-    --------
-    >>> default_technical_columns()
-    """
-    return ["_pipeline_run_id", "_pipeline_name", "_pipeline_environment", "_source_system", "_source_table", "_source_extract_timestamp", "_record_loaded_timestamp", "_record_updated_timestamp", "_effective_start_datetime", "_effective_end_datetime", "_is_current", "_row_hash", "_business_key_hash", "_watermark_value", "pipeline_run_id", "loaded_at", "run_ingest_id", "ingest_run_id"]
 
 
 def flatten_profile_for_metadata(profile: dict, table_name: str, run_id: str, table_stage: str, exclude_columns: list[str] | None = None) -> list[dict]:

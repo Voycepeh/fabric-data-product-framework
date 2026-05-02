@@ -1,10 +1,11 @@
-"""Reusable technical column and datetime helpers for pandas and Spark dataframes."""
+"""Capability-based technical column helpers for pandas and Spark DataFrames."""
 
 from __future__ import annotations
 
 from datetime import datetime, timezone
 import hashlib
 from typing import Any
+import uuid
 
 import pandas as pd
 
@@ -12,23 +13,22 @@ from fabric_data_product_framework.engines import detect_dataframe_engine, valid
 
 
 def default_technical_columns() -> list[str]:
-    """Default technical columns.
+    """Return framework-generated and legacy technical column names to ignore.
 
-    Run `default_technical_columns`.
-
-    Parameters
-    ----------
-    None
-        This callable does not require user-provided parameters.
+    The returned list is intended for downstream profiling and hash generation logic
+    that needs a shared source of truth for framework-managed columns.
 
     Returns
     -------
-    result : list[str]
-        Return value from `default_technical_columns`.
+    list[str]
+        Technical column names including current standard names and legacy names
+        retained only for backward-compatible ignore behavior.
 
     Examples
     --------
-    >>> default_technical_columns()
+    >>> cols = default_technical_columns()
+    >>> "_pipeline_run_id" in cols
+    True
     """
     return [
         "_pipeline_run_id",
@@ -38,17 +38,24 @@ def default_technical_columns() -> list[str]:
         "_source_table",
         "_source_extract_timestamp",
         "_record_loaded_timestamp",
-        "_record_updated_timestamp",
-        "_effective_start_datetime",
-        "_effective_end_datetime",
-        "_is_current",
-        "_row_hash",
-        "_business_key_hash",
+        "_notebook_name",
+        "_loaded_by",
         "_watermark_value",
+        "_partition_bucket",
+        "_sample_bucket",
+        "_row_ingest_id",
+        "_business_key_hash",
+        "_row_hash",
+        "pipeline_ts",
+        "notebook_name",
+        "loaded_by",
+        "p_bucket",
+        "sample_bucket",
+        "row_ingest_id",
+        "ingest_run_id",
         "pipeline_run_id",
         "loaded_at",
         "run_ingest_id",
-        "ingest_run_id",
     ]
 
 
@@ -69,7 +76,7 @@ def _non_technical_columns(df: Any) -> list[str]:
 
 
 def _safe_string(value: Any) -> str:
-    if value is None or (isinstance(value, float) and pd.isna(value)):
+    if value is None or (isinstance(value, float) and pd.isna(value)) or pd.isna(value):
         return "<NULL>"
     return str(value)
 
@@ -79,532 +86,242 @@ def _hash_row(values: list[Any]) -> str:
     return hashlib.sha256(joined.encode("utf-8")).hexdigest()
 
 
-def add_literal_column(df, column_name: str, value, engine: str = "auto"):
-    """Add literal column.
+def _get_fabric_runtime_context() -> dict[str, Any]:
+    try:
+        from notebookutils import runtime  # type: ignore
 
-    Run `add_literal_column`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    column_name : str
-        Parameter `column_name`.
-    value : Any
-        Parameter `value`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : object
-        Return value from `add_literal_column`.
-
-    Examples
-    --------
-    >>> add_literal_column(df, column_name)
-    """
-    selected_engine = _resolve_engine(df, engine)
-    if selected_engine == "pandas":
-        out = df.copy()
-        out[column_name] = value
-        return out
-
-    from pyspark.sql import functions as F
-
-    return df.withColumn(column_name, F.lit(value))
+        return getattr(runtime, "context", None) or {}
+    except Exception:
+        return {}
 
 
-def add_pipeline_run_id(df, run_id: str, column_name: str = "_pipeline_run_id", engine: str = "auto"):
-    """Add pipeline run id.
+def _bucket_values_pandas(series: pd.Series, bucket_size: int) -> tuple[pd.Series, pd.Series]:
+    hashes = series.apply(lambda v: int(hashlib.sha256(_safe_string(v).encode("utf-8")).hexdigest(), 16))
+    return hashes % bucket_size, hashes % 1_000_000
 
-    Run `add_pipeline_run_id`.
+
+def add_datetime_features(
+    df,
+    datetime_column: str,
+    *,
+    prefix: str | None = None,
+    timezone: str = "Asia/Singapore",
+    include_datetime: bool = True,
+    include_date: bool = True,
+    include_time: bool = True,
+    include_hour: bool = True,
+    include_30_min_block: bool = True,
+    engine: str = "auto",
+):
+    """Add localized datetime feature columns derived from a UTC datetime column.
 
     Parameters
     ----------
     df : Any
-        Parameter `df`.
-    run_id : str
-        Parameter `run_id`.
-    column_name : str, optional
-        Parameter `column_name`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : object
-        Return value from `add_pipeline_run_id`.
-
-    Examples
-    --------
-    >>> add_pipeline_run_id(df, run_id)
-    """
-    return add_literal_column(df, column_name=column_name, value=run_id, engine=engine)
-
-
-def add_pipeline_metadata(df, *, run_id: str, pipeline_name: str | None = None, environment: str | None = None, column_prefix: str = "_", engine: str = "auto"):
-    """Add pipeline metadata.
-
-    Run `add_pipeline_metadata`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    run_id : str
-        Parameter `run_id`.
-    pipeline_name : str | None, optional
-        Parameter `pipeline_name`.
-    environment : str | None, optional
-        Parameter `environment`.
-    column_prefix : str, optional
-        Parameter `column_prefix`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : object
-        Return value from `add_pipeline_metadata`.
-
-    Examples
-    --------
-    >>> add_pipeline_metadata(df, run_id)
-    """
-    out = add_pipeline_run_id(df, run_id=run_id, column_name=f"{column_prefix}pipeline_run_id", engine=engine)
-    if pipeline_name is not None:
-        out = add_literal_column(out, column_name=f"{column_prefix}pipeline_name", value=pipeline_name, engine=engine)
-    if environment is not None:
-        out = add_literal_column(out, column_name=f"{column_prefix}pipeline_environment", value=environment, engine=engine)
-    return out
-
-
-def add_source_metadata(df, *, source_system: str | None = None, source_table: str | None = None, source_extract_timestamp: str | None = None, column_prefix: str = "_", engine: str = "auto"):
-    """Add source metadata.
-
-    Run `add_source_metadata`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    source_system : str | None, optional
-        Parameter `source_system`.
-    source_table : str | None, optional
-        Parameter `source_table`.
-    source_extract_timestamp : str | None, optional
-        Parameter `source_extract_timestamp`.
-    column_prefix : str, optional
-        Parameter `column_prefix`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : object
-        Return value from `add_source_metadata`.
-
-    Examples
-    --------
-    >>> add_source_metadata(df, source_system)
-    """
-    out = df
-    if source_system is not None:
-        out = add_literal_column(out, column_name=f"{column_prefix}source_system", value=source_system, engine=engine)
-    if source_table is not None:
-        out = add_literal_column(out, column_name=f"{column_prefix}source_table", value=source_table, engine=engine)
-    if source_extract_timestamp is not None:
-        out = add_literal_column(out, column_name=f"{column_prefix}source_extract_timestamp", value=source_extract_timestamp, engine=engine)
-    return out
-
-
-def add_loaded_at(df, timestamp: str | None = None, column_name: str = "_record_loaded_timestamp", engine: str = "auto"):
-    """Add loaded at.
-
-    Run `add_loaded_at`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    timestamp : str | None, optional
-        Parameter `timestamp`.
-    column_name : str, optional
-        Parameter `column_name`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : object
-        Return value from `add_loaded_at`.
-
-    Examples
-    --------
-    >>> add_loaded_at(df, timestamp)
-    """
-    selected_engine = _resolve_engine(df, engine)
-    if timestamp is not None:
-        return add_literal_column(df, column_name=column_name, value=timestamp, engine=selected_engine)
-    if selected_engine == "pandas":
-        now_utc = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-        return add_literal_column(df, column_name=column_name, value=now_utc, engine="pandas")
-
-    from pyspark.sql import functions as F
-
-    return df.withColumn(column_name, F.current_timestamp())
-
-
-def add_watermark_value(df, watermark_column: str, output_column: str = "_watermark_value", engine: str = "auto"):
-    """Add watermark value.
-
-    Run `add_watermark_value`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    watermark_column : str
-        Parameter `watermark_column`.
-    output_column : str, optional
-        Parameter `output_column`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : object
-        Return value from `add_watermark_value`.
-
-    Examples
-    --------
-    >>> add_watermark_value(df, watermark_column)
-    """
-    _assert_columns_exist(df, [watermark_column])
-    selected_engine = _resolve_engine(df, engine)
-    if selected_engine == "pandas":
-        out = df.copy()
-        out[output_column] = out[watermark_column]
-        return out
-
-    from pyspark.sql import functions as F
-
-    return df.withColumn(output_column, F.col(watermark_column))
-
-
-def add_row_hash(df, columns: list[str] | None = None, output_column: str = "_row_hash", engine: str = "auto"):
-    """Add row hash.
-
-    Run `add_row_hash`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    columns : list[str] | None, optional
-        Parameter `columns`.
-    output_column : str, optional
-        Parameter `output_column`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : object
-        Return value from `add_row_hash`.
-
-    Examples
-    --------
-    >>> add_row_hash(df, columns)
-    """
-    selected_engine = _resolve_engine(df, engine)
-    columns = columns or _non_technical_columns(df)
-    _assert_columns_exist(df, columns)
-    if selected_engine == "pandas":
-        out = df.copy()
-        out[output_column] = out[columns].apply(lambda row: _hash_row(row.tolist()), axis=1)
-        return out
-
-    from pyspark.sql import functions as F
-
-    return df.withColumn(output_column, F.sha2(F.concat_ws("||", *[F.col(c) for c in columns]), 256))
-
-
-def add_business_key_hash(df, business_keys: list[str], output_column: str = "_business_key_hash", engine: str = "auto"):
-    """Add business key hash.
-
-    Run `add_business_key_hash`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    business_keys : list[str]
-        Parameter `business_keys`.
-    output_column : str, optional
-        Parameter `output_column`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : object
-        Return value from `add_business_key_hash`.
-
-    Examples
-    --------
-    >>> add_business_key_hash(df, business_keys)
-    """
-    _assert_columns_exist(df, business_keys)
-    selected_engine = _resolve_engine(df, engine)
-    if selected_engine == "pandas":
-        out = df.copy()
-        out[output_column] = out[business_keys].apply(lambda row: _hash_row(row.tolist()), axis=1)
-        return out
-
-    from pyspark.sql import functions as F
-
-    return df.withColumn(output_column, F.sha2(F.concat_ws("||", *[F.col(c) for c in business_keys]), 256))
-
-
-def add_datetime_parts(df, datetime_column: str, *, timezone: str = "Asia/Singapore", prefix: str | None = None, include_date: bool = True, include_time: bool = True, include_hour: bool = True, include_30_min_block: bool = True, engine: str = "auto"):
-    """Add datetime parts.
-
-    Run `add_datetime_parts`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
+        Input pandas or Spark DataFrame.
     datetime_column : str
-        Parameter `datetime_column`.
-    timezone : str, optional
-        Parameter `timezone`.
+        Source UTC datetime column.
     prefix : str | None, optional
-        Parameter `prefix`.
-    include_date : bool, optional
-        Parameter `include_date`.
-    include_time : bool, optional
-        Parameter `include_time`.
-    include_hour : bool, optional
-        Parameter `include_hour`.
-    include_30_min_block : bool, optional
-        Parameter `include_30_min_block`.
-    engine : str, optional
-        Parameter `engine`.
+        Prefix used for output columns. When omitted, `datetime_column` is used.
+    timezone : str, default="Asia/Singapore"
+        IANA timezone used for localization.
+    include_datetime : bool, default=True
+        Whether to add ``{PREFIX}_DTM_UTC8``.
+    include_date : bool, default=True
+        Whether to add ``{PREFIX}_DATE_UTC8``.
+    include_time : bool, default=True
+        Whether to add ``{PREFIX}_TIME_UTC8``.
+    include_hour : bool, default=True
+        Whether to add ``{PREFIX}_HOUR_UTC8``.
+    include_30_min_block : bool, default=True
+        Whether to add ``{PREFIX}_TIME_BLOCK_30_MIN``.
+    engine : str, default="auto"
+        Execution engine (``auto``, ``pandas``, or ``spark``).
 
     Returns
     -------
-    result : object
-        Return value from `add_datetime_parts`.
+    Any
+        DataFrame with requested datetime features.
+
+    Raises
+    ------
+    ValueError
+        If `datetime_column` does not exist.
 
     Examples
     --------
-    >>> add_datetime_parts(df, datetime_column)
+    >>> import pandas as pd
+    >>> df = pd.DataFrame({"event_ts": ["2026-01-01T00:45:00Z"]})
+    >>> add_datetime_features(df, "event_ts", prefix="EVENT")["EVENT_TIME_UTC8"].iloc[0]
+    '08:45:00'
     """
     _assert_columns_exist(df, [datetime_column])
     selected_engine = _resolve_engine(df, engine)
     col_prefix = prefix or datetime_column
     if selected_engine == "pandas":
         out = df.copy()
-        parsed = pd.to_datetime(out[datetime_column], errors="coerce", utc=True)
-        if timezone:
-            parsed = parsed.dt.tz_convert(timezone)
+        parsed = pd.to_datetime(out[datetime_column], errors="coerce", utc=True).dt.tz_convert(timezone)
+        if include_datetime:
+            out[f"{col_prefix}_DTM_UTC8"] = parsed.dt.strftime("%Y-%m-%d %H:%M:%S%z")
         if include_date:
-            out[f"{col_prefix}_date"] = parsed.dt.strftime("%Y-%m-%d")
+            out[f"{col_prefix}_DATE_UTC8"] = parsed.dt.strftime("%Y-%m-%d")
         if include_time:
-            out[f"{col_prefix}_time"] = parsed.dt.strftime("%H:%M:%S")
+            out[f"{col_prefix}_TIME_UTC8"] = parsed.dt.strftime("%H:%M:%S")
         if include_hour:
-            out[f"{col_prefix}_hour"] = parsed.dt.hour
+            out[f"{col_prefix}_HOUR_UTC8"] = parsed.dt.hour
         if include_30_min_block:
-            out[f"{col_prefix}_time_block_30min"] = parsed.dt.strftime("%H:") + parsed.dt.minute.apply(lambda m: "00" if pd.notna(m) and m < 30 else "30")
+            out[f"{col_prefix}_TIME_BLOCK_30_MIN"] = parsed.dt.strftime("%H:") + parsed.dt.minute.apply(
+                lambda m: "00" if pd.notna(m) and m < 30 else "30"
+            )
         return out
 
     from pyspark.sql import functions as F
 
     localized = F.from_utc_timestamp(F.col(datetime_column), timezone)
     out = df
+    if include_datetime:
+        out = out.withColumn(f"{col_prefix}_DTM_UTC8", localized)
     if include_date:
-        out = out.withColumn(f"{col_prefix}_date", F.to_date(localized))
+        out = out.withColumn(f"{col_prefix}_DATE_UTC8", F.to_date(localized))
     if include_time:
-        out = out.withColumn(f"{col_prefix}_time", F.date_format(localized, "HH:mm:ss"))
+        out = out.withColumn(f"{col_prefix}_TIME_UTC8", F.date_format(localized, "HH:mm:ss"))
     if include_hour:
-        out = out.withColumn(f"{col_prefix}_hour", F.hour(localized))
+        out = out.withColumn(f"{col_prefix}_HOUR_UTC8", F.hour(localized))
     if include_30_min_block:
         out = out.withColumn(
-            f"{col_prefix}_time_block_30min",
-            F.when(F.minute(localized) < 30, F.concat(F.date_format(localized, "HH:"), F.lit("00"))).otherwise(F.concat(F.date_format(localized, "HH:"), F.lit("30"))),
+            f"{col_prefix}_TIME_BLOCK_30_MIN",
+            F.when(F.minute(localized) < 30, F.concat(F.date_format(localized, "HH:"), F.lit("00"))).otherwise(
+                F.concat(F.date_format(localized, "HH:"), F.lit("30"))
+            ),
         )
     return out
 
 
-def add_standard_technical_columns(df, *, run_id: str, pipeline_name: str | None = None, environment: str | None = None, source_system: str | None = None, source_table: str | None = None, source_extract_timestamp: str | None = None, watermark_column: str | None = None, business_keys: list[str] | None = None, add_hash: bool = True, engine: str = "auto"):
-    """Add standard technical columns.
+def add_audit_columns(
+    df,
+    *,
+    run_id: str | None = None,
+    pipeline_name: str | None = None,
+    environment: str | None = None,
+    source_system: str | None = None,
+    source_table: str | None = None,
+    source_extract_timestamp: str | None = None,
+    notebook_name: str | None = None,
+    loaded_by: str | None = None,
+    watermark_column: str | None = None,
+    bucket_column: str | None = None,
+    bucket_size: int = 512,
+    include_row_ingest_id: bool = True,
+    engine: str = "auto",
+):
+    """Add run tracking and audit columns for ingestion workflows.
 
-    Run `add_standard_technical_columns`.
+    Notes
+    -----
+    This function is local Python compatible and can import without Fabric runtime.
+    When running in Fabric notebooks, it can read ``notebookutils.runtime.context``.
 
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    run_id : str
-        Parameter `run_id`.
-    pipeline_name : str | None, optional
-        Parameter `pipeline_name`.
-    environment : str | None, optional
-        Parameter `environment`.
-    source_system : str | None, optional
-        Parameter `source_system`.
-    source_table : str | None, optional
-        Parameter `source_table`.
-    source_extract_timestamp : str | None, optional
-        Parameter `source_extract_timestamp`.
-    watermark_column : str | None, optional
-        Parameter `watermark_column`.
-    business_keys : list[str] | None, optional
-        Parameter `business_keys`.
-    add_hash : bool, optional
-        Parameter `add_hash`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : object
-        Return value from `add_standard_technical_columns`.
-
-    Examples
-    --------
-    >>> add_standard_technical_columns(df, run_id)
     """
-    out = add_pipeline_metadata(df, run_id=run_id, pipeline_name=pipeline_name, environment=environment, engine=engine)
-    out = add_source_metadata(out, source_system=source_system, source_table=source_table, source_extract_timestamp=source_extract_timestamp, engine=engine)
-    out = add_loaded_at(out, engine=engine)
-    if watermark_column:
-        out = add_watermark_value(out, watermark_column=watermark_column, engine=engine)
-    if business_keys:
-        out = add_business_key_hash(out, business_keys=business_keys, engine=engine)
-    if add_hash:
-        out = add_row_hash(out, engine=engine)
-    return out
-
-
-def clean_datetime_columns(df, datetime_col, prefix, tz_region="Asia/Singapore", time_block_col="TIME_BLOCK_30_MIN"):
-    """Clean datetime columns.
-
-    Run `clean_datetime_columns`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    datetime_col : Any
-        Parameter `datetime_col`.
-    prefix : Any
-        Parameter `prefix`.
-    tz_region : object, optional
-        Parameter `tz_region`.
-    time_block_col : object, optional
-        Parameter `time_block_col`.
-
-    Returns
-    -------
-    result : object
-        Return value from `clean_datetime_columns`.
-
-    Raises
-    ------
-    ValueError
-        Raised when input validation or runtime checks fail.
-
-    Examples
-    --------
-    >>> clean_datetime_columns(df, datetime_col)
-    """
-    if datetime_col not in df.columns:
-        raise ValueError(f"Column not found: {datetime_col}")
-
-    from pyspark.sql.functions import from_utc_timestamp, to_date, date_format, expr
-
-    dt_utc_name = f"{prefix}_DTM_UTC8"
-    dt_date_name = f"{prefix}_DATE_UTC8"
-    dt_time_name = f"{prefix}_TIME_UTC8"
-
-    df = df.withColumn(dt_utc_name, from_utc_timestamp(df[datetime_col], tz_region))
-    df = df.withColumn(dt_date_name, to_date(df[dt_utc_name]))
-    df = df.withColumn(dt_time_name, date_format(df[dt_utc_name], "HH:mm"))
-    df = df.withColumn(
-        time_block_col,
-        date_format(
-            expr(
-                f"timestampadd(MINUTE, floor(minute({dt_utc_name})/30)*30-MINUTE({dt_utc_name}), {dt_utc_name})"
-            ),
-            "HH:mm",
-        ),
-    )
-    return df
-
-
-def add_system_technical_columns(df, hash_col, bucket_size=512, run_id=None, notebook_name=None, loaded_by=None):
-    """Add system technical columns.
-
-    Run `add_system_technical_columns`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    hash_col : Any
-        Parameter `hash_col`.
-    bucket_size : object, optional
-        Parameter `bucket_size`.
-    run_id : object, optional
-        Parameter `run_id`.
-    notebook_name : object, optional
-        Parameter `notebook_name`.
-    loaded_by : object, optional
-        Parameter `loaded_by`.
-
-    Returns
-    -------
-    result : object
-        Return value from `add_system_technical_columns`.
-
-    Raises
-    ------
-    ValueError
-        Raised when input validation or runtime checks fail.
-
-    Examples
-    --------
-    >>> add_system_technical_columns(df, hash_col)
-    """
-    if hash_col not in df.columns:
-        raise ValueError(f"Column not found: {hash_col}")
-
-    if bucket_size not in {128, 256, 512, 1024}:
-        raise ValueError("bucket_size must be one of 128, 256, 512, or 1024.")
-
-    from pyspark.sql.functions import (
-        from_utc_timestamp,
-        current_timestamp,
-        lit,
-        abs as F_abs,
-        hash as F_hash,
-        monotonically_increasing_id,
-    )
-
+    selected_engine = _resolve_engine(df, engine)
+    resolved_run_id = run_id or str(uuid.uuid4())
     context = _get_fabric_runtime_context()
     resolved_notebook_name = notebook_name or context.get("currentNotebookName", "local_notebook")
     resolved_loaded_by = loaded_by or context.get("userName", "local_user")
-    ingest_run_id = run_id or str(uuid.uuid4())
 
-    df = df.withColumn("pipeline_ts", from_utc_timestamp(current_timestamp(), "Asia/Singapore"))
-    df = df.withColumn("notebook_name", lit(resolved_notebook_name))
-    df = df.withColumn("loaded_by", lit(resolved_loaded_by))
-    df = df.withColumn("p_bucket", F_abs(F_hash(hash_col)) % bucket_size)
-    df = df.withColumn("sample_bucket", F_abs(F_hash(hash_col)) % 1000000)
-    df = df.withColumn("row_ingest_id", monotonically_increasing_id())
-    df = df.withColumn("ingest_run_id", lit(ingest_run_id))
-    return df
+    if watermark_column is not None:
+        _assert_columns_exist(df, [watermark_column])
+    if bucket_column is not None:
+        _assert_columns_exist(df, [bucket_column])
+        if bucket_size not in {128, 256, 512, 1024}:
+            raise ValueError("bucket_size must be one of 128, 256, 512, or 1024.")
+
+    if selected_engine == "pandas":
+        out = df.copy()
+        out["_pipeline_run_id"] = resolved_run_id
+        if pipeline_name is not None:
+            out["_pipeline_name"] = pipeline_name
+        if environment is not None:
+            out["_pipeline_environment"] = environment
+        if source_system is not None:
+            out["_source_system"] = source_system
+        if source_table is not None:
+            out["_source_table"] = source_table
+        if source_extract_timestamp is not None:
+            out["_source_extract_timestamp"] = source_extract_timestamp
+        out["_record_loaded_timestamp"] = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+        out["_notebook_name"] = resolved_notebook_name
+        out["_loaded_by"] = resolved_loaded_by
+        if watermark_column is not None:
+            out["_watermark_value"] = out[watermark_column]
+        if bucket_column is not None:
+            p_bucket, s_bucket = _bucket_values_pandas(out[bucket_column], bucket_size)
+            out["_partition_bucket"] = p_bucket
+            out["_sample_bucket"] = s_bucket
+        if include_row_ingest_id:
+            out["_row_ingest_id"] = [str(uuid.uuid4()) for _ in range(len(out))]
+        return out
+
+    from pyspark.sql import functions as F
+
+    out = df.withColumn("_pipeline_run_id", F.lit(resolved_run_id))
+    for name, value in [
+        ("_pipeline_name", pipeline_name),
+        ("_pipeline_environment", environment),
+        ("_source_system", source_system),
+        ("_source_table", source_table),
+        ("_source_extract_timestamp", source_extract_timestamp),
+    ]:
+        if value is not None:
+            out = out.withColumn(name, F.lit(value))
+    out = out.withColumn("_record_loaded_timestamp", F.current_timestamp())
+    out = out.withColumn("_notebook_name", F.lit(resolved_notebook_name))
+    out = out.withColumn("_loaded_by", F.lit(resolved_loaded_by))
+    if watermark_column is not None:
+        out = out.withColumn("_watermark_value", F.col(watermark_column))
+    if bucket_column is not None:
+        value = F.abs(F.hash(F.col(bucket_column)))
+        out = out.withColumn("_partition_bucket", F.pmod(value, F.lit(bucket_size))).withColumn("_sample_bucket", F.pmod(value, F.lit(1_000_000)))
+    if include_row_ingest_id:
+        out = out.withColumn("_row_ingest_id", F.expr("uuid()"))
+    return out
+
+
+def add_hash_columns(
+    df,
+    *,
+    business_keys: list[str] | None = None,
+    row_hash_columns: list[str] | None = None,
+    include_business_key_hash: bool = True,
+    include_row_hash: bool = True,
+    engine: str = "auto",
+):
+    """Add business key hash and row hash columns using stable SHA256 hashing."""
+    selected_engine = _resolve_engine(df, engine)
+
+    if include_business_key_hash:
+        if not business_keys:
+            raise ValueError("business_keys must be provided when include_business_key_hash=True.")
+        _assert_columns_exist(df, business_keys)
+
+    if include_row_hash:
+        row_hash_columns = row_hash_columns or _non_technical_columns(df)
+        _assert_columns_exist(df, row_hash_columns)
+
+    if selected_engine == "pandas":
+        out = df.copy()
+        if include_business_key_hash:
+            out["_business_key_hash"] = out[business_keys].apply(lambda row: _hash_row(row.tolist()), axis=1)
+        if include_row_hash:
+            out["_row_hash"] = out[row_hash_columns].apply(lambda row: _hash_row(row.tolist()), axis=1)
+        return out
+
+    from pyspark.sql import functions as F
+
+    out = df
+    if include_business_key_hash:
+        business_exprs = [F.coalesce(F.col(c).cast("string"), F.lit("<NULL>")) for c in business_keys]
+        out = out.withColumn("_business_key_hash", F.sha2(F.concat_ws("||", *business_exprs), 256))
+    if include_row_hash:
+        row_exprs = [F.coalesce(F.col(c).cast("string"), F.lit("<NULL>")) for c in row_hash_columns]
+        out = out.withColumn("_row_hash", F.sha2(F.concat_ws("||", *row_exprs), 256))
+    return out

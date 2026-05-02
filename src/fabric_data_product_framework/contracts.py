@@ -407,7 +407,7 @@ from fabric_data_product_framework.drift import (
 )
 from fabric_data_product_framework.lineage import build_lineage_records
 from fabric_data_product_framework.metadata import build_dataset_run_record, write_metadata_records
-from fabric_data_product_framework.profiling import default_technical_columns, flatten_profile_for_metadata, profile_dataframe
+from fabric_data_product_framework.profiling import flatten_profile_for_metadata, profile_dataframe
 from fabric_data_product_framework.quality import run_dq_workflow
 from fabric_data_product_framework.governance import (
     build_governance_classification_records,
@@ -419,7 +419,7 @@ from fabric_data_product_framework.quality import build_quality_result_records
 from fabric_data_product_framework.quarantine import split_valid_and_quarantine
 from fabric_data_product_framework.run_summary import build_run_summary, build_run_summary_record
 from fabric_data_product_framework.runtime import build_runtime_context
-from fabric_data_product_framework.technical_columns import add_standard_technical_columns
+from fabric_data_product_framework.technical_columns import add_audit_columns, add_hash_columns, default_technical_columns
 
 _ALLOWED_REFRESH_MODES = {"full", "incremental", "snapshot", "append"}
 
@@ -1126,7 +1126,8 @@ def run_data_product(spark, contract: dict | DataProductContract, transform=None
             )
 
     out_df = transform(src_df, ctx, effective_contract) if transform else src_df
-    out_df = add_standard_technical_columns(out_df, run_id=ctx["run_id"], pipeline_name=dataset_name, environment=ctx["environment"], source_table=source_table, watermark_column=(n.source.watermark_column if n.source.watermark_column in getattr(out_df, "columns", []) else None), business_keys=n.source.business_keys)
+    out_df = add_audit_columns(out_df, run_id=ctx["run_id"], pipeline_name=dataset_name, environment=ctx["environment"], source_table=source_table, watermark_column=(n.source.watermark_column if n.source.watermark_column in getattr(out_df, "columns", []) else None))
+    out_df = add_hash_columns(out_df, business_keys=n.source.business_keys)
 
     output_profile = profile_dataframe(out_df, dataset_name=dataset_name)
     if write_metadata:
