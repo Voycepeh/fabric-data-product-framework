@@ -24,7 +24,7 @@ class IncrementalSafetyError(Exception):
 def default_incremental_safety_policy() -> dict:
     """Default incremental safety policy.
 
-    Execute `default_incremental_safety_policy`.
+    Run `default_incremental_safety_policy`.
 
     Parameters
     ----------
@@ -34,7 +34,7 @@ def default_incremental_safety_policy() -> dict:
     Returns
     -------
     result : dict
-        Result returned by `default_incremental_safety_policy`.
+        Return value from `default_incremental_safety_policy`.
 
     Examples
     --------
@@ -155,31 +155,31 @@ def _build_spark_partition_snapshot(df, *, dataset_name: str, table_name: str, p
 def build_partition_snapshot(df, *, dataset_name: str = "unknown", table_name: str = "unknown", partition_column: str, business_keys: list[str], watermark_column: str | None = None, run_id: str | None = None, engine: str = "auto") -> list[dict]:
     """Build partition snapshot.
 
-    Execute `build_partition_snapshot`.
+    Run `build_partition_snapshot`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     dataset_name : str, optional
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : str, optional
-        Value for `table_name`.
+        Parameter `table_name`.
     partition_column : str
-        Value for `partition_column`.
+        Parameter `partition_column`.
     business_keys : list[str]
-        Value for `business_keys`.
+        Parameter `business_keys`.
     watermark_column : str | None, optional
-        Value for `watermark_column`.
+        Parameter `watermark_column`.
     run_id : str | None, optional
-        Value for `run_id`.
+        Parameter `run_id`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
     result : list[dict]
-        Result returned by `build_partition_snapshot`.
+        Return value from `build_partition_snapshot`.
 
     Raises
     ------
@@ -227,21 +227,21 @@ def _is_closed_partition(partition_value: Any, grace_days: int) -> bool:
 def compare_partition_snapshots(baseline_snapshots: list[dict], current_snapshots: list[dict], policy: dict | None = None) -> dict:
     """Compare partition snapshots.
 
-    Execute `compare_partition_snapshots`.
+    Run `compare_partition_snapshots`.
 
     Parameters
     ----------
     baseline_snapshots : list[dict]
-        Value for `baseline_snapshots`.
+        Parameter `baseline_snapshots`.
     current_snapshots : list[dict]
-        Value for `current_snapshots`.
+        Parameter `current_snapshots`.
     policy : dict | None, optional
-        Value for `policy`.
+        Parameter `policy`.
 
     Returns
     -------
     result : dict
-        Result returned by `compare_partition_snapshots`.
+        Return value from `compare_partition_snapshots`.
 
     Examples
     --------
@@ -293,17 +293,17 @@ def compare_partition_snapshots(baseline_snapshots: list[dict], current_snapshot
 def assert_incremental_safe(result: dict) -> None:
     """Assert incremental safe.
 
-    Execute `assert_incremental_safe`.
+    Run `assert_incremental_safe`.
 
     Parameters
     ----------
     result : dict
-        Value for `result`.
+        Parameter `result`.
 
     Returns
     -------
     result : None
-        Result returned by `assert_incremental_safe`.
+        Return value from `assert_incremental_safe`.
 
     Raises
     ------
@@ -321,23 +321,23 @@ def assert_incremental_safe(result: dict) -> None:
 def build_incremental_safety_records(result: dict, *, run_id: str, dataset_name: str, table_name: str) -> list[dict]:
     """Build incremental safety records.
 
-    Execute `build_incremental_safety_records`.
+    Run `build_incremental_safety_records`.
 
     Parameters
     ----------
     result : dict
-        Value for `result`.
+        Parameter `result`.
     run_id : str
-        Value for `run_id`.
+        Parameter `run_id`.
     dataset_name : str
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : str
-        Value for `table_name`.
+        Parameter `table_name`.
 
     Returns
     -------
     result : list[dict]
-        Result returned by `build_incremental_safety_records`.
+        Return value from `build_incremental_safety_records`.
 
     Examples
     --------

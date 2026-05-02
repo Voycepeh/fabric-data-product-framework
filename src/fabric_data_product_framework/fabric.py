@@ -12,21 +12,21 @@ def build_table_identifier(
 ) -> str:
     """Build table identifier.
 
-    Execute `build_table_identifier`.
+    Run `build_table_identifier`.
 
     Parameters
     ----------
     lakehouse : str | None, optional
-        Value for `lakehouse`.
+        Parameter `lakehouse`.
     schema : str | None, optional
-        Value for `schema`.
+        Parameter `schema`.
     table : str | None, optional
-        Value for `table`.
+        Parameter `table`.
 
     Returns
     -------
     result : str
-        Result returned by `build_table_identifier`.
+        Return value from `build_table_identifier`.
 
     Raises
     ------
@@ -46,19 +46,19 @@ def build_table_identifier(
 def read_table(table_identifier: str, reader=None):
     """Read table.
 
-    Execute `read_table`.
+    Run `read_table`.
 
     Parameters
     ----------
     table_identifier : str
-        Value for `table_identifier`.
-    reader : Any, optional
-        Value for `reader`.
+        Parameter `table_identifier`.
+    reader : object, optional
+        Parameter `reader`.
 
     Returns
     -------
-    result : Any
-        Result returned by `read_table`.
+    result : object
+        Return value from `read_table`.
 
     Raises
     ------
@@ -79,17 +79,17 @@ def read_table(table_identifier: str, reader=None):
 def validate_write_mode(mode: str) -> str:
     """Validate write mode.
 
-    Execute `validate_write_mode`.
+    Run `validate_write_mode`.
 
     Parameters
     ----------
     mode : str
-        Value for `mode`.
+        Parameter `mode`.
 
     Returns
     -------
     result : str
-        Result returned by `validate_write_mode`.
+        Return value from `validate_write_mode`.
 
     Raises
     ------
@@ -109,23 +109,23 @@ def validate_write_mode(mode: str) -> str:
 def write_table(df, table_identifier: str, writer=None, mode: str = "append", **options):
     """Write table.
 
-    Execute `write_table`.
+    Run `write_table`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     table_identifier : str
-        Value for `table_identifier`.
-    writer : Any, optional
-        Value for `writer`.
+        Parameter `table_identifier`.
+    writer : object, optional
+        Parameter `writer`.
     mode : str, optional
-        Value for `mode`.
+        Parameter `mode`.
 
     Returns
     -------
-    result : Any
-        Result returned by `write_table`.
+    result : object
+        Return value from `write_table`.
 
     Raises
     ------

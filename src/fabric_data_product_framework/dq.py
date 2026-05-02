@@ -64,27 +64,27 @@ def generate_dq_rule_candidates_with_fabric_ai(
 ) -> list[dict]:
     """Generate dq rule candidates with fabric ai.
 
-    Execute `generate_dq_rule_candidates_with_fabric_ai`.
+    Run `generate_dq_rule_candidates_with_fabric_ai`.
 
     Parameters
     ----------
     profile : Any
-        Value for `profile`.
-    contract : Any, optional
-        Value for `contract`.
-    business_context : Any, optional
-        Value for `business_context`.
-    dataset_name : Any, optional
-        Value for `dataset_name`.
-    table_name : Any, optional
-        Value for `table_name`.
-    response_format : Any, optional
-        Value for `response_format`.
+        Parameter `profile`.
+    contract : object, optional
+        Parameter `contract`.
+    business_context : object, optional
+        Parameter `business_context`.
+    dataset_name : object, optional
+        Parameter `dataset_name`.
+    table_name : object, optional
+        Parameter `table_name`.
+    response_format : object, optional
+        Parameter `response_format`.
 
     Returns
     -------
     result : list[dict]
-        Result returned by `generate_dq_rule_candidates_with_fabric_ai`.
+        Return value from `generate_dq_rule_candidates_with_fabric_ai`.
 
     Raises
     ------
@@ -152,25 +152,25 @@ def generate_dq_rule_candidates(
 ) -> list[dict]:
     """Generate dq rule candidates.
 
-    Execute `generate_dq_rule_candidates`.
+    Run `generate_dq_rule_candidates`.
 
     Parameters
     ----------
     profile : dict
-        Value for `profile`.
+        Parameter `profile`.
     metadata : dict | None, optional
-        Value for `metadata`.
+        Parameter `metadata`.
     business_context : str | dict | None, optional
-        Value for `business_context`.
+        Parameter `business_context`.
     dataset_name : str | None, optional
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : str | None, optional
-        Value for `table_name`.
+        Parameter `table_name`.
 
     Returns
     -------
     result : list[dict]
-        Result returned by `generate_dq_rule_candidates`.
+        Return value from `generate_dq_rule_candidates`.
 
     Examples
     --------
@@ -215,17 +215,17 @@ def generate_dq_rule_candidates(
 def normalize_dq_rule(rule: dict) -> dict:
     """Normalize dq rule.
 
-    Execute `normalize_dq_rule`.
+    Run `normalize_dq_rule`.
 
     Parameters
     ----------
     rule : dict
-        Value for `rule`.
+        Parameter `rule`.
 
     Returns
     -------
     result : dict
-        Result returned by `normalize_dq_rule`.
+        Return value from `normalize_dq_rule`.
 
     Examples
     --------
@@ -276,17 +276,17 @@ def normalize_dq_rule(rule: dict) -> dict:
 def normalize_dq_rules(rules: list[dict] | None) -> list[dict]:
     """Normalize dq rules.
 
-    Execute `normalize_dq_rules`.
+    Run `normalize_dq_rules`.
 
     Parameters
     ----------
     rules : list[dict] | None
-        Value for `rules`.
+        Parameter `rules`.
 
     Returns
     -------
     result : list[dict]
-        Result returned by `normalize_dq_rules`.
+        Return value from `normalize_dq_rules`.
 
     Examples
     --------
@@ -298,27 +298,27 @@ def normalize_dq_rules(rules: list[dict] | None) -> list[dict]:
 def build_dq_rule_records(rules: list[dict], dataset_name: str, table_name: str, run_id: str | None = None, status: str = "candidate", generated_by: str = "framework") -> list[dict]:
     """Build dq rule records.
 
-    Execute `build_dq_rule_records`.
+    Run `build_dq_rule_records`.
 
     Parameters
     ----------
     rules : list[dict]
-        Value for `rules`.
+        Parameter `rules`.
     dataset_name : str
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : str
-        Value for `table_name`.
+        Parameter `table_name`.
     run_id : str | None, optional
-        Value for `run_id`.
+        Parameter `run_id`.
     status : str, optional
-        Value for `status`.
+        Parameter `status`.
     generated_by : str, optional
-        Value for `generated_by`.
+        Parameter `generated_by`.
 
     Returns
     -------
     result : list[dict]
-        Result returned by `build_dq_rule_records`.
+        Return value from `build_dq_rule_records`.
 
     Examples
     --------
@@ -345,33 +345,33 @@ def build_dq_rule_records(rules: list[dict], dataset_name: str, table_name: str,
 def store_dq_rules(spark, rules: list[dict], table_name: str, dataset_name: str | None = None, source_table: str | None = None, run_id: str | None = None, status: str = "candidate", generated_by: str = "framework", mode: str = "append") -> list[dict]:
     """Store dq rules.
 
-    Execute `store_dq_rules`.
+    Run `store_dq_rules`.
 
     Parameters
     ----------
     spark : Any
-        Value for `spark`.
+        Parameter `spark`.
     rules : list[dict]
-        Value for `rules`.
+        Parameter `rules`.
     table_name : str
-        Value for `table_name`.
+        Parameter `table_name`.
     dataset_name : str | None, optional
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     source_table : str | None, optional
-        Value for `source_table`.
+        Parameter `source_table`.
     run_id : str | None, optional
-        Value for `run_id`.
+        Parameter `run_id`.
     status : str, optional
-        Value for `status`.
+        Parameter `status`.
     generated_by : str, optional
-        Value for `generated_by`.
+        Parameter `generated_by`.
     mode : str, optional
-        Value for `mode`.
+        Parameter `mode`.
 
     Returns
     -------
     result : list[dict]
-        Result returned by `store_dq_rules`.
+        Return value from `store_dq_rules`.
 
     Examples
     --------
@@ -388,25 +388,25 @@ def store_dq_rules(spark, rules: list[dict], table_name: str, dataset_name: str 
 def load_dq_rules(spark, table_name: str, dataset_name: str | None = None, source_table: str | None = None, status: str | list[str] = "approved") -> list[dict]:
     """Load dq rules.
 
-    Execute `load_dq_rules`.
+    Run `load_dq_rules`.
 
     Parameters
     ----------
     spark : Any
-        Value for `spark`.
+        Parameter `spark`.
     table_name : str
-        Value for `table_name`.
+        Parameter `table_name`.
     dataset_name : str | None, optional
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     source_table : str | None, optional
-        Value for `source_table`.
+        Parameter `source_table`.
     status : str | list[str], optional
-        Value for `status`.
+        Parameter `status`.
 
     Returns
     -------
     result : list[dict]
-        Result returned by `load_dq_rules`.
+        Return value from `load_dq_rules`.
 
     Examples
     --------
@@ -442,27 +442,27 @@ def load_dq_rules(spark, table_name: str, dataset_name: str | None = None, sourc
 def run_dq_rules(df, rules: list[dict], dataset_name: str, table_name: str, engine: str = "spark", fail_on: str = "critical") -> dict:
     """Run dq rules.
 
-    Execute `run_dq_rules`.
+    Run `run_dq_rules`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     rules : list[dict]
-        Value for `rules`.
+        Parameter `rules`.
     dataset_name : str
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : str
-        Value for `table_name`.
+        Parameter `table_name`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
     fail_on : str, optional
-        Value for `fail_on`.
+        Parameter `fail_on`.
 
     Returns
     -------
     result : dict
-        Result returned by `run_dq_rules`.
+        Return value from `run_dq_rules`.
 
     Examples
     --------
@@ -492,35 +492,35 @@ def run_dq_rules(df, rules: list[dict], dataset_name: str, table_name: str, engi
 def run_dq_workflow(spark, df, quality_contract, dataset_name: str, table_name: str, run_id: str | None = None, profile: dict | None = None, metadata: dict | None = None, business_context: str | dict | None = None, engine: str = "spark") -> dict:
     """Run dq workflow.
 
-    Execute `run_dq_workflow`.
+    Run `run_dq_workflow`.
 
     Parameters
     ----------
     spark : Any
-        Value for `spark`.
+        Parameter `spark`.
     df : Any
-        Value for `df`.
+        Parameter `df`.
     quality_contract : Any
-        Value for `quality_contract`.
+        Parameter `quality_contract`.
     dataset_name : str
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : str
-        Value for `table_name`.
+        Parameter `table_name`.
     run_id : str | None, optional
-        Value for `run_id`.
+        Parameter `run_id`.
     profile : dict | None, optional
-        Value for `profile`.
+        Parameter `profile`.
     metadata : dict | None, optional
-        Value for `metadata`.
+        Parameter `metadata`.
     business_context : str | dict | None, optional
-        Value for `business_context`.
+        Parameter `business_context`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
     result : dict
-        Result returned by `run_dq_workflow`.
+        Return value from `run_dq_workflow`.
 
     Examples
     --------

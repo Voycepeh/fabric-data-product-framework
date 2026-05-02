@@ -34,7 +34,7 @@ VALID_ENGINES = {"auto", "pandas", "spark"}
 def default_schema_drift_policy() -> dict:
     """Default schema drift policy.
 
-    Execute `default_schema_drift_policy`.
+    Run `default_schema_drift_policy`.
 
     Parameters
     ----------
@@ -44,7 +44,7 @@ def default_schema_drift_policy() -> dict:
     Returns
     -------
     result : dict
-        Result returned by `default_schema_drift_policy`.
+        Return value from `default_schema_drift_policy`.
 
     Examples
     --------
@@ -63,17 +63,17 @@ def default_schema_drift_policy() -> dict:
 def detect_dataframe_engine(df) -> str:
     """Detect dataframe engine.
 
-    Execute `detect_dataframe_engine`.
+    Run `detect_dataframe_engine`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
 
     Returns
     -------
     result : str
-        Result returned by `detect_dataframe_engine`.
+        Return value from `detect_dataframe_engine`.
 
     Raises
     ------
@@ -156,23 +156,23 @@ def _build_spark_schema_snapshot(df, dataset_name: str, table_name: str) -> dict
 def build_schema_snapshot(df, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "auto") -> dict:
     """Build schema snapshot.
 
-    Execute `build_schema_snapshot`.
+    Run `build_schema_snapshot`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     dataset_name : str, optional
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : str, optional
-        Value for `table_name`.
+        Parameter `table_name`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
     result : dict
-        Result returned by `build_schema_snapshot`.
+        Return value from `build_schema_snapshot`.
 
     Raises
     ------
@@ -209,21 +209,21 @@ def _resolve_change_behavior(is_warning: bool, is_blocking: bool) -> tuple[str, 
 def compare_schema_snapshots(baseline_snapshot: dict, current_snapshot: dict, policy: dict | None = None) -> dict:
     """Compare schema snapshots.
 
-    Execute `compare_schema_snapshots`.
+    Run `compare_schema_snapshots`.
 
     Parameters
     ----------
     baseline_snapshot : dict
-        Value for `baseline_snapshot`.
+        Parameter `baseline_snapshot`.
     current_snapshot : dict
-        Value for `current_snapshot`.
+        Parameter `current_snapshot`.
     policy : dict | None, optional
-        Value for `policy`.
+        Parameter `policy`.
 
     Returns
     -------
     result : dict
-        Result returned by `compare_schema_snapshots`.
+        Return value from `compare_schema_snapshots`.
 
     Examples
     --------
@@ -303,17 +303,17 @@ def compare_schema_snapshots(baseline_snapshot: dict, current_snapshot: dict, po
 def assert_no_blocking_schema_drift(result: dict) -> None:
     """Assert no blocking schema drift.
 
-    Execute `assert_no_blocking_schema_drift`.
+    Run `assert_no_blocking_schema_drift`.
 
     Parameters
     ----------
     result : dict
-        Value for `result`.
+        Parameter `result`.
 
     Returns
     -------
     result : None
-        Result returned by `assert_no_blocking_schema_drift`.
+        Return value from `assert_no_blocking_schema_drift`.
 
     Raises
     ------

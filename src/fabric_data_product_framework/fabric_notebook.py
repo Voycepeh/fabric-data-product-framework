@@ -58,17 +58,17 @@ EXAMPLE_CONFIG: Dict[str, Dict[str, Housepath]] = {
 def load_fabric_config(path: str | Path) -> dict[str, dict[str, Housepath]]:
     """Load fabric config.
 
-    Execute `load_fabric_config`.
+    Run `load_fabric_config`.
 
     Parameters
     ----------
     path : str | Path
-        Value for `path`.
+        Parameter `path`.
 
     Returns
     -------
     result : dict[str, dict[str, Housepath]]
-        Result returned by `load_fabric_config`.
+        Return value from `load_fabric_config`.
 
     Raises
     ------
@@ -137,23 +137,23 @@ def get_path(
 ) -> Any:
     """Get path.
 
-    Execute `get_path`.
+    Run `get_path`.
 
     Parameters
     ----------
     env : str, optional
-        Value for `env`.
+        Parameter `env`.
     target : str, optional
-        Value for `target`.
+        Parameter `target`.
     config : dict | None, optional
-        Value for `config`.
+        Parameter `config`.
     use_example_config : bool, optional
-        Value for `use_example_config`.
+        Parameter `use_example_config`.
 
     Returns
     -------
-    result : Any
-        Result returned by `get_path`.
+    result : object
+        Return value from `get_path`.
 
     Raises
     ------
@@ -195,21 +195,21 @@ def _get_spark(spark_session=None):
 def lakehouse_table_read(lh, tablename, spark_session=None):
     """Lakehouse table read.
 
-    Execute `lakehouse_table_read`.
+    Run `lakehouse_table_read`.
 
     Parameters
     ----------
     lh : Any
-        Value for `lh`.
+        Parameter `lh`.
     tablename : Any
-        Value for `tablename`.
-    spark_session : Any, optional
-        Value for `spark_session`.
+        Parameter `tablename`.
+    spark_session : object, optional
+        Parameter `spark_session`.
 
     Returns
     -------
-    result : Any
-        Result returned by `lakehouse_table_read`.
+    result : object
+        Return value from `lakehouse_table_read`.
 
     Raises
     ------
@@ -240,29 +240,29 @@ def lakehouse_table_write(
 ):
     """Lakehouse table write.
 
-    Execute `lakehouse_table_write`.
+    Run `lakehouse_table_write`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     lh : Any
-        Value for `lh`.
+        Parameter `lh`.
     tablename : Any
-        Value for `tablename`.
-    mode : Any, optional
-        Value for `mode`.
-    partition_by : Any, optional
-        Value for `partition_by`.
-    repartition_by : Any, optional
-        Value for `repartition_by`.
-    overwrite_schema : Any, optional
-        Value for `overwrite_schema`.
+        Parameter `tablename`.
+    mode : object, optional
+        Parameter `mode`.
+    partition_by : object, optional
+        Parameter `partition_by`.
+    repartition_by : object, optional
+        Parameter `repartition_by`.
+    overwrite_schema : object, optional
+        Parameter `overwrite_schema`.
 
     Returns
     -------
     result : None
-        Result returned by `lakehouse_table_write`.
+        Return value from `lakehouse_table_write`.
 
     Raises
     ------
@@ -312,23 +312,23 @@ def lakehouse_table_write(
 def lakehouse_csv_read(lh, relative_path, spark_session=None, header=True):
     """Lakehouse csv read.
 
-    Execute `lakehouse_csv_read`.
+    Run `lakehouse_csv_read`.
 
     Parameters
     ----------
     lh : Any
-        Value for `lh`.
+        Parameter `lh`.
     relative_path : Any
-        Value for `relative_path`.
-    spark_session : Any, optional
-        Value for `spark_session`.
-    header : Any, optional
-        Value for `header`.
+        Parameter `relative_path`.
+    spark_session : object, optional
+        Parameter `spark_session`.
+    header : object, optional
+        Parameter `header`.
 
     Returns
     -------
-    result : Any
-        Result returned by `lakehouse_csv_read`.
+    result : object
+        Return value from `lakehouse_csv_read`.
 
     Examples
     --------
@@ -342,27 +342,27 @@ def lakehouse_csv_read(lh, relative_path, spark_session=None, header=True):
 def warehouse_read(env, target, schema, table, config=None, spark_session=None):
     """Warehouse read.
 
-    Execute `warehouse_read`.
+    Run `warehouse_read`.
 
     Parameters
     ----------
     env : Any
-        Value for `env`.
+        Parameter `env`.
     target : Any
-        Value for `target`.
+        Parameter `target`.
     schema : Any
-        Value for `schema`.
+        Parameter `schema`.
     table : Any
-        Value for `table`.
-    config : Any, optional
-        Value for `config`.
-    spark_session : Any, optional
-        Value for `spark_session`.
+        Parameter `table`.
+    config : object, optional
+        Parameter `config`.
+    spark_session : object, optional
+        Parameter `spark_session`.
 
     Returns
     -------
-    result : Any
-        Result returned by `warehouse_read`.
+    result : object
+        Return value from `warehouse_read`.
 
     Examples
     --------
@@ -383,29 +383,29 @@ def warehouse_read(env, target, schema, table, config=None, spark_session=None):
 def warehouse_write(df, env, target, schema, table, mode="append", config=None):
     """Warehouse write.
 
-    Execute `warehouse_write`.
+    Run `warehouse_write`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     env : Any
-        Value for `env`.
+        Parameter `env`.
     target : Any
-        Value for `target`.
+        Parameter `target`.
     schema : Any
-        Value for `schema`.
+        Parameter `schema`.
     table : Any
-        Value for `table`.
-    mode : Any, optional
-        Value for `mode`.
-    config : Any, optional
-        Value for `config`.
+        Parameter `table`.
+    mode : object, optional
+        Parameter `mode`.
+    config : object, optional
+        Parameter `config`.
 
     Returns
     -------
     result : None
-        Result returned by `warehouse_write`.
+        Return value from `warehouse_write`.
 
     Examples
     --------
@@ -426,21 +426,21 @@ def warehouse_write(df, env, target, schema, table, mode="append", config=None):
 def single_file_ns_to_us(local_in_path, local_out_path, verbose=True):
     """Single file ns to us.
 
-    Execute `single_file_ns_to_us`.
+    Run `single_file_ns_to_us`.
 
     Parameters
     ----------
     local_in_path : Any
-        Value for `local_in_path`.
+        Parameter `local_in_path`.
     local_out_path : Any
-        Value for `local_out_path`.
-    verbose : Any, optional
-        Value for `verbose`.
+        Parameter `local_out_path`.
+    verbose : object, optional
+        Parameter `verbose`.
 
     Returns
     -------
     result : None
-        Result returned by `single_file_ns_to_us`.
+        Return value from `single_file_ns_to_us`.
 
     Examples
     --------
@@ -470,23 +470,23 @@ def single_file_ns_to_us(local_in_path, local_out_path, verbose=True):
 def lakehouse_parquet_read_as_spark(lh, relative_path, verbose=True, spark_session=None):
     """Lakehouse parquet read as spark.
 
-    Execute `lakehouse_parquet_read_as_spark`.
+    Run `lakehouse_parquet_read_as_spark`.
 
     Parameters
     ----------
     lh : Any
-        Value for `lh`.
+        Parameter `lh`.
     relative_path : Any
-        Value for `relative_path`.
-    verbose : Any, optional
-        Value for `verbose`.
-    spark_session : Any, optional
-        Value for `spark_session`.
+        Parameter `relative_path`.
+    verbose : object, optional
+        Parameter `verbose`.
+    spark_session : object, optional
+        Parameter `spark_session`.
 
     Returns
     -------
-    result : Any
-        Result returned by `lakehouse_parquet_read_as_spark`.
+    result : object
+        Return value from `lakehouse_parquet_read_as_spark`.
 
     Raises
     ------
@@ -566,23 +566,23 @@ def lakehouse_parquet_read_as_spark(lh, relative_path, verbose=True, spark_sessi
 def lakehouse_excel_read_as_spark(lh, relative_path, sheet_name=0, spark_session=None):
     """Lakehouse excel read as spark.
 
-    Execute `lakehouse_excel_read_as_spark`.
+    Run `lakehouse_excel_read_as_spark`.
 
     Parameters
     ----------
     lh : Any
-        Value for `lh`.
+        Parameter `lh`.
     relative_path : Any
-        Value for `relative_path`.
-    sheet_name : Any, optional
-        Value for `sheet_name`.
-    spark_session : Any, optional
-        Value for `spark_session`.
+        Parameter `relative_path`.
+    sheet_name : object, optional
+        Parameter `sheet_name`.
+    spark_session : object, optional
+        Parameter `spark_session`.
 
     Returns
     -------
-    result : Any
-        Result returned by `lakehouse_excel_read_as_spark`.
+    result : object
+        Return value from `lakehouse_excel_read_as_spark`.
 
     Raises
     ------
@@ -636,21 +636,21 @@ def _get_fabric_runtime_context():
 def check_naming_convention(notebook_name=None, allowed_prefixes=None, fail_on_error=True):
     """Check naming convention.
 
-    Execute `check_naming_convention`.
+    Run `check_naming_convention`.
 
     Parameters
     ----------
-    notebook_name : Any, optional
-        Value for `notebook_name`.
-    allowed_prefixes : Any, optional
-        Value for `allowed_prefixes`.
-    fail_on_error : Any, optional
-        Value for `fail_on_error`.
+    notebook_name : object, optional
+        Parameter `notebook_name`.
+    allowed_prefixes : object, optional
+        Parameter `allowed_prefixes`.
+    fail_on_error : object, optional
+        Parameter `fail_on_error`.
 
     Returns
     -------
-    result : Any
-        Result returned by `check_naming_convention`.
+    result : object
+        Return value from `check_naming_convention`.
 
     Raises
     ------
@@ -706,25 +706,25 @@ def check_naming_convention(notebook_name=None, allowed_prefixes=None, fail_on_e
 def clean_datetime_columns(df, datetime_col, prefix, tz_region="Asia/Singapore", time_block_col="TIME_BLOCK_30_MIN"):
     """Clean datetime columns.
 
-    Execute `clean_datetime_columns`.
+    Run `clean_datetime_columns`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     datetime_col : Any
-        Value for `datetime_col`.
+        Parameter `datetime_col`.
     prefix : Any
-        Value for `prefix`.
-    tz_region : Any, optional
-        Value for `tz_region`.
-    time_block_col : Any, optional
-        Value for `time_block_col`.
+        Parameter `prefix`.
+    tz_region : object, optional
+        Parameter `tz_region`.
+    time_block_col : object, optional
+        Parameter `time_block_col`.
 
     Returns
     -------
-    result : Any
-        Result returned by `clean_datetime_columns`.
+    result : object
+        Return value from `clean_datetime_columns`.
 
     Raises
     ------
@@ -762,27 +762,27 @@ def clean_datetime_columns(df, datetime_col, prefix, tz_region="Asia/Singapore",
 def add_system_technical_columns(df, hash_col, bucket_size=512, run_id=None, notebook_name=None, loaded_by=None):
     """Add system technical columns.
 
-    Execute `add_system_technical_columns`.
+    Run `add_system_technical_columns`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     hash_col : Any
-        Value for `hash_col`.
-    bucket_size : Any, optional
-        Value for `bucket_size`.
-    run_id : Any, optional
-        Value for `run_id`.
-    notebook_name : Any, optional
-        Value for `notebook_name`.
-    loaded_by : Any, optional
-        Value for `loaded_by`.
+        Parameter `hash_col`.
+    bucket_size : object, optional
+        Parameter `bucket_size`.
+    run_id : object, optional
+        Parameter `run_id`.
+    notebook_name : object, optional
+        Parameter `notebook_name`.
+    loaded_by : object, optional
+        Parameter `loaded_by`.
 
     Returns
     -------
-    result : Any
-        Result returned by `add_system_technical_columns`.
+    result : object
+        Return value from `add_system_technical_columns`.
 
     Raises
     ------
@@ -826,19 +826,19 @@ def add_system_technical_columns(df, hash_col, bucket_size=512, run_id=None, not
 def pass_if_yes_else_run(condition, code):
     """Pass if yes else run.
 
-    Execute `pass_if_yes_else_run`.
+    Run `pass_if_yes_else_run`.
 
     Parameters
     ----------
     condition : Any
-        Value for `condition`.
+        Parameter `condition`.
     code : Any
-        Value for `code`.
+        Parameter `code`.
 
     Returns
     -------
-    result : Any
-        Result returned by `pass_if_yes_else_run`.
+    result : object
+        Return value from `pass_if_yes_else_run`.
 
     Examples
     --------
@@ -853,23 +853,23 @@ def pass_if_yes_else_run(condition, code):
 def ODI_METADATA_LOGGER(df, tablename: str, exclude_columns=None, run_timestamp_timezone="Asia/Singapore"):
     """Odi metadata logger.
 
-    Execute `ODI_METADATA_LOGGER`.
+    Run `ODI_METADATA_LOGGER`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     tablename : str
-        Value for `tablename`.
-    exclude_columns : Any, optional
-        Value for `exclude_columns`.
-    run_timestamp_timezone : Any, optional
-        Value for `run_timestamp_timezone`.
+        Parameter `tablename`.
+    exclude_columns : object, optional
+        Parameter `exclude_columns`.
+    run_timestamp_timezone : object, optional
+        Parameter `run_timestamp_timezone`.
 
     Returns
     -------
-    result : Any
-        Result returned by `ODI_METADATA_LOGGER`.
+    result : object
+        Return value from `ODI_METADATA_LOGGER`.
 
     Raises
     ------
@@ -946,17 +946,17 @@ def ODI_METADATA_LOGGER(df, tablename: str, exclude_columns=None, run_timestamp_
 def transformation_summary(code: str):
     """Transformation summary.
 
-    Execute `transformation_summary`.
+    Run `transformation_summary`.
 
     Parameters
     ----------
     code : str
-        Value for `code`.
+        Parameter `code`.
 
     Returns
     -------
-    result : Any
-        Result returned by `transformation_summary`.
+    result : object
+        Return value from `transformation_summary`.
 
     Examples
     --------
@@ -1005,21 +1005,21 @@ def transformation_summary(code: str):
 def transformation_reasons(pdf, reason, spark_session=None):
     """Transformation reasons.
 
-    Execute `transformation_reasons`.
+    Run `transformation_reasons`.
 
     Parameters
     ----------
     pdf : Any
-        Value for `pdf`.
+        Parameter `pdf`.
     reason : Any
-        Value for `reason`.
-    spark_session : Any, optional
-        Value for `spark_session`.
+        Parameter `reason`.
+    spark_session : object, optional
+        Parameter `spark_session`.
 
     Returns
     -------
-    result : Any
-        Result returned by `transformation_reasons`.
+    result : object
+        Return value from `transformation_reasons`.
 
     Raises
     ------

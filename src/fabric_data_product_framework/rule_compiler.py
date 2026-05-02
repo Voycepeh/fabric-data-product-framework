@@ -20,17 +20,17 @@ def _skipped(candidate, message):
 def compile_layman_rule_to_quality_rule(candidate):
     """Compile layman rule to quality rule.
 
-    Execute `compile_layman_rule_to_quality_rule`.
+    Run `compile_layman_rule_to_quality_rule`.
 
     Parameters
     ----------
     candidate : Any
-        Value for `candidate`.
+        Parameter `candidate`.
 
     Returns
     -------
-    result : Any
-        Result returned by `compile_layman_rule_to_quality_rule`.
+    result : object
+        Return value from `compile_layman_rule_to_quality_rule`.
 
     Examples
     --------
@@ -88,17 +88,17 @@ def compile_layman_rule_to_quality_rule(candidate):
 def compile_layman_rules_to_quality_rules(candidates):
     """Compile layman rules to quality rules.
 
-    Execute `compile_layman_rules_to_quality_rules`.
+    Run `compile_layman_rules_to_quality_rules`.
 
     Parameters
     ----------
     candidates : Any
-        Value for `candidates`.
+        Parameter `candidates`.
 
     Returns
     -------
-    result : Any
-        Result returned by `compile_layman_rules_to_quality_rules`.
+    result : object
+        Return value from `compile_layman_rules_to_quality_rules`.
 
     Examples
     --------
@@ -111,23 +111,23 @@ def compile_layman_rules_to_quality_rules(candidates):
 def build_rule_registry_records(compiled_rules, run_id, dataset_name, table_name):
     """Build rule registry records.
 
-    Execute `build_rule_registry_records`.
+    Run `build_rule_registry_records`.
 
     Parameters
     ----------
     compiled_rules : Any
-        Value for `compiled_rules`.
+        Parameter `compiled_rules`.
     run_id : Any
-        Value for `run_id`.
+        Parameter `run_id`.
     dataset_name : Any
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : Any
-        Value for `table_name`.
+        Parameter `table_name`.
 
     Returns
     -------
-    result : Any
-        Result returned by `build_rule_registry_records`.
+    result : object
+        Return value from `build_rule_registry_records`.
 
     Examples
     --------

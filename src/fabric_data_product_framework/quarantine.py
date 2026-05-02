@@ -17,23 +17,23 @@ def _severity_bucket(severity: str) -> str:
 def build_quarantine_rule_coverage_records(rules, run_id, dataset_name, table_name):
     """Build quarantine rule coverage records.
 
-    Execute `build_quarantine_rule_coverage_records`.
+    Run `build_quarantine_rule_coverage_records`.
 
     Parameters
     ----------
     rules : Any
-        Value for `rules`.
+        Parameter `rules`.
     run_id : Any
-        Value for `run_id`.
+        Parameter `run_id`.
     dataset_name : Any
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : Any
-        Value for `table_name`.
+        Parameter `table_name`.
 
     Returns
     -------
-    result : Any
-        Result returned by `build_quarantine_rule_coverage_records`.
+    result : object
+        Return value from `build_quarantine_rule_coverage_records`.
 
     Examples
     --------
@@ -55,21 +55,21 @@ def build_quarantine_rule_coverage_records(rules, run_id, dataset_name, table_na
 def add_dq_failure_columns(df, rules, engine="auto"):
     """Add dq failure columns.
 
-    Execute `add_dq_failure_columns`.
+    Run `add_dq_failure_columns`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     rules : Any
-        Value for `rules`.
-    engine : Any, optional
-        Value for `engine`.
+        Parameter `rules`.
+    engine : object, optional
+        Parameter `engine`.
 
     Returns
     -------
-    result : Any
-        Result returned by `add_dq_failure_columns`.
+    result : object
+        Return value from `add_dq_failure_columns`.
 
     Examples
     --------
@@ -82,21 +82,21 @@ def add_dq_failure_columns(df, rules, engine="auto"):
 def split_valid_and_quarantine(df, rules, engine="auto"):
     """Split valid and quarantine.
 
-    Execute `split_valid_and_quarantine`.
+    Run `split_valid_and_quarantine`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     rules : Any
-        Value for `rules`.
-    engine : Any, optional
-        Value for `engine`.
+        Parameter `rules`.
+    engine : object, optional
+        Parameter `engine`.
 
     Returns
     -------
-    result : Any
-        Result returned by `split_valid_and_quarantine`.
+    result : object
+        Return value from `split_valid_and_quarantine`.
 
     Examples
     --------
@@ -113,25 +113,25 @@ def split_valid_and_quarantine(df, rules, engine="auto"):
 def build_quarantine_summary_records(quarantine_df, run_id, dataset_name, table_name, engine="auto"):
     """Build quarantine summary records.
 
-    Execute `build_quarantine_summary_records`.
+    Run `build_quarantine_summary_records`.
 
     Parameters
     ----------
     quarantine_df : Any
-        Value for `quarantine_df`.
+        Parameter `quarantine_df`.
     run_id : Any
-        Value for `run_id`.
+        Parameter `run_id`.
     dataset_name : Any
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : Any
-        Value for `table_name`.
-    engine : Any, optional
-        Value for `engine`.
+        Parameter `table_name`.
+    engine : object, optional
+        Parameter `engine`.
 
     Returns
     -------
-    result : Any
-        Result returned by `build_quarantine_summary_records`.
+    result : object
+        Return value from `build_quarantine_summary_records`.
 
     Examples
     --------

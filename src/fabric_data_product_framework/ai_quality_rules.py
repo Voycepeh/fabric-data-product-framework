@@ -28,25 +28,25 @@ def _jsonable(value: Any) -> Any:
 def build_quality_rule_prompt_context(profile, contract=None, business_context=None, table_name=None, dataset_name=None):
     """Build quality rule prompt context.
 
-    Execute `build_quality_rule_prompt_context`.
+    Run `build_quality_rule_prompt_context`.
 
     Parameters
     ----------
     profile : Any
-        Value for `profile`.
-    contract : Any, optional
-        Value for `contract`.
-    business_context : Any, optional
-        Value for `business_context`.
-    table_name : Any, optional
-        Value for `table_name`.
-    dataset_name : Any, optional
-        Value for `dataset_name`.
+        Parameter `profile`.
+    contract : object, optional
+        Parameter `contract`.
+    business_context : object, optional
+        Parameter `business_context`.
+    table_name : object, optional
+        Parameter `table_name`.
+    dataset_name : object, optional
+        Parameter `dataset_name`.
 
     Returns
     -------
-    result : Any
-        Result returned by `build_quality_rule_prompt_context`.
+    result : object
+        Return value from `build_quality_rule_prompt_context`.
 
     Examples
     --------
@@ -67,25 +67,25 @@ def build_quality_rule_prompt_context(profile, contract=None, business_context=N
 def build_quality_rule_generation_prompt(profile, contract=None, business_context=None, table_name=None, dataset_name=None):
     """Build quality rule generation prompt.
 
-    Execute `build_quality_rule_generation_prompt`.
+    Run `build_quality_rule_generation_prompt`.
 
     Parameters
     ----------
     profile : Any
-        Value for `profile`.
-    contract : Any, optional
-        Value for `contract`.
-    business_context : Any, optional
-        Value for `business_context`.
-    table_name : Any, optional
-        Value for `table_name`.
-    dataset_name : Any, optional
-        Value for `dataset_name`.
+        Parameter `profile`.
+    contract : object, optional
+        Parameter `contract`.
+    business_context : object, optional
+        Parameter `business_context`.
+    table_name : object, optional
+        Parameter `table_name`.
+    dataset_name : object, optional
+        Parameter `dataset_name`.
 
     Returns
     -------
-    result : Any
-        Result returned by `build_quality_rule_generation_prompt`.
+    result : object
+        Return value from `build_quality_rule_generation_prompt`.
 
     Examples
     --------
@@ -115,17 +115,17 @@ def _strip_json_fences(text: str) -> str:
 def parse_ai_quality_rule_candidates(raw_response):
     """Parse ai quality rule candidates.
 
-    Execute `parse_ai_quality_rule_candidates`.
+    Run `parse_ai_quality_rule_candidates`.
 
     Parameters
     ----------
     raw_response : Any
-        Value for `raw_response`.
+        Parameter `raw_response`.
 
     Returns
     -------
-    result : Any
-        Result returned by `parse_ai_quality_rule_candidates`.
+    result : object
+        Return value from `parse_ai_quality_rule_candidates`.
 
     Examples
     --------
@@ -159,17 +159,17 @@ def parse_ai_quality_rule_candidates(raw_response):
 def normalize_quality_rule_candidate(candidate):
     """Normalize quality rule candidate.
 
-    Execute `normalize_quality_rule_candidate`.
+    Run `normalize_quality_rule_candidate`.
 
     Parameters
     ----------
     candidate : Any
-        Value for `candidate`.
+        Parameter `candidate`.
 
     Returns
     -------
-    result : Any
-        Result returned by `normalize_quality_rule_candidate`.
+    result : object
+        Return value from `normalize_quality_rule_candidate`.
 
     Examples
     --------
@@ -191,17 +191,17 @@ def normalize_quality_rule_candidate(candidate):
 def validate_ai_quality_rule_candidate(candidate):
     """Validate ai quality rule candidate.
 
-    Execute `validate_ai_quality_rule_candidate`.
+    Run `validate_ai_quality_rule_candidate`.
 
     Parameters
     ----------
     candidate : Any
-        Value for `candidate`.
+        Parameter `candidate`.
 
     Returns
     -------
-    result : Any
-        Result returned by `validate_ai_quality_rule_candidate`.
+    result : object
+        Return value from `validate_ai_quality_rule_candidate`.
 
     Examples
     --------
@@ -222,23 +222,23 @@ def validate_ai_quality_rule_candidate(candidate):
 def build_layman_rule_records(candidates, run_id, dataset_name, table_name):
     """Build layman rule records.
 
-    Execute `build_layman_rule_records`.
+    Run `build_layman_rule_records`.
 
     Parameters
     ----------
     candidates : Any
-        Value for `candidates`.
+        Parameter `candidates`.
     run_id : Any
-        Value for `run_id`.
+        Parameter `run_id`.
     dataset_name : Any
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : Any
-        Value for `table_name`.
+        Parameter `table_name`.
 
     Returns
     -------
-    result : Any
-        Result returned by `build_layman_rule_records`.
+    result : object
+        Return value from `build_layman_rule_records`.
 
     Examples
     --------

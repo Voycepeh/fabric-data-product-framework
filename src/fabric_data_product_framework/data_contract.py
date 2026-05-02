@@ -206,17 +206,17 @@ def _dict(config: dict | None) -> dict:
 def build_source_contract(config: dict) -> SourceContract:
     """Build source contract.
 
-    Execute `build_source_contract`.
+    Run `build_source_contract`.
 
     Parameters
     ----------
     config : dict
-        Value for `config`.
+        Parameter `config`.
 
     Returns
     -------
     result : SourceContract
-        Result returned by `build_source_contract`.
+        Return value from `build_source_contract`.
 
     Examples
     --------
@@ -240,17 +240,17 @@ def build_source_contract(config: dict) -> SourceContract:
 def build_target_contract(config: dict) -> TargetContract:
     """Build target contract.
 
-    Execute `build_target_contract`.
+    Run `build_target_contract`.
 
     Parameters
     ----------
     config : dict
-        Value for `config`.
+        Parameter `config`.
 
     Returns
     -------
     result : TargetContract
-        Result returned by `build_target_contract`.
+        Return value from `build_target_contract`.
 
     Examples
     --------
@@ -271,17 +271,17 @@ def build_target_contract(config: dict) -> TargetContract:
 def build_quality_contract(config: dict) -> QualityContract:
     """Build quality contract.
 
-    Execute `build_quality_contract`.
+    Run `build_quality_contract`.
 
     Parameters
     ----------
     config : dict
-        Value for `config`.
+        Parameter `config`.
 
     Returns
     -------
     result : QualityContract
-        Result returned by `build_quality_contract`.
+        Return value from `build_quality_contract`.
 
     Examples
     --------
@@ -304,17 +304,17 @@ def build_quality_contract(config: dict) -> QualityContract:
 def build_drift_contract(config: dict) -> DriftContract:
     """Build drift contract.
 
-    Execute `build_drift_contract`.
+    Run `build_drift_contract`.
 
     Parameters
     ----------
     config : dict
-        Value for `config`.
+        Parameter `config`.
 
     Returns
     -------
     result : DriftContract
-        Result returned by `build_drift_contract`.
+        Return value from `build_drift_contract`.
 
     Examples
     --------
@@ -334,17 +334,17 @@ def build_drift_contract(config: dict) -> DriftContract:
 def build_governance_contract(config: dict) -> GovernanceContract:
     """Build governance contract.
 
-    Execute `build_governance_contract`.
+    Run `build_governance_contract`.
 
     Parameters
     ----------
     config : dict
-        Value for `config`.
+        Parameter `config`.
 
     Returns
     -------
     result : GovernanceContract
-        Result returned by `build_governance_contract`.
+        Return value from `build_governance_contract`.
 
     Examples
     --------
@@ -362,17 +362,17 @@ def build_governance_contract(config: dict) -> GovernanceContract:
 def build_metadata_contract(config: dict) -> MetadataContract:
     """Build metadata contract.
 
-    Execute `build_metadata_contract`.
+    Run `build_metadata_contract`.
 
     Parameters
     ----------
     config : dict
-        Value for `config`.
+        Parameter `config`.
 
     Returns
     -------
     result : MetadataContract
-        Result returned by `build_metadata_contract`.
+        Return value from `build_metadata_contract`.
 
     Examples
     --------
@@ -398,17 +398,17 @@ def build_metadata_contract(config: dict) -> MetadataContract:
 def build_runtime_contract(config: dict) -> RuntimeContract:
     """Build runtime contract.
 
-    Execute `build_runtime_contract`.
+    Run `build_runtime_contract`.
 
     Parameters
     ----------
     config : dict
-        Value for `config`.
+        Parameter `config`.
 
     Returns
     -------
     result : RuntimeContract
-        Result returned by `build_runtime_contract`.
+        Return value from `build_runtime_contract`.
 
     Examples
     --------
@@ -428,17 +428,17 @@ def build_runtime_contract(config: dict) -> RuntimeContract:
 def normalize_data_product_contract(contract: dict | DataProductContract) -> DataProductContract:
     """Normalize data product contract.
 
-    Execute `normalize_data_product_contract`.
+    Run `normalize_data_product_contract`.
 
     Parameters
     ----------
     contract : dict | DataProductContract
-        Value for `contract`.
+        Parameter `contract`.
 
     Returns
     -------
     result : DataProductContract
-        Result returned by `normalize_data_product_contract`.
+        Return value from `normalize_data_product_contract`.
 
     Examples
     --------
@@ -498,17 +498,17 @@ def normalize_data_product_contract(contract: dict | DataProductContract) -> Dat
 def data_product_contract_to_dict(contract: DataProductContract) -> dict:
     """Data product contract to dict.
 
-    Execute `data_product_contract_to_dict`.
+    Run `data_product_contract_to_dict`.
 
     Parameters
     ----------
     contract : DataProductContract
-        Value for `contract`.
+        Parameter `contract`.
 
     Returns
     -------
     result : dict
-        Result returned by `data_product_contract_to_dict`.
+        Return value from `data_product_contract_to_dict`.
 
     Examples
     --------
@@ -547,17 +547,17 @@ def _effective_contract_dict(contract: dict | DataProductContract) -> dict:
 def load_data_contract(path_or_dict: str | Path | dict) -> DataProductContract:
     """Load data contract.
 
-    Execute `load_data_contract`.
+    Run `load_data_contract`.
 
     Parameters
     ----------
     path_or_dict : str | Path | dict
-        Value for `path_or_dict`.
+        Parameter `path_or_dict`.
 
     Returns
     -------
     result : DataProductContract
-        Result returned by `load_data_contract`.
+        Return value from `load_data_contract`.
 
     Examples
     --------
@@ -574,17 +574,17 @@ def _refresh_mode(contract: dict) -> str:
 def validate_data_contract_shape(contract: dict | DataProductContract) -> list[str]:
     """Validate data contract shape.
 
-    Execute `validate_data_contract_shape`.
+    Run `validate_data_contract_shape`.
 
     Parameters
     ----------
     contract : dict | DataProductContract
-        Value for `contract`.
+        Parameter `contract`.
 
     Returns
     -------
     result : list[str]
-        Result returned by `validate_data_contract_shape`.
+        Return value from `validate_data_contract_shape`.
 
     Examples
     --------
@@ -619,19 +619,19 @@ def validate_data_contract_shape(contract: dict | DataProductContract) -> list[s
 def build_runtime_context_from_contract(contract: dict | DataProductContract, overrides: dict | None = None) -> dict:
     """Build runtime context from contract.
 
-    Execute `build_runtime_context_from_contract`.
+    Run `build_runtime_context_from_contract`.
 
     Parameters
     ----------
     contract : dict | DataProductContract
-        Value for `contract`.
+        Parameter `contract`.
     overrides : dict | None, optional
-        Value for `overrides`.
+        Parameter `overrides`.
 
     Returns
     -------
     result : dict
-        Result returned by `build_runtime_context_from_contract`.
+        Return value from `build_runtime_context_from_contract`.
 
     Examples
     --------
@@ -668,29 +668,29 @@ def _runtime_validation_contract(contract: dict | DataProductContract) -> dict:
 def run_data_product(spark, contract: dict | DataProductContract, transform=None, source_df=None, write: bool | None = None, *, write_target: bool = True, write_metadata: bool = True) -> dict:
     """Run data product.
 
-    Execute `run_data_product`.
+    Run `run_data_product`.
 
     Parameters
     ----------
     spark : Any
-        Value for `spark`.
+        Parameter `spark`.
     contract : dict | DataProductContract
-        Value for `contract`.
-    transform : Any, optional
-        Value for `transform`.
-    source_df : Any, optional
-        Value for `source_df`.
+        Parameter `contract`.
+    transform : object, optional
+        Parameter `transform`.
+    source_df : object, optional
+        Parameter `source_df`.
     write : bool | None, optional
-        Value for `write`.
+        Parameter `write`.
     write_target : bool, optional
-        Value for `write_target`.
+        Parameter `write_target`.
     write_metadata : bool, optional
-        Value for `write_metadata`.
+        Parameter `write_metadata`.
 
     Returns
     -------
     result : dict
-        Result returned by `run_data_product`.
+        Return value from `run_data_product`.
 
     Examples
     --------
@@ -865,17 +865,17 @@ def run_data_product(spark, contract: dict | DataProductContract, transform=None
 def assert_data_product_passed(result: dict) -> None:
     """Assert data product passed.
 
-    Execute `assert_data_product_passed`.
+    Run `assert_data_product_passed`.
 
     Parameters
     ----------
     result : dict
-        Value for `result`.
+        Parameter `result`.
 
     Returns
     -------
     result : None
-        Result returned by `assert_data_product_passed`.
+        Return value from `assert_data_product_passed`.
 
     Raises
     ------

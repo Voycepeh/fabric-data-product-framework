@@ -24,17 +24,17 @@ class UnsupportedDataFrameEngineError(TypeError):
 def validate_engine(engine: str) -> str:
     """Validate engine.
 
-    Execute `validate_engine`.
+    Run `validate_engine`.
 
     Parameters
     ----------
     engine : str
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
     result : str
-        Result returned by `validate_engine`.
+        Return value from `validate_engine`.
 
     Raises
     ------
@@ -54,17 +54,17 @@ def validate_engine(engine: str) -> str:
 def detect_dataframe_engine(df: Any) -> str:
     """Detect dataframe engine.
 
-    Execute `detect_dataframe_engine`.
+    Run `detect_dataframe_engine`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
 
     Returns
     -------
     result : str
-        Result returned by `detect_dataframe_engine`.
+        Return value from `detect_dataframe_engine`.
 
     Raises
     ------

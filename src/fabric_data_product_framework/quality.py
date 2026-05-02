@@ -201,25 +201,25 @@ def _spark_rule(df: Any, rule: dict[str, Any], row_count: int) -> tuple[int, int
 def run_quality_rules(df: Any, rules: list[dict], *, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "auto") -> dict:
     """Run quality rules.
 
-    Execute `run_quality_rules`.
+    Run `run_quality_rules`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     rules : list[dict]
-        Value for `rules`.
+        Parameter `rules`.
     dataset_name : str, optional
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : str, optional
-        Value for `table_name`.
+        Parameter `table_name`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
     result : dict
-        Result returned by `run_quality_rules`.
+        Return value from `run_quality_rules`.
 
     Examples
     --------
@@ -315,19 +315,19 @@ def run_quality_rules(df: Any, rules: list[dict], *, dataset_name: str = "unknow
 def assert_quality_gate(result: dict, fail_on: str = "critical") -> None:
     """Assert quality gate.
 
-    Execute `assert_quality_gate`.
+    Run `assert_quality_gate`.
 
     Parameters
     ----------
     result : dict
-        Value for `result`.
+        Parameter `result`.
     fail_on : str, optional
-        Value for `fail_on`.
+        Parameter `fail_on`.
 
     Returns
     -------
     result : None
-        Result returned by `assert_quality_gate`.
+        Return value from `assert_quality_gate`.
 
     Raises
     ------
@@ -349,19 +349,19 @@ def assert_quality_gate(result: dict, fail_on: str = "critical") -> None:
 def build_quality_result_records(result: dict, *, run_id: str) -> list[dict]:
     """Build quality result records.
 
-    Execute `build_quality_result_records`.
+    Run `build_quality_result_records`.
 
     Parameters
     ----------
     result : dict
-        Value for `result`.
+        Parameter `result`.
     run_id : str
-        Value for `run_id`.
+        Parameter `run_id`.
 
     Returns
     -------
     result : list[dict]
-        Result returned by `build_quality_result_records`.
+        Return value from `build_quality_result_records`.
 
     Examples
     --------

@@ -23,37 +23,37 @@ def build_dataset_run_record(
 ) -> dict:
     """Build dataset run record.
 
-    Execute `build_dataset_run_record`.
+    Run `build_dataset_run_record`.
 
     Parameters
     ----------
     run_id : str
-        Value for `run_id`.
+        Parameter `run_id`.
     dataset_name : str
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     environment : str
-        Value for `environment`.
+        Parameter `environment`.
     source_table : str
-        Value for `source_table`.
+        Parameter `source_table`.
     target_table : str
-        Value for `target_table`.
+        Parameter `target_table`.
     status : str, optional
-        Value for `status`.
+        Parameter `status`.
     started_at_utc : str | None, optional
-        Value for `started_at_utc`.
+        Parameter `started_at_utc`.
     ended_at_utc : str | None, optional
-        Value for `ended_at_utc`.
+        Parameter `ended_at_utc`.
     row_count_source : int | None, optional
-        Value for `row_count_source`.
+        Parameter `row_count_source`.
     row_count_output : int | None, optional
-        Value for `row_count_output`.
+        Parameter `row_count_output`.
     notes : str | None, optional
-        Value for `notes`.
+        Parameter `notes`.
 
     Returns
     -------
     result : dict
-        Result returned by `build_dataset_run_record`.
+        Return value from `build_dataset_run_record`.
 
     Examples
     --------
@@ -79,21 +79,21 @@ def build_dataset_run_record(
 def build_schema_snapshot_records(snapshot: dict, *, run_id: str, table_stage: str) -> list[dict]:
     """Build schema snapshot records.
 
-    Execute `build_schema_snapshot_records`.
+    Run `build_schema_snapshot_records`.
 
     Parameters
     ----------
     snapshot : dict
-        Value for `snapshot`.
+        Parameter `snapshot`.
     run_id : str
-        Value for `run_id`.
+        Parameter `run_id`.
     table_stage : str
-        Value for `table_stage`.
+        Parameter `table_stage`.
 
     Returns
     -------
     result : list[dict]
-        Result returned by `build_schema_snapshot_records`.
+        Return value from `build_schema_snapshot_records`.
 
     Examples
     --------
@@ -125,21 +125,21 @@ def build_schema_snapshot_records(snapshot: dict, *, run_id: str, table_stage: s
 def build_schema_drift_records(drift_result: dict, *, run_id: str, table_stage: str) -> list[dict]:
     """Build schema drift records.
 
-    Execute `build_schema_drift_records`.
+    Run `build_schema_drift_records`.
 
     Parameters
     ----------
     drift_result : dict
-        Value for `drift_result`.
+        Parameter `drift_result`.
     run_id : str
-        Value for `run_id`.
+        Parameter `run_id`.
     table_stage : str
-        Value for `table_stage`.
+        Parameter `table_stage`.
 
     Returns
     -------
     result : list[dict]
-        Result returned by `build_schema_drift_records`.
+        Return value from `build_schema_drift_records`.
 
     Examples
     --------
@@ -199,25 +199,25 @@ def build_quality_result_records(
 ) -> list[dict]:
     """Build quality result records.
 
-    Execute `build_quality_result_records`.
+    Run `build_quality_result_records`.
 
     Parameters
     ----------
     quality_result : dict | list[dict]
-        Value for `quality_result`.
+        Parameter `quality_result`.
     run_id : str
-        Value for `run_id`.
+        Parameter `run_id`.
     dataset_name : str
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : str
-        Value for `table_name`.
+        Parameter `table_name`.
     table_stage : str
-        Value for `table_stage`.
+        Parameter `table_stage`.
 
     Returns
     -------
     result : list[dict]
-        Result returned by `build_quality_result_records`.
+        Return value from `build_quality_result_records`.
 
     Examples
     --------
@@ -257,23 +257,23 @@ def build_quality_result_records(
 def write_metadata_records(records: list[dict], table_identifier: str, writer=None, mode: str = "append", **options):
     """Write metadata records.
 
-    Execute `write_metadata_records`.
+    Run `write_metadata_records`.
 
     Parameters
     ----------
     records : list[dict]
-        Value for `records`.
+        Parameter `records`.
     table_identifier : str
-        Value for `table_identifier`.
-    writer : Any, optional
-        Value for `writer`.
+        Parameter `table_identifier`.
+    writer : object, optional
+        Parameter `writer`.
     mode : str, optional
-        Value for `mode`.
+        Parameter `mode`.
 
     Returns
     -------
-    result : Any
-        Result returned by `write_metadata_records`.
+    result : object
+        Return value from `write_metadata_records`.
 
     Raises
     ------
@@ -302,23 +302,23 @@ def write_multiple_metadata_outputs(
 ) -> dict:
     """Write multiple metadata outputs.
 
-    Execute `write_multiple_metadata_outputs`.
+    Run `write_multiple_metadata_outputs`.
 
     Parameters
     ----------
     outputs : dict[str, list[dict]]
-        Value for `outputs`.
+        Parameter `outputs`.
     table_mapping : dict[str, str]
-        Value for `table_mapping`.
-    writer : Any, optional
-        Value for `writer`.
+        Parameter `table_mapping`.
+    writer : object, optional
+        Parameter `writer`.
     mode : str, optional
-        Value for `mode`.
+        Parameter `mode`.
 
     Returns
     -------
     result : dict
-        Result returned by `write_multiple_metadata_outputs`.
+        Return value from `write_multiple_metadata_outputs`.
 
     Raises
     ------

@@ -88,27 +88,27 @@ def classify_column(
 ) -> dict:
     """Classify column.
 
-    Execute `classify_column`.
+    Run `classify_column`.
 
     Parameters
     ----------
     column_name : str
-        Value for `column_name`.
+        Parameter `column_name`.
     data_type : str | None, optional
-        Value for `data_type`.
+        Parameter `data_type`.
     profile : dict | None, optional
-        Value for `profile`.
+        Parameter `profile`.
     metadata : dict | None, optional
-        Value for `metadata`.
+        Parameter `metadata`.
     business_context : str | dict | None, optional
-        Value for `business_context`.
+        Parameter `business_context`.
     rules : list[dict] | None, optional
-        Value for `rules`.
+        Parameter `rules`.
 
     Returns
     -------
     result : dict
-        Result returned by `classify_column`.
+        Return value from `classify_column`.
 
     Examples
     --------
@@ -204,29 +204,29 @@ def classify_column(
 def classify_columns(profile: dict | list[dict], metadata: dict | list[dict] | None = None, business_context: str | dict | None = None, rules: list[dict] | None = None, dataset_name: str | None = None, table_name: str | None = None, run_id: str | None = None) -> list[dict]:
     """Classify columns.
 
-    Execute `classify_columns`.
+    Run `classify_columns`.
 
     Parameters
     ----------
     profile : dict | list[dict]
-        Value for `profile`.
+        Parameter `profile`.
     metadata : dict | list[dict] | None, optional
-        Value for `metadata`.
+        Parameter `metadata`.
     business_context : str | dict | None, optional
-        Value for `business_context`.
+        Parameter `business_context`.
     rules : list[dict] | None, optional
-        Value for `rules`.
+        Parameter `rules`.
     dataset_name : str | None, optional
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : str | None, optional
-        Value for `table_name`.
+        Parameter `table_name`.
     run_id : str | None, optional
-        Value for `run_id`.
+        Parameter `run_id`.
 
     Returns
     -------
     result : list[dict]
-        Result returned by `classify_columns`.
+        Return value from `classify_columns`.
 
     Examples
     --------
@@ -255,27 +255,27 @@ def classify_columns(profile: dict | list[dict], metadata: dict | list[dict] | N
 def build_governance_classification_records(classifications: list[dict], dataset_name: str, table_name: str, run_id: str | None = None, status: str = "suggested", generated_by: str = "framework") -> list[dict]:
     """Build governance classification records.
 
-    Execute `build_governance_classification_records`.
+    Run `build_governance_classification_records`.
 
     Parameters
     ----------
     classifications : list[dict]
-        Value for `classifications`.
+        Parameter `classifications`.
     dataset_name : str
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : str
-        Value for `table_name`.
+        Parameter `table_name`.
     run_id : str | None, optional
-        Value for `run_id`.
+        Parameter `run_id`.
     status : str, optional
-        Value for `status`.
+        Parameter `status`.
     generated_by : str, optional
-        Value for `generated_by`.
+        Parameter `generated_by`.
 
     Returns
     -------
     result : list[dict]
-        Result returned by `build_governance_classification_records`.
+        Return value from `build_governance_classification_records`.
 
     Examples
     --------
@@ -317,33 +317,33 @@ def _spark_create_governance_metadata_dataframe(spark, rows: list[dict]):
 def write_governance_classifications(spark, classifications: list[dict], table_name: str, dataset_name: str | None = None, source_table: str | None = None, run_id: str | None = None, status: str = "suggested", generated_by: str = "framework", mode: str = "append") -> list[dict]:
     """Write governance classifications.
 
-    Execute `write_governance_classifications`.
+    Run `write_governance_classifications`.
 
     Parameters
     ----------
     spark : Any
-        Value for `spark`.
+        Parameter `spark`.
     classifications : list[dict]
-        Value for `classifications`.
+        Parameter `classifications`.
     table_name : str
-        Value for `table_name`.
+        Parameter `table_name`.
     dataset_name : str | None, optional
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     source_table : str | None, optional
-        Value for `source_table`.
+        Parameter `source_table`.
     run_id : str | None, optional
-        Value for `run_id`.
+        Parameter `run_id`.
     status : str, optional
-        Value for `status`.
+        Parameter `status`.
     generated_by : str, optional
-        Value for `generated_by`.
+        Parameter `generated_by`.
     mode : str, optional
-        Value for `mode`.
+        Parameter `mode`.
 
     Returns
     -------
     result : list[dict]
-        Result returned by `write_governance_classifications`.
+        Return value from `write_governance_classifications`.
 
     Examples
     --------
@@ -367,17 +367,17 @@ def write_governance_classifications(spark, classifications: list[dict], table_n
 def summarize_governance_classifications(classifications: list[dict]) -> dict:
     """Summarize governance classifications.
 
-    Execute `summarize_governance_classifications`.
+    Run `summarize_governance_classifications`.
 
     Parameters
     ----------
     classifications : list[dict]
-        Value for `classifications`.
+        Parameter `classifications`.
 
     Returns
     -------
     result : dict
-        Result returned by `summarize_governance_classifications`.
+        Return value from `summarize_governance_classifications`.
 
     Examples
     --------

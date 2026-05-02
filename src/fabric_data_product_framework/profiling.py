@@ -69,17 +69,17 @@ class DataFrameProfile:
 def to_jsonable(value: Any) -> Any:
     """To jsonable.
 
-    Execute `to_jsonable`.
+    Run `to_jsonable`.
 
     Parameters
     ----------
     value : Any
-        Value for `value`.
+        Parameter `value`.
 
     Returns
     -------
-    result : Any
-        Result returned by `to_jsonable`.
+    result : object
+        Return value from `to_jsonable`.
 
     Examples
     --------
@@ -116,19 +116,19 @@ def to_jsonable(value: Any) -> Any:
 def infer_semantic_type(column_name: str, sample_values: list[Any]) -> str:
     """Infer semantic type.
 
-    Execute `infer_semantic_type`.
+    Run `infer_semantic_type`.
 
     Parameters
     ----------
     column_name : str
-        Value for `column_name`.
+        Parameter `column_name`.
     sample_values : list[Any]
-        Value for `sample_values`.
+        Parameter `sample_values`.
 
     Returns
     -------
     result : str
-        Result returned by `infer_semantic_type`.
+        Return value from `infer_semantic_type`.
 
     Examples
     --------
@@ -172,21 +172,21 @@ def _is_spark_date_like_type(data_type: str) -> bool:
 def profile_column(series: pd.Series, sample_size: int = 5, top_n: int = 5) -> dict[str, Any]:
     """Profile column.
 
-    Execute `profile_column`.
+    Run `profile_column`.
 
     Parameters
     ----------
     series : pd.Series
-        Value for `series`.
+        Parameter `series`.
     sample_size : int, optional
-        Value for `sample_size`.
+        Parameter `sample_size`.
     top_n : int, optional
-        Value for `top_n`.
+        Parameter `top_n`.
 
     Returns
     -------
     result : dict[str, Any]
-        Result returned by `profile_column`.
+        Return value from `profile_column`.
 
     Examples
     --------
@@ -267,25 +267,25 @@ def _profile_spark_dataframe(df, dataset_name: str = "unknown", sample_size: int
 def profile_dataframe(df, dataset_name: str = "unknown", sample_size: int = 5, top_n: int = 5, engine: str = "auto") -> dict[str, Any]:
     """Profile dataframe.
 
-    Execute `profile_dataframe`.
+    Run `profile_dataframe`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     dataset_name : str, optional
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     sample_size : int, optional
-        Value for `sample_size`.
+        Parameter `sample_size`.
     top_n : int, optional
-        Value for `top_n`.
+        Parameter `top_n`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
     result : dict[str, Any]
-        Result returned by `profile_dataframe`.
+        Return value from `profile_dataframe`.
 
     Examples
     --------
@@ -307,7 +307,7 @@ def profile_dataframe(df, dataset_name: str = "unknown", sample_size: int = 5, t
 def default_technical_columns() -> list[str]:
     """Default technical columns.
 
-    Execute `default_technical_columns`.
+    Run `default_technical_columns`.
 
     Parameters
     ----------
@@ -317,7 +317,7 @@ def default_technical_columns() -> list[str]:
     Returns
     -------
     result : list[str]
-        Result returned by `default_technical_columns`.
+        Return value from `default_technical_columns`.
 
     Examples
     --------
@@ -329,25 +329,25 @@ def default_technical_columns() -> list[str]:
 def flatten_profile_for_metadata(profile: dict, table_name: str, run_id: str, table_stage: str, exclude_columns: list[str] | None = None) -> list[dict]:
     """Flatten profile for metadata.
 
-    Execute `flatten_profile_for_metadata`.
+    Run `flatten_profile_for_metadata`.
 
     Parameters
     ----------
     profile : dict
-        Value for `profile`.
+        Parameter `profile`.
     table_name : str
-        Value for `table_name`.
+        Parameter `table_name`.
     run_id : str
-        Value for `run_id`.
+        Parameter `run_id`.
     table_stage : str
-        Value for `table_stage`.
+        Parameter `table_stage`.
     exclude_columns : list[str] | None, optional
-        Value for `exclude_columns`.
+        Parameter `exclude_columns`.
 
     Returns
     -------
     result : list[dict]
-        Result returned by `flatten_profile_for_metadata`.
+        Return value from `flatten_profile_for_metadata`.
 
     Examples
     --------
@@ -412,23 +412,23 @@ def write_profile_metadata_rows(
 ):
     """Write profile metadata rows.
 
-    Execute `write_profile_metadata_rows`.
+    Run `write_profile_metadata_rows`.
 
     Parameters
     ----------
     spark : Any
-        Value for `spark`.
+        Parameter `spark`.
     metadata_rows : list[dict]
-        Value for `metadata_rows`.
+        Parameter `metadata_rows`.
     metadata_table : str
-        Value for `metadata_table`.
+        Parameter `metadata_table`.
     mode : str, optional
-        Value for `mode`.
+        Parameter `mode`.
 
     Returns
     -------
-    result : Any
-        Result returned by `write_profile_metadata_rows`.
+    result : object
+        Return value from `write_profile_metadata_rows`.
 
     Examples
     --------
@@ -457,37 +457,37 @@ def profile_and_write_metadata(
 ) -> dict[str, Any]:
     """Profile and write metadata.
 
-    Execute `profile_and_write_metadata`.
+    Run `profile_and_write_metadata`.
 
     Parameters
     ----------
     spark : Any
-        Value for `spark`.
+        Parameter `spark`.
     df : Any
-        Value for `df`.
+        Parameter `df`.
     dataset_name : str
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : str
-        Value for `table_name`.
+        Parameter `table_name`.
     metadata_table : str
-        Value for `metadata_table`.
+        Parameter `metadata_table`.
     run_id : str
-        Value for `run_id`.
+        Parameter `run_id`.
     table_stage : str
-        Value for `table_stage`.
+        Parameter `table_stage`.
     mode : str, optional
-        Value for `mode`.
+        Parameter `mode`.
     exclude_columns : list[str] | None, optional
-        Value for `exclude_columns`.
+        Parameter `exclude_columns`.
     sample_size : int, optional
-        Value for `sample_size`.
+        Parameter `sample_size`.
     top_n : int, optional
-        Value for `top_n`.
+        Parameter `top_n`.
 
     Returns
     -------
     result : dict[str, Any]
-        Result returned by `profile_and_write_metadata`.
+        Return value from `profile_and_write_metadata`.
 
     Examples
     --------
@@ -520,35 +520,35 @@ def profile_table_and_write_metadata(
 ) -> dict[str, Any]:
     """Profile table and write metadata.
 
-    Execute `profile_table_and_write_metadata`.
+    Run `profile_table_and_write_metadata`.
 
     Parameters
     ----------
     spark : Any
-        Value for `spark`.
+        Parameter `spark`.
     table_name : str
-        Value for `table_name`.
+        Parameter `table_name`.
     dataset_name : str
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     metadata_table : str
-        Value for `metadata_table`.
+        Parameter `metadata_table`.
     run_id : str
-        Value for `run_id`.
+        Parameter `run_id`.
     table_stage : str
-        Value for `table_stage`.
+        Parameter `table_stage`.
     mode : str, optional
-        Value for `mode`.
+        Parameter `mode`.
     exclude_columns : list[str] | None, optional
-        Value for `exclude_columns`.
+        Parameter `exclude_columns`.
     sample_size : int, optional
-        Value for `sample_size`.
+        Parameter `sample_size`.
     top_n : int, optional
-        Value for `top_n`.
+        Parameter `top_n`.
 
     Returns
     -------
     result : dict[str, Any]
-        Result returned by `profile_table_and_write_metadata`.
+        Return value from `profile_table_and_write_metadata`.
 
     Examples
     --------
@@ -573,17 +573,17 @@ def profile_table_and_write_metadata(
 def summarize_profile(profile: dict[str, Any]) -> dict[str, Any]:
     """Summarize profile.
 
-    Execute `summarize_profile`.
+    Run `summarize_profile`.
 
     Parameters
     ----------
     profile : dict[str, Any]
-        Value for `profile`.
+        Parameter `profile`.
 
     Returns
     -------
     result : dict[str, Any]
-        Result returned by `summarize_profile`.
+        Return value from `summarize_profile`.
 
     Examples
     --------

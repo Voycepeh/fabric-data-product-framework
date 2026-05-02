@@ -76,37 +76,37 @@ class LineageRecorder:
     def add_step(self, *, step_id: str, step_name: str, input_name: str, output_name: str, description: str, reason: str, transformation_type: str = "custom", columns_used: list[str] | None = None, columns_created: list[str] | None = None, business_impact: str | None = None, notes: str | None = None) -> dict:
         """Add step.
 
-        Execute `add_step`.
+        Run `add_step`.
 
         Parameters
         ----------
         step_id : str
-            Value for `step_id`.
+            Parameter `step_id`.
         step_name : str
-            Value for `step_name`.
+            Parameter `step_name`.
         input_name : str
-            Value for `input_name`.
+            Parameter `input_name`.
         output_name : str
-            Value for `output_name`.
+            Parameter `output_name`.
         description : str
-            Value for `description`.
+            Parameter `description`.
         reason : str
-            Value for `reason`.
+            Parameter `reason`.
         transformation_type : str, optional
-            Value for `transformation_type`.
+            Parameter `transformation_type`.
         columns_used : list[str] | None, optional
-            Value for `columns_used`.
+            Parameter `columns_used`.
         columns_created : list[str] | None, optional
-            Value for `columns_created`.
+            Parameter `columns_created`.
         business_impact : str | None, optional
-            Value for `business_impact`.
+            Parameter `business_impact`.
         notes : str | None, optional
-            Value for `notes`.
+            Parameter `notes`.
 
         Returns
         -------
         result : dict
-            Result returned by `add_step`.
+            Return value from `add_step`.
 
         Examples
         --------
@@ -119,7 +119,7 @@ class LineageRecorder:
     def to_records(self) -> list[dict]:
         """To records.
 
-        Execute `to_records`.
+        Run `to_records`.
 
         Parameters
         ----------
@@ -129,7 +129,7 @@ class LineageRecorder:
         Returns
         -------
         result : list[dict]
-            Result returned by `to_records`.
+            Return value from `to_records`.
 
         Examples
         --------
@@ -140,7 +140,7 @@ class LineageRecorder:
     def build_summary(self) -> dict:
         """Build summary.
 
-        Execute `build_summary`.
+        Run `build_summary`.
 
         Parameters
         ----------
@@ -150,7 +150,7 @@ class LineageRecorder:
         Returns
         -------
         result : dict
-            Result returned by `build_summary`.
+            Return value from `build_summary`.
 
         Examples
         --------
@@ -163,23 +163,23 @@ class LineageRecorder:
 def generate_mermaid_lineage(*, source_tables: list[str], target_table: str, transformation_steps: list[dict], graph_direction: str = "LR") -> str:
     """Generate mermaid lineage.
 
-    Execute `generate_mermaid_lineage`.
+    Run `generate_mermaid_lineage`.
 
     Parameters
     ----------
     source_tables : list[str]
-        Value for `source_tables`.
+        Parameter `source_tables`.
     target_table : str
-        Value for `target_table`.
+        Parameter `target_table`.
     transformation_steps : list[dict]
-        Value for `transformation_steps`.
+        Parameter `transformation_steps`.
     graph_direction : str, optional
-        Value for `graph_direction`.
+        Parameter `graph_direction`.
 
     Returns
     -------
     result : str
-        Result returned by `generate_mermaid_lineage`.
+        Return value from `generate_mermaid_lineage`.
 
     Examples
     --------
@@ -218,19 +218,19 @@ def generate_mermaid_lineage(*, source_tables: list[str], target_table: str, tra
 def build_transformation_summary_markdown(summary: dict, *, include_mermaid: bool = True) -> str:
     """Build transformation summary markdown.
 
-    Execute `build_transformation_summary_markdown`.
+    Run `build_transformation_summary_markdown`.
 
     Parameters
     ----------
     summary : dict
-        Value for `summary`.
+        Parameter `summary`.
     include_mermaid : bool, optional
-        Value for `include_mermaid`.
+        Parameter `include_mermaid`.
 
     Returns
     -------
     result : str
-        Result returned by `build_transformation_summary_markdown`.
+        Return value from `build_transformation_summary_markdown`.
 
     Examples
     --------
@@ -267,25 +267,25 @@ def build_transformation_summary_markdown(summary: dict, *, include_mermaid: boo
 def build_lineage_prompt_context(*, dataset_name: str, source_tables: list[str], target_table: str, transformation_steps: list[dict], eda_notes: str | None = None) -> str:
     """Build lineage prompt context.
 
-    Execute `build_lineage_prompt_context`.
+    Run `build_lineage_prompt_context`.
 
     Parameters
     ----------
     dataset_name : str
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     source_tables : list[str]
-        Value for `source_tables`.
+        Parameter `source_tables`.
     target_table : str
-        Value for `target_table`.
+        Parameter `target_table`.
     transformation_steps : list[dict]
-        Value for `transformation_steps`.
+        Parameter `transformation_steps`.
     eda_notes : str | None, optional
-        Value for `eda_notes`.
+        Parameter `eda_notes`.
 
     Returns
     -------
     result : str
-        Result returned by `build_lineage_prompt_context`.
+        Return value from `build_lineage_prompt_context`.
 
     Examples
     --------
@@ -316,7 +316,7 @@ def build_lineage_prompt_context(*, dataset_name: str, source_tables: list[str],
 def get_fabric_copilot_lineage_prompt() -> str:
     """Get fabric copilot lineage prompt.
 
-    Execute `get_fabric_copilot_lineage_prompt`.
+    Run `get_fabric_copilot_lineage_prompt`.
 
     Parameters
     ----------
@@ -326,7 +326,7 @@ def get_fabric_copilot_lineage_prompt() -> str:
     Returns
     -------
     result : str
-        Result returned by `get_fabric_copilot_lineage_prompt`.
+        Return value from `get_fabric_copilot_lineage_prompt`.
 
     Examples
     --------
@@ -338,17 +338,17 @@ def get_fabric_copilot_lineage_prompt() -> str:
 def validate_lineage_steps(lineage_steps) -> dict:
     """Validate lineage steps.
 
-    Execute `validate_lineage_steps`.
+    Run `validate_lineage_steps`.
 
     Parameters
     ----------
     lineage_steps : Any
-        Value for `lineage_steps`.
+        Parameter `lineage_steps`.
 
     Returns
     -------
     result : dict
-        Result returned by `validate_lineage_steps`.
+        Return value from `validate_lineage_steps`.
 
     Examples
     --------
@@ -417,27 +417,27 @@ def validate_lineage_steps(lineage_steps) -> dict:
 def build_lineage_record_from_steps(dataset_name, lineage_steps, run_id=None, notebook_name=None, workspace_name=None, created_by=None) -> list[dict]:
     """Build lineage record from steps.
 
-    Execute `build_lineage_record_from_steps`.
+    Run `build_lineage_record_from_steps`.
 
     Parameters
     ----------
     dataset_name : Any
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     lineage_steps : Any
-        Value for `lineage_steps`.
-    run_id : Any, optional
-        Value for `run_id`.
-    notebook_name : Any, optional
-        Value for `notebook_name`.
-    workspace_name : Any, optional
-        Value for `workspace_name`.
-    created_by : Any, optional
-        Value for `created_by`.
+        Parameter `lineage_steps`.
+    run_id : object, optional
+        Parameter `run_id`.
+    notebook_name : object, optional
+        Parameter `notebook_name`.
+    workspace_name : object, optional
+        Parameter `workspace_name`.
+    created_by : object, optional
+        Parameter `created_by`.
 
     Returns
     -------
     result : list[dict]
-        Result returned by `build_lineage_record_from_steps`.
+        Return value from `build_lineage_record_from_steps`.
 
     Raises
     ------
@@ -477,25 +477,25 @@ def build_lineage_record_from_steps(dataset_name, lineage_steps, run_id=None, no
 def build_lineage_records(*, dataset_name: str, run_id: str, source_tables: list[str], target_table: str, transformation_steps: list[dict]) -> list[dict]:
     """Build lineage records.
 
-    Execute `build_lineage_records`.
+    Run `build_lineage_records`.
 
     Parameters
     ----------
     dataset_name : str
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     run_id : str
-        Value for `run_id`.
+        Parameter `run_id`.
     source_tables : list[str]
-        Value for `source_tables`.
+        Parameter `source_tables`.
     target_table : str
-        Value for `target_table`.
+        Parameter `target_table`.
     transformation_steps : list[dict]
-        Value for `transformation_steps`.
+        Parameter `transformation_steps`.
 
     Returns
     -------
     result : list[dict]
-        Result returned by `build_lineage_records`.
+        Return value from `build_lineage_records`.
 
     Examples
     --------
@@ -507,27 +507,27 @@ def build_lineage_records(*, dataset_name: str, run_id: str, source_tables: list
 def build_lineage_record(*, dataset_name: str, run_id: str | None = None, lineage_steps: list[dict] | None = None, notebook_name: str | None = None, workspace_name: str | None = None, created_by: str | None = None) -> list[dict]:
     """Build lineage record.
 
-    Execute `build_lineage_record`.
+    Run `build_lineage_record`.
 
     Parameters
     ----------
     dataset_name : str
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     run_id : str | None, optional
-        Value for `run_id`.
+        Parameter `run_id`.
     lineage_steps : list[dict] | None, optional
-        Value for `lineage_steps`.
+        Parameter `lineage_steps`.
     notebook_name : str | None, optional
-        Value for `notebook_name`.
+        Parameter `notebook_name`.
     workspace_name : str | None, optional
-        Value for `workspace_name`.
+        Parameter `workspace_name`.
     created_by : str | None, optional
-        Value for `created_by`.
+        Parameter `created_by`.
 
     Returns
     -------
     result : list[dict]
-        Result returned by `build_lineage_record`.
+        Return value from `build_lineage_record`.
 
     Raises
     ------
@@ -546,19 +546,19 @@ def build_lineage_record(*, dataset_name: str, run_id: str | None = None, lineag
 def plot_lineage_networkx(lineage_steps_or_record, title=None):
     """Plot lineage networkx.
 
-    Execute `plot_lineage_networkx`.
+    Run `plot_lineage_networkx`.
 
     Parameters
     ----------
     lineage_steps_or_record : Any
-        Value for `lineage_steps_or_record`.
-    title : Any, optional
-        Value for `title`.
+        Parameter `lineage_steps_or_record`.
+    title : object, optional
+        Parameter `title`.
 
     Returns
     -------
-    result : Any
-        Result returned by `plot_lineage_networkx`.
+    result : object
+        Return value from `plot_lineage_networkx`.
 
     Raises
     ------

@@ -27,7 +27,7 @@ REQUIRED_HANDOVER_PACK_KEYS = ["profile", "dq", "governance", "lineage", "run_su
 def get_mvp_step_registry() -> list[dict[str, Any]]:
     """Get mvp step registry.
 
-    Execute `get_mvp_step_registry`.
+    Run `get_mvp_step_registry`.
 
     Parameters
     ----------
@@ -37,7 +37,7 @@ def get_mvp_step_registry() -> list[dict[str, Any]]:
     Returns
     -------
     result : list[dict[str, Any]]
-        Result returned by `get_mvp_step_registry`.
+        Return value from `get_mvp_step_registry`.
 
     Examples
     --------
@@ -49,17 +49,17 @@ def get_mvp_step_registry() -> list[dict[str, Any]]:
 def validate_mvp_artifacts(artifacts: dict[str, Any]) -> dict[str, Any]:
     """Validate mvp artifacts.
 
-    Execute `validate_mvp_artifacts`.
+    Run `validate_mvp_artifacts`.
 
     Parameters
     ----------
     artifacts : dict[str, Any]
-        Value for `artifacts`.
+        Parameter `artifacts`.
 
     Returns
     -------
     result : dict[str, Any]
-        Result returned by `validate_mvp_artifacts`.
+        Return value from `validate_mvp_artifacts`.
 
     Examples
     --------

@@ -17,35 +17,35 @@ def _status_of(section: dict | None) -> str:
 def build_run_summary(*, runtime_context: dict, contract: dict | None = None, source_profile: dict | None = None, output_profile: dict | None = None, schema_drift_result: dict | None = None, incremental_safety_result: dict | None = None, quality_result: dict | None = None, contract_validation_result: dict | None = None, lineage_summary: dict | None = None, notes: list[str] | None = None) -> dict:
     """Build run summary.
 
-    Execute `build_run_summary`.
+    Run `build_run_summary`.
 
     Parameters
     ----------
     runtime_context : dict
-        Value for `runtime_context`.
+        Parameter `runtime_context`.
     contract : dict | None, optional
-        Value for `contract`.
+        Parameter `contract`.
     source_profile : dict | None, optional
-        Value for `source_profile`.
+        Parameter `source_profile`.
     output_profile : dict | None, optional
-        Value for `output_profile`.
+        Parameter `output_profile`.
     schema_drift_result : dict | None, optional
-        Value for `schema_drift_result`.
+        Parameter `schema_drift_result`.
     incremental_safety_result : dict | None, optional
-        Value for `incremental_safety_result`.
+        Parameter `incremental_safety_result`.
     quality_result : dict | None, optional
-        Value for `quality_result`.
+        Parameter `quality_result`.
     contract_validation_result : dict | None, optional
-        Value for `contract_validation_result`.
+        Parameter `contract_validation_result`.
     lineage_summary : dict | None, optional
-        Value for `lineage_summary`.
+        Parameter `lineage_summary`.
     notes : list[str] | None, optional
-        Value for `notes`.
+        Parameter `notes`.
 
     Returns
     -------
     result : dict
-        Result returned by `build_run_summary`.
+        Return value from `build_run_summary`.
 
     Examples
     --------
@@ -70,17 +70,17 @@ def build_run_summary(*, runtime_context: dict, contract: dict | None = None, so
 def render_run_summary_markdown(summary: dict) -> str:
     """Render run summary markdown.
 
-    Execute `render_run_summary_markdown`.
+    Run `render_run_summary_markdown`.
 
     Parameters
     ----------
     summary : dict
-        Value for `summary`.
+        Parameter `summary`.
 
     Returns
     -------
     result : str
-        Result returned by `render_run_summary_markdown`.
+        Return value from `render_run_summary_markdown`.
 
     Examples
     --------
@@ -102,17 +102,17 @@ def render_run_summary_markdown(summary: dict) -> str:
 def build_run_summary_record(summary: dict) -> dict:
     """Build run summary record.
 
-    Execute `build_run_summary_record`.
+    Run `build_run_summary_record`.
 
     Parameters
     ----------
     summary : dict
-        Value for `summary`.
+        Parameter `summary`.
 
     Returns
     -------
     result : dict
-        Result returned by `build_run_summary_record`.
+        Return value from `build_run_summary_record`.
 
     Examples
     --------

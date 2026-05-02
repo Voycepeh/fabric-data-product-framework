@@ -45,17 +45,17 @@ def _format_error_path(error_path: list[object], message: str, validator: str) -
 def load_dataset_contract(path: str | Path) -> dict:
     """Load dataset contract.
 
-    Execute `load_dataset_contract`.
+    Run `load_dataset_contract`.
 
     Parameters
     ----------
     path : str | Path
-        Value for `path`.
+        Parameter `path`.
 
     Returns
     -------
     result : dict
-        Result returned by `load_dataset_contract`.
+        Return value from `load_dataset_contract`.
 
     Examples
     --------
@@ -86,19 +86,19 @@ def _load_schema(schema_path: str | Path | None = None) -> dict:
 def validate_dataset_contract(contract: dict, schema_path: str | Path | None = None) -> list[str]:
     """Validate dataset contract.
 
-    Execute `validate_dataset_contract`.
+    Run `validate_dataset_contract`.
 
     Parameters
     ----------
     contract : dict
-        Value for `contract`.
+        Parameter `contract`.
     schema_path : str | Path | None, optional
-        Value for `schema_path`.
+        Parameter `schema_path`.
 
     Returns
     -------
     result : list[str]
-        Result returned by `validate_dataset_contract`.
+        Return value from `validate_dataset_contract`.
 
     Examples
     --------
@@ -120,19 +120,19 @@ def validate_dataset_contract(contract: dict, schema_path: str | Path | None = N
 def assert_valid_dataset_contract(contract: dict, schema_path: str | Path | None = None) -> None:
     """Assert valid dataset contract.
 
-    Execute `assert_valid_dataset_contract`.
+    Run `assert_valid_dataset_contract`.
 
     Parameters
     ----------
     contract : dict
-        Value for `contract`.
+        Parameter `contract`.
     schema_path : str | Path | None, optional
-        Value for `schema_path`.
+        Parameter `schema_path`.
 
     Returns
     -------
     result : None
-        Result returned by `assert_valid_dataset_contract`.
+        Return value from `assert_valid_dataset_contract`.
 
     Raises
     ------
@@ -155,19 +155,19 @@ def load_and_validate_dataset_contract(
 ) -> tuple[dict, list[str]]:
     """Load and validate dataset contract.
 
-    Execute `load_and_validate_dataset_contract`.
+    Run `load_and_validate_dataset_contract`.
 
     Parameters
     ----------
     path : str | Path
-        Value for `path`.
+        Parameter `path`.
     schema_path : str | Path | None, optional
-        Value for `schema_path`.
+        Parameter `schema_path`.
 
     Returns
     -------
     result : tuple[dict, list[str]]
-        Result returned by `load_and_validate_dataset_contract`.
+        Return value from `load_and_validate_dataset_contract`.
 
     Examples
     --------

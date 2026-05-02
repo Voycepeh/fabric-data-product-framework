@@ -58,29 +58,29 @@ def _parse_freshness_timedelta(value: str | None) -> timedelta | None:
 def validate_required_columns(df, expected_columns: list[str], *, dataset_name: str = "unknown", table_name: str = "unknown", check_name: str = "required_columns", severity: str = "critical", engine: str = "auto") -> dict:
     """Validate required columns.
 
-    Execute `validate_required_columns`.
+    Run `validate_required_columns`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     expected_columns : list[str]
-        Value for `expected_columns`.
+        Parameter `expected_columns`.
     dataset_name : str, optional
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : str, optional
-        Value for `table_name`.
+        Parameter `table_name`.
     check_name : str, optional
-        Value for `check_name`.
+        Parameter `check_name`.
     severity : str, optional
-        Value for `severity`.
+        Parameter `severity`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
     result : dict
-        Result returned by `validate_required_columns`.
+        Return value from `validate_required_columns`.
 
     Examples
     --------
@@ -98,27 +98,27 @@ def validate_required_columns(df, expected_columns: list[str], *, dataset_name: 
 def validate_grain(df, business_keys: list[str], *, dataset_name: str = "unknown", table_name: str = "unknown", severity: str = "critical", engine: str = "auto") -> dict:
     """Validate grain.
 
-    Execute `validate_grain`.
+    Run `validate_grain`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     business_keys : list[str]
-        Value for `business_keys`.
+        Parameter `business_keys`.
     dataset_name : str, optional
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : str, optional
-        Value for `table_name`.
+        Parameter `table_name`.
     severity : str, optional
-        Value for `severity`.
+        Parameter `severity`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
     result : dict
-        Result returned by `validate_grain`.
+        Return value from `validate_grain`.
 
     Examples
     --------
@@ -160,31 +160,31 @@ def validate_grain(df, business_keys: list[str], *, dataset_name: str = "unknown
 def validate_freshness(df, watermark_column: str, *, max_age_days: int | None = None, max_age_timedelta: timedelta | None = None, dataset_name: str = "unknown", table_name: str = "unknown", severity: str = "critical", engine: str = "auto") -> dict:
     """Validate freshness.
 
-    Execute `validate_freshness`.
+    Run `validate_freshness`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     watermark_column : str
-        Value for `watermark_column`.
+        Parameter `watermark_column`.
     max_age_days : int | None, optional
-        Value for `max_age_days`.
+        Parameter `max_age_days`.
     max_age_timedelta : timedelta | None, optional
-        Value for `max_age_timedelta`.
+        Parameter `max_age_timedelta`.
     dataset_name : str, optional
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : str, optional
-        Value for `table_name`.
+        Parameter `table_name`.
     severity : str, optional
-        Value for `severity`.
+        Parameter `severity`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
     result : dict
-        Result returned by `validate_freshness`.
+        Return value from `validate_freshness`.
 
     Examples
     --------
@@ -224,25 +224,25 @@ def _combine_contract_checks(dataset_name: str, table_name: str, contract_type: 
 def validate_upstream_contract(df, contract: dict, *, dataset_name: str | None = None, table_name: str | None = None, engine: str = "auto") -> dict:
     """Validate upstream contract.
 
-    Execute `validate_upstream_contract`.
+    Run `validate_upstream_contract`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     contract : dict
-        Value for `contract`.
+        Parameter `contract`.
     dataset_name : str | None, optional
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : str | None, optional
-        Value for `table_name`.
+        Parameter `table_name`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
     result : dict
-        Result returned by `validate_upstream_contract`.
+        Return value from `validate_upstream_contract`.
 
     Examples
     --------
@@ -262,25 +262,25 @@ def validate_upstream_contract(df, contract: dict, *, dataset_name: str | None =
 def validate_downstream_contract(df, contract: dict, *, dataset_name: str | None = None, table_name: str | None = None, engine: str = "auto") -> dict:
     """Validate downstream contract.
 
-    Execute `validate_downstream_contract`.
+    Run `validate_downstream_contract`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     contract : dict
-        Value for `contract`.
+        Parameter `contract`.
     dataset_name : str | None, optional
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : str | None, optional
-        Value for `table_name`.
+        Parameter `table_name`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
     result : dict
-        Result returned by `validate_downstream_contract`.
+        Return value from `validate_downstream_contract`.
 
     Examples
     --------
@@ -296,23 +296,23 @@ def validate_downstream_contract(df, contract: dict, *, dataset_name: str | None
 def validate_runtime_contracts(*, source_df=None, output_df=None, contract: dict, engine: str = "auto") -> dict:
     """Validate runtime contracts.
 
-    Execute `validate_runtime_contracts`.
+    Run `validate_runtime_contracts`.
 
     Parameters
     ----------
-    source_df : Any, optional
-        Value for `source_df`.
-    output_df : Any, optional
-        Value for `output_df`.
+    source_df : object, optional
+        Parameter `source_df`.
+    output_df : object, optional
+        Parameter `output_df`.
     contract : dict
-        Value for `contract`.
+        Parameter `contract`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
     result : dict
-        Result returned by `validate_runtime_contracts`.
+        Return value from `validate_runtime_contracts`.
 
     Examples
     --------
@@ -335,17 +335,17 @@ def validate_runtime_contracts(*, source_df=None, output_df=None, contract: dict
 def assert_contracts_valid(result: dict) -> None:
     """Assert contracts valid.
 
-    Execute `assert_contracts_valid`.
+    Run `assert_contracts_valid`.
 
     Parameters
     ----------
     result : dict
-        Value for `result`.
+        Parameter `result`.
 
     Returns
     -------
     result : None
-        Result returned by `assert_contracts_valid`.
+        Return value from `assert_contracts_valid`.
 
     Raises
     ------
@@ -363,19 +363,19 @@ def assert_contracts_valid(result: dict) -> None:
 def build_contract_validation_records(result: dict, *, run_id: str) -> list[dict]:
     """Build contract validation records.
 
-    Execute `build_contract_validation_records`.
+    Run `build_contract_validation_records`.
 
     Parameters
     ----------
     result : dict
-        Value for `result`.
+        Parameter `result`.
     run_id : str
-        Value for `run_id`.
+        Parameter `run_id`.
 
     Returns
     -------
     result : list[dict]
-        Result returned by `build_contract_validation_records`.
+        Return value from `build_contract_validation_records`.
 
     Examples
     --------

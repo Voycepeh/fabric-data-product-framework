@@ -21,7 +21,7 @@ class NotebookNamingError(ValueError):
 def get_current_timestamp_utc() -> str:
     """Get current timestamp utc.
 
-    Execute `get_current_timestamp_utc`.
+    Run `get_current_timestamp_utc`.
 
     Parameters
     ----------
@@ -31,7 +31,7 @@ def get_current_timestamp_utc() -> str:
     Returns
     -------
     result : str
-        Result returned by `get_current_timestamp_utc`.
+        Return value from `get_current_timestamp_utc`.
 
     Examples
     --------
@@ -43,17 +43,17 @@ def get_current_timestamp_utc() -> str:
 def generate_run_id(prefix: str = "run") -> str:
     """Generate run id.
 
-    Execute `generate_run_id`.
+    Run `generate_run_id`.
 
     Parameters
     ----------
     prefix : str, optional
-        Value for `prefix`.
+        Parameter `prefix`.
 
     Returns
     -------
     result : str
-        Result returned by `generate_run_id`.
+        Return value from `generate_run_id`.
 
     Examples
     --------
@@ -68,17 +68,17 @@ def generate_run_id(prefix: str = "run") -> str:
 def normalize_name(value: str) -> str:
     """Normalize name.
 
-    Execute `normalize_name`.
+    Run `normalize_name`.
 
     Parameters
     ----------
     value : str
-        Value for `value`.
+        Parameter `value`.
 
     Returns
     -------
     result : str
-        Result returned by `normalize_name`.
+        Return value from `normalize_name`.
 
     Examples
     --------
@@ -92,19 +92,19 @@ def normalize_name(value: str) -> str:
 def validate_notebook_name(name: str, allowed_prefixes: list[str]) -> list[str]:
     """Validate notebook name.
 
-    Execute `validate_notebook_name`.
+    Run `validate_notebook_name`.
 
     Parameters
     ----------
     name : str
-        Value for `name`.
+        Parameter `name`.
     allowed_prefixes : list[str]
-        Value for `allowed_prefixes`.
+        Parameter `allowed_prefixes`.
 
     Returns
     -------
     result : list[str]
-        Result returned by `validate_notebook_name`.
+        Return value from `validate_notebook_name`.
 
     Examples
     --------
@@ -137,19 +137,19 @@ def validate_notebook_name(name: str, allowed_prefixes: list[str]) -> list[str]:
 def assert_notebook_name_valid(name: str, allowed_prefixes: list[str]) -> None:
     """Assert notebook name valid.
 
-    Execute `assert_notebook_name_valid`.
+    Run `assert_notebook_name_valid`.
 
     Parameters
     ----------
     name : str
-        Value for `name`.
+        Parameter `name`.
     allowed_prefixes : list[str]
-        Value for `allowed_prefixes`.
+        Parameter `allowed_prefixes`.
 
     Returns
     -------
     result : None
-        Result returned by `assert_notebook_name_valid`.
+        Return value from `assert_notebook_name_valid`.
 
     Raises
     ------
@@ -175,27 +175,27 @@ def build_runtime_context(
 ) -> dict:
     """Build runtime context.
 
-    Execute `build_runtime_context`.
+    Run `build_runtime_context`.
 
     Parameters
     ----------
     dataset_name : str
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     environment : str
-        Value for `environment`.
+        Parameter `environment`.
     source_table : str
-        Value for `source_table`.
+        Parameter `source_table`.
     target_table : str
-        Value for `target_table`.
+        Parameter `target_table`.
     notebook_name : str | None, optional
-        Value for `notebook_name`.
+        Parameter `notebook_name`.
     run_id : str | None, optional
-        Value for `run_id`.
+        Parameter `run_id`.
 
     Returns
     -------
     result : dict
-        Result returned by `build_runtime_context`.
+        Return value from `build_runtime_context`.
 
     Examples
     --------

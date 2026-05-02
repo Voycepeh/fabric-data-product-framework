@@ -14,7 +14,7 @@ from fabric_data_product_framework.engines import detect_dataframe_engine, valid
 def default_technical_columns() -> list[str]:
     """Default technical columns.
 
-    Execute `default_technical_columns`.
+    Run `default_technical_columns`.
 
     Parameters
     ----------
@@ -24,7 +24,7 @@ def default_technical_columns() -> list[str]:
     Returns
     -------
     result : list[str]
-        Result returned by `default_technical_columns`.
+        Return value from `default_technical_columns`.
 
     Examples
     --------
@@ -82,23 +82,23 @@ def _hash_row(values: list[Any]) -> str:
 def add_literal_column(df, column_name: str, value, engine: str = "auto"):
     """Add literal column.
 
-    Execute `add_literal_column`.
+    Run `add_literal_column`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     column_name : str
-        Value for `column_name`.
+        Parameter `column_name`.
     value : Any
-        Value for `value`.
+        Parameter `value`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
-    result : Any
-        Result returned by `add_literal_column`.
+    result : object
+        Return value from `add_literal_column`.
 
     Examples
     --------
@@ -118,23 +118,23 @@ def add_literal_column(df, column_name: str, value, engine: str = "auto"):
 def add_pipeline_run_id(df, run_id: str, column_name: str = "_pipeline_run_id", engine: str = "auto"):
     """Add pipeline run id.
 
-    Execute `add_pipeline_run_id`.
+    Run `add_pipeline_run_id`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     run_id : str
-        Value for `run_id`.
+        Parameter `run_id`.
     column_name : str, optional
-        Value for `column_name`.
+        Parameter `column_name`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
-    result : Any
-        Result returned by `add_pipeline_run_id`.
+    result : object
+        Return value from `add_pipeline_run_id`.
 
     Examples
     --------
@@ -146,27 +146,27 @@ def add_pipeline_run_id(df, run_id: str, column_name: str = "_pipeline_run_id", 
 def add_pipeline_metadata(df, *, run_id: str, pipeline_name: str | None = None, environment: str | None = None, column_prefix: str = "_", engine: str = "auto"):
     """Add pipeline metadata.
 
-    Execute `add_pipeline_metadata`.
+    Run `add_pipeline_metadata`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     run_id : str
-        Value for `run_id`.
+        Parameter `run_id`.
     pipeline_name : str | None, optional
-        Value for `pipeline_name`.
+        Parameter `pipeline_name`.
     environment : str | None, optional
-        Value for `environment`.
+        Parameter `environment`.
     column_prefix : str, optional
-        Value for `column_prefix`.
+        Parameter `column_prefix`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
-    result : Any
-        Result returned by `add_pipeline_metadata`.
+    result : object
+        Return value from `add_pipeline_metadata`.
 
     Examples
     --------
@@ -183,27 +183,27 @@ def add_pipeline_metadata(df, *, run_id: str, pipeline_name: str | None = None, 
 def add_source_metadata(df, *, source_system: str | None = None, source_table: str | None = None, source_extract_timestamp: str | None = None, column_prefix: str = "_", engine: str = "auto"):
     """Add source metadata.
 
-    Execute `add_source_metadata`.
+    Run `add_source_metadata`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     source_system : str | None, optional
-        Value for `source_system`.
+        Parameter `source_system`.
     source_table : str | None, optional
-        Value for `source_table`.
+        Parameter `source_table`.
     source_extract_timestamp : str | None, optional
-        Value for `source_extract_timestamp`.
+        Parameter `source_extract_timestamp`.
     column_prefix : str, optional
-        Value for `column_prefix`.
+        Parameter `column_prefix`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
-    result : Any
-        Result returned by `add_source_metadata`.
+    result : object
+        Return value from `add_source_metadata`.
 
     Examples
     --------
@@ -222,23 +222,23 @@ def add_source_metadata(df, *, source_system: str | None = None, source_table: s
 def add_loaded_at(df, timestamp: str | None = None, column_name: str = "_record_loaded_timestamp", engine: str = "auto"):
     """Add loaded at.
 
-    Execute `add_loaded_at`.
+    Run `add_loaded_at`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     timestamp : str | None, optional
-        Value for `timestamp`.
+        Parameter `timestamp`.
     column_name : str, optional
-        Value for `column_name`.
+        Parameter `column_name`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
-    result : Any
-        Result returned by `add_loaded_at`.
+    result : object
+        Return value from `add_loaded_at`.
 
     Examples
     --------
@@ -259,23 +259,23 @@ def add_loaded_at(df, timestamp: str | None = None, column_name: str = "_record_
 def add_watermark_value(df, watermark_column: str, output_column: str = "_watermark_value", engine: str = "auto"):
     """Add watermark value.
 
-    Execute `add_watermark_value`.
+    Run `add_watermark_value`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     watermark_column : str
-        Value for `watermark_column`.
+        Parameter `watermark_column`.
     output_column : str, optional
-        Value for `output_column`.
+        Parameter `output_column`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
-    result : Any
-        Result returned by `add_watermark_value`.
+    result : object
+        Return value from `add_watermark_value`.
 
     Examples
     --------
@@ -296,23 +296,23 @@ def add_watermark_value(df, watermark_column: str, output_column: str = "_waterm
 def add_row_hash(df, columns: list[str] | None = None, output_column: str = "_row_hash", engine: str = "auto"):
     """Add row hash.
 
-    Execute `add_row_hash`.
+    Run `add_row_hash`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     columns : list[str] | None, optional
-        Value for `columns`.
+        Parameter `columns`.
     output_column : str, optional
-        Value for `output_column`.
+        Parameter `output_column`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
-    result : Any
-        Result returned by `add_row_hash`.
+    result : object
+        Return value from `add_row_hash`.
 
     Examples
     --------
@@ -334,23 +334,23 @@ def add_row_hash(df, columns: list[str] | None = None, output_column: str = "_ro
 def add_business_key_hash(df, business_keys: list[str], output_column: str = "_business_key_hash", engine: str = "auto"):
     """Add business key hash.
 
-    Execute `add_business_key_hash`.
+    Run `add_business_key_hash`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     business_keys : list[str]
-        Value for `business_keys`.
+        Parameter `business_keys`.
     output_column : str, optional
-        Value for `output_column`.
+        Parameter `output_column`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
-    result : Any
-        Result returned by `add_business_key_hash`.
+    result : object
+        Return value from `add_business_key_hash`.
 
     Examples
     --------
@@ -371,33 +371,33 @@ def add_business_key_hash(df, business_keys: list[str], output_column: str = "_b
 def add_datetime_parts(df, datetime_column: str, *, timezone: str = "Asia/Singapore", prefix: str | None = None, include_date: bool = True, include_time: bool = True, include_hour: bool = True, include_30_min_block: bool = True, engine: str = "auto"):
     """Add datetime parts.
 
-    Execute `add_datetime_parts`.
+    Run `add_datetime_parts`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     datetime_column : str
-        Value for `datetime_column`.
+        Parameter `datetime_column`.
     timezone : str, optional
-        Value for `timezone`.
+        Parameter `timezone`.
     prefix : str | None, optional
-        Value for `prefix`.
+        Parameter `prefix`.
     include_date : bool, optional
-        Value for `include_date`.
+        Parameter `include_date`.
     include_time : bool, optional
-        Value for `include_time`.
+        Parameter `include_time`.
     include_hour : bool, optional
-        Value for `include_hour`.
+        Parameter `include_hour`.
     include_30_min_block : bool, optional
-        Value for `include_30_min_block`.
+        Parameter `include_30_min_block`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
-    result : Any
-        Result returned by `add_datetime_parts`.
+    result : object
+        Return value from `add_datetime_parts`.
 
     Examples
     --------
@@ -442,37 +442,37 @@ def add_datetime_parts(df, datetime_column: str, *, timezone: str = "Asia/Singap
 def add_standard_technical_columns(df, *, run_id: str, pipeline_name: str | None = None, environment: str | None = None, source_system: str | None = None, source_table: str | None = None, source_extract_timestamp: str | None = None, watermark_column: str | None = None, business_keys: list[str] | None = None, add_hash: bool = True, engine: str = "auto"):
     """Add standard technical columns.
 
-    Execute `add_standard_technical_columns`.
+    Run `add_standard_technical_columns`.
 
     Parameters
     ----------
     df : Any
-        Value for `df`.
+        Parameter `df`.
     run_id : str
-        Value for `run_id`.
+        Parameter `run_id`.
     pipeline_name : str | None, optional
-        Value for `pipeline_name`.
+        Parameter `pipeline_name`.
     environment : str | None, optional
-        Value for `environment`.
+        Parameter `environment`.
     source_system : str | None, optional
-        Value for `source_system`.
+        Parameter `source_system`.
     source_table : str | None, optional
-        Value for `source_table`.
+        Parameter `source_table`.
     source_extract_timestamp : str | None, optional
-        Value for `source_extract_timestamp`.
+        Parameter `source_extract_timestamp`.
     watermark_column : str | None, optional
-        Value for `watermark_column`.
+        Parameter `watermark_column`.
     business_keys : list[str] | None, optional
-        Value for `business_keys`.
+        Parameter `business_keys`.
     add_hash : bool, optional
-        Value for `add_hash`.
+        Parameter `add_hash`.
     engine : str, optional
-        Value for `engine`.
+        Parameter `engine`.
 
     Returns
     -------
-    result : Any
-        Result returned by `add_standard_technical_columns`.
+    result : object
+        Return value from `add_standard_technical_columns`.
 
     Examples
     --------

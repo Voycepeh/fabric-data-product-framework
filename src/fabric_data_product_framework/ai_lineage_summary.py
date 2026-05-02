@@ -66,25 +66,28 @@ def build_transformation_summary_prompt_context(lineage_summary, code_snippets=N
 
 
 def build_transformation_summary_generation_prompt(lineage_summary, code_snippets=None, runtime_metrics=None, business_context=None):
-    """Build transformation summary generation prompt.
-
-    Execute `build_transformation_summary_generation_prompt`.
+    """Build the instruction prompt string for AI transformation summaries.
 
     Parameters
     ----------
-    lineage_summary : Any
-        Value for `lineage_summary`.
-    code_snippets : Any, optional
-        Value for `code_snippets`.
-    runtime_metrics : Any, optional
-        Value for `runtime_metrics`.
-    business_context : Any, optional
-        Value for `business_context`.
+    lineage_summary : dict
+        Lineage summary payload that provides the transformation steps and
+        lineage evidence to include in the prompt context.
+    code_snippets : list[str] or list[dict], optional
+        Optional code snippets or extracted transformation fragments used as
+        grounding evidence.
+    runtime_metrics : dict, optional
+        Optional execution metrics that help the model reason about scale and
+        operational impact.
+    business_context : dict, optional
+        Optional business context or stakeholder notes for business-facing
+        summary text.
 
     Returns
     -------
-    result : Any
-        Result returned by `build_transformation_summary_generation_prompt`.
+    str
+        Prompt text instructing the model to emit a strict JSON array of
+        transformation summaries using the required framework fields.
 
     Examples
     --------
@@ -168,23 +171,23 @@ def parse_ai_transformation_summaries(raw_response):
 def build_transformation_summary_records(candidates, run_id, dataset_name, table_name):
     """Build transformation summary records.
 
-    Execute `build_transformation_summary_records`.
+    Run `build_transformation_summary_records`.
 
     Parameters
     ----------
     candidates : Any
-        Value for `candidates`.
+        Parameter `candidates`.
     run_id : Any
-        Value for `run_id`.
+        Parameter `run_id`.
     dataset_name : Any
-        Value for `dataset_name`.
+        Parameter `dataset_name`.
     table_name : Any
-        Value for `table_name`.
+        Parameter `table_name`.
 
     Returns
     -------
-    result : Any
-        Result returned by `build_transformation_summary_records`.
+    result : object
+        Return value from `build_transformation_summary_records`.
 
     Examples
     --------
