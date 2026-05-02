@@ -488,3 +488,123 @@ def add_standard_technical_columns(df, *, run_id: str, pipeline_name: str | None
     if add_hash:
         out = add_row_hash(out, engine=engine)
     return out
+
+
+def clean_datetime_columns(df, datetime_col, prefix, tz_region="Asia/Singapore", time_block_col="TIME_BLOCK_30_MIN"):
+    """Clean datetime columns.
+
+    Run `clean_datetime_columns`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    datetime_col : Any
+        Parameter `datetime_col`.
+    prefix : Any
+        Parameter `prefix`.
+    tz_region : object, optional
+        Parameter `tz_region`.
+    time_block_col : object, optional
+        Parameter `time_block_col`.
+
+    Returns
+    -------
+    result : object
+        Return value from `clean_datetime_columns`.
+
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> clean_datetime_columns(df, datetime_col)
+    """
+    if datetime_col not in df.columns:
+        raise ValueError(f"Column not found: {datetime_col}")
+
+    from pyspark.sql.functions import from_utc_timestamp, to_date, date_format, expr
+
+    dt_utc_name = f"{prefix}_DTM_UTC8"
+    dt_date_name = f"{prefix}_DATE_UTC8"
+    dt_time_name = f"{prefix}_TIME_UTC8"
+
+    df = df.withColumn(dt_utc_name, from_utc_timestamp(df[datetime_col], tz_region))
+    df = df.withColumn(dt_date_name, to_date(df[dt_utc_name]))
+    df = df.withColumn(dt_time_name, date_format(df[dt_utc_name], "HH:mm"))
+    df = df.withColumn(
+        time_block_col,
+        date_format(
+            expr(
+                f"timestampadd(MINUTE, floor(minute({dt_utc_name})/30)*30-MINUTE({dt_utc_name}), {dt_utc_name})"
+            ),
+            "HH:mm",
+        ),
+    )
+    return df
+
+
+def add_system_technical_columns(df, hash_col, bucket_size=512, run_id=None, notebook_name=None, loaded_by=None):
+    """Add system technical columns.
+
+    Run `add_system_technical_columns`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    hash_col : Any
+        Parameter `hash_col`.
+    bucket_size : object, optional
+        Parameter `bucket_size`.
+    run_id : object, optional
+        Parameter `run_id`.
+    notebook_name : object, optional
+        Parameter `notebook_name`.
+    loaded_by : object, optional
+        Parameter `loaded_by`.
+
+    Returns
+    -------
+    result : object
+        Return value from `add_system_technical_columns`.
+
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> add_system_technical_columns(df, hash_col)
+    """
+    if hash_col not in df.columns:
+        raise ValueError(f"Column not found: {hash_col}")
+
+    if bucket_size not in {128, 256, 512, 1024}:
+        raise ValueError("bucket_size must be one of 128, 256, 512, or 1024.")
+
+    from pyspark.sql.functions import (
+        from_utc_timestamp,
+        current_timestamp,
+        lit,
+        abs as F_abs,
+        hash as F_hash,
+        monotonically_increasing_id,
+    )
+
+    context = _get_fabric_runtime_context()
+    resolved_notebook_name = notebook_name or context.get("currentNotebookName", "local_notebook")
+    resolved_loaded_by = loaded_by or context.get("userName", "local_user")
+    ingest_run_id = run_id or str(uuid.uuid4())
+
+    df = df.withColumn("pipeline_ts", from_utc_timestamp(current_timestamp(), "Asia/Singapore"))
+    df = df.withColumn("notebook_name", lit(resolved_notebook_name))
+    df = df.withColumn("loaded_by", lit(resolved_loaded_by))
+    df = df.withColumn("p_bucket", F_abs(F_hash(hash_col)) % bucket_size)
+    df = df.withColumn("sample_bucket", F_abs(F_hash(hash_col)) % 1000000)
+    df = df.withColumn("row_ingest_id", monotonically_increasing_id())
+    df = df.withColumn("ingest_run_id", lit(ingest_run_id))
+    return df

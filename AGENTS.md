@@ -26,7 +26,7 @@ Guide agent/Codex contributions for this repository so changes stay reusable, pu
 - Keep examples in `examples/` runnable and teachable for Python users.
 - Use links to detailed docs instead of duplicating long explanations across multiple files.
 - Docstrings in `src/fabric_data_product_framework/` are the source of truth for generated API docs under `docs/reference/`.
-- Do not create or maintain duplicate manual function/member lists in `README.md`, `src/README.md`, or `docs/api/`.
+- Do not create or maintain duplicate manual function/member lists in `README.md`, `src/README.md`, or `docs/reference/`.
 
 ## Docstring requirements for public APIs
 

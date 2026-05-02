@@ -616,3 +616,125 @@ def plot_lineage_networkx(lineage_steps_or_record, title=None):
     ax.axis("off")
     plt.tight_layout()
     return g, fig, ax
+
+
+def transformation_summary(code: str):
+    """Transformation summary.
+
+    Run `transformation_summary`.
+
+    Parameters
+    ----------
+    code : str
+        Parameter `code`.
+
+    Returns
+    -------
+    result : object
+        Return value from `transformation_summary`.
+
+    Examples
+    --------
+    >>> transformation_summary(code)
+    """
+    tree = ast.parse(code)
+    steps: list[dict[str, str]] = []
+
+    op_map = {
+        "select": "Select specific columns",
+        "withColumn": "Create or modify column",
+        "drop": "Drop columns",
+        "withColumnRenamed": "Rename column",
+        "join": "Join with another dataframe",
+        "dropDuplicates": "Drop duplicate rows",
+        "distinct": "Keep distinct rows",
+        "union": "Union with another dataframe",
+        "unionByName": "Union by name with another dataframe",
+        "dropna": "Drop rows with null values",
+        "fillna": "Fill null values",
+        "trim": "Trim whitespace",
+    }
+
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+
+        if isinstance(node.func, ast.Attribute):
+            method = node.func.attr
+            if method in op_map:
+                steps.append({"step": len(steps) + 1, "summary": op_map[method]})
+            if method in {"when", "otherwise"}:
+                steps.append({"step": len(steps) + 1, "summary": "Conditional classification logic"})
+            if method == "split" and node.args:
+                for arg in node.args:
+                    if isinstance(arg, ast.Constant) and arg.value == "@":
+                        steps.append({"step": len(steps) + 1, "summary": "Split column by @ to derive domain"})
+                        break
+
+    if not steps:
+        steps.append({"step": 1, "summary": "No recognized transformation operations found"})
+
+    return pd.DataFrame(steps, columns=["step", "summary"])
+
+
+def transformation_reasons(pdf, reason, spark_session=None):
+    """Transformation reasons.
+
+    Run `transformation_reasons`.
+
+    Parameters
+    ----------
+    pdf : Any
+        Parameter `pdf`.
+    reason : Any
+        Parameter `reason`.
+    spark_session : object, optional
+        Parameter `spark_session`.
+
+    Returns
+    -------
+    result : object
+        Return value from `transformation_reasons`.
+
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> transformation_reasons(pdf, reason)
+    """
+    spark_obj = _get_spark(spark_session)
+    context = _get_fabric_runtime_context()
+
+    notebook_name = context.get("currentNotebookName", "local_notebook")
+    workspace_name = context.get("currentWorkspaceName", "")
+    user_name = context.get("userName", "local_user")
+
+    if isinstance(reason, str):
+        reasons = [reason] * len(pdf)
+    elif isinstance(reason, pd.Series):
+        reasons = reason.tolist()
+    else:
+        reasons = list(reason)
+
+    if len(reasons) != len(pdf):
+        raise ValueError("reason list length must match transformation_summary row count.")
+
+    code_id = hashlib.sha256("|".join(pdf["summary"].astype(str)).encode("utf-8")).hexdigest()[:16]
+    run_timestamp = datetime.now(timezone.utc).isoformat()
+
+    out_pdf = pdf.copy()
+    out_pdf["reason"] = reasons
+    out_pdf["notebook_name"] = notebook_name
+    out_pdf["workspace_name"] = workspace_name
+    out_pdf["user_name"] = user_name
+    out_pdf["code_id"] = code_id
+    out_pdf["run_timestamp"] = run_timestamp
+
+    out_pdf["step"] = out_pdf["step"].astype(int)
+    out_pdf = out_pdf[
+        ["step", "summary", "reason", "notebook_name", "workspace_name", "user_name", "code_id", "run_timestamp"]
+    ]
+    return spark_obj.createDataFrame(out_pdf)

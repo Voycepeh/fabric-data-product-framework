@@ -602,3 +602,96 @@ def summarize_profile(profile: dict[str, Any]) -> dict[str, Any]:
         "likely_sensitive_columns": likely_sensitive,
         "generated_at": profile.get("generated_at"),
     }
+
+
+def ODI_METADATA_LOGGER(df, tablename: str, exclude_columns=None, run_timestamp_timezone="Asia/Singapore"):
+    """Odi metadata logger.
+
+    Run `ODI_METADATA_LOGGER`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    tablename : str
+        Parameter `tablename`.
+    exclude_columns : object, optional
+        Parameter `exclude_columns`.
+    run_timestamp_timezone : object, optional
+        Parameter `run_timestamp_timezone`.
+
+    Returns
+    -------
+    result : object
+        Return value from `ODI_METADATA_LOGGER`.
+
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> ODI_METADATA_LOGGER(df, tablename)
+    """
+    from pyspark.sql import functions as F
+
+    technicalcol = {
+        "pipeline_ts",
+        "notebook_name",
+        "loaded_by",
+        "p_bucket",
+        "sample_bucket",
+        "row_ingest_id",
+        "ingest_run_id",
+    }
+
+    if exclude_columns:
+        technicalcol.update(exclude_columns)
+
+    eligible_columns = [c for c, _ in df.dtypes if c not in technicalcol]
+    if not eligible_columns:
+        raise ValueError("No eligible non-technical columns found for metadata profiling.")
+
+    row_count = df.count()
+    agg_exprs = []
+
+    for c, t in df.dtypes:
+        if c in technicalcol:
+            continue
+
+        agg_exprs.append(F.sum(F.col(c).isNull().cast("int")).alias(f"{c}_NULL_COUNT"))
+        agg_exprs.append(F.countDistinct(F.col(c)).alias(f"{c}_DISTINCT_COUNT"))
+
+        if t in ("int", "bigint", "double", "float", "decimal", "timestamp", "date"):
+            agg_exprs.append(F.min(F.col(c)).alias(f"{c}_MIN"))
+            agg_exprs.append(F.max(F.col(c)).alias(f"{c}_MAX"))
+
+    agg_df = df.agg(*agg_exprs)
+
+    rows = []
+    for c, t in df.dtypes:
+        if c in technicalcol:
+            continue
+
+        rows.append(
+            agg_df.select(
+                F.lit(tablename).alias("TABLE_NAME"),
+                F.from_utc_timestamp(F.current_timestamp(), run_timestamp_timezone).alias("RUN_TIMESTAMP"),
+                F.lit(c).alias("COLUMN_NAME"),
+                F.lit(t).alias("DATA_TYPE"),
+                F.lit(row_count).alias("ROW_COUNT"),
+                F.col(f"{c}_NULL_COUNT").alias("NULL_COUNT"),
+                F.round((F.col(f"{c}_NULL_COUNT").cast("double") / F.lit(row_count)) * 100, 3).alias("NULL_PERCENT"),
+                F.col(f"{c}_DISTINCT_COUNT").alias("DISTINCT_COUNT"),
+                F.round((F.col(f"{c}_DISTINCT_COUNT").cast("double") / F.lit(row_count)) * 100, 3).alias("DISTINCT_PERCENT"),
+                F.col(f"{c}_MIN").cast("string").alias("MIN_VALUE") if f"{c}_MIN" in agg_df.columns else F.lit(None).cast("string").alias("MIN_VALUE"),
+                F.col(f"{c}_MAX").cast("string").alias("MAX_VALUE") if f"{c}_MAX" in agg_df.columns else F.lit(None).cast("string").alias("MAX_VALUE"),
+            )
+        )
+
+    df_profile = rows[0]
+    for r in rows[1:]:
+        df_profile = df_profile.unionByName(r)
+
+    return df_profile
