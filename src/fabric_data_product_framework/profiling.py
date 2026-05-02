@@ -403,10 +403,16 @@ def flatten_profile_for_metadata(
     exclude_columns: list[str] | set[str] | None = None,
 ) -> list[dict[str, Any]]:
     """Flatten a profile dictionary into metadata-friendly row records."""
+    def first_present(mapping: dict[str, Any], *keys: str) -> Any:
+        for key in keys:
+            if key in mapping and mapping[key] is not None:
+                return mapping[key]
+        return None
+
     excluded = set(exclude_columns or [])
     rows: list[dict[str, Any]] = []
     for col in profile.get("columns", []):
-        column_name = col.get("column_name") or col.get("COLUMN_NAME")
+        column_name = first_present(col, "column_name", "COLUMN_NAME")
         if column_name in excluded:
             continue
         rows.append(
@@ -415,14 +421,14 @@ def flatten_profile_for_metadata(
                 "table_name": table_name,
                 "profile_role": profile_role,
                 "column_name": column_name,
-                "data_type": col.get("data_type") or col.get("DATA_TYPE"),
+                "data_type": first_present(col, "data_type", "DATA_TYPE"),
                 "row_count": col.get("row_count", profile.get("row_count")),
-                "null_count": col.get("null_count") or col.get("NULL_COUNT"),
-                "null_pct": col.get("null_pct") or col.get("NULL_PERCENT"),
-                "distinct_count": col.get("distinct_count") or col.get("DISTINCT_COUNT"),
-                "distinct_pct": col.get("distinct_pct") or col.get("DISTINCT_PERCENT"),
-                "min_value": to_jsonable(col.get("min_value") or col.get("MIN_VALUE")),
-                "max_value": to_jsonable(col.get("max_value") or col.get("MAX_VALUE")),
+                "null_count": first_present(col, "null_count", "NULL_COUNT"),
+                "null_pct": first_present(col, "null_pct", "NULL_PERCENT"),
+                "distinct_count": first_present(col, "distinct_count", "DISTINCT_COUNT"),
+                "distinct_pct": first_present(col, "distinct_pct", "DISTINCT_PERCENT"),
+                "min_value": to_jsonable(first_present(col, "min_value", "MIN_VALUE")),
+                "max_value": to_jsonable(first_present(col, "max_value", "MAX_VALUE")),
                 "generated_at": profile.get("generated_at", datetime.utcnow().isoformat()),
             }
         )
