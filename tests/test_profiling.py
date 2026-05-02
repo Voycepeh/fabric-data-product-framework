@@ -77,14 +77,11 @@ def test_build_ai_quality_context_returns_expected_sections():
     assert ("event_timestamp", "DATE_RANGE_CANDIDATE") in hints
 
 
-def test_legacy_profile_apis_raise_not_implemented():
-    try:
-        profile_dataframe(object())
-    except NotImplementedError as exc:
-        assert "profile_dataframe_to_metadata" in str(exc)
-    else:
-        raise AssertionError("Expected NotImplementedError")
-
+def test_legacy_profile_dataframe_supports_pandas():
+    profile = profile_dataframe([{"id": 1, "status": "OPEN"}, {"id": 2, "status": "CLOSED"}], dataset_name="orders")
+    assert profile["dataset_name"] == "orders"
+    assert profile["engine"] == "pandas"
+    assert profile["row_count"] == 2
     try:
         summarize_profile({})
     except NotImplementedError as exc:
