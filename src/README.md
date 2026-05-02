@@ -4,7 +4,7 @@ Open `mvp_steps.py` first when manually testing in Fabric notebooks. It gives th
 
 ## Module ownership
 
-- **Environment and Fabric IO**: `fabric.py`, `runtime.py`
+- **Environment and Fabric IO**: `fabric_io.py`, `runtime.py`
 - **Profiling and metadata**: `profiling.py`, `metadata.py`
 - **Data quality and rule compilation**: `quality.py`, `rule_compiler.py`, `ai_quality_rules.py`
 - **Drift and incremental safety**: `drift.py`, `incremental.py`
@@ -15,14 +15,14 @@ Open `mvp_steps.py` first when manually testing in Fabric notebooks. It gives th
 
 ## Recommended manual Fabric test order
 
-1. Configure runtime and identifiers (`runtime.py`, `fabric.py`).
-2. Read source table/file (`fabric.py`).
+1. Configure runtime and identifiers (`runtime.py`, `fabric_io.py`).
+2. Read source table/file (`fabric_io.py`).
 3. Profile source (`profiling.py`).
 4. Generate or compile quality rules (`ai_quality_rules.py`, `rule_compiler.py`).
 5. Run quality checks (`quality.py`).
 6. Check schema/profile/partition drift (`drift.py`, `incremental.py`).
 7. Apply governance classification (`governance.py`).
-8. Transform and write output (`fabric.py`, project notebook cell).
+8. Transform and write output (`fabric_io.py`, project notebook cell).
 9. Profile output (`profiling.py`).
 10. Build lineage and handover summary (`lineage.py`, `ai_lineage_summary.py`).
 11. Write run summary (`run_summary.py`, `metadata.py`).
@@ -64,7 +64,7 @@ Minimum notebook setup:
 ```python
 import fabric_data_product_framework as fdpf
 
-config = fdpf.load_fabric_config("Files/config/fabric_config.yml")
+config = fdpf.load_fabric_config(CONFIG)
 runtime_context = fdpf.build_runtime_context(
     dataset_name="orders",
     environment="Sandbox",

@@ -22,6 +22,7 @@ SYMBOL_SECTION_OVERRIDES = {
 }
 
 SECTION_DISPLAY_NAMES = {
+    "fabric_io": "Fabric IO",
     "fabric_notebook": "Fabric Notebook",
     "template_generator": "Template Generator",
     "lineage": "Lineage",
@@ -33,6 +34,7 @@ SECTION_DISPLAY_NAMES = {
 }
 
 SECTION_ORDER = [
+    "fabric_io",
     "fabric_notebook",
     "template_generator",
     "lineage",

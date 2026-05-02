@@ -15,7 +15,7 @@ committing to a full production write path.
 
 ```python
 from fabric_data_product_framework.quality import run_dq_workflow
-from fabric_data_product_framework.fabric import (
+from fabric_data_product_framework.fabric_io import (
     get_path,
     lakehouse_table_read,
     load_fabric_config,
@@ -24,7 +24,7 @@ from fabric_data_product_framework.profiling import profile_dataframe
 
 DRY_RUN = True
 
-cfg = load_fabric_config("Files/configs/fabric_houses.yml")
+cfg = load_fabric_config(CONFIG)
 lh_source = get_path(env="Sandbox", target="Source", config=cfg)
 
 dataset_name = "orders"

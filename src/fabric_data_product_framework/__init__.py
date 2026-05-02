@@ -2,18 +2,16 @@
 
 from .contracts import load_data_contract, run_data_product
 from .drift import check_partition_drift, check_profile_drift, check_schema_drift, summarize_drift_results
-from .fabric import (
+from .fabric_io import (
     Housepath,
-    build_table_identifier,
     get_path,
     lakehouse_csv_read,
     lakehouse_excel_read_as_spark,
     lakehouse_parquet_read_as_spark,
     lakehouse_table_read,
     load_fabric_config,
-    read_table,
     warehouse_read,
-    write_table,
+    warehouse_write,
 )
 from .governance import classify_columns, summarize_governance_classifications
 from .lineage import LineageRecorder, build_lineage_records, build_transformation_summary_markdown, generate_mermaid_lineage
@@ -29,14 +27,12 @@ __all__ = [
     "Housepath",
     "load_fabric_config",
     "get_path",
-    "build_table_identifier",
     "lakehouse_table_read",
     "lakehouse_csv_read",
     "lakehouse_parquet_read_as_spark",
     "lakehouse_excel_read_as_spark",
     "warehouse_read",
-    "read_table",
-    "write_table",
+    "warehouse_write",
     "generate_run_id",
     "build_runtime_context",
     "validate_notebook_name",
