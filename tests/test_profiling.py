@@ -1,3 +1,5 @@
+import pandas as pd
+
 from fabric_data_product_framework.profiling import (
     build_ai_quality_context,
     default_technical_columns,
@@ -78,10 +80,19 @@ def test_build_ai_quality_context_returns_expected_sections():
 
 
 def test_legacy_profile_dataframe_supports_pandas():
-    profile = profile_dataframe([{"id": 1, "status": "OPEN"}, {"id": 2, "status": "CLOSED"}], dataset_name="orders")
+    pdf = pd.DataFrame([{"id": 1, "status": "OPEN"}, {"id": 2, "status": "CLOSED"}])
+    profile = profile_dataframe(pdf, dataset_name="orders")
     assert profile["dataset_name"] == "orders"
     assert profile["engine"] == "pandas"
     assert profile["row_count"] == 2
+
+    profile_auto = profile_dataframe(
+        pdf,
+        dataset_name="orders",
+        engine="auto",
+    )
+    assert profile_auto["engine"] == "pandas"
+    assert profile_auto["row_count"] == 2
     try:
         summarize_profile({})
     except NotImplementedError as exc:

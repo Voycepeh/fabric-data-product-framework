@@ -315,7 +315,8 @@ def build_ai_quality_context(
 # Legacy compatibility shims
 def profile_dataframe(df, dataset_name: str = "unknown", sample_size: int = 5, top_n: int = 5, engine: str = "auto") -> dict[str, Any]:
     """Build a lightweight profile for pandas or Spark-like DataFrames."""
-    resolved_engine = validate_engine(engine, df)
+    selected_engine = validate_engine(engine)
+    resolved_engine = detect_dataframe_engine(df) if selected_engine == "auto" else selected_engine
     if resolved_engine == "pandas":
         pdf = df if isinstance(df, pd.DataFrame) else pd.DataFrame(df)
         row_count = int(len(pdf))
