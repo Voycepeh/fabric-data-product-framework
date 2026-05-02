@@ -51,3 +51,47 @@ Use the canonical flow artifacts below when onboarding or running end-to-end smo
 - Template notebook: `templates/notebooks/fabric_data_product_mvp.py`
 - Roadmap: `docs/mvp-13-step-roadmap.md`
 - Registry + artifact validation helpers: `src/fabric_data_product_framework/mvp_steps.py`
+
+## Step 1 to 3: setup and pull source data
+
+Use these canonical helpers for the first workflow segment in Fabric notebooks:
+- Runtime setup: `build_runtime_context`, `generate_run_id`
+- Fabric config/pathing: `load_fabric_config`, `get_path`
+- Source reads: `lakehouse_table_read`, `lakehouse_csv_read`, `lakehouse_parquet_read_as_spark`, `lakehouse_excel_read_as_spark`, `warehouse_read`
+
+Minimum notebook setup:
+
+```python
+import fabric_data_product_framework as fdpf
+
+config = fdpf.load_fabric_config("Files/config/fabric_config.yml")
+runtime_context = fdpf.build_runtime_context(
+    dataset_name="orders",
+    environment="Sandbox",
+    source_table="raw_orders",
+    target_table="clean_orders",
+    notebook_name="dex_source_to_dex_unified_orders",
+)
+```
+
+Lakehouse example:
+
+```python
+lh_source = fdpf.get_path("Sandbox", "Source", config=config)
+df_source = fdpf.lakehouse_table_read(lh_source, "raw_orders")
+display(df_source.limit(10))
+```
+
+Warehouse example:
+
+```python
+df_wh = fdpf.warehouse_read(
+    env="DE",
+    target="Warehouse",
+    schema="dbo",
+    table="SomeTable",
+    config=config,
+)
+```
+
+Keep workspace and house identifiers in YAML config files, not hardcoded notebook literals.

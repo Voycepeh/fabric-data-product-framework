@@ -60,3 +60,13 @@ def test_build_runtime_context_returns_expected_json_safe_keys():
         "started_at_utc",
     }
     json.dumps(context)
+
+
+def test_build_runtime_context_generates_run_id_using_dataset_prefix():
+    context = build_runtime_context(
+        dataset_name="Synthetic Orders",
+        environment="dev",
+        source_table="source.synthetic_orders",
+        target_table="product.synthetic_orders",
+    )
+    assert context["run_id"].startswith("synthetic_orders_")

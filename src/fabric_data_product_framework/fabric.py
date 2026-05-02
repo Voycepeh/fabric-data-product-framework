@@ -160,6 +160,7 @@ import pandas as pd
 from fabric_data_product_framework.technical_columns import add_system_technical_columns, clean_datetime_columns
 from fabric_data_product_framework.profiling import ODI_METADATA_LOGGER
 from fabric_data_product_framework.lineage import transformation_reasons, transformation_summary
+from fabric_data_product_framework.runtime import assert_notebook_name_valid
 
 
 @dataclass(frozen=True)
@@ -246,12 +247,12 @@ def load_fabric_config(path: str | Path) -> dict[str, dict[str, Housepath]]:
         if path_str.startswith("Files/") or path_str.startswith("Files\\"):
             config_path = Path("/lakehouse/default") / path_str
         if not config_path.exists():
-            raise FileNotFoundError(f"Fabric config file not found: {path}")
+            raise FileNotFoundError(f"Missing config file: {path}")
 
     raw = yaml.safe_load(config_path.read_text(encoding="utf-8")) or {}
     environments = raw.get("environments")
     if not isinstance(environments, dict) or not environments:
-        raise ValueError("Fabric config must define a non-empty top-level 'environments' mapping.")
+        raise ValueError("Missing environments mapping. Add a top-level 'environments:' section.")
 
     required = {"workspace_id", "house_id", "house_name", "root"}
     parsed: dict[str, dict[str, Housepath]] = {}
@@ -262,12 +263,13 @@ def load_fabric_config(path: str | Path) -> dict[str, dict[str, Housepath]]:
         parsed[env_name] = {}
         for target_name, payload in targets.items():
             if not isinstance(payload, dict):
-                raise ValueError(f"Target '{env_name}/{target_name}' must be a mapping.")
+                raise ValueError(f"Missing target mapping for '{env_name}/{target_name}'.")
             missing = required - set(payload.keys())
             if missing:
                 missing_fields = ", ".join(sorted(missing))
                 raise ValueError(
-                    f"Target '{env_name}/{target_name}' is missing required fields: {missing_fields}."
+                    f"Target '{env_name}/{target_name}' is missing required fields: {missing_fields}. "
+                    "Required fields are workspace_id, house_id, house_name, root."
                 )
             parsed[env_name][target_name] = Housepath(
                 workspace_id=str(payload["workspace_id"]),
@@ -318,7 +320,7 @@ def get_path(
         if not use_example_config:
             raise ValueError(
                 "No Fabric config was provided. Load one with load_fabric_config(...) "
-                "or pass use_example_config=True for documentation examples."
+                "and pass config=config."
             )
         active_config = EXAMPLE_CONFIG
     else:
@@ -327,7 +329,16 @@ def get_path(
     try:
         return active_config[env][target]
     except KeyError as exc:
-        raise ValueError(f"Invalid env/target: {env}/{target}") from exc
+        if env not in active_config:
+            available_envs = ", ".join(sorted(active_config.keys())) or "<none>"
+            raise ValueError(
+                f"Environment '{env}' was not found in Fabric config. Available environments: {available_envs}."
+            ) from exc
+        available_targets = ", ".join(sorted(active_config[env].keys())) or "<none>"
+        raise ValueError(
+            f"Target '{target}' was not found under environment '{env}'. "
+            f"Available targets: {available_targets}."
+        ) from exc
 
 
 def _get_spark(spark_session=None):
@@ -484,6 +495,10 @@ def lakehouse_csv_read(lh, relative_path, spark_session=None, header=True):
     --------
     >>> lakehouse_csv_read(lh, relative_path)
     """
+    if not getattr(lh, "root", None):
+        raise ValueError("lh.root is required.")
+    if not relative_path:
+        raise ValueError("relative_path is required.")
     spark_obj = _get_spark(spark_session)
     path = f"{lh.root}/{relative_path}"
     return spark_obj.read.option("header", header).csv(path)
@@ -520,8 +535,14 @@ def warehouse_read(env, target, schema, table, config=None, spark_session=None):
     """
     spark_obj = _get_spark(spark_session)
     p = get_path(env, target, config=config)
-    import com.microsoft.spark.fabric
-    from com.microsoft.spark.fabric.Constants import Constants
+    try:
+        import com.microsoft.spark.fabric
+        from com.microsoft.spark.fabric.Constants import Constants
+    except Exception as exc:
+        raise RuntimeError(
+            "This function must run inside Microsoft Fabric Spark with "
+            "com.microsoft.spark.fabric available."
+        ) from exc
 
     return (
         spark_obj.read.option(Constants.WorkspaceId, p.workspace_id)
@@ -829,7 +850,11 @@ def check_naming_convention(notebook_name=None, allowed_prefixes=None, fail_on_e
         }
 
     notebook_name_normalized = notebook_name.lower()
-    match = any(notebook_name_normalized.startswith(prefix) for prefix in prefixes)
+    try:
+        assert_notebook_name_valid(notebook_name_normalized, prefixes)
+        match = True
+    except Exception:
+        match = False
     status = "comply" if match else "failed - please follow standard naming convention for notebook"
 
     print(f"Notebook name: {notebook_name_normalized}")
@@ -840,10 +865,7 @@ def check_naming_convention(notebook_name=None, allowed_prefixes=None, fail_on_e
     print(df.to_string(index=False))
 
     if not match and fail_on_error:
-        raise ValueError(
-            f"Notebook name '{notebook_name_normalized}' does not comply with naming conventions. "
-            "Please use one of the standard prefixes listed above."
-        )
+        assert_notebook_name_valid(notebook_name_normalized, prefixes)
 
     return {
         "notebook_name": notebook_name_normalized,
@@ -878,5 +900,3 @@ def pass_if_yes_else_run(condition, code):
         return None
     exec(code)
     return None
-
-
