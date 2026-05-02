@@ -22,7 +22,6 @@ nav:
   - Getting Started: getting-started.md
   - Notebook Conventions:
       - Notebook Structure: notebook-structure.md
-      - Notebook Standard: notebook-standard.md
   - Lifecycle: lifecycle-operating-model.md
   - Architecture: architecture.md
   - Function Reference: reference/SUMMARY.md

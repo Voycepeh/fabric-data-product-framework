@@ -11,4 +11,9 @@ Use this six-notebook split for a teachable and handover-friendly implementation
 | `04_checks_and_gates` | Run DQ, drift, and incremental safety checks. |
 | `05_handover_export` | Export lineage, run summary, and handover context. |
 
+## Stable notebook standards
+
+- Keep AI-generated content reviewable and explicitly human-approved.
+- Keep run artifacts reproducible, including profiles, DQ results, lineage, and handover outputs.
+
 For workflow steps and execution order, use [Quick Start](quick-start.md).
