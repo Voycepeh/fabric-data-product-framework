@@ -177,14 +177,14 @@ lakehouse_table_write(
     mode="overwrite"
 )
 
-# Optional for large tables after add_audit_columns creates p_bucket:
+# Optional for large tables after add_audit_columns creates _partition_bucket:
 # lakehouse_table_write(
 #     df_output,
 #     lh_out,
 #     output_table,
 #     mode="overwrite",
-#     partition_by="p_bucket",
-#     repartition_by=("p_bucket",)
+#     partition_by="_partition_bucket",
+#     repartition_by=("_partition_bucket",)
 # )
 
 # %% [markdown]
