@@ -42,14 +42,10 @@ for step in get_mvp_step_registry():
 # ==========================================================
 # 2) Fabric config and paths [Human]
 # ==========================================================
-try:
-    config = fdpf.load_fabric_config(CONFIG)
-    lh_source = fdpf.get_path("Sandbox", "Source", config=config)
-    lh_unified = fdpf.get_path("Sandbox", "Unified", config=config)
-except FileNotFoundError:
-    config = None
-    lh_source = fdpf.get_path("Sandbox", "Source", config=config)
-    lh_unified = fdpf.get_path("Sandbox", "Unified", config=config)
+# In Fabric notebooks, run `%run 00_config` before this template.
+config = fdpf.load_fabric_config(CONFIG)
+lh_source = fdpf.get_path("Sandbox", "Source", config=config)
+lh_unified = fdpf.get_path("Sandbox", "Unified", config=config)
 
 USE_SAMPLE_DATA = True
 ENABLE_FABRIC_WRITES = False
