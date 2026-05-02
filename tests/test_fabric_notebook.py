@@ -1,6 +1,6 @@
 import pytest
 
-from fabric_data_product_framework.fabric_notebook import (
+from fabric_data_product_framework.fabric import (
     Housepath,
     ODI_METADATA_LOGGER,
     add_system_technical_columns,

@@ -3,7 +3,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from fabric_data_product_framework.data_contract import (
+from fabric_data_product_framework.contracts import (
     assert_data_product_passed,
     build_runtime_context_from_contract,
     load_data_contract,
@@ -240,14 +240,14 @@ def test_run_data_product_calls_schema_drift_wrappers(monkeypatch):
     spark = _FakeSpark(_source_df())
     seen = {"check": 0}
 
-    monkeypatch.setattr("fabric_data_product_framework.data_contract.load_latest_schema_snapshot", lambda *args, **kwargs: None)
+    monkeypatch.setattr("fabric_data_product_framework.contracts.load_latest_schema_snapshot", lambda *args, **kwargs: None)
 
     def _check_schema_drift(**kwargs):
         seen["check"] += 1
         return {"status": "no_baseline", "can_continue": True}
 
-    monkeypatch.setattr("fabric_data_product_framework.data_contract.check_schema_drift", _check_schema_drift)
-    monkeypatch.setattr("fabric_data_product_framework.data_contract.build_and_write_schema_snapshot", lambda **kwargs: {"written": True})
+    monkeypatch.setattr("fabric_data_product_framework.contracts.check_schema_drift", _check_schema_drift)
+    monkeypatch.setattr("fabric_data_product_framework.contracts.build_and_write_schema_snapshot", lambda **kwargs: {"written": True})
 
     c = _contract("full")
     c["drift"]["schema_enabled"] = True
@@ -274,9 +274,9 @@ def test_data_drift_second_run_uses_written_baseline(monkeypatch):
     def _check_partition_drift(**kwargs):
         return {"status": "no_baseline" if kwargs.get("baseline_snapshot") is None else "passed", "can_continue": True}
 
-    monkeypatch.setattr("fabric_data_product_framework.data_contract.load_latest_partition_snapshot", _load_latest_partition_snapshot)
-    monkeypatch.setattr("fabric_data_product_framework.data_contract.build_and_write_partition_snapshot", _build_and_write_partition_snapshot)
-    monkeypatch.setattr("fabric_data_product_framework.data_contract.check_partition_drift", _check_partition_drift)
+    monkeypatch.setattr("fabric_data_product_framework.contracts.load_latest_partition_snapshot", _load_latest_partition_snapshot)
+    monkeypatch.setattr("fabric_data_product_framework.contracts.build_and_write_partition_snapshot", _build_and_write_partition_snapshot)
+    monkeypatch.setattr("fabric_data_product_framework.contracts.check_partition_drift", _check_partition_drift)
 
     first = run_data_product(spark=spark, contract=c, source_df=_source_df())
     second = run_data_product(spark=spark, contract=c, source_df=_source_df())

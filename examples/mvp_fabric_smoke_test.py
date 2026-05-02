@@ -4,9 +4,9 @@ from __future__ import annotations
 
 import pandas as pd
 
-from fabric_data_product_framework.governance_classifier import classify_columns
+from fabric_data_product_framework.governance import classify_columns
 from fabric_data_product_framework.lineage import build_lineage_record
-from fabric_data_product_framework.mvp_steps import get_mvp_step_registry, validate_mvp_artifacts
+from fabric_data_product_framework.template_generator import get_mvp_step_registry, validate_mvp_artifacts
 from fabric_data_product_framework.profiling import profile_dataframe
 
 

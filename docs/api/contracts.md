@@ -1,10 +1,10 @@
 # Contracts API Reference
 
-`fabric_data_product_framework.data_contract` and `fabric_data_product_framework.config` provide contract loading, validation, and contract-first orchestration entrypoints.
+`fabric_data_product_framework.contracts` and `fabric_data_product_framework.config` provide contract loading, validation, and contract-first orchestration entrypoints.
 
 ## Data contract orchestration
 
-::: fabric_data_product_framework.data_contract
+::: fabric_data_product_framework.contracts
     options:
       filters: ["!^_"]
 

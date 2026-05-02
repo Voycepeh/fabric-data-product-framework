@@ -14,8 +14,8 @@ committing to a full production write path.
 ## Example
 
 ```python
-from fabric_data_product_framework.dq import run_dq_workflow
-from fabric_data_product_framework.fabric_notebook import (
+from fabric_data_product_framework.quality import run_dq_workflow
+from fabric_data_product_framework.fabric import (
     get_path,
     lakehouse_table_read,
     load_fabric_config,

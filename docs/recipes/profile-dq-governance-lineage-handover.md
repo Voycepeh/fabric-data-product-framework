@@ -15,12 +15,12 @@ handover-ready artifacts.
 ## Example
 
 ```python
-from fabric_data_product_framework.dq import run_dq_workflow
-from fabric_data_product_framework.drift_checkers import (
+from fabric_data_product_framework.quality import run_dq_workflow
+from fabric_data_product_framework.drift import (
     check_profile_drift,
     summarize_drift_results,
 )
-from fabric_data_product_framework.governance_classifier import (
+from fabric_data_product_framework.governance import (
     build_governance_classification_records,
     classify_columns,
 )

@@ -15,7 +15,7 @@ from datetime import datetime, timezone
 import pandas as pd
 
 import fabric_data_product_framework as fdpf
-from fabric_data_product_framework.governance_classifier import classify_columns
+from fabric_data_product_framework.governance import classify_columns
 from fabric_data_product_framework.lineage import (
     build_lineage_records,
     build_transformation_summary_markdown,
