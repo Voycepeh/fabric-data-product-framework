@@ -11,7 +11,9 @@ from .fabric import (
     lakehouse_parquet_read_as_spark,
     lakehouse_table_read,
     load_fabric_config,
+    read_table,
     warehouse_read,
+    write_table,
 )
 from .governance import classify_columns, summarize_governance_classifications
 from .lineage import LineageRecorder, build_lineage_records, build_transformation_summary_markdown, generate_mermaid_lineage
@@ -33,6 +35,8 @@ __all__ = [
     "lakehouse_parquet_read_as_spark",
     "lakehouse_excel_read_as_spark",
     "warehouse_read",
+    "read_table",
+    "write_table",
     "generate_run_id",
     "build_runtime_context",
     "validate_notebook_name",

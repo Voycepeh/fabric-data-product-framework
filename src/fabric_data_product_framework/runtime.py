@@ -175,6 +175,6 @@ def build_runtime_context(
         "source_table": str(source_table),
         "target_table": str(target_table),
         "notebook_name": None if notebook_name is None else str(notebook_name),
-        "run_id": str(run_id) if run_id else generate_run_id(),
+        "run_id": str(run_id) if run_id else generate_run_id(str(dataset_name)),
         "started_at_utc": get_current_timestamp_utc(),
     }

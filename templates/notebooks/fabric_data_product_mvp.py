@@ -70,7 +70,8 @@ if USE_SAMPLE_DATA:
 else:
     df_source = fdpf.lakehouse_table_read(lh_source, SOURCE_TABLE)
     display(df_source.limit(10))
-    source_dataframe = df_source.toPandas()
+    # Keep pandas conversion bounded for the current pandas-based MVP smoke path.
+    source_dataframe = df_source.limit(1000).toPandas()
 
 # Optional warehouse source example:
 # df_wh = fdpf.warehouse_read(
