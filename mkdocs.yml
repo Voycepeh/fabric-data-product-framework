@@ -25,7 +25,7 @@ nav:
       - Notebook Standard: notebook-standard.md
   - Lifecycle: lifecycle-operating-model.md
   - Architecture: architecture.md
-  - Function Reference: reference/SUMMARY.md
+  - Function Reference: reference/index.md
 
 markdown_extensions:
   - admonition
