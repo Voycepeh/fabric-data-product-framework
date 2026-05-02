@@ -19,8 +19,8 @@ Use `configs/fabric_houses.example.yaml` as the public template.
 ## Runtime usage
 
 ```python
-from fabric_data_product_framework.fabric import load_fabric_config, get_path
+from fabric_data_product_framework.fabric_io import load_fabric_config, get_path
 
-fabric_config = load_fabric_config("Files/configs/fabric_houses.yaml")
+fabric_config = load_fabric_config(CONFIG)
 lh_in = get_path("Sandbox", "Source", config=fabric_config)
 ```

@@ -76,7 +76,7 @@ def create_pipeline_notebook_template(
 import fabric_data_product_framework as fw
 
 # %%
-from fabric_data_product_framework.fabric import (
+from fabric_data_product_framework.fabric_io import (
     load_fabric_config,
     get_path,
     check_naming_convention,
@@ -87,7 +87,7 @@ from fabric_data_product_framework.fabric import (
     ODI_METADATA_LOGGER,
 )
 
-fabric_config = load_fabric_config("Files/configs/fabric_houses.yaml")
+fabric_config = load_fabric_config(CONFIG)
 
 lh_in = get_path("{source_env}", "{source_target}", config=fabric_config)
 lh_out = get_path("{output_env}", "{output_target}", config=fabric_config)

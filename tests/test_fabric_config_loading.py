@@ -1,6 +1,6 @@
 import pytest
 
-from fabric_data_product_framework.fabric import (
+from fabric_data_product_framework.fabric_io import (
     Housepath,
     get_path,
     load_fabric_config,
@@ -57,7 +57,7 @@ def test_get_path_without_config_raises():
 
 
 def test_get_path_with_example_config():
-    p = get_path("Sandbox", "Source", use_example_config=True)
+    p = get_path("Sandbox", "Source", config=config)
     assert p.house_name == "SAMPLE_SOURCE"
 
 

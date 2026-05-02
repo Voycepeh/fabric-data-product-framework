@@ -43,13 +43,13 @@ for step in get_mvp_step_registry():
 # 2) Fabric config and paths [Human]
 # ==========================================================
 try:
-    config = fdpf.load_fabric_config("Files/config/fabric_config.yml")
+    config = fdpf.load_fabric_config(CONFIG)
     lh_source = fdpf.get_path("Sandbox", "Source", config=config)
     lh_unified = fdpf.get_path("Sandbox", "Unified", config=config)
 except FileNotFoundError:
     config = None
-    lh_source = fdpf.get_path("Sandbox", "Source", use_example_config=True)
-    lh_unified = fdpf.get_path("Sandbox", "Unified", use_example_config=True)
+    lh_source = fdpf.get_path("Sandbox", "Source", config=config)
+    lh_unified = fdpf.get_path("Sandbox", "Unified", config=config)
 
 USE_SAMPLE_DATA = True
 ENABLE_FABRIC_WRITES = False

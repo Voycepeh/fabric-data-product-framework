@@ -1,6 +1,6 @@
 import pytest
 
-from fabric_data_product_framework.fabric import (
+from fabric_data_product_framework.fabric_io import (
     build_table_identifier,
     read_table,
     write_table,
