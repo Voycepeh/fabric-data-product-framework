@@ -1,17 +1,20 @@
 # Fabric Data Product Framework
 
-A metadata-first, AI-in-the-loop, Fabric-first notebook framework for building documented, profiled, quality-checked, drift-aware, governed, and handover-ready data products.
+A structured workflow for turning notebook-based data work into reliable, reusable, and handover-ready Fabric data products.
 
-## What this framework is
-- A reusable Microsoft Fabric notebook workflow.
-- Built for Python-proficient data practitioners who need repeatable data product delivery.
-- The **data product itself is treated as the contract**.
-- Metadata, profile results, DQ rules, governance labels, lineage, and run summaries become reusable contract artifacts.
-- AI proposes; humans approve; the framework validates, logs, and packages artifacts.
+Framework documentation: https://voycepeh.github.io/fabric-data-product-framework/  
 
-## Visual overview
+Function reference: https://voycepeh.github.io/fabric-data-product-framework/reference/
 
-These visuals summarize the user benefits, workflow improvement, and canonical MVP flow.
+## What this framework sets out to do?
+
+Most notebook pipelines start as one-off analysis work. Over time, they become difficult to rerun, review, govern, and hand over.
+
+The Fabric Data Product Framework gives notebook-based data work a standard delivery path.
+
+It helps teams define the data contract clearly, profile and store metadata early, separate exploration from engineering, generate data quality rules with AI support, apply confidentiality and governance checks before release, and produce lineage, documentation, and handover materials as part of the workflow.
+
+The outcome is faster delivery, more trusted outputs, easier onboarding, and better continuity when another person takes over.
 
 ### What users get
 ![Framework benefits](docs/assets/framework-benefits.png)
@@ -19,18 +22,10 @@ These visuals summarize the user benefits, workflow improvement, and canonical M
 ### Before vs after
 ![Before and after](docs/assets/before-after.png)
 
-### MVP flow
+### End to end flow
 ![MVP flow](docs/assets/mvp-flow.png)
 
-## Start here:
-- Docs homepage: <https://voycepeh.github.io/fabric-data-product-framework/>
-- Quick Start runbook: [docs/quick-start.md](docs/quick-start.md)
-- Canonical lifecycle: [docs/lifecycle-operating-model.md](docs/lifecycle-operating-model.md)
-- Architecture: [docs/architecture.md](docs/architecture.md)
-- Build and install in Fabric guide: [docs/UV_WHEEL_FABRIC_INSTALL_GUIDE.md](docs/UV_WHEEL_FABRIC_INSTALL_GUIDE.md)
-- List of available function: [generated function reference](https://voycepeh.github.io/fabric-data-product-framework/reference/).
-
-## What problems it solves
+## What problems it aims to solve?
 
 | Problem | Framework response |
 |---|---|
@@ -42,15 +37,10 @@ These visuals summarize the user benefits, workflow improvement, and canonical M
 | Handover is hard when logic lives only in notebooks | Lineage, run summaries, and handover pack artifacts are assembled for transfer. |
 
 ## DQX-inspired, Fabric-native
-This framework is inspired by [Databricks Labs DQX](https://databrickslabs.github.io/dqx/docs/guide/ai_assisted_quality_checks_generation/) patterns (profiling, quality rule generation, quality check storage, check execution, and quarantine/summary metrics), but it is **not** a fork, clone, or replacement for DQX.
+This framework takes inspiration from [Databricks Labs DQX](https://databrickslabs.github.io/dqx/docs/guide/ai_assisted_quality_checks_generation/) patterns (profiling, quality rule generation, quality check storage, check execution, and quarantine/summary metrics).
 
 This repository adapts that pattern to Microsoft Fabric notebooks, Lakehouse/Warehouse, Fabric AI functions, and Copilot-style workflows.
 
 ## How does AI comes into play?
 AI helps draft DQ rules, sensitivity labels, lineage, transformation summaries, and handover notes.
 We do it via creating functions within this framework that allow us to prompt the native [AI function](https://learn.microsoft.com/en-us/fabric/data-science/ai-functions/overview?tabs=pandas-pyspark%2Cpandas) or standardize prompts that we manually generate and paste into copilot.
-
-
-## Callable Function Reference
-
-See `src/README.md` for the callable package workflow and module ownership guide.
