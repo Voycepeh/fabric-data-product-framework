@@ -1,6 +1,9 @@
+import pandas as pd
+
 from fabric_data_product_framework.profiling import (
     build_ai_quality_context,
     default_technical_columns,
+    flatten_profile_for_metadata,
     get_profiled_columns,
     is_min_max_supported_type,
     profile_metadata_to_records,
@@ -77,17 +80,74 @@ def test_build_ai_quality_context_returns_expected_sections():
     assert ("event_timestamp", "DATE_RANGE_CANDIDATE") in hints
 
 
-def test_legacy_profile_apis_raise_not_implemented():
-    try:
-        profile_dataframe(object())
-    except NotImplementedError as exc:
-        assert "profile_dataframe_to_metadata" in str(exc)
-    else:
-        raise AssertionError("Expected NotImplementedError")
+def test_legacy_profile_dataframe_supports_pandas():
+    pdf = pd.DataFrame([{"id": 1, "status": "OPEN"}, {"id": 2, "status": "CLOSED"}])
+    profile = profile_dataframe(pdf, dataset_name="orders")
+    assert profile["dataset_name"] == "orders"
+    assert profile["engine"] == "pandas"
+    assert profile["row_count"] == 2
 
+    profile_auto = profile_dataframe(
+        pdf,
+        dataset_name="orders",
+        engine="auto",
+    )
+    assert profile_auto["engine"] == "pandas"
+    assert profile_auto["row_count"] == 2
     try:
         summarize_profile({})
     except NotImplementedError as exc:
         assert "build_ai_quality_context" in str(exc)
     else:
         raise AssertionError("Expected NotImplementedError")
+
+
+def test_flatten_profile_for_metadata_preserves_falsey_lowercase_values():
+    profile = {
+        "row_count": 2,
+        "generated_at": "2026-01-01T00:00:00",
+        "columns": [
+            {
+                "column_name": "amount",
+                "data_type": "int64",
+                "null_count": 0,
+                "null_pct": 0.0,
+                "distinct_count": 1,
+                "distinct_pct": 50.0,
+                "min_value": 0,
+                "max_value": 0,
+            }
+        ],
+    }
+    rows = flatten_profile_for_metadata(profile, "orders", "r1", "source")
+    assert len(rows) == 1
+    assert rows[0]["null_count"] == 0
+    assert rows[0]["null_pct"] == 0.0
+    assert rows[0]["min_value"] == 0
+    assert rows[0]["max_value"] == 0
+
+
+def test_flatten_profile_for_metadata_supports_uppercase_and_exclude_columns():
+    profile = {
+        "row_count": 3,
+        "columns": [
+            {
+                "COLUMN_NAME": "id",
+                "DATA_TYPE": "int",
+                "NULL_COUNT": 0,
+                "NULL_PERCENT": 0.0,
+                "DISTINCT_COUNT": 3,
+                "DISTINCT_PERCENT": 100.0,
+                "MIN_VALUE": 1,
+                "MAX_VALUE": 3,
+            },
+            {"COLUMN_NAME": "ignore_me", "DATA_TYPE": "string"},
+        ],
+    }
+    rows = flatten_profile_for_metadata(profile, "orders", "r2", "output", exclude_columns={"ignore_me"})
+    assert len(rows) == 1
+    assert rows[0]["column_name"] == "id"
+    assert rows[0]["null_count"] == 0
+    assert rows[0]["null_pct"] == 0.0
+    assert rows[0]["min_value"] == 1
+    assert rows[0]["max_value"] == 3

@@ -7,6 +7,9 @@ AI-ready context for deterministic data quality rule hinting.
 
 from __future__ import annotations
 
+from dataclasses import asdict, dataclass
+from datetime import datetime
+import re
 from typing import Any
 
 import pandas as pd
@@ -67,43 +70,20 @@ class DataFrameProfile:
 
 
 def to_jsonable(value: Any) -> Any:
-    """To jsonable.
-
-def default_technical_columns() -> list[str]:
-    """Return the default technical/audit columns excluded from profiling.
-
-    Returns
-    -------
-    list[str]
-        Technical column names that should be excluded by default when building
-        standardized metadata profiles.
-    """
-    return [
-        "pipeline_ts",
-        "notebook_name",
-        "loaded_by",
-        "p_bucket",
-        "sample_bucket",
-        "row_ingest_id",
-        "ingest_run_id",
-        "_pipeline_run_id",
-        "_pipeline_name",
-        "_pipeline_environment",
-        "_source_system",
-        "_source_table",
-        "_source_extract_timestamp",
-        "_record_loaded_timestamp",
-        "_record_updated_timestamp",
-        "_effective_start_datetime",
-        "_effective_end_datetime",
-        "_is_current",
-        "_row_hash",
-        "_business_key_hash",
-        "_watermark_value",
-        "pipeline_run_id",
-        "loaded_at",
-        "run_ingest_id",
-    ]
+    """Convert a value recursively into JSON-serializable primitives."""
+    if isinstance(value, dict):
+        return {k: to_jsonable(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [to_jsonable(v) for v in value]
+    if hasattr(value, "isoformat"):
+        return value.isoformat()
+    try:
+        missing = pd.isna(value)
+    except Exception:
+        missing = False
+    if isinstance(missing, bool) and missing:
+        return None
+    return value
 
 
 def get_profiled_columns(df, exclude_columns: list[str] | set[str] | None = None) -> list[str]:
@@ -334,17 +314,71 @@ def build_ai_quality_context(
 
 # Legacy compatibility shims
 def profile_dataframe(df, dataset_name: str = "unknown", sample_size: int = 5, top_n: int = 5, engine: str = "auto") -> dict[str, Any]:
-    """Deprecated legacy API.
-
-    Raises
-    ------
-    NotImplementedError
-        Always raised. Use ``profile_dataframe_to_metadata`` and
-        ``build_ai_quality_context`` instead.
-    """
-    raise NotImplementedError(
-        "profile_dataframe is deprecated. Use profile_dataframe_to_metadata and build_ai_quality_context."
-    )
+    """Build a lightweight profile for pandas or Spark-like DataFrames."""
+    selected_engine = validate_engine(engine)
+    resolved_engine = detect_dataframe_engine(df) if selected_engine == "auto" else selected_engine
+    if resolved_engine == "pandas":
+        pdf = df if isinstance(df, pd.DataFrame) else pd.DataFrame(df)
+        row_count = int(len(pdf))
+        columns = []
+        for name in pdf.columns:
+            series = pdf[name]
+            non_null_count = int(series.notna().sum())
+            null_count = int(series.isna().sum())
+            null_pct = float((null_count / row_count) * 100) if row_count else 0.0
+            distinct_count = int(series.nunique(dropna=True))
+            distinct_pct = float((distinct_count / row_count) * 100) if row_count else 0.0
+            non_null_values = series.dropna()
+            min_value = to_jsonable(non_null_values.min()) if not non_null_values.empty else None
+            max_value = to_jsonable(non_null_values.max()) if not non_null_values.empty else None
+            sample_values = [to_jsonable(v) for v in non_null_values.head(sample_size).tolist()]
+            top_series = series.value_counts(dropna=True).head(top_n)
+            top_values = [{"value": to_jsonable(idx), "count": int(count)} for idx, count in top_series.items()]
+            columns.append(
+                asdict(
+                    ColumnProfile(
+                        column_name=name,
+                        data_type=str(series.dtype),
+                        non_null_count=non_null_count,
+                        null_count=null_count,
+                        null_pct=null_pct,
+                        distinct_count=distinct_count,
+                        distinct_pct=distinct_pct,
+                        sample_values=sample_values,
+                        min_value=min_value,
+                        max_value=max_value,
+                        mean_value=float(non_null_values.mean()) if pd.api.types.is_numeric_dtype(series.dtype) and not non_null_values.empty else None,
+                        median_value=float(non_null_values.median()) if pd.api.types.is_numeric_dtype(series.dtype) and not non_null_values.empty else None,
+                        std_value=float(non_null_values.std()) if pd.api.types.is_numeric_dtype(series.dtype) and len(non_null_values) > 1 else None,
+                        top_values=top_values,
+                        inferred_semantic_type="unknown",
+                    )
+                )
+            )
+        return asdict(
+            DataFrameProfile(
+                dataset_name=dataset_name,
+                engine=resolved_engine,
+                row_count=row_count,
+                column_count=len(pdf.columns),
+                duplicate_row_count=int(pdf.duplicated().sum()),
+                duplicate_row_pct=float((pdf.duplicated().sum() / row_count) * 100) if row_count else 0.0,
+                columns=columns,
+                generated_at=datetime.utcnow().isoformat(),
+            )
+        )
+    if detect_dataframe_engine(df) == "spark":
+        metadata_df = profile_dataframe_to_metadata(df, table_name=dataset_name)
+        records = profile_metadata_to_records(metadata_df)
+        return {
+            "dataset_name": dataset_name,
+            "engine": "spark",
+            "row_count": int(records[0].get("ROW_COUNT", 0)) if records else 0,
+            "column_count": len(records),
+            "columns": records,
+            "generated_at": datetime.utcnow().isoformat(),
+        }
+    raise TypeError("Unsupported dataframe type for profile_dataframe.")
 
 
 def summarize_profile(profile: dict[str, Any]) -> dict[str, Any]:
@@ -359,3 +393,43 @@ def summarize_profile(profile: dict[str, Any]) -> dict[str, Any]:
     raise NotImplementedError(
         "summarize_profile is deprecated. Use profile_dataframe_to_metadata and build_ai_quality_context."
     )
+
+
+def flatten_profile_for_metadata(
+    profile: dict[str, Any],
+    table_name: str,
+    run_id: str,
+    profile_role: str,
+    exclude_columns: list[str] | set[str] | None = None,
+) -> list[dict[str, Any]]:
+    """Flatten a profile dictionary into metadata-friendly row records."""
+    def first_present(mapping: dict[str, Any], *keys: str) -> Any:
+        for key in keys:
+            if key in mapping and mapping[key] is not None:
+                return mapping[key]
+        return None
+
+    excluded = set(exclude_columns or [])
+    rows: list[dict[str, Any]] = []
+    for col in profile.get("columns", []):
+        column_name = first_present(col, "column_name", "COLUMN_NAME")
+        if column_name in excluded:
+            continue
+        rows.append(
+            {
+                "run_id": run_id,
+                "table_name": table_name,
+                "profile_role": profile_role,
+                "column_name": column_name,
+                "data_type": first_present(col, "data_type", "DATA_TYPE"),
+                "row_count": col.get("row_count", profile.get("row_count")),
+                "null_count": first_present(col, "null_count", "NULL_COUNT"),
+                "null_pct": first_present(col, "null_pct", "NULL_PERCENT"),
+                "distinct_count": first_present(col, "distinct_count", "DISTINCT_COUNT"),
+                "distinct_pct": first_present(col, "distinct_pct", "DISTINCT_PERCENT"),
+                "min_value": to_jsonable(first_present(col, "min_value", "MIN_VALUE")),
+                "max_value": to_jsonable(first_present(col, "max_value", "MAX_VALUE")),
+                "generated_at": profile.get("generated_at", datetime.utcnow().isoformat()),
+            }
+        )
+    return rows
