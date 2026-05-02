@@ -21,7 +21,6 @@ nav:
   - Quick Start: quick-start.md
   - Notebook Conventions:
       - Notebook Structure: notebook-structure.md
-      - Notebook Standard: notebook-standard.md
   - Lifecycle: lifecycle-operating-model.md
   - Architecture: architecture.md
   - Function Reference: reference/SUMMARY.md
