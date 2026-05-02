@@ -15,14 +15,16 @@ from datetime import datetime, timezone
 import pandas as pd
 
 import fabric_data_product_framework as fdpf
-from fabric_data_product_framework.governance import classify_columns
-from fabric_data_product_framework.lineage import (
+from fabric_data_product_framework import (
     build_lineage_records,
     build_transformation_summary_markdown,
+    classify_columns,
     generate_mermaid_lineage,
+    profile_dataframe,
+    run_quality_rules,
+    summarize_profile,
 )
-from fabric_data_product_framework.profiling import profile_dataframe, summarize_profile
-from fabric_data_product_framework.quality import run_quality_rules
+from fabric_data_product_framework.mvp_steps import get_mvp_step_registry
 
 # ==========================================================
 # 0) Package and environment verification
@@ -30,6 +32,10 @@ from fabric_data_product_framework.quality import run_quality_rules
 print("fabric_data_product_framework version:", getattr(fdpf, "__version__", "unknown"))
 print("fabric_data_product_framework module:", getattr(fdpf, "__file__", "unknown"))
 print("Assumption: framework wheel is installed through your Fabric Environment.")
+
+print("MVP step map:")
+for step in get_mvp_step_registry():
+    print(" -", step["step"], "=>", step["canonical_module"])
 
 # ==========================================================
 # 1) Runtime parameters (safe defaults)

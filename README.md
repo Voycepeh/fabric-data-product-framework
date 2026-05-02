@@ -49,3 +49,8 @@ This repository adapts that pattern to Microsoft Fabric notebooks, Lakehouse/War
 ## How does AI comes into play?
 AI helps draft DQ rules, sensitivity labels, lineage, transformation summaries, and handover notes.
 We do it via creating functions within this framework that allow us to prompt the native [AI function](https://learn.microsoft.com/en-us/fabric/data-science/ai-functions/overview?tabs=pandas-pyspark%2Cpandas) or standardize prompts that we manually generate and paste into copilot.
+
+
+## Callable Function Reference
+
+See `src/README.md` for the callable package workflow and module ownership guide.
