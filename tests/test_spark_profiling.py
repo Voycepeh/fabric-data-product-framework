@@ -45,7 +45,12 @@ def test_zero_row_dataframe_no_divide_by_zero(spark_session):
     out = profile_dataframe_to_metadata(empty_df, "orders_clean")
     rows = out.collect()
     assert all(r["ROW_COUNT"] == 0 for r in rows)
+    assert all(r["NULL_COUNT"] == 0 for r in rows)
     assert all(r["NULL_PERCENT"] == 0.0 for r in rows)
+    assert all(r["DISTINCT_COUNT"] == 0 for r in rows)
+    assert all(r["DISTINCT_PERCENT"] == 0.0 for r in rows)
+    assert all(r["MIN_VALUE"] is None for r in rows)
+    assert all(r["MAX_VALUE"] is None for r in rows)
 
 
 def test_odi_wrapper_matches_new_function_shape(spark_session):

@@ -4,6 +4,8 @@ from fabric_data_product_framework.profiling import (
     get_profiled_columns,
     is_min_max_supported_type,
     profile_metadata_to_records,
+    profile_dataframe,
+    summarize_profile,
 )
 
 
@@ -66,9 +68,26 @@ def test_build_ai_quality_context_returns_expected_sections():
     assert context["dataset_name"] == "orders"
     assert context["table_name"] == "orders_clean"
     assert context["row_count"] == 100
+    assert len(context["column_profiles"]) == 3
     assert context["column_count"] == 3
     assert "order_status" in context["columns_with_nulls"]
     hints = {(h["column"], h["hint"]) for h in context["candidate_rule_hints"]}
     assert ("order_id", "UNIQUE_CANDIDATE") in hints
     assert ("order_status", "ACCEPTED_VALUES_CANDIDATE") in hints
     assert ("event_timestamp", "DATE_RANGE_CANDIDATE") in hints
+
+
+def test_legacy_profile_apis_raise_not_implemented():
+    try:
+        profile_dataframe(object())
+    except NotImplementedError as exc:
+        assert "profile_dataframe_to_metadata" in str(exc)
+    else:
+        raise AssertionError("Expected NotImplementedError")
+
+    try:
+        summarize_profile({})
+    except NotImplementedError as exc:
+        assert "build_ai_quality_context" in str(exc)
+    else:
+        raise AssertionError("Expected NotImplementedError")

@@ -140,10 +140,10 @@ def profile_dataframe_to_metadata(
                 F.lit(column_name).alias("COLUMN_NAME"),
                 F.lit(dtype_map[column_name]).alias("DATA_TYPE"),
                 F.lit(row_count).alias("ROW_COUNT"),
-                F.col(f"{column_name}_NULL_COUNT").alias("NULL_COUNT"),
-                F.round((F.col(f"{column_name}_NULL_COUNT").cast("double") / denominator) * 100, 3).alias("NULL_PERCENT"),
-                F.col(f"{column_name}_DISTINCT_COUNT").alias("DISTINCT_COUNT"),
-                F.round((F.col(f"{column_name}_DISTINCT_COUNT").cast("double") / denominator) * 100, 3).alias("DISTINCT_PERCENT"),
+                F.coalesce(F.col(f"{column_name}_NULL_COUNT"), F.lit(0)).cast("long").alias("NULL_COUNT"),
+                F.round((F.coalesce(F.col(f"{column_name}_NULL_COUNT"), F.lit(0)).cast("double") / denominator) * 100, 3).alias("NULL_PERCENT"),
+                F.coalesce(F.col(f"{column_name}_DISTINCT_COUNT"), F.lit(0)).cast("long").alias("DISTINCT_COUNT"),
+                F.round((F.coalesce(F.col(f"{column_name}_DISTINCT_COUNT"), F.lit(0)).cast("double") / denominator) * 100, 3).alias("DISTINCT_PERCENT"),
                 F.col(f"{column_name}_MIN").cast("string").alias("MIN_VALUE") if f"{column_name}_MIN" in agg_df.columns else F.lit(None).cast("string").alias("MIN_VALUE"),
                 F.col(f"{column_name}_MAX").cast("string").alias("MAX_VALUE") if f"{column_name}_MAX" in agg_df.columns else F.lit(None).cast("string").alias("MAX_VALUE"),
             )
@@ -231,20 +231,24 @@ def build_ai_quality_context(
     ]
 
     candidate_rule_hints = []
+    column_profiles = []
     for r in records:
         col = r.get("COLUMN_NAME")
         dtype = str(r.get("DATA_TYPE", "")).lower()
         null_pct = _num(r.get("NULL_PERCENT"), 0)
         distinct_pct = _num(r.get("DISTINCT_PERCENT"), 0)
+        distinct_count = int(_num(r.get("DISTINCT_COUNT"), 0))
         has_range = r.get("MIN_VALUE") is not None and r.get("MAX_VALUE") is not None
 
-        if null_pct <= 0.1:
+        column_profiles.append({k: r.get(k) for k in ("COLUMN_NAME", "DATA_TYPE", "ROW_COUNT", "NULL_COUNT", "NULL_PERCENT", "DISTINCT_COUNT", "DISTINCT_PERCENT", "MIN_VALUE", "MAX_VALUE")})
+
+        if row_count > 0 and null_pct <= 0.1:
             candidate_rule_hints.append({"column": col, "hint": "NOT_NULL_CANDIDATE"})
-        if distinct_pct >= unique_threshold:
+        if row_count > 0 and distinct_pct >= unique_threshold:
             candidate_rule_hints.append({"column": col, "hint": "UNIQUE_CANDIDATE"})
         if ("date" in dtype or "timestamp" in dtype) and has_range:
             candidate_rule_hints.append({"column": col, "hint": "DATE_RANGE_CANDIDATE"})
-        if distinct_pct <= low_cardinality_threshold:
+        if row_count > 0 and distinct_count > 0 and distinct_pct <= low_cardinality_threshold:
             candidate_rule_hints.append({"column": col, "hint": "ACCEPTED_VALUES_CANDIDATE"})
         if any(token in dtype for token in ("int", "bigint", "float", "double", "decimal")) and has_range:
             candidate_rule_hints.append({"column": col, "hint": "NUMERIC_RANGE_CANDIDATE"})
@@ -258,6 +262,7 @@ def build_ai_quality_context(
         "row_count": row_count,
         "column_count": len(columns),
         "columns": columns,
+        "column_profiles": column_profiles,
         "columns_with_nulls": columns_with_nulls,
         "high_null_columns": high_null_columns,
         "high_cardinality_columns": high_cardinality_columns,
@@ -270,14 +275,28 @@ def build_ai_quality_context(
 
 # Legacy compatibility shims
 def profile_dataframe(df, dataset_name: str = "unknown", sample_size: int = 5, top_n: int = 5, engine: str = "auto") -> dict[str, Any]:
-    """Legacy helper retained for compatibility; prefer profile_dataframe_to_metadata."""
-    if engine == "pandas":
-        return {"dataset_name": dataset_name, "engine": "pandas", "row_count": int(getattr(df, "shape", [0])[0]), "column_count": int(getattr(df, "shape", [0,0])[1]), "columns": []}
-    if engine == "auto" and hasattr(df, "shape"):
-        return {"dataset_name": dataset_name, "engine": "pandas", "row_count": int(df.shape[0]), "column_count": int(df.shape[1]), "columns": []}
-    return {"dataset_name": dataset_name, "engine": "spark", "row_count": 0, "column_count": len(getattr(df, "dtypes", [])), "columns": []}
+    """Deprecated legacy API.
+
+    Raises
+    ------
+    NotImplementedError
+        Always raised. Use ``profile_dataframe_to_metadata`` and
+        ``build_ai_quality_context`` instead.
+    """
+    raise NotImplementedError(
+        "profile_dataframe is deprecated. Use profile_dataframe_to_metadata and build_ai_quality_context."
+    )
 
 
 def summarize_profile(profile: dict[str, Any]) -> dict[str, Any]:
-    """Legacy summary shim retained for compatibility."""
-    return {"dataset_name": profile.get("dataset_name"), "row_count": profile.get("row_count", 0), "column_count": profile.get("column_count", 0), "duplicate_row_count": profile.get("duplicate_row_count", 0), "columns_with_nulls": [], "likely_identifier_columns": [], "likely_date_columns": [], "likely_sensitive_columns": [], "generated_at": profile.get("generated_at")}
+    """Deprecated legacy API.
+
+    Raises
+    ------
+    NotImplementedError
+        Always raised. Use ``profile_dataframe_to_metadata`` and
+        ``build_ai_quality_context`` instead.
+    """
+    raise NotImplementedError(
+        "summarize_profile is deprecated. Use profile_dataframe_to_metadata and build_ai_quality_context."
+    )
