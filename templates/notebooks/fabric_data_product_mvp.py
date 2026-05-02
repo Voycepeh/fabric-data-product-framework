@@ -20,32 +20,42 @@ from fabric_data_product_framework.mvp_steps import get_mvp_step_registry, valid
 # ==========================================================
 # 1) Package and runtime setup [Framework]
 # ==========================================================
-runtime_context = {
-    "framework_version": getattr(fdpf, "__version__", "unknown"),
-    "framework_module": getattr(fdpf, "__file__", "unknown"),
-    "run_started_at_utc": datetime.now(timezone.utc).isoformat(),
-}
-print("framework version:", runtime_context["framework_version"])
+print("framework module:", getattr(fdpf, "__file__", "unknown"))
+print("framework version:", getattr(fdpf, "__version__", "unknown"))
+
+DATASET_NAME = "orders"
+SOURCE_TABLE = "raw_orders"
+TARGET_TABLE = "clean_orders"
+
+runtime_context = fdpf.build_runtime_context(
+    dataset_name=DATASET_NAME,
+    environment="Sandbox",
+    source_table=SOURCE_TABLE,
+    target_table=TARGET_TABLE,
+    notebook_name="dex_source_to_dex_unified_orders",
+)
+RUN_ID = runtime_context["run_id"]
+
 for step in get_mvp_step_registry():
     print(f"{step['step_number']}. {step['step_name']} [{step['owner_type']}]")
 
 # ==========================================================
 # 2) Fabric config and paths [Human]
 # ==========================================================
-DATASET_NAME = "orders"
-RUN_ID = f"orders_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}"
-SOURCE_TABLE = "source_lakehouse.sales.orders"
-TARGET_TABLE = "unified_lakehouse.curated.orders"
+try:
+    config = fdpf.load_fabric_config("Files/config/fabric_config.yml")
+    lh_source = fdpf.get_path("Sandbox", "Source", config=config)
+    lh_unified = fdpf.get_path("Sandbox", "Unified", config=config)
+except FileNotFoundError:
+    config = None
+    lh_source = fdpf.get_path("Sandbox", "Source", use_example_config=True)
+    lh_unified = fdpf.get_path("Sandbox", "Unified", use_example_config=True)
+
 USE_SAMPLE_DATA = True
 ENABLE_FABRIC_WRITES = False
 
-fabric_config = {
-    "environment": "sandbox",
-    "source_table": SOURCE_TABLE,
-    "target_table": TARGET_TABLE,
-}
-path_context = {"source_path": SOURCE_TABLE, "target_path": TARGET_TABLE}
-# TODO: replace `fabric_config` and `path_context` with runtime-loaded Fabric config and path resolution.
+fabric_config = {"environment": "Sandbox"}
+path_context = {"source_path": lh_source.root, "target_path": lh_unified.root}
 
 # ==========================================================
 # 3) Pull source data [Framework]
@@ -58,7 +68,19 @@ if USE_SAMPLE_DATA:
         ]
     )
 else:
-    raise NotImplementedError("TODO: implement Fabric source read (for example spark.table(SOURCE_TABLE)).")
+    df_source = fdpf.lakehouse_table_read(lh_source, SOURCE_TABLE)
+    display(df_source.limit(10))
+    source_dataframe = df_source.toPandas()
+
+# Optional warehouse source example:
+# df_wh = fdpf.warehouse_read(
+#     env="DE",
+#     target="Warehouse",
+#     schema="dbo",
+#     table="SomeTable",
+#     config=config,
+# )
+# display(df_wh.limit(10))
 
 # ==========================================================
 # 4) Source profiling [Framework]

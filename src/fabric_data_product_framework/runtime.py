@@ -8,56 +8,41 @@ from uuid import uuid4
 
 
 class NotebookNamingError(ValueError):
-    """Notebooknamingerror.
-
-    Public class used by the framework API for `NotebookNamingError`.
-
-    Examples
-    --------
-    >>> NotebookNamingError(... )
-    """
+    """Raised when notebook naming validation fails."""
 
 
 def get_current_timestamp_utc() -> str:
-    """Get current timestamp utc.
-
-    Run `get_current_timestamp_utc`.
-
-    Parameters
-    ----------
-    None
-        This callable does not require user-provided parameters.
+    """Return the current UTC timestamp in ISO-8601 format.
 
     Returns
     -------
-    result : str
-        Return value from `get_current_timestamp_utc`.
+    str
+        Timestamp such as ``2026-05-02T10:20:30.123456+00:00``.
 
-    Examples
-    --------
-    >>> get_current_timestamp_utc()
+    Notes
+    -----
+    Useful for runtime context values persisted in Fabric logs and metadata tables.
     """
     return datetime.now(timezone.utc).isoformat()
 
 
 def generate_run_id(prefix: str = "run") -> str:
-    """Generate run id.
-
-    Run `generate_run_id`.
+    """Generate a notebook-safe run identifier.
 
     Parameters
     ----------
-    prefix : str, optional
-        Parameter `prefix`.
+    prefix : str, default="run"
+        Human-friendly prefix, typically a dataset name.
 
     Returns
     -------
-    result : str
-        Return value from `generate_run_id`.
+    str
+        Identifier in the form ``<normalized_prefix>_<utc_timestamp>_<short_uuid>``.
 
     Examples
     --------
-    >>> generate_run_id(prefix)
+    >>> generate_run_id("orders")  # doctest: +SKIP
+    'orders_20260502T102030Z_1a2b3c4d'
     """
     normalized_prefix = normalize_name(prefix) or "run"
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
@@ -66,23 +51,17 @@ def generate_run_id(prefix: str = "run") -> str:
 
 
 def normalize_name(value: str) -> str:
-    """Normalize name.
-
-    Run `normalize_name`.
+    """Normalize a value for safe Fabric notebook and table-style naming.
 
     Parameters
     ----------
     value : str
-        Parameter `value`.
+        Input text.
 
     Returns
     -------
-    result : str
-        Return value from `normalize_name`.
-
-    Examples
-    --------
-    >>> normalize_name(value)
+    str
+        Lowercase value with non ``[a-z0-9_]`` characters replaced by underscores.
     """
     normalized = re.sub(r"[^a-z0-9_]+", "_", (value or "").strip().lower().replace(" ", "_"))
     normalized = re.sub(r"_+", "_", normalized).strip("_")
@@ -90,25 +69,19 @@ def normalize_name(value: str) -> str:
 
 
 def validate_notebook_name(name: str, allowed_prefixes: list[str]) -> list[str]:
-    """Validate notebook name.
-
-    Run `validate_notebook_name`.
+    """Validate a Fabric notebook name against required prefixes and format.
 
     Parameters
     ----------
     name : str
-        Parameter `name`.
+        Notebook name to validate.
     allowed_prefixes : list[str]
-        Parameter `allowed_prefixes`.
+        Permitted prefixes (for example ``dex_source_to_dex_unified``).
 
     Returns
     -------
-    result : list[str]
-        Return value from `validate_notebook_name`.
-
-    Examples
-    --------
-    >>> validate_notebook_name(name, allowed_prefixes)
+    list[str]
+        Validation error messages. Empty list means the name is valid.
     """
     errors: list[str] = []
     normalized_name = (name or "").strip()
@@ -135,30 +108,19 @@ def validate_notebook_name(name: str, allowed_prefixes: list[str]) -> list[str]:
 
 
 def assert_notebook_name_valid(name: str, allowed_prefixes: list[str]) -> None:
-    """Assert notebook name valid.
-
-    Run `assert_notebook_name_valid`.
+    """Raise :class:`NotebookNamingError` when a notebook name is invalid.
 
     Parameters
     ----------
     name : str
-        Parameter `name`.
+        Notebook name.
     allowed_prefixes : list[str]
-        Parameter `allowed_prefixes`.
-
-    Returns
-    -------
-    result : None
-        Return value from `assert_notebook_name_valid`.
+        Allowed naming prefixes.
 
     Raises
     ------
     NotebookNamingError
-        Raised when input validation or runtime checks fail.
-
-    Examples
-    --------
-    >>> assert_notebook_name_valid(name, allowed_prefixes)
+        If ``name`` fails :func:`validate_notebook_name` checks.
     """
     errors = validate_notebook_name(name=name, allowed_prefixes=allowed_prefixes)
     if errors:
@@ -173,33 +135,39 @@ def build_runtime_context(
     notebook_name: str | None = None,
     run_id: str | None = None,
 ) -> dict:
-    """Build runtime context.
-
-    Run `build_runtime_context`.
+    """Build a standard runtime context dictionary for Fabric notebooks.
 
     Parameters
     ----------
     dataset_name : str
-        Parameter `dataset_name`.
+        Logical dataset name (for example ``orders``).
     environment : str
-        Parameter `environment`.
+        Deployment environment label (for example ``Sandbox``).
     source_table : str
-        Parameter `source_table`.
+        Source object name used in the run.
     target_table : str
-        Parameter `target_table`.
+        Target object name used in the run.
     notebook_name : str | None, optional
-        Parameter `notebook_name`.
+        Notebook name if available.
     run_id : str | None, optional
-        Parameter `run_id`.
+        Pre-generated run id. When omitted, :func:`generate_run_id` is used.
 
     Returns
     -------
-    result : dict
-        Return value from `build_runtime_context`.
+    dict
+        Notebook runtime context with run metadata.
 
     Examples
     --------
-    >>> build_runtime_context(dataset_name, environment)
+    >>> from fabric_data_product_framework.runtime import build_runtime_context
+    >>> build_runtime_context(
+    ...     dataset_name="orders",
+    ...     environment="Sandbox",
+    ...     source_table="raw_orders",
+    ...     target_table="clean_orders",
+    ...     notebook_name="dex_source_to_dex_unified_orders",
+    ... )  # doctest: +SKIP
+    {'dataset_name': 'orders', ...}
     """
     return {
         "dataset_name": str(dataset_name),
