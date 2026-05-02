@@ -7,18 +7,49 @@ import hashlib
 
 
 class SchemaDriftError(Exception):
-    """Raised when schema drift contains blocking changes."""
+    """Schemadrifterror.
+
+    Public class used by the framework API for `SchemaDriftError`.
+
+    Examples
+    --------
+    >>> SchemaDriftError(... )
+    """
 
 
 class UnsupportedDataFrameEngineError(Exception):
-    """Raised when schema snapshotting cannot identify a supported dataframe engine."""
+    """Unsupporteddataframeengineerror.
+
+    Public class used by the framework API for `UnsupportedDataFrameEngineError`.
+
+    Examples
+    --------
+    >>> UnsupportedDataFrameEngineError(... )
+    """
 
 
 VALID_ENGINES = {"auto", "pandas", "spark"}
 
 
 def default_schema_drift_policy() -> dict:
-    """Return default schema drift policy used for pre-transform safety checks (step 5)."""
+    """Default schema drift policy.
+
+    Run `default_schema_drift_policy`.
+
+    Parameters
+    ----------
+    None
+        This callable does not require user-provided parameters.
+
+    Returns
+    -------
+    result : dict
+        Return value from `default_schema_drift_policy`.
+
+    Examples
+    --------
+    >>> default_schema_drift_policy()
+    """
     return {
         "block_on_removed_column": True,
         "block_on_type_change": True,
@@ -30,7 +61,29 @@ def default_schema_drift_policy() -> dict:
 
 
 def detect_dataframe_engine(df) -> str:
-    """Detect pandas or Spark dataframe type for schema snapshot helpers (step 5)."""
+    """Detect dataframe engine.
+
+    Run `detect_dataframe_engine`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+
+    Returns
+    -------
+    result : str
+        Return value from `detect_dataframe_engine`.
+
+    Raises
+    ------
+    UnsupportedDataFrameEngineError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> detect_dataframe_engine(df)
+    """
     module_name = type(df).__module__
     if module_name.startswith("pandas") and hasattr(df, "dtypes") and hasattr(df, "columns"):
         return "pandas"
@@ -101,9 +154,36 @@ def _build_spark_schema_snapshot(df, dataset_name: str, table_name: str) -> dict
 
 
 def build_schema_snapshot(df, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "auto") -> dict:
-    """Create a schema snapshot for baseline/current comparison before transforms (step 5).
+    """Build schema snapshot.
 
-    Returns dataset/table/column structure details. Supports pandas and Spark.
+    Run `build_schema_snapshot`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    dataset_name : str, optional
+        Parameter `dataset_name`.
+    table_name : str, optional
+        Parameter `table_name`.
+    engine : str, optional
+        Parameter `engine`.
+
+    Returns
+    -------
+    result : dict
+        Return value from `build_schema_snapshot`.
+
+    Raises
+    ------
+    UnsupportedDataFrameEngineError
+        Raised when input validation or runtime checks fail.
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> build_schema_snapshot(df, dataset_name)
     """
     if engine not in VALID_ENGINES:
         raise ValueError(f"Unsupported engine '{engine}'. Expected one of: {sorted(VALID_ENGINES)}")
@@ -127,7 +207,28 @@ def _resolve_change_behavior(is_warning: bool, is_blocking: bool) -> tuple[str, 
 
 
 def compare_schema_snapshots(baseline_snapshot: dict, current_snapshot: dict, policy: dict | None = None) -> dict:
-    """Compare baseline and current schema snapshots and classify drift actions (step 5)."""
+    """Compare schema snapshots.
+
+    Run `compare_schema_snapshots`.
+
+    Parameters
+    ----------
+    baseline_snapshot : dict
+        Parameter `baseline_snapshot`.
+    current_snapshot : dict
+        Parameter `current_snapshot`.
+    policy : dict | None, optional
+        Parameter `policy`.
+
+    Returns
+    -------
+    result : dict
+        Return value from `compare_schema_snapshots`.
+
+    Examples
+    --------
+    >>> compare_schema_snapshots(baseline_snapshot, current_snapshot)
+    """
     active_policy = {**default_schema_drift_policy(), **(policy or {})}
 
     baseline_columns = {col["column_name"]: col for col in baseline_snapshot.get("columns", [])}
@@ -200,6 +301,28 @@ def compare_schema_snapshots(baseline_snapshot: dict, current_snapshot: dict, po
 
 
 def assert_no_blocking_schema_drift(result: dict) -> None:
-    """Raise ``SchemaDriftError`` when drift comparison contains blocking changes (step 5 gate)."""
+    """Assert no blocking schema drift.
+
+    Run `assert_no_blocking_schema_drift`.
+
+    Parameters
+    ----------
+    result : dict
+        Parameter `result`.
+
+    Returns
+    -------
+    result : None
+        Return value from `assert_no_blocking_schema_drift`.
+
+    Raises
+    ------
+    SchemaDriftError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> assert_no_blocking_schema_drift(result)
+    """
     if not bool(result.get("can_continue", True)):
         raise SchemaDriftError("Blocking schema drift detected.")

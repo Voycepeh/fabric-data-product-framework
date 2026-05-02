@@ -25,7 +25,14 @@ SEVERITY_TO_ACTION = {"info": "allow", "warning": "warn", "critical": "block"}
 
 
 class DataQualityError(Exception):
-    """Raised when data quality gate fails."""
+    """Dataqualityerror.
+
+    Public class used by the framework API for `DataQualityError`.
+
+    Examples
+    --------
+    >>> DataQualityError(... )
+    """
 
 
 def _now_iso() -> str:
@@ -192,16 +199,31 @@ def _spark_rule(df: Any, rule: dict[str, Any], row_count: int) -> tuple[int, int
 
 
 def run_quality_rules(df: Any, rules: list[dict], *, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "auto") -> dict:
-    """Execute supported quality rules against pandas/Spark dataframes.
+    """Run quality rules.
 
-    Returns:
-        Quality result payload with per-rule outcomes and gate status.
+    Run `run_quality_rules`.
 
-    Runtime:
-        Local-safe for pandas and Fabric/Spark compatible for distributed runs.
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    rules : list[dict]
+        Parameter `rules`.
+    dataset_name : str, optional
+        Parameter `dataset_name`.
+    table_name : str, optional
+        Parameter `table_name`.
+    engine : str, optional
+        Parameter `engine`.
 
-    Example:
-        >>> result = run_quality_rules(df, rules, dataset_name="orders", table_name="silver.orders")
+    Returns
+    -------
+    result : dict
+        Return value from `run_quality_rules`.
+
+    Examples
+    --------
+    >>> run_quality_rules(df, rules)
     """
     resolved_engine = _resolve_engine(df, engine)
     row_count = len(df) if resolved_engine == "pandas" else df.count()
@@ -291,11 +313,32 @@ def run_quality_rules(df: Any, rules: list[dict], *, dataset_name: str = "unknow
 
 
 def assert_quality_gate(result: dict, fail_on: str = "critical") -> None:
-    """Raise ``DataQualityError`` when the quality result blocks pipeline progression.
+    """Assert quality gate.
 
-    Args:
-        result: Payload returned by ``run_quality_rules``.
-        fail_on: Gate mode; MVP currently supports only ``"critical"``.
+    Run `assert_quality_gate`.
+
+    Parameters
+    ----------
+    result : dict
+        Parameter `result`.
+    fail_on : str, optional
+        Parameter `fail_on`.
+
+    Returns
+    -------
+    result : None
+        Return value from `assert_quality_gate`.
+
+    Raises
+    ------
+    DataQualityError
+        Raised when input validation or runtime checks fail.
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> assert_quality_gate(result, fail_on)
     """
     if fail_on != "critical":
         raise ValueError("Only fail_on='critical' is supported in MVP")
@@ -304,7 +347,26 @@ def assert_quality_gate(result: dict, fail_on: str = "critical") -> None:
 
 
 def build_quality_result_records(result: dict, *, run_id: str) -> list[dict]:
-    """Flatten rule execution results into metadata-table-ready quality records."""
+    """Build quality result records.
+
+    Run `build_quality_result_records`.
+
+    Parameters
+    ----------
+    result : dict
+        Parameter `result`.
+    run_id : str
+        Parameter `run_id`.
+
+    Returns
+    -------
+    result : list[dict]
+        Return value from `build_quality_result_records`.
+
+    Examples
+    --------
+    >>> build_quality_result_records(result, run_id)
+    """
     rows = []
     for r in result.get("results", []):
         rows.append(

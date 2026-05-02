@@ -11,11 +11,35 @@ from fabric_data_product_framework.profiling import to_jsonable
 
 
 class IncrementalSafetyError(Exception):
-    """Raised when incremental safety checks detect blocking historical changes."""
+    """Incrementalsafetyerror.
+
+    Public class used by the framework API for `IncrementalSafetyError`.
+
+    Examples
+    --------
+    >>> IncrementalSafetyError(... )
+    """
 
 
 def default_incremental_safety_policy() -> dict:
-    """Return default incremental partition safety policy for lifecycle step 5 checks."""
+    """Default incremental safety policy.
+
+    Run `default_incremental_safety_policy`.
+
+    Parameters
+    ----------
+    None
+        This callable does not require user-provided parameters.
+
+    Returns
+    -------
+    result : dict
+        Return value from `default_incremental_safety_policy`.
+
+    Examples
+    --------
+    >>> default_incremental_safety_policy()
+    """
     return {
         "block_on_historical_partition_change": True,
         "closed_partition_grace_days": 1,
@@ -129,10 +153,42 @@ def _build_spark_partition_snapshot(df, *, dataset_name: str, table_name: str, p
 
 
 def build_partition_snapshot(df, *, dataset_name: str = "unknown", table_name: str = "unknown", partition_column: str, business_keys: list[str], watermark_column: str | None = None, run_id: str | None = None, engine: str = "auto") -> list[dict]:
-    """Build per-partition snapshots for incremental safety validation (step 5).
+    """Build partition snapshot.
 
-    Requires ``partition_column`` and ``business_keys``. Returns partition records.
-    Supports pandas and Spark without Spark-to-pandas conversion.
+    Run `build_partition_snapshot`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    dataset_name : str, optional
+        Parameter `dataset_name`.
+    table_name : str, optional
+        Parameter `table_name`.
+    partition_column : str
+        Parameter `partition_column`.
+    business_keys : list[str]
+        Parameter `business_keys`.
+    watermark_column : str | None, optional
+        Parameter `watermark_column`.
+    run_id : str | None, optional
+        Parameter `run_id`.
+    engine : str, optional
+        Parameter `engine`.
+
+    Returns
+    -------
+    result : list[dict]
+        Return value from `build_partition_snapshot`.
+
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> build_partition_snapshot(df, dataset_name)
     """
     selected_engine = validate_engine(engine)
     if selected_engine == "auto":
@@ -169,7 +225,28 @@ def _is_closed_partition(partition_value: Any, grace_days: int) -> bool:
 
 
 def compare_partition_snapshots(baseline_snapshots: list[dict], current_snapshots: list[dict], policy: dict | None = None) -> dict:
-    """Compare baseline/current partition snapshots and classify historical-change risk (step 5)."""
+    """Compare partition snapshots.
+
+    Run `compare_partition_snapshots`.
+
+    Parameters
+    ----------
+    baseline_snapshots : list[dict]
+        Parameter `baseline_snapshots`.
+    current_snapshots : list[dict]
+        Parameter `current_snapshots`.
+    policy : dict | None, optional
+        Parameter `policy`.
+
+    Returns
+    -------
+    result : dict
+        Return value from `compare_partition_snapshots`.
+
+    Examples
+    --------
+    >>> compare_partition_snapshots(baseline_snapshots, current_snapshots)
+    """
     active_policy = {**default_incremental_safety_policy(), **(policy or {})}
     baseline = {str(s.get("partition_value")): s for s in baseline_snapshots}
     current = {str(s.get("partition_value")): s for s in current_snapshots}
@@ -214,13 +291,58 @@ def compare_partition_snapshots(baseline_snapshots: list[dict], current_snapshot
 
 
 def assert_incremental_safe(result: dict) -> None:
-    """Raise ``IncrementalSafetyError`` when incremental comparison has blocking changes."""
+    """Assert incremental safe.
+
+    Run `assert_incremental_safe`.
+
+    Parameters
+    ----------
+    result : dict
+        Parameter `result`.
+
+    Returns
+    -------
+    result : None
+        Return value from `assert_incremental_safe`.
+
+    Raises
+    ------
+    IncrementalSafetyError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> assert_incremental_safe(result)
+    """
     if not bool(result.get("can_continue", True)):
         raise IncrementalSafetyError("Blocking incremental partition safety changes detected.")
 
 
 def build_incremental_safety_records(result: dict, *, run_id: str, dataset_name: str, table_name: str) -> list[dict]:
-    """Flatten incremental safety outcomes into metadata rows for run tracking (steps 5/14)."""
+    """Build incremental safety records.
+
+    Run `build_incremental_safety_records`.
+
+    Parameters
+    ----------
+    result : dict
+        Parameter `result`.
+    run_id : str
+        Parameter `run_id`.
+    dataset_name : str
+        Parameter `dataset_name`.
+    table_name : str
+        Parameter `table_name`.
+
+    Returns
+    -------
+    result : list[dict]
+        Return value from `build_incremental_safety_records`.
+
+    Examples
+    --------
+    >>> build_incremental_safety_records(result, run_id)
+    """
     changes = result.get("changes", []) or [
         {
             "drift_type": "none",

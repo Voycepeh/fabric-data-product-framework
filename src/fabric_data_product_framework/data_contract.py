@@ -38,7 +38,14 @@ _ALLOWED_REFRESH_MODES = {"full", "incremental", "snapshot", "append"}
 
 @dataclass
 class SourceContract:
-    """Source-side contract settings for ingestion and validation."""
+    """Sourcecontract.
+
+    Public class used by the framework API for `SourceContract`.
+
+    Examples
+    --------
+    >>> SourceContract(... )
+    """
     name: str | None = None
     type: str = "table"
     table: str | None = None
@@ -53,7 +60,14 @@ class SourceContract:
 
 @dataclass
 class TargetContract:
-    """Target write contract settings for curated outputs."""
+    """Targetcontract.
+
+    Public class used by the framework API for `TargetContract`.
+
+    Examples
+    --------
+    >>> TargetContract(... )
+    """
     table: str | None = None
     path: str | None = None
     format: str = "delta"
@@ -65,7 +79,14 @@ class TargetContract:
 
 @dataclass
 class QualityContract:
-    """Quality workflow configuration including rule-store and gating behavior."""
+    """Qualitycontract.
+
+    Public class used by the framework API for `QualityContract`.
+
+    Examples
+    --------
+    >>> QualityContract(... )
+    """
     rules: list[dict[str, Any]] = field(default_factory=list)
     rule_store_table: str | None = None
     use_rule_store: bool = False
@@ -79,7 +100,14 @@ class QualityContract:
 
 @dataclass
 class DriftContract:
-    """Schema/data drift policy and baseline table references."""
+    """Driftcontract.
+
+    Public class used by the framework API for `DriftContract`.
+
+    Examples
+    --------
+    >>> DriftContract(... )
+    """
     schema_enabled: bool = True
     data_enabled: bool = False
     schema_policy: dict[str, Any] = field(default_factory=dict)
@@ -90,7 +118,14 @@ class DriftContract:
 
 @dataclass
 class GovernanceContract:
-    """Governance classification policy for sensitive columns and review."""
+    """Governancecontract.
+
+    Public class used by the framework API for `GovernanceContract`.
+
+    Examples
+    --------
+    >>> GovernanceContract(... )
+    """
     classify_columns: bool = False
     classification_table: str | None = None
     require_human_approval: bool = True
@@ -99,7 +134,14 @@ class GovernanceContract:
 
 @dataclass
 class MetadataContract:
-    """Metadata table destinations used across the pipeline lifecycle."""
+    """Metadatacontract.
+
+    Public class used by the framework API for `MetadataContract`.
+
+    Examples
+    --------
+    >>> MetadataContract(... )
+    """
     schema: str = "fw_metadata"
     source_profile_table: str | None = None
     output_profile_table: str | None = None
@@ -116,7 +158,14 @@ class MetadataContract:
 
 @dataclass
 class RuntimeContract:
-    """Runtime context defaults such as dataset, environment, and naming."""
+    """Runtimecontract.
+
+    Public class used by the framework API for `RuntimeContract`.
+
+    Examples
+    --------
+    >>> RuntimeContract(... )
+    """
     dataset_name: str = ""
     environment: str = "fabric"
     notebook_name: str | None = None
@@ -127,7 +176,14 @@ class RuntimeContract:
 
 @dataclass
 class DataProductContract:
-    """Top-level contract model used by ``run_data_product`` orchestration."""
+    """Dataproductcontract.
+
+    Public class used by the framework API for `DataProductContract`.
+
+    Examples
+    --------
+    >>> DataProductContract(... )
+    """
     dataset: dict[str, Any] = field(default_factory=dict)
     source: SourceContract = field(default_factory=SourceContract)
     target: TargetContract = field(default_factory=TargetContract)
@@ -148,7 +204,24 @@ def _dict(config: dict | None) -> dict:
 
 
 def build_source_contract(config: dict) -> SourceContract:
-    """Build a typed ``SourceContract`` from raw contract configuration."""
+    """Build source contract.
+
+    Run `build_source_contract`.
+
+    Parameters
+    ----------
+    config : dict
+        Parameter `config`.
+
+    Returns
+    -------
+    result : SourceContract
+        Return value from `build_source_contract`.
+
+    Examples
+    --------
+    >>> build_source_contract(config)
+    """
     c = _dict(config)
     return SourceContract(
         name=c.get("name"),
@@ -165,7 +238,24 @@ def build_source_contract(config: dict) -> SourceContract:
 
 
 def build_target_contract(config: dict) -> TargetContract:
-    """Build a typed ``TargetContract`` from raw contract configuration."""
+    """Build target contract.
+
+    Run `build_target_contract`.
+
+    Parameters
+    ----------
+    config : dict
+        Parameter `config`.
+
+    Returns
+    -------
+    result : TargetContract
+        Return value from `build_target_contract`.
+
+    Examples
+    --------
+    >>> build_target_contract(config)
+    """
     c = _dict(config)
     return TargetContract(
         table=c.get("table"),
@@ -179,7 +269,24 @@ def build_target_contract(config: dict) -> TargetContract:
 
 
 def build_quality_contract(config: dict) -> QualityContract:
-    """Build a typed ``QualityContract`` from raw contract configuration."""
+    """Build quality contract.
+
+    Run `build_quality_contract`.
+
+    Parameters
+    ----------
+    config : dict
+        Parameter `config`.
+
+    Returns
+    -------
+    result : QualityContract
+        Return value from `build_quality_contract`.
+
+    Examples
+    --------
+    >>> build_quality_contract(config)
+    """
     c = _dict(config)
     return QualityContract(
         rules=list(c.get("rules") or []),
@@ -195,7 +302,24 @@ def build_quality_contract(config: dict) -> QualityContract:
 
 
 def build_drift_contract(config: dict) -> DriftContract:
-    """Build a typed ``DriftContract`` from raw contract configuration."""
+    """Build drift contract.
+
+    Run `build_drift_contract`.
+
+    Parameters
+    ----------
+    config : dict
+        Parameter `config`.
+
+    Returns
+    -------
+    result : DriftContract
+        Return value from `build_drift_contract`.
+
+    Examples
+    --------
+    >>> build_drift_contract(config)
+    """
     c = _dict(config)
     return DriftContract(
         schema_enabled=bool(c.get("schema_enabled", True)),
@@ -208,7 +332,24 @@ def build_drift_contract(config: dict) -> DriftContract:
 
 
 def build_governance_contract(config: dict) -> GovernanceContract:
-    """Build a typed ``GovernanceContract`` from raw contract configuration."""
+    """Build governance contract.
+
+    Run `build_governance_contract`.
+
+    Parameters
+    ----------
+    config : dict
+        Parameter `config`.
+
+    Returns
+    -------
+    result : GovernanceContract
+        Return value from `build_governance_contract`.
+
+    Examples
+    --------
+    >>> build_governance_contract(config)
+    """
     c = _dict(config)
     return GovernanceContract(
         classify_columns=bool(c.get("classify_columns", False)),
@@ -219,7 +360,24 @@ def build_governance_contract(config: dict) -> GovernanceContract:
 
 
 def build_metadata_contract(config: dict) -> MetadataContract:
-    """Build a typed ``MetadataContract`` from raw contract configuration."""
+    """Build metadata contract.
+
+    Run `build_metadata_contract`.
+
+    Parameters
+    ----------
+    config : dict
+        Parameter `config`.
+
+    Returns
+    -------
+    result : MetadataContract
+        Return value from `build_metadata_contract`.
+
+    Examples
+    --------
+    >>> build_metadata_contract(config)
+    """
     c = _dict(config)
     return MetadataContract(
         schema=str(c.get("schema") or "fw_metadata"),
@@ -238,7 +396,24 @@ def build_metadata_contract(config: dict) -> MetadataContract:
 
 
 def build_runtime_contract(config: dict) -> RuntimeContract:
-    """Build a typed ``RuntimeContract`` from raw contract configuration."""
+    """Build runtime contract.
+
+    Run `build_runtime_contract`.
+
+    Parameters
+    ----------
+    config : dict
+        Parameter `config`.
+
+    Returns
+    -------
+    result : RuntimeContract
+        Return value from `build_runtime_contract`.
+
+    Examples
+    --------
+    >>> build_runtime_contract(config)
+    """
     c = _dict(config)
     return RuntimeContract(
         dataset_name=str(c.get("dataset_name") or ""),
@@ -251,10 +426,23 @@ def build_runtime_contract(config: dict) -> RuntimeContract:
 
 
 def normalize_data_product_contract(contract: dict | DataProductContract) -> DataProductContract:
-    """Normalize a raw dict/dataclass contract into ``DataProductContract``.
+    """Normalize data product contract.
 
-    Typical next step:
-        Build runtime context and run the orchestration flow with ``run_data_product``.
+    Run `normalize_data_product_contract`.
+
+    Parameters
+    ----------
+    contract : dict | DataProductContract
+        Parameter `contract`.
+
+    Returns
+    -------
+    result : DataProductContract
+        Return value from `normalize_data_product_contract`.
+
+    Examples
+    --------
+    >>> normalize_data_product_contract(contract)
     """
     if isinstance(contract, DataProductContract):
         return contract
@@ -308,7 +496,24 @@ def normalize_data_product_contract(contract: dict | DataProductContract) -> Dat
 
 
 def data_product_contract_to_dict(contract: DataProductContract) -> dict:
-    """Convert a typed data product contract to a serializable dictionary."""
+    """Data product contract to dict.
+
+    Run `data_product_contract_to_dict`.
+
+    Parameters
+    ----------
+    contract : DataProductContract
+        Parameter `contract`.
+
+    Returns
+    -------
+    result : dict
+        Return value from `data_product_contract_to_dict`.
+
+    Examples
+    --------
+    >>> data_product_contract_to_dict(contract)
+    """
     return asdict(contract)
 
 
@@ -340,7 +545,24 @@ def _effective_contract_dict(contract: dict | DataProductContract) -> dict:
 
 
 def load_data_contract(path_or_dict: str | Path | dict) -> DataProductContract:
-    """Load and normalize a contract from path or in-memory dictionary."""
+    """Load data contract.
+
+    Run `load_data_contract`.
+
+    Parameters
+    ----------
+    path_or_dict : str | Path | dict
+        Parameter `path_or_dict`.
+
+    Returns
+    -------
+    result : DataProductContract
+        Return value from `load_data_contract`.
+
+    Examples
+    --------
+    >>> load_data_contract(path_or_dict)
+    """
     raw = dict(path_or_dict) if isinstance(path_or_dict, dict) else load_dataset_contract(path_or_dict)
     return normalize_data_product_contract(raw)
 
@@ -350,7 +572,24 @@ def _refresh_mode(contract: dict) -> str:
 
 
 def validate_data_contract_shape(contract: dict | DataProductContract) -> list[str]:
-    """Validate required top-level contract fields and return shape errors."""
+    """Validate data contract shape.
+
+    Run `validate_data_contract_shape`.
+
+    Parameters
+    ----------
+    contract : dict | DataProductContract
+        Parameter `contract`.
+
+    Returns
+    -------
+    result : list[str]
+        Return value from `validate_data_contract_shape`.
+
+    Examples
+    --------
+    >>> validate_data_contract_shape(contract)
+    """
     n = normalize_data_product_contract(contract)
     raw = _effective_contract_dict(n)
     errors: list[str] = []
@@ -378,7 +617,26 @@ def validate_data_contract_shape(contract: dict | DataProductContract) -> list[s
 
 
 def build_runtime_context_from_contract(contract: dict | DataProductContract, overrides: dict | None = None) -> dict:
-    """Build runtime context from contract values with optional notebook overrides."""
+    """Build runtime context from contract.
+
+    Run `build_runtime_context_from_contract`.
+
+    Parameters
+    ----------
+    contract : dict | DataProductContract
+        Parameter `contract`.
+    overrides : dict | None, optional
+        Parameter `overrides`.
+
+    Returns
+    -------
+    result : dict
+        Return value from `build_runtime_context_from_contract`.
+
+    Examples
+    --------
+    >>> build_runtime_context_from_contract(contract, overrides)
+    """
     n = normalize_data_product_contract(contract)
     context = build_runtime_context(dataset_name=n.dataset.get("name", ""), environment=n.runtime.environment, source_table=n.source.table or "", target_table=n.target.table or "", notebook_name=n.runtime.notebook_name, run_id=(overrides or {}).get("run_id"))
     if overrides:
@@ -408,16 +666,35 @@ def _runtime_validation_contract(contract: dict | DataProductContract) -> dict:
 
 
 def run_data_product(spark, contract: dict | DataProductContract, transform=None, source_df=None, write: bool | None = None, *, write_target: bool = True, write_metadata: bool = True) -> dict:
-    """Execute contract-first end-to-end workflow for a Fabric data product.
+    """Run data product.
 
-    Args:
-        spark: Active Spark session (Fabric runtime expected for IO writes).
-        contract: Raw contract dictionary or normalized contract dataclass.
-        transform: Optional callable ``transform(df, runtime_context, contract_dict)``.
-        source_df: Optional injected source dataframe for testing/notebook chaining.
+    Run `run_data_product`.
 
-    Returns:
-        Dictionary containing runtime context, validation/drift/quality outputs, and run summary.
+    Parameters
+    ----------
+    spark : Any
+        Parameter `spark`.
+    contract : dict | DataProductContract
+        Parameter `contract`.
+    transform : object, optional
+        Parameter `transform`.
+    source_df : object, optional
+        Parameter `source_df`.
+    write : bool | None, optional
+        Parameter `write`.
+    write_target : bool, optional
+        Parameter `write_target`.
+    write_metadata : bool, optional
+        Parameter `write_metadata`.
+
+    Returns
+    -------
+    result : dict
+        Return value from `run_data_product`.
+
+    Examples
+    --------
+    >>> run_data_product(spark, contract)
     """
     n = normalize_data_product_contract(contract)
     if write is False:
@@ -586,6 +863,28 @@ def run_data_product(spark, contract: dict | DataProductContract, transform=None
 
 
 def assert_data_product_passed(result: dict) -> None:
-    """Raise ``RuntimeError`` when a contract-driven run is blocking/failed."""
+    """Assert data product passed.
+
+    Run `assert_data_product_passed`.
+
+    Parameters
+    ----------
+    result : dict
+        Parameter `result`.
+
+    Returns
+    -------
+    result : None
+        Return value from `assert_data_product_passed`.
+
+    Raises
+    ------
+    RuntimeError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> assert_data_product_passed(result)
+    """
     if result.get("status") != "passed":
         raise RuntimeError("Data product run failed contract/quality gates")

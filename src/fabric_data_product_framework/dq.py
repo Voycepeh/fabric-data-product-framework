@@ -62,21 +62,38 @@ def generate_dq_rule_candidates_with_fabric_ai(
     table_name=None,
     response_format=None,
 ) -> list[dict]:
-    """Generate candidate DQ rules with Fabric AI notebook integration.
+    """Generate dq rule candidates with fabric ai.
 
-    Args:
-        profile: Profile payload from ``profile_dataframe``.
-        contract: Optional contract section to improve prompt grounding.
-        business_context: Optional business context string/dict.
-        dataset_name: Dataset name for prompt and outputs.
-        table_name: Table name for prompt and outputs.
-        response_format: Optional Fabric AI response format argument.
+    Run `generate_dq_rule_candidates_with_fabric_ai`.
 
-    Returns:
-        List of normalized candidate rules.
+    Parameters
+    ----------
+    profile : Any
+        Parameter `profile`.
+    contract : object, optional
+        Parameter `contract`.
+    business_context : object, optional
+        Parameter `business_context`.
+    dataset_name : object, optional
+        Parameter `dataset_name`.
+    table_name : object, optional
+        Parameter `table_name`.
+    response_format : object, optional
+        Parameter `response_format`.
 
-    Runtime compatibility:
-        Fabric notebook runtime with Fabric AI + ``openai``/``pydantic`` installed.
+    Returns
+    -------
+    result : list[dict]
+        Return value from `generate_dq_rule_candidates_with_fabric_ai`.
+
+    Raises
+    ------
+    RuntimeError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> generate_dq_rule_candidates_with_fabric_ai(profile, contract)
     """
     import pandas as pd
 
@@ -133,10 +150,31 @@ def generate_dq_rule_candidates(
     dataset_name: str | None = None,
     table_name: str | None = None,
 ) -> list[dict]:
-    """Generate conservative candidate DQ rules from profile and optional metadata.
+    """Generate dq rule candidates.
 
-    These candidates are review-first suggestions; typical next step is human approval
-    and storage before enforcement.
+    Run `generate_dq_rule_candidates`.
+
+    Parameters
+    ----------
+    profile : dict
+        Parameter `profile`.
+    metadata : dict | None, optional
+        Parameter `metadata`.
+    business_context : str | dict | None, optional
+        Parameter `business_context`.
+    dataset_name : str | None, optional
+        Parameter `dataset_name`.
+    table_name : str | None, optional
+        Parameter `table_name`.
+
+    Returns
+    -------
+    result : list[dict]
+        Return value from `generate_dq_rule_candidates`.
+
+    Examples
+    --------
+    >>> generate_dq_rule_candidates(profile, metadata)
     """
     profile = profile or {}
     metadata = metadata or {}
@@ -175,10 +213,23 @@ def generate_dq_rule_candidates(
 
 
 def normalize_dq_rule(rule: dict) -> dict:
-    """Normalize one DQ rule dictionary into framework-compatible keys.
+    """Normalize dq rule.
 
-    Example:
-        >>> normalize_dq_rule({"name": "id_not_null", "field": "id", "rule_type": "not_empty"})
+    Run `normalize_dq_rule`.
+
+    Parameters
+    ----------
+    rule : dict
+        Parameter `rule`.
+
+    Returns
+    -------
+    result : dict
+        Return value from `normalize_dq_rule`.
+
+    Examples
+    --------
+    >>> normalize_dq_rule(rule)
     """
     r = dict(rule or {})
     if "rule_id" not in r:
@@ -223,71 +274,55 @@ def normalize_dq_rule(rule: dict) -> dict:
 
 
 def normalize_dq_rules(rules: list[dict] | None) -> list[dict]:
-    """Normalize a list of DQ rule dictionaries into framework-ready rules.
+    """Normalize dq rules.
+
+    Run `normalize_dq_rules`.
 
     Parameters
     ----------
     rules : list[dict] | None
-        Raw rule payloads from notebooks, YAML/JSON config, or AI-generated
-        candidates.
+        Parameter `rules`.
 
     Returns
     -------
-    list[dict]
-        Normalized rule objects with consistent keys such as ``rule_id``,
-        ``rule_type``, ``severity``, and ``status``.
+    result : list[dict]
+        Return value from `normalize_dq_rules`.
 
-    Notes
-    -----
-    This helper is safe for direct notebook use and also used internally by
-    rule execution and metadata persistence helpers.
+    Examples
+    --------
+    >>> normalize_dq_rules(rules)
     """
     return [normalize_dq_rule(r) for r in (rules or [])]
 
 
 def build_dq_rule_records(rules: list[dict], dataset_name: str, table_name: str, run_id: str | None = None, status: str = "candidate", generated_by: str = "framework") -> list[dict]:
-    """Convert normalized DQ rules into metadata-table-friendly persistence rows.
+    """Build dq rule records.
 
-    This function solves the handover problem between rule authoring and rule
-    governance by producing records that can be stored in a Lakehouse metadata
-    table and reviewed by stewards before enforcement.
+    Run `build_dq_rule_records`.
 
     Parameters
     ----------
     rules : list[dict]
-        Candidate or approved DQ rules.
+        Parameter `rules`.
     dataset_name : str
-        Logical dataset name associated with the rule set.
+        Parameter `dataset_name`.
     table_name : str
-        Source table that the rules apply to.
+        Parameter `table_name`.
     run_id : str | None, optional
-        Pipeline run identifier for traceability.
-    status : str, default "candidate"
-        Default status used when a rule does not already provide one.
-    generated_by : str, default "framework"
-        Default generator marker if not present on individual rules.
+        Parameter `run_id`.
+    status : str, optional
+        Parameter `status`.
+    generated_by : str, optional
+        Parameter `generated_by`.
 
     Returns
     -------
-    list[dict]
-        Rows containing fields such as ``rule_id``, ``source_table``,
-        ``description``, ``generated_by``, ``run_id``, ``status``, and
-        ``rule_json`` for full-fidelity storage.
-
-    Notes
-    -----
-    - If an input rule has ``status="approved"``, that status is preserved.
-    - Rules with missing status are treated as ``candidate`` unless overridden.
-    - ``rule_json`` stores the full normalized rule for replay/audit.
+    result : list[dict]
+        Return value from `build_dq_rule_records`.
 
     Examples
     --------
-    >>> rules = [
-    ...   {"rule_id": "order_id_not_null", "column": "order_id", "rule_type": "not_null"},
-    ...   {"rule_id": "status_in_set", "column": "status", "rule_type": "accepted_values", "accepted_values": ["NEW", "DONE"], "status": "approved"},
-    ... ]
-    >>> build_dq_rule_records(rules, dataset_name="sales", table_name="bronze_orders", run_id="run_001")[0]["status"]
-    'candidate'
+    >>> build_dq_rule_records(rules, dataset_name)
     """
     created_at = _now_iso()
     rows = []
@@ -308,7 +343,40 @@ def build_dq_rule_records(rules: list[dict], dataset_name: str, table_name: str,
 
 
 def store_dq_rules(spark, rules: list[dict], table_name: str, dataset_name: str | None = None, source_table: str | None = None, run_id: str | None = None, status: str = "candidate", generated_by: str = "framework", mode: str = "append") -> list[dict]:
-    """Persist normalized DQ rules to a Spark table using JSON-safe rows."""
+    """Store dq rules.
+
+    Run `store_dq_rules`.
+
+    Parameters
+    ----------
+    spark : Any
+        Parameter `spark`.
+    rules : list[dict]
+        Parameter `rules`.
+    table_name : str
+        Parameter `table_name`.
+    dataset_name : str | None, optional
+        Parameter `dataset_name`.
+    source_table : str | None, optional
+        Parameter `source_table`.
+    run_id : str | None, optional
+        Parameter `run_id`.
+    status : str, optional
+        Parameter `status`.
+    generated_by : str, optional
+        Parameter `generated_by`.
+    mode : str, optional
+        Parameter `mode`.
+
+    Returns
+    -------
+    result : list[dict]
+        Return value from `store_dq_rules`.
+
+    Examples
+    --------
+    >>> store_dq_rules(spark, rules)
+    """
     ds = dataset_name or "unknown"
     st = source_table or "unknown"
     records = build_dq_rule_records(rules, dataset_name=ds, table_name=st, run_id=run_id, status=status, generated_by=generated_by)
@@ -318,7 +386,32 @@ def store_dq_rules(spark, rules: list[dict], table_name: str, dataset_name: str 
 
 
 def load_dq_rules(spark, table_name: str, dataset_name: str | None = None, source_table: str | None = None, status: str | list[str] = "approved") -> list[dict]:
-    """Load approved DQ rules from storage, honoring optional filters."""
+    """Load dq rules.
+
+    Run `load_dq_rules`.
+
+    Parameters
+    ----------
+    spark : Any
+        Parameter `spark`.
+    table_name : str
+        Parameter `table_name`.
+    dataset_name : str | None, optional
+        Parameter `dataset_name`.
+    source_table : str | None, optional
+        Parameter `source_table`.
+    status : str | list[str], optional
+        Parameter `status`.
+
+    Returns
+    -------
+    result : list[dict]
+        Return value from `load_dq_rules`.
+
+    Examples
+    --------
+    >>> load_dq_rules(spark, table_name)
+    """
     rows = spark.table(table_name)
     if dataset_name is not None:
         rows = rows[rows["dataset_name"] == dataset_name] if hasattr(rows, "__getitem__") and "dataset_name" in rows.columns else rows
@@ -347,35 +440,33 @@ def load_dq_rules(spark, table_name: str, dataset_name: str | None = None, sourc
 
 
 def run_dq_rules(df, rules: list[dict], dataset_name: str, table_name: str, engine: str = "spark", fail_on: str = "critical") -> dict:
-    """Evaluate DQ rules and return pass/fail results with pipeline actions.
+    """Run dq rules.
+
+    Run `run_dq_rules`.
 
     Parameters
     ----------
     df : Any
-        Pandas or Spark dataframe to validate.
+        Parameter `df`.
     rules : list[dict]
-        Executable rules, usually approved rules from metadata storage.
+        Parameter `rules`.
     dataset_name : str
-        Dataset identifier used in result metadata.
+        Parameter `dataset_name`.
     table_name : str
-        Table identifier used in result metadata.
-    engine : str, default "spark"
-        Execution engine name.
-    fail_on : str, default "critical"
-        Quality gate level interpreted by downstream gate assertions.
+        Parameter `table_name`.
+    engine : str, optional
+        Parameter `engine`.
+    fail_on : str, optional
+        Parameter `fail_on`.
 
     Returns
     -------
-    dict
-        Aggregate quality result with per-rule outcomes. ``status="failed"``
-        and ``can_continue=False`` indicate pipeline-blocking failures.
+    result : dict
+        Return value from `run_dq_rules`.
 
-    Notes
-    -----
-    Severity controls expected action semantics:
-    - ``critical`` failures should block a pipeline.
-    - ``warning`` failures should warn but allow continuation.
-    - ``info`` failures are informational.
+    Examples
+    --------
+    >>> run_dq_rules(df, rules)
     """
     normalized = normalize_dq_rules(rules)
     result = run_quality_rules(df, normalized, dataset_name=dataset_name, table_name=table_name, engine=engine)
@@ -399,13 +490,41 @@ def run_dq_rules(df, rules: list[dict], dataset_name: str, table_name: str, engi
 
 
 def run_dq_workflow(spark, df, quality_contract, dataset_name: str, table_name: str, run_id: str | None = None, profile: dict | None = None, metadata: dict | None = None, business_context: str | dict | None = None, engine: str = "spark") -> dict:
-    """Execute end-to-end contract-driven DQ workflow for notebook orchestration.
+    """Run dq workflow.
 
-    Typical chain:
-        ``profile_dataframe`` -> ``run_dq_workflow`` -> write returned records to metadata tables.
-    Flow:
-        load approved rules (optional), generate/store candidates (optional),
-        execute enforceable rules, then evaluate gate status.
+    Run `run_dq_workflow`.
+
+    Parameters
+    ----------
+    spark : Any
+        Parameter `spark`.
+    df : Any
+        Parameter `df`.
+    quality_contract : Any
+        Parameter `quality_contract`.
+    dataset_name : str
+        Parameter `dataset_name`.
+    table_name : str
+        Parameter `table_name`.
+    run_id : str | None, optional
+        Parameter `run_id`.
+    profile : dict | None, optional
+        Parameter `profile`.
+    metadata : dict | None, optional
+        Parameter `metadata`.
+    business_context : str | dict | None, optional
+        Parameter `business_context`.
+    engine : str, optional
+        Parameter `engine`.
+
+    Returns
+    -------
+    result : dict
+        Return value from `run_dq_workflow`.
+
+    Examples
+    --------
+    >>> run_dq_workflow(spark, df)
     """
     qc = quality_contract
     explicit_rules = list(getattr(qc, "rules", None) or (qc.get("rules") if isinstance(qc, dict) else []) or [])

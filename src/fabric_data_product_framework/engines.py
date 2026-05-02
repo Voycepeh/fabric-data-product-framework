@@ -11,11 +11,40 @@ SUPPORTED_ENGINES = {"auto", "pandas", "spark"}
 
 
 class UnsupportedDataFrameEngineError(TypeError):
-    """Raised when a dataframe type cannot be mapped to a supported engine."""
+    """Unsupporteddataframeengineerror.
+
+    Public class used by the framework API for `UnsupportedDataFrameEngineError`.
+
+    Examples
+    --------
+    >>> UnsupportedDataFrameEngineError(... )
+    """
 
 
 def validate_engine(engine: str) -> str:
-    """Validate and normalize an engine selector."""
+    """Validate engine.
+
+    Run `validate_engine`.
+
+    Parameters
+    ----------
+    engine : str
+        Parameter `engine`.
+
+    Returns
+    -------
+    result : str
+        Return value from `validate_engine`.
+
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> validate_engine(engine)
+    """
     normalized = (engine or "").strip().lower()
     if normalized not in SUPPORTED_ENGINES:
         raise ValueError(f"Unsupported engine '{engine}'. Expected one of: auto, pandas, spark.")
@@ -23,7 +52,29 @@ def validate_engine(engine: str) -> str:
 
 
 def detect_dataframe_engine(df: Any) -> str:
-    """Detect whether an input dataframe is pandas or Spark-like."""
+    """Detect dataframe engine.
+
+    Run `detect_dataframe_engine`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+
+    Returns
+    -------
+    result : str
+        Return value from `detect_dataframe_engine`.
+
+    Raises
+    ------
+    UnsupportedDataFrameEngineError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> detect_dataframe_engine(df)
+    """
     if isinstance(df, pd.DataFrame):
         return "pandas"
 

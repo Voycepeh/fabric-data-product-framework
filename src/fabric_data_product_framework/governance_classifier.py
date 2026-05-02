@@ -86,7 +86,34 @@ def classify_column(
     business_context: str | dict | None = None,
     rules: list[dict] | None = None,
 ) -> dict:
-    """Classify one column into framework governance categories with deterministic evidence."""
+    """Classify column.
+
+    Run `classify_column`.
+
+    Parameters
+    ----------
+    column_name : str
+        Parameter `column_name`.
+    data_type : str | None, optional
+        Parameter `data_type`.
+    profile : dict | None, optional
+        Parameter `profile`.
+    metadata : dict | None, optional
+        Parameter `metadata`.
+    business_context : str | dict | None, optional
+        Parameter `business_context`.
+    rules : list[dict] | None, optional
+        Parameter `rules`.
+
+    Returns
+    -------
+    result : dict
+        Return value from `classify_column`.
+
+    Examples
+    --------
+    >>> classify_column(column_name, data_type)
+    """
     profile = profile or {}
     metadata = metadata or {}
     text_parts = [column_name, str(metadata.get("description") or ""), str(metadata.get("business_term") or "")]
@@ -175,14 +202,35 @@ def classify_column(
 
 
 def classify_columns(profile: dict | list[dict], metadata: dict | list[dict] | None = None, business_context: str | dict | None = None, rules: list[dict] | None = None, dataset_name: str | None = None, table_name: str | None = None, run_id: str | None = None) -> list[dict]:
-    """Classify columns from profile-like inputs into governance suggestions.
+    """Classify columns.
 
-    Runtime:
-        Local-safe and Spark-independent. Typical next step is persisting review
-        suggestions with ``write_governance_classifications``.
+    Run `classify_columns`.
 
-    Example:
-        >>> classify_columns(profile, dataset_name="orders", table_name="silver.orders")
+    Parameters
+    ----------
+    profile : dict | list[dict]
+        Parameter `profile`.
+    metadata : dict | list[dict] | None, optional
+        Parameter `metadata`.
+    business_context : str | dict | None, optional
+        Parameter `business_context`.
+    rules : list[dict] | None, optional
+        Parameter `rules`.
+    dataset_name : str | None, optional
+        Parameter `dataset_name`.
+    table_name : str | None, optional
+        Parameter `table_name`.
+    run_id : str | None, optional
+        Parameter `run_id`.
+
+    Returns
+    -------
+    result : list[dict]
+        Return value from `classify_columns`.
+
+    Examples
+    --------
+    >>> classify_columns(profile, metadata)
     """
     del dataset_name, table_name, run_id
     columns = _normalize_columns(profile)
@@ -205,7 +253,34 @@ def classify_columns(profile: dict | list[dict], metadata: dict | list[dict] | N
 
 
 def build_governance_classification_records(classifications: list[dict], dataset_name: str, table_name: str, run_id: str | None = None, status: str = "suggested", generated_by: str = "framework") -> list[dict]:
-    """Convert column classifications into governance metadata records."""
+    """Build governance classification records.
+
+    Run `build_governance_classification_records`.
+
+    Parameters
+    ----------
+    classifications : list[dict]
+        Parameter `classifications`.
+    dataset_name : str
+        Parameter `dataset_name`.
+    table_name : str
+        Parameter `table_name`.
+    run_id : str | None, optional
+        Parameter `run_id`.
+    status : str, optional
+        Parameter `status`.
+    generated_by : str, optional
+        Parameter `generated_by`.
+
+    Returns
+    -------
+    result : list[dict]
+        Return value from `build_governance_classification_records`.
+
+    Examples
+    --------
+    >>> build_governance_classification_records(classifications, dataset_name)
+    """
     rows = []
     for item in classifications:
         safe_item = to_jsonable(item)
@@ -240,10 +315,39 @@ def _spark_create_governance_metadata_dataframe(spark, rows: list[dict]):
 
 
 def write_governance_classifications(spark, classifications: list[dict], table_name: str, dataset_name: str | None = None, source_table: str | None = None, run_id: str | None = None, status: str = "suggested", generated_by: str = "framework", mode: str = "append") -> list[dict]:
-    """Persist governance classifications to a Spark metadata table.
+    """Write governance classifications.
 
-    Side effects:
-        Writes records to ``table_name`` using ``saveAsTable``.
+    Run `write_governance_classifications`.
+
+    Parameters
+    ----------
+    spark : Any
+        Parameter `spark`.
+    classifications : list[dict]
+        Parameter `classifications`.
+    table_name : str
+        Parameter `table_name`.
+    dataset_name : str | None, optional
+        Parameter `dataset_name`.
+    source_table : str | None, optional
+        Parameter `source_table`.
+    run_id : str | None, optional
+        Parameter `run_id`.
+    status : str, optional
+        Parameter `status`.
+    generated_by : str, optional
+        Parameter `generated_by`.
+    mode : str, optional
+        Parameter `mode`.
+
+    Returns
+    -------
+    result : list[dict]
+        Return value from `write_governance_classifications`.
+
+    Examples
+    --------
+    >>> write_governance_classifications(spark, classifications)
     """
     dataset = dataset_name or "unknown"
     source = source_table or table_name
@@ -261,7 +365,24 @@ def write_governance_classifications(spark, classifications: list[dict], table_n
 
 
 def summarize_governance_classifications(classifications: list[dict]) -> dict:
-    """Summarize classification output for notebook/runtime reporting."""
+    """Summarize governance classifications.
+
+    Run `summarize_governance_classifications`.
+
+    Parameters
+    ----------
+    classifications : list[dict]
+        Parameter `classifications`.
+
+    Returns
+    -------
+    result : dict
+        Return value from `summarize_governance_classifications`.
+
+    Examples
+    --------
+    >>> summarize_governance_classifications(classifications)
+    """
     by_classification = Counter(c.get("suggested_classification", "unknown") for c in classifications)
     by_action = Counter(c.get("suggested_action", "review") for c in classifications)
     review_required_count = sum(1 for c in classifications if c.get("suggested_action") in {"review", "restrict_access", "mask_or_tokenize", "classify_in_catalog"})

@@ -14,7 +14,14 @@ import pandas as pd
 
 @dataclass(frozen=True)
 class Housepath:
-    """Container for Lakehouse path roots used by Fabric notebook IO helpers."""
+    """Housepath.
+
+    Public class used by the framework API for `Housepath`.
+
+    Examples
+    --------
+    >>> Housepath(... )
+    """
     workspace_id: str
     house_id: str
     house_name: str
@@ -49,7 +56,33 @@ EXAMPLE_CONFIG: Dict[str, Dict[str, Housepath]] = {
 
 
 def load_fabric_config(path: str | Path) -> dict[str, dict[str, Housepath]]:
-    """Load Fabric environment/target lakehouse mappings from YAML."""
+    """Load fabric config.
+
+    Run `load_fabric_config`.
+
+    Parameters
+    ----------
+    path : str | Path
+        Parameter `path`.
+
+    Returns
+    -------
+    result : dict[str, dict[str, Housepath]]
+        Return value from `load_fabric_config`.
+
+    Raises
+    ------
+    FileNotFoundError
+        Raised when input validation or runtime checks fail.
+    ImportError
+        Raised when input validation or runtime checks fail.
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> load_fabric_config(path)
+    """
     try:
         import yaml
     except ImportError as exc:
@@ -102,7 +135,35 @@ def get_path(
     config: dict | None = None,
     use_example_config: bool = False,
 ) -> Any:
-    """Resolve a ``Housepath`` for a given environment and target."""
+    """Get path.
+
+    Run `get_path`.
+
+    Parameters
+    ----------
+    env : str, optional
+        Parameter `env`.
+    target : str, optional
+        Parameter `target`.
+    config : dict | None, optional
+        Parameter `config`.
+    use_example_config : bool, optional
+        Parameter `use_example_config`.
+
+    Returns
+    -------
+    result : object
+        Return value from `get_path`.
+
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> get_path(env, target)
+    """
     if config is None:
         if not use_example_config:
             raise ValueError(
@@ -132,7 +193,33 @@ def _get_spark(spark_session=None):
 
 
 def lakehouse_table_read(lh, tablename, spark_session=None):
-    """Read a Delta table from a configured Lakehouse path."""
+    """Lakehouse table read.
+
+    Run `lakehouse_table_read`.
+
+    Parameters
+    ----------
+    lh : Any
+        Parameter `lh`.
+    tablename : Any
+        Parameter `tablename`.
+    spark_session : object, optional
+        Parameter `spark_session`.
+
+    Returns
+    -------
+    result : object
+        Return value from `lakehouse_table_read`.
+
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> lakehouse_table_read(lh, tablename)
+    """
     if not getattr(lh, "root", None):
         raise ValueError("lh.root is required.")
     if not tablename:
@@ -151,7 +238,41 @@ def lakehouse_table_write(
     repartition_by=None,
     overwrite_schema=True,
 ):
-    """Write a Spark DataFrame to a Delta table under Lakehouse ``Tables``."""
+    """Lakehouse table write.
+
+    Run `lakehouse_table_write`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    lh : Any
+        Parameter `lh`.
+    tablename : Any
+        Parameter `tablename`.
+    mode : object, optional
+        Parameter `mode`.
+    partition_by : object, optional
+        Parameter `partition_by`.
+    repartition_by : object, optional
+        Parameter `repartition_by`.
+    overwrite_schema : object, optional
+        Parameter `overwrite_schema`.
+
+    Returns
+    -------
+    result : None
+        Return value from `lakehouse_table_write`.
+
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> lakehouse_table_write(df, lh)
+    """
     if not getattr(lh, "root", None):
         raise ValueError("lh.root is required.")
     if not tablename:
@@ -189,14 +310,64 @@ def lakehouse_table_write(
 
 
 def lakehouse_csv_read(lh, relative_path, spark_session=None, header=True):
-    """Read a CSV file from Lakehouse ``Files`` relative path."""
+    """Lakehouse csv read.
+
+    Run `lakehouse_csv_read`.
+
+    Parameters
+    ----------
+    lh : Any
+        Parameter `lh`.
+    relative_path : Any
+        Parameter `relative_path`.
+    spark_session : object, optional
+        Parameter `spark_session`.
+    header : object, optional
+        Parameter `header`.
+
+    Returns
+    -------
+    result : object
+        Return value from `lakehouse_csv_read`.
+
+    Examples
+    --------
+    >>> lakehouse_csv_read(lh, relative_path)
+    """
     spark_obj = _get_spark(spark_session)
     path = f"{lh.root}/{relative_path}"
     return spark_obj.read.option("header", header).csv(path)
 
 
 def warehouse_read(env, target, schema, table, config=None, spark_session=None):
-    """Read a Fabric Warehouse table using workspace-aware connector options."""
+    """Warehouse read.
+
+    Run `warehouse_read`.
+
+    Parameters
+    ----------
+    env : Any
+        Parameter `env`.
+    target : Any
+        Parameter `target`.
+    schema : Any
+        Parameter `schema`.
+    table : Any
+        Parameter `table`.
+    config : object, optional
+        Parameter `config`.
+    spark_session : object, optional
+        Parameter `spark_session`.
+
+    Returns
+    -------
+    result : object
+        Return value from `warehouse_read`.
+
+    Examples
+    --------
+    >>> warehouse_read(env, target)
+    """
     spark_obj = _get_spark(spark_session)
     p = get_path(env, target, config=config)
     import com.microsoft.spark.fabric
@@ -210,7 +381,36 @@ def warehouse_read(env, target, schema, table, config=None, spark_session=None):
 
 
 def warehouse_write(df, env, target, schema, table, mode="append", config=None):
-    """Write to a Fabric Warehouse table via the Fabric Spark connector."""
+    """Warehouse write.
+
+    Run `warehouse_write`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    env : Any
+        Parameter `env`.
+    target : Any
+        Parameter `target`.
+    schema : Any
+        Parameter `schema`.
+    table : Any
+        Parameter `table`.
+    mode : object, optional
+        Parameter `mode`.
+    config : object, optional
+        Parameter `config`.
+
+    Returns
+    -------
+    result : None
+        Return value from `warehouse_write`.
+
+    Examples
+    --------
+    >>> warehouse_write(df, env)
+    """
     p = get_path(env, target, config=config)
     import com.microsoft.spark.fabric
     from com.microsoft.spark.fabric.Constants import Constants
@@ -224,7 +424,28 @@ def warehouse_write(df, env, target, schema, table, mode="append", config=None):
 
 
 def single_file_ns_to_us(local_in_path, local_out_path, verbose=True):
-    """Normalize parquet timestamp units for single-file local interoperability."""
+    """Single file ns to us.
+
+    Run `single_file_ns_to_us`.
+
+    Parameters
+    ----------
+    local_in_path : Any
+        Parameter `local_in_path`.
+    local_out_path : Any
+        Parameter `local_out_path`.
+    verbose : object, optional
+        Parameter `verbose`.
+
+    Returns
+    -------
+    result : None
+        Return value from `single_file_ns_to_us`.
+
+    Examples
+    --------
+    >>> single_file_ns_to_us(local_in_path, local_out_path)
+    """
     import pyarrow as pa
     import pyarrow.parquet as pq
 
@@ -247,7 +468,37 @@ def single_file_ns_to_us(local_in_path, local_out_path, verbose=True):
 
 
 def lakehouse_parquet_read_as_spark(lh, relative_path, verbose=True, spark_session=None):
-    """Read parquet from a Lakehouse path into Spark with local fallback support."""
+    """Lakehouse parquet read as spark.
+
+    Run `lakehouse_parquet_read_as_spark`.
+
+    Parameters
+    ----------
+    lh : Any
+        Parameter `lh`.
+    relative_path : Any
+        Parameter `relative_path`.
+    verbose : object, optional
+        Parameter `verbose`.
+    spark_session : object, optional
+        Parameter `spark_session`.
+
+    Returns
+    -------
+    result : object
+        Return value from `lakehouse_parquet_read_as_spark`.
+
+    Raises
+    ------
+    RuntimeError
+        Raised when input validation or runtime checks fail.
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> lakehouse_parquet_read_as_spark(lh, relative_path)
+    """
     spark_obj = _get_spark(spark_session)
 
     orig_spark_path = "Files/" + relative_path
@@ -313,7 +564,35 @@ def lakehouse_parquet_read_as_spark(lh, relative_path, verbose=True, spark_sessi
 
 
 def lakehouse_excel_read_as_spark(lh, relative_path, sheet_name=0, spark_session=None):
-    """Read Excel from Lakehouse Files into Spark using a pandas bridge."""
+    """Lakehouse excel read as spark.
+
+    Run `lakehouse_excel_read_as_spark`.
+
+    Parameters
+    ----------
+    lh : Any
+        Parameter `lh`.
+    relative_path : Any
+        Parameter `relative_path`.
+    sheet_name : object, optional
+        Parameter `sheet_name`.
+    spark_session : object, optional
+        Parameter `spark_session`.
+
+    Returns
+    -------
+    result : object
+        Return value from `lakehouse_excel_read_as_spark`.
+
+    Raises
+    ------
+    FileNotFoundError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> lakehouse_excel_read_as_spark(lh, relative_path)
+    """
     spark_obj = _get_spark(spark_session)
     lakehouse_file_path = f"{lh.root}/{relative_path}"
 
@@ -355,7 +634,33 @@ def _get_fabric_runtime_context():
 
 
 def check_naming_convention(notebook_name=None, allowed_prefixes=None, fail_on_error=True):
-    """Validate notebook naming conventions for lifecycle governance checks."""
+    """Check naming convention.
+
+    Run `check_naming_convention`.
+
+    Parameters
+    ----------
+    notebook_name : object, optional
+        Parameter `notebook_name`.
+    allowed_prefixes : object, optional
+        Parameter `allowed_prefixes`.
+    fail_on_error : object, optional
+        Parameter `fail_on_error`.
+
+    Returns
+    -------
+    result : object
+        Return value from `check_naming_convention`.
+
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> check_naming_convention(notebook_name, allowed_prefixes)
+    """
     prefixes = allowed_prefixes or NOTEBOOK_PREFIX_LIST
 
     if notebook_name is None:
@@ -399,7 +704,37 @@ def check_naming_convention(notebook_name=None, allowed_prefixes=None, fail_on_e
 
 
 def clean_datetime_columns(df, datetime_col, prefix, tz_region="Asia/Singapore", time_block_col="TIME_BLOCK_30_MIN"):
-    """Add standard datetime derivative columns for downstream analytics."""
+    """Clean datetime columns.
+
+    Run `clean_datetime_columns`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    datetime_col : Any
+        Parameter `datetime_col`.
+    prefix : Any
+        Parameter `prefix`.
+    tz_region : object, optional
+        Parameter `tz_region`.
+    time_block_col : object, optional
+        Parameter `time_block_col`.
+
+    Returns
+    -------
+    result : object
+        Return value from `clean_datetime_columns`.
+
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> clean_datetime_columns(df, datetime_col)
+    """
     if datetime_col not in df.columns:
         raise ValueError(f"Column not found: {datetime_col}")
 
@@ -425,7 +760,39 @@ def clean_datetime_columns(df, datetime_col, prefix, tz_region="Asia/Singapore",
 
 
 def add_system_technical_columns(df, hash_col, bucket_size=512, run_id=None, notebook_name=None, loaded_by=None):
-    """Append common technical columns for traceability and incremental processing."""
+    """Add system technical columns.
+
+    Run `add_system_technical_columns`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    hash_col : Any
+        Parameter `hash_col`.
+    bucket_size : object, optional
+        Parameter `bucket_size`.
+    run_id : object, optional
+        Parameter `run_id`.
+    notebook_name : object, optional
+        Parameter `notebook_name`.
+    loaded_by : object, optional
+        Parameter `loaded_by`.
+
+    Returns
+    -------
+    result : object
+        Return value from `add_system_technical_columns`.
+
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> add_system_technical_columns(df, hash_col)
+    """
     if hash_col not in df.columns:
         raise ValueError(f"Column not found: {hash_col}")
 
@@ -457,7 +824,26 @@ def add_system_technical_columns(df, hash_col, bucket_size=512, run_id=None, not
 
 
 def pass_if_yes_else_run(condition, code):
-    """Execute code only when ``condition`` is not an affirmative answer."""
+    """Pass if yes else run.
+
+    Run `pass_if_yes_else_run`.
+
+    Parameters
+    ----------
+    condition : Any
+        Parameter `condition`.
+    code : Any
+        Parameter `code`.
+
+    Returns
+    -------
+    result : object
+        Return value from `pass_if_yes_else_run`.
+
+    Examples
+    --------
+    >>> pass_if_yes_else_run(condition, code)
+    """
     if str(condition).lower() == "yes":
         return None
     exec(code)
@@ -465,7 +851,35 @@ def pass_if_yes_else_run(condition, code):
 
 
 def ODI_METADATA_LOGGER(df, tablename: str, exclude_columns=None, run_timestamp_timezone="Asia/Singapore"):
-    """Generate ODI-style metadata records from a Spark dataframe schema/profile."""
+    """Odi metadata logger.
+
+    Run `ODI_METADATA_LOGGER`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    tablename : str
+        Parameter `tablename`.
+    exclude_columns : object, optional
+        Parameter `exclude_columns`.
+    run_timestamp_timezone : object, optional
+        Parameter `run_timestamp_timezone`.
+
+    Returns
+    -------
+    result : object
+        Return value from `ODI_METADATA_LOGGER`.
+
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> ODI_METADATA_LOGGER(df, tablename)
+    """
     from pyspark.sql import functions as F
 
     technicalcol = {
@@ -530,7 +944,24 @@ def ODI_METADATA_LOGGER(df, tablename: str, exclude_columns=None, run_timestamp_
 
 
 def transformation_summary(code: str):
-    """Extract concise transformation statements from notebook code text."""
+    """Transformation summary.
+
+    Run `transformation_summary`.
+
+    Parameters
+    ----------
+    code : str
+        Parameter `code`.
+
+    Returns
+    -------
+    result : object
+        Return value from `transformation_summary`.
+
+    Examples
+    --------
+    >>> transformation_summary(code)
+    """
     tree = ast.parse(code)
     steps: list[dict[str, str]] = []
 
@@ -572,7 +1003,33 @@ def transformation_summary(code: str):
 
 
 def transformation_reasons(pdf, reason, spark_session=None):
-    """Append a human-readable transformation reason column to pandas/Spark data."""
+    """Transformation reasons.
+
+    Run `transformation_reasons`.
+
+    Parameters
+    ----------
+    pdf : Any
+        Parameter `pdf`.
+    reason : Any
+        Parameter `reason`.
+    spark_session : object, optional
+        Parameter `spark_session`.
+
+    Returns
+    -------
+    result : object
+        Return value from `transformation_reasons`.
+
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> transformation_reasons(pdf, reason)
+    """
     spark_obj = _get_spark(spark_session)
     context = _get_fabric_runtime_context()
 

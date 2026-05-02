@@ -11,7 +11,14 @@ from jsonschema import Draft202012Validator
 
 
 class DatasetContractValidationError(Exception):
-    """Raised when strict dataset contract validation fails."""
+    """Datasetcontractvalidationerror.
+
+    Public class used by the framework API for `DatasetContractValidationError`.
+
+    Examples
+    --------
+    >>> DatasetContractValidationError(... )
+    """
 
 
 def _default_schema_text() -> str:
@@ -36,13 +43,23 @@ def _format_error_path(error_path: list[object], message: str, validator: str) -
 
 
 def load_dataset_contract(path: str | Path) -> dict:
-    """Load a dataset contract YAML file from disk.
+    """Load dataset contract.
 
-    Args:
-        path: Path to YAML contract.
+    Run `load_dataset_contract`.
 
-    Returns:
-        Parsed contract dictionary.
+    Parameters
+    ----------
+    path : str | Path
+        Parameter `path`.
+
+    Returns
+    -------
+    result : dict
+        Return value from `load_dataset_contract`.
+
+    Examples
+    --------
+    >>> load_dataset_contract(path)
     """
     contract_path = Path(path)
     with contract_path.open("r", encoding="utf-8") as handle:
@@ -67,20 +84,25 @@ def _load_schema(schema_path: str | Path | None = None) -> dict:
 
 
 def validate_dataset_contract(contract: dict, schema_path: str | Path | None = None) -> list[str]:
-    """Validate a dataset contract dictionary against the configured schema.
+    """Validate dataset contract.
 
-    Args:
-        contract: Contract payload already loaded into a dictionary.
-        schema_path: Optional schema path; uses packaged default when omitted.
+    Run `validate_dataset_contract`.
 
-    Returns:
-        List of formatted validation errors. Empty means valid.
+    Parameters
+    ----------
+    contract : dict
+        Parameter `contract`.
+    schema_path : str | Path | None, optional
+        Parameter `schema_path`.
 
-    Runtime:
-        Local-safe and Fabric-safe.
+    Returns
+    -------
+    result : list[str]
+        Return value from `validate_dataset_contract`.
 
-    Typical next step:
-        Gate execution with ``assert_valid_dataset_contract`` when errors are not allowed.
+    Examples
+    --------
+    >>> validate_dataset_contract(contract, schema_path)
     """
     schema = _load_schema(schema_path=schema_path)
 
@@ -96,7 +118,31 @@ def validate_dataset_contract(contract: dict, schema_path: str | Path | None = N
 
 
 def assert_valid_dataset_contract(contract: dict, schema_path: str | Path | None = None) -> None:
-    """Validate a contract and raise a custom exception when validation fails."""
+    """Assert valid dataset contract.
+
+    Run `assert_valid_dataset_contract`.
+
+    Parameters
+    ----------
+    contract : dict
+        Parameter `contract`.
+    schema_path : str | Path | None, optional
+        Parameter `schema_path`.
+
+    Returns
+    -------
+    result : None
+        Return value from `assert_valid_dataset_contract`.
+
+    Raises
+    ------
+    DatasetContractValidationError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> assert_valid_dataset_contract(contract, schema_path)
+    """
     errors = validate_dataset_contract(contract, schema_path=schema_path)
     if errors:
         joined_errors = "\n".join(f"- {error}" for error in errors)
@@ -107,13 +153,25 @@ def load_and_validate_dataset_contract(
     path: str | Path,
     schema_path: str | Path | None = None,
 ) -> tuple[dict, list[str]]:
-    """Load a contract file and validate it in one notebook-entrypoint call.
+    """Load and validate dataset contract.
 
-    Returns:
-        Tuple of ``(contract, errors)``. Continue only when ``errors`` is empty.
+    Run `load_and_validate_dataset_contract`.
 
-    Example:
-        >>> contract, errors = load_and_validate_dataset_contract("contracts/orders.yaml")
+    Parameters
+    ----------
+    path : str | Path
+        Parameter `path`.
+    schema_path : str | Path | None, optional
+        Parameter `schema_path`.
+
+    Returns
+    -------
+    result : tuple[dict, list[str]]
+        Return value from `load_and_validate_dataset_contract`.
+
+    Examples
+    --------
+    >>> load_and_validate_dataset_contract(path, schema_path)
     """
     contract = load_dataset_contract(path)
     errors = validate_dataset_contract(contract, schema_path=schema_path)

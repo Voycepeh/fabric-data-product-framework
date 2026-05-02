@@ -31,7 +31,28 @@ def _jsonable(value: Any) -> Any:
 
 
 def build_transformation_summary_prompt_context(lineage_summary, code_snippets=None, runtime_metrics=None, business_context=None):
-    """Build grounded context used for AI transformation-summary generation."""
+    """Build the AI prompt context payload for transformation summaries.
+
+    Parameters
+    ----------
+    lineage_summary : dict
+        Lineage summary payload describing transformation steps and data flow.
+    code_snippets : list[str] or list[dict], optional
+        Optional source snippets or extracted transformation code fragments used
+        as evidence for the summary.
+    runtime_metrics : dict, optional
+        Optional runtime statistics such as row counts, durations, or resource
+        usage that help ground the generated text.
+    business_context : dict, optional
+        Optional business explanation or stakeholder notes that should shape the
+        non-technical summary.
+
+    Returns
+    -------
+    dict
+        Context dictionary with keys ``lineage_summary``, ``code_snippets``,
+        ``runtime_metrics``, ``business_context``, and ``instructions``.
+    """
     return {
         "lineage_summary": _jsonable(lineage_summary or {}),
         "code_snippets": _jsonable(code_snippets or []),
@@ -45,7 +66,33 @@ def build_transformation_summary_prompt_context(lineage_summary, code_snippets=N
 
 
 def build_transformation_summary_generation_prompt(lineage_summary, code_snippets=None, runtime_metrics=None, business_context=None):
-    """Create prompt text for generating human-readable transformation summaries."""
+    """Build the instruction prompt string for AI transformation summaries.
+
+    Parameters
+    ----------
+    lineage_summary : dict
+        Lineage summary payload that provides the transformation steps and
+        lineage evidence to include in the prompt context.
+    code_snippets : list[str] or list[dict], optional
+        Optional code snippets or extracted transformation fragments used as
+        grounding evidence.
+    runtime_metrics : dict, optional
+        Optional execution metrics that help the model reason about scale and
+        operational impact.
+    business_context : dict, optional
+        Optional business context or stakeholder notes for business-facing
+        summary text.
+
+    Returns
+    -------
+    str
+        Prompt text instructing the model to emit a strict JSON array of
+        transformation summaries using the required framework fields.
+
+    Examples
+    --------
+    >>> build_transformation_summary_generation_prompt(lineage_summary, code_snippets)
+    """
     context = build_transformation_summary_prompt_context(lineage_summary, code_snippets, runtime_metrics, business_context)
     return (
         "Generate transformation summaries as JSON array only (no markdown). "
@@ -63,7 +110,20 @@ def _strip_fences(text: str) -> str:
 
 
 def normalize_transformation_summary_candidate(candidate):
-    """Normalize one AI transformation-summary object to framework keys."""
+    """Normalize one AI-generated transformation summary object.
+
+    Parameters
+    ----------
+    candidate : dict
+        Mapping parsed from an AI response for a single transformation step.
+
+    Returns
+    -------
+    dict
+        Normalized summary record where required fields are preserved, default
+        values are set for ``approval_status`` and ``confidence``, evidence is
+        coerced to a list, and unknown fields are moved under ``metadata``.
+    """
     known = {k: candidate.get(k) for k in REQUIRED_FIELDS if k in candidate}
     metadata = {k: v for k, v in candidate.items() if k not in REQUIRED_FIELDS}
     known["approval_status"] = str(known.get("approval_status", "candidate")).lower() or "candidate"
@@ -74,7 +134,21 @@ def normalize_transformation_summary_candidate(candidate):
 
 
 def parse_ai_transformation_summaries(raw_response):
-    """Parse and validate AI response payload into approved summary candidates."""
+    """Parse and validate AI output for transformation summaries.
+
+    Parameters
+    ----------
+    raw_response : str or list[dict] or dict
+        JSON string (optionally fenced with ```json ... ```), or an already
+        parsed payload returned by an AI client.
+
+    Returns
+    -------
+    dict
+        Validation payload with keys:
+        ``ok`` (bool), ``candidates`` (list[dict]), and ``errors`` (list[str]).
+        Candidate objects are normalized before field validation.
+    """
     try:
         payload = json.loads(_strip_fences(raw_response)) if isinstance(raw_response, str) else raw_response
     except Exception as exc:
@@ -95,7 +169,30 @@ def parse_ai_transformation_summaries(raw_response):
 
 
 def build_transformation_summary_records(candidates, run_id, dataset_name, table_name):
-    """Convert summary candidates into metadata-table-ready records."""
+    """Build transformation summary records.
+
+    Run `build_transformation_summary_records`.
+
+    Parameters
+    ----------
+    candidates : Any
+        Parameter `candidates`.
+    run_id : Any
+        Parameter `run_id`.
+    dataset_name : Any
+        Parameter `dataset_name`.
+    table_name : Any
+        Parameter `table_name`.
+
+    Returns
+    -------
+    result : object
+        Return value from `build_transformation_summary_records`.
+
+    Examples
+    --------
+    >>> build_transformation_summary_records(candidates, run_id)
+    """
     return [
         {
             "run_id": run_id,

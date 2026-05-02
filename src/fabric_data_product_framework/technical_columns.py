@@ -12,10 +12,23 @@ from fabric_data_product_framework.engines import detect_dataframe_engine, valid
 
 
 def default_technical_columns() -> list[str]:
-    """Return the framework's default technical/audit column names (step 8).
+    """Default technical columns.
 
-    Use this list when excluding technical fields from profiling or hashing logic.
-    Engine support: pandas and Spark.
+    Run `default_technical_columns`.
+
+    Parameters
+    ----------
+    None
+        This callable does not require user-provided parameters.
+
+    Returns
+    -------
+    result : list[str]
+        Return value from `default_technical_columns`.
+
+    Examples
+    --------
+    >>> default_technical_columns()
     """
     return [
         "_pipeline_run_id",
@@ -67,7 +80,30 @@ def _hash_row(values: list[Any]) -> str:
 
 
 def add_literal_column(df, column_name: str, value, engine: str = "auto"):
-    """Add a constant column to pandas/Spark dataframes during enrichment (step 8)."""
+    """Add literal column.
+
+    Run `add_literal_column`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    column_name : str
+        Parameter `column_name`.
+    value : Any
+        Parameter `value`.
+    engine : str, optional
+        Parameter `engine`.
+
+    Returns
+    -------
+    result : object
+        Return value from `add_literal_column`.
+
+    Examples
+    --------
+    >>> add_literal_column(df, column_name)
+    """
     selected_engine = _resolve_engine(df, engine)
     if selected_engine == "pandas":
         out = df.copy()
@@ -80,12 +116,62 @@ def add_literal_column(df, column_name: str, value, engine: str = "auto"):
 
 
 def add_pipeline_run_id(df, run_id: str, column_name: str = "_pipeline_run_id", engine: str = "auto"):
-    """Stamp a run id column for traceability across lifecycle outputs (steps 2/8/14)."""
+    """Add pipeline run id.
+
+    Run `add_pipeline_run_id`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    run_id : str
+        Parameter `run_id`.
+    column_name : str, optional
+        Parameter `column_name`.
+    engine : str, optional
+        Parameter `engine`.
+
+    Returns
+    -------
+    result : object
+        Return value from `add_pipeline_run_id`.
+
+    Examples
+    --------
+    >>> add_pipeline_run_id(df, run_id)
+    """
     return add_literal_column(df, column_name=column_name, value=run_id, engine=engine)
 
 
 def add_pipeline_metadata(df, *, run_id: str, pipeline_name: str | None = None, environment: str | None = None, column_prefix: str = "_", engine: str = "auto"):
-    """Add pipeline-level metadata columns such as run id, name, and environment (step 8)."""
+    """Add pipeline metadata.
+
+    Run `add_pipeline_metadata`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    run_id : str
+        Parameter `run_id`.
+    pipeline_name : str | None, optional
+        Parameter `pipeline_name`.
+    environment : str | None, optional
+        Parameter `environment`.
+    column_prefix : str, optional
+        Parameter `column_prefix`.
+    engine : str, optional
+        Parameter `engine`.
+
+    Returns
+    -------
+    result : object
+        Return value from `add_pipeline_metadata`.
+
+    Examples
+    --------
+    >>> add_pipeline_metadata(df, run_id)
+    """
     out = add_pipeline_run_id(df, run_id=run_id, column_name=f"{column_prefix}pipeline_run_id", engine=engine)
     if pipeline_name is not None:
         out = add_literal_column(out, column_name=f"{column_prefix}pipeline_name", value=pipeline_name, engine=engine)
@@ -95,7 +181,34 @@ def add_pipeline_metadata(df, *, run_id: str, pipeline_name: str | None = None, 
 
 
 def add_source_metadata(df, *, source_system: str | None = None, source_table: str | None = None, source_extract_timestamp: str | None = None, column_prefix: str = "_", engine: str = "auto"):
-    """Add source lineage metadata columns for ingestion transparency (steps 3/8/13)."""
+    """Add source metadata.
+
+    Run `add_source_metadata`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    source_system : str | None, optional
+        Parameter `source_system`.
+    source_table : str | None, optional
+        Parameter `source_table`.
+    source_extract_timestamp : str | None, optional
+        Parameter `source_extract_timestamp`.
+    column_prefix : str, optional
+        Parameter `column_prefix`.
+    engine : str, optional
+        Parameter `engine`.
+
+    Returns
+    -------
+    result : object
+        Return value from `add_source_metadata`.
+
+    Examples
+    --------
+    >>> add_source_metadata(df, source_system)
+    """
     out = df
     if source_system is not None:
         out = add_literal_column(out, column_name=f"{column_prefix}source_system", value=source_system, engine=engine)
@@ -107,7 +220,30 @@ def add_source_metadata(df, *, source_system: str | None = None, source_table: s
 
 
 def add_loaded_at(df, timestamp: str | None = None, column_name: str = "_record_loaded_timestamp", engine: str = "auto"):
-    """Add record load timestamp in UTC-compatible format for auditability (step 8)."""
+    """Add loaded at.
+
+    Run `add_loaded_at`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    timestamp : str | None, optional
+        Parameter `timestamp`.
+    column_name : str, optional
+        Parameter `column_name`.
+    engine : str, optional
+        Parameter `engine`.
+
+    Returns
+    -------
+    result : object
+        Return value from `add_loaded_at`.
+
+    Examples
+    --------
+    >>> add_loaded_at(df, timestamp)
+    """
     selected_engine = _resolve_engine(df, engine)
     if timestamp is not None:
         return add_literal_column(df, column_name=column_name, value=timestamp, engine=selected_engine)
@@ -121,7 +257,30 @@ def add_loaded_at(df, timestamp: str | None = None, column_name: str = "_record_
 
 
 def add_watermark_value(df, watermark_column: str, output_column: str = "_watermark_value", engine: str = "auto"):
-    """Copy a business watermark into a standard technical column (steps 5/8)."""
+    """Add watermark value.
+
+    Run `add_watermark_value`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    watermark_column : str
+        Parameter `watermark_column`.
+    output_column : str, optional
+        Parameter `output_column`.
+    engine : str, optional
+        Parameter `engine`.
+
+    Returns
+    -------
+    result : object
+        Return value from `add_watermark_value`.
+
+    Examples
+    --------
+    >>> add_watermark_value(df, watermark_column)
+    """
     _assert_columns_exist(df, [watermark_column])
     selected_engine = _resolve_engine(df, engine)
     if selected_engine == "pandas":
@@ -135,7 +294,30 @@ def add_watermark_value(df, watermark_column: str, output_column: str = "_waterm
 
 
 def add_row_hash(df, columns: list[str] | None = None, output_column: str = "_row_hash", engine: str = "auto"):
-    """Add a row-level SHA256 hash from selected columns for change detection (steps 5/8)."""
+    """Add row hash.
+
+    Run `add_row_hash`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    columns : list[str] | None, optional
+        Parameter `columns`.
+    output_column : str, optional
+        Parameter `output_column`.
+    engine : str, optional
+        Parameter `engine`.
+
+    Returns
+    -------
+    result : object
+        Return value from `add_row_hash`.
+
+    Examples
+    --------
+    >>> add_row_hash(df, columns)
+    """
     selected_engine = _resolve_engine(df, engine)
     columns = columns or _non_technical_columns(df)
     _assert_columns_exist(df, columns)
@@ -150,7 +332,30 @@ def add_row_hash(df, columns: list[str] | None = None, output_column: str = "_ro
 
 
 def add_business_key_hash(df, business_keys: list[str], output_column: str = "_business_key_hash", engine: str = "auto"):
-    """Add a SHA256 hash from declared business keys for incremental safety (steps 5/8)."""
+    """Add business key hash.
+
+    Run `add_business_key_hash`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    business_keys : list[str]
+        Parameter `business_keys`.
+    output_column : str, optional
+        Parameter `output_column`.
+    engine : str, optional
+        Parameter `engine`.
+
+    Returns
+    -------
+    result : object
+        Return value from `add_business_key_hash`.
+
+    Examples
+    --------
+    >>> add_business_key_hash(df, business_keys)
+    """
     _assert_columns_exist(df, business_keys)
     selected_engine = _resolve_engine(df, engine)
     if selected_engine == "pandas":
@@ -164,10 +369,39 @@ def add_business_key_hash(df, business_keys: list[str], output_column: str = "_b
 
 
 def add_datetime_parts(df, datetime_column: str, *, timezone: str = "Asia/Singapore", prefix: str | None = None, include_date: bool = True, include_time: bool = True, include_hour: bool = True, include_30_min_block: bool = True, engine: str = "auto"):
-    """Derive date/time helper columns from a UTC datetime column.
+    """Add datetime parts.
 
-    Common gating behavior:
-        Raises ``ValueError`` when ``datetime_column`` is missing.
+    Run `add_datetime_parts`.
+
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    datetime_column : str
+        Parameter `datetime_column`.
+    timezone : str, optional
+        Parameter `timezone`.
+    prefix : str | None, optional
+        Parameter `prefix`.
+    include_date : bool, optional
+        Parameter `include_date`.
+    include_time : bool, optional
+        Parameter `include_time`.
+    include_hour : bool, optional
+        Parameter `include_hour`.
+    include_30_min_block : bool, optional
+        Parameter `include_30_min_block`.
+    engine : str, optional
+        Parameter `engine`.
+
+    Returns
+    -------
+    result : object
+        Return value from `add_datetime_parts`.
+
+    Examples
+    --------
+    >>> add_datetime_parts(df, datetime_column)
     """
     _assert_columns_exist(df, [datetime_column])
     selected_engine = _resolve_engine(df, engine)
@@ -206,13 +440,43 @@ def add_datetime_parts(df, datetime_column: str, *, timezone: str = "Asia/Singap
 
 
 def add_standard_technical_columns(df, *, run_id: str, pipeline_name: str | None = None, environment: str | None = None, source_system: str | None = None, source_table: str | None = None, source_extract_timestamp: str | None = None, watermark_column: str | None = None, business_keys: list[str] | None = None, add_hash: bool = True, engine: str = "auto"):
-    """Apply the standard technical column bundle used before persistence (step 8).
+    """Add standard technical columns.
 
-    Key args include ``run_id``, optional ``business_keys``, and optional source details.
-    Returns the transformed dataframe. Supports pandas and Spark without Spark-to-pandas conversion.
+    Run `add_standard_technical_columns`.
 
-    Example:
-        >>> out = add_standard_technical_columns(df, run_id="run_001", business_keys=["id"], engine="pandas")
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    run_id : str
+        Parameter `run_id`.
+    pipeline_name : str | None, optional
+        Parameter `pipeline_name`.
+    environment : str | None, optional
+        Parameter `environment`.
+    source_system : str | None, optional
+        Parameter `source_system`.
+    source_table : str | None, optional
+        Parameter `source_table`.
+    source_extract_timestamp : str | None, optional
+        Parameter `source_extract_timestamp`.
+    watermark_column : str | None, optional
+        Parameter `watermark_column`.
+    business_keys : list[str] | None, optional
+        Parameter `business_keys`.
+    add_hash : bool, optional
+        Parameter `add_hash`.
+    engine : str, optional
+        Parameter `engine`.
+
+    Returns
+    -------
+    result : object
+        Return value from `add_standard_technical_columns`.
+
+    Examples
+    --------
+    >>> add_standard_technical_columns(df, run_id)
     """
     out = add_pipeline_metadata(df, run_id=run_id, pipeline_name=pipeline_name, environment=environment, engine=engine)
     out = add_source_metadata(out, source_system=source_system, source_table=source_table, source_extract_timestamp=source_extract_timestamp, engine=engine)

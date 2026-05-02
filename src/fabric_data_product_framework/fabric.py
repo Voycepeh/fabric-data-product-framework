@@ -10,11 +10,32 @@ def build_table_identifier(
     schema: str | None = None,
     table: str | None = None,
 ) -> str:
-    """Build a table identifier as ``table``, ``schema.table``, or ``lakehouse.schema.table``.
+    """Build table identifier.
 
-    Example:
-        >>> build_table_identifier(schema="silver", table="orders")
-        'silver.orders'
+    Run `build_table_identifier`.
+
+    Parameters
+    ----------
+    lakehouse : str | None, optional
+        Parameter `lakehouse`.
+    schema : str | None, optional
+        Parameter `schema`.
+    table : str | None, optional
+        Parameter `table`.
+
+    Returns
+    -------
+    result : str
+        Return value from `build_table_identifier`.
+
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> build_table_identifier(lakehouse, schema)
     """
     parts = [part for part in [lakehouse, schema, table] if part]
     if not parts:
@@ -23,10 +44,30 @@ def build_table_identifier(
 
 
 def read_table(table_identifier: str, reader=None):
-    """Read a table through an injected Fabric-compatible reader adapter.
+    """Read table.
 
-    Runtime:
-        Fabric runtime required for real Lakehouse access; local-safe for adapter tests.
+    Run `read_table`.
+
+    Parameters
+    ----------
+    table_identifier : str
+        Parameter `table_identifier`.
+    reader : object, optional
+        Parameter `reader`.
+
+    Returns
+    -------
+    result : object
+        Return value from `read_table`.
+
+    Raises
+    ------
+    NotImplementedError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> read_table(table_identifier, reader)
     """
     if reader is None:
         raise NotImplementedError(
@@ -36,7 +77,29 @@ def read_table(table_identifier: str, reader=None):
 
 
 def validate_write_mode(mode: str) -> str:
-    """Validate and normalize write mode."""
+    """Validate write mode.
+
+    Run `validate_write_mode`.
+
+    Parameters
+    ----------
+    mode : str
+        Parameter `mode`.
+
+    Returns
+    -------
+    result : str
+        Return value from `validate_write_mode`.
+
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> validate_write_mode(mode)
+    """
     normalized_mode = (mode or "").strip().lower()
     if normalized_mode not in VALID_WRITE_MODES:
         raise ValueError("Invalid write mode. Expected one of: append, overwrite, merge.")
@@ -44,12 +107,34 @@ def validate_write_mode(mode: str) -> str:
 
 
 def write_table(df, table_identifier: str, writer=None, mode: str = "append", **options):
-    """Write a dataframe through an injected Fabric-compatible writer adapter.
+    """Write table.
 
-    Typical next step is building run summary + metadata records for handover.
+    Run `write_table`.
 
-    Side effects:
-        Delegates persistence to the injected ``writer`` callable.
+    Parameters
+    ----------
+    df : Any
+        Parameter `df`.
+    table_identifier : str
+        Parameter `table_identifier`.
+    writer : object, optional
+        Parameter `writer`.
+    mode : str, optional
+        Parameter `mode`.
+
+    Returns
+    -------
+    result : object
+        Return value from `write_table`.
+
+    Raises
+    ------
+    NotImplementedError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> write_table(df, table_identifier)
     """
     normalized_mode = validate_write_mode(mode)
     if writer is None:

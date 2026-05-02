@@ -21,7 +21,44 @@ def build_dataset_run_record(
     row_count_output: int | None = None,
     notes: str | None = None,
 ) -> dict:
-    """Build a dataset-level run record for status tracking and handover exports (step 14)."""
+    """Build dataset run record.
+
+    Run `build_dataset_run_record`.
+
+    Parameters
+    ----------
+    run_id : str
+        Parameter `run_id`.
+    dataset_name : str
+        Parameter `dataset_name`.
+    environment : str
+        Parameter `environment`.
+    source_table : str
+        Parameter `source_table`.
+    target_table : str
+        Parameter `target_table`.
+    status : str, optional
+        Parameter `status`.
+    started_at_utc : str | None, optional
+        Parameter `started_at_utc`.
+    ended_at_utc : str | None, optional
+        Parameter `ended_at_utc`.
+    row_count_source : int | None, optional
+        Parameter `row_count_source`.
+    row_count_output : int | None, optional
+        Parameter `row_count_output`.
+    notes : str | None, optional
+        Parameter `notes`.
+
+    Returns
+    -------
+    result : dict
+        Return value from `build_dataset_run_record`.
+
+    Examples
+    --------
+    >>> build_dataset_run_record(run_id, dataset_name)
+    """
     return to_jsonable(
         {
             "run_id": run_id,
@@ -40,7 +77,28 @@ def build_dataset_run_record(
 
 
 def build_schema_snapshot_records(snapshot: dict, *, run_id: str, table_stage: str) -> list[dict]:
-    """Convert schema snapshot output into row records for metadata tables (step 5)."""
+    """Build schema snapshot records.
+
+    Run `build_schema_snapshot_records`.
+
+    Parameters
+    ----------
+    snapshot : dict
+        Parameter `snapshot`.
+    run_id : str
+        Parameter `run_id`.
+    table_stage : str
+        Parameter `table_stage`.
+
+    Returns
+    -------
+    result : list[dict]
+        Return value from `build_schema_snapshot_records`.
+
+    Examples
+    --------
+    >>> build_schema_snapshot_records(snapshot, run_id)
+    """
     base = {
         "run_id": run_id,
         "dataset_name": snapshot.get("dataset_name"),
@@ -65,7 +123,28 @@ def build_schema_snapshot_records(snapshot: dict, *, run_id: str, table_stage: s
 
 
 def build_schema_drift_records(drift_result: dict, *, run_id: str, table_stage: str) -> list[dict]:
-    """Convert schema drift comparison results into metadata rows (step 5 gate logging)."""
+    """Build schema drift records.
+
+    Run `build_schema_drift_records`.
+
+    Parameters
+    ----------
+    drift_result : dict
+        Parameter `drift_result`.
+    run_id : str
+        Parameter `run_id`.
+    table_stage : str
+        Parameter `table_stage`.
+
+    Returns
+    -------
+    result : list[dict]
+        Return value from `build_schema_drift_records`.
+
+    Examples
+    --------
+    >>> build_schema_drift_records(drift_result, run_id)
+    """
     base = {
         "run_id": run_id,
         "dataset_name": drift_result.get("dataset_name"),
@@ -118,7 +197,32 @@ def build_quality_result_records(
     table_name: str,
     table_stage: str,
 ) -> list[dict]:
-    """Normalize quality rule outputs into metadata rows for quality reporting (step 10)."""
+    """Build quality result records.
+
+    Run `build_quality_result_records`.
+
+    Parameters
+    ----------
+    quality_result : dict | list[dict]
+        Parameter `quality_result`.
+    run_id : str
+        Parameter `run_id`.
+    dataset_name : str
+        Parameter `dataset_name`.
+    table_name : str
+        Parameter `table_name`.
+    table_stage : str
+        Parameter `table_stage`.
+
+    Returns
+    -------
+    result : list[dict]
+        Return value from `build_quality_result_records`.
+
+    Examples
+    --------
+    >>> build_quality_result_records(quality_result, run_id)
+    """
     results: list[dict[str, Any]]
     if isinstance(quality_result, dict):
         results = list(quality_result.get("results", []))
@@ -151,9 +255,34 @@ def build_quality_result_records(
 
 
 def write_metadata_records(records: list[dict], table_identifier: str, writer=None, mode: str = "append", **options):
-    """Write metadata rows via an injected writer adapter (steps 4/5/9/10/14).
+    """Write metadata records.
 
-    Safety: this module does not hardcode runtime-specific writers; callers must inject one.
+    Run `write_metadata_records`.
+
+    Parameters
+    ----------
+    records : list[dict]
+        Parameter `records`.
+    table_identifier : str
+        Parameter `table_identifier`.
+    writer : object, optional
+        Parameter `writer`.
+    mode : str, optional
+        Parameter `mode`.
+
+    Returns
+    -------
+    result : object
+        Return value from `write_metadata_records`.
+
+    Raises
+    ------
+    NotImplementedError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> write_metadata_records(records, table_identifier)
     """
     if not records:
         return None
@@ -171,7 +300,35 @@ def write_multiple_metadata_outputs(
     mode: str = "append",
     **options,
 ) -> dict:
-    """Write multiple named metadata outputs using a name-to-table mapping and shared writer."""
+    """Write multiple metadata outputs.
+
+    Run `write_multiple_metadata_outputs`.
+
+    Parameters
+    ----------
+    outputs : dict[str, list[dict]]
+        Parameter `outputs`.
+    table_mapping : dict[str, str]
+        Parameter `table_mapping`.
+    writer : object, optional
+        Parameter `writer`.
+    mode : str, optional
+        Parameter `mode`.
+
+    Returns
+    -------
+    result : dict
+        Return value from `write_multiple_metadata_outputs`.
+
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> write_multiple_metadata_outputs(outputs, table_mapping)
+    """
     results = {}
     for output_name, records in outputs.items():
         if not records:

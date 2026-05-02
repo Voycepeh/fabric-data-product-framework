@@ -15,7 +15,47 @@ def create_pipeline_notebook_template(
     include_ai_prompts=True,
     overwrite=False,
 ):
-    """Create a runnable Fabric notebook template for pipeline-style development."""
+    """Create pipeline notebook template.
+
+    Run `create_pipeline_notebook_template`.
+
+    Parameters
+    ----------
+    output_path : Any
+        Parameter `output_path`.
+    dataset_name : object, optional
+        Parameter `dataset_name`.
+    source_table : object, optional
+        Parameter `source_table`.
+    output_table : object, optional
+        Parameter `output_table`.
+    source_env : object, optional
+        Parameter `source_env`.
+    source_target : object, optional
+        Parameter `source_target`.
+    output_env : object, optional
+        Parameter `output_env`.
+    output_target : object, optional
+        Parameter `output_target`.
+    include_ai_prompts : object, optional
+        Parameter `include_ai_prompts`.
+    overwrite : object, optional
+        Parameter `overwrite`.
+
+    Returns
+    -------
+    result : object
+        Return value from `create_pipeline_notebook_template`.
+
+    Raises
+    ------
+    FileExistsError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> create_pipeline_notebook_template(output_path, dataset_name)
+    """
     path = Path(output_path)
     if path.exists() and not overwrite:
         raise FileExistsError(f"Output already exists: {path}")
@@ -222,7 +262,26 @@ def create_actual_data_mvp_template(
     output_path: str,
     contract_path: str = "contracts/examples/actual_data_mvp_contract.yml",
 ) -> str:
-    """Create the end-to-end "actual data MVP" notebook template."""
+    """Create actual data mvp template.
+
+    Run `create_actual_data_mvp_template`.
+
+    Parameters
+    ----------
+    output_path : str
+        Parameter `output_path`.
+    contract_path : str, optional
+        Parameter `contract_path`.
+
+    Returns
+    -------
+    result : str
+        Return value from `create_actual_data_mvp_template`.
+
+    Examples
+    --------
+    >>> create_actual_data_mvp_template(output_path, contract_path)
+    """
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     content = f'''# %% [markdown]

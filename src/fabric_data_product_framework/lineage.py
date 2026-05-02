@@ -12,7 +12,14 @@ _ALLOWED_CONFIDENCE = {"high", "medium", "low"}
 
 @dataclass
 class TransformationStep:
-    """Structured transformation step for lineage records and handover text."""
+    """Transformationstep.
+
+    Public class used by the framework API for `TransformationStep`.
+
+    Examples
+    --------
+    >>> TransformationStep(... )
+    """
     step_id: str
     step_name: str
     input_name: str
@@ -51,7 +58,14 @@ def _safe_node_id(raw: str, prefix: str = "node") -> str:
 
 
 class LineageRecorder:
-    """Collect transformation steps and render lineage-friendly summaries."""
+    """Lineagerecorder.
+
+    Public class used by the framework API for `LineageRecorder`.
+
+    Examples
+    --------
+    >>> LineageRecorder(... )
+    """
     def __init__(self, dataset_name: str, run_id: str | None = None, source_tables: list[str] | None = None, target_table: str | None = None) -> None:
         self.dataset_name = dataset_name
         self.run_id = run_id
@@ -60,23 +74,116 @@ class LineageRecorder:
         self._steps: list[TransformationStep] = []
 
     def add_step(self, *, step_id: str, step_name: str, input_name: str, output_name: str, description: str, reason: str, transformation_type: str = "custom", columns_used: list[str] | None = None, columns_created: list[str] | None = None, business_impact: str | None = None, notes: str | None = None) -> dict:
+        """Add step.
+
+        Run `add_step`.
+
+        Parameters
+        ----------
+        step_id : str
+            Parameter `step_id`.
+        step_name : str
+            Parameter `step_name`.
+        input_name : str
+            Parameter `input_name`.
+        output_name : str
+            Parameter `output_name`.
+        description : str
+            Parameter `description`.
+        reason : str
+            Parameter `reason`.
+        transformation_type : str, optional
+            Parameter `transformation_type`.
+        columns_used : list[str] | None, optional
+            Parameter `columns_used`.
+        columns_created : list[str] | None, optional
+            Parameter `columns_created`.
+        business_impact : str | None, optional
+            Parameter `business_impact`.
+        notes : str | None, optional
+            Parameter `notes`.
+
+        Returns
+        -------
+        result : dict
+            Return value from `add_step`.
+
+        Examples
+        --------
+        >>> add_step(step_id, step_name)
+        """
         step = TransformationStep(step_id=step_id, step_name=step_name, input_name=input_name, output_name=output_name, description=description, reason=reason, transformation_type=transformation_type, columns_used=_clean_list(columns_used), columns_created=_clean_list(columns_created), business_impact=business_impact, notes=notes)
         self._steps.append(step)
         return asdict(step)
 
     def to_records(self) -> list[dict]:
+        """To records.
+
+        Run `to_records`.
+
+        Parameters
+        ----------
+        None
+            This callable does not require user-provided parameters.
+
+        Returns
+        -------
+        result : list[dict]
+            Return value from `to_records`.
+
+        Examples
+        --------
+        >>> to_records()
+        """
         return [asdict(step) for step in self._steps]
 
     def build_summary(self) -> dict:
+        """Build summary.
+
+        Run `build_summary`.
+
+        Parameters
+        ----------
+        None
+            This callable does not require user-provided parameters.
+
+        Returns
+        -------
+        result : dict
+            Return value from `build_summary`.
+
+        Examples
+        --------
+        >>> build_summary()
+        """
         steps = self.to_records()
         return {"dataset_name": self.dataset_name, "run_id": self.run_id, "source_tables": self.source_tables, "target_table": self.target_table, "step_count": len(steps), "steps": steps, "columns_used": _unique([c for s in steps for c in s.get("columns_used", [])]), "columns_created": _unique([c for s in steps for c in s.get("columns_created", [])]), "transformation_types": _unique([s.get("transformation_type", "custom") for s in steps]), "summary_text": f"Recorded {len(steps)} transformation step(s) from {len(self.source_tables)} source table(s) to {self.target_table or 'target not set'}."}
 
 
 def generate_mermaid_lineage(*, source_tables: list[str], target_table: str, transformation_steps: list[dict], graph_direction: str = "LR") -> str:
-    """Generate a Mermaid flowchart from lineage step records.
+    """Generate mermaid lineage.
 
-    Returns:
-        Mermaid graph text suitable for markdown fences.
+    Run `generate_mermaid_lineage`.
+
+    Parameters
+    ----------
+    source_tables : list[str]
+        Parameter `source_tables`.
+    target_table : str
+        Parameter `target_table`.
+    transformation_steps : list[dict]
+        Parameter `transformation_steps`.
+    graph_direction : str, optional
+        Parameter `graph_direction`.
+
+    Returns
+    -------
+    result : str
+        Return value from `generate_mermaid_lineage`.
+
+    Examples
+    --------
+    >>> generate_mermaid_lineage(source_tables, target_table)
     """
     direction = graph_direction if graph_direction in {"LR", "TD", "RL", "BT"} else "LR"
     lines = [f"flowchart {direction}"]
@@ -109,10 +216,25 @@ def generate_mermaid_lineage(*, source_tables: list[str], target_table: str, tra
 
 
 def build_transformation_summary_markdown(summary: dict, *, include_mermaid: bool = True) -> str:
-    """Render lineage summary content as notebook-friendly markdown.
+    """Build transformation summary markdown.
 
-    Typical next step:
-        Store this markdown in handover notes or run summary artifacts.
+    Run `build_transformation_summary_markdown`.
+
+    Parameters
+    ----------
+    summary : dict
+        Parameter `summary`.
+    include_mermaid : bool, optional
+        Parameter `include_mermaid`.
+
+    Returns
+    -------
+    result : str
+        Return value from `build_transformation_summary_markdown`.
+
+    Examples
+    --------
+    >>> build_transformation_summary_markdown(summary, include_mermaid)
     """
     steps = summary.get("steps", []) or []
     lines = [
@@ -143,7 +265,32 @@ def build_transformation_summary_markdown(summary: dict, *, include_mermaid: boo
 
 
 def build_lineage_prompt_context(*, dataset_name: str, source_tables: list[str], target_table: str, transformation_steps: list[dict], eda_notes: str | None = None) -> str:
-    """Build grounded context text for lineage-oriented Copilot prompting."""
+    """Build lineage prompt context.
+
+    Run `build_lineage_prompt_context`.
+
+    Parameters
+    ----------
+    dataset_name : str
+        Parameter `dataset_name`.
+    source_tables : list[str]
+        Parameter `source_tables`.
+    target_table : str
+        Parameter `target_table`.
+    transformation_steps : list[dict]
+        Parameter `transformation_steps`.
+    eda_notes : str | None, optional
+        Parameter `eda_notes`.
+
+    Returns
+    -------
+    result : str
+        Return value from `build_lineage_prompt_context`.
+
+    Examples
+    --------
+    >>> build_lineage_prompt_context(dataset_name, source_tables)
+    """
     lines = [
         "Use this context to draft or review a lineage explanation.",
         "Do not invent transformations not listed here.",
@@ -167,15 +314,45 @@ def build_lineage_prompt_context(*, dataset_name: str, source_tables: list[str],
     lines.extend(["", "## EDA Notes", eda_notes or "Not provided."])
     return "\n".join(lines)
 def get_fabric_copilot_lineage_prompt() -> str:
-    """Return the default instruction block for Fabric Copilot lineage drafting."""
+    """Get fabric copilot lineage prompt.
+
+    Run `get_fabric_copilot_lineage_prompt`.
+
+    Parameters
+    ----------
+    None
+        This callable does not require user-provided parameters.
+
+    Returns
+    -------
+    result : str
+        Return value from `get_fabric_copilot_lineage_prompt`.
+
+    Examples
+    --------
+    >>> get_fabric_copilot_lineage_prompt()
+    """
     return """You are assisting with notebook-level lineage inside a Microsoft Fabric notebook.\nscan the entire current Fabric notebook before answering: inspect markdown, comments, section headers, EDA notes, and Python code cells.\nInspect Spark and Pandas DataFrame assignments and transformations including reads, writes, joins, filters, select/selectExpr, withColumn, groupBy, aggregations, unions, drops, renames, window functions, lakehouse reads, warehouse reads, file reads, table writes, and final outputs.\nIdentify only meaningful lineage steps. Ignore temporary diagnostics unless they affect final output. Infer the business/analytical reason from notebook context when possible.\nReturn ONLY valid Python code that defines lineage_steps = [...] using this exact schema and field names:\n\nlineage_steps = [\n    {\n        \"source\": \"<source dataframe/table/file>\",\n        \"target\": \"<target dataframe/table/file>\",\n        \"transformation\": \"<short technical summary>\",\n        \"reason\": \"<business or analytical reason>\",\n        \"source_type\": \"<dataframe|lakehouse_table|warehouse_table|file|unknown>\",\n        \"target_type\": \"<dataframe|lakehouse_table|warehouse_table|file|unknown>\",\n        \"confidence\": \"<high|medium|low>\",\n        \"notes\": \"<optional review note>\"\n    }\n]\n\nUse \"Needs human review\" if the reason cannot be inferred confidently.\nDo not invent business context. For Fabric notebook rendering, use matplotlib + networkx and avoid Mermaid.\nThis output must be reviewed by a human before approval and storage.\n"""
 
 
 def validate_lineage_steps(lineage_steps) -> dict:
-    """Validate AI/manual lineage steps before metadata persistence.
+    """Validate lineage steps.
 
-    Enforces required fields and flags low-confidence or unknown lineage values
-    for human steward review.
+    Run `validate_lineage_steps`.
+
+    Parameters
+    ----------
+    lineage_steps : Any
+        Parameter `lineage_steps`.
+
+    Returns
+    -------
+    result : dict
+        Return value from `validate_lineage_steps`.
+
+    Examples
+    --------
+    >>> validate_lineage_steps(lineage_steps)
     """
     errors: list[str] = []
     warnings: list[str] = []
@@ -238,7 +415,39 @@ def validate_lineage_steps(lineage_steps) -> dict:
 
 
 def build_lineage_record_from_steps(dataset_name, lineage_steps, run_id=None, notebook_name=None, workspace_name=None, created_by=None) -> list[dict]:
-    """Convert validated lineage steps into machine-readable metadata rows."""
+    """Build lineage record from steps.
+
+    Run `build_lineage_record_from_steps`.
+
+    Parameters
+    ----------
+    dataset_name : Any
+        Parameter `dataset_name`.
+    lineage_steps : Any
+        Parameter `lineage_steps`.
+    run_id : object, optional
+        Parameter `run_id`.
+    notebook_name : object, optional
+        Parameter `notebook_name`.
+    workspace_name : object, optional
+        Parameter `workspace_name`.
+    created_by : object, optional
+        Parameter `created_by`.
+
+    Returns
+    -------
+    result : list[dict]
+        Return value from `build_lineage_record_from_steps`.
+
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> build_lineage_record_from_steps(dataset_name, lineage_steps)
+    """
     validation = validate_lineage_steps(lineage_steps)
     if not validation["is_valid"]:
         raise ValueError(f"Invalid lineage_steps: {validation['errors']}")
@@ -266,19 +475,100 @@ def build_lineage_record_from_steps(dataset_name, lineage_steps, run_id=None, no
 
 
 def build_lineage_records(*, dataset_name: str, run_id: str, source_tables: list[str], target_table: str, transformation_steps: list[dict]) -> list[dict]:
-    """Build canonical lineage records from structured transformation steps."""
+    """Build lineage records.
+
+    Run `build_lineage_records`.
+
+    Parameters
+    ----------
+    dataset_name : str
+        Parameter `dataset_name`.
+    run_id : str
+        Parameter `run_id`.
+    source_tables : list[str]
+        Parameter `source_tables`.
+    target_table : str
+        Parameter `target_table`.
+    transformation_steps : list[dict]
+        Parameter `transformation_steps`.
+
+    Returns
+    -------
+    result : list[dict]
+        Return value from `build_lineage_records`.
+
+    Examples
+    --------
+    >>> build_lineage_records(dataset_name, run_id)
+    """
     return [{"run_id": run_id, "dataset_name": dataset_name, "source_tables": _clean_list(source_tables), "target_table": target_table, "step_id": step.get("step_id"), "step_name": step.get("step_name"), "input_name": step.get("input_name"), "output_name": step.get("output_name"), "transformation_type": step.get("transformation_type", "custom"), "columns_used": _clean_list(step.get("columns_used")), "columns_created": _clean_list(step.get("columns_created")), "description": step.get("description"), "reason": step.get("reason"), "business_impact": step.get("business_impact"), "notes": step.get("notes")} for step in (transformation_steps or [])]
 
 
 def build_lineage_record(*, dataset_name: str, run_id: str | None = None, lineage_steps: list[dict] | None = None, notebook_name: str | None = None, workspace_name: str | None = None, created_by: str | None = None) -> list[dict]:
-    """Build normalized lineage records from notebook-captured lineage steps."""
+    """Build lineage record.
+
+    Run `build_lineage_record`.
+
+    Parameters
+    ----------
+    dataset_name : str
+        Parameter `dataset_name`.
+    run_id : str | None, optional
+        Parameter `run_id`.
+    lineage_steps : list[dict] | None, optional
+        Parameter `lineage_steps`.
+    notebook_name : str | None, optional
+        Parameter `notebook_name`.
+    workspace_name : str | None, optional
+        Parameter `workspace_name`.
+    created_by : str | None, optional
+        Parameter `created_by`.
+
+    Returns
+    -------
+    result : list[dict]
+        Return value from `build_lineage_record`.
+
+    Raises
+    ------
+    ValueError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> build_lineage_record(dataset_name, run_id)
+    """
     if lineage_steps is None:
         raise ValueError("lineage_steps is required. Use get_fabric_copilot_lineage_prompt() to generate notebook lineage steps via Fabric Copilot.")
     return build_lineage_record_from_steps(dataset_name, lineage_steps, run_id, notebook_name, workspace_name, created_by)
 
 
 def plot_lineage_networkx(lineage_steps_or_record, title=None):
-    """Render lineage steps as a NetworkX diagram for notebook review."""
+    """Plot lineage networkx.
+
+    Run `plot_lineage_networkx`.
+
+    Parameters
+    ----------
+    lineage_steps_or_record : Any
+        Parameter `lineage_steps_or_record`.
+    title : object, optional
+        Parameter `title`.
+
+    Returns
+    -------
+    result : object
+        Return value from `plot_lineage_networkx`.
+
+    Raises
+    ------
+    ImportError
+        Raised when input validation or runtime checks fail.
+
+    Examples
+    --------
+    >>> plot_lineage_networkx(lineage_steps_or_record, title)
+    """
     try:
         import matplotlib.pyplot as plt
     except Exception as ex:
