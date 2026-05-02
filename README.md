@@ -28,7 +28,7 @@ These visuals summarize the user benefits, workflow improvement, and canonical M
 - Canonical lifecycle: [docs/lifecycle-operating-model.md](docs/lifecycle-operating-model.md)
 - Architecture: [docs/architecture.md](docs/architecture.md)
 - Build and install in Fabric guide: [docs/UV_WHEEL_FABRIC_INSTALL_GUIDE.md](docs/UV_WHEEL_FABRIC_INSTALL_GUIDE.md)
-- List of available function: [generated function reference](docs/reference/index.md)
+- List of available function: [generated function reference](https://voycepeh.github.io/fabric-data-product-framework/reference/).
 
 ## What problems it solves
 
