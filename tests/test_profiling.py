@@ -1,131 +1,74 @@
-import pytest
-import json
-
-import pandas as pd
-
 from fabric_data_product_framework.profiling import (
-    profile_column,
-    profile_dataframe,
-    summarize_profile,
-    to_jsonable,
+    build_ai_quality_context,
+    default_technical_columns,
+    get_profiled_columns,
+    is_min_max_supported_type,
+    profile_metadata_to_records,
 )
 
 
-class FakeSparkDataFrame:
-    __module__ = "pyspark.sql.dataframe"
-
-    def __init__(self):
-        self.schema = {"fields": []}
+class FakeDTypesDataFrame:
+    def __init__(self, dtypes):
+        self.dtypes = dtypes
 
 
-def test_profile_dataframe_counts_and_duplicates():
-    df = pd.DataFrame({"a": [1, 1, 2], "b": ["x", "x", "y"]})
-    prof = profile_dataframe(df, dataset_name="synthetic")
-    assert prof["dataset_name"] == "synthetic"
-    assert prof["row_count"] == 3
-    assert prof["column_count"] == 2
-    assert prof["duplicate_row_count"] == 1
+class FakeRow(dict):
+    def asDict(self):
+        return dict(self)
 
 
-def test_profile_column_null_and_distinct():
-    s = pd.Series([1, None, 1, 2], name="x")
-    prof = profile_column(s)
-    assert prof["null_count"] == 1
-    assert prof["distinct_count"] == 2
+class FakeProfileDF:
+    def __init__(self, rows):
+        self._rows = rows
+
+    def collect(self):
+        return self._rows
 
 
-def test_numeric_column_stats():
-    s = pd.Series([10.0, 20.0, 30.0], name="amount")
-    prof = profile_column(s)
-    assert prof["min_value"] == 10.0
-    assert prof["max_value"] == 30.0
-    assert prof["mean_value"] == 20.0
-    assert prof["median_value"] == 20.0
-    assert prof["std_value"] is not None
+def test_default_technical_columns_contains_required_values():
+    cols = set(default_technical_columns())
+    for required in {"pipeline_ts", "_pipeline_run_id", "loaded_at", "run_ingest_id", "ingest_run_id"}:
+        assert required in cols
 
 
-def test_date_column_min_max():
-    s = pd.Series(pd.to_datetime(["2024-01-01", "2024-01-03"]), name="event_date")
-    prof = profile_column(s)
-    assert prof["min_value"].startswith("2024-01-01")
-    assert prof["max_value"].startswith("2024-01-03")
+def test_get_profiled_columns_excludes_default_and_custom():
+    df = FakeDTypesDataFrame([
+        ("id", "int"),
+        ("pipeline_ts", "timestamp"),
+        ("status", "string"),
+        ("custom_tech", "string"),
+    ])
+    assert get_profiled_columns(df, exclude_columns={"custom_tech"}) == ["id", "status"]
 
 
-def test_categorical_top_values():
-    s = pd.Series(["A", "A", "B", "C"], name="segment")
-    prof = profile_column(s, top_n=2)
-    assert len(prof["top_values"]) == 2
-    assert prof["top_values"][0]["value"] == "A"
+def test_is_min_max_supported_type():
+    assert is_min_max_supported_type("int")
+    assert is_min_max_supported_type("timestamp")
+    assert is_min_max_supported_type("string")
+    assert not is_min_max_supported_type("array<string>")
+    assert not is_min_max_supported_type("struct<a:int>")
 
 
-def test_semantic_inference_rules():
-    email_prof = profile_column(pd.Series(["a@example.com", "b@example.com"], name="email"))
-    id_prof = profile_column(pd.Series(["c1", "c2"], name="customer_id"))
-    amount_prof = profile_column(pd.Series([10.5, 20.5], name="amount"))
-
-    assert email_prof["inferred_semantic_type"] == "email"
-    assert id_prof["inferred_semantic_type"] == "identifier"
-    assert amount_prof["inferred_semantic_type"] == "amount"
+def test_profile_metadata_to_records_collects_as_dict_rows():
+    profile_df = FakeProfileDF([FakeRow(COLUMN_NAME="id", ROW_COUNT=3), FakeRow(COLUMN_NAME="status", ROW_COUNT=3)])
+    rows = profile_metadata_to_records(profile_df)
+    assert rows[0]["COLUMN_NAME"] == "id"
+    assert rows[1]["COLUMN_NAME"] == "status"
 
 
-def test_profile_is_json_serializable():
-    df = pd.DataFrame({"customer_id": [1, 2], "created_at": pd.to_datetime(["2024-01-01", "2024-01-02"])})
-    prof = profile_dataframe(df)
-    json.dumps(prof)
-
-
-def test_summarize_profile_keys():
-    df = pd.DataFrame({"customer_id": [1, 2, 2], "email": ["a@example.com", None, "b@example.com"]})
-    prof = profile_dataframe(df)
-    summary = summarize_profile(prof)
-    expected = {
-        "dataset_name",
-        "row_count",
-        "column_count",
-        "duplicate_row_count",
-        "columns_with_nulls",
-        "likely_identifier_columns",
-        "likely_date_columns",
-        "likely_sensitive_columns",
-        "generated_at",
-    }
-    assert expected.issubset(summary.keys())
-
-
-def test_empty_dataframe_does_not_crash():
-    df = pd.DataFrame()
-    prof = profile_dataframe(df, dataset_name="empty")
-    assert prof["dataset_name"] == "empty"
-    assert prof["row_count"] == 0
-    assert prof["column_count"] == 0
-    assert prof["columns"] == []
-
-
-def test_to_jsonable_list_with_timestamp():
-    out = to_jsonable([1, None, pd.Timestamp("2024-01-01")])
-    assert out == [1, None, "2024-01-01T00:00:00"]
-
-
-def test_to_jsonable_nested_dict_with_pd_na_and_nan():
-    out = to_jsonable({"a": pd.NA, "b": [1, float("nan")]})
-    assert out == {"a": None, "b": [1, None]}
-
-
-def test_profile_column_mixed_object_values_is_json_serializable():
-    s = pd.Series([1, "x", pd.Timestamp("2024-01-01"), None], name="mixed_obj", dtype="object")
-    prof = profile_column(s)
-    json.dumps(prof)
-
-
-def test_profile_dataframe_engine_auto_uses_pandas_path():
-    df = pd.DataFrame({"a": [1, 1], "b": ["x", "x"]})
-    prof = profile_dataframe(df, engine="auto")
-    assert prof["row_count"] == 2
-
-
-def test_profile_dataframe_engine_pandas_explicit():
-    df = pd.DataFrame({"a": [1, 2]})
-    prof = profile_dataframe(df, engine="pandas")
-    assert prof["column_count"] == 1
-
-
+def test_build_ai_quality_context_returns_expected_sections():
+    profile_df = FakeProfileDF([
+        FakeRow(COLUMN_NAME="order_id", DATA_TYPE="string", ROW_COUNT=100, NULL_COUNT=0, NULL_PERCENT=0.0, DISTINCT_PERCENT=100.0, MIN_VALUE="1", MAX_VALUE="100"),
+        FakeRow(COLUMN_NAME="order_status", DATA_TYPE="string", ROW_COUNT=100, NULL_COUNT=2, NULL_PERCENT=2.0, DISTINCT_PERCENT=3.0, MIN_VALUE="OPEN", MAX_VALUE="CLOSED"),
+        FakeRow(COLUMN_NAME="event_timestamp", DATA_TYPE="timestamp", ROW_COUNT=100, NULL_COUNT=0, NULL_PERCENT=0.0, DISTINCT_PERCENT=95.0, MIN_VALUE="2026-01-01", MAX_VALUE="2026-01-31"),
+    ])
+    context = build_ai_quality_context(profile_df, dataset_name="orders", table_name="orders_clean")
+    assert context["dataset_name"] == "orders"
+    assert context["table_name"] == "orders_clean"
+    assert context["row_count"] == 100
+    assert context["column_count"] == 3
+    assert "order_status" in context["columns_with_nulls"]
+    hints = {(h["column"], h["hint"]) for h in context["candidate_rule_hints"]}
+    assert ("order_id", "UNIQUE_CANDIDATE") in hints
+    assert ("order_status", "ACCEPTED_VALUES_CANDIDATE") in hints
+    assert ("event_timestamp", "DATE_RANGE_CANDIDATE") in hints
