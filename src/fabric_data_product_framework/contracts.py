@@ -1127,7 +1127,11 @@ def run_data_product(spark, contract: dict | DataProductContract, transform=None
 
     out_df = transform(src_df, ctx, effective_contract) if transform else src_df
     out_df = add_audit_columns(out_df, run_id=ctx["run_id"], pipeline_name=dataset_name, environment=ctx["environment"], source_table=source_table, watermark_column=(n.source.watermark_column if n.source.watermark_column in getattr(out_df, "columns", []) else None))
-    out_df = add_hash_columns(out_df, business_keys=n.source.business_keys)
+    out_df = add_hash_columns(
+        out_df,
+        business_keys=n.source.business_keys,
+        include_business_key_hash=bool(n.source.business_keys),
+    )
 
     output_profile = profile_dataframe(out_df, dataset_name=dataset_name)
     if write_metadata:

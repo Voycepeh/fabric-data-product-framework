@@ -216,11 +216,68 @@ def add_audit_columns(
 ):
     """Add run tracking and audit columns for ingestion workflows.
 
+    Parameters
+    ----------
+    df : Any
+        Input pandas or Spark DataFrame.
+    run_id : str | None, optional
+        Pipeline run identifier. If omitted, a UUID is generated.
+    pipeline_name : str | None, optional
+        Pipeline or notebook workflow name.
+    environment : str | None, optional
+        Environment label such as ``Sandbox`` or ``Production``.
+    source_system : str | None, optional
+        Upstream source system name.
+    source_table : str | None, optional
+        Upstream table or dataset name.
+    source_extract_timestamp : str | None, optional
+        Timestamp string representing source extract time.
+    notebook_name : str | None, optional
+        Notebook name override. Uses Fabric runtime context when available.
+    loaded_by : str | None, optional
+        User override. Uses Fabric runtime context when available.
+    watermark_column : str | None, optional
+        Source column copied into ``_watermark_value``.
+    bucket_column : str | None, optional
+        Source column used to derive ``_partition_bucket`` and ``_sample_bucket``.
+    bucket_size : int, default=512
+        Partition bucket modulus. Must be one of ``128``, ``256``, ``512``, ``1024``.
+    include_row_ingest_id : bool, default=True
+        Whether to add ``_row_ingest_id``.
+    engine : str, default="auto"
+        Execution engine (``auto``, ``pandas``, or ``spark``).
+
+    Returns
+    -------
+    Any
+        DataFrame with requested audit columns.
+
+    Raises
+    ------
+    ValueError
+        If `watermark_column` or `bucket_column` does not exist, or `bucket_size` is invalid.
+
     Notes
     -----
-    This function is local Python compatible and can import without Fabric runtime.
-    When running in Fabric notebooks, it can read ``notebookutils.runtime.context``.
+    Fabric notebook runtime is optional. This function imports locally without Fabric.
+    In Fabric notebooks it reads ``notebookutils.runtime.context`` when available;
+    otherwise it falls back to ``local_notebook`` and ``local_user``.
 
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> df = pd.DataFrame({"BUSINESS_KEY": ["A1"], "updated_at": ["2026-01-01T00:00:00Z"]})
+    >>> out = add_audit_columns(
+    ...     df,
+    ...     pipeline_name="orders_pipeline",
+    ...     environment="Sandbox",
+    ...     source_table="orders",
+    ...     watermark_column="updated_at",
+    ...     bucket_column="BUSINESS_KEY",
+    ...     engine="pandas",
+    ... )
+    >>> "_pipeline_run_id" in out.columns
+    True
     """
     selected_engine = _resolve_engine(df, engine)
     resolved_run_id = run_id or str(uuid.uuid4())
@@ -295,7 +352,41 @@ def add_hash_columns(
     include_row_hash: bool = True,
     engine: str = "auto",
 ):
-    """Add business key hash and row hash columns using stable SHA256 hashing."""
+    """Add business key and row-level SHA256 hash columns.
+
+    Parameters
+    ----------
+    df : Any
+        Input pandas or Spark DataFrame.
+    business_keys : list[str] | None, optional
+        Business key columns used to build ``_business_key_hash``.
+    row_hash_columns : list[str] | None, optional
+        Columns used to build ``_row_hash``. When omitted, all non-technical columns are used.
+    include_business_key_hash : bool, default=True
+        Whether to add ``_business_key_hash``.
+    include_row_hash : bool, default=True
+        Whether to add ``_row_hash``.
+    engine : str, default="auto"
+        Execution engine (``auto``, ``pandas``, or ``spark``).
+
+    Returns
+    -------
+    Any
+        DataFrame with hash columns added.
+
+    Raises
+    ------
+    ValueError
+        If business key hashing is enabled without `business_keys`, or if required columns are missing.
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> df = pd.DataFrame({"BUSINESS_KEY": ["A1"], "amount": [10.5]})
+    >>> out = add_hash_columns(df, business_keys=["BUSINESS_KEY"], engine="pandas")
+    >>> "_row_hash" in out.columns
+    True
+    """
     selected_engine = _resolve_engine(df, engine)
 
     if include_business_key_hash:
