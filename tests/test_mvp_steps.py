@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from examples.mvp_fabric_smoke_test import build_smoke_artifacts
-from fabric_data_product_framework.mvp_steps import MVP_STEPS, validate_mvp_artifacts
+from fabric_data_product_framework.template_generator import MVP_STEPS, validate_mvp_artifacts
 
 
 def test_mvp_steps_ordered_1_to_13():

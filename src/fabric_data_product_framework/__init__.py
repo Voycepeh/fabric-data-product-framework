@@ -1,6 +1,6 @@
 """Fabric Data Product Framework package."""
 
-from .fabric_notebook import (
+from .fabric import (
     Housepath,
     ODI_METADATA_LOGGER,
     add_system_technical_columns,
@@ -32,7 +32,7 @@ from .lineage import (
     plot_lineage_networkx,
     validate_lineage_steps,
 )
-from .dq import (
+from .quality import (
     build_dq_rule_records,
     generate_dq_rule_candidates,
     generate_dq_rule_candidates_with_fabric_ai,
@@ -44,7 +44,7 @@ from .dq import (
     store_dq_rules,
 )
 
-from .drift_checkers import (
+from .drift import (
     build_and_write_partition_snapshot,
     build_and_write_schema_snapshot,
     check_partition_drift,
@@ -55,15 +55,15 @@ from .drift_checkers import (
     summarize_drift_results,
 )
 
-from .governance_classifier import (
+from .governance import (
     build_governance_classification_records,
     classify_column,
     classify_columns,
     summarize_governance_classifications,
     write_governance_classifications,
 )
-from .mvp_steps import MVP_STEPS, get_mvp_step_registry, validate_mvp_artifacts
-from .data_contract import (
+from .template_generator import MVP_STEPS, get_mvp_step_registry, validate_mvp_artifacts
+from .contracts import (
     DataProductContract,
     DriftContract,
     GovernanceContract,

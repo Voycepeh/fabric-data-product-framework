@@ -1,6 +1,6 @@
 import json
 
-from fabric_data_product_framework.governance_classifier import (
+from fabric_data_product_framework.governance import (
     build_governance_classification_records,
     classify_column,
     classify_columns,

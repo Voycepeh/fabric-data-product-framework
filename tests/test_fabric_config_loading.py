@@ -1,6 +1,6 @@
 import pytest
 
-from fabric_data_product_framework.fabric_notebook import (
+from fabric_data_product_framework.fabric import (
     Housepath,
     get_path,
     load_fabric_config,

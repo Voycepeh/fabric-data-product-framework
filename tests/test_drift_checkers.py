@@ -2,7 +2,7 @@ import json
 
 import pandas as pd
 
-from fabric_data_product_framework import drift_checkers
+import fabric_data_product_framework.drift as drift_checkers
 from fabric_data_product_framework.drift import default_schema_drift_policy
 
 
