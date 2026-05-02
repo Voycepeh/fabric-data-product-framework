@@ -24,25 +24,25 @@ CONFIG = {
             workspace_id="00000000-0000-0000-0000-000000000001",
             house_id="11111111-1111-1111-1111-111111111111",
             house_name="lh_source",
-            root="abfss://workspace-sandbox@onelake.dfs.fabric.microsoft.com/lh_source.Lakehouse",
+            root="abfss://00000000-0000-0000-0000-000000000001@onelake.dfs.fabric.microsoft.com/11111111-1111-1111-1111-111111111111",
         ),
         "Unified": Housepath(
             workspace_id="00000000-0000-0000-0000-000000000001",
             house_id="11111111-1111-1111-1111-111111111112",
             house_name="lh_unified",
-            root="abfss://workspace-sandbox@onelake.dfs.fabric.microsoft.com/lh_unified.Lakehouse",
+            root="abfss://00000000-0000-0000-0000-000000000001@onelake.dfs.fabric.microsoft.com/11111111-1111-1111-1111-111111111112",
         ),
         "Product": Housepath(
             workspace_id="00000000-0000-0000-0000-000000000001",
             house_id="11111111-1111-1111-1111-111111111113",
             house_name="lh_product",
-            root="abfss://workspace-sandbox@onelake.dfs.fabric.microsoft.com/lh_product.Lakehouse",
+            root="abfss://00000000-0000-0000-0000-000000000001@onelake.dfs.fabric.microsoft.com/11111111-1111-1111-1111-111111111113",
         ),
         "Warehouse": Housepath(
             workspace_id="00000000-0000-0000-0000-000000000001",
             house_id="11111111-1111-1111-1111-111111111114",
             house_name="wh_product",
-            root="abfss://workspace-sandbox@onelake.dfs.fabric.microsoft.com/wh_product.Warehouse",
+            root="abfss://00000000-0000-0000-0000-000000000001@onelake.dfs.fabric.microsoft.com/11111111-1111-1111-1111-111111111114",
         ),
     }
 }
