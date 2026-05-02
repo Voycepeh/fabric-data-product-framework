@@ -143,6 +143,8 @@ for step in WORKFLOW_STEPS:
             fd.write("    options:\n")
             fd.write("      show_root_heading: false\n")
             fd.write("      show_source: true\n")
+            fd.write("      docstring_style: numpy\n")
+            fd.write("      docstring_section_style: table\n")
 
 for symbol, dotted_path in other_utilities:
     doc_path = f"reference/other-utilities/{symbol}.md"
@@ -152,6 +154,8 @@ for symbol, dotted_path in other_utilities:
         fd.write("    options:\n")
         fd.write("      show_root_heading: false\n")
         fd.write("      show_source: true\n")
+        fd.write("      docstring_style: numpy\n")
+        fd.write("      docstring_section_style: table\n")
 
 with mkdocs_gen_files.open("reference/index.md", "w") as fd:
     fd.write("# Callable Reference\n\n")
