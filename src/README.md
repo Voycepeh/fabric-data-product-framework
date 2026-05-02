@@ -35,5 +35,19 @@ Use `mvp_steps.py` for a notebook-friendly list:
 from fabric_data_product_framework.mvp_steps import get_mvp_step_registry
 
 for step in get_mvp_step_registry():
-    print(step["step"], "->", step["canonical_module"])
+    print(
+        step["step_number"],
+        step["step_name"],
+        step["owner_type"],
+        step["canonical_modules"],
+    )
 ```
+
+
+## Canonical 13 step MVP flow
+
+Use the canonical flow artifacts below when onboarding or running end-to-end smoke tests in Fabric:
+
+- Template notebook: `templates/notebooks/fabric_data_product_mvp.py`
+- Roadmap: `docs/mvp-13-step-roadmap.md`
+- Registry + artifact validation helpers: `src/fabric_data_product_framework/mvp_steps.py`
