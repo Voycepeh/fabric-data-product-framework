@@ -36,3 +36,13 @@ def test_validate_mvp_artifacts_reports_missing():
     assert result["valid"] is False
     assert "source_dataframe" in result["missing_artifacts"]
     assert "runtime_context" in result["available_artifacts"]
+
+
+def test_src_readme_uses_new_registry_keys_only():
+    text = open("src/README.md", encoding="utf-8").read()
+    assert "step[\"step\"]" not in text
+    assert "step[\"canonical_module\"]" not in text
+    assert "step[\"step_number\"]" in text
+    assert "step[\"step_name\"]" in text
+    assert "step[\"owner_type\"]" in text
+    assert "step[\"canonical_modules\"]" in text

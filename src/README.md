@@ -35,7 +35,12 @@ Use `mvp_steps.py` for a notebook-friendly list:
 from fabric_data_product_framework.mvp_steps import get_mvp_step_registry
 
 for step in get_mvp_step_registry():
-    print(step["step"], "->", step["canonical_module"])
+    print(
+        step["step_number"],
+        step["step_name"],
+        step["owner_type"],
+        step["canonical_modules"],
+    )
 ```
 
 
