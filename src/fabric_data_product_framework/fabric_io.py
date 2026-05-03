@@ -76,7 +76,7 @@ def load_fabric_config(config: FrameworkConfig | dict) -> FrameworkConfig:
 def get_path(
     env: str = DEFAULT_ENV,
     target: str = DEFAULT_TARGET,
-    config: dict | None = None,
+    config: FrameworkConfig | PathConfig | None = None,
 ) -> Housepath:
     """Return the Fabric path object for an environment and target.
 
@@ -90,9 +90,9 @@ def get_path(
         Environment name in the config mapping.
     target : str, default "Source"
         Target name under the selected environment.
-    config : dict
-        Config mapping from the config notebook. Expected shape:
-        `config[environment][target] = Housepath(...)`.
+    config : FrameworkConfig | PathConfig
+        Structured framework config returned by ``load_fabric_config`` or its
+        ``path_config`` section.
 
     Returns
     -------
@@ -107,9 +107,10 @@ def get_path(
 
     Examples
     --------
-    >>> # %run 00_env_config
-    >>> lh_source = get_path("Sandbox", "Source", config=CONFIG)
-    >>> lh_unified = get_path("Sandbox", "Unified", config=CONFIG)
+    >>> # %run 00_config
+    >>> framework_config = load_fabric_config(CONFIG)
+    >>> lh_source = get_path("Sandbox", "Source", config=framework_config)
+    >>> lh_unified = get_path("Sandbox", "Unified", config=framework_config)
     >>> lh_source.house_name
     'DEX_SB_SOURCE'
     """
@@ -119,40 +120,28 @@ def get_path(
             "and pass config=CONFIG."
         )
 
-    try:
-        path_config = getattr(config, "path_config", None)
-        if isinstance(config, dict) and path_config is None:
-            path_config = config.get("path_config")
-        if isinstance(path_config, PathConfig):
-            paths = path_config.paths
-        elif isinstance(path_config, dict):
-            paths = path_config
-        else:
-            paths = config
-        return paths[env][target]
-    except KeyError as exc:
-        path_config = getattr(config, "path_config", None)
-        if isinstance(config, dict) and path_config is None:
-            path_config = config.get("path_config")
-        if isinstance(path_config, PathConfig):
-            paths = path_config.paths
-        elif isinstance(path_config, dict):
-            paths = path_config
-        else:
-            paths = config
+    if isinstance(config, FrameworkConfig):
+        paths = config.path_config.paths
+    elif isinstance(config, PathConfig):
+        paths = config.paths
+    else:
+        raise ValueError("config must be a FrameworkConfig or PathConfig object.")
 
-        if env not in paths:
-            available_envs = ", ".join(sorted(paths.keys())) or "<none>"
-            raise ValueError(
-                f"Environment '{env}' was not found in Fabric config. "
-                f"Available environments: {available_envs}."
-            ) from exc
+    if env not in paths:
+        available_envs = ", ".join(sorted(paths.keys())) or "<none>"
+        raise ValueError(
+            f"Environment '{env}' was not found in Fabric config. "
+            f"Available environments: {available_envs}."
+        )
 
+    if target not in paths[env]:
         available_targets = ", ".join(sorted(paths[env].keys())) or "<none>"
         raise ValueError(
             f"Target '{target}' was not found under environment '{env}'. "
             f"Available targets: {available_targets}."
-        ) from exc
+        )
+
+    return paths[env][target]
 
 
 def _get_spark(spark_session=None):

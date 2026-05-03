@@ -1,5 +1,11 @@
 """Sample reusable framework config notebook for Fabric Data Product Framework."""
 
+# EDIT THESE VALUES BEFORE USE:
+# 1) Replace all sample workspace_id / house_id / house_name / root values.
+# 2) Add your real environments and targets under PATH_CONFIG.
+# 3) Tune notebook prefixes and default AI/quality/governance/lineage behavior.
+# 4) Keep this notebook reusable and run `%run 00_config` from operational notebooks.
+
 from fabric_data_product_framework import (
     Housepath,
     create_ai_prompt_config,

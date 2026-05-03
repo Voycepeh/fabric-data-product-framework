@@ -68,7 +68,7 @@ def normalize_name(value: str) -> str:
     return normalized
 
 
-def validate_notebook_name(name: str, allowed_prefixes: list[str] | None = None, config: dict | object | None = None) -> list[str]:
+def validate_notebook_name(name: str, allowed_prefixes: list[str] | None = None, config: object | None = None) -> list[str]:
     """Validate notebook names against the framework workspace notebook model.
 
     Parameters
@@ -108,8 +108,6 @@ def validate_notebook_name(name: str, allowed_prefixes: list[str] | None = None,
 
     if allowed_prefixes is None and config is not None:
         runtime_config = getattr(config, "notebook_runtime_config", None)
-        if runtime_config is None and isinstance(config, dict):
-            runtime_config = config.get("notebook_runtime_config")
         config_prefixes = getattr(runtime_config, "allowed_notebook_prefixes", None)
         if config_prefixes:
             allowed_prefixes = list(config_prefixes)
@@ -141,7 +139,7 @@ def validate_notebook_name(name: str, allowed_prefixes: list[str] | None = None,
     return errors
 
 
-def assert_notebook_name_valid(name: str, allowed_prefixes: list[str] | None = None, config: dict | object | None = None) -> None:
+def assert_notebook_name_valid(name: str, allowed_prefixes: list[str] | None = None, config: object | None = None) -> None:
     """Raise :class:`NotebookNamingError` when a notebook name is invalid.
 
     Parameters
