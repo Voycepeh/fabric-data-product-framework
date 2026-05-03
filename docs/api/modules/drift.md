@@ -8,12 +8,12 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`check_partition_drift`](#check_partition_drift) | function | Check partition drift. | — |
-| [`check_profile_drift`](#check_profile_drift) | function | Check profile drift. | — |
-| [`check_schema_drift`](#check_schema_drift) | function | Check schema drift. | — |
-| [`summarize_drift_results`](#summarize_drift_results) | function | Summarize drift results. | — |
+| [`check_partition_drift`](../../reference/step-08-quality-rule-execution/check_partition_drift.md) | function | Check partition drift. | — |
+| [`check_profile_drift`](../../reference/step-08-quality-rule-execution/check_profile_drift.md) | function | Check profile drift. | — |
+| [`check_schema_drift`](../../reference/step-08-quality-rule-execution/check_schema_drift.md) | function | Check schema drift. | — |
+| [`summarize_drift_results`](../../reference/step-08-quality-rule-execution/summarize_drift_results.md) | function | Summarize drift results. | — |
 
-## Internal helpers (module-level)
+## Internal helpers
 
 | Helper | Related public callables |
 |---|---|
@@ -31,7 +31,3 @@
 | [`_safe_spark_collect`](../../reference/internal/drift/_safe_spark_collect.md) | — |
 | [`_utc_now_iso`](../../reference/internal/drift/_utc_now_iso.md) | — |
 | [`_write_metadata_rows`](../../reference/internal/drift/_write_metadata_rows.md) | — |
-
-## Full module API
-
-::: fabric_data_product_framework.drift

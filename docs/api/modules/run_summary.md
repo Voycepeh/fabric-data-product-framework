@@ -8,15 +8,11 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`build_run_summary`](#build_run_summary) | function | Build run summary. | — |
-| [`render_run_summary_markdown`](#render_run_summary_markdown) | function | Render run summary markdown. | [`_status_of`](../../reference/internal/run_summary/_status_of.md) (internal) |
+| [`build_run_summary`](../../reference/step-13-lineage-summary-handover/build_run_summary.md) | function | Build run summary. | — |
+| [`render_run_summary_markdown`](../../reference/step-13-lineage-summary-handover/render_run_summary_markdown.md) | function | Render run summary markdown. | [`_status_of`](../../reference/internal/run_summary/_status_of.md) (internal) |
 
-## Internal helpers (module-level)
+## Internal helpers
 
 | Helper | Related public callables |
 |---|---|
-| [`_status_of`](../../reference/internal/run_summary/_status_of.md) | `render_run_summary_markdown` |
-
-## Full module API
-
-::: fabric_data_product_framework.run_summary
+| [`_status_of`](../../reference/internal/run_summary/_status_of.md) | [`render_run_summary_markdown`](../../reference/step-13-lineage-summary-handover/render_run_summary_markdown.md) |

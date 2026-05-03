@@ -9,10 +9,6 @@
 
 No public exports in this module.
 
-## Internal helpers (module-level)
+## Internal helpers
 
 No module-level internal helpers detected.
-
-## Full module API
-
-This module is internal-only and is intentionally excluded from full public API rendering.

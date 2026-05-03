@@ -9,12 +9,8 @@
 
 No public exports in this module.
 
-## Internal helpers (module-level)
+## Internal helpers
 
 | Helper | Related public callables |
 |---|---|
 | [`_get_legacy_mvp_steps`](../../reference/internal/handover/_get_legacy_mvp_steps.md) | — |
-
-## Full module API
-
-This module is internal-only and is intentionally excluded from full public API rendering.

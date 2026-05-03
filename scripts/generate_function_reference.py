@@ -120,6 +120,17 @@ def internal_helper_link(module: str, helper: str) -> str:
     return f"../../reference/internal/{module}/{helper}.md"
 
 
+def public_reference_link(symbol: str, docs_metadata: dict[str, dict[str, Any]], step_slugs: dict[int, str]) -> str:
+    """Return docs-relative link target for a public callable reference page."""
+    if symbol not in docs_metadata:
+        raise RuntimeError(f"Missing PUBLIC_SYMBOL_DOCS entry for exported symbol: {symbol}")
+    step = docs_metadata[symbol]["workflow_step"]
+    step_slug = step_slugs.get(step)
+    if not step_slug:
+        raise RuntimeError(f"Missing WORKFLOW_STEP_DOCS slug mapping for workflow step {step} ({symbol})")
+    return f"../../reference/{step_slug}/{symbol}.md"
+
+
 def main() -> None:
     public = parse_public_exports()
     module_data = {p.stem: parse_module(p) for p in PKG_DIR.glob("*.py") if p.name != "__init__.py"}
@@ -192,27 +203,41 @@ def main() -> None:
             for s in sorted(public_in_module, key=lambda x: x.name.lower()):
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
                 lines.append(
-                    f"| [`{s.name}`](#{s.name}) | {s.obj_type} | {s.summary or '—'} | "
+                    f"| [`{s.name}`]({public_reference_link(s.name, docs_metadata, step_slugs)}) | {s.obj_type} | {s.summary or '—'} | "
                     f"{', '.join(f'[`{r}`]({internal_helper_link(module, r)}) (internal)' for r in related) or '—'} |"
                 )
         else:
             lines.append("No public exports in this module.")
-        lines.extend(["", "## Internal helpers (module-level)", ""])
+        lines.extend(["", "## Internal helpers", ""])
         internal_fns = sorted([f for f in info["functions"] if f.startswith("_")])
         if internal_fns:
             lines.extend(["| Helper | Related public callables |", "|---|---|"])
             for helper in internal_fns:
                 users = sorted([u for u in info["used_by"].get(helper, set()) if u in {p.name for p in public_in_module}])
-                lines.append(
-                    f"| [`{helper}`]({internal_helper_link(module, helper)}) | "
-                    f"{', '.join(f'`{u}`' for u in users) or '—'} |"
-                )
+                users_links = ", ".join(f"[`{u}`]({public_reference_link(u, docs_metadata, step_slugs)})" for u in users) or "—"
+                lines.append(f"| [`{helper}`]({internal_helper_link(module, helper)}) | {users_links} |")
         else:
             lines.append("No module-level internal helpers detected.")
-        if not is_internal_only:
-            lines.extend(["", "## Full module API", "", f"::: fabric_data_product_framework.{module}"])
-        else:
-            lines.extend(["", "## Full module API", "", "This module is internal-only and is intentionally excluded from full public API rendering."])
+
+        if public_in_module:
+            for s in sorted(public_in_module, key=lambda x: x.name.lower()):
+                expected_link = f"[`{s.name}`]({public_reference_link(s.name, docs_metadata, step_slugs)})"
+                if not any(expected_link in line for line in lines):
+                    raise RuntimeError(f"Missing callable table link for {module}.{s.name}")
+                if f"../../reference/{module}/{s.name}.md" in "\n".join(lines):
+                    raise RuntimeError(
+                        f"Found deprecated module-path public link for {module}.{s.name}; expected workflow-step slug path."
+                    )
+        for helper in internal_fns:
+            expected_helper_link = f"[`{helper}`]({internal_helper_link(module, helper)})"
+            if not any(expected_helper_link in line for line in lines):
+                raise RuntimeError(f"Missing internal helper link for {module}.{helper}")
+        if any("## Public callable details" in line for line in lines):
+            raise RuntimeError(f"Public callable details section should not be rendered for {module}")
+        if any("## Full module API" in line for line in lines):
+            raise RuntimeError(f"Full module API section should not be rendered for {module}")
+        if any(line.strip().startswith("::: fabric_data_product_framework.") for line in lines):
+            raise RuntimeError(f"Mkdocstrings directives should not be rendered on module page for {module}")
         module_md.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
         if not is_internal_only:
             module_index_lines.append(f"- [`{module}`]({module}.md)")

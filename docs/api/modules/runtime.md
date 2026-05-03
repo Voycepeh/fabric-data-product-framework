@@ -8,15 +8,11 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`assert_notebook_name_valid`](#assert_notebook_name_valid) | function | Raise :class:`NotebookNamingError` when a notebook name is invalid. | — |
-| [`build_runtime_context`](#build_runtime_context) | function | Build a standard runtime context dictionary for Fabric notebooks. | — |
-| [`generate_run_id`](#generate_run_id) | function | Generate a notebook-safe run identifier. | — |
-| [`validate_notebook_name`](#validate_notebook_name) | function | Validate a Fabric notebook name against required prefixes and format. | — |
+| [`assert_notebook_name_valid`](../../reference/step-01-purpose-setup/assert_notebook_name_valid.md) | function | Raise :class:`NotebookNamingError` when a notebook name is invalid. | — |
+| [`build_runtime_context`](../../reference/step-01-purpose-setup/build_runtime_context.md) | function | Build a standard runtime context dictionary for Fabric notebooks. | — |
+| [`generate_run_id`](../../reference/step-01-purpose-setup/generate_run_id.md) | function | Generate a notebook-safe run identifier. | — |
+| [`validate_notebook_name`](../../reference/step-01-purpose-setup/validate_notebook_name.md) | function | Validate a Fabric notebook name against required prefixes and format. | — |
 
-## Internal helpers (module-level)
+## Internal helpers
 
 No module-level internal helpers detected.
-
-## Full module API
-
-::: fabric_data_product_framework.runtime
