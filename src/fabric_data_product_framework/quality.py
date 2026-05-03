@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass, field
 from datetime import datetime, timedelta, timezone
 import importlib.util
 import json
@@ -420,17 +420,6 @@ def build_quality_result_records(result: dict, *, run_id: str) -> list[dict]:
             }
         )
     return _to_jsonable(rows)
-
-
-# --- merged from dq.py ---
-
-
-import importlib.util
-
-
-
-def _now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
 
 
 def _build_rule_id(rule: dict[str, Any]) -> str:
@@ -1004,16 +993,10 @@ def run_dq_workflow(spark, df, quality_contract, dataset_name: str, table_name: 
     }
 
 
-# --- merged from contracts.py ---
-"""Runtime contract validation helpers for pandas and Spark dataframes."""
-
-
-from datetime import datetime, timedelta, timezone
-
-
+# Contract validation
 from fabric_data_product_framework.runtime import detect_dataframe_engine, validate_engine
 
-SEVERITY_TO_ACTION = {"info": "warn", "warning": "warn", "critical": "block"}
+CONTRACT_SEVERITY_TO_ACTION = {"info": "warn", "warning": "warn", "critical": "block"}
 
 
 class ContractValidationError(Exception):
@@ -1045,7 +1028,7 @@ def _resolve_engine(df: Any, engine: str) -> str:
 def _action_for(status: str, severity: str) -> str:
     if status in {"passed", "skipped"}:
         return "allow"
-    return SEVERITY_TO_ACTION.get(severity, "block")
+    return CONTRACT_SEVERITY_TO_ACTION.get(severity, "block")
 
 
 def _parse_freshness_timedelta(value: str | None) -> timedelta | None:
@@ -1391,11 +1374,6 @@ def build_contract_validation_records(result: dict, *, run_id: str) -> list[dict
     return records
 
 
-# --- merged from data_contract.py ---
-
-
-from dataclasses import asdict, dataclass, field
-from pathlib import Path
 
 from fabric_data_product_framework.config import load_dataset_contract
 from fabric_data_product_framework.drift import (

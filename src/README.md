@@ -9,9 +9,9 @@ Open `handover.py` first when manually testing in Fabric notebooks. It gives the
 - **Data quality and rule compilation**: `quality.py`
 - **Drift and incremental safety**: `drift.py`
 - **Governance and sensitivity classification**: `governance.py`
-- **Lineage and AI handover**: `lineage.py`, `lineage.py/handover.py`
+- **Lineage and AI handover**: `lineage.py`, `handover.py`
 - **Runtime summary and orchestration**: `run_summary.py`, `quality.py`
-- **Templates and notebook helpers**: `handover.py`, `handover.py`
+- **Templates and notebook helpers**: `handover.py`
 
 ## Recommended manual Fabric test order
 
@@ -24,7 +24,7 @@ Open `handover.py` first when manually testing in Fabric notebooks. It gives the
 7. Apply governance classification (`governance.py`).
 8. Transform and write output (`fabric_io.py`, project notebook cell).
 9. Profile output (`profiling.py`).
-10. Build lineage and handover summary (`lineage.py`, `lineage.py/handover.py`).
+10. Build lineage and handover summary (`lineage.py`, `handover.py`).
 11. Write run summary (`run_summary.py`, `metadata.py`).
 
 ## MVP run order helper
