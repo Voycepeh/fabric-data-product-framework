@@ -1,4 +1,4 @@
-from fabric_data_product_framework.ai_lineage_summary import (
+from fabric_data_product_framework.lineage import (
     build_transformation_summary_generation_prompt,
     build_transformation_summary_prompt_context,
     build_transformation_summary_records,

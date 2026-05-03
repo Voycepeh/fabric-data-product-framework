@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from fabric_data_product_framework.template_generator import create_actual_data_mvp_template
+from fabric_data_product_framework.handover import create_actual_data_mvp_template
 
 
 def test_actual_data_mvp_assets_exist_and_contain_runner_calls(tmp_path: Path):
@@ -49,7 +49,7 @@ def test_actual_data_mvp_assets_exist_and_contain_runner_calls(tmp_path: Path):
     assert 'result.get("quarantine_summary")' not in generated_text
 
 
-from fabric_data_product_framework.template_generator import create_pipeline_notebook_template
+from fabric_data_product_framework.handover import create_pipeline_notebook_template
 
 
 def test_pipeline_template_lineage_calls_are_namespaced_and_defined(tmp_path: Path):

@@ -32,7 +32,7 @@ Open `mvp_steps.py` first when manually testing in Fabric notebooks. It gives th
 Use `mvp_steps.py` for a notebook-friendly list:
 
 ```python
-from fabric_data_product_framework.mvp_steps import get_mvp_step_registry
+from fabric_data_product_framework.handover import get_mvp_step_registry
 
 for step in get_mvp_step_registry():
     print(

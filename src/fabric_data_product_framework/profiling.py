@@ -14,7 +14,7 @@ from typing import Any
 
 import pandas as pd
 
-from fabric_data_product_framework.engines import detect_dataframe_engine, validate_engine
+from fabric_data_product_framework.runtime import detect_dataframe_engine, validate_engine
 from fabric_data_product_framework.technical_columns import default_technical_columns
 
 

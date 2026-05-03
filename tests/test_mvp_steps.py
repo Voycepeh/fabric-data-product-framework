@@ -1,4 +1,4 @@
-from fabric_data_product_framework.mvp_steps import (
+from fabric_data_product_framework.handover import (
     get_mvp_step_names,
     get_mvp_step_registry,
     validate_mvp_artifacts,

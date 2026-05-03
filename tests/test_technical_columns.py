@@ -6,7 +6,7 @@ import types
 import pandas as pd
 import pytest
 
-from fabric_data_product_framework.engines import detect_dataframe_engine
+from fabric_data_product_framework.runtime import detect_dataframe_engine
 from fabric_data_product_framework.technical_columns import (
     _non_technical_columns,
     add_audit_columns,

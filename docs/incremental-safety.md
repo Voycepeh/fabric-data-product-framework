@@ -49,7 +49,7 @@ Incremental refresh can hide risk. If closed partitions are changed upstream, a 
 Run this check after source ingestion and before transform/write, so unsafe incremental runs fail early.
 
 ```python
-from fabric_data_product_framework.incremental import (
+from fabric_data_product_framework.drift import (
     build_partition_snapshot,
     compare_partition_snapshots,
     assert_incremental_safe,

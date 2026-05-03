@@ -9,7 +9,7 @@ def test_public_api_smoke_imports():
 
 
 def test_mvp_step_registry_and_artifact_validation():
-    from fabric_data_product_framework.mvp_steps import get_mvp_step_registry, validate_mvp_artifacts
+    from fabric_data_product_framework.handover import get_mvp_step_registry, validate_mvp_artifacts
 
     steps = get_mvp_step_registry()
     assert steps[0]["step_number"] == 1
