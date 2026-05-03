@@ -201,11 +201,14 @@ def main() -> None:
         is_internal_only = not public_in_module
         title = f"# `{module}` module" if not is_internal_only else f"# `{module}` module (internal)"
         status_banner = (
-            "!!! warning \"Internal-only module\"\n"
-            "    Not intended as a primary user-facing API surface."
+            '<div class="api-status-block">\n'
+            '  <span class="api-chip api-chip-internal">Internal-only module</span>\n'
+            '  <div class="api-chip-subtitle">Not intended as a primary user-facing API surface.</div>\n'
+            '</div>'
             if is_internal_only
-            else "!!! info \"Module overview\"\n"
-            "    This page summarizes public callables and related internal helpers."
+            else '<div class="api-status-block">\n'
+            '  <span class="api-chip api-chip-module">Module overview</span>\n'
+            '</div>'
         )
         lines = [title, "", status_banner, "", "## Public callables from `__all__`", ""]
         if public_in_module:
