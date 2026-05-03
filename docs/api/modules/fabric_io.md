@@ -15,7 +15,7 @@
 | [`lakehouse_parquet_read_as_spark`](../../reference/step-03-source-declaration-paths/lakehouse_parquet_read_as_spark.md) | function | Read a Parquet file from a Fabric lakehouse Files path. | [`_convert_single_parquet_ns_to_us`](../../reference/internal/fabric_io/_convert_single_parquet_ns_to_us.md) (internal), [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) (internal) |
 | [`lakehouse_table_read`](../../reference/step-03-source-declaration-paths/lakehouse_table_read.md) | function | Read a Delta table from a Fabric lakehouse. | [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) (internal) |
 | [`lakehouse_table_write`](../../reference/step-11-output-write-metadata-logging/lakehouse_table_write.md) | function | Write a Spark DataFrame to a Fabric lakehouse Delta table. | — |
-| [`load_fabric_config`](../../reference/step-02-runtime-configuration/load_fabric_config.md) | function | Validate and return a Fabric config mapping. | — |
+| [`load_fabric_config`](../../reference/step-02-runtime-configuration/load_fabric_config.md) | function | Validate and return a framework config mapping. | — |
 | [`warehouse_read`](../../reference/step-03-source-declaration-paths/warehouse_read.md) | function | Read a table from a Microsoft Fabric warehouse. | [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) (internal) |
 | [`warehouse_write`](../../reference/step-11-output-write-metadata-logging/warehouse_write.md) | function | Write a Spark DataFrame to a Microsoft Fabric warehouse table. | — |
 

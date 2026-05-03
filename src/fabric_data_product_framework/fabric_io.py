@@ -17,6 +17,8 @@ import tempfile
 
 import pandas as pd
 
+from .config import FrameworkConfig, PathConfig, load_fabric_config as load_framework_config
+
 
 @dataclass(frozen=True)
 class Housepath:
@@ -62,81 +64,19 @@ DEFAULT_ENV = "Sandbox"
 DEFAULT_TARGET = "Source"
 
 
-def load_fabric_config(config: dict[str, dict[str, Housepath]]) -> dict[str, dict[str, Housepath]]:
-    """Validate and return a Fabric config mapping.
+def load_fabric_config(config: FrameworkConfig | dict) -> FrameworkConfig:
+    """Validate and return a framework config mapping.
 
-    This framework expects Fabric environment paths to be defined in a separate
-    config notebook, then passed into this function as a normal Python object.
-
-    In a Fabric notebook, run ``00_env_config`` first. It is one reusable
-    config notebook per environment workspace:
-
-    >>> # Fabric notebook cell
-    >>> # %run 00_env_config
-
-    The config notebook should define a mapping like this:
-
-    >>> CONFIG = {
-    ...     "Sandbox": {
-    ...         "Source": Housepath(
-    ...             workspace_id="<workspace-id>",
-    ...             house_id="<lakehouse-id>",
-    ...             house_name="DEX_SB_SOURCE",
-    ...             root="abfss://<workspace-id>@onelake.dfs.fabric.microsoft.com/<lakehouse-id>",
-    ...         ),
-    ...     },
-    ... }
-
-    Then validate and use it:
-
-    >>> config = load_fabric_config(CONFIG)
-    >>> lh_source = get_path("Sandbox", "Source", config=config)
-
-    Parameters
-    ----------
-    config : dict[str, dict[str, Housepath]]
-        Nested mapping in the form `config[environment][target] = Housepath(...)`.
-
-    Returns
-    -------
-    dict[str, dict[str, Housepath]]
-        The validated config mapping.
-
-    Raises
-    ------
-    ValueError
-        If the config is empty, has an invalid nested structure, or contains
-        targets that are not `Housepath` objects.
+    This helper validates a user-maintained ``CONFIG`` object (for example from
+    ``00_config``) and returns the normalized framework config. It does not
+    create Fabric resources.
     """
-    if not isinstance(config, dict) or not config:
-        raise ValueError("config must be a non-empty mapping of environments to targets.")
-
-    for env_name, targets in config.items():
-        if not isinstance(targets, dict) or not targets:
-            raise ValueError(f"Environment '{env_name}' must contain at least one target.")
-
-        for target_name, housepath in targets.items():
-            if not isinstance(housepath, Housepath):
-                raise ValueError(f"Target '{env_name}/{target_name}' must be a Housepath object.")
-
-            missing = [
-                field
-                for field in ("workspace_id", "house_id", "house_name", "root")
-                if not getattr(housepath, field, None)
-            ]
-            if missing:
-                raise ValueError(
-                    f"Target '{env_name}/{target_name}' is missing required values: "
-                    f"{', '.join(missing)}."
-                )
-
-    return config
-
+    return load_framework_config(config)
 
 def get_path(
     env: str = DEFAULT_ENV,
     target: str = DEFAULT_TARGET,
-    config: dict | None = None,
+    config: FrameworkConfig | PathConfig | None = None,
 ) -> Housepath:
     """Return the Fabric path object for an environment and target.
 
@@ -150,9 +90,9 @@ def get_path(
         Environment name in the config mapping.
     target : str, default "Source"
         Target name under the selected environment.
-    config : dict
-        Config mapping from the config notebook. Expected shape:
-        `config[environment][target] = Housepath(...)`.
+    config : FrameworkConfig | PathConfig
+        Structured framework config returned by ``load_fabric_config`` or its
+        ``path_config`` section.
 
     Returns
     -------
@@ -167,9 +107,10 @@ def get_path(
 
     Examples
     --------
-    >>> # %run 00_env_config
-    >>> lh_source = get_path("Sandbox", "Source", config=CONFIG)
-    >>> lh_unified = get_path("Sandbox", "Unified", config=CONFIG)
+    >>> # %run 00_config
+    >>> framework_config = load_fabric_config(CONFIG)
+    >>> lh_source = get_path("Sandbox", "Source", config=framework_config)
+    >>> lh_unified = get_path("Sandbox", "Unified", config=framework_config)
     >>> lh_source.house_name
     'DEX_SB_SOURCE'
     """
@@ -179,21 +120,28 @@ def get_path(
             "and pass config=CONFIG."
         )
 
-    try:
-        return config[env][target]
-    except KeyError as exc:
-        if env not in config:
-            available_envs = ", ".join(sorted(config.keys())) or "<none>"
-            raise ValueError(
-                f"Environment '{env}' was not found in Fabric config. "
-                f"Available environments: {available_envs}."
-            ) from exc
+    if isinstance(config, FrameworkConfig):
+        paths = config.path_config.paths
+    elif isinstance(config, PathConfig):
+        paths = config.paths
+    else:
+        raise ValueError("config must be a FrameworkConfig or PathConfig object.")
 
-        available_targets = ", ".join(sorted(config[env].keys())) or "<none>"
+    if env not in paths:
+        available_envs = ", ".join(sorted(paths.keys())) or "<none>"
+        raise ValueError(
+            f"Environment '{env}' was not found in Fabric config. "
+            f"Available environments: {available_envs}."
+        )
+
+    if target not in paths[env]:
+        available_targets = ", ".join(sorted(paths[env].keys())) or "<none>"
         raise ValueError(
             f"Target '{target}' was not found under environment '{env}'. "
             f"Available targets: {available_targets}."
-        ) from exc
+        )
+
+    return paths[env][target]
 
 
 def _get_spark(spark_session=None):
