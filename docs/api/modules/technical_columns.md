@@ -13,18 +13,32 @@
 | [`add_hash_columns`](#add_hash_columns) | function | Add business key and row-level SHA256 hash columns. | [`_assert_columns_exist`](../../reference/internal/technical_columns/_assert_columns_exist.md) (internal), [`_hash_row`](../../reference/internal/technical_columns/_hash_row.md) (internal), [`_non_technical_columns`](../../reference/internal/technical_columns/_non_technical_columns.md) (internal), [`_resolve_engine`](../../reference/internal/technical_columns/_resolve_engine.md) (internal) |
 | [`default_technical_columns`](#default_technical_columns) | function | Return framework-generated and legacy technical column names to ignore. | — |
 
-## Internal helpers (module-level)
+## Public callable details
 
-| Helper | Related public callables |
-|---|---|
-| [`_assert_columns_exist`](../../reference/internal/technical_columns/_assert_columns_exist.md) | `add_audit_columns`, `add_datetime_features`, `add_hash_columns` |
-| [`_bucket_values_pandas`](../../reference/internal/technical_columns/_bucket_values_pandas.md) | `add_audit_columns` |
-| [`_get_fabric_runtime_context`](../../reference/internal/technical_columns/_get_fabric_runtime_context.md) | `add_audit_columns` |
-| [`_hash_row`](../../reference/internal/technical_columns/_hash_row.md) | `add_hash_columns` |
-| [`_non_technical_columns`](../../reference/internal/technical_columns/_non_technical_columns.md) | `add_hash_columns` |
-| [`_resolve_engine`](../../reference/internal/technical_columns/_resolve_engine.md) | `add_audit_columns`, `add_datetime_features`, `add_hash_columns` |
-| [`_safe_string`](../../reference/internal/technical_columns/_safe_string.md) | — |
+### add_audit_columns
 
-## Full module API
+::: fabric_data_product_framework.technical_columns.add_audit_columns
 
-::: fabric_data_product_framework.technical_columns
+### add_datetime_features
+
+::: fabric_data_product_framework.technical_columns.add_datetime_features
+
+### add_hash_columns
+
+::: fabric_data_product_framework.technical_columns.add_hash_columns
+
+### default_technical_columns
+
+::: fabric_data_product_framework.technical_columns.default_technical_columns
+
+??? note "Internal helpers (collapsed)"
+
+    Internal helpers are documented separately for maintainers:
+
+    - [`_assert_columns_exist`](../../reference/internal/technical_columns/_assert_columns_exist.md) (used by: `add_audit_columns`, `add_datetime_features`, `add_hash_columns`)
+    - [`_bucket_values_pandas`](../../reference/internal/technical_columns/_bucket_values_pandas.md) (used by: `add_audit_columns`)
+    - [`_get_fabric_runtime_context`](../../reference/internal/technical_columns/_get_fabric_runtime_context.md) (used by: `add_audit_columns`)
+    - [`_hash_row`](../../reference/internal/technical_columns/_hash_row.md) (used by: `add_hash_columns`)
+    - [`_non_technical_columns`](../../reference/internal/technical_columns/_non_technical_columns.md) (used by: `add_hash_columns`)
+    - [`_resolve_engine`](../../reference/internal/technical_columns/_resolve_engine.md) (used by: `add_audit_columns`, `add_datetime_features`, `add_hash_columns`)
+    - [`_safe_string`](../../reference/internal/technical_columns/_safe_string.md)

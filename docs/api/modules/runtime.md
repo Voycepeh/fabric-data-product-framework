@@ -13,10 +13,21 @@
 | [`generate_run_id`](#generate_run_id) | function | Generate a notebook-safe run identifier. | — |
 | [`validate_notebook_name`](#validate_notebook_name) | function | Validate a Fabric notebook name against required prefixes and format. | — |
 
-## Internal helpers (module-level)
+## Public callable details
 
-No module-level internal helpers detected.
+### assert_notebook_name_valid
 
-## Full module API
+::: fabric_data_product_framework.runtime.assert_notebook_name_valid
 
-::: fabric_data_product_framework.runtime
+### build_runtime_context
+
+::: fabric_data_product_framework.runtime.build_runtime_context
+
+### generate_run_id
+
+::: fabric_data_product_framework.runtime.generate_run_id
+
+### validate_notebook_name
+
+::: fabric_data_product_framework.runtime.validate_notebook_name
+

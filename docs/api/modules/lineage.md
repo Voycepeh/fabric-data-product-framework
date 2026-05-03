@@ -19,17 +19,55 @@
 | [`scan_notebook_lineage`](#scan_notebook_lineage) | function | Extract deterministic lineage steps from notebook code using AST parsing. | [`_call_name`](../../reference/internal/lineage/_call_name.md) (internal), [`_flatten_chain`](../../reference/internal/lineage/_flatten_chain.md) (internal), [`_name`](../../reference/internal/lineage/_name.md) (internal), [`_resolve_write_target`](../../reference/internal/lineage/_resolve_write_target.md) (internal), [`_step`](../../reference/internal/lineage/_step.md) (internal) |
 | [`validate_lineage_steps`](#validate_lineage_steps) | function | Validate lineage step structure and flag records requiring human review. | — |
 
-## Internal helpers (module-level)
+## Public callable details
 
-| Helper | Related public callables |
-|---|---|
-| [`_call_name`](../../reference/internal/lineage/_call_name.md) | `scan_notebook_lineage` |
-| [`_flatten_chain`](../../reference/internal/lineage/_flatten_chain.md) | `scan_notebook_lineage` |
-| [`_literal`](../../reference/internal/lineage/_literal.md) | — |
-| [`_name`](../../reference/internal/lineage/_name.md) | `scan_notebook_lineage` |
-| [`_resolve_write_target`](../../reference/internal/lineage/_resolve_write_target.md) | `scan_notebook_lineage` |
-| [`_step`](../../reference/internal/lineage/_step.md) | `scan_notebook_lineage` |
+### build_lineage_from_notebook_code
 
-## Full module API
+::: fabric_data_product_framework.lineage.build_lineage_from_notebook_code
 
-::: fabric_data_product_framework.lineage
+### build_lineage_handover_markdown
+
+::: fabric_data_product_framework.lineage.build_lineage_handover_markdown
+
+### build_lineage_record_from_steps
+
+::: fabric_data_product_framework.lineage.build_lineage_record_from_steps
+
+### build_lineage_records
+
+::: fabric_data_product_framework.lineage.build_lineage_records
+
+### enrich_lineage_steps_with_ai
+
+::: fabric_data_product_framework.lineage.enrich_lineage_steps_with_ai
+
+### fallback_copilot_lineage_prompt
+
+::: fabric_data_product_framework.lineage.fallback_copilot_lineage_prompt
+
+### plot_lineage_steps
+
+::: fabric_data_product_framework.lineage.plot_lineage_steps
+
+### scan_notebook_cells
+
+::: fabric_data_product_framework.lineage.scan_notebook_cells
+
+### scan_notebook_lineage
+
+::: fabric_data_product_framework.lineage.scan_notebook_lineage
+
+### validate_lineage_steps
+
+::: fabric_data_product_framework.lineage.validate_lineage_steps
+
+??? note "Internal helpers (collapsed)"
+
+    Internal helpers are documented separately for maintainers:
+
+    - [`_call_name`](../../reference/internal/lineage/_call_name.md) (used by: `scan_notebook_lineage`)
+    - [`_flatten_chain`](../../reference/internal/lineage/_flatten_chain.md) (used by: `scan_notebook_lineage`)
+    - [`_literal`](../../reference/internal/lineage/_literal.md)
+    - [`_name`](../../reference/internal/lineage/_name.md) (used by: `scan_notebook_lineage`)
+    - [`_resolve_write_target`](../../reference/internal/lineage/_resolve_write_target.md) (used by: `scan_notebook_lineage`)
+    - [`_step`](../../reference/internal/lineage/_step.md) (used by: `scan_notebook_lineage`)

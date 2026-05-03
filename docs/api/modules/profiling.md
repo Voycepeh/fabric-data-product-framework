@@ -13,10 +13,21 @@
 | [`profile_dataframe_to_metadata`](#profile_dataframe_to_metadata) | function | Profile a Spark/Fabric DataFrame into ODI-compatible metadata rows. | — |
 | [`profile_metadata_to_records`](#profile_metadata_to_records) | function | Convert Spark metadata profile rows into JSON-friendly dictionaries. | — |
 
-## Internal helpers (module-level)
+## Public callable details
 
-No module-level internal helpers detected.
+### build_ai_quality_context
 
-## Full module API
+::: fabric_data_product_framework.profiling.build_ai_quality_context
 
-::: fabric_data_product_framework.profiling
+### profile_dataframe
+
+::: fabric_data_product_framework.profiling.profile_dataframe
+
+### profile_dataframe_to_metadata
+
+::: fabric_data_product_framework.profiling.profile_dataframe_to_metadata
+
+### profile_metadata_to_records
+
+::: fabric_data_product_framework.profiling.profile_metadata_to_records
+

@@ -15,10 +15,29 @@
 | [`write_metadata_records`](#write_metadata_records) | function | Write metadata records. | — |
 | [`write_multiple_metadata_outputs`](#write_multiple_metadata_outputs) | function | Write multiple metadata outputs. | — |
 
-## Internal helpers (module-level)
+## Public callable details
 
-No module-level internal helpers detected.
+### build_dataset_run_record
 
-## Full module API
+::: fabric_data_product_framework.metadata.build_dataset_run_record
 
-::: fabric_data_product_framework.metadata
+### build_quality_result_records
+
+::: fabric_data_product_framework.metadata.build_quality_result_records
+
+### build_schema_drift_records
+
+::: fabric_data_product_framework.metadata.build_schema_drift_records
+
+### build_schema_snapshot_records
+
+::: fabric_data_product_framework.metadata.build_schema_snapshot_records
+
+### write_metadata_records
+
+::: fabric_data_product_framework.metadata.write_metadata_records
+
+### write_multiple_metadata_outputs
+
+::: fabric_data_product_framework.metadata.write_multiple_metadata_outputs
+

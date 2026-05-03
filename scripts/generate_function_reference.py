@@ -197,22 +197,28 @@ def main() -> None:
                 )
         else:
             lines.append("No public exports in this module.")
-        lines.extend(["", "## Internal helpers (module-level)", ""])
+        if public_in_module:
+            lines.extend(["", "## Public callable details", ""])
+            for s in sorted(public_in_module, key=lambda x: x.name.lower()):
+                lines.extend([f"### {s.name}", "", f"::: fabric_data_product_framework.{module}.{s.name}", ""])
+
         internal_fns = sorted([f for f in info["functions"] if f.startswith("_")])
-        if internal_fns:
-            lines.extend(["| Helper | Related public callables |", "|---|---|"])
+        if internal_fns and public_in_module:
+            lines.extend(['??? note "Internal helpers (collapsed)"', "", "    Internal helpers are documented separately for maintainers:", ""])
             for helper in internal_fns:
                 users = sorted([u for u in info["used_by"].get(helper, set()) if u in {p.name for p in public_in_module}])
-                lines.append(
-                    f"| [`{helper}`]({internal_helper_link(module, helper)}) | "
-                    f"{', '.join(f'`{u}`' for u in users) or '—'} |"
-                )
-        else:
-            lines.append("No module-level internal helpers detected.")
-        if not is_internal_only:
-            lines.extend(["", "## Full module API", "", f"::: fabric_data_product_framework.{module}"])
-        else:
-            lines.extend(["", "## Full module API", "", "This module is internal-only and is intentionally excluded from full public API rendering."])
+                relation = f" (used by: {', '.join(f'`{u}`' for u in users)})" if users else ""
+                lines.append(f"    - [`{helper}`]({internal_helper_link(module, helper)}){relation}")
+
+        if public_in_module:
+            for s in sorted(public_in_module, key=lambda x: x.name.lower()):
+                expected_link = f"[`{s.name}`](#{s.name})"
+                if not any(expected_link in line for line in lines):
+                    raise RuntimeError(f"Missing callable table link for {module}.{s.name}")
+                if not any(line.strip() == f"### {s.name}" for line in lines):
+                    raise RuntimeError(f"Missing callable section anchor for {module}.{s.name}")
+        if any("## Full module API" in line for line in lines):
+            raise RuntimeError(f"Full module API section should not be rendered for {module}")
         module_md.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
         if not is_internal_only:
             module_index_lines.append(f"- [`{module}`]({module}.md)")

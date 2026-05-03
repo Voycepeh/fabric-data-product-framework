@@ -8,15 +8,3 @@
 ## Public callables from `__all__`
 
 No public exports in this module.
-
-## Internal helpers (module-level)
-
-| Helper | Related public callables |
-|---|---|
-| [`_default_schema_text`](../../reference/internal/config/_default_schema_text.md) | — |
-| [`_format_error_path`](../../reference/internal/config/_format_error_path.md) | — |
-| [`_load_schema`](../../reference/internal/config/_load_schema.md) | — |
-
-## Full module API
-
-This module is internal-only and is intentionally excluded from full public API rendering.
