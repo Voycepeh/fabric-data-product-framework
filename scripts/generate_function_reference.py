@@ -179,13 +179,26 @@ def main() -> None:
             '  <span class="api-chip api-chip-module">Module overview</span>\n'
             '</div>'
         )
-        lines = [title, "", status_banner, "", "## Public callables from `__all__`", ""]
+        lines = [
+            title,
+            "",
+            status_banner,
+            "",
+            "## Overview",
+            "",
+            "This page is a lightweight module summary. Use dedicated function pages for full callable details.",
+            "",
+            "## Public callables from `__all__`",
+            "",
+        ]
         if public_in_module:
             lines.extend(["| Callable | Type | Summary | Related helpers |", "|---|---|---|---|"])
             for s in sorted(public_in_module, key=lambda x: x.name.lower()):
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
+                step_slug = step_slugs.get(docs_metadata[s.name]["workflow_step"], "")
+                symbol_page_link = f"../../reference/{step_slug}/{s.name}.md" if step_slug else "#"
                 lines.append(
-                    f"| [`{s.name}`](#{s.name}) | {s.obj_type} | {s.summary or '—'} | "
+                    f"| [`{s.name}`]({symbol_page_link}) | {s.obj_type} | {s.summary or '—'} | "
                     f"{', '.join(f'[`{r}`]({internal_helper_link(module, r)}) (internal)' for r in related) or '—'} |"
                 )
         else:
@@ -202,10 +215,8 @@ def main() -> None:
                 )
         else:
             lines.append("No module-level internal helpers detected.")
-        if not is_internal_only:
-            lines.extend(["", "## Full module API", "", f"::: fabric_data_product_framework.{module}"])
-        else:
-            lines.extend(["", "## Full module API", "", "This module is internal-only and is intentionally excluded from full public API rendering."])
+        if is_internal_only:
+            lines.extend(["", "## Notes", "", "This internal-only module is intentionally excluded from the public callable catalogue."])
         module_md.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
         if not is_internal_only:
             module_index_lines.append(f"- [`{module}`]({module}.md)")
