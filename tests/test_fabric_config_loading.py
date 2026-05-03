@@ -25,7 +25,7 @@ def _sample_framework_config() -> FrameworkConfig:
     return create_framework_config(
         path_config=path_config,
         notebook_runtime_config=create_notebook_runtime_config(["00_", "03_"]),
-        ai_prompt_config=create_ai_prompt_config("lineage {steps}", "handover {context}", "quality {profile}"),
+        ai_prompt_config=create_ai_prompt_config(dq_rule_candidate_template="quality {profile}", governance_candidate_template="lineage {steps}", handover_summary_template="handover {context}"),
         quality_config=create_quality_config(),
         governance_config=create_governance_config(),
         lineage_config=create_lineage_config(),
@@ -72,3 +72,10 @@ def test_get_path_missing_values_raise_clean_errors():
         get_path("Prod", "Source", config=config)
     with pytest.raises(ValueError, match="Target 'Warehouse' was not found"):
         get_path("Sandbox", "Warehouse", config=config.path_config)
+
+
+def test_create_ai_prompt_config_requires_explicit_templates():
+    with pytest.raises(ValueError, match="dq_rule_candidate_template"):
+        create_ai_prompt_config("", "g", "h")
+    with pytest.raises(TypeError):
+        create_ai_prompt_config(dq_rule_candidate_template="dq", governance_candidate_template="g")

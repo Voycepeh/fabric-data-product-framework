@@ -3,6 +3,40 @@ from __future__ import annotations
 
 import json
 
+from .config import FrameworkConfig
+
+
+DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE = (
+    "Generate candidate data quality rules from row-level profile metadata. "
+    "Return JSON only with: rule_id, table_name, column_name, rule_type, severity, reason, evidence, needs_human_review. "
+    "Suggestions are for human review and are not deterministic enforcement. "
+    "Dataset name: {dataset_name}. Business context: {business_context}. "
+    "Row profile fields: column_name={column_name}, data_type={data_type}, null_count={null_count}, distinct_count={distinct_count}, row_count={row_count}."
+)
+DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE = (
+    "Generate governance label suggestions from profile metadata. "
+    "Return JSON only with: table_name, column_name, candidate_label, reason, evidence, needs_human_review. "
+    "Allowed candidate_label: public, internal, confidential_candidate, restricted_candidate, unknown. "
+    "Suggestions are for human review and are not deterministic enforcement. "
+    "Dataset name: {dataset_name}. Business context: {business_context}. "
+    "Row profile fields: table_name={table_name}, column_name={column_name}, data_type={data_type}, profile_summary={profile_summary}."
+)
+DEFAULT_HANDOVER_SUMMARY_TEMPLATE = (
+    "Generate handover summary suggestions. "
+    "Return JSON only with: pipeline_summary, important_transformations, business_reason, handover_notes, risks_or_open_questions. "
+    "Suggestions are for human review and are not deterministic enforcement. "
+    "Business context: {business_context}. "
+    "Row summary field: summary={summary}."
+)
+
+
+def _resolve_prompt_template(config: FrameworkConfig | None, template_name: str, fallback_template: str) -> str:
+    if config is None:
+        return fallback_template
+    ai_prompt_config = getattr(config, "ai_prompt_config", None)
+    configured_template = getattr(ai_prompt_config, template_name, "") if ai_prompt_config is not None else ""
+    return configured_template or fallback_template
+
 
 def check_fabric_ai_functions_available() -> dict:
     """Check whether Fabric AI Functions can be imported in the current runtime.
@@ -63,7 +97,7 @@ def configure_fabric_ai_functions(deployment_name: str | None = None, temperatur
     return {"available": True, "configured": True, "message": "Microsoft Fabric AI Functions default configuration applied."}
 
 
-def build_dq_rule_candidate_prompt(business_context="", dataset_name=None) -> str:
+def build_dq_rule_candidate_prompt(business_context="", dataset_name=None, config: FrameworkConfig | None = None) -> str:
     """Build standardized prompt text for AI-assisted DQ candidate generation.
 
     Parameters
@@ -85,18 +119,11 @@ def build_dq_rule_candidate_prompt(business_context="", dataset_name=None) -> st
     ``{data_type}``, ``{null_count}``, ``{distinct_count}``, and ``{row_count}``.
     Output is suggestion-oriented and not deterministic enforcement.
     """
-    dataset_context = dataset_name or "unknown"
-    business_context_text = business_context or ""
-    return (
-        "Generate candidate data quality rules from row-level profile metadata. "
-        "Return JSON only with: rule_id, table_name, column_name, rule_type, severity, reason, evidence, needs_human_review. "
-        "Suggestions are for human review and are not deterministic enforcement. "
-        f"Dataset name: {dataset_context}. Business context: {business_context_text}. "
-        "Row profile fields: column_name={column_name}, data_type={data_type}, null_count={null_count}, distinct_count={distinct_count}, row_count={row_count}."
-    )
+    template = _resolve_prompt_template(config, "dq_rule_candidate_template", DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE)
+    return template.replace("{dataset_name}", dataset_name or "unknown").replace("{business_context}", business_context or "")
 
 
-def build_governance_candidate_prompt(business_context="", dataset_name=None) -> str:
+def build_governance_candidate_prompt(business_context="", dataset_name=None, config: FrameworkConfig | None = None) -> str:
     """Build standardized prompt text for AI-assisted governance suggestions.
 
     Parameters
@@ -118,19 +145,11 @@ def build_governance_candidate_prompt(business_context="", dataset_name=None) ->
     ``{column_name}``, ``{data_type}``, and ``{profile_summary}``.
     Output is suggestion-oriented and requires human review.
     """
-    dataset_context = dataset_name or "unknown"
-    business_context_text = business_context or ""
-    return (
-        "Generate governance label suggestions from profile metadata. "
-        "Return JSON only with: table_name, column_name, candidate_label, reason, evidence, needs_human_review. "
-        "Allowed candidate_label: public, internal, confidential_candidate, restricted_candidate, unknown. "
-        "Suggestions are for human review and are not deterministic enforcement. "
-        f"Dataset name: {dataset_context}. Business context: {business_context_text}. "
-        "Row profile fields: table_name={table_name}, column_name={column_name}, data_type={data_type}, profile_summary={profile_summary}."
-    )
+    template = _resolve_prompt_template(config, "governance_candidate_template", DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE)
+    return template.replace("{dataset_name}", dataset_name or "unknown").replace("{business_context}", business_context or "")
 
 
-def build_handover_summary_prompt(business_context="") -> str:
+def build_handover_summary_prompt(business_context="", config: FrameworkConfig | None = None) -> str:
     """Build standardized prompt text for AI-assisted handover summary suggestions.
 
     Parameters
@@ -149,14 +168,8 @@ def build_handover_summary_prompt(business_context="") -> str:
     Row placeholder injected from DataFrame rows is ``{summary}``.
     Output is suggestion-oriented and requires human review.
     """
-    business_context_text = business_context or ""
-    return (
-        "Generate handover summary suggestions. "
-        "Return JSON only with: pipeline_summary, important_transformations, business_reason, handover_notes, risks_or_open_questions. "
-        "Suggestions are for human review and are not deterministic enforcement. "
-        f"Business context: {business_context_text}. "
-        "Row summary field: summary={summary}."
-    )
+    template = _resolve_prompt_template(config, "handover_summary_template", DEFAULT_HANDOVER_SUMMARY_TEMPLATE)
+    return template.replace("{business_context}", business_context or "")
 
 
 def _require_fabric_ai_dataframe(df, helper_name: str):
@@ -166,7 +179,7 @@ def _require_fabric_ai_dataframe(df, helper_name: str):
     return ai
 
 
-def generate_dq_rule_candidates_with_fabric_ai(profile_df, business_context="", dataset_name=None, output_col="ai_dq_rule_candidate", error_col="ai_dq_rule_error", response_format="json_object", concurrency=20):
+def generate_dq_rule_candidates_with_fabric_ai(profile_df, business_context="", dataset_name=None, output_col="ai_dq_rule_candidate", error_col="ai_dq_rule_error", response_format="json_object", concurrency=20, config: FrameworkConfig | None = None):
     """Execute Fabric AI Functions to append DQ candidate suggestions to a DataFrame.
 
     Parameters
@@ -199,11 +212,11 @@ def generate_dq_rule_candidates_with_fabric_ai(profile_df, business_context="", 
     quality rules.
     """
     _require_fabric_ai_dataframe(profile_df, "generate_dq_rule_candidates_with_fabric_ai")
-    prompt = build_dq_rule_candidate_prompt(business_context=business_context, dataset_name=dataset_name)
+    prompt = build_dq_rule_candidate_prompt(business_context=business_context, dataset_name=dataset_name, config=config)
     return profile_df.ai.generate_response(prompt=prompt, is_prompt_template=True, output_col=output_col, error_col=error_col, response_format=response_format, concurrency=concurrency)
 
 
-def generate_governance_candidates_with_fabric_ai(profile_df, business_context="", dataset_name=None, output_col="ai_governance_candidate", error_col="ai_governance_error", response_format="json_object", concurrency=20):
+def generate_governance_candidates_with_fabric_ai(profile_df, business_context="", dataset_name=None, output_col="ai_governance_candidate", error_col="ai_governance_error", response_format="json_object", concurrency=20, config: FrameworkConfig | None = None):
     """Execute Fabric AI Functions to append governance suggestions to a DataFrame.
 
     Parameters
@@ -225,11 +238,11 @@ def generate_governance_candidates_with_fabric_ai(profile_df, business_context="
         Enriched DataFrame containing AI suggestion output columns.
     """
     _require_fabric_ai_dataframe(profile_df, "generate_governance_candidates_with_fabric_ai")
-    prompt = build_governance_candidate_prompt(business_context=business_context, dataset_name=dataset_name)
+    prompt = build_governance_candidate_prompt(business_context=business_context, dataset_name=dataset_name, config=config)
     return profile_df.ai.generate_response(prompt=prompt, is_prompt_template=True, output_col=output_col, error_col=error_col, response_format=response_format, concurrency=concurrency)
 
 
-def generate_handover_summary_with_fabric_ai(summary_df, business_context="", output_col="ai_handover_summary", error_col="ai_handover_error", response_format="json_object", concurrency=20):
+def generate_handover_summary_with_fabric_ai(summary_df, business_context="", output_col="ai_handover_summary", error_col="ai_handover_error", response_format="json_object", concurrency=20, config: FrameworkConfig | None = None):
     """Execute Fabric AI Functions to append handover summary suggestions.
 
     Parameters
@@ -248,7 +261,7 @@ def generate_handover_summary_with_fabric_ai(summary_df, business_context="", ou
         Enriched DataFrame containing AI suggestion output columns.
     """
     _require_fabric_ai_dataframe(summary_df, "generate_handover_summary_with_fabric_ai")
-    prompt = build_handover_summary_prompt(business_context=business_context)
+    prompt = build_handover_summary_prompt(business_context=business_context, config=config)
     return summary_df.ai.generate_response(prompt=prompt, is_prompt_template=True, output_col=output_col, error_col=error_col, response_format=response_format, concurrency=concurrency)
 
 
@@ -261,7 +274,7 @@ def _compact_sample_rows(sample_rows=None) -> str:
         return str(sample_rows)[:3000]
 
 
-def build_manual_dq_rule_prompt_package(sample_rows=None, business_context="", dataset_name=None) -> dict:
+def build_manual_dq_rule_prompt_package(sample_rows=None, business_context="", dataset_name=None, config: FrameworkConfig | None = None) -> dict:
     """Build copy/paste prompt package for manual DQ candidate generation.
 
     Parameters
@@ -279,7 +292,7 @@ def build_manual_dq_rule_prompt_package(sample_rows=None, business_context="", d
         Manual package containing reusable prompt text, schema expectations, and
         notes. Output is advisory and requires human review.
     """
-    prompt = build_dq_rule_candidate_prompt(business_context=business_context, dataset_name=dataset_name)
+    prompt = build_dq_rule_candidate_prompt(business_context=business_context, dataset_name=dataset_name, config=config)
     compact = _compact_sample_rows(sample_rows)
     return {
         "mode": "manual_prompt_ferry",
@@ -292,7 +305,7 @@ def build_manual_dq_rule_prompt_package(sample_rows=None, business_context="", d
     }
 
 
-def build_manual_governance_prompt_package(sample_rows=None, business_context="", dataset_name=None) -> dict:
+def build_manual_governance_prompt_package(sample_rows=None, business_context="", dataset_name=None, config: FrameworkConfig | None = None) -> dict:
     """Build copy/paste prompt package for manual governance suggestion generation.
 
     Parameters
@@ -310,7 +323,7 @@ def build_manual_governance_prompt_package(sample_rows=None, business_context=""
         Manual package containing reusable prompt text, schema expectations, and
         notes. Output is advisory and requires human review.
     """
-    prompt = build_governance_candidate_prompt(business_context=business_context, dataset_name=dataset_name)
+    prompt = build_governance_candidate_prompt(business_context=business_context, dataset_name=dataset_name, config=config)
     compact = _compact_sample_rows(sample_rows)
     return {
         "mode": "manual_prompt_ferry",
@@ -323,7 +336,7 @@ def build_manual_governance_prompt_package(sample_rows=None, business_context=""
     }
 
 
-def build_manual_handover_prompt_package(sample_rows=None, business_context="") -> dict:
+def build_manual_handover_prompt_package(sample_rows=None, business_context="", config: FrameworkConfig | None = None) -> dict:
     """Build copy/paste prompt package for manual handover summary generation.
 
     Parameters
@@ -339,7 +352,7 @@ def build_manual_handover_prompt_package(sample_rows=None, business_context="") 
         Manual package containing reusable prompt text, schema expectations, and
         notes. Output is advisory and requires human review.
     """
-    prompt = build_handover_summary_prompt(business_context=business_context)
+    prompt = build_handover_summary_prompt(business_context=business_context, config=config)
     compact = _compact_sample_rows(sample_rows)
     return {
         "mode": "manual_prompt_ferry",

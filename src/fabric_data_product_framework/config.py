@@ -34,9 +34,9 @@ class NotebookRuntimeConfig:
 class AIPromptConfig:
     """Prompt templates used by AI-assisted framework workflows."""
 
-    lineage_summary_template: str
+    dq_rule_candidate_template: str
+    governance_candidate_template: str
     handover_summary_template: str
-    quality_rule_generation_template: str
 
 
 @dataclass(frozen=True)
@@ -92,22 +92,23 @@ def create_notebook_runtime_config(allowed_notebook_prefixes: list[str] | tuple[
 
 
 def create_ai_prompt_config(
-    lineage_summary_template: str,
+    dq_rule_candidate_template: str,
+    governance_candidate_template: str,
     handover_summary_template: str,
-    quality_rule_generation_template: str,
 ) -> AIPromptConfig:
     """Create AI prompt-template configuration."""
     for label, value in {
-        "lineage_summary_template": lineage_summary_template,
+        "dq_rule_candidate_template": dq_rule_candidate_template,
+        "governance_candidate_template": governance_candidate_template,
         "handover_summary_template": handover_summary_template,
-        "quality_rule_generation_template": quality_rule_generation_template,
     }.items():
-        if not str(value).strip():
+        if not isinstance(value, str) or not value.strip():
             raise ValueError(f"{label} must be a non-empty string.")
+
     return AIPromptConfig(
-        lineage_summary_template=lineage_summary_template,
+        dq_rule_candidate_template=dq_rule_candidate_template,
+        governance_candidate_template=governance_candidate_template,
         handover_summary_template=handover_summary_template,
-        quality_rule_generation_template=quality_rule_generation_template,
     )
 
 

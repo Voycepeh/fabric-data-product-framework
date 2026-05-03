@@ -2,6 +2,15 @@ import builtins
 
 import pytest
 
+from fabric_data_product_framework.config import (
+    create_ai_prompt_config,
+    create_framework_config,
+    create_governance_config,
+    create_lineage_config,
+    create_notebook_runtime_config,
+    create_path_config,
+    create_quality_config,
+)
 from fabric_data_product_framework.ai import (
     build_dq_rule_candidate_prompt,
     build_governance_candidate_prompt,
@@ -95,3 +104,40 @@ def test_parse_manual_ai_json_response_success_and_failure():
     assert parse_manual_ai_json_response('{"a":1}')["a"] == 1
     with pytest.raises(ValueError):
         parse_manual_ai_json_response("not json")
+
+
+def _build_config():
+    return create_framework_config(
+        path_config=create_path_config({"Sandbox": {"Source": type("H", (), {"workspace_id": "w", "house_id": "h", "house_name": "n", "root": "r"})()}}),
+        notebook_runtime_config=create_notebook_runtime_config(["00_"]),
+        ai_prompt_config=create_ai_prompt_config(
+            dq_rule_candidate_template="DQ {dataset_name} {business_context} {column_name}",
+            governance_candidate_template="GOV {dataset_name} {business_context} {column_name}",
+            handover_summary_template="HO {business_context} {summary}",
+        ),
+        quality_config=create_quality_config(),
+        governance_config=create_governance_config(),
+        lineage_config=create_lineage_config(),
+    )
+
+
+def test_prompt_builders_use_config_templates_and_fallbacks():
+    config = _build_config()
+    assert build_dq_rule_candidate_prompt("ctx", "orders", config=config).startswith("DQ orders ctx")
+    assert build_governance_candidate_prompt("ctx", "orders", config=config).startswith("GOV orders ctx")
+    assert build_handover_summary_prompt("ctx", config=config).startswith("HO ctx")
+    assert "Generate candidate data quality rules" in build_dq_rule_candidate_prompt("ctx", "orders")
+
+
+def test_manual_prompt_package_uses_config_prompt_and_full_prompt_text():
+    config = _build_config()
+    pkg = build_manual_dq_rule_prompt_package(sample_rows=[{"a": 1}], business_context="ctx", dataset_name="orders", config=config)
+    assert pkg["prompt"].startswith("DQ orders ctx")
+    assert pkg["full_prompt_text"].startswith(pkg["prompt"])
+
+
+def test_generate_helpers_forward_config_to_prompt_builder():
+    config = _build_config()
+    df = _DFMock()
+    generate_dq_rule_candidates_with_fabric_ai(df, business_context="ctx", dataset_name="orders", config=config)
+    assert df.ai.calls[0]["prompt"].startswith("DQ orders ctx")
