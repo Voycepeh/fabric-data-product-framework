@@ -8,26 +8,11 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`build_ai_quality_context`](#build_ai_quality_context) | function | Build deterministic AI-ready context from standard metadata profile rows. | — |
-| [`profile_dataframe`](#profile_dataframe) | function | Build a lightweight profile for pandas or Spark-like DataFrames. | — |
-| [`profile_dataframe_to_metadata`](#profile_dataframe_to_metadata) | function | Profile a Spark/Fabric DataFrame into ODI-compatible metadata rows. | — |
-| [`profile_metadata_to_records`](#profile_metadata_to_records) | function | Convert Spark metadata profile rows into JSON-friendly dictionaries. | — |
+| [`build_ai_quality_context`](../../reference/profiling/build_ai_quality_context.md) | function | Build deterministic AI-ready context from standard metadata profile rows. | — |
+| [`profile_dataframe`](../../reference/profiling/profile_dataframe.md) | function | Build a lightweight profile for pandas or Spark-like DataFrames. | — |
+| [`profile_dataframe_to_metadata`](../../reference/profiling/profile_dataframe_to_metadata.md) | function | Profile a Spark/Fabric DataFrame into ODI-compatible metadata rows. | — |
+| [`profile_metadata_to_records`](../../reference/profiling/profile_metadata_to_records.md) | function | Convert Spark metadata profile rows into JSON-friendly dictionaries. | — |
 
-## Public callable details
+## Internal helpers
 
-### build_ai_quality_context
-
-::: fabric_data_product_framework.profiling.build_ai_quality_context
-
-### profile_dataframe
-
-::: fabric_data_product_framework.profiling.profile_dataframe
-
-### profile_dataframe_to_metadata
-
-::: fabric_data_product_framework.profiling.profile_dataframe_to_metadata
-
-### profile_metadata_to_records
-
-::: fabric_data_product_framework.profiling.profile_metadata_to_records
-
+No module-level internal helpers detected.

@@ -8,3 +8,7 @@
 ## Public callables from `__all__`
 
 No public exports in this module.
+
+## Internal helpers
+
+No module-level internal helpers detected.

@@ -120,9 +120,9 @@ def internal_helper_link(module: str, helper: str) -> str:
     return f"../../reference/internal/{module}/{helper}.md"
 
 
-def mkdocs_heading_anchor(name: str) -> str:
-    """Return a MkDocs/Python-Markdown-compatible heading anchor slug."""
-    return name.strip().lower().replace(" ", "-")
+def public_reference_link(module: str, symbol: str) -> str:
+    """Return docs-relative link target for a public callable reference page."""
+    return f"../../reference/{module}/{symbol}.md"
 
 
 def main() -> None:
@@ -196,35 +196,38 @@ def main() -> None:
             lines.extend(["| Callable | Type | Summary | Related helpers |", "|---|---|---|---|"])
             for s in sorted(public_in_module, key=lambda x: x.name.lower()):
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
-                anchor = mkdocs_heading_anchor(s.name)
                 lines.append(
-                    f"| [`{s.name}`](#{anchor}) | {s.obj_type} | {s.summary or '—'} | "
+                    f"| [`{s.name}`]({public_reference_link(module, s.name)}) | {s.obj_type} | {s.summary or '—'} | "
                     f"{', '.join(f'[`{r}`]({internal_helper_link(module, r)}) (internal)' for r in related) or '—'} |"
                 )
         else:
             lines.append("No public exports in this module.")
-        if public_in_module:
-            lines.extend(["", "## Public callable details", ""])
-            for s in sorted(public_in_module, key=lambda x: x.name.lower()):
-                lines.extend([f"### {s.name}", "", f"::: fabric_data_product_framework.{module}.{s.name}", ""])
-
+        lines.extend(["", "## Internal helpers", ""])
         internal_fns = sorted([f for f in info["functions"] if f.startswith("_")])
-        if internal_fns and public_in_module:
-            lines.extend(['??? note "Internal helpers (collapsed)"', "", "    Internal helpers are documented separately for maintainers:", ""])
+        if internal_fns:
+            lines.extend(["| Helper | Related public callables |", "|---|---|"])
             for helper in internal_fns:
                 users = sorted([u for u in info["used_by"].get(helper, set()) if u in {p.name for p in public_in_module}])
-                relation = f" (used by: {', '.join(f'`{u}`' for u in users)})" if users else ""
-                lines.append(f"    - [`{helper}`]({internal_helper_link(module, helper)}){relation}")
+                users_links = ", ".join(f"[`{u}`]({public_reference_link(module, u)})" for u in users) or "—"
+                lines.append(f"| [`{helper}`]({internal_helper_link(module, helper)}) | {users_links} |")
+        else:
+            lines.append("No module-level internal helpers detected.")
 
         if public_in_module:
             for s in sorted(public_in_module, key=lambda x: x.name.lower()):
-                expected_link = f"[`{s.name}`](#{mkdocs_heading_anchor(s.name)})"
+                expected_link = f"[`{s.name}`]({public_reference_link(module, s.name)})"
                 if not any(expected_link in line for line in lines):
                     raise RuntimeError(f"Missing callable table link for {module}.{s.name}")
-                if not any(line.strip() == f"### {s.name}" for line in lines):
-                    raise RuntimeError(f"Missing callable section anchor for {module}.{s.name}")
+        for helper in internal_fns:
+            expected_helper_link = f"[`{helper}`]({internal_helper_link(module, helper)})"
+            if not any(expected_helper_link in line for line in lines):
+                raise RuntimeError(f"Missing internal helper link for {module}.{helper}")
+        if any("## Public callable details" in line for line in lines):
+            raise RuntimeError(f"Public callable details section should not be rendered for {module}")
         if any("## Full module API" in line for line in lines):
             raise RuntimeError(f"Full module API section should not be rendered for {module}")
+        if any(line.strip().startswith("::: fabric_data_product_framework.") for line in lines):
+            raise RuntimeError(f"Mkdocstrings directives should not be rendered on module page for {module}")
         module_md.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
         if not is_internal_only:
             module_index_lines.append(f"- [`{module}`]({module}.md)")
