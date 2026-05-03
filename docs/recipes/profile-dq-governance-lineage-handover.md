@@ -26,8 +26,8 @@ from fabric_data_product_framework.governance import (
 )
 from fabric_data_product_framework.lineage import (
     build_lineage_records,
-    build_transformation_summary_markdown,
-    generate_mermaid_lineage,
+    build_lineage_handover_markdown,
+    plot_lineage_steps,
 )
 from fabric_data_product_framework.profiling import profile_dataframe
 
@@ -99,7 +99,7 @@ lineage_records = build_lineage_records(
     transformation_steps=steps,
 )
 
-lineage_mermaid = generate_mermaid_lineage(
+lineage_mermaid = plot_lineage_steps(
     source_tables=["bronze_sales_orders"],
     target_table=table_name,
     transformation_steps=steps,
@@ -116,7 +116,7 @@ summary = {
     "columns_created": ["order_total", "dq_status"],
 }
 
-summary_md = build_transformation_summary_markdown(summary)
+summary_md = build_lineage_handover_markdown(summary)
 
 artifacts = {
     "profile": profile,
