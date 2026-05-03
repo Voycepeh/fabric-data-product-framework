@@ -167,7 +167,7 @@ def resolve_step(symbol: Symbol, step_modules: dict[int, list[str]]) -> int | No
 
 def internal_helper_link(module: str, helper: str) -> str:
     """Return docs-relative link target for an internal helper page."""
-    return f"../reference/internal/{module}/{helper}.md"
+    return f"../../reference/internal/{module}/{helper}.md"
 
 
 def main() -> None:
