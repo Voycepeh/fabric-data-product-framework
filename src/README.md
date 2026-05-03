@@ -1,97 +1,19 @@
 # Source package guide (`src/fabric_data_product_framework`)
 
-Open `handover.py` first when manually testing in Fabric notebooks. It gives the end-to-end notebook run order and references the canonical module for each step.
+This package keeps runtime logic in `src/fabric_data_product_framework/` and publishes user-facing callables through `fabric_data_product_framework.__all__` in `src/fabric_data_product_framework/__init__.py`.
 
-## Module ownership
+## Public callable catalogue sources
 
-- **Environment and Fabric IO**: `fabric_io.py`, `runtime.py`
-- **Profiling and metadata**: `profiling.py`, `metadata.py`
-- **Data quality and rule compilation**: `quality.py`
-- **Drift and incremental safety**: `drift.py`
-- **Governance and sensitivity classification**: `governance.py`
-- **Lineage and AI handover**: `lineage.py`, `handover.py`
-- **Runtime summary and orchestration**: `run_summary.py`, `quality.py`
-- **Templates and notebook helpers**: `handover.py`
+- **Public callable source of truth:** `__all__` in `src/fabric_data_product_framework/__init__.py`.
+- **Workflow registry source:** `get_mvp_step_registry` in `src/fabric_data_product_framework/handover.py` (canonical 13-step mapping and module ownership).
+- **Generated docs outputs:**
+  - Step-first reference: `docs/reference/index.md`
+  - Module catalogues: `docs/api/modules/*.md`
 
-## Recommended manual Fabric test order
+## Regenerate the function reference
 
-1. Configure runtime and identifiers (`runtime.py`, `fabric_io.py`).
-2. Read source table/file (`fabric_io.py`).
-3. Profile source (`profiling.py`).
-4. Generate or compile quality rules (`quality.py`).
-5. Run quality checks (`quality.py`).
-6. Check schema/profile/partition drift (`drift.py`).
-7. Apply governance classification (`governance.py`).
-8. Transform and write output (`fabric_io.py`, project notebook cell).
-9. Profile output (`profiling.py`).
-10. Build lineage and handover summary (`lineage.py`, `handover.py`).
-11. Write run summary (`run_summary.py`, `metadata.py`).
-
-## MVP run order helper
-
-Use `handover.py` for a notebook-friendly list:
-
-```python
-from fabric_data_product_framework.handover import get_mvp_step_registry
-
-for step in get_mvp_step_registry():
-    print(
-        step["step_number"],
-        step["step_name"],
-        step["owner_type"],
-        step["canonical_modules"],
-    )
+```bash
+PYTHONPATH=src python scripts/generate_function_reference.py
 ```
 
-
-## Canonical 13 step MVP flow
-
-Use the canonical flow artifacts below when onboarding or running end-to-end smoke tests in Fabric:
-
-- Template notebook: `templates/notebooks/fabric_data_product_mvp.py`
-- Roadmap: `docs/mvp-13-step-roadmap.md`
-- Registry + artifact validation helpers: `src/fabric_data_product_framework/handover.py`
-
-## Step 1 to 3: setup and pull source data
-
-Use these canonical helpers for the first workflow segment in Fabric notebooks:
-- Runtime setup: `build_runtime_context`, `generate_run_id`
-- Fabric config/pathing: `load_fabric_config`, `get_path`
-- Source reads: `lakehouse_table_read`, `lakehouse_csv_read`, `lakehouse_parquet_read_as_spark`, `lakehouse_excel_read_as_spark`, `warehouse_read`
-
-Minimum notebook setup:
-
-```python
-import fabric_data_product_framework as fdpf
-
-config = fdpf.load_fabric_config(CONFIG)
-runtime_context = fdpf.build_runtime_context(
-    dataset_name="orders",
-    environment="Sandbox",
-    source_table="raw_orders",
-    target_table="clean_orders",
-    notebook_name="dex_source_to_dex_unified_orders",
-)
-```
-
-Lakehouse example:
-
-```python
-lh_source = fdpf.get_path("Sandbox", "Source", config=config)
-df_source = fdpf.lakehouse_table_read(lh_source, "raw_orders")
-display(df_source.limit(10))
-```
-
-Warehouse example:
-
-```python
-df_wh = fdpf.warehouse_read(
-    env="DE",
-    target="Warehouse",
-    schema="dbo",
-    table="SomeTable",
-    config=config,
-)
-```
-
-Keep workspace and house identifiers in YAML config files, not hardcoded notebook literals.
+Run the generator whenever public exports change (add/remove/rename) so GitHub Pages stays aligned with the package surface.

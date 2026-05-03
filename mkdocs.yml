@@ -24,6 +24,7 @@ nav:
   - Lifecycle: lifecycle-operating-model.md
   - Architecture: architecture.md
   - Function Reference: reference/index.md
+  - Module API Catalogue: api/modules/index.md
 
 markdown_extensions:
   - admonition
