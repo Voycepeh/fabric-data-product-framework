@@ -25,6 +25,9 @@ The outcome is faster delivery, more trusted outputs, easier onboarding, and bet
 ### End to end flow
 ![MVP flow](docs/assets/mvp-flow.png)
 
+### Workspace Notebooks Setup
+![Notebooks](docs/assets/notebook-structure.png)
+
 ## What problems it aims to solve?
 
 | Problem | Framework response |
