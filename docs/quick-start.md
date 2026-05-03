@@ -2,9 +2,9 @@
 
 Use this as the single runbook to execute the Fabric MVP workflow from local setup to handover artifacts.
 
-## What this framework is for
+## What this starter kit is for
 
-The Fabric Data Product Framework gives you a repeatable notebook workflow to:
+FabricOps Starter Kit gives you a repeatable notebook-driven workflow to:
 - profile source and output data,
 - apply data quality and drift safety checks,
 - run transformations with traceable rationale,
@@ -111,7 +111,7 @@ Human approval required for:
 
 ## 10) Run schema drift, data drift, and incremental safety checks
 
-Execute framework checks to detect:
+Execute starter-kit checks to detect:
 - schema drift,
 - profile/statistical drift,
 - unsafe incremental/backfill patterns.

@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for contributing to the Fabric Data Product Framework.
+Thank you for contributing to the FabricOps Starter Kit.
 
 ## Contribution guidelines
 

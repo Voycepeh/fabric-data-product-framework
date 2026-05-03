@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "fabric-data-product-framework"
 version = "0.1.0"
-description = "A reusable Microsoft Fabric notebook framework for building documented, governed, quality-checked, drift-aware, AI-ready data products."
+description = "A practical starter kit for building governed, quality-checked, AI-ready notebooks in Microsoft Fabric."
 requires-python = ">=3.10"
 dependencies = [
   "PyYAML>=6.0",

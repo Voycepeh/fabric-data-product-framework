@@ -1,6 +1,6 @@
 # Build and install the framework wheel in Microsoft Fabric
 
-This **Fabric-first, notebook-friendly, AI-in-the-loop data product framework** is designed to ship as a reusable package, not copy-paste helper cells in every notebook.
+This **Fabric-first, notebook-friendly, AI-in-the-loop starter kit** is designed to ship as a reusable package, not copy-paste helper cells in every notebook.
 
 ## Why use a wheel
 A wheel-based install lets you:
