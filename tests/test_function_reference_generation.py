@@ -39,7 +39,7 @@ def test_every_public_export_is_listed_and_linked() -> None:
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     for name in public_exports():
         assert f"`{name}`" in content
-        assert "module API" in content
+        assert "../api/modules/" in content
 
 
 def test_every_public_callable_has_docstring_first_sentence() -> None:
@@ -134,3 +134,30 @@ def test_generated_docs_use_lf_newlines() -> None:
     for doc in docs_files:
         raw = doc.read_bytes()
         assert b"\r\n" not in raw, f"{doc} contains CRLF newlines"
+
+
+
+def test_module_pages_include_module_contents_and_stable_anchors() -> None:
+    generate_reference()
+    for module_doc in (ROOT / "docs" / "api" / "modules").glob("*.md"):
+        if module_doc.name == "index.md":
+            continue
+        content = module_doc.read_text(encoding="utf-8")
+        assert "## Module contents" in content
+        assert "| Name | Status | Type | Purpose | Used by / related public callable | API link |" in content
+        assert "#" in content and "[API](#" in content
+
+
+def test_module_index_uses_table_catalogue() -> None:
+    generate_reference()
+    content = MODULE_INDEX_FILE.read_text(encoding="utf-8")
+    assert "| Module | Public callable count | Internal helper count | Main workflow step(s) | Description | Link |" in content
+    assert "- [`" not in content
+
+
+def test_reference_links_to_module_and_function_anchors() -> None:
+    generate_reference()
+    content = REFERENCE_FILE.read_text(encoding="utf-8")
+    for name in public_exports():
+        assert f"function API](../api/modules/" in content
+        assert f"`{name}`](../api/modules/" in content
