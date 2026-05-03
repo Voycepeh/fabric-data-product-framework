@@ -3,12 +3,15 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 
+import pytest
+
 from scripts.generate_function_reference import main as generate_reference
 
 ROOT = Path(__file__).resolve().parents[1]
 INIT_FILE = ROOT / "src" / "fabric_data_product_framework" / "__init__.py"
 REFERENCE_FILE = ROOT / "docs" / "reference" / "index.md"
 MODULE_INDEX_FILE = ROOT / "docs" / "api" / "modules" / "index.md"
+DOCS_METADATA_FILE = ROOT / "src" / "fabric_data_product_framework" / "docs_metadata.py"
 
 
 def public_exports() -> list[str]:
@@ -17,6 +20,16 @@ def public_exports() -> list[str]:
         if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "__all__" for t in node.targets):
             return [elt.value for elt in node.value.elts if isinstance(elt, ast.Constant)]
     raise AssertionError("__all__ missing")
+
+
+def public_symbol_docs() -> list[dict[str, object]]:
+    tree = ast.parse(DOCS_METADATA_FILE.read_text(encoding="utf-8"))
+    for node in tree.body:
+        is_assign = isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "PUBLIC_SYMBOL_DOCS" for t in node.targets)
+        is_annassign = isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and node.target.id == "PUBLIC_SYMBOL_DOCS"
+        if (is_assign or is_annassign) and node.value is not None:
+            return ast.literal_eval(node.value)
+    raise AssertionError("PUBLIC_SYMBOL_DOCS missing")
 
 
 def section(content: str, title: str) -> str:
@@ -80,6 +93,36 @@ def test_metadata_driven_summary_override_is_applied() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     assert "Run the framework pipeline end-to-end for a data product." in content
+
+
+def test_reference_links_are_site_friendly_and_correctly_routed() -> None:
+    generate_reference()
+    content = REFERENCE_FILE.read_text(encoding="utf-8")
+    assert "./step-02-runtime-configuration/get_path/" in content
+    assert "./step-02-runtime-configuration/load_fabric_config/" in content
+    assert "./step-04-source-ingestion-read-helpers/profile_metadata_to_records/" in content
+    assert "./step-02-runtime-configuration/get_path.md" not in content
+    assert "./step-02-runtime-configuration/load_fabric_config.md" not in content
+    assert "./step-04-source-ingestion-read-helpers/profile_metadata_to_records.md" not in content
+
+
+def test_docs_metadata_matches_public_exports() -> None:
+    exports = set(public_exports())
+    metadata_symbols = {row["symbol_name"] for row in public_symbol_docs()}
+    assert exports - metadata_symbols == set()
+    assert metadata_symbols - exports == set()
+
+
+def test_invalid_workflow_step_fails_loudly(monkeypatch) -> None:
+    from scripts import generate_function_reference as gen
+
+    bad = dict(gen.parse_docs_metadata())
+    target = next(iter(bad))
+    bad[target] = dict(bad[target])
+    bad[target]["workflow_step"] = 99
+    monkeypatch.setattr(gen, "parse_docs_metadata", lambda: bad)
+    with pytest.raises(RuntimeError, match="Invalid workflow_step"):
+        gen.main()
 
 
 def test_generated_docs_are_multiline_readable() -> None:

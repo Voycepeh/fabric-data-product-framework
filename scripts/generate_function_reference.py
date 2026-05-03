@@ -11,22 +11,6 @@ INIT_PATH = PKG_DIR / "__init__.py"
 DOCS_METADATA_PATH = PKG_DIR / "docs_metadata.py"
 REFERENCE_PATH = ROOT / "docs" / "reference" / "index.md"
 MODULE_DIR = ROOT / "docs" / "api" / "modules"
-REFERENCE_STEP_SLUGS = {
-    1: "step-01-purpose-setup",
-    2: "step-02-runtime-configuration",
-    3: "step-03-source-declaration-paths",
-    4: "step-04-source-ingestion-read-helpers",
-    5: "step-05-source-profiling-metadata",
-    6: "step-06-drift-checks",
-    7: "step-07-ai-rule-generation-review",
-    8: "step-08-quality-rule-execution",
-    9: "step-09-core-transformation-business-logic",
-    10: "step-10-technical-columns-write-prep",
-    11: "step-11-output-write-metadata-logging",
-    12: "step-12-governance-classification",
-    13: "step-13-lineage-summary-handover",
-}
-
 STEP_FALLBACK_NOTES = {
     5: "No public callable is currently exported for this step. Use notebook prompts for AI-assisted rule drafting.",
 }
@@ -117,6 +101,18 @@ def parse_docs_metadata() -> dict[str, dict[str, Any]]:
     raise RuntimeError("Could not parse PUBLIC_SYMBOL_DOCS from docs_metadata.py")
 
 
+def parse_workflow_step_docs() -> list[dict[str, Any]]:
+    tree = ast.parse(DOCS_METADATA_PATH.read_text(encoding="utf-8"))
+    for node in tree.body:
+        is_assign = isinstance(node, ast.Assign) and any(
+            isinstance(t, ast.Name) and t.id == "WORKFLOW_STEP_DOCS" for t in node.targets
+        )
+        is_annassign = isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and node.target.id == "WORKFLOW_STEP_DOCS"
+        if (is_assign or is_annassign) and node.value is not None:
+            return ast.literal_eval(node.value)
+    raise RuntimeError("Could not parse WORKFLOW_STEP_DOCS from docs_metadata.py")
+
+
 def internal_helper_link(module: str, helper: str) -> str:
     """Return docs-relative link target for an internal helper page."""
     return f"../../reference/internal/{module}/{helper}.md"
@@ -138,7 +134,9 @@ def main() -> None:
 
     step_registry = parse_step_registry()
     docs_metadata = parse_docs_metadata()
+    step_docs = parse_workflow_step_docs()
     step_titles = {s["step_number"]: s["step_name"] for s in step_registry}
+    step_slugs = {int(step["number"]): step["slug"] for step in step_docs}
     step_symbols: dict[int, list[Symbol]] = {s["step_number"]: [] for s in step_registry}
 
     missing_metadata = sorted(name for name in public if name not in docs_metadata)
@@ -226,12 +224,12 @@ def main() -> None:
             for s in entries:
                 info = module_data[s.module]
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
-                step_slug = REFERENCE_STEP_SLUGS.get(step)
-                symbol_link = f"./{step_slug}/{s.name}.md" if step_slug else f"../api/modules/{s.module}.md#{s.name}"
+                step_slug = step_slugs.get(step)
+                symbol_link = f"./{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.module}/#{s.name}"
                 ref.append(
                     f"| [`{s.name}`]({symbol_link}) | `{s.module}` | {s.summary or '—'} | "
                     f"{', '.join(f'[`{r}`](./internal/{s.module}/{r}.md) (internal)' for r in related) or '—'} | "
-                    f"[module overview](../api/modules/{s.module}.md) |"
+                    f"[module overview](../api/modules/{s.module}/) |"
                 )
         else:
             ref.append("No public callable currently mapped to this step.")

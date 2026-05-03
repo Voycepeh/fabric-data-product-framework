@@ -15,6 +15,23 @@ class PublicSymbolDocMetadata(TypedDict):
     summary_override: str | None
 
 
+WORKFLOW_STEP_DOCS: list[dict[str, int | str]] = [
+    {"number": 1, "slug": "step-01-purpose-setup", "title": "Package and runtime setup"},
+    {"number": 2, "slug": "step-02-runtime-configuration", "title": "Fabric config and paths"},
+    {"number": 3, "slug": "step-03-source-declaration-paths", "title": "Pull source data"},
+    {"number": 4, "slug": "step-04-source-ingestion-read-helpers", "title": "Source profiling"},
+    {"number": 5, "slug": "step-05-source-profiling-metadata", "title": "AI assisted DQ rule drafting"},
+    {"number": 6, "slug": "step-06-drift-checks", "title": "Human review of rules and metadata"},
+    {"number": 7, "slug": "step-07-ai-rule-generation-review", "title": "Compile and run DQ checks"},
+    {"number": 8, "slug": "step-08-quality-rule-execution", "title": "Schema/profile/data drift checks"},
+    {"number": 9, "slug": "step-09-core-transformation-business-logic", "title": "Core transformation"},
+    {"number": 10, "slug": "step-10-technical-columns-write-prep", "title": "Standard technical columns"},
+    {"number": 11, "slug": "step-11-output-write-metadata-logging", "title": "Output write, output profiling, and metadata logging"},
+    {"number": 12, "slug": "step-12-governance-classification", "title": "Governance classification and lineage"},
+    {"number": 13, "slug": "step-13-lineage-summary-handover", "title": "Run summary and handover package"},
+]
+
+
 PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [
     {"symbol_name": "Housepath", "module": "fabric_io", "kind": "class", "workflow_step": 2, "summary_override": None},
     {"symbol_name": "load_fabric_config", "module": "fabric_io", "kind": "function", "workflow_step": 2, "summary_override": None},
