@@ -11,21 +11,6 @@ INIT_PATH = PKG_DIR / "__init__.py"
 REFERENCE_PATH = ROOT / "docs" / "reference" / "index.md"
 MODULE_DIR = ROOT / "docs" / "api" / "modules"
 
-STEP_TITLES = {
-    1: "Purpose, steward, and notebook setup",
-    2: "Environment and runtime configuration",
-    3: "Source declaration and Fabric path resolution",
-    4: "Source ingestion and read helpers",
-    5: "Source profiling and metadata capture",
-    6: "Schema drift and data drift checks",
-    7: "AI-assisted rule generation and human review",
-    8: "Data quality rule execution",
-    9: "Core transformation and business logic support",
-    10: "Standard technical columns and write preparation",
-    11: "Output write, output profiling, and metadata logging",
-    12: "Governance classification and sensitivity handling",
-    13: "Lineage, run summary, and handover documentation",
-}
 STEP_FALLBACK_NOTES = {
     7: "No public callable is currently exported for this step. Use notebook prompts and human review as defined in the MVP runbook.",
 }
@@ -83,17 +68,28 @@ def parse_public_exports() -> list[str]:
     raise RuntimeError("Could not parse __all__ from __init__.py")
 
 
-def parse_step_registry() -> dict[int, list[str]]:
+def parse_step_registry() -> list[dict[str, Any]]:
     path = PKG_DIR / "handover.py"
     tree = ast.parse(path.read_text(encoding="utf-8"))
     for node in tree.body:
-        if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "MVP_STEP_REGISTRY" for t in node.targets):
-            reg = ast.literal_eval(node.value)
-            out: dict[int, list[str]] = {}
+        is_registry_assign = isinstance(node, ast.Assign) and any(
+            isinstance(t, ast.Name) and t.id == "MVP_STEP_REGISTRY" for t in node.targets
+        )
+        is_registry_annassign = isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and node.target.id == "MVP_STEP_REGISTRY"
+        if is_registry_assign or is_registry_annassign:
+            value = node.value
+            if value is None:
+                continue
+            reg = ast.literal_eval(value)
+            out: list[dict[str, Any]] = []
             for item in reg:
-                out[item["step_number"]] = [m.replace(".py", "") for m in item.get("canonical_modules", [])]
+                out.append({
+                    "step_number": item["step_number"],
+                    "step_name": item["step_name"],
+                    "canonical_modules": [m.replace(".py", "") for m in item.get("canonical_modules", [])],
+                })
             return out
-    return {}
+    return []
 
 
 def main() -> None:
@@ -110,8 +106,10 @@ def main() -> None:
                 symbol_map[name] = Symbol(name, module, "class", info["classes"][name])
                 break
 
-    step_modules = parse_step_registry()
-    step_symbols: dict[int, list[Symbol]] = {k: [] for k in STEP_TITLES}
+    step_registry = parse_step_registry()
+    step_modules = {step["step_number"]: step["canonical_modules"] for step in step_registry}
+    step_titles = {step["step_number"]: step["step_name"] for step in step_registry}
+    step_symbols: dict[int, list[Symbol]] = {step["step_number"]: [] for step in step_registry}
     other: list[Symbol] = []
     for s in symbol_map.values():
         placed = False
@@ -158,8 +156,8 @@ def main() -> None:
     (MODULE_DIR / "index.md").write_text("\n".join(module_index_lines) + "\n", encoding="utf-8")
 
     ref = ["# Callable Reference", "", "Generated step-first function catalogue sourced from `fabric_data_product_framework.__all__`.", ""]
-    for step in range(1, 14):
-        ref.append(f"## Step {step}: {STEP_TITLES[step]}")
+    for step in sorted(step_titles):
+        ref.append(f"## Step {step}: {step_titles[step]}")
         ref.append("")
         entries = sorted(step_symbols.get(step, []), key=lambda x: x.name.lower())
         if entries:

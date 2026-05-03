@@ -43,3 +43,19 @@ def test_every_public_callable_has_docstring_first_sentence() -> None:
         if not first_line:
             missing.append(name)
     assert missing == []
+
+
+def test_not_all_public_exports_land_in_other_utilities() -> None:
+    generate_reference()
+    content = REFERENCE_FILE.read_text(encoding="utf-8")
+    other_section = content.split("## Other Utilities", 1)[1] if "## Other Utilities" in content else ""
+    other_count = sum(1 for name in public_exports() if f"`{name}`" in other_section)
+    assert other_count < len(public_exports())
+
+
+def test_at_least_one_callable_mapped_to_numbered_step() -> None:
+    generate_reference()
+    content = REFERENCE_FILE.read_text(encoding="utf-8")
+    numbered_section = content.split("## Other Utilities", 1)[0]
+    mapped = any(f"`{name}`" in numbered_section for name in public_exports())
+    assert mapped
