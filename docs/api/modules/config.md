@@ -1,13 +1,21 @@
-# `config` module (internal)
+# `config` module
 
 <div class="api-status-block">
-  <span class="api-chip api-chip-internal">Internal-only module</span>
-  <div class="api-chip-subtitle">Not intended as a primary user-facing API surface.</div>
+  <span class="api-chip api-chip-module">Module overview</span>
 </div>
 
 ## Public callables from `__all__`
 
-No public exports in this module.
+| Callable | Type | Summary | Related helpers |
+|---|---|---|---|
+| [`create_ai_prompt_config`](../../reference/step-02-runtime-configuration/create_ai_prompt_config.md) | function | Create AI prompt-template configuration. | — |
+| [`create_framework_config`](../../reference/step-02-runtime-configuration/create_framework_config.md) | function | Create the top-level framework configuration object. | — |
+| [`create_governance_config`](../../reference/step-02-runtime-configuration/create_governance_config.md) | function | Create governance-default configuration. | — |
+| [`create_lineage_config`](../../reference/step-02-runtime-configuration/create_lineage_config.md) | function | Create lineage-default configuration. | — |
+| [`create_notebook_runtime_config`](../../reference/step-02-runtime-configuration/create_notebook_runtime_config.md) | function | Create notebook runtime configuration. | — |
+| [`create_path_config`](../../reference/step-02-runtime-configuration/create_path_config.md) | function | Create a validated :class:`PathConfig` object. | — |
+| [`create_quality_config`](../../reference/step-02-runtime-configuration/create_quality_config.md) | function | Create quality-default configuration. | — |
+| [`validate_framework_config`](../../reference/step-02-runtime-configuration/validate_framework_config.md) | function | Validate and normalize framework config input. | — |
 
 ## Internal helpers
 

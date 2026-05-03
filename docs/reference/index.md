@@ -17,9 +17,17 @@ Generated step-first function catalogue sourced from `fabric_data_product_framew
 
 | Function / class | Module | Purpose | Related helpers | Module page |
 |---|---|---|---|---|
+| [`create_ai_prompt_config`](./step-02-runtime-configuration/create_ai_prompt_config/) | `config` | Create AI prompt-template configuration. | — | [module overview](../api/modules/config/) |
+| [`create_framework_config`](./step-02-runtime-configuration/create_framework_config/) | `config` | Create the top-level framework configuration object. | — | [module overview](../api/modules/config/) |
+| [`create_governance_config`](./step-02-runtime-configuration/create_governance_config/) | `config` | Create governance-default configuration. | — | [module overview](../api/modules/config/) |
+| [`create_lineage_config`](./step-02-runtime-configuration/create_lineage_config/) | `config` | Create lineage-default configuration. | — | [module overview](../api/modules/config/) |
+| [`create_notebook_runtime_config`](./step-02-runtime-configuration/create_notebook_runtime_config/) | `config` | Create notebook runtime configuration. | — | [module overview](../api/modules/config/) |
+| [`create_path_config`](./step-02-runtime-configuration/create_path_config/) | `config` | Create a validated :class:`PathConfig` object. | — | [module overview](../api/modules/config/) |
+| [`create_quality_config`](./step-02-runtime-configuration/create_quality_config/) | `config` | Create quality-default configuration. | — | [module overview](../api/modules/config/) |
 | [`get_path`](./step-02-runtime-configuration/get_path/) | `fabric_io` | Return the Fabric path object for an environment and target. | — | [module overview](../api/modules/fabric_io/) |
 | [`Housepath`](./step-02-runtime-configuration/Housepath/) | `fabric_io` | Fabric lakehouse or warehouse connection details. | — | [module overview](../api/modules/fabric_io/) |
-| [`load_fabric_config`](./step-02-runtime-configuration/load_fabric_config/) | `fabric_io` | Validate and return a Fabric config mapping. | — | [module overview](../api/modules/fabric_io/) |
+| [`load_fabric_config`](./step-02-runtime-configuration/load_fabric_config/) | `fabric_io` | Validate and return a framework config mapping. | — | [module overview](../api/modules/fabric_io/) |
+| [`validate_framework_config`](./step-02-runtime-configuration/validate_framework_config/) | `config` | Validate and normalize framework config input. | — | [module overview](../api/modules/config/) |
 
 ## Step 3: Pull source data
 

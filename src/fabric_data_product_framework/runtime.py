@@ -68,7 +68,7 @@ def normalize_name(value: str) -> str:
     return normalized
 
 
-def validate_notebook_name(name: str, allowed_prefixes: list[str] | None = None) -> list[str]:
+def validate_notebook_name(name: str, allowed_prefixes: list[str] | None = None, config: dict | object | None = None) -> list[str]:
     """Validate notebook names against the framework workspace notebook model.
 
     Parameters
@@ -106,6 +106,14 @@ def validate_notebook_name(name: str, allowed_prefixes: list[str] | None = None)
         )
         return errors
 
+    if allowed_prefixes is None and config is not None:
+        runtime_config = getattr(config, "notebook_runtime_config", None)
+        if runtime_config is None and isinstance(config, dict):
+            runtime_config = config.get("notebook_runtime_config")
+        config_prefixes = getattr(runtime_config, "allowed_notebook_prefixes", None)
+        if config_prefixes:
+            allowed_prefixes = list(config_prefixes)
+
     if allowed_prefixes:
         if not any(normalized_name.startswith(prefix) for prefix in allowed_prefixes):
             prefix_list = ", ".join(allowed_prefixes)
@@ -133,7 +141,7 @@ def validate_notebook_name(name: str, allowed_prefixes: list[str] | None = None)
     return errors
 
 
-def assert_notebook_name_valid(name: str, allowed_prefixes: list[str] | None = None) -> None:
+def assert_notebook_name_valid(name: str, allowed_prefixes: list[str] | None = None, config: dict | object | None = None) -> None:
     """Raise :class:`NotebookNamingError` when a notebook name is invalid.
 
     Parameters
@@ -154,7 +162,7 @@ def assert_notebook_name_valid(name: str, allowed_prefixes: list[str] | None = N
     >>> assert_notebook_name_valid("02_ex_email_metadata_event_logic")
     >>> assert_notebook_name_valid("03_pc_email_metadata_source_to_unified")
     """
-    errors = validate_notebook_name(name=name, allowed_prefixes=allowed_prefixes)
+    errors = validate_notebook_name(name=name, allowed_prefixes=allowed_prefixes, config=config)
     if errors:
         raise NotebookNamingError(" ".join(errors))
 

@@ -1,6 +1,16 @@
 """Public notebook-friendly entrypoints for the Fabric Data Product Framework."""
 
 from .drift import check_partition_drift, check_profile_drift, check_schema_drift, summarize_drift_results
+from .config import (
+    create_ai_prompt_config,
+    create_framework_config,
+    create_governance_config,
+    create_lineage_config,
+    create_notebook_runtime_config,
+    create_path_config,
+    create_quality_config,
+    validate_framework_config,
+)
 from .fabric_io import (
     Housepath,
     get_path,
@@ -69,6 +79,14 @@ __version__ = "0.1.0"
 
 __all__ = [
     "Housepath",
+    "validate_framework_config",
+    "create_framework_config",
+    "create_lineage_config",
+    "create_governance_config",
+    "create_quality_config",
+    "create_ai_prompt_config",
+    "create_notebook_runtime_config",
+    "create_path_config",
     "load_fabric_config",
     "get_path",
     "lakehouse_table_read",

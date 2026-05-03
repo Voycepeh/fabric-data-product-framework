@@ -34,6 +34,14 @@ WORKFLOW_STEP_DOCS: list[dict[str, int | str]] = [
 
 PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [
     {"symbol_name": "Housepath", "module": "fabric_io", "kind": "class", "workflow_step": 2, "summary_override": None},
+    {"symbol_name": "create_path_config", "module": "config", "kind": "function", "workflow_step": 2, "summary_override": None},
+    {"symbol_name": "create_notebook_runtime_config", "module": "config", "kind": "function", "workflow_step": 2, "summary_override": None},
+    {"symbol_name": "create_ai_prompt_config", "module": "config", "kind": "function", "workflow_step": 2, "summary_override": None},
+    {"symbol_name": "create_quality_config", "module": "config", "kind": "function", "workflow_step": 2, "summary_override": None},
+    {"symbol_name": "create_governance_config", "module": "config", "kind": "function", "workflow_step": 2, "summary_override": None},
+    {"symbol_name": "create_lineage_config", "module": "config", "kind": "function", "workflow_step": 2, "summary_override": None},
+    {"symbol_name": "create_framework_config", "module": "config", "kind": "function", "workflow_step": 2, "summary_override": None},
+    {"symbol_name": "validate_framework_config", "module": "config", "kind": "function", "workflow_step": 2, "summary_override": None},
     {"symbol_name": "load_fabric_config", "module": "fabric_io", "kind": "function", "workflow_step": 2, "summary_override": None},
     {"symbol_name": "get_path", "module": "fabric_io", "kind": "function", "workflow_step": 2, "summary_override": None},
     {"symbol_name": "lakehouse_table_read", "module": "fabric_io", "kind": "function", "workflow_step": 3, "summary_override": None},
