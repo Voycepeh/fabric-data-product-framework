@@ -2,6 +2,9 @@
 
 Use `load_fabric_config(...)` to load environment and target house mappings at notebook runtime.
 
+In Fabric, keep this mapping in `00_env_config`, which is one reusable config
+notebook per environment workspace.
+
 ## Public-safe configuration
 
 - Do **not** commit real workspace IDs.
@@ -21,6 +24,7 @@ Use `configs/fabric_houses.example.yaml` as the public template.
 ```python
 from fabric_data_product_framework.fabric_io import load_fabric_config, get_path
 
+# %run 00_env_config
 fabric_config = load_fabric_config(CONFIG)
 lh_in = get_path("Sandbox", "Source", config=fabric_config)
 ```

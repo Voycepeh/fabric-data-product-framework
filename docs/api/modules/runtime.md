@@ -11,7 +11,7 @@
 | [`assert_notebook_name_valid`](../../reference/step-01-purpose-setup/assert_notebook_name_valid.md) | function | Raise :class:`NotebookNamingError` when a notebook name is invalid. | — |
 | [`build_runtime_context`](../../reference/step-01-purpose-setup/build_runtime_context.md) | function | Build a standard runtime context dictionary for Fabric notebooks. | — |
 | [`generate_run_id`](../../reference/step-01-purpose-setup/generate_run_id.md) | function | Generate a notebook-safe run identifier. | — |
-| [`validate_notebook_name`](../../reference/step-01-purpose-setup/validate_notebook_name.md) | function | Validate a Fabric notebook name against required prefixes and format. | — |
+| [`validate_notebook_name`](../../reference/step-01-purpose-setup/validate_notebook_name.md) | function | Validate notebook names against the framework workspace notebook model. | — |
 
 ## Internal helpers
 

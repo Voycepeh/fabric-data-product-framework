@@ -68,20 +68,31 @@ def normalize_name(value: str) -> str:
     return normalized
 
 
-def validate_notebook_name(name: str, allowed_prefixes: list[str]) -> list[str]:
-    """Validate a Fabric notebook name against required prefixes and format.
+def validate_notebook_name(name: str, allowed_prefixes: list[str] | None = None) -> list[str]:
+    """Validate notebook names against the framework workspace notebook model.
 
     Parameters
     ----------
     name : str
         Notebook name to validate.
-    allowed_prefixes : list[str]
-        Permitted prefixes (for example ``dex_source_to_dex_unified``).
+    allowed_prefixes : list[str] | None, optional
+        Optional legacy prefix list retained for backward compatibility with
+        older projects. New projects should use the default finalized model:
+        ``00_env_config``, ``01_data_sharing_agreement_<agreement>``,
+        ``02_ex_<agreement>_<topic>``, and
+        ``03_pc_<agreement>_<from>_to_<to>``.
 
     Returns
     -------
     list[str]
-        Validation error messages. Empty list means the name is valid.
+        Validation error messages. An empty list means the name is valid.
+
+    Examples
+    --------
+    >>> validate_notebook_name("00_env_config")
+    []
+    >>> validate_notebook_name("03_pc_email_metadata_source_to_unified")
+    []
     """
     errors: list[str] = []
     normalized_name = (name or "").strip()
@@ -89,38 +100,59 @@ def validate_notebook_name(name: str, allowed_prefixes: list[str]) -> list[str]:
         errors.append("Notebook name must not be empty.")
         return errors
 
-    if not allowed_prefixes:
-        errors.append("At least one allowed prefix must be provided.")
-        return errors
-
-    if not any(normalized_name.startswith(prefix) for prefix in allowed_prefixes):
-        prefix_list = ", ".join(allowed_prefixes)
-        errors.append(
-            f"Notebook name '{normalized_name}' must start with one of: {prefix_list}."
-        )
-
     if normalize_name(normalized_name) != normalized_name:
         errors.append(
             "Notebook name should be lowercase with underscores only (no spaces or unsafe characters)."
+        )
+        return errors
+
+    if allowed_prefixes:
+        if not any(normalized_name.startswith(prefix) for prefix in allowed_prefixes):
+            prefix_list = ", ".join(allowed_prefixes)
+            errors.append(
+                f"Notebook name '{normalized_name}' must start with one of: {prefix_list}."
+            )
+        return errors
+
+    agreement_segment = r"[a-z0-9]+(?:_[a-z0-9]+)*"
+    notebook_patterns = (
+        r"^00_env_config$",
+        rf"^01_data_sharing_agreement_{agreement_segment}$",
+        rf"^02_ex_{agreement_segment}_{agreement_segment}$",
+        rf"^03_pc_{agreement_segment}_{agreement_segment}_to_{agreement_segment}$",
+    )
+    if not any(re.fullmatch(pattern, normalized_name) for pattern in notebook_patterns):
+        errors.append(
+            "Notebook name must follow one of: "
+            "00_env_config, "
+            "01_data_sharing_agreement_<agreement>, "
+            "02_ex_<agreement>_<topic>, or "
+            "03_pc_<agreement>_<from>_to_<to>."
         )
 
     return errors
 
 
-def assert_notebook_name_valid(name: str, allowed_prefixes: list[str]) -> None:
+def assert_notebook_name_valid(name: str, allowed_prefixes: list[str] | None = None) -> None:
     """Raise :class:`NotebookNamingError` when a notebook name is invalid.
 
     Parameters
     ----------
     name : str
         Notebook name.
-    allowed_prefixes : list[str]
-        Allowed naming prefixes.
+    allowed_prefixes : list[str] | None, optional
+        Optional legacy prefix list. When omitted, the finalized notebook model
+        is enforced.
 
     Raises
     ------
     NotebookNamingError
         If ``name`` fails :func:`validate_notebook_name` checks.
+
+    Examples
+    --------
+    >>> assert_notebook_name_valid("02_ex_email_metadata_event_logic")
+    >>> assert_notebook_name_valid("03_pc_email_metadata_source_to_unified")
     """
     errors = validate_notebook_name(name=name, allowed_prefixes=allowed_prefixes)
     if errors:
@@ -165,7 +197,7 @@ def build_runtime_context(
     ...     environment="Sandbox",
     ...     source_table="raw_orders",
     ...     target_table="clean_orders",
-    ...     notebook_name="dex_source_to_dex_unified_orders",
+    ...     notebook_name="03_pc_orders_source_to_product",
     ... )  # doctest: +SKIP
     {'dataset_name': 'orders', ...}
     """
@@ -281,4 +313,3 @@ def detect_dataframe_engine(df: Any) -> str:
         f"Could not detect dataframe engine for type '{module_name}.{class_name}'. "
         "Supported inputs are pandas DataFrame and Spark-like DataFrame objects."
     )
-

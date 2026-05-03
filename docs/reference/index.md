@@ -11,7 +11,7 @@ Generated step-first function catalogue sourced from `fabric_data_product_framew
 | [`check_fabric_ai_functions_available`](./step-01-purpose-setup/check_fabric_ai_functions_available/) | `ai` | Check whether Fabric AI Functions can be imported in the current runtime. | — | [module overview](../api/modules/ai/) |
 | [`configure_fabric_ai_functions`](./step-01-purpose-setup/configure_fabric_ai_functions/) | `ai` | Apply optional default Fabric AI Function configuration. | — | [module overview](../api/modules/ai/) |
 | [`generate_run_id`](./step-01-purpose-setup/generate_run_id/) | `runtime` | Generate a notebook-safe run identifier. | — | [module overview](../api/modules/runtime/) |
-| [`validate_notebook_name`](./step-01-purpose-setup/validate_notebook_name/) | `runtime` | Validate a Fabric notebook name against required prefixes and format. | — | [module overview](../api/modules/runtime/) |
+| [`validate_notebook_name`](./step-01-purpose-setup/validate_notebook_name/) | `runtime` | Validate notebook names against the framework workspace notebook model. | — | [module overview](../api/modules/runtime/) |
 
 ## Step 2: Fabric config and paths
 
