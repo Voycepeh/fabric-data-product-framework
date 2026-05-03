@@ -1,5 +1,8 @@
 # `quality` module
 
+!!! info "Module overview"
+    This page summarizes public callables and related internal helpers.
+
 ## Public callables from `__all__`
 
 | Callable | Type | Summary | Related helpers |

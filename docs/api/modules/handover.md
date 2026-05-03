@@ -1,5 +1,8 @@
 # `handover` module (internal)
 
+!!! warning "Internal-only module"
+    Not intended as a primary user-facing API surface.
+
 ## Public callables from `__all__`
 
 No public exports in this module.
