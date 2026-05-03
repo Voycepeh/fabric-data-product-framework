@@ -3,6 +3,7 @@
 Generated module summaries with public exports and related internal helpers.
 
 - [`config`](config.md) *(internal-only)*
+- [`docs_metadata`](docs_metadata.md) *(internal-only)*
 - [`drift`](drift.md)
 - [`fabric_io`](fabric_io.md)
 - [`governance`](governance.md)

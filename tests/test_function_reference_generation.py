@@ -3,7 +3,7 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 
-from scripts.generate_function_reference import PUBLIC_CALLABLE_STEP_REGISTRY, main as generate_reference
+from scripts.generate_function_reference import main as generate_reference
 
 ROOT = Path(__file__).resolve().parents[1]
 INIT_FILE = ROOT / "src" / "fabric_data_product_framework" / "__init__.py"
@@ -39,7 +39,7 @@ def test_every_public_export_is_listed_and_linked() -> None:
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     for name in public_exports():
         assert f"`{name}`" in content
-        assert "module API" in content
+        assert "module overview" in content
 
 
 def test_every_public_callable_has_docstring_first_sentence() -> None:
@@ -63,7 +63,6 @@ def test_step_specific_callable_placement() -> None:
     step3 = section(content, "Step 3: Pull source data")
     step10 = section(content, "Step 10: Standard technical columns")
     step11 = section(content, "Step 11: Output write, output profiling, and metadata logging")
-    other = section(content, "Other Utilities")
 
     assert "`lakehouse_table_read`" in step3
     assert "`lakehouse_table_read`" not in step1
@@ -75,26 +74,12 @@ def test_step_specific_callable_placement() -> None:
     assert "`warehouse_write`" in step11
     assert "`warehouse_write`" not in step1
     assert "`get_path`" in step2
-    assert "`add_audit_columns`" not in other
-    assert "`add_datetime_features`" not in other
-    assert "`add_hash_columns`" not in other
-    assert "`default_technical_columns`" not in other
 
 
-def test_not_all_public_exports_land_in_other_utilities() -> None:
+def test_metadata_driven_summary_override_is_applied() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
-    other_section = content.split("## Other Utilities", 1)[1] if "## Other Utilities" in content else ""
-    other_count = sum(1 for name in public_exports() if f"`{name}`" in other_section)
-    assert other_count < len(public_exports())
-
-
-def test_at_least_one_callable_uses_explicit_override() -> None:
-    generate_reference()
-    content = REFERENCE_FILE.read_text(encoding="utf-8")
-    override_symbols = [name for name in public_exports() if name in PUBLIC_CALLABLE_STEP_REGISTRY]
-    assert override_symbols
-    assert any(f"`{name}`" in content for name in override_symbols)
+    assert "Run the framework pipeline end-to-end for a data product." in content
 
 
 def test_generated_docs_are_multiline_readable() -> None:

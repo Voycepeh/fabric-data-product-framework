@@ -53,7 +53,6 @@ No public callable currently mapped to this step.
 | Function / class | Module | Purpose | Related helpers | Module page |
 |---|---|---|---|---|
 | [`load_data_contract`](./step-07-ai-rule-generation-review/load_data_contract.md) | `quality` | Load data contract. | — | [module overview](../api/modules/quality.md) |
-| [`run_data_product`](./step-07-ai-rule-generation-review/run_data_product.md) | `quality` | Run data product. | [`_effective_contract_dict`](./internal/quality/_effective_contract_dict.md) (internal), [`_refresh_mode`](./internal/quality/_refresh_mode.md) (internal), [`_runtime_validation_contract`](./internal/quality/_runtime_validation_contract.md) (internal), [`_write_dataframe_to_table`](./internal/quality/_write_dataframe_to_table.md) (internal), [`_write_records_spark`](./internal/quality/_write_records_spark.md) (internal) | [module overview](../api/modules/quality.md) |
 | [`run_quality_rules`](./step-07-ai-rule-generation-review/run_quality_rules.md) | `quality` | Run quality rules. | [`_normalize_severity`](./internal/quality/_normalize_severity.md) (internal), [`_now_iso`](./internal/quality/_now_iso.md) (internal), [`_pandas_rule`](./internal/quality/_pandas_rule.md) (internal), [`_resolve_engine`](./internal/quality/_resolve_engine.md) (internal), [`_result_from_counts`](./internal/quality/_result_from_counts.md) (internal), [`_spark_rule`](./internal/quality/_spark_rule.md) (internal), [`_to_jsonable`](./internal/quality/_to_jsonable.md) (internal) | [module overview](../api/modules/quality.md) |
 
 ## Step 8: Schema/profile/data drift checks
@@ -67,7 +66,9 @@ No public callable currently mapped to this step.
 
 ## Step 9: Core transformation
 
-No public callable currently mapped to this step.
+| Function / class | Module | Purpose | Related helpers | Module page |
+|---|---|---|---|---|
+| [`run_data_product`](./step-09-core-transformation-business-logic/run_data_product.md) | `quality` | Run the framework pipeline end-to-end for a data product. | [`_effective_contract_dict`](./internal/quality/_effective_contract_dict.md) (internal), [`_refresh_mode`](./internal/quality/_refresh_mode.md) (internal), [`_runtime_validation_contract`](./internal/quality/_runtime_validation_contract.md) (internal), [`_write_dataframe_to_table`](./internal/quality/_write_dataframe_to_table.md) (internal), [`_write_records_spark`](./internal/quality/_write_records_spark.md) (internal) | [module overview](../api/modules/quality.md) |
 
 ## Step 10: Standard technical columns
 
@@ -83,7 +84,7 @@ No public callable currently mapped to this step.
 | Function / class | Module | Purpose | Related helpers | Module page |
 |---|---|---|---|---|
 | [`build_dataset_run_record`](./step-11-output-write-metadata-logging/build_dataset_run_record.md) | `metadata` | Build dataset run record. | — | [module overview](../api/modules/metadata.md) |
-| [`build_quality_result_records`](./step-11-output-write-metadata-logging/build_quality_result_records.md) | `quality` | Build quality result records. | [`_to_jsonable`](./internal/quality/_to_jsonable.md) (internal) | [module overview](../api/modules/quality.md) |
+| [`build_quality_result_records`](./step-11-output-write-metadata-logging/build_quality_result_records.md) | `metadata` | Build quality result records. | — | [module overview](../api/modules/metadata.md) |
 | [`build_schema_drift_records`](./step-11-output-write-metadata-logging/build_schema_drift_records.md) | `metadata` | Build schema drift records. | — | [module overview](../api/modules/metadata.md) |
 | [`build_schema_snapshot_records`](./step-11-output-write-metadata-logging/build_schema_snapshot_records.md) | `metadata` | Build schema snapshot records. | — | [module overview](../api/modules/metadata.md) |
 | [`lakehouse_table_write`](./step-11-output-write-metadata-logging/lakehouse_table_write.md) | `fabric_io` | Write a Spark DataFrame to a Fabric lakehouse Delta table. | — | [module overview](../api/modules/fabric_io.md) |

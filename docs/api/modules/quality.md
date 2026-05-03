@@ -8,9 +8,8 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`build_quality_result_records`](#build_quality_result_records) | function | Build quality result records. | [`_to_jsonable`](../../reference/internal/quality/_to_jsonable.md) (internal) |
 | [`load_data_contract`](#load_data_contract) | function | Load data contract. | — |
-| [`run_data_product`](#run_data_product) | function | Run data product. | [`_effective_contract_dict`](../../reference/internal/quality/_effective_contract_dict.md) (internal), [`_refresh_mode`](../../reference/internal/quality/_refresh_mode.md) (internal), [`_runtime_validation_contract`](../../reference/internal/quality/_runtime_validation_contract.md) (internal), [`_write_dataframe_to_table`](../../reference/internal/quality/_write_dataframe_to_table.md) (internal), [`_write_records_spark`](../../reference/internal/quality/_write_records_spark.md) (internal) |
+| [`run_data_product`](#run_data_product) | function | Run the framework pipeline end-to-end for a data product. | [`_effective_contract_dict`](../../reference/internal/quality/_effective_contract_dict.md) (internal), [`_refresh_mode`](../../reference/internal/quality/_refresh_mode.md) (internal), [`_runtime_validation_contract`](../../reference/internal/quality/_runtime_validation_contract.md) (internal), [`_write_dataframe_to_table`](../../reference/internal/quality/_write_dataframe_to_table.md) (internal), [`_write_records_spark`](../../reference/internal/quality/_write_records_spark.md) (internal) |
 | [`run_quality_rules`](#run_quality_rules) | function | Run quality rules. | [`_normalize_severity`](../../reference/internal/quality/_normalize_severity.md) (internal), [`_now_iso`](../../reference/internal/quality/_now_iso.md) (internal), [`_pandas_rule`](../../reference/internal/quality/_pandas_rule.md) (internal), [`_resolve_engine`](../../reference/internal/quality/_resolve_engine.md) (internal), [`_result_from_counts`](../../reference/internal/quality/_result_from_counts.md) (internal), [`_spark_rule`](../../reference/internal/quality/_spark_rule.md) (internal), [`_to_jsonable`](../../reference/internal/quality/_to_jsonable.md) (internal) |
 
 ## Internal helpers (module-level)
@@ -40,7 +39,7 @@
 | [`_skipped`](../../reference/internal/quality/_skipped.md) | — |
 | [`_spark_rule`](../../reference/internal/quality/_spark_rule.md) | `run_quality_rules` |
 | [`_strip_json_fences`](../../reference/internal/quality/_strip_json_fences.md) | — |
-| [`_to_jsonable`](../../reference/internal/quality/_to_jsonable.md) | `build_quality_result_records`, `run_quality_rules` |
+| [`_to_jsonable`](../../reference/internal/quality/_to_jsonable.md) | `run_quality_rules` |
 | [`_write_dataframe_to_table`](../../reference/internal/quality/_write_dataframe_to_table.md) | `run_data_product` |
 | [`_write_records_spark`](../../reference/internal/quality/_write_records_spark.md) | `run_data_product` |
 

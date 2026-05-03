@@ -8,6 +8,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 PKG_DIR = ROOT / "src" / "fabric_data_product_framework"
 INIT_PATH = PKG_DIR / "__init__.py"
+DOCS_METADATA_PATH = PKG_DIR / "docs_metadata.py"
 REFERENCE_PATH = ROOT / "docs" / "reference" / "index.md"
 MODULE_DIR = ROOT / "docs" / "api" / "modules"
 REFERENCE_STEP_SLUGS = {
@@ -29,61 +30,6 @@ REFERENCE_STEP_SLUGS = {
 STEP_FALLBACK_NOTES = {
     5: "No public callable is currently exported for this step. Use notebook prompts for AI-assisted rule drafting.",
 }
-
-PUBLIC_CALLABLE_STEP_REGISTRY = {
-    "validate_notebook_name": 1,
-    "assert_notebook_name_valid": 1,
-    "build_runtime_context": 1,
-    "generate_run_id": 1,
-    "Housepath": 2,
-    "load_fabric_config": 2,
-    "get_path": 2,
-    "lakehouse_table_read": 3,
-    "lakehouse_csv_read": 3,
-    "lakehouse_excel_read_as_spark": 3,
-    "lakehouse_parquet_read_as_spark": 3,
-    "warehouse_read": 3,
-    "profile_dataframe": 4,
-    "profile_dataframe_to_metadata": 4,
-    "profile_metadata_to_records": 4,
-    "build_ai_quality_context": 4,
-    "build_dataset_run_record": 11,
-    "build_schema_snapshot_records": 11,
-    "build_schema_drift_records": 11,
-    "build_quality_result_records": 11,
-    "write_metadata_records": 11,
-    "write_multiple_metadata_outputs": 11,
-    "run_quality_rules": 7,
-    "load_data_contract": 7,
-    "check_schema_drift": 8,
-    "check_profile_drift": 8,
-    "check_partition_drift": 8,
-    "summarize_drift_results": 8,
-    "default_technical_columns": 10,
-    "add_datetime_features": 10,
-    "add_audit_columns": 10,
-    "add_hash_columns": 10,
-    "lakehouse_table_write": 11,
-    "warehouse_write": 11,
-    "classify_column": 12,
-    "classify_columns": 12,
-    "build_governance_classification_records": 12,
-    "write_governance_classifications": 12,
-    "summarize_governance_classifications": 12,
-    "build_lineage_records": 13,
-    "scan_notebook_lineage": 12,
-    "scan_notebook_cells": 12,
-    "enrich_lineage_steps_with_ai": 12,
-    "fallback_copilot_lineage_prompt": 12,
-    "validate_lineage_steps": 12,
-    "build_lineage_record_from_steps": 12,
-    "build_lineage_from_notebook_code": 12,
-    "build_lineage_handover_markdown": 12,
-    "plot_lineage_steps": 12,
-                "build_run_summary": 13,
-    "render_run_summary_markdown": 13,
-}
-
 
 @dataclass
 class Symbol:
@@ -156,13 +102,19 @@ def parse_step_registry() -> list[dict[str, Any]]:
     return []
 
 
-def resolve_step(symbol: Symbol, step_modules: dict[int, list[str]]) -> int | None:
-    if symbol.name in PUBLIC_CALLABLE_STEP_REGISTRY:
-        return PUBLIC_CALLABLE_STEP_REGISTRY[symbol.name]
-    for step, modules in step_modules.items():
-        if symbol.module in modules:
-            return step
-    return None
+def parse_docs_metadata() -> dict[str, dict[str, Any]]:
+    tree = ast.parse(DOCS_METADATA_PATH.read_text(encoding="utf-8"))
+    for node in tree.body:
+        is_assign = isinstance(node, ast.Assign) and any(
+            isinstance(t, ast.Name) and t.id == "PUBLIC_SYMBOL_DOCS" for t in node.targets
+        )
+        is_annassign = (
+            isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and node.target.id == "PUBLIC_SYMBOL_DOCS"
+        )
+        if (is_assign or is_annassign) and node.value is not None:
+            rows = ast.literal_eval(node.value)
+            return {row["symbol_name"]: row for row in rows}
+    raise RuntimeError("Could not parse PUBLIC_SYMBOL_DOCS from docs_metadata.py")
 
 
 def internal_helper_link(module: str, helper: str) -> str:
@@ -185,17 +137,31 @@ def main() -> None:
                 break
 
     step_registry = parse_step_registry()
-    step_modules = {s["step_number"]: s["canonical_modules"] for s in step_registry}
+    docs_metadata = parse_docs_metadata()
     step_titles = {s["step_number"]: s["step_name"] for s in step_registry}
     step_symbols: dict[int, list[Symbol]] = {s["step_number"]: [] for s in step_registry}
-    other: list[Symbol] = []
+
+    missing_metadata = sorted(name for name in public if name not in docs_metadata)
+    if missing_metadata:
+        raise RuntimeError("Missing PUBLIC_SYMBOL_DOCS entries for exported symbols: " + ", ".join(missing_metadata))
+
+    unknown_metadata = sorted(name for name in docs_metadata if name not in public)
+    if unknown_metadata:
+        raise RuntimeError("PUBLIC_SYMBOL_DOCS contains symbols not exported in __all__: " + ", ".join(unknown_metadata))
 
     for symbol in symbol_map.values():
-        step = resolve_step(symbol, step_modules)
-        if step is None:
-            other.append(symbol)
-        else:
-            step_symbols[step].append(symbol)
+        meta = docs_metadata[symbol.name]
+        if meta["module"] != symbol.module:
+            raise RuntimeError(
+                f"Metadata module mismatch for {symbol.name}: expected {symbol.module}, found {meta['module']}"
+            )
+        if meta["kind"] != symbol.obj_type:
+            raise RuntimeError(f"Metadata kind mismatch for {symbol.name}: expected {symbol.obj_type}, found {meta['kind']}")
+        step = meta["workflow_step"]
+        if step not in step_symbols:
+            raise RuntimeError(f"Invalid workflow_step {step} for {symbol.name}; expected one of {sorted(step_symbols)}")
+        symbol.summary = meta.get("summary_override") or symbol.summary
+        step_symbols[step].append(symbol)
 
     MODULE_DIR.mkdir(parents=True, exist_ok=True)
     module_index_lines = ["# Module API Catalogue", "", "Generated module summaries with public exports and related internal helpers.", ""]
@@ -272,11 +238,6 @@ def main() -> None:
             if step in STEP_FALLBACK_NOTES:
                 ref.extend(["", STEP_FALLBACK_NOTES[step]])
         ref.append("")
-    if other:
-        ref.extend(["## Other Utilities", ""])
-        for s in sorted(other, key=lambda x: x.name.lower()):
-            ref.append(f"- [`{s.name}`](./other-utilities/{s.name}.md) (`{s.module}`) → [module overview](../api/modules/{s.module}.md)")
-
     REFERENCE_PATH.parent.mkdir(parents=True, exist_ok=True)
     REFERENCE_PATH.write_text("\n".join(ref) + "\n", encoding="utf-8", newline="\n")
 
