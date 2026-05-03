@@ -113,6 +113,14 @@ def test_docs_metadata_matches_public_exports() -> None:
     assert metadata_symbols - exports == set()
 
 
+def test_build_quality_result_records_metadata_module_matches_exported_symbol_module() -> None:
+    import fabric_data_product_framework as fdpf
+
+    metadata_row = next(row for row in public_symbol_docs() if row["symbol_name"] == "build_quality_result_records")
+    exported_module = getattr(fdpf.build_quality_result_records, "__module__", "").split(".")[-1]
+    assert metadata_row["module"] == exported_module
+
+
 def test_invalid_workflow_step_fails_loudly(monkeypatch) -> None:
     from scripts import generate_function_reference as gen
 
