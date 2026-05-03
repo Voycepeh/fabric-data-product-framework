@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -60,6 +61,10 @@ class Symbol:
     module: str
     obj_type: str
     summary: str
+    is_public: bool
+    is_deprecated: bool
+    related_public: set[str]
+
 
 
 def first_sentence(doc: str | None) -> str:
@@ -69,15 +74,39 @@ def first_sentence(doc: str | None) -> str:
     return line.split(".")[0].strip() + ("." if "." in line else "")
 
 
+
+def is_dataclass_node(node: ast.ClassDef) -> bool:
+    for deco in node.decorator_list:
+        if isinstance(deco, ast.Name) and deco.id == "dataclass":
+            return True
+        if isinstance(deco, ast.Attribute) and deco.attr == "dataclass":
+            return True
+        if isinstance(deco, ast.Call):
+            if isinstance(deco.func, ast.Name) and deco.func.id == "dataclass":
+                return True
+            if isinstance(deco.func, ast.Attribute) and deco.func.attr == "dataclass":
+                return True
+    return False
+
+
+
+def slug(name: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+
+
+
 def parse_module(path: Path) -> dict[str, Any]:
     tree = ast.parse(path.read_text(encoding="utf-8"))
-    functions: dict[str, str] = {}
-    classes: dict[str, str] = {}
+    symbols: dict[str, dict[str, Any]] = {}
     calls: dict[str, set[str]] = {}
-    used_by: dict[str, set[str]] = {}
+
     for node in tree.body:
         if isinstance(node, ast.FunctionDef):
-            functions[node.name] = first_sentence(ast.get_docstring(node))
+            symbols[node.name] = {
+                "summary": first_sentence(ast.get_docstring(node)),
+                "obj_type": "Function",
+                "doc": ast.get_docstring(node) or "",
+            }
             called = set()
             for child in ast.walk(node):
                 if isinstance(child, ast.Call):
@@ -87,13 +116,21 @@ def parse_module(path: Path) -> dict[str, Any]:
                         called.add(child.func.attr)
             calls[node.name] = called
         elif isinstance(node, ast.ClassDef):
-            classes[node.name] = first_sentence(ast.get_docstring(node))
-    names = set(functions) | set(classes)
+            typ = "Dataclass" if is_dataclass_node(node) else "Class"
+            symbols[node.name] = {
+                "summary": first_sentence(ast.get_docstring(node)),
+                "obj_type": typ,
+                "doc": ast.get_docstring(node) or "",
+            }
+
+    names = set(symbols)
+    used_by: dict[str, set[str]] = {name: set() for name in names}
     for caller, callees in calls.items():
-        for callee in names:
-            if callee in callees:
+        for callee in callees:
+            if callee in names:
                 used_by.setdefault(callee, set()).add(caller)
-    return {"functions": functions, "classes": classes, "calls": calls, "used_by": used_by}
+
+    return {"symbols": symbols, "calls": calls, "used_by": used_by}
 
 
 def parse_public_exports() -> list[str]:
@@ -135,18 +172,27 @@ def resolve_step(symbol: Symbol, step_modules: dict[int, list[str]]) -> int | No
 
 
 def main() -> None:
-    public = parse_public_exports()
+    public = set(parse_public_exports())
     module_data = {p.stem: parse_module(p) for p in PKG_DIR.glob("*.py") if p.name != "__init__.py"}
 
     symbol_map: dict[str, Symbol] = {}
-    for name in public:
-        for module, info in module_data.items():
-            if name in info["functions"]:
-                symbol_map[name] = Symbol(name, module, "function", info["functions"][name])
-                break
-            if name in info["classes"]:
-                symbol_map[name] = Symbol(name, module, "class", info["classes"][name])
-                break
+    for module, info in module_data.items():
+        for name, meta in info["symbols"].items():
+            symbol_map[f"{module}.{name}"] = Symbol(
+                name=name,
+                module=module,
+                obj_type=meta["obj_type"],
+                summary=meta["summary"],
+                is_public=name in public,
+                is_deprecated="deprecated" in meta["doc"].lower(),
+                related_public=set(),
+            )
+
+    for module, info in module_data.items():
+        for name in info["symbols"]:
+            users = info["used_by"].get(name, set())
+            related_public = {u for u in users if f"{module}.{u}" in symbol_map and symbol_map[f"{module}.{u}"].is_public}
+            symbol_map[f"{module}.{name}"].related_public = related_public
 
     step_registry = parse_step_registry()
     step_modules = {s["step_number"]: s["canonical_modules"] for s in step_registry}
@@ -154,7 +200,8 @@ def main() -> None:
     step_symbols: dict[int, list[Symbol]] = {s["step_number"]: [] for s in step_registry}
     other: list[Symbol] = []
 
-    for symbol in symbol_map.values():
+    public_symbols = [s for s in symbol_map.values() if s.is_public]
+    for symbol in public_symbols:
         step = resolve_step(symbol, step_modules)
         if step is None:
             other.append(symbol)
@@ -162,31 +209,76 @@ def main() -> None:
             step_symbols[step].append(symbol)
 
     MODULE_DIR.mkdir(parents=True, exist_ok=True)
-    module_index_lines = ["# Module API Catalogue", "", "Generated module summaries with public exports and related internal helpers.", ""]
+    module_index_lines = [
+        "# Module API Catalogue",
+        "",
+        "Generated module summaries with public exports and related internal helpers.",
+        "",
+        "| Module | Public callable count | Internal helper count | Main workflow step(s) | Description | Link |",
+        "|---|---:|---:|---|---|---|",
+    ]
+
     for module in sorted(module_data):
         info = module_data[module]
         module_md = MODULE_DIR / f"{module}.md"
-        public_in_module = [s for s in symbol_map.values() if s.module == module]
-        lines = [f"# `{module}` module", "", "## Public callables from `__all__`", ""]
+        module_symbols = [s for s in symbol_map.values() if s.module == module]
+        public_in_module = [s for s in module_symbols if s.is_public]
+        related_helpers = [s for s in module_symbols if (not s.is_public and bool(s.related_public))]
+        other_internal = [s for s in module_symbols if (not s.is_public and not s.related_public)]
+        deprecated_count = sum(1 for s in module_symbols if s.is_deprecated)
+
+        lines = [f"# `{module}` module", "", "## Module contents", ""]
+        lines.append(f"- Public callables: {len(public_in_module)}")
+        lines.append(f"- Related internal helpers: {len(related_helpers)}")
+        lines.append(f"- Other internal objects: {len(other_internal)}")
+        lines.append(f"- Deprecated objects: {deprecated_count}")
+        if not public_in_module:
+            lines.append("- **Internal module: no public exports from `__all__`.**")
+        lines.extend(["", "| Name | Status | Type | Purpose | Used by / related public callable | API link |", "|---|---|---|---|---|---|"])
+
+        for s in sorted(module_symbols, key=lambda x: x.name.lower()):
+            if s.is_deprecated:
+                status = "Deprecated"
+            elif s.is_public:
+                status = "Public"
+            elif s.related_public:
+                status = "Internal helper"
+            else:
+                status = "Internal"
+            anchor = slug(s.name)
+            related = ", ".join(f"[`{u}`](#{slug(u)})" for u in sorted(s.related_public)) if s.related_public else "—"
+            lines.append(
+                f"| [`{s.name}`](#{anchor}) | {status} | {s.obj_type} | {s.summary or '—'} | {related} | [Jump](#{anchor}) |"
+            )
+
+        lines.extend(["", "## Public callables from `__all__`", ""])
         if public_in_module:
             lines.extend(["| Callable | Type | Summary | Related helpers |", "|---|---|---|---|"])
             for s in sorted(public_in_module, key=lambda x: x.name.lower()):
-                related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
-                lines.append(f"| `{s.name}` | {s.obj_type} | {s.summary or '—'} | {', '.join(f'`{r}` (internal)' for r in related) or '—'} |")
+                related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["symbols"] and not c.startswith("__") and c != s.name and not symbol_map[f"{module}.{c}"].is_public])
+                lines.append(f"| [`{s.name}`](#{slug(s.name)}) | {s.obj_type} | {s.summary or '—'} | {', '.join(f'[`{r}`](#{slug(r)})' for r in related) or '—'} |")
         else:
             lines.append("No public exports in this module.")
-        lines.extend(["", "## Internal helpers (module-level)", ""])
-        internal_fns = sorted([f for f in info["functions"] if f.startswith("_")])
-        if internal_fns:
+
+        lines.extend(["", "## Related internal helpers", ""])
+        if related_helpers:
             lines.extend(["| Helper | Related public callables |", "|---|---|"])
-            for helper in internal_fns:
-                users = sorted([u for u in info["used_by"].get(helper, set()) if u in {p.name for p in public_in_module}])
-                lines.append(f"| `{helper}` | {', '.join(f'`{u}`' for u in users) or '—'} |")
+            for helper in sorted(related_helpers, key=lambda x: x.name.lower()):
+                users = ", ".join(f"[`{u}`](#{slug(u)})" for u in sorted(helper.related_public))
+                lines.append(f"| [`{helper.name}`](#{slug(helper.name)}) | {users or '—'} |")
         else:
-            lines.append("No module-level internal helpers detected.")
+            lines.append("No related internal helpers detected.")
+
         lines.extend(["", "## Full module API", "", f"::: fabric_data_product_framework.{module}"])
         module_md.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
-        module_index_lines.append(f"- [`{module}`]({module}.md)")
+
+        module_steps = sorted({resolve_step(s, step_modules) for s in public_in_module if resolve_step(s, step_modules) is not None})
+        step_labels = ", ".join(f"Step {n}" for n in module_steps) if module_steps else "Internal / not mapped"
+        desc = next((s.summary for s in sorted(public_in_module, key=lambda x: x.name.lower()) if s.summary), "Internal utility module")
+        label = f"`{module}`" if public_in_module else f"`{module}` (internal)"
+        module_index_lines.append(
+            f"| {label} | {len(public_in_module)} | {len(related_helpers)} | {step_labels} | {desc} | [Open]({module}.md) |"
+        )
 
     (MODULE_DIR / "index.md").write_text("\n".join(module_index_lines) + "\n", encoding="utf-8", newline="\n")
 
@@ -199,9 +291,9 @@ def main() -> None:
             ref.extend(["| Function / class | Module | Purpose | Related helpers | API link |", "|---|---|---|---|---|"])
             for s in entries:
                 info = module_data[s.module]
-                related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
+                related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["symbols"] and not symbol_map[f"{s.module}.{c}"].is_public])
                 ref.append(
-                    f"| `{s.name}` | `{s.module}` | {s.summary or '—'} | {', '.join(f'`{r}` (internal)' for r in related) or '—'} | [module API](../api/modules/{s.module}.md) |"
+                    f"| [`{s.name}`](../api/modules/{s.module}.md#{slug(s.name)}) | [`{s.module}`](../api/modules/{s.module}.md) | {s.summary or '—'} | {', '.join(f'[`{r}`](../api/modules/{s.module}.md#{slug(r)})' for r in related) or '—'} | [API anchor](../api/modules/{s.module}.md#{slug(s.name)}) · [Module](../api/modules/{s.module}.md) |"
                 )
         else:
             ref.append("No public callable currently mapped to this step.")
@@ -211,7 +303,7 @@ def main() -> None:
     if other:
         ref.extend(["## Other Utilities", ""])
         for s in sorted(other, key=lambda x: x.name.lower()):
-            ref.append(f"- `{s.name}` (`{s.module}`) → [module API](../api/modules/{s.module}.md)")
+            ref.append(f"- [`{s.name}`](../api/modules/{s.module}.md#{slug(s.name)}) ([`{s.module}`](../api/modules/{s.module}.md))")
 
     REFERENCE_PATH.parent.mkdir(parents=True, exist_ok=True)
     REFERENCE_PATH.write_text("\n".join(ref) + "\n", encoding="utf-8", newline="\n")
