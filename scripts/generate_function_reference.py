@@ -247,6 +247,10 @@ def main() -> None:
     (MODULE_DIR / "index.md").write_text("\n".join(module_index_lines) + "\n", encoding="utf-8", newline="\n")
 
     ref = ["# Callable Functions", "", "Generated step-first catalogue of callable functions sourced from `fabricops_kit.__all__`.", ""]
+    ref.extend(["## Modules", "", "| Module | Link |", "|---|---|"])
+    for module in sorted(module_data):
+        ref.append(f"| `{module}` | [Open module overview](../api/modules/{module}/) |")
+    ref.append("")
     for step in sorted(step_titles):
         ref.append(f"## Step {step}: {step_titles[step]}")
         ref.append("")

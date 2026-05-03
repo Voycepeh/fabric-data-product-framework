@@ -2,6 +2,25 @@
 
 Generated step-first catalogue of callable functions sourced from `fabricops_kit.__all__`.
 
+## Modules
+
+| Module | Link |
+|---|---|
+| `ai` | [Open module overview](../api/modules/ai/) |
+| `config` | [Open module overview](../api/modules/config/) |
+| `docs_metadata` | [Open module overview](../api/modules/docs_metadata/) |
+| `drift` | [Open module overview](../api/modules/drift/) |
+| `fabric_io` | [Open module overview](../api/modules/fabric_io/) |
+| `governance` | [Open module overview](../api/modules/governance/) |
+| `handover` | [Open module overview](../api/modules/handover/) |
+| `lineage` | [Open module overview](../api/modules/lineage/) |
+| `metadata` | [Open module overview](../api/modules/metadata/) |
+| `profiling` | [Open module overview](../api/modules/profiling/) |
+| `quality` | [Open module overview](../api/modules/quality/) |
+| `run_summary` | [Open module overview](../api/modules/run_summary/) |
+| `runtime` | [Open module overview](../api/modules/runtime/) |
+| `technical_columns` | [Open module overview](../api/modules/technical_columns/) |
+
 ## Step 1: Package and runtime setup
 
 | Function / class | Module | Purpose | Related helpers | Module page |
