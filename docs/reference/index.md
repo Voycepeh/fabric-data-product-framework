@@ -8,6 +8,8 @@ Generated step-first function catalogue sourced from `fabric_data_product_framew
 |---|---|---|---|---|
 | [`assert_notebook_name_valid`](./step-01-purpose-setup/assert_notebook_name_valid/) | `runtime` | Raise :class:`NotebookNamingError` when a notebook name is invalid. | — | [module overview](../api/modules/runtime/) |
 | [`build_runtime_context`](./step-01-purpose-setup/build_runtime_context/) | `runtime` | Build a standard runtime context dictionary for Fabric notebooks. | — | [module overview](../api/modules/runtime/) |
+| [`check_fabric_ai_functions_available`](./step-01-purpose-setup/check_fabric_ai_functions_available/) | `ai` | Check whether Fabric AI Functions can be imported in the current runtime. | — | [module overview](../api/modules/ai/) |
+| [`configure_fabric_ai_functions`](./step-01-purpose-setup/configure_fabric_ai_functions/) | `ai` | Apply optional default Fabric AI Function configuration. | — | [module overview](../api/modules/ai/) |
 | [`generate_run_id`](./step-01-purpose-setup/generate_run_id/) | `runtime` | Generate a notebook-safe run identifier. | — | [module overview](../api/modules/runtime/) |
 | [`validate_notebook_name`](./step-01-purpose-setup/validate_notebook_name/) | `runtime` | Validate a Fabric notebook name against required prefixes and format. | — | [module overview](../api/modules/runtime/) |
 
@@ -40,9 +42,11 @@ Generated step-first function catalogue sourced from `fabric_data_product_framew
 
 ## Step 5: AI assisted DQ rule drafting
 
-No public callable currently mapped to this step.
-
-No public callable is currently exported for this step. Use notebook prompts for AI-assisted rule drafting.
+| Function / class | Module | Purpose | Related helpers | Module page |
+|---|---|---|---|---|
+| [`build_dq_rule_candidate_prompt`](./step-05-source-profiling-metadata/build_dq_rule_candidate_prompt/) | `ai` | Build standardized prompt text for AI-assisted DQ candidate generation. | — | [module overview](../api/modules/ai/) |
+| [`build_manual_dq_rule_prompt_package`](./step-05-source-profiling-metadata/build_manual_dq_rule_prompt_package/) | `ai` | Build copy/paste prompt package for manual DQ candidate generation. | [`_compact_sample_rows`](./internal/ai/_compact_sample_rows.md) (internal) | [module overview](../api/modules/ai/) |
+| [`generate_dq_rule_candidates_with_fabric_ai`](./step-05-source-profiling-metadata/generate_dq_rule_candidates_with_fabric_ai/) | `ai` | Execute Fabric AI Functions to append DQ candidate suggestions to a DataFrame. | [`_require_fabric_ai_dataframe`](./internal/ai/_require_fabric_ai_dataframe.md) (internal) | [module overview](../api/modules/ai/) |
 
 ## Step 6: Human review of rules and metadata
 
@@ -52,11 +56,6 @@ No public callable currently mapped to this step.
 
 | Function / class | Module | Purpose | Related helpers | Module page |
 |---|---|---|---|---|
-| [`build_dq_rule_candidate_prompt`](./step-07-ai-rule-generation-review/build_dq_rule_candidate_prompt/) | `ai` | Build standardized prompt text for AI-assisted DQ candidate generation. | — | [module overview](../api/modules/ai/) |
-| [`build_manual_dq_rule_prompt_package`](./step-07-ai-rule-generation-review/build_manual_dq_rule_prompt_package/) | `ai` | Build copy/paste prompt package for manual DQ candidate generation. | [`_compact_sample_rows`](./internal/ai/_compact_sample_rows.md) (internal) | [module overview](../api/modules/ai/) |
-| [`check_fabric_ai_functions_available`](./step-07-ai-rule-generation-review/check_fabric_ai_functions_available/) | `ai` | Check whether Fabric AI Functions can be imported in the current runtime. | — | [module overview](../api/modules/ai/) |
-| [`configure_fabric_ai_functions`](./step-07-ai-rule-generation-review/configure_fabric_ai_functions/) | `ai` | Apply optional default Fabric AI Function configuration. | — | [module overview](../api/modules/ai/) |
-| [`generate_dq_rule_candidates_with_fabric_ai`](./step-07-ai-rule-generation-review/generate_dq_rule_candidates_with_fabric_ai/) | `ai` | Execute Fabric AI Functions to append DQ candidate suggestions to a DataFrame. | [`_require_fabric_ai_dataframe`](./internal/ai/_require_fabric_ai_dataframe.md) (internal) | [module overview](../api/modules/ai/) |
 | [`load_data_contract`](./step-07-ai-rule-generation-review/load_data_contract/) | `quality` | Load data contract. | — | [module overview](../api/modules/quality/) |
 | [`run_quality_rules`](./step-07-ai-rule-generation-review/run_quality_rules/) | `quality` | Run quality rules. | [`_normalize_severity`](./internal/quality/_normalize_severity.md) (internal), [`_now_iso`](./internal/quality/_now_iso.md) (internal), [`_pandas_rule`](./internal/quality/_pandas_rule.md) (internal), [`_resolve_engine`](./internal/quality/_resolve_engine.md) (internal), [`_result_from_counts`](./internal/quality/_result_from_counts.md) (internal), [`_spark_rule`](./internal/quality/_spark_rule.md) (internal), [`_to_jsonable`](./internal/quality/_to_jsonable.md) (internal) | [module overview](../api/modules/quality/) |
 
