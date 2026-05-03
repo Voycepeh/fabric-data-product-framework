@@ -52,9 +52,11 @@ No public callable currently mapped to this step.
 
 | Function / class | Module | Purpose | Related helpers | Module page |
 |---|---|---|---|---|
-| [`check_fabric_ai_functions_available`](./step-07-ai-rule-generation-review/check_fabric_ai_functions_available/) | `ai` | Best-effort check for Fabric AI Functions availability. | — | [module overview](../api/modules/ai/) |
-| [`configure_fabric_ai_functions`](./step-07-ai-rule-generation-review/configure_fabric_ai_functions/) | `ai` | Configure Fabric AI Functions default settings when available. | — | [module overview](../api/modules/ai/) |
-| [`generate_dq_rule_candidates_with_fabric_ai`](./step-07-ai-rule-generation-review/generate_dq_rule_candidates_with_fabric_ai/) | `ai` | Generate DQ candidate suggestions as an enriched DataFrame. | [`_require_fabric_ai_dataframe`](./internal/ai/_require_fabric_ai_dataframe.md) (internal) | [module overview](../api/modules/ai/) |
+| [`build_dq_rule_candidate_prompt`](./step-07-ai-rule-generation-review/build_dq_rule_candidate_prompt/) | `ai` | — | — | [module overview](../api/modules/ai/) |
+| [`build_manual_dq_rule_prompt_package`](./step-07-ai-rule-generation-review/build_manual_dq_rule_prompt_package/) | `ai` | — | [`_compact_sample_rows`](./internal/ai/_compact_sample_rows.md) (internal) | [module overview](../api/modules/ai/) |
+| [`check_fabric_ai_functions_available`](./step-07-ai-rule-generation-review/check_fabric_ai_functions_available/) | `ai` | — | — | [module overview](../api/modules/ai/) |
+| [`configure_fabric_ai_functions`](./step-07-ai-rule-generation-review/configure_fabric_ai_functions/) | `ai` | — | — | [module overview](../api/modules/ai/) |
+| [`generate_dq_rule_candidates_with_fabric_ai`](./step-07-ai-rule-generation-review/generate_dq_rule_candidates_with_fabric_ai/) | `ai` | — | [`_require_fabric_ai_dataframe`](./internal/ai/_require_fabric_ai_dataframe.md) (internal) | [module overview](../api/modules/ai/) |
 | [`load_data_contract`](./step-07-ai-rule-generation-review/load_data_contract/) | `quality` | Load data contract. | — | [module overview](../api/modules/quality/) |
 | [`run_quality_rules`](./step-07-ai-rule-generation-review/run_quality_rules/) | `quality` | Run quality rules. | [`_normalize_severity`](./internal/quality/_normalize_severity.md) (internal), [`_now_iso`](./internal/quality/_now_iso.md) (internal), [`_pandas_rule`](./internal/quality/_pandas_rule.md) (internal), [`_resolve_engine`](./internal/quality/_resolve_engine.md) (internal), [`_result_from_counts`](./internal/quality/_result_from_counts.md) (internal), [`_spark_rule`](./internal/quality/_spark_rule.md) (internal), [`_to_jsonable`](./internal/quality/_to_jsonable.md) (internal) | [module overview](../api/modules/quality/) |
 
@@ -99,15 +101,17 @@ No public callable currently mapped to this step.
 
 | Function / class | Module | Purpose | Related helpers | Module page |
 |---|---|---|---|---|
+| [`build_governance_candidate_prompt`](./step-12-governance-classification/build_governance_candidate_prompt/) | `ai` | — | — | [module overview](../api/modules/ai/) |
 | [`build_governance_classification_records`](./step-12-governance-classification/build_governance_classification_records/) | `governance` | Build governance classification records. | — | [module overview](../api/modules/governance/) |
 | [`build_lineage_from_notebook_code`](./step-12-governance-classification/build_lineage_from_notebook_code/) | `lineage` | Scan, optionally enrich, and validate lineage from notebook source code. | — | [module overview](../api/modules/lineage/) |
 | [`build_lineage_handover_markdown`](./step-12-governance-classification/build_lineage_handover_markdown/) | `lineage` | Create a concise markdown handover summary from lineage execution results. | — | [module overview](../api/modules/lineage/) |
 | [`build_lineage_record_from_steps`](./step-12-governance-classification/build_lineage_record_from_steps/) | `lineage` | Create metadata-ready lineage records from validated lineage steps. | — | [module overview](../api/modules/lineage/) |
+| [`build_manual_governance_prompt_package`](./step-12-governance-classification/build_manual_governance_prompt_package/) | `ai` | — | [`_compact_sample_rows`](./internal/ai/_compact_sample_rows.md) (internal) | [module overview](../api/modules/ai/) |
 | [`classify_column`](./step-12-governance-classification/classify_column/) | `governance` | Classify column. | [`_match_terms`](./internal/governance/_match_terms.md) (internal), [`_phrase_in_text`](./internal/governance/_phrase_in_text.md) (internal) | [module overview](../api/modules/governance/) |
 | [`classify_columns`](./step-12-governance-classification/classify_columns/) | `governance` | Classify columns. | [`_column_name`](./internal/governance/_column_name.md) (internal), [`_normalize_columns`](./internal/governance/_normalize_columns.md) (internal) | [module overview](../api/modules/governance/) |
 | [`enrich_lineage_steps_with_ai`](./step-12-governance-classification/enrich_lineage_steps_with_ai/) | `lineage` | Optionally enrich deterministic lineage steps using an AI helper callable. | — | [module overview](../api/modules/lineage/) |
 | [`fallback_copilot_lineage_prompt`](./step-12-governance-classification/fallback_copilot_lineage_prompt/) | `lineage` | Build a fallback Copilot prompt for manual lineage enrichment. | — | [module overview](../api/modules/lineage/) |
-| [`generate_governance_candidates_with_fabric_ai`](./step-12-governance-classification/generate_governance_candidates_with_fabric_ai/) | `ai` | Generate governance label candidate suggestions as an enriched DataFrame. | [`_require_fabric_ai_dataframe`](./internal/ai/_require_fabric_ai_dataframe.md) (internal) | [module overview](../api/modules/ai/) |
+| [`generate_governance_candidates_with_fabric_ai`](./step-12-governance-classification/generate_governance_candidates_with_fabric_ai/) | `ai` | — | [`_require_fabric_ai_dataframe`](./internal/ai/_require_fabric_ai_dataframe.md) (internal) | [module overview](../api/modules/ai/) |
 | [`plot_lineage_steps`](./step-12-governance-classification/plot_lineage_steps/) | `lineage` | Render lineage steps as a directed graph figure. | — | [module overview](../api/modules/lineage/) |
 | [`scan_notebook_cells`](./step-12-governance-classification/scan_notebook_cells/) | `lineage` | Scan multiple notebook cells and append cell references to lineage steps. | — | [module overview](../api/modules/lineage/) |
 | [`scan_notebook_lineage`](./step-12-governance-classification/scan_notebook_lineage/) | `lineage` | Extract deterministic lineage steps from notebook code using AST parsing. | [`_call_name`](./internal/lineage/_call_name.md) (internal), [`_flatten_chain`](./internal/lineage/_flatten_chain.md) (internal), [`_name`](./internal/lineage/_name.md) (internal), [`_resolve_write_target`](./internal/lineage/_resolve_write_target.md) (internal), [`_step`](./internal/lineage/_step.md) (internal) | [module overview](../api/modules/lineage/) |
@@ -119,8 +123,11 @@ No public callable currently mapped to this step.
 
 | Function / class | Module | Purpose | Related helpers | Module page |
 |---|---|---|---|---|
+| [`build_handover_summary_prompt`](./step-13-lineage-summary-handover/build_handover_summary_prompt/) | `ai` | — | — | [module overview](../api/modules/ai/) |
 | [`build_lineage_records`](./step-13-lineage-summary-handover/build_lineage_records/) | `lineage` | Build compact lineage records for downstream metadata sinks. | — | [module overview](../api/modules/lineage/) |
+| [`build_manual_handover_prompt_package`](./step-13-lineage-summary-handover/build_manual_handover_prompt_package/) | `ai` | — | [`_compact_sample_rows`](./internal/ai/_compact_sample_rows.md) (internal) | [module overview](../api/modules/ai/) |
 | [`build_run_summary`](./step-13-lineage-summary-handover/build_run_summary/) | `run_summary` | Build run summary. | — | [module overview](../api/modules/run_summary/) |
-| [`generate_handover_summary_with_fabric_ai`](./step-13-lineage-summary-handover/generate_handover_summary_with_fabric_ai/) | `ai` | Generate handover summary suggestions as an enriched DataFrame. | [`_require_fabric_ai_dataframe`](./internal/ai/_require_fabric_ai_dataframe.md) (internal) | [module overview](../api/modules/ai/) |
+| [`generate_handover_summary_with_fabric_ai`](./step-13-lineage-summary-handover/generate_handover_summary_with_fabric_ai/) | `ai` | — | [`_require_fabric_ai_dataframe`](./internal/ai/_require_fabric_ai_dataframe.md) (internal) | [module overview](../api/modules/ai/) |
+| [`parse_manual_ai_json_response`](./step-13-lineage-summary-handover/parse_manual_ai_json_response/) | `ai` | — | — | [module overview](../api/modules/ai/) |
 | [`render_run_summary_markdown`](./step-13-lineage-summary-handover/render_run_summary_markdown/) | `run_summary` | Render run summary markdown. | [`_status_of`](./internal/run_summary/_status_of.md) (internal) | [module overview](../api/modules/run_summary/) |
 

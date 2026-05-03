@@ -60,3 +60,7 @@ Dependency notes (runtime and DataFrame-type dependent):
 - PySpark DataFrame with PySpark runtime: no installation required.
 
 Use the Microsoft Learn installation commands for your environment rather than pinning local versions unless Microsoft documentation requires specific versions.
+
+The framework supports native Fabric AI Functions when available.
+When Fabric AI Functions are unavailable, you can generate the same standardized prompts and manually paste them into Copilot or another LLM.
+Human-reviewed outputs should then be stored back into framework metadata or rules tables.

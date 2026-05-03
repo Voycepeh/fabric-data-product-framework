@@ -18,6 +18,7 @@ from fabric_data_product_framework import (
     configure_fabric_ai_functions,
     generate_dq_rule_candidates_with_fabric_ai,
     generate_governance_candidates_with_fabric_ai,
+    build_manual_dq_rule_prompt_package,
 )
 from fabric_data_product_framework.mvp_steps import get_mvp_step_registry, validate_mvp_artifacts
 
@@ -112,6 +113,15 @@ if ai_functions_status.get("available"):
     #     business_context="Orders governance classification review",
     # )
     # gov_ai_df.write.mode("append").saveAsTable("AI_GOVERNANCE_CANDIDATES")
+
+else:
+    # Paste this into Copilot or another LLM if Fabric AI Functions are unavailable.
+    # Review the response before storing approved rules.
+    manual_dq_prompt = build_manual_dq_rule_prompt_package(
+        business_context="Orders pipeline quality review",
+        dataset_name=DATASET_NAME,
+    )
+    print(manual_dq_prompt["prompt"])
 
 # ==========================================================
 # 5) AI assisted DQ rule drafting [AI Assisted]
