@@ -190,7 +190,10 @@ def main() -> None:
             lines.extend(["| Callable | Type | Summary | Related helpers |", "|---|---|---|---|"])
             for s in sorted(public_in_module, key=lambda x: x.name.lower()):
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
-                lines.append(f"| `{s.name}` | {s.obj_type} | {s.summary or '—'} | {', '.join(f'`{r}` (internal)' for r in related) or '—'} |")
+                lines.append(
+                    f"| [`{s.name}`](#{s.name}) | {s.obj_type} | {s.summary or '—'} | "
+                    f"{', '.join(f'`{r}` (internal)' for r in related) or '—'} |"
+                )
         else:
             lines.append("No public exports in this module.")
         lines.extend(["", "## Internal helpers (module-level)", ""])
@@ -225,7 +228,9 @@ def main() -> None:
                 info = module_data[s.module]
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
                 ref.append(
-                    f"| `{s.name}` | `{s.module}` | {s.summary or '—'} | {', '.join(f'`{r}` (internal)' for r in related) or '—'} | [module API](../api/modules/{s.module}.md) |"
+                    f"| [`{s.name}`](../api/modules/{s.module}.md#{s.name}) | `{s.module}` | {s.summary or '—'} | "
+                    f"{', '.join(f'`{r}` (internal)' for r in related) or '—'} | "
+                    f"[module API](../api/modules/{s.module}.md#{s.name}) |"
                 )
         else:
             ref.append("No public callable currently mapped to this step.")
@@ -235,7 +240,7 @@ def main() -> None:
     if other:
         ref.extend(["## Other Utilities", ""])
         for s in sorted(other, key=lambda x: x.name.lower()):
-            ref.append(f"- `{s.name}` (`{s.module}`) → [module API](../api/modules/{s.module}.md)")
+            ref.append(f"- [`{s.name}`](../api/modules/{s.module}.md#{s.name}) (`{s.module}`) → [module API](../api/modules/{s.module}.md#{s.name})")
 
     REFERENCE_PATH.parent.mkdir(parents=True, exist_ok=True)
     REFERENCE_PATH.write_text("\n".join(ref) + "\n", encoding="utf-8", newline="\n")
