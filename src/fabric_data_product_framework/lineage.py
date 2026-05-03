@@ -51,6 +51,18 @@ def _step(source: str, target: str, transformation: str, source_type: str, targe
 
 
 def scan_notebook_lineage(code: str) -> list[dict[str, Any]]:
+    """Extract deterministic lineage steps from notebook code using AST parsing.
+
+    Parameters
+    ----------
+    code : str
+        Python notebook source code to analyze.
+
+    Returns
+    -------
+    list of dict of str to Any
+        Ordered lineage step dictionaries inferred from read, transform, and write calls.
+    """
     tree = ast.parse(code)
     steps: list[dict[str, Any]] = []
     for node in ast.walk(tree):
@@ -78,6 +90,18 @@ def scan_notebook_lineage(code: str) -> list[dict[str, Any]]:
 
 
 def scan_notebook_cells(cells: list[str]) -> list[dict[str, Any]]:
+    """Scan multiple notebook cells and append cell references to lineage steps.
+
+    Parameters
+    ----------
+    cells : list of str
+        Cell source strings in notebook execution order.
+
+    Returns
+    -------
+    list of dict of str to Any
+        Combined lineage steps with ``cell:<index>`` entries in ``code_refs``.
+    """
     out: list[dict[str, Any]] = []
     for idx, cell in enumerate(cells):
         for step in scan_notebook_lineage(cell):
@@ -87,16 +111,54 @@ def scan_notebook_cells(cells: list[str]) -> list[dict[str, Any]]:
 
 
 def fallback_copilot_lineage_prompt(lineage_steps: list[dict[str, Any]]) -> str:
+    """Build a fallback Copilot prompt for manual lineage enrichment.
+
+    Parameters
+    ----------
+    lineage_steps : list of dict of str to Any
+        Deterministic lineage steps produced by the scanner.
+
+    Returns
+    -------
+    str
+        Prompt text instructing an AI helper to refine only reasoning fields.
+    """
     return "Review these deterministic lineage steps and improve reasons/notes only; do not change structure. steps=" + str(lineage_steps)
 
 
 def enrich_lineage_steps_with_ai(lineage_steps: list[dict[str, Any]], ai_helper: Any | None = None) -> dict[str, Any]:
+    """Optionally enrich deterministic lineage steps using an AI helper callable.
+
+    Parameters
+    ----------
+    lineage_steps : list of dict of str to Any
+        Deterministic lineage step dictionaries.
+    ai_helper : Any or None, default=None
+        Callable that accepts lineage steps and returns enriched steps.
+
+    Returns
+    -------
+    dict of str to Any
+        Enrichment payload containing steps, AI usage flag, fallback prompt, and notes.
+    """
     if ai_helper is None:
         return {"steps": lineage_steps, "ai_used": False, "fallback_prompt": fallback_copilot_lineage_prompt(lineage_steps), "notes": "AI helper unavailable; Copilot fallback prompt generated."}
     return {"steps": ai_helper(lineage_steps) or lineage_steps, "ai_used": True, "fallback_prompt": "", "notes": "AI enrichment applied."}
 
 
 def validate_lineage_steps(lineage_steps: Any) -> dict[str, Any]:
+    """Validate lineage step structure and flag records requiring human review.
+
+    Parameters
+    ----------
+    lineage_steps : Any
+        Candidate lineage payload, expected to be a list of dictionaries.
+
+    Returns
+    -------
+    dict of str to Any
+        Validation result with ``is_valid``, ``errors``, ``warnings``, and ``review_required``.
+    """
     errors: list[str] = []
     warnings: list[str] = []
     review_required = False
@@ -121,6 +183,33 @@ def validate_lineage_steps(lineage_steps: Any) -> dict[str, Any]:
 
 
 def build_lineage_record_from_steps(dataset_name: str, lineage_steps: list[dict], run_id: str | None = None, notebook_name: str | None = None, workspace_name: str | None = None, created_by: str | None = None) -> list[dict]:
+    """Create metadata-ready lineage records from validated lineage steps.
+
+    Parameters
+    ----------
+    dataset_name : str
+        Dataset identifier associated with the lineage record set.
+    lineage_steps : list of dict
+        Validated lineage step dictionaries.
+    run_id : str or None, default=None
+        Optional run identifier for traceability.
+    notebook_name : str or None, default=None
+        Optional Fabric notebook name.
+    workspace_name : str or None, default=None
+        Optional workspace display name.
+    created_by : str or None, default=None
+        Optional creator identity string.
+
+    Returns
+    -------
+    list of dict
+        Lineage rows with step numbers and creation timestamp.
+
+    Raises
+    ------
+    ValueError
+        If lineage steps fail schema validation.
+    """
     v = validate_lineage_steps(lineage_steps)
     if not v["is_valid"]:
         raise ValueError(f"Invalid lineage_steps: {v['errors']}")
@@ -129,10 +218,46 @@ def build_lineage_record_from_steps(dataset_name: str, lineage_steps: list[dict]
 
 
 def build_lineage_records(*, dataset_name: str, run_id: str, source_tables: list[str], target_table: str, transformation_steps: list[dict]) -> list[dict]:
+    """Build compact lineage records for downstream metadata sinks.
+
+    Parameters
+    ----------
+    dataset_name : str
+        Dataset identifier for all output rows.
+    run_id : str
+        Unique run identifier.
+    source_tables : list of str
+        Source table names captured for the run.
+    target_table : str
+        Target table name produced by the run.
+    transformation_steps : list of dict
+        Transformation step dictionaries to merge into each output row.
+
+    Returns
+    -------
+    list of dict
+        Row dictionaries suitable for metadata persistence.
+    """
     return [{"run_id": run_id, "dataset_name": dataset_name, "source_tables": source_tables, "target_table": target_table, **s} for s in transformation_steps]
 
 
 def build_lineage_from_notebook_code(code: str, use_ai: bool = True, ai_helper: Any | None = None) -> dict[str, Any]:
+    """Scan, optionally enrich, and validate lineage from notebook source code.
+
+    Parameters
+    ----------
+    code : str
+        Notebook source code to parse.
+    use_ai : bool, default=True
+        Whether to invoke AI enrichment when a helper is provided.
+    ai_helper : Any or None, default=None
+        Optional callable used to enrich deterministic lineage steps.
+
+    Returns
+    -------
+    dict of str to Any
+        End-to-end lineage result with steps, validation, review status, and notes.
+    """
     steps = scan_notebook_lineage(code)
     enrichment = enrich_lineage_steps_with_ai(steps, ai_helper=ai_helper) if use_ai else {"steps": steps, "ai_used": False, "fallback_prompt": "", "notes": "AI disabled."}
     validation = validate_lineage_steps(enrichment["steps"]) if enrichment["steps"] else {"is_valid": False, "errors": ["No lineage detected."], "warnings": [], "review_required": True}
@@ -140,6 +265,20 @@ def build_lineage_from_notebook_code(code: str, use_ai: bool = True, ai_helper: 
 
 
 def plot_lineage_steps(lineage_steps_or_record, title: str | None = None):
+    """Render lineage steps as a directed graph figure.
+
+    Parameters
+    ----------
+    lineage_steps_or_record : iterable
+        Lineage step dictionaries containing source, target, and transformation keys.
+    title : str or None, default=None
+        Optional chart title override.
+
+    Returns
+    -------
+    matplotlib.figure.Figure
+        Rendered lineage diagram figure.
+    """
     import matplotlib.pyplot as plt
     import networkx as nx
     g = nx.DiGraph()
@@ -154,4 +293,16 @@ def plot_lineage_steps(lineage_steps_or_record, title: str | None = None):
 
 
 def build_lineage_handover_markdown(result: dict[str, Any]) -> str:
+    """Create a concise markdown handover summary from lineage execution results.
+
+    Parameters
+    ----------
+    result : dict of str to Any
+        Lineage result payload returned by ``build_lineage_from_notebook_code``.
+
+    Returns
+    -------
+    str
+        Markdown summary with step count, AI usage, and review requirement.
+    """
     return f"## Lineage Handover\n- Steps: {len(result.get('steps', []))}\n- AI used: {result.get('ai_used')}\n- Review required: {result.get('review_required')}"
