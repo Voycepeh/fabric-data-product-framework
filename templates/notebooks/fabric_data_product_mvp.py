@@ -15,6 +15,9 @@ from fabric_data_product_framework import (
     run_quality_rules,
     summarize_profile,
     check_fabric_ai_functions_available,
+    configure_fabric_ai_functions,
+    generate_dq_rule_candidates_with_fabric_ai,
+    generate_governance_candidates_with_fabric_ai,
 )
 from fabric_data_product_framework.mvp_steps import get_mvp_step_registry, validate_mvp_artifacts
 
@@ -87,11 +90,32 @@ source_profile = profile_dataframe(source_dataframe, dataset_name=DATASET_NAME, 
 print("Source profile:", json.dumps(summarize_profile(source_profile), indent=2, default=str))
 
 # ==========================================================
-# 5) AI assisted DQ rule drafting [AI Assisted]
+# 4A) Optional AI assisted rule and governance generation [AI Assisted]
 # ==========================================================
+# Run this during development or review.
+# AI suggestions are not enforcement.
+# Approved deterministic rules are what scheduled pipelines should run.
 ai_functions_status = check_fabric_ai_functions_available()
 print("Fabric AI Functions status:", ai_functions_status)
+if ai_functions_status.get("available"):
+    configure_fabric_ai_functions(temperature=0.0)
+    # Example profile metadata DataFrame should include column profile fields.
+    # profile_spark_df = spark.table("fw_metadata.source_profile_records")
+    # dq_ai_df = generate_dq_rule_candidates_with_fabric_ai(
+    #     profile_spark_df,
+    #     business_context="Orders pipeline quality review",
+    #     dataset_name=DATASET_NAME,
+    # )
+    # dq_ai_df.write.mode("append").saveAsTable("AI_DQ_RULE_CANDIDATES")
+    # gov_ai_df = generate_governance_candidates_with_fabric_ai(
+    #     profile_spark_df,
+    #     business_context="Orders governance classification review",
+    # )
+    # gov_ai_df.write.mode("append").saveAsTable("AI_GOVERNANCE_CANDIDATES")
 
+# ==========================================================
+# 5) AI assisted DQ rule drafting [AI Assisted]
+# ==========================================================
 draft_dq_rules = [
     {"rule_id": "order_id_required", "rule_type": "not_null", "column": "order_id", "severity": "critical"},
     {"rule_id": "order_amount_non_negative", "rule_type": "range_check", "column": "order_amount", "min_value": 0, "severity": "critical"},

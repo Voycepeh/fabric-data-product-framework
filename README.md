@@ -41,7 +41,7 @@ This framework takes inspiration from [Databricks Labs DQX](https://databricksla
 
 This repository adapts that pattern to Microsoft Fabric notebooks, Lakehouse/Warehouse, Fabric AI functions, and Copilot-style workflows.
 
-## How does AI comes into play?
+## How does AI come into play?
 AI helps draft DQ rules, sensitivity labels, lineage, transformation summaries, and handover notes.
 We do it via creating functions within this framework that allow us to prompt the native [AI function](https://learn.microsoft.com/en-us/fabric/data-science/ai-functions/overview?tabs=pandas-pyspark%2Cpandas) or standardize prompts that we manually generate and paste into copilot.
 

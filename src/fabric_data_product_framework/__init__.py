@@ -46,7 +46,13 @@ from .profiling import (
     profile_dataframe_to_metadata,
     profile_metadata_to_records,
 )
-from .ai import check_fabric_ai_functions_available, configure_fabric_ai_functions
+from .ai import (
+    check_fabric_ai_functions_available,
+    configure_fabric_ai_functions,
+    generate_dq_rule_candidates_with_fabric_ai,
+    generate_governance_candidates_with_fabric_ai,
+    generate_handover_summary_with_fabric_ai,
+)
 from .quality import load_data_contract, run_data_product, run_quality_rules
 from .run_summary import build_run_summary, render_run_summary_markdown
 from .runtime import assert_notebook_name_valid, build_runtime_context, generate_run_id, validate_notebook_name
@@ -76,6 +82,9 @@ __all__ = [
     "run_quality_rules",
     "check_fabric_ai_functions_available",
     "configure_fabric_ai_functions",
+    "generate_dq_rule_candidates_with_fabric_ai",
+    "generate_governance_candidates_with_fabric_ai",
+    "generate_handover_summary_with_fabric_ai",
     "check_schema_drift",
     "check_partition_drift",
     "check_profile_drift",

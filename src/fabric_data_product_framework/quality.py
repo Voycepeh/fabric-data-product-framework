@@ -14,7 +14,6 @@ from typing import Any
 import pandas as pd
 import yaml
 
-from .ai import generate_dq_rule_candidates_with_fabric_ai
 
 from fabric_data_product_framework.drift import (
     build_and_write_partition_snapshot,
@@ -835,13 +834,7 @@ def run_dq_workflow(spark, df, quality_contract, dataset_name: str, table_name: 
 
     if generate_candidates:
         if str(candidate_generation_method).lower() == "fabric_ai":
-            generated_candidates = generate_dq_rule_candidates_with_fabric_ai(
-                profile=profile or {},
-                contract=getattr(qc, "__dict__", qc),
-                business_context=business_context,
-                dataset_name=dataset_name,
-                table_name=table_name,
-            )
+            generated_candidates = []
         else:
             generated_candidates = generate_dq_rule_candidates(profile or {}, metadata=metadata, business_context=business_context, dataset_name=dataset_name, table_name=table_name)
         if rule_store_table:

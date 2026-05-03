@@ -1,28 +1,12 @@
 """Microsoft Fabric AI Functions helpers for optional AI-in-the-loop workflows."""
-
 from __future__ import annotations
 
-import importlib.util
-from typing import Any
-
-
 def check_fabric_ai_functions_available() -> dict:
-    """Check whether Microsoft Fabric AI Functions appear available.
-
-    Returns
-    -------
-    dict
-        Status dictionary with keys ``available``, ``runtime``, and ``message``.
-
-    Notes
-    -----
-    Fabric notebook runtime required. This is a best-effort import check and does
-    not guarantee tenant switch, capacity, or deployment configuration.
-    """
+    """Best-effort check for Fabric AI Functions availability."""
     try:
         import synapse.ml.spark.aifunc as _aifunc  # noqa: F401
         return {"available": True, "runtime": "fabric_pyspark", "message": "Microsoft Fabric AI Functions import check passed."}
-    except Exception as exc:  # pragma: no cover - runtime dependent
+    except Exception as exc:  # pragma: no cover
         return {
             "available": False,
             "runtime": "local_or_unknown",
@@ -35,18 +19,10 @@ def check_fabric_ai_functions_available() -> dict:
 
 
 def configure_fabric_ai_functions(deployment_name: str | None = None, temperature: float = 0.0) -> dict:
-    """Configure Fabric AI Functions default settings when available.
-
-    Parameters
-    ----------
-    deployment_name : str | None, optional
-        Optional deployment name passed to ``aifunc.default_conf.set_deployment_name``.
-    temperature : float, default=0.0
-        Temperature value passed to ``aifunc.default_conf.set_temperature`` when supported.
-    """
+    """Configure Fabric AI Functions default settings when available."""
     try:
         import synapse.ml.spark.aifunc as aifunc
-    except Exception as exc:  # pragma: no cover - runtime dependent
+    except Exception as exc:  # pragma: no cover
         return {
             "available": False,
             "configured": False,
@@ -56,102 +32,102 @@ def configure_fabric_ai_functions(deployment_name: str | None = None, temperatur
                 f"Import error: {exc}"
             ),
         }
-
     conf = getattr(aifunc, "default_conf", None)
     if conf is None:
         return {"available": True, "configured": False, "message": "aifunc.default_conf is not available in this runtime."}
-
     if deployment_name and hasattr(conf, "set_deployment_name"):
         conf.set_deployment_name(deployment_name)
     if hasattr(conf, "set_temperature"):
         conf.set_temperature(float(temperature))
-
-    return {
-        "available": True,
-        "configured": True,
-        "message": "Microsoft Fabric AI Functions default configuration applied.",
-        "deployment_name": deployment_name,
-        "temperature": float(temperature),
-    }
+    return {"available": True, "configured": True, "message": "Microsoft Fabric AI Functions default configuration applied."}
 
 
-def _fabric_ai_dependencies_available() -> bool:
-    return importlib.util.find_spec("openai") is not None and importlib.util.find_spec("pydantic") is not None
-
-
-def _extract_fabric_ai_response_payload(ai_response: Any):
-    import pandas as pd
-
-    if isinstance(ai_response, (str, list)):
-        return ai_response
-    if isinstance(ai_response, dict):
-        return ai_response.get("response") or ai_response.get("generated_response") or ai_response.get("text") or ai_response
-    if isinstance(ai_response, pd.DataFrame):
-        if ai_response.empty:
-            return "[]"
-        row = ai_response.iloc[0].to_dict()
-        for key in ("response", "generated_response", "text"):
-            val = row.get(key)
-            if isinstance(val, (str, list, dict)):
-                return val
-        for val in row.values():
-            if isinstance(val, (str, list)):
-                return val
-        return row
-    return ai_response
-
-
-def generate_dq_rule_candidates_with_fabric_ai(profile, contract=None, business_context=None, dataset_name=None, table_name=None, response_format=None) -> list[dict]:
-    """Generate DQ candidate rules using Fabric AI Functions.
-
-    This helper only returns candidate suggestions and does not enforce pipeline
-    outcomes directly.
-    """
-    import pandas as pd
-    from .quality import build_quality_rule_generation_prompt, normalize_dq_rule, parse_ai_quality_rule_candidates
-
-    if not _fabric_ai_dependencies_available():
-        raise RuntimeError(
-            "Fabric AI candidate generation requires Microsoft Fabric AI functions plus openai/pydantic runtime dependencies. "
-            "Install the fabric-ai extra or run %pip install openai pydantic in the Fabric notebook."
-        )
-
-    prompt = build_quality_rule_generation_prompt(
-        profile=profile,
-        contract=contract,
-        business_context=business_context,
-        table_name=table_name,
-        dataset_name=dataset_name,
-    )
-    prompt_df = pd.DataFrame([{"prompt": prompt}])
-    ai = getattr(prompt_df, "ai", None)
+def _require_fabric_ai_dataframe(df, helper_name: str):
+    ai = getattr(df, "ai", None)
     if ai is None or not hasattr(ai, "generate_response"):
         raise RuntimeError(
-            "Fabric AI candidate generation requires Microsoft Fabric AI functions plus openai/pydantic runtime dependencies. "
-            "Install the fabric-ai extra or run %pip install openai pydantic in the Fabric notebook."
+            f"{helper_name} requires a Fabric PySpark DataFrame with AI Functions enabled and DataFrame.ai.generate_response available."
         )
+    return ai
 
-    kwargs = {"prompt": prompt}
-    if response_format is not None:
-        kwargs["response_format"] = response_format
-    raw_response = _extract_fabric_ai_response_payload(ai.generate_response(**kwargs))
-    parsed = parse_ai_quality_rule_candidates(raw_response)
 
-    out = []
-    for c in parsed.get("candidates", []):
-        rule = {
-            "rule_id": c.get("rule_id") or c.get("name"),
-            "table_name": table_name,
-            "column": c.get("column"),
-            "columns": c.get("columns"),
-            "rule_type": c.get("rule_type"),
-            "severity": c.get("severity", "warning"),
-            "description": c.get("layman_rule") or c.get("reason"),
-            "generated_by": "fabric_ai",
-            "status": "candidate",
-        }
-        cfg = c.get("rule_config") or {}
-        if isinstance(cfg, dict):
-            rule.update(cfg)
-        out.append(normalize_dq_rule(rule))
-    return out
+def generate_dq_rule_candidates_with_fabric_ai(
+    profile_df,
+    business_context="",
+    dataset_name=None,
+    output_col="ai_dq_rule_candidate",
+    error_col="ai_dq_rule_error",
+    response_format="json_object",
+    concurrency=20,
+):
+    """Generate DQ candidate suggestions as an enriched DataFrame."""
+    _require_fabric_ai_dataframe(profile_df, "generate_dq_rule_candidates_with_fabric_ai")
+    prompt = (
+        "You are generating candidate data quality rules from profile metadata rows. "
+        "Return JSON only with keys: rule_id, table_name, column_name, rule_type, severity, reason, evidence, needs_human_review. "
+        "These are suggestions only and must not be treated as enforced checks. "
+        "dataset_name={{dataset_name}}, business_context={{business_context}}, "
+        "column_name={{column_name}}, data_type={{data_type}}, null_count={{null_count}}, distinct_count={{distinct_count}}, row_count={{row_count}}."
+    )
+    return profile_df.ai.generate_response(
+        prompt=prompt,
+        is_prompt_template=True,
+        output_col=output_col,
+        error_col=error_col,
+        response_format=response_format,
+        concurrency=concurrency,
+        dataset_name=dataset_name,
+        business_context=business_context,
+    )
+
+
+def generate_governance_candidates_with_fabric_ai(
+    profile_df,
+    business_context="",
+    output_col="ai_governance_candidate",
+    error_col="ai_governance_error",
+    response_format="json_object",
+    concurrency=20,
+):
+    """Generate governance label candidate suggestions as an enriched DataFrame."""
+    _require_fabric_ai_dataframe(profile_df, "generate_governance_candidates_with_fabric_ai")
+    prompt = (
+        "Return JSON only with keys: table_name, column_name, candidate_label, reason, evidence, needs_human_review. "
+        "Allowed candidate_label values: public, internal, confidential_candidate, restricted_candidate, unknown. "
+        "Use dataset metadata context and this business_context={{business_context}}. "
+        "Evaluate row details table_name={{table_name}}, column_name={{column_name}}, data_type={{data_type}}, profile_summary={{profile_summary}}."
+    )
+    return profile_df.ai.generate_response(
+        prompt=prompt,
+        is_prompt_template=True,
+        output_col=output_col,
+        error_col=error_col,
+        response_format=response_format,
+        concurrency=concurrency,
+        business_context=business_context,
+    )
+
+
+def generate_handover_summary_with_fabric_ai(
+    summary_df,
+    business_context="",
+    output_col="ai_handover_summary",
+    error_col="ai_handover_error",
+    response_format="json_object",
+    concurrency=20,
+):
+    """Generate handover summary suggestions as an enriched DataFrame."""
+    _require_fabric_ai_dataframe(summary_df, "generate_handover_summary_with_fabric_ai")
+    prompt = (
+        "Return JSON only with keys: pipeline_summary, important_transformations, business_reason, handover_notes, risks_or_open_questions. "
+        "These are suggestions for human review. Use business_context={{business_context}} and row context run_summary={{run_summary}}."
+    )
+    return summary_df.ai.generate_response(
+        prompt=prompt,
+        is_prompt_template=True,
+        output_col=output_col,
+        error_col=error_col,
+        response_format=response_format,
+        concurrency=concurrency,
+        business_context=business_context,
+    )
