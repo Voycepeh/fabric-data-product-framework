@@ -3,12 +3,15 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 
-from scripts.generate_function_reference import PUBLIC_CALLABLE_STEP_REGISTRY, main as generate_reference
+import pytest
+
+from scripts.generate_function_reference import main as generate_reference
 
 ROOT = Path(__file__).resolve().parents[1]
 INIT_FILE = ROOT / "src" / "fabric_data_product_framework" / "__init__.py"
 REFERENCE_FILE = ROOT / "docs" / "reference" / "index.md"
 MODULE_INDEX_FILE = ROOT / "docs" / "api" / "modules" / "index.md"
+DOCS_METADATA_FILE = ROOT / "src" / "fabric_data_product_framework" / "docs_metadata.py"
 
 
 def public_exports() -> list[str]:
@@ -17,6 +20,16 @@ def public_exports() -> list[str]:
         if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "__all__" for t in node.targets):
             return [elt.value for elt in node.value.elts if isinstance(elt, ast.Constant)]
     raise AssertionError("__all__ missing")
+
+
+def public_symbol_docs() -> list[dict[str, object]]:
+    tree = ast.parse(DOCS_METADATA_FILE.read_text(encoding="utf-8"))
+    for node in tree.body:
+        is_assign = isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "PUBLIC_SYMBOL_DOCS" for t in node.targets)
+        is_annassign = isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and node.target.id == "PUBLIC_SYMBOL_DOCS"
+        if (is_assign or is_annassign) and node.value is not None:
+            return ast.literal_eval(node.value)
+    raise AssertionError("PUBLIC_SYMBOL_DOCS missing")
 
 
 def section(content: str, title: str) -> str:
@@ -39,7 +52,7 @@ def test_every_public_export_is_listed_and_linked() -> None:
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     for name in public_exports():
         assert f"`{name}`" in content
-        assert "module API" in content
+        assert "module overview" in content
 
 
 def test_every_public_callable_has_docstring_first_sentence() -> None:
@@ -63,7 +76,6 @@ def test_step_specific_callable_placement() -> None:
     step3 = section(content, "Step 3: Pull source data")
     step10 = section(content, "Step 10: Standard technical columns")
     step11 = section(content, "Step 11: Output write, output profiling, and metadata logging")
-    other = section(content, "Other Utilities")
 
     assert "`lakehouse_table_read`" in step3
     assert "`lakehouse_table_read`" not in step1
@@ -75,26 +87,42 @@ def test_step_specific_callable_placement() -> None:
     assert "`warehouse_write`" in step11
     assert "`warehouse_write`" not in step1
     assert "`get_path`" in step2
-    assert "`add_audit_columns`" not in other
-    assert "`add_datetime_features`" not in other
-    assert "`add_hash_columns`" not in other
-    assert "`default_technical_columns`" not in other
 
 
-def test_not_all_public_exports_land_in_other_utilities() -> None:
+def test_metadata_driven_summary_override_is_applied() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
-    other_section = content.split("## Other Utilities", 1)[1] if "## Other Utilities" in content else ""
-    other_count = sum(1 for name in public_exports() if f"`{name}`" in other_section)
-    assert other_count < len(public_exports())
+    assert "Run the framework pipeline end-to-end for a data product." in content
 
 
-def test_at_least_one_callable_uses_explicit_override() -> None:
+def test_reference_links_are_site_friendly_and_correctly_routed() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
-    override_symbols = [name for name in public_exports() if name in PUBLIC_CALLABLE_STEP_REGISTRY]
-    assert override_symbols
-    assert any(f"`{name}`" in content for name in override_symbols)
+    assert "./step-02-runtime-configuration/get_path/" in content
+    assert "./step-02-runtime-configuration/load_fabric_config/" in content
+    assert "./step-04-source-ingestion-read-helpers/profile_metadata_to_records/" in content
+    assert "./step-02-runtime-configuration/get_path.md" not in content
+    assert "./step-02-runtime-configuration/load_fabric_config.md" not in content
+    assert "./step-04-source-ingestion-read-helpers/profile_metadata_to_records.md" not in content
+
+
+def test_docs_metadata_matches_public_exports() -> None:
+    exports = set(public_exports())
+    metadata_symbols = {row["symbol_name"] for row in public_symbol_docs()}
+    assert exports - metadata_symbols == set()
+    assert metadata_symbols - exports == set()
+
+
+def test_invalid_workflow_step_fails_loudly(monkeypatch) -> None:
+    from scripts import generate_function_reference as gen
+
+    bad = dict(gen.parse_docs_metadata())
+    target = next(iter(bad))
+    bad[target] = dict(bad[target])
+    bad[target]["workflow_step"] = 99
+    monkeypatch.setattr(gen, "parse_docs_metadata", lambda: bad)
+    with pytest.raises(RuntimeError, match="Invalid workflow_step"):
+        gen.main()
 
 
 def test_generated_docs_are_multiline_readable() -> None:
