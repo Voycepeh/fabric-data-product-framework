@@ -52,6 +52,8 @@ PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [
     {"symbol_name": "profile_metadata_to_records", "module": "profiling", "kind": "function", "workflow_step": 4, "summary_override": None},
     {"symbol_name": "build_ai_quality_context", "module": "profiling", "kind": "function", "workflow_step": 4, "summary_override": None},
     {"symbol_name": "run_quality_rules", "module": "quality", "kind": "function", "workflow_step": 7, "summary_override": None},
+    {"symbol_name": "check_fabric_ai_functions_available", "module": "ai", "kind": "function", "workflow_step": 7, "summary_override": None},
+    {"symbol_name": "configure_fabric_ai_functions", "module": "ai", "kind": "function", "workflow_step": 7, "summary_override": None},
     {"symbol_name": "check_schema_drift", "module": "drift", "kind": "function", "workflow_step": 8, "summary_override": None},
     {"symbol_name": "check_partition_drift", "module": "drift", "kind": "function", "workflow_step": 8, "summary_override": None},
     {"symbol_name": "check_profile_drift", "module": "drift", "kind": "function", "workflow_step": 8, "summary_override": None},

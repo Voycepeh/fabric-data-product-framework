@@ -14,6 +14,8 @@ from typing import Any
 import pandas as pd
 import yaml
 
+from .ai import generate_dq_rule_candidates_with_fabric_ai
+
 from fabric_data_product_framework.drift import (
     build_and_write_partition_snapshot,
     build_and_write_schema_snapshot,
@@ -430,123 +432,8 @@ def _build_rule_id(rule: dict[str, Any]) -> str:
 
 
 
-def _fabric_ai_dependencies_available() -> bool:
-    return importlib.util.find_spec("openai") is not None and importlib.util.find_spec("pydantic") is not None
 
 
-
-def _extract_fabric_ai_response_payload(ai_response):
-    import pandas as pd
-
-    if isinstance(ai_response, (str, list)):
-        return ai_response
-    if isinstance(ai_response, dict):
-        return ai_response.get("response") or ai_response.get("generated_response") or ai_response.get("text") or ai_response
-    if isinstance(ai_response, pd.DataFrame):
-        if ai_response.empty:
-            return "[]"
-        row = ai_response.iloc[0].to_dict()
-        for key in ("response", "generated_response", "text"):
-            val = row.get(key)
-            if isinstance(val, (str, list, dict)):
-                return val
-        for val in row.values():
-            if isinstance(val, str):
-                return val
-            if isinstance(val, list):
-                return val
-        return row
-    return ai_response
-
-def generate_dq_rule_candidates_with_fabric_ai(
-    profile,
-    contract=None,
-    business_context=None,
-    dataset_name=None,
-    table_name=None,
-    response_format=None,
-) -> list[dict]:
-    """Generate dq rule candidates with fabric ai.
-
-    Run `generate_dq_rule_candidates_with_fabric_ai`.
-
-    Parameters
-    ----------
-    profile : Any
-        Parameter `profile`.
-    contract : object, optional
-        Parameter `contract`.
-    business_context : object, optional
-        Parameter `business_context`.
-    dataset_name : object, optional
-        Parameter `dataset_name`.
-    table_name : object, optional
-        Parameter `table_name`.
-    response_format : object, optional
-        Parameter `response_format`.
-
-    Returns
-    -------
-    result : list[dict]
-        Return value from `generate_dq_rule_candidates_with_fabric_ai`.
-
-    Raises
-    ------
-    RuntimeError
-        Raised when input validation or runtime checks fail.
-
-    Examples
-    --------
-    >>> generate_dq_rule_candidates_with_fabric_ai(profile, contract)
-    """
-    import pandas as pd
-
-    if not _fabric_ai_dependencies_available():
-        raise RuntimeError(
-            "Fabric AI candidate generation requires Microsoft Fabric AI functions plus openai/pydantic runtime dependencies. "
-            "Install the fabric-ai extra or run %pip install openai pydantic in the Fabric notebook."
-        )
-
-    prompt = build_quality_rule_generation_prompt(
-        profile=profile,
-        contract=contract,
-        business_context=business_context,
-        table_name=table_name,
-        dataset_name=dataset_name,
-    )
-    prompt_df = pd.DataFrame([{"prompt": prompt}])
-    ai = getattr(prompt_df, "ai", None)
-    if ai is None or not hasattr(ai, "generate_response"):
-        raise RuntimeError(
-            "Fabric AI candidate generation requires Microsoft Fabric AI functions plus openai/pydantic runtime dependencies. "
-            "Install the fabric-ai extra or run %pip install openai pydantic in the Fabric notebook."
-        )
-
-    kwargs = {"prompt": prompt}
-    if response_format is not None:
-        kwargs["response_format"] = response_format
-    ai_response = ai.generate_response(**kwargs)
-    raw_response = _extract_fabric_ai_response_payload(ai_response)
-
-    parsed = parse_ai_quality_rule_candidates(raw_response)
-    out = []
-    for c in parsed.get("candidates", []):
-        rule = {
-            "rule_id": c.get("rule_id") or c.get("name"),
-            "table_name": table_name,
-            "column": c.get("column"),
-            "columns": c.get("columns"),
-            "rule_type": c.get("rule_type"),
-            "severity": c.get("severity", "warning"),
-            "description": c.get("layman_rule") or c.get("reason"),
-            "generated_by": "fabric_ai",
-            "status": "candidate",
-        }
-        cfg = c.get("rule_config") or {}
-        if isinstance(cfg, dict):
-            rule.update(cfg)
-        out.append(normalize_dq_rule(rule))
-    return out
 def generate_dq_rule_candidates(
     profile: dict,
     metadata: dict | None = None,

@@ -52,6 +52,8 @@ No public callable currently mapped to this step.
 
 | Function / class | Module | Purpose | Related helpers | Module page |
 |---|---|---|---|---|
+| [`check_fabric_ai_functions_available`](./step-07-ai-rule-generation-review/check_fabric_ai_functions_available/) | `ai` | Check whether Microsoft Fabric AI Functions appear available. | — | [module overview](../api/modules/ai/) |
+| [`configure_fabric_ai_functions`](./step-07-ai-rule-generation-review/configure_fabric_ai_functions/) | `ai` | Configure Fabric AI Functions default settings when available. | — | [module overview](../api/modules/ai/) |
 | [`load_data_contract`](./step-07-ai-rule-generation-review/load_data_contract/) | `quality` | Load data contract. | — | [module overview](../api/modules/quality/) |
 | [`run_quality_rules`](./step-07-ai-rule-generation-review/run_quality_rules/) | `quality` | Run quality rules. | [`_normalize_severity`](./internal/quality/_normalize_severity.md) (internal), [`_now_iso`](./internal/quality/_now_iso.md) (internal), [`_pandas_rule`](./internal/quality/_pandas_rule.md) (internal), [`_resolve_engine`](./internal/quality/_resolve_engine.md) (internal), [`_result_from_counts`](./internal/quality/_result_from_counts.md) (internal), [`_spark_rule`](./internal/quality/_spark_rule.md) (internal), [`_to_jsonable`](./internal/quality/_to_jsonable.md) (internal) | [module overview](../api/modules/quality/) |
 

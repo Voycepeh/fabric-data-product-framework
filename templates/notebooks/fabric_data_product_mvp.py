@@ -14,6 +14,7 @@ from fabric_data_product_framework import (
     profile_dataframe,
     run_quality_rules,
     summarize_profile,
+    check_fabric_ai_functions_available,
 )
 from fabric_data_product_framework.mvp_steps import get_mvp_step_registry, validate_mvp_artifacts
 
@@ -88,6 +89,9 @@ print("Source profile:", json.dumps(summarize_profile(source_profile), indent=2,
 # ==========================================================
 # 5) AI assisted DQ rule drafting [AI Assisted]
 # ==========================================================
+ai_functions_status = check_fabric_ai_functions_available()
+print("Fabric AI Functions status:", ai_functions_status)
+
 draft_dq_rules = [
     {"rule_id": "order_id_required", "rule_type": "not_null", "column": "order_id", "severity": "critical"},
     {"rule_id": "order_amount_non_negative", "rule_type": "range_check", "column": "order_amount", "min_value": 0, "severity": "critical"},
