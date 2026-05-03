@@ -1,6 +1,0 @@
-domain_name,table_name,column_name,data_type,is_nullable,is_primary_key,is_foreign_key,foreign_key_reference,business_definition,sensitivity_level,allowed_values,example_value,ai_generated_description,human_approved
-education_demo,student_enrolment,enrolment_id,string,FALSE,TRUE,FALSE,,Unique enrolment event identifier,internal,,ENR-0001,Unique ID for each enrolment transaction,TRUE
-education_demo,student_enrolment,student_key,string,FALSE,FALSE,FALSE,,Pseudonymous student key,restricted,,STD-1029,Pseudonymous identifier for a student,TRUE
-education_demo,student_enrolment,programme_code,string,FALSE,FALSE,FALSE,,Programme for which learner is enrolled,internal,"PRG-A|PRG-B|PRG-C",PRG-A,Programme classification code,TRUE
-education_demo,student_enrolment,enrolment_status,string,FALSE,FALSE,FALSE,,Current enrolment lifecycle status,internal,"active|deferred|withdrawn",active,Current status of the enrolment,TRUE
-education_demo,student_enrolment,event_date,date,FALSE,FALSE,FALSE,,Date of enrolment event,internal,,2026-04-01,Date the enrolment event was recorded,TRUE

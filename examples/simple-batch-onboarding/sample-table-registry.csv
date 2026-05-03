@@ -1,2 +1,0 @@
-domain_name,source_system,schema_name,table_name,target_lakehouse,target_table,business_description,data_owner,technical_owner,refresh_type,refresh_frequency,primary_key,expected_row_count_range,sensitivity_level,is_active
-education_demo,source_system_alpha,raw,student_enrolment,lh_education_demo,student_enrolment_curated,Fictional student enrolment events for onboarding demo,business_owner_demo,technical_owner_demo,batch,daily,enrolment_id,800-1200,internal,TRUE
