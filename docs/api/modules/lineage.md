@@ -16,19 +16,19 @@
 | [`fallback_copilot_lineage_prompt`](#fallback_copilot_lineage_prompt) | function | Build a fallback Copilot prompt for manual lineage enrichment. | — |
 | [`plot_lineage_steps`](#plot_lineage_steps) | function | Render lineage steps as a directed graph figure. | — |
 | [`scan_notebook_cells`](#scan_notebook_cells) | function | Scan multiple notebook cells and append cell references to lineage steps. | — |
-| [`scan_notebook_lineage`](#scan_notebook_lineage) | function | Extract deterministic lineage steps from notebook code using AST parsing. | `_call_name` (internal), `_flatten_chain` (internal), `_name` (internal), `_resolve_write_target` (internal), `_step` (internal) |
+| [`scan_notebook_lineage`](#scan_notebook_lineage) | function | Extract deterministic lineage steps from notebook code using AST parsing. | [`_call_name`](../../reference/internal/lineage/_call_name.md) (internal), [`_flatten_chain`](../../reference/internal/lineage/_flatten_chain.md) (internal), [`_name`](../../reference/internal/lineage/_name.md) (internal), [`_resolve_write_target`](../../reference/internal/lineage/_resolve_write_target.md) (internal), [`_step`](../../reference/internal/lineage/_step.md) (internal) |
 | [`validate_lineage_steps`](#validate_lineage_steps) | function | Validate lineage step structure and flag records requiring human review. | — |
 
 ## Internal helpers (module-level)
 
 | Helper | Related public callables |
 |---|---|
-| `_call_name` | `scan_notebook_lineage` |
-| `_flatten_chain` | `scan_notebook_lineage` |
-| `_literal` | — |
-| `_name` | `scan_notebook_lineage` |
-| `_resolve_write_target` | `scan_notebook_lineage` |
-| `_step` | `scan_notebook_lineage` |
+| [`_call_name`](../../reference/internal/lineage/_call_name.md) | `scan_notebook_lineage` |
+| [`_flatten_chain`](../../reference/internal/lineage/_flatten_chain.md) | `scan_notebook_lineage` |
+| [`_literal`](../../reference/internal/lineage/_literal.md) | — |
+| [`_name`](../../reference/internal/lineage/_name.md) | `scan_notebook_lineage` |
+| [`_resolve_write_target`](../../reference/internal/lineage/_resolve_write_target.md) | `scan_notebook_lineage` |
+| [`_step`](../../reference/internal/lineage/_step.md) | `scan_notebook_lineage` |
 
 ## Full module API
 

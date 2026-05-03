@@ -2,7 +2,9 @@
 from __future__ import annotations
 
 from collections import defaultdict
+import ast
 import importlib
+from pathlib import Path
 
 import mkdocs_gen_files
 
@@ -138,6 +140,27 @@ for items in symbols_by_step.values():
     items.sort(key=lambda item: item[0].lower())
 other_utilities.sort(key=lambda item: item[0].lower())
 
+
+def _load_internal_helpers() -> dict[str, list[str]]:
+    """Return module -> sorted internal helper names for package modules."""
+    package_root = Path(__file__).resolve().parents[1] / "src" / PACKAGE
+    module_helpers: dict[str, list[str]] = {}
+    for module_path in sorted(package_root.glob("*.py")):
+        if module_path.name == "__init__.py":
+            continue
+        tree = ast.parse(module_path.read_text(encoding="utf-8"))
+        helpers = sorted(
+            node.name
+            for node in tree.body
+            if isinstance(node, ast.FunctionDef) and node.name.startswith("_")
+        )
+        if helpers:
+            module_helpers[module_path.stem] = helpers
+    return module_helpers
+
+
+internal_helpers_by_module = _load_internal_helpers()
+
 for step in WORKFLOW_STEPS:
     step_number = step["number"]
     step_slug = step["slug"]
@@ -169,6 +192,22 @@ for symbol, dotted_path in other_utilities:
         fd.write("      docstring_style: numpy\n")
         fd.write("      docstring_section_style: table\n")
 
+for module_name, helpers in internal_helpers_by_module.items():
+    for helper_name in helpers:
+        doc_path = f"reference/internal/{module_name}/{helper_name}.md"
+        with mkdocs_gen_files.open(doc_path, "w") as fd:
+            fd.write(f"# `{helper_name}`\n\n")
+            fd.write("<div class=\"api-status-block\">\n")
+            fd.write("  <span class=\"api-chip api-chip-internal\">Internal helper</span>\n")
+            fd.write("  <div class=\"api-chip-subtitle\">This page documents an internal implementation helper, not a primary public API.</div>\n")
+            fd.write("</div>\n\n")
+            fd.write(f"::: {PACKAGE}.{module_name}.{helper_name}\n")
+            fd.write("    options:\n")
+            fd.write("      show_root_heading: false\n")
+            fd.write("      show_source: true\n")
+            fd.write("      docstring_style: numpy\n")
+            fd.write("      docstring_section_style: table\n")
+
 # NOTE:
 # `docs/reference/index.md` is intentionally maintained by hand as the
 # Function Reference landing page and must never be generated here.
@@ -188,3 +227,9 @@ with mkdocs_gen_files.open("reference/SUMMARY.md", "w") as fd:
         fd.write("- Other Utilities\n")
         for symbol, _ in other_utilities:
             fd.write(f"  - [{symbol}](other-utilities/{symbol}.md)\n")
+    if internal_helpers_by_module:
+        fd.write("- Internal Helpers\n")
+        for module_name, helpers in sorted(internal_helpers_by_module.items()):
+            fd.write(f"  - {module_name}\n")
+            for helper_name in helpers:
+                fd.write(f"    - [{helper_name}](internal/{module_name}/{helper_name}.md)\n")

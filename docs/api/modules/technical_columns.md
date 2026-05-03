@@ -8,22 +8,22 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`add_audit_columns`](#add_audit_columns) | function | Add run tracking and audit columns for ingestion workflows. | `_assert_columns_exist` (internal), `_bucket_values_pandas` (internal), `_get_fabric_runtime_context` (internal), `_resolve_engine` (internal) |
-| [`add_datetime_features`](#add_datetime_features) | function | Add localized datetime feature columns derived from a UTC datetime column. | `_assert_columns_exist` (internal), `_resolve_engine` (internal) |
-| [`add_hash_columns`](#add_hash_columns) | function | Add business key and row-level SHA256 hash columns. | `_assert_columns_exist` (internal), `_hash_row` (internal), `_non_technical_columns` (internal), `_resolve_engine` (internal) |
+| [`add_audit_columns`](#add_audit_columns) | function | Add run tracking and audit columns for ingestion workflows. | [`_assert_columns_exist`](../../reference/internal/technical_columns/_assert_columns_exist.md) (internal), [`_bucket_values_pandas`](../../reference/internal/technical_columns/_bucket_values_pandas.md) (internal), [`_get_fabric_runtime_context`](../../reference/internal/technical_columns/_get_fabric_runtime_context.md) (internal), [`_resolve_engine`](../../reference/internal/technical_columns/_resolve_engine.md) (internal) |
+| [`add_datetime_features`](#add_datetime_features) | function | Add localized datetime feature columns derived from a UTC datetime column. | [`_assert_columns_exist`](../../reference/internal/technical_columns/_assert_columns_exist.md) (internal), [`_resolve_engine`](../../reference/internal/technical_columns/_resolve_engine.md) (internal) |
+| [`add_hash_columns`](#add_hash_columns) | function | Add business key and row-level SHA256 hash columns. | [`_assert_columns_exist`](../../reference/internal/technical_columns/_assert_columns_exist.md) (internal), [`_hash_row`](../../reference/internal/technical_columns/_hash_row.md) (internal), [`_non_technical_columns`](../../reference/internal/technical_columns/_non_technical_columns.md) (internal), [`_resolve_engine`](../../reference/internal/technical_columns/_resolve_engine.md) (internal) |
 | [`default_technical_columns`](#default_technical_columns) | function | Return framework-generated and legacy technical column names to ignore. | — |
 
 ## Internal helpers (module-level)
 
 | Helper | Related public callables |
 |---|---|
-| `_assert_columns_exist` | `add_audit_columns`, `add_datetime_features`, `add_hash_columns` |
-| `_bucket_values_pandas` | `add_audit_columns` |
-| `_get_fabric_runtime_context` | `add_audit_columns` |
-| `_hash_row` | `add_hash_columns` |
-| `_non_technical_columns` | `add_hash_columns` |
-| `_resolve_engine` | `add_audit_columns`, `add_datetime_features`, `add_hash_columns` |
-| `_safe_string` | — |
+| [`_assert_columns_exist`](../../reference/internal/technical_columns/_assert_columns_exist.md) | `add_audit_columns`, `add_datetime_features`, `add_hash_columns` |
+| [`_bucket_values_pandas`](../../reference/internal/technical_columns/_bucket_values_pandas.md) | `add_audit_columns` |
+| [`_get_fabric_runtime_context`](../../reference/internal/technical_columns/_get_fabric_runtime_context.md) | `add_audit_columns` |
+| [`_hash_row`](../../reference/internal/technical_columns/_hash_row.md) | `add_hash_columns` |
+| [`_non_technical_columns`](../../reference/internal/technical_columns/_non_technical_columns.md) | `add_hash_columns` |
+| [`_resolve_engine`](../../reference/internal/technical_columns/_resolve_engine.md) | `add_audit_columns`, `add_datetime_features`, `add_hash_columns` |
+| [`_safe_string`](../../reference/internal/technical_columns/_safe_string.md) | — |
 
 ## Full module API
 
