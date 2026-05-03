@@ -84,7 +84,7 @@ MVP_STEP_REGISTRY: list[dict[str, Any]] = [
     },
     {
         "step_number": 11,
-        "step_name": "Write output and profile output",
+        "step_name": "Output write, output profiling, and metadata logging",
         "owner_type": "framework",
         "canonical_modules": ["fabric_io.py", "profiling.py", "metadata.py"],
         "expected_artifacts": ["target_write_result", "output_profile"],
@@ -666,4 +666,3 @@ def validate_mvp_artifacts(artifacts: dict[str, Any]) -> dict[str, Any]:
 
 # --- merged from ai_context.py ---
 """AI context export module scaffold."""
-

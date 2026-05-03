@@ -76,10 +76,11 @@ No public callable currently mapped to this step.
 | `add_hash_columns` | `technical_columns` | Add business key and row-level SHA256 hash columns. | `_assert_columns_exist` (internal), `_hash_row` (internal), `_non_technical_columns` (internal), `_resolve_engine` (internal) | [module API](../api/modules/technical_columns.md) |
 | `default_technical_columns` | `technical_columns` | Return framework-generated and legacy technical column names to ignore. | — | [module API](../api/modules/technical_columns.md) |
 
-## Step 11: Write output and profile output
+## Step 11: Output write, output profiling, and metadata logging
 
 | Function / class | Module | Purpose | Related helpers | API link |
 |---|---|---|---|---|
+| `lakehouse_table_write` | `fabric_io` | Write a Spark DataFrame to a Fabric lakehouse Delta table. | — | [module API](../api/modules/fabric_io.md) |
 | `warehouse_write` | `fabric_io` | Write a Spark DataFrame to a Microsoft Fabric warehouse table. | — | [module API](../api/modules/fabric_io.md) |
 | `write_multiple_metadata_outputs` | `metadata` | Write multiple metadata outputs. | — | [module API](../api/modules/metadata.md) |
 
