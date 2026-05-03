@@ -11,26 +11,20 @@ from fabric_data_product_framework.runtime import (
 )
 
 
-def test_validate_notebook_name_allows_expected_prefix():
-    errors = validate_notebook_name(
-        "source_to_product_synthetic_orders",
-        allowed_prefixes=["source_to_product_", "bronze_to_silver_"],
-    )
+def test_validate_notebook_name_allows_finalized_model_names():
+    errors = validate_notebook_name("03_pc_email_metadata_source_to_unified")
     assert errors == []
 
 
-def test_validate_notebook_name_rejects_disallowed_prefix():
-    errors = validate_notebook_name(
-        "adhoc_orders_pipeline",
-        allowed_prefixes=["source_to_product_", "bronze_to_silver_"],
-    )
+def test_validate_notebook_name_rejects_non_model_name():
+    errors = validate_notebook_name("adhoc_orders_pipeline")
     assert errors
-    assert "must start with one of" in errors[0]
+    assert "must follow one of" in errors[0]
 
 
 def test_assert_notebook_name_valid_raises_for_invalid_name():
     with pytest.raises(NotebookNamingError):
-        assert_notebook_name_valid("Bad Name", allowed_prefixes=["source_to_product_"])
+        assert_notebook_name_valid("Bad Name")
 
 
 def test_generate_run_id_returns_unique_values():
@@ -46,7 +40,7 @@ def test_build_runtime_context_returns_expected_json_safe_keys():
         environment="dev",
         source_table="source.synthetic_orders",
         target_table="product.synthetic_orders",
-        notebook_name="source_to_product_synthetic_orders",
+        notebook_name="03_pc_synthetic_orders_source_to_product",
         run_id="run_20260101T000000Z_deadbeef",
     )
 

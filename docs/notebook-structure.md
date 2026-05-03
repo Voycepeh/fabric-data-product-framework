@@ -1,19 +1,37 @@
 # Notebook Structure
 
-Use this six-notebook split for a teachable and handover-friendly implementation.
+Use this finalized notebook model in each Fabric environment workspace.
 
-| Notebook | Stable convention |
-| --- | --- |
-| `00_governance_setup` | Capture purpose, owner/steward, usage boundaries, and governance context. |
-| `01_source_and_profile` | Declare source data and run source profiling. |
-| `02_exploration_notes` | Record transformation rationale, caveats, and decisions. |
-| `03_transform_and_model` | Apply transformation logic and prepare outputs. |
-| `04_checks_and_gates` | Run DQ, drift, and incremental safety checks. |
-| `05_handover_export` | Export lineage, run summary, and handover context. |
+```text
+<env> Workspace
+├── 00_env_config
+│   └── One reusable config notebook per environment workspace
+│
+├── 01_data_sharing_agreement_<agreement>
+│   └── Governance, approved usage, permissions, restrictions
+│
+├── Exploration notebooks (many)
+│   ├── 02_ex_<agreement>_source_profile
+│   └── 02_ex_<agreement>_event_logic
+│
+└── Pipeline contract notebooks (many)
+    ├── 03_pc_<agreement>_<from>_to_<to>
+    │   └── Executable pipeline + handover
+    └── 03_pc_<agreement>_<from>_to_<to>
+        └── Executable pipeline + handover
+```
 
-## Stable notebook standards
+## Notebook roles
 
-- Keep AI-generated content reviewable and explicitly human-approved.
-- Keep run artifacts reproducible, including profiles, DQ results, lineage, and handover outputs.
+- `00_env_config` is the shared runtime/config notebook for that environment workspace.
+- `01_data_sharing_agreement_<agreement>` is the governance artifact for one agreement.
+- `02_ex_<agreement>_*` notebooks are manual exploration notebooks and are not scheduled.
+- `03_pc_<agreement>_<from>_to_<to>` notebooks are scheduled operational notebooks and include executable pipeline logic plus handover in the same notebook.
+
+## Relationship model
+
+- One agreement can connect to many exploration notebooks.
+- One agreement can connect to many pipeline contract notebooks.
+- Pipeline stage movement is encoded inside `<from>_to_<to>`, not by changing notebook type prefixes.
 
 For workflow steps and execution order, use [Quick Start](quick-start.md).

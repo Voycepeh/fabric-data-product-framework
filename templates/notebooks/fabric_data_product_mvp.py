@@ -37,7 +37,7 @@ runtime_context = fdpf.build_runtime_context(
     environment="Sandbox",
     source_table=SOURCE_TABLE,
     target_table=TARGET_TABLE,
-    notebook_name="dex_source_to_dex_unified_orders",
+    notebook_name="03_pc_orders_source_to_unified",
 )
 RUN_ID = runtime_context["run_id"]
 
@@ -47,7 +47,7 @@ for step in get_mvp_step_registry():
 # ==========================================================
 # 2) Fabric config and paths [Human]
 # ==========================================================
-# In Fabric notebooks, run `%run 00_config` before this template.
+# In Fabric notebooks, run `%run 00_env_config` before this template.
 config = fdpf.load_fabric_config(CONFIG)
 lh_source = fdpf.get_path("Sandbox", "Source", config=config)
 lh_unified = fdpf.get_path("Sandbox", "Unified", config=config)

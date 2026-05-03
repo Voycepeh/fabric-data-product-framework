@@ -68,10 +68,11 @@ def load_fabric_config(config: dict[str, dict[str, Housepath]]) -> dict[str, dic
     This framework expects Fabric environment paths to be defined in a separate
     config notebook, then passed into this function as a normal Python object.
 
-    In a Fabric notebook, run the config notebook first:
+    In a Fabric notebook, run ``00_env_config`` first. It is one reusable
+    config notebook per environment workspace:
 
     >>> # Fabric notebook cell
-    >>> # %run 00_config
+    >>> # %run 00_env_config
 
     The config notebook should define a mapping like this:
 
@@ -166,7 +167,7 @@ def get_path(
 
     Examples
     --------
-    >>> # %run 00_config
+    >>> # %run 00_env_config
     >>> lh_source = get_path("Sandbox", "Source", config=CONFIG)
     >>> lh_unified = get_path("Sandbox", "Unified", config=CONFIG)
     >>> lh_source.house_name
@@ -847,7 +848,7 @@ def check_naming_convention(notebook_name=None, allowed_prefixes=None, fail_on_e
 
     Examples
     --------
-    >>> # %run 00_config
+    >>> # %run 00_env_config
     >>> check_naming_convention(allowed_prefixes=NOTEBOOK_PREFIX_LIST)
     """
     if not allowed_prefixes:

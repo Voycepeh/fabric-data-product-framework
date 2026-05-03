@@ -22,12 +22,11 @@ ctx = build_runtime_context(
     environment="dev",
     source_table="source.synthetic_orders",
     target_table="product.synthetic_orders",
-    notebook_name="source_to_product_synthetic_orders",
+    notebook_name="03_pc_email_metadata_source_to_unified",
 )
 
 assert_notebook_name_valid(
     ctx["notebook_name"],
-    allowed_prefixes=["source_to_product_", "bronze_to_silver_", "silver_to_gold_"],
 )
 
 source_identifier = build_table_identifier(schema="source", table="synthetic_orders")
