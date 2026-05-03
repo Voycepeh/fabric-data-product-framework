@@ -46,6 +46,20 @@ from .profiling import (
     profile_dataframe_to_metadata,
     profile_metadata_to_records,
 )
+from .ai import (
+    build_dq_rule_candidate_prompt,
+    build_governance_candidate_prompt,
+    build_handover_summary_prompt,
+    build_manual_dq_rule_prompt_package,
+    build_manual_governance_prompt_package,
+    build_manual_handover_prompt_package,
+    check_fabric_ai_functions_available,
+    configure_fabric_ai_functions,
+    generate_dq_rule_candidates_with_fabric_ai,
+    generate_governance_candidates_with_fabric_ai,
+    generate_handover_summary_with_fabric_ai,
+    parse_manual_ai_json_response,
+)
 from .quality import load_data_contract, run_data_product, run_quality_rules
 from .run_summary import build_run_summary, render_run_summary_markdown
 from .runtime import assert_notebook_name_valid, build_runtime_context, generate_run_id, validate_notebook_name
@@ -73,6 +87,18 @@ __all__ = [
     "profile_metadata_to_records",
     "build_ai_quality_context",
     "run_quality_rules",
+    "check_fabric_ai_functions_available",
+    "parse_manual_ai_json_response",
+    "build_manual_handover_prompt_package",
+    "build_manual_governance_prompt_package",
+    "build_manual_dq_rule_prompt_package",
+    "build_handover_summary_prompt",
+    "build_governance_candidate_prompt",
+    "build_dq_rule_candidate_prompt",
+    "configure_fabric_ai_functions",
+    "generate_dq_rule_candidates_with_fabric_ai",
+    "generate_governance_candidates_with_fabric_ai",
+    "generate_handover_summary_with_fabric_ai",
     "check_schema_drift",
     "check_partition_drift",
     "check_profile_drift",

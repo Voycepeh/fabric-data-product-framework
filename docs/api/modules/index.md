@@ -2,6 +2,7 @@
 
 Generated module summaries with public exports and related internal helpers.
 
+- [`ai`](ai.md)
 - [`config`](config.md) *(internal-only)*
 - [`docs_metadata`](docs_metadata.md) *(internal-only)*
 - [`drift`](drift.md)

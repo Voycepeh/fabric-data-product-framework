@@ -23,8 +23,6 @@
 | [`_combine_contract_checks`](../../reference/internal/quality/_combine_contract_checks.md) | — |
 | [`_dict`](../../reference/internal/quality/_dict.md) | — |
 | [`_effective_contract_dict`](../../reference/internal/quality/_effective_contract_dict.md) | [`run_data_product`](../../reference/step-09-core-transformation-business-logic/run_data_product.md) |
-| [`_extract_fabric_ai_response_payload`](../../reference/internal/quality/_extract_fabric_ai_response_payload.md) | — |
-| [`_fabric_ai_dependencies_available`](../../reference/internal/quality/_fabric_ai_dependencies_available.md) | — |
 | [`_json_safe`](../../reference/internal/quality/_json_safe.md) | — |
 | [`_jsonable`](../../reference/internal/quality/_jsonable.md) | — |
 | [`_normalize_severity`](../../reference/internal/quality/_normalize_severity.md) | [`run_quality_rules`](../../reference/step-07-ai-rule-generation-review/run_quality_rules.md) |

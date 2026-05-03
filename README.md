@@ -41,6 +41,26 @@ This framework takes inspiration from [Databricks Labs DQX](https://databricksla
 
 This repository adapts that pattern to Microsoft Fabric notebooks, Lakehouse/Warehouse, Fabric AI functions, and Copilot-style workflows.
 
-## How does AI comes into play?
+## How does AI come into play?
 AI helps draft DQ rules, sensitivity labels, lineage, transformation summaries, and handover notes.
 We do it via creating functions within this framework that allow us to prompt the native [AI function](https://learn.microsoft.com/en-us/fabric/data-science/ai-functions/overview?tabs=pandas-pyspark%2Cpandas) or standardize prompts that we manually generate and paste into copilot.
+
+### Microsoft Fabric AI Functions prerequisites
+Fabric AI Functions are used as an optional AI in the loop layer for generating candidate metadata, quality rules, governance suggestions, and handover summaries from profiling evidence. They are not required for the deterministic core pipeline to run.
+
+Requirements:
+- Fabric Runtime 1.3 or later.
+- Paid Fabric capacity F2 or higher, or P capacity.
+- Tenant switch for Copilot / Azure OpenAI powered features enabled.
+- See Microsoft Learn: [AI Functions overview](https://learn.microsoft.com/en-us/fabric/data-science/ai-functions/overview).
+
+Dependency notes (runtime and DataFrame-type dependent):
+- Pandas with Python runtime: install `synapseml_internal` and `synapseml_core` wheel dependencies plus `openai`.
+- Pandas with PySpark runtime: install `openai`.
+- PySpark DataFrame with PySpark runtime: no installation required.
+
+Use the Microsoft Learn installation commands for your environment rather than pinning local versions unless Microsoft documentation requires specific versions.
+
+The framework supports native Fabric AI Functions when available.
+When Fabric AI Functions are unavailable, you can generate the same standardized prompts and manually paste them into Copilot or another LLM.
+Human-reviewed outputs should then be stored back into framework metadata or rules tables.
