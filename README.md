@@ -2,9 +2,8 @@
 
 A practical starter kit for building governed, quality-checked, AI-ready notebooks in Microsoft Fabric.
 
-Documentation: https://voycepeh.github.io/fabricops-kit/  
-
-Function reference: https://voycepeh.github.io/fabricops-kit/reference/
+Quick Start and list of functions
+[https://voycepeh.github.io/fabricops-kit/  ](https://voycepeh.github.io/FabricOps-Starter-Kit/)
 
 FabricOps Starter Kit helps teams structure Microsoft Fabric notebooks with reusable configuration, runtime validation, profiling, quality checks, lineage, metadata logging, and handover patterns.
 
