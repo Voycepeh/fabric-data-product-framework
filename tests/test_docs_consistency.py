@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 import inspect
 
-from fabric_data_product_framework import drift, incremental, metadata, profiling, technical_columns
+from fabricops_kit import drift, incremental, metadata, profiling, technical_columns
 
 
 IMPORTANT_PUBLIC_FUNCTIONS = [

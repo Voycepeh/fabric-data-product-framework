@@ -3,7 +3,7 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "fabric-data-product-framework"
+name = "fabricops-kit"
 version = "0.1.0"
 description = "A practical starter kit for building governed, quality-checked, AI-ready notebooks in Microsoft Fabric."
 requires-python = ">=3.10"
@@ -42,7 +42,7 @@ include-package-data = true
 where = ["src"]
 
 [tool.setuptools.package-data]
-fabric_data_product_framework = ["schemas/*.json"]
+fabricops_kit = ["schemas/*.json"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src", "."]

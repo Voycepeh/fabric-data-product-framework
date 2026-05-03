@@ -10,8 +10,8 @@ import re
 from collections import Counter
 from typing import Any
 
-from fabric_data_product_framework.metadata import write_metadata_records
-from fabric_data_product_framework.profiling import to_jsonable
+from fabricops_kit.metadata import write_metadata_records
+from fabricops_kit.profiling import to_jsonable
 
 DEFAULT_CLASSIFICATION_TERMS: dict[str, list[str]] = {
     "identifier": ["staff_id", "student_id", "employee_id", "user_id", "person_id", "nric", "national_id", "passport", "matric", "account_id"],

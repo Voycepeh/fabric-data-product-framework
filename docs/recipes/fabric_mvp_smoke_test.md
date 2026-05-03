@@ -80,7 +80,7 @@ If `uv` cannot access PyPI in your environment, record that limitation and run e
 5. Run import/version validation:
 
 ```python
-import fabric_data_product_framework as fdpf
+import fabricops_kit as fdpf
 
 print("Package path:", fdpf.__file__)
 print("Package version:", getattr(fdpf, "__version__", "unknown"))

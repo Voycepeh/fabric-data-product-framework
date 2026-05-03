@@ -2,7 +2,7 @@ import builtins
 
 import pytest
 
-from fabric_data_product_framework.config import (
+from fabricops_kit.config import (
     create_ai_prompt_config,
     create_framework_config,
     create_governance_config,
@@ -11,7 +11,7 @@ from fabric_data_product_framework.config import (
     create_path_config,
     create_quality_config,
 )
-from fabric_data_product_framework.ai import (
+from fabricops_kit.ai import (
     build_dq_rule_candidate_prompt,
     build_governance_candidate_prompt,
     build_handover_summary_prompt,

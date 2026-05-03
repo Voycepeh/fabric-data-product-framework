@@ -9,7 +9,7 @@ import uuid
 
 import pandas as pd
 
-from fabric_data_product_framework.runtime import detect_dataframe_engine, validate_engine
+from fabricops_kit.runtime import detect_dataframe_engine, validate_engine
 
 
 def default_technical_columns() -> list[str]:

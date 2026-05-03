@@ -1,7 +1,7 @@
 import pytest
 
-from fabric_data_product_framework.profiling import (
-    ODI_METADATA_LOGGER,
+from fabricops_kit.profiling import (
+    generate_metadata_profile,
     profile_dataframe_to_metadata,
 )
 
@@ -56,6 +56,6 @@ def test_zero_row_dataframe_no_divide_by_zero(spark_session):
 def test_odi_wrapper_matches_new_function_shape(spark_session):
     df = _make_spark_df(spark_session)
     out_new = profile_dataframe_to_metadata(df, "orders_clean")
-    out_old = ODI_METADATA_LOGGER(df, "orders_clean")
+    out_old = generate_metadata_profile(df, "orders_clean")
     assert out_new.columns == out_old.columns
     assert out_new.count() == out_old.count()

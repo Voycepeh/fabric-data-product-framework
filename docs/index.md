@@ -23,4 +23,4 @@ Use this site as the **operating manual** for running notebook-driven FabricOps 
 
 ## Package/import compatibility note
 
-The Python package/import path remains `fabric_data_product_framework` for compatibility in this release.
+The Python package/import path remains `fabricops_kit` for compatibility in this release.

@@ -334,7 +334,7 @@ def assert_no_blocking_schema_drift(result: dict) -> None:
 from datetime import datetime, timezone
 import json
 
-from fabric_data_product_framework.profiling import to_jsonable
+from fabricops_kit.profiling import to_jsonable
 
 
 def _utc_now_iso() -> str:
@@ -865,8 +865,8 @@ from datetime import date, datetime, timedelta, timezone
 import hashlib
 from typing import Any
 
-from fabric_data_product_framework.runtime import detect_dataframe_engine, validate_engine
-from fabric_data_product_framework.profiling import to_jsonable
+from fabricops_kit.runtime import detect_dataframe_engine, validate_engine
+from fabricops_kit.profiling import to_jsonable
 
 
 class IncrementalSafetyError(Exception):

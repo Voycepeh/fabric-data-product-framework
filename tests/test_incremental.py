@@ -5,7 +5,7 @@ import sys
 import pandas as pd
 import pytest
 
-from fabric_data_product_framework.drift import (
+from fabricops_kit.drift import (
     IncrementalSafetyError,
     assert_incremental_safe,
     build_incremental_safety_records,
@@ -141,14 +141,14 @@ def test_incremental_outputs_are_json_serializable() -> None:
 
 
 def test_no_pyspark_import_at_module_import_time() -> None:
-    sys.modules.pop("fabric_data_product_framework.drift", None)
+    sys.modules.pop("fabricops_kit.drift", None)
     before = set(sys.modules)
-    importlib.import_module("fabric_data_product_framework.drift")
+    importlib.import_module("fabricops_kit.drift")
     assert "pyspark" not in (set(sys.modules) - before)
 
 
 def test_spark_path_code_exists_without_topandas_usage() -> None:
-    import fabric_data_product_framework.drift as incremental
+    import fabricops_kit.drift as incremental
 
     source = open(incremental.__file__, encoding="utf-8").read()
     assert "_build_spark_partition_snapshot" in source

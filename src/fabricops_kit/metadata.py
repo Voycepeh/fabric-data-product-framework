@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from fabric_data_product_framework.profiling import to_jsonable
+from fabricops_kit.profiling import to_jsonable
 
 
 def build_dataset_run_record(

@@ -18,7 +18,7 @@ Current Spark MVP behavior:
 Use `flatten_profile_for_metadata` to transform a dataset profile into column-level metadata rows suitable for appending into metadata tables.
 
 ```python
-from fabric_data_product_framework.profiling import (
+from fabricops_kit.profiling import (
     default_technical_columns,
     flatten_profile_for_metadata,
     profile_dataframe,
@@ -44,7 +44,7 @@ metadata_rows = flatten_profile_for_metadata(
 Use `profile_table_and_write_metadata` to avoid manual chaining of `profile_dataframe` + `flatten_profile_for_metadata` + `spark.createDataFrame` + `saveAsTable`.
 
 ```python
-from fabric_data_product_framework.profiling import profile_table_and_write_metadata
+from fabricops_kit.profiling import profile_table_and_write_metadata
 
 profile_table_and_write_metadata(
     spark=spark,
@@ -57,4 +57,4 @@ profile_table_and_write_metadata(
 )
 ```
 
-These helpers are Spark/Fabric convenience APIs for `saveAsTable`-compatible metadata tables. For runtime-agnostic adapter flows, keep using `fabric_data_product_framework.metadata.write_metadata_records(...)` with an injected writer.
+These helpers are Spark/Fabric convenience APIs for `saveAsTable`-compatible metadata tables. For runtime-agnostic adapter flows, keep using `fabricops_kit.metadata.write_metadata_records(...)` with an injected writer.

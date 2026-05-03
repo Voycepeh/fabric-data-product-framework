@@ -30,8 +30,8 @@ Prepare these required human inputs up front:
 ## 1) Clone the repository
 
 ```bash
-git clone https://github.com/Voycepeh/fabric-data-product-framework.git
-cd fabric-data-product-framework
+git clone https://github.com/Voycepeh/fabricops-kit.git
+cd fabricops-kit
 ```
 
 ## 2) Set up with uv

@@ -19,7 +19,7 @@ Maintain a reusable `00_config` notebook (or equivalent Python file) that builds
 ## Runtime usage
 
 ```python
-from fabric_data_product_framework import load_fabric_config, get_path
+from fabricops_kit import load_fabric_config, get_path
 
 # %run 00_config
 config = load_fabric_config(CONFIG)
@@ -36,7 +36,7 @@ lh_in = get_path("Sandbox", "Source", config=config)
 ## AI prompt template override in `00_config`
 
 ```python
-from fabric_data_product_framework import (
+from fabricops_kit import (
     create_ai_prompt_config,
     create_framework_config,
     create_governance_config,

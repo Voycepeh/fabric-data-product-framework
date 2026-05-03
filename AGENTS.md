@@ -26,13 +26,13 @@ Guide agent/Codex contributions for this repository so changes stay reusable, pu
 - Update `docs/` when lifecycle or architecture behavior changes.
 - Keep examples in `examples/` runnable and teachable for Python users.
 - Use links to detailed docs instead of duplicating long explanations across multiple files.
-- Docstrings in `src/fabric_data_product_framework/` are the source of truth for generated API docs under `docs/api/`.
+- Docstrings in `src/fabricops_kit/` are the source of truth for generated API docs under `docs/api/`.
 - Do not create or maintain duplicate manual function/member lists in `README.md`, `src/README.md`, or `docs/api/`.
 
 
 ## Public callable catalogue and workflow mapping rules
 
-- Add a symbol to `src/fabric_data_product_framework/__init__.py::__all__` only when it is intentionally user-facing.
+- Add a symbol to `src/fabricops_kit/__init__.py::__all__` only when it is intentionally user-facing.
 - Every public callable in `__all__` must have a complete NumPy-style docstring with a meaningful first sentence.
 - Public callables must be assignable to a 13-step workflow category through the central registry (`get_mvp_step_registry` / `MVP_STEP_REGISTRY`) consumed by the reference generator.
 - If a public callable depends on important internal helpers, keep those helpers documented enough that generated relationship lists remain useful.
@@ -45,7 +45,7 @@ Guide agent/Codex contributions for this repository so changes stay reusable, pu
 
 ## Docstring requirements for public APIs
 
-For every new or modified public API under `src/fabric_data_product_framework/` (public function, class, dataclass, and important public method):
+For every new or modified public API under `src/fabricops_kit/` (public function, class, dataclass, and important public method):
 
 - Include a NumPy-style docstring.
 - Use NumPy-style sections:
@@ -118,7 +118,7 @@ def api_name(param1: str, param2: int = 0) -> bool:
 
 ## Review checklist (required before PR completion)
 
-- [ ] New/modified public APIs in `src/fabric_data_product_framework/` include complete NumPy-style docstrings.
+- [ ] New/modified public APIs in `src/fabricops_kit/` include complete NumPy-style docstrings.
 - [ ] Docstrings describe actual behavior and avoid placeholders.
 - [ ] No duplicate adjacent docstrings exist.
 - [ ] No mixed Google-style and NumPy-style section headers.
@@ -133,7 +133,7 @@ import ast
 from pathlib import Path
 
 bad = []
-for path in Path("src/fabric_data_product_framework").glob("*.py"):
+for path in Path("src/fabricops_kit").glob("*.py"):
     tree = ast.parse(path.read_text(encoding="utf-8"))
     for node in ast.walk(tree):
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
@@ -160,5 +160,5 @@ PY
 
 - Public brand name is **FabricOps Starter Kit**.
 - Preferred wording: **governed, quality-checked, AI-ready notebooks in Microsoft Fabric**.
-- Avoid reintroducing **Fabric Data Product Framework** as the public-facing brand.
+- Avoid reintroducing **FabricOps Starter Kit** as the public-facing brand.
 - Do not position the project as a full data product platform.

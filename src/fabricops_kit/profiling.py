@@ -1,6 +1,6 @@
 """Fabric-first profiling utilities for standardized metadata evidence.
 
-This module focuses on producing a stable, ODI-compatible metadata profile from a
+This module focuses on producing a stable, metadata-compatible metadata profile from a
 Spark DataFrame. The profile can be written to metadata tables and reused as
 AI-ready context for deterministic data quality rule hinting.
 """
@@ -14,8 +14,8 @@ from typing import Any
 
 import pandas as pd
 
-from fabric_data_product_framework.runtime import detect_dataframe_engine, validate_engine
-from fabric_data_product_framework.technical_columns import default_technical_columns
+from fabricops_kit.runtime import detect_dataframe_engine, validate_engine
+from fabricops_kit.technical_columns import default_technical_columns
 
 
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
@@ -137,7 +137,7 @@ def profile_dataframe_to_metadata(
     exclude_columns: list[str] | set[str] | None = None,
     run_timestamp_timezone: str = "Asia/Singapore",
 ):
-    """Profile a Spark/Fabric DataFrame into ODI-compatible metadata rows.
+    """Profile a Spark/Fabric DataFrame into metadata-compatible metadata rows.
 
     Notes
     -----
@@ -194,16 +194,28 @@ def profile_dataframe_to_metadata(
     return out
 
 
-def ODI_METADATA_LOGGER(df, tablename: str, exclude_columns=None, run_timestamp_timezone="Asia/Singapore"):
-    """Compatibility wrapper kept for existing Fabric notebook workflows.
+def generate_metadata_profile(df, table_name: str, exclude_columns=None, run_timestamp_timezone="Asia/Singapore"):
+    """Generate standard metadata profile rows for a Spark/Fabric DataFrame.
 
-    Examples
-    --------
-    >>> ODI_METADATA_LOGGER(df, "orders_clean")
+    Parameters
+    ----------
+    df : Any
+        Spark DataFrame to profile.
+    table_name : str
+        Logical table name used in the output metadata records.
+    exclude_columns : list[str] | set[str] | None, optional
+        Optional columns to skip during profiling.
+    run_timestamp_timezone : str, default="Asia/Singapore"
+        Timezone used to stamp profile rows.
+
+    Returns
+    -------
+    Any
+        Spark DataFrame with metadata profile records.
     """
     return profile_dataframe_to_metadata(
         df=df,
-        table_name=tablename,
+        table_name=table_name,
         exclude_columns=exclude_columns,
         run_timestamp_timezone=run_timestamp_timezone,
     )
@@ -312,7 +324,7 @@ def build_ai_quality_context(
     }
 
 
-# Legacy compatibility shims
+# Legacy helper utilities
 def profile_dataframe(df, dataset_name: str = "unknown", sample_size: int = 5, top_n: int = 5, engine: str = "auto") -> dict[str, Any]:
     """Build a lightweight profile for pandas or Spark-like DataFrames."""
     selected_engine = validate_engine(engine)

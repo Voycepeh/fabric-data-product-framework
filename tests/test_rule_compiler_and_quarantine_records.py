@@ -1,10 +1,10 @@
 import pandas as pd
 
-from fabric_data_product_framework.quality import (
+from fabricops_kit.quality import (
     build_quarantine_rule_coverage_records,
     build_quarantine_summary_records,
 )
-from fabric_data_product_framework.quality import (
+from fabricops_kit.quality import (
     build_rule_registry_records,
     compile_layman_rules_to_quality_rules,
 )

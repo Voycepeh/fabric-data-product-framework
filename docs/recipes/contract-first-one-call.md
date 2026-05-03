@@ -12,7 +12,7 @@ Run a full contract-first workflow with one orchestrated execution call.
 ## Example
 
 ```python
-from fabric_data_product_framework import (
+from fabricops_kit import (
     assert_data_product_passed,
     load_data_contract,
     run_data_product,

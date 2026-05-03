@@ -197,7 +197,7 @@ def build_runtime_context(
 
     Examples
     --------
-    >>> from fabric_data_product_framework.runtime import build_runtime_context
+    >>> from fabricops_kit.runtime import build_runtime_context
     >>> build_runtime_context(
     ...     dataset_name="orders",
     ...     environment="Sandbox",

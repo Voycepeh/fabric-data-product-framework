@@ -26,7 +26,7 @@ Freshness compares `datetime.now(timezone.utc) - max_watermark` against the pars
 ## Example
 
 ```python
-from fabric_data_product_framework.quality import validate_runtime_contracts, assert_contracts_valid
+from fabricops_kit.quality import validate_runtime_contracts, assert_contracts_valid
 
 result = validate_runtime_contracts(source_df=df_source, output_df=df_output, contract=contract, engine="auto")
 assert_contracts_valid(result)

@@ -3,15 +3,15 @@
 This file is provider-neutral; Fabric AI calls are shown as pseudocode placeholders.
 """
 
-from fabric_data_product_framework.ai_quality_rules import (
+from fabricops_kit.ai_quality_rules import (
     build_layman_rule_records,
     build_quality_rule_generation_prompt,
     parse_ai_quality_rule_candidates,
 )
-from fabric_data_product_framework.profiling import profile_dataframe
-from fabric_data_product_framework.quality import build_quality_result_records, run_quality_rules
-from fabric_data_product_framework.quarantine import split_valid_and_quarantine
-from fabric_data_product_framework.rule_compiler import (
+from fabricops_kit.profiling import profile_dataframe
+from fabricops_kit.quality import build_quality_result_records, run_quality_rules
+from fabricops_kit.quarantine import split_valid_and_quarantine
+from fabricops_kit.rule_compiler import (
     build_rule_registry_records,
     compile_layman_rules_to_quality_rules,
 )

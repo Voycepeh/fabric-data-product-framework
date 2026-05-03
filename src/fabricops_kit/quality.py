@@ -15,7 +15,7 @@ import pandas as pd
 import yaml
 
 
-from fabric_data_product_framework.drift import (
+from fabricops_kit.drift import (
     build_and_write_partition_snapshot,
     build_and_write_schema_snapshot,
     check_partition_drift,
@@ -24,18 +24,18 @@ from fabric_data_product_framework.drift import (
     load_latest_schema_snapshot,
     summarize_drift_results,
 )
-from fabric_data_product_framework.lineage import build_lineage_records
-from fabric_data_product_framework.metadata import build_dataset_run_record, write_metadata_records
-from fabric_data_product_framework.profiling import flatten_profile_for_metadata, profile_dataframe
-from fabric_data_product_framework.governance import (
+from fabricops_kit.lineage import build_lineage_records
+from fabricops_kit.metadata import build_dataset_run_record, write_metadata_records
+from fabricops_kit.profiling import flatten_profile_for_metadata, profile_dataframe
+from fabricops_kit.governance import (
     build_governance_classification_records,
     classify_columns,
     summarize_governance_classifications,
     write_governance_classifications,
 )
-from fabric_data_product_framework.run_summary import build_run_summary, build_run_summary_record
-from fabric_data_product_framework.runtime import build_runtime_context
-from fabric_data_product_framework.technical_columns import add_audit_columns, add_hash_columns, default_technical_columns
+from fabricops_kit.run_summary import build_run_summary, build_run_summary_record
+from fabricops_kit.runtime import build_runtime_context
+from fabricops_kit.technical_columns import add_audit_columns, add_hash_columns, default_technical_columns
 
 SUPPORTED_RULE_TYPES = {
     "not_null",
@@ -874,7 +874,7 @@ def run_dq_workflow(spark, df, quality_contract, dataset_name: str, table_name: 
 
 
 # Contract validation
-from fabric_data_product_framework.runtime import detect_dataframe_engine, validate_engine
+from fabricops_kit.runtime import detect_dataframe_engine, validate_engine
 
 CONTRACT_SEVERITY_TO_ACTION = {"info": "warn", "warning": "warn", "critical": "block"}
 
@@ -1255,8 +1255,8 @@ def build_contract_validation_records(result: dict, *, run_id: str) -> list[dict
 
 
 
-from fabric_data_product_framework.config import load_dataset_contract
-from fabric_data_product_framework.drift import (
+from fabricops_kit.config import load_dataset_contract
+from fabricops_kit.drift import (
     build_and_write_partition_snapshot,
     build_and_write_schema_snapshot,
     check_partition_drift,
@@ -1265,18 +1265,18 @@ from fabric_data_product_framework.drift import (
     load_latest_schema_snapshot,
     summarize_drift_results,
 )
-from fabric_data_product_framework.lineage import build_lineage_records
-from fabric_data_product_framework.metadata import build_dataset_run_record, write_metadata_records
-from fabric_data_product_framework.profiling import flatten_profile_for_metadata, profile_dataframe
-from fabric_data_product_framework.governance import (
+from fabricops_kit.lineage import build_lineage_records
+from fabricops_kit.metadata import build_dataset_run_record, write_metadata_records
+from fabricops_kit.profiling import flatten_profile_for_metadata, profile_dataframe
+from fabricops_kit.governance import (
     build_governance_classification_records,
     classify_columns,
     summarize_governance_classifications,
     write_governance_classifications,
 )
-from fabric_data_product_framework.run_summary import build_run_summary, build_run_summary_record
-from fabric_data_product_framework.runtime import build_runtime_context
-from fabric_data_product_framework.technical_columns import add_audit_columns, add_hash_columns, default_technical_columns
+from fabricops_kit.run_summary import build_run_summary, build_run_summary_record
+from fabricops_kit.runtime import build_runtime_context
+from fabricops_kit.technical_columns import add_audit_columns, add_hash_columns, default_technical_columns
 
 _ALLOWED_REFRESH_MODES = {"full", "incremental", "snapshot", "append"}
 

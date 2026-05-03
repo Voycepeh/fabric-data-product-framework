@@ -1,6 +1,6 @@
 import json
 
-from fabric_data_product_framework.run_summary import build_run_summary, build_run_summary_record, render_run_summary_markdown
+from fabricops_kit.run_summary import build_run_summary, build_run_summary_record, render_run_summary_markdown
 
 
 def _ctx():

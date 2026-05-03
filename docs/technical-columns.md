@@ -47,7 +47,7 @@ Important guarantees:
 Use one call to apply the standard pattern:
 
 ```python
-from fabric_data_product_framework.technical_columns import add_standard_technical_columns
+from fabricops_kit.technical_columns import add_standard_technical_columns
 
 df_output = add_standard_technical_columns(
     df_output,
@@ -67,7 +67,7 @@ df_output = add_standard_technical_columns(
 When flattening profile output for metadata tables, exclude technical columns:
 
 ```python
-from fabric_data_product_framework.profiling import (
+from fabricops_kit.profiling import (
     default_technical_columns,
     flatten_profile_for_metadata,
 )

@@ -1,8 +1,8 @@
 """Simplified Fabric smoke test flow based on the MVP template."""
 
-from fabric_data_product_framework.config import load_dataset_contract, validate_dataset_contract
-from fabric_data_product_framework.runtime import build_runtime_context
-from fabric_data_product_framework.profiling import profile_dataframe
+from fabricops_kit.config import load_dataset_contract, validate_dataset_contract
+from fabricops_kit.runtime import build_runtime_context
+from fabricops_kit.profiling import profile_dataframe
 
 from templates.fabric_adapters import (
     fabric_reader,

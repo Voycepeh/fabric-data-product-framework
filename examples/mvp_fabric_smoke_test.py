@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import pandas as pd
 
-from fabric_data_product_framework.governance import classify_columns
-from fabric_data_product_framework.lineage import build_lineage_record
-from fabric_data_product_framework.template_generator import get_mvp_step_registry, validate_mvp_artifacts
-from fabric_data_product_framework.profiling import profile_dataframe
+from fabricops_kit.governance import classify_columns
+from fabricops_kit.lineage import build_lineage_record
+from fabricops_kit.template_generator import get_mvp_step_registry, validate_mvp_artifacts
+from fabricops_kit.profiling import profile_dataframe
 
 
 def build_smoke_artifacts() -> dict:

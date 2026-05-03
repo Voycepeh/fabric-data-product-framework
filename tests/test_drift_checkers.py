@@ -2,8 +2,8 @@ import json
 
 import pandas as pd
 
-import fabric_data_product_framework.drift as drift_checkers
-from fabric_data_product_framework.drift import default_schema_drift_policy
+import fabricops_kit.drift as drift_checkers
+from fabricops_kit.drift import default_schema_drift_policy
 
 
 class _FakeWriter:

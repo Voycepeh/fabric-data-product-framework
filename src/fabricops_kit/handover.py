@@ -222,18 +222,18 @@ def create_pipeline_notebook_template(
 # # 3. Configuration and setup
 
 # %%
-import fabric_data_product_framework as fw
+import fabricops_kit as fw
 
 # %%
-from fabric_data_product_framework.fabric_io import (
+from fabricops_kit.fabric_io import (
     load_fabric_config,
     get_path,
     check_naming_convention,
     lakehouse_table_read,
     lakehouse_table_write,
-    ODI_METADATA_LOGGER,
+    generate_metadata_profile,
 )
-from fabric_data_product_framework.technical_columns import (
+from fabricops_kit.technical_columns import (
     add_audit_columns,
     add_datetime_features,
     add_hash_columns,
@@ -265,7 +265,7 @@ print(df_source.count())
 # # 6. Source profiling metadata
 
 # %%
-df_source_profile = ODI_METADATA_LOGGER(
+df_source_profile = generate_metadata_profile(
     df_source,
     f"{{lh_in.house_name}}|{{source_table}}"
 )
@@ -342,7 +342,7 @@ lakehouse_table_write(
 # %%
 df_output_read = lakehouse_table_read(lh_out, output_table)
 
-df_output_profile = ODI_METADATA_LOGGER(
+df_output_profile = generate_metadata_profile(
     df_output_read,
     f"{{lh_out.house_name}}|{{output_table}}"
 )
@@ -452,7 +452,7 @@ def create_actual_data_mvp_template(
 # # 2. Setup
 
 # %%
-import fabric_data_product_framework as fw
+import fabricops_kit as fw
 from pyspark.sql import functions as F
 
 # %% [markdown]

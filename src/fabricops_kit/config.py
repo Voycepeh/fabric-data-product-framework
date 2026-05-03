@@ -226,7 +226,7 @@ def load_fabric_config(config: FrameworkConfig | dict[str, Any]) -> FrameworkCon
 
 def _default_schema_text() -> str:
     return (
-        files("fabric_data_product_framework.schemas")
+        files("fabricops_kit.schemas")
         .joinpath("dataset_contract.schema.json")
         .read_text(encoding="utf-8")
     )

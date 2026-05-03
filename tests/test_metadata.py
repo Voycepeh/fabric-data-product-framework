@@ -1,6 +1,6 @@
 import json
 
-from fabric_data_product_framework.metadata import (
+from fabricops_kit.metadata import (
     build_dataset_run_record,
     build_quality_result_records,
     build_schema_drift_records,

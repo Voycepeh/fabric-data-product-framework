@@ -28,7 +28,7 @@ Workflow:
 ## Minimal runnable pattern
 
 ```python
-import fabric_data_product_framework as fw
+import fabricops_kit as fw
 
 prompt = fw.get_fabric_copilot_lineage_prompt()
 print(prompt)
@@ -57,5 +57,5 @@ fw.plot_lineage_networkx(lineage_record, title=f"{DATASET_NAME} Notebook Lineage
 - For local usage, install optional lineage extras:
 
 ```bash
-pip install "fabric-data-product-framework[lineage]"
+pip install "fabricops-kit[lineage]"
 ```

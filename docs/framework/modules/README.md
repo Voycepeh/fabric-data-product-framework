@@ -1,6 +1,6 @@
 # Framework Modules (Conceptual)
 
-Concept-only module definitions are documented here so Python package code remains under `src/fabric_data_product_framework/`.
+Concept-only module definitions are documented here so Python package code remains under `src/fabricops_kit/`.
 
 ## profiling
 Generate source/output profiles for metadata drafting, baseline statistics, and drift thresholds.

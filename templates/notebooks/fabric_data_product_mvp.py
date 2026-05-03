@@ -7,8 +7,8 @@ from datetime import datetime, timezone
 
 import pandas as pd
 
-import fabric_data_product_framework as fdpf
-from fabric_data_product_framework import (
+import fabricops_kit as fdpf
+from fabricops_kit import (
     build_lineage_records,
     classify_columns,
     profile_dataframe,
@@ -20,7 +20,7 @@ from fabric_data_product_framework import (
     generate_governance_candidates_with_fabric_ai,
     build_manual_dq_rule_prompt_package,
 )
-from fabric_data_product_framework.mvp_steps import get_mvp_step_registry, validate_mvp_artifacts
+from fabricops_kit.mvp_steps import get_mvp_step_registry, validate_mvp_artifacts
 
 # ==========================================================
 # 1) Package and runtime setup [Framework]
