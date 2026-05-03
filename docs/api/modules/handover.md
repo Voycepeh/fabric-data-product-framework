@@ -13,7 +13,7 @@ No public exports in this module.
 
 | Helper | Related public callables |
 |---|---|
-| `_get_legacy_mvp_steps` | — |
+| [`_get_legacy_mvp_steps`](../reference/internal/handover/_get_legacy_mvp_steps.md) | — |
 
 ## Full module API
 

@@ -13,9 +13,9 @@ No public exports in this module.
 
 | Helper | Related public callables |
 |---|---|
-| `_default_schema_text` | — |
-| `_format_error_path` | — |
-| `_load_schema` | — |
+| [`_default_schema_text`](../reference/internal/config/_default_schema_text.md) | — |
+| [`_format_error_path`](../reference/internal/config/_format_error_path.md) | — |
+| [`_load_schema`](../reference/internal/config/_load_schema.md) | — |
 
 ## Full module API
 

@@ -165,6 +165,11 @@ def resolve_step(symbol: Symbol, step_modules: dict[int, list[str]]) -> int | No
     return None
 
 
+def internal_helper_link(module: str, helper: str) -> str:
+    """Return docs-relative link target for an internal helper page."""
+    return f"../reference/internal/{module}/{helper}.md"
+
+
 def main() -> None:
     public = parse_public_exports()
     module_data = {p.stem: parse_module(p) for p in PKG_DIR.glob("*.py") if p.name != "__init__.py"}
@@ -217,7 +222,7 @@ def main() -> None:
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
                 lines.append(
                     f"| [`{s.name}`](#{s.name}) | {s.obj_type} | {s.summary or '—'} | "
-                    f"{', '.join(f'`{r}` (internal)' for r in related) or '—'} |"
+                    f"{', '.join(f'[`{r}`]({internal_helper_link(module, r)}) (internal)' for r in related) or '—'} |"
                 )
         else:
             lines.append("No public exports in this module.")
@@ -227,7 +232,10 @@ def main() -> None:
             lines.extend(["| Helper | Related public callables |", "|---|---|"])
             for helper in internal_fns:
                 users = sorted([u for u in info["used_by"].get(helper, set()) if u in {p.name for p in public_in_module}])
-                lines.append(f"| `{helper}` | {', '.join(f'`{u}`' for u in users) or '—'} |")
+                lines.append(
+                    f"| [`{helper}`]({internal_helper_link(module, helper)}) | "
+                    f"{', '.join(f'`{u}`' for u in users) or '—'} |"
+                )
         else:
             lines.append("No module-level internal helpers detected.")
         if not is_internal_only:
@@ -256,7 +264,7 @@ def main() -> None:
                 symbol_link = f"./{step_slug}/{s.name}.md" if step_slug else f"../api/modules/{s.module}.md#{s.name}"
                 ref.append(
                     f"| [`{s.name}`]({symbol_link}) | `{s.module}` | {s.summary or '—'} | "
-                    f"{', '.join(f'`{r}` (internal)' for r in related) or '—'} | "
+                    f"{', '.join(f'[`{r}`](./internal/{s.module}/{r}.md) (internal)' for r in related) or '—'} | "
                     f"[module overview](../api/modules/{s.module}.md) |"
                 )
         else:
