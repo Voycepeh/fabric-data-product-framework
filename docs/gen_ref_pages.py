@@ -52,17 +52,10 @@ for step in WORKFLOW_STEPS:
     for symbol, dotted_path in symbols_by_step.get(step_number, []):
         doc_path = f"reference/{step_slug}/{symbol}.md"
         with mkdocs_gen_files.open(doc_path, "w") as fd:
-            module_name = dotted_path.rsplit(".", 1)[0].split(".")[-1]
             fd.write(f"# `{symbol}`\n\n")
             fd.write("<div class=\"api-status-block\">\n")
             fd.write("  <span class=\"api-chip api-chip-public\">Public callable</span>\n")
-            fd.write("  <div class=\"api-chip-subtitle\">Primary API detail page with full reference and usage context.</div>\n")
             fd.write("</div>\n\n")
-            fd.write("## Overview\n\n")
-            fd.write(f"- **Workflow step:** {step_number}\n")
-            fd.write(f"- **Owning module:** [`{module_name}`](../../api/modules/{module_name}/)\n")
-            fd.write("- **Page role:** Primary destination for callable-level documentation.\n\n")
-            fd.write("## API reference\n\n")
             fd.write(f"::: {dotted_path}\n")
             fd.write("    options:\n")
             fd.write("      show_root_heading: false\n")
@@ -77,12 +70,8 @@ for module_name, helpers in internal_helpers_by_module.items():
             fd.write(f"# `{helper_name}`\n\n")
             fd.write("<div class=\"api-status-block\">\n")
             fd.write("  <span class=\"api-chip api-chip-internal\">Internal helper</span>\n")
-            fd.write("  <div class=\"api-chip-subtitle\">Developer drill-down page for implementation details; not a public API entry point.</div>\n")
+            fd.write("  <div class=\"api-chip-subtitle\">This page documents an internal implementation helper, not a primary public API.</div>\n")
             fd.write("</div>\n\n")
-            fd.write("## Overview\n\n")
-            fd.write(f"- **Owning module:** [`{module_name}`](../../../api/modules/{module_name}/)\n")
-            fd.write("- **Page role:** Secondary drill-down for internal implementation behavior.\n\n")
-            fd.write("## API reference\n\n")
             fd.write(f"::: {PACKAGE}.{module_name}.{helper_name}\n")
             fd.write("    options:\n")
             fd.write("      show_root_heading: false\n")

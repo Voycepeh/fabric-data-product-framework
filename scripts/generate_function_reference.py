@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import ast
+import importlib
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 PKG_DIR = ROOT / "src" / "fabric_data_product_framework"
+PACKAGE_NAME = "fabric_data_product_framework"
 INIT_PATH = PKG_DIR / "__init__.py"
 DOCS_METADATA_PATH = PKG_DIR / "docs_metadata.py"
 REFERENCE_PATH = ROOT / "docs" / "reference" / "index.md"
@@ -121,10 +123,15 @@ def internal_helper_link(module: str, helper: str) -> str:
 def main() -> None:
     public = parse_public_exports()
     module_data = {p.stem: parse_module(p) for p in PKG_DIR.glob("*.py") if p.name != "__init__.py"}
+    pkg = importlib.import_module(PACKAGE_NAME)
 
     symbol_map: dict[str, Symbol] = {}
     for name in public:
+        obj = getattr(pkg, name)
+        obj_module = getattr(obj, "__module__", PACKAGE_NAME).split(".")[-1]
         for module, info in module_data.items():
+            if module != obj_module:
+                continue
             if name in info["functions"]:
                 symbol_map[name] = Symbol(name, module, "function", info["functions"][name])
                 break
@@ -179,26 +186,13 @@ def main() -> None:
             '  <span class="api-chip api-chip-module">Module overview</span>\n'
             '</div>'
         )
-        lines = [
-            title,
-            "",
-            status_banner,
-            "",
-            "## Overview",
-            "",
-            "This page is a lightweight module summary. Use dedicated function pages for full callable details.",
-            "",
-            "## Public callables from `__all__`",
-            "",
-        ]
+        lines = [title, "", status_banner, "", "## Public callables from `__all__`", ""]
         if public_in_module:
             lines.extend(["| Callable | Type | Summary | Related helpers |", "|---|---|---|---|"])
             for s in sorted(public_in_module, key=lambda x: x.name.lower()):
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
-                step_slug = step_slugs.get(docs_metadata[s.name]["workflow_step"], "")
-                symbol_page_link = f"../../reference/{step_slug}/{s.name}.md" if step_slug else "#"
                 lines.append(
-                    f"| [`{s.name}`]({symbol_page_link}) | {s.obj_type} | {s.summary or '—'} | "
+                    f"| [`{s.name}`](#{s.name}) | {s.obj_type} | {s.summary or '—'} | "
                     f"{', '.join(f'[`{r}`]({internal_helper_link(module, r)}) (internal)' for r in related) or '—'} |"
                 )
         else:
@@ -215,8 +209,10 @@ def main() -> None:
                 )
         else:
             lines.append("No module-level internal helpers detected.")
-        if is_internal_only:
-            lines.extend(["", "## Notes", "", "This internal-only module is intentionally excluded from the public callable catalogue."])
+        if not is_internal_only:
+            lines.extend(["", "## Full module API", "", f"::: fabric_data_product_framework.{module}"])
+        else:
+            lines.extend(["", "## Full module API", "", "This module is internal-only and is intentionally excluded from full public API rendering."])
         module_md.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
         if not is_internal_only:
             module_index_lines.append(f"- [`{module}`]({module}.md)")
