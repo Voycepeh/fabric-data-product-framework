@@ -52,7 +52,7 @@ Generated step-first function catalogue sourced from `fabric_data_product_framew
 
 | Function / class | Module | Purpose | Related helpers | Module page |
 |---|---|---|---|---|
-| [`build_dq_rule_candidate_prompt`](./step-05-source-profiling-metadata/build_dq_rule_candidate_prompt/) | `ai` | Build standardized prompt text for AI-assisted DQ candidate generation. | — | [module overview](../api/modules/ai/) |
+| [`build_dq_rule_candidate_prompt`](./step-05-source-profiling-metadata/build_dq_rule_candidate_prompt/) | `ai` | Build standardized prompt text for AI-assisted DQ candidate generation. | [`_resolve_prompt_template`](./internal/ai/_resolve_prompt_template.md) (internal) | [module overview](../api/modules/ai/) |
 | [`build_manual_dq_rule_prompt_package`](./step-05-source-profiling-metadata/build_manual_dq_rule_prompt_package/) | `ai` | Build copy/paste prompt package for manual DQ candidate generation. | [`_compact_sample_rows`](./internal/ai/_compact_sample_rows.md) (internal) | [module overview](../api/modules/ai/) |
 | [`generate_dq_rule_candidates_with_fabric_ai`](./step-05-source-profiling-metadata/generate_dq_rule_candidates_with_fabric_ai/) | `ai` | Execute Fabric AI Functions to append DQ candidate suggestions to a DataFrame. | [`_require_fabric_ai_dataframe`](./internal/ai/_require_fabric_ai_dataframe.md) (internal) | [module overview](../api/modules/ai/) |
 
@@ -108,7 +108,7 @@ No public callable currently mapped to this step.
 
 | Function / class | Module | Purpose | Related helpers | Module page |
 |---|---|---|---|---|
-| [`build_governance_candidate_prompt`](./step-12-governance-classification/build_governance_candidate_prompt/) | `ai` | Build standardized prompt text for AI-assisted governance suggestions. | — | [module overview](../api/modules/ai/) |
+| [`build_governance_candidate_prompt`](./step-12-governance-classification/build_governance_candidate_prompt/) | `ai` | Build standardized prompt text for AI-assisted governance suggestions. | [`_resolve_prompt_template`](./internal/ai/_resolve_prompt_template.md) (internal) | [module overview](../api/modules/ai/) |
 | [`build_governance_classification_records`](./step-12-governance-classification/build_governance_classification_records/) | `governance` | Build governance classification records. | — | [module overview](../api/modules/governance/) |
 | [`build_lineage_from_notebook_code`](./step-12-governance-classification/build_lineage_from_notebook_code/) | `lineage` | Scan, optionally enrich, and validate lineage from notebook source code. | — | [module overview](../api/modules/lineage/) |
 | [`build_lineage_handover_markdown`](./step-12-governance-classification/build_lineage_handover_markdown/) | `lineage` | Create a concise markdown handover summary from lineage execution results. | — | [module overview](../api/modules/lineage/) |
@@ -130,7 +130,7 @@ No public callable currently mapped to this step.
 
 | Function / class | Module | Purpose | Related helpers | Module page |
 |---|---|---|---|---|
-| [`build_handover_summary_prompt`](./step-13-lineage-summary-handover/build_handover_summary_prompt/) | `ai` | Build standardized prompt text for AI-assisted handover summary suggestions. | — | [module overview](../api/modules/ai/) |
+| [`build_handover_summary_prompt`](./step-13-lineage-summary-handover/build_handover_summary_prompt/) | `ai` | Build standardized prompt text for AI-assisted handover summary suggestions. | [`_resolve_prompt_template`](./internal/ai/_resolve_prompt_template.md) (internal) | [module overview](../api/modules/ai/) |
 | [`build_lineage_records`](./step-13-lineage-summary-handover/build_lineage_records/) | `lineage` | Build compact lineage records for downstream metadata sinks. | — | [module overview](../api/modules/lineage/) |
 | [`build_manual_handover_prompt_package`](./step-13-lineage-summary-handover/build_manual_handover_prompt_package/) | `ai` | Build copy/paste prompt package for manual handover summary generation. | [`_compact_sample_rows`](./internal/ai/_compact_sample_rows.md) (internal) | [module overview](../api/modules/ai/) |
 | [`build_run_summary`](./step-13-lineage-summary-handover/build_run_summary/) | `run_summary` | Build run summary. | — | [module overview](../api/modules/run_summary/) |

@@ -34,9 +34,11 @@ class NotebookRuntimeConfig:
 class AIPromptConfig:
     """Prompt templates used by AI-assisted framework workflows."""
 
-    lineage_summary_template: str
+    dq_rule_candidate_template: str
+    governance_candidate_template: str
     handover_summary_template: str
-    quality_rule_generation_template: str
+    lineage_summary_template: str = ""
+    quality_rule_generation_template: str = ""
 
 
 @dataclass(frozen=True)
@@ -92,22 +94,30 @@ def create_notebook_runtime_config(allowed_notebook_prefixes: list[str] | tuple[
 
 
 def create_ai_prompt_config(
-    lineage_summary_template: str,
-    handover_summary_template: str,
-    quality_rule_generation_template: str,
+    dq_rule_candidate_template: str | None = None,
+    governance_candidate_template: str | None = None,
+    handover_summary_template: str | None = None,
+    lineage_summary_template: str | None = None,
+    quality_rule_generation_template: str | None = None,
 ) -> AIPromptConfig:
     """Create AI prompt-template configuration."""
+    resolved_dq = dq_rule_candidate_template or quality_rule_generation_template
+    resolved_governance = governance_candidate_template or lineage_summary_template
+
     for label, value in {
-        "lineage_summary_template": lineage_summary_template,
+        "dq_rule_candidate_template": resolved_dq,
+        "governance_candidate_template": resolved_governance,
         "handover_summary_template": handover_summary_template,
-        "quality_rule_generation_template": quality_rule_generation_template,
     }.items():
         if not str(value).strip():
             raise ValueError(f"{label} must be a non-empty string.")
+
     return AIPromptConfig(
-        lineage_summary_template=lineage_summary_template,
-        handover_summary_template=handover_summary_template,
-        quality_rule_generation_template=quality_rule_generation_template,
+        dq_rule_candidate_template=str(resolved_dq),
+        governance_candidate_template=str(resolved_governance),
+        handover_summary_template=str(handover_summary_template),
+        lineage_summary_template=str(lineage_summary_template or resolved_governance),
+        quality_rule_generation_template=str(quality_rule_generation_template or resolved_dq),
     )
 
 
