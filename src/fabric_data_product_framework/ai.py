@@ -1,6 +1,7 @@
 """Microsoft Fabric AI Functions helpers for optional AI-in-the-loop workflows."""
 from __future__ import annotations
 
+
 def check_fabric_ai_functions_available() -> dict:
     """Best-effort check for Fabric AI Functions availability."""
     try:
@@ -51,23 +52,17 @@ def _require_fabric_ai_dataframe(df, helper_name: str):
     return ai
 
 
-def generate_dq_rule_candidates_with_fabric_ai(
-    profile_df,
-    business_context="",
-    dataset_name=None,
-    output_col="ai_dq_rule_candidate",
-    error_col="ai_dq_rule_error",
-    response_format="json_object",
-    concurrency=20,
-):
+def generate_dq_rule_candidates_with_fabric_ai(profile_df, business_context="", dataset_name=None, output_col="ai_dq_rule_candidate", error_col="ai_dq_rule_error", response_format="json_object", concurrency=20):
     """Generate DQ candidate suggestions as an enriched DataFrame."""
     _require_fabric_ai_dataframe(profile_df, "generate_dq_rule_candidates_with_fabric_ai")
+    dataset_context = dataset_name or "unknown"
+    business_context_text = business_context or ""
     prompt = (
         "You are generating candidate data quality rules from profile metadata rows. "
         "Return JSON only with keys: rule_id, table_name, column_name, rule_type, severity, reason, evidence, needs_human_review. "
         "These are suggestions only and must not be treated as enforced checks. "
-        "dataset_name={{dataset_name}}, business_context={{business_context}}, "
-        "column_name={{column_name}}, data_type={{data_type}}, null_count={{null_count}}, distinct_count={{distinct_count}}, row_count={{row_count}}."
+        f"Dataset name: {dataset_context}. Business context: {business_context_text}. "
+        "Use this row profile: column_name={column_name}, data_type={data_type}, null_count={null_count}, distinct_count={distinct_count}, row_count={row_count}."
     )
     return profile_df.ai.generate_response(
         prompt=prompt,
@@ -76,26 +71,18 @@ def generate_dq_rule_candidates_with_fabric_ai(
         error_col=error_col,
         response_format=response_format,
         concurrency=concurrency,
-        dataset_name=dataset_name,
-        business_context=business_context,
     )
 
 
-def generate_governance_candidates_with_fabric_ai(
-    profile_df,
-    business_context="",
-    output_col="ai_governance_candidate",
-    error_col="ai_governance_error",
-    response_format="json_object",
-    concurrency=20,
-):
+def generate_governance_candidates_with_fabric_ai(profile_df, business_context="", output_col="ai_governance_candidate", error_col="ai_governance_error", response_format="json_object", concurrency=20):
     """Generate governance label candidate suggestions as an enriched DataFrame."""
     _require_fabric_ai_dataframe(profile_df, "generate_governance_candidates_with_fabric_ai")
+    business_context_text = business_context or ""
     prompt = (
         "Return JSON only with keys: table_name, column_name, candidate_label, reason, evidence, needs_human_review. "
         "Allowed candidate_label values: public, internal, confidential_candidate, restricted_candidate, unknown. "
-        "Use dataset metadata context and this business_context={{business_context}}. "
-        "Evaluate row details table_name={{table_name}}, column_name={{column_name}}, data_type={{data_type}}, profile_summary={{profile_summary}}."
+        f"Business context: {business_context_text}. "
+        "Evaluate row details table_name={table_name}, column_name={column_name}, data_type={data_type}, profile_summary={profile_summary}."
     )
     return profile_df.ai.generate_response(
         prompt=prompt,
@@ -104,23 +91,23 @@ def generate_governance_candidates_with_fabric_ai(
         error_col=error_col,
         response_format=response_format,
         concurrency=concurrency,
-        business_context=business_context,
     )
 
 
-def generate_handover_summary_with_fabric_ai(
-    summary_df,
-    business_context="",
-    output_col="ai_handover_summary",
-    error_col="ai_handover_error",
-    response_format="json_object",
-    concurrency=20,
-):
-    """Generate handover summary suggestions as an enriched DataFrame."""
+def generate_handover_summary_with_fabric_ai(summary_df, business_context="", output_col="ai_handover_summary", error_col="ai_handover_error", response_format="json_object", concurrency=20):
+    """Generate handover summary suggestions as an enriched DataFrame.
+
+    Notes
+    -----
+    ``summary_df`` should include a ``summary`` column for row-level context when
+    using prompt templates.
+    """
     _require_fabric_ai_dataframe(summary_df, "generate_handover_summary_with_fabric_ai")
+    business_context_text = business_context or ""
     prompt = (
         "Return JSON only with keys: pipeline_summary, important_transformations, business_reason, handover_notes, risks_or_open_questions. "
-        "These are suggestions for human review. Use business_context={{business_context}} and row context run_summary={{run_summary}}."
+        f"These are suggestions for human review. Business context: {business_context_text}. "
+        "Use row context summary={summary}."
     )
     return summary_df.ai.generate_response(
         prompt=prompt,
@@ -129,5 +116,4 @@ def generate_handover_summary_with_fabric_ai(
         error_col=error_col,
         response_format=response_format,
         concurrency=concurrency,
-        business_context=business_context,
     )

@@ -36,6 +36,10 @@ def test_generate_dq_candidates_calls_generate_response_with_expected_params():
     assert call["response_format"] == "json_object"
     assert call["concurrency"] == 9
     assert "prompt" in call
+    assert "{column_name}" in call["prompt"]
+    assert "{{column_name}}" not in call["prompt"]
+    assert "dataset_name" not in call
+    assert "business_context" not in call
 
 
 def test_generate_governance_candidates_calls_generate_response_with_expected_params():
@@ -48,6 +52,9 @@ def test_generate_governance_candidates_calls_generate_response_with_expected_pa
     assert call["response_format"] == "json_object"
     assert call["concurrency"] == 3
     assert "candidate_label" in call["prompt"]
+    assert "{column_name}" in call["prompt"]
+    assert "{{column_name}}" not in call["prompt"]
+    assert "business_context" not in call
 
 
 def test_generate_handover_summary_calls_generate_response_with_expected_params():
@@ -59,6 +66,9 @@ def test_generate_handover_summary_calls_generate_response_with_expected_params(
     assert call["error_col"] == "he"
     assert call["response_format"] == "json_object"
     assert call["concurrency"] == 4
+    assert "{summary}" in call["prompt"]
+    assert "{{summary}}" not in call["prompt"]
+    assert "business_context" not in call
 
 
 def test_check_fabric_ai_functions_available_returns_false_when_import_fails(monkeypatch):
