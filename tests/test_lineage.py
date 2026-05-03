@@ -1,6 +1,12 @@
-from fabric_data_product_framework.lineage import build_lineage_from_notebook_code, build_lineage_record_from_steps, plot_lineage_steps, validate_lineage_steps
-from fabric_data_product_framework.lineage_ai_enrichment import enrich_lineage_steps_with_ai
-from fabric_data_product_framework.notebook_lineage_scan import scan_notebook_cells, scan_notebook_lineage
+from fabric_data_product_framework.lineage import (
+    build_lineage_from_notebook_code,
+    build_lineage_record_from_steps,
+    enrich_lineage_steps_with_ai,
+    plot_lineage_steps,
+    scan_notebook_cells,
+    scan_notebook_lineage,
+    validate_lineage_steps,
+)
 
 
 def test_scan_read_transform_write_deterministic() -> None:

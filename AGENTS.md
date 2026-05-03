@@ -11,6 +11,7 @@ Guide agent/Codex contributions for this repository so changes stay reusable, pu
 - Treat Microsoft Fabric as the execution environment.
 - Keep an AI-in-the-loop workflow and optimize for junior-friendly handover.
 - Prefer small, focused PRs over large restructures.
+- Prefer updating existing modules over creating new files; only add new `.py`, `.md`, or other repo files when clearly justified by a separate user-facing concept or when extending an existing file would materially hurt readability. Avoid thin wrapper modules and unnecessary feature fragmentation.
 
 ## Public safety rules
 

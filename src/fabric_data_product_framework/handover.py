@@ -94,7 +94,7 @@ MVP_STEP_REGISTRY: list[dict[str, Any]] = [
         "step_number": 12,
         "step_name": "Governance classification and lineage",
         "owner_type": "mixed",
-        "canonical_modules": ["governance.py", "lineage.py", "lineage_ai_enrichment.py"],
+        "canonical_modules": ["governance.py", "lineage.py"],
         "expected_artifacts": ["governance_labels", "lineage_records"],
         "description": "Classify governance tags and record lineage with human approval for AI-assisted suggestions.",
     },
