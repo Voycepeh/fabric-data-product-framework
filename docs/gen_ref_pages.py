@@ -145,8 +145,9 @@ for step in WORKFLOW_STEPS:
         doc_path = f"reference/{step_slug}/{symbol}.md"
         with mkdocs_gen_files.open(doc_path, "w") as fd:
             fd.write(f"# `{symbol}`\n\n")
-            fd.write("!!! success \"Public callable\"\n")
-            fd.write("    This is part of the public framework API.\n\n")
+            fd.write("<div class=\"api-status-block\">\n")
+            fd.write("  <span class=\"api-chip api-chip-public\">Public callable</span>\n")
+            fd.write("</div>\n\n")
             fd.write(f"::: {dotted_path}\n")
             fd.write("    options:\n")
             fd.write("      show_root_heading: false\n")
@@ -158,8 +159,9 @@ for symbol, dotted_path in other_utilities:
     doc_path = f"reference/other-utilities/{symbol}.md"
     with mkdocs_gen_files.open(doc_path, "w") as fd:
         fd.write(f"# `{symbol}`\n\n")
-        fd.write("!!! success \"Public callable\"\n")
-        fd.write("    This is part of the public framework API.\n\n")
+        fd.write("<div class=\"api-status-block\">\n")
+        fd.write("  <span class=\"api-chip api-chip-public\">Public callable</span>\n")
+        fd.write("</div>\n\n")
         fd.write(f"::: {dotted_path}\n")
         fd.write("    options:\n")
         fd.write("      show_root_heading: false\n")

@@ -1,7 +1,8 @@
 # `governance` module
 
-!!! info "Module overview"
-    This page summarizes public callables and related internal helpers.
+<div class="api-status-block">
+  <span class="api-chip api-chip-module">Module overview</span>
+</div>
 
 ## Public callables from `__all__`
 

@@ -1,0 +1,40 @@
+.api-status-block {
+  margin: 0.2rem 0 1rem;
+}
+
+.api-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.18rem 0.62rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.45;
+  border: 1px solid transparent;
+}
+
+.api-chip-public {
+  color: rgb(16, 98, 72);
+  background: rgba(16, 185, 129, 0.14);
+  border-color: rgba(16, 185, 129, 0.32);
+}
+
+.api-chip-module {
+  color: rgb(53, 86, 185);
+  background: rgba(99, 102, 241, 0.13);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.api-chip-internal {
+  color: rgb(120, 53, 15);
+  background: rgba(245, 158, 11, 0.16);
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+.api-chip-subtitle {
+  margin-top: 0.32rem;
+  font-size: 0.82rem;
+  color: var(--md-default-fg-color--light);
+}
