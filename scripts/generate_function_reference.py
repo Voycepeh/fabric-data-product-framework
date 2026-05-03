@@ -120,6 +120,11 @@ def internal_helper_link(module: str, helper: str) -> str:
     return f"../../reference/internal/{module}/{helper}.md"
 
 
+def mkdocs_heading_anchor(name: str) -> str:
+    """Return a MkDocs/Python-Markdown-compatible heading anchor slug."""
+    return name.strip().lower().replace(" ", "-")
+
+
 def main() -> None:
     public = parse_public_exports()
     module_data = {p.stem: parse_module(p) for p in PKG_DIR.glob("*.py") if p.name != "__init__.py"}
@@ -191,8 +196,9 @@ def main() -> None:
             lines.extend(["| Callable | Type | Summary | Related helpers |", "|---|---|---|---|"])
             for s in sorted(public_in_module, key=lambda x: x.name.lower()):
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
+                anchor = mkdocs_heading_anchor(s.name)
                 lines.append(
-                    f"| [`{s.name}`](#{s.name}) | {s.obj_type} | {s.summary or '—'} | "
+                    f"| [`{s.name}`](#{anchor}) | {s.obj_type} | {s.summary or '—'} | "
                     f"{', '.join(f'[`{r}`]({internal_helper_link(module, r)}) (internal)' for r in related) or '—'} |"
                 )
         else:
@@ -212,7 +218,7 @@ def main() -> None:
 
         if public_in_module:
             for s in sorted(public_in_module, key=lambda x: x.name.lower()):
-                expected_link = f"[`{s.name}`](#{s.name})"
+                expected_link = f"[`{s.name}`](#{mkdocs_heading_anchor(s.name)})"
                 if not any(expected_link in line for line in lines):
                     raise RuntimeError(f"Missing callable table link for {module}.{s.name}")
                 if not any(line.strip() == f"### {s.name}" for line in lines):

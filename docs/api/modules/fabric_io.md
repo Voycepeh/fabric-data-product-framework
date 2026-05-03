@@ -9,7 +9,7 @@
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
 | [`get_path`](#get_path) | function | Return the Fabric path object for an environment and target. | — |
-| [`Housepath`](#Housepath) | class | Fabric lakehouse or warehouse connection details. | — |
+| [`Housepath`](#housepath) | class | Fabric lakehouse or warehouse connection details. | — |
 | [`lakehouse_csv_read`](#lakehouse_csv_read) | function | Read a CSV file from a Fabric lakehouse Files path. | [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) (internal) |
 | [`lakehouse_excel_read_as_spark`](#lakehouse_excel_read_as_spark) | function | Read an Excel file from a Fabric lakehouse Files path. | [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) (internal) |
 | [`lakehouse_parquet_read_as_spark`](#lakehouse_parquet_read_as_spark) | function | Read a Parquet file from a Fabric lakehouse Files path. | [`_convert_single_parquet_ns_to_us`](../../reference/internal/fabric_io/_convert_single_parquet_ns_to_us.md) (internal), [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) (internal) |
