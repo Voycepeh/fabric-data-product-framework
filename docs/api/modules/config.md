@@ -8,14 +8,14 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`create_ai_prompt_config`](../../reference/step-02-runtime-configuration/create_ai_prompt_config.md) | function | Create AI prompt-template configuration. | — |
-| [`create_framework_config`](../../reference/step-02-runtime-configuration/create_framework_config.md) | function | Create the top-level framework configuration object. | — |
-| [`create_governance_config`](../../reference/step-02-runtime-configuration/create_governance_config.md) | function | Create governance-default configuration. | — |
-| [`create_lineage_config`](../../reference/step-02-runtime-configuration/create_lineage_config.md) | function | Create lineage-default configuration. | — |
-| [`create_notebook_runtime_config`](../../reference/step-02-runtime-configuration/create_notebook_runtime_config.md) | function | Create notebook runtime configuration. | — |
-| [`create_path_config`](../../reference/step-02-runtime-configuration/create_path_config.md) | function | Create a validated :class:`PathConfig` object. | — |
-| [`create_quality_config`](../../reference/step-02-runtime-configuration/create_quality_config.md) | function | Create quality-default configuration. | — |
-| [`validate_framework_config`](../../reference/step-02-runtime-configuration/validate_framework_config.md) | function | Validate and normalize framework config input. | — |
+| [`create_ai_prompt_config`](../../reference/step-02-runtime-environment-path-rules/create_ai_prompt_config.md) | function | Create AI prompt-template configuration. | — |
+| [`create_framework_config`](../../reference/step-02-runtime-environment-path-rules/create_framework_config.md) | function | Create the top-level framework configuration object. | — |
+| [`create_governance_config`](../../reference/step-02-runtime-environment-path-rules/create_governance_config.md) | function | Create governance-default configuration. | — |
+| [`create_lineage_config`](../../reference/step-02-runtime-environment-path-rules/create_lineage_config.md) | function | Create lineage-default configuration. | — |
+| [`create_notebook_runtime_config`](../../reference/step-02-runtime-environment-path-rules/create_notebook_runtime_config.md) | function | Create notebook runtime configuration. | — |
+| [`create_path_config`](../../reference/step-02-runtime-environment-path-rules/create_path_config.md) | function | Create a validated :class:`PathConfig` object. | — |
+| [`create_quality_config`](../../reference/step-02-runtime-environment-path-rules/create_quality_config.md) | function | Create quality-default configuration. | — |
+| [`validate_framework_config`](../../reference/step-02-runtime-environment-path-rules/validate_framework_config.md) | function | Validate and normalize framework config input. | — |
 
 ## Internal helpers
 

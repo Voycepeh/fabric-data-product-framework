@@ -11,6 +11,4 @@ No public exports in this module.
 
 ## Internal helpers
 
-| Helper | Related public callables |
-|---|---|
-| [`_get_legacy_mvp_steps`](../../reference/internal/handover/_get_legacy_mvp_steps.md) | — |
+No module-level internal helpers detected.
