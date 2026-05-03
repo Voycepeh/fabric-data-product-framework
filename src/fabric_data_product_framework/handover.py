@@ -5,8 +5,6 @@
 # --- merged from mvp_steps.py ---
 """Canonical 13-step MVP lifecycle registry and artifact validation helpers."""
 
-from __future__ import annotations
-
 from typing import Any
 
 

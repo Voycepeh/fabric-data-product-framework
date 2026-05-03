@@ -2,13 +2,39 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from dataclasses import dataclass
+from datetime import datetime, timedelta, timezone
+import importlib.util
+import json
 import math
+from pathlib import Path
 import re
 from typing import Any
 
 import pandas as pd
+import yaml
 
+from fabric_data_product_framework.drift import (
+    build_and_write_partition_snapshot,
+    build_and_write_schema_snapshot,
+    check_partition_drift,
+    check_schema_drift,
+    load_latest_partition_snapshot,
+    load_latest_schema_snapshot,
+    summarize_drift_results,
+)
+from fabric_data_product_framework.lineage import build_lineage_records
+from fabric_data_product_framework.metadata import build_dataset_run_record, write_metadata_records
+from fabric_data_product_framework.profiling import flatten_profile_for_metadata, profile_dataframe
+from fabric_data_product_framework.governance import (
+    build_governance_classification_records,
+    classify_columns,
+    summarize_governance_classifications,
+    write_governance_classifications,
+)
+from fabric_data_product_framework.run_summary import build_run_summary, build_run_summary_record
+from fabric_data_product_framework.runtime import build_runtime_context
+from fabric_data_product_framework.technical_columns import add_audit_columns, add_hash_columns, default_technical_columns
 
 SUPPORTED_RULE_TYPES = {
     "not_null",
@@ -400,14 +426,7 @@ def build_quality_result_records(result: dict, *, run_id: str) -> list[dict]:
 
 
 import importlib.util
-import json
-from datetime import datetime, timezone
-from typing import Any
 
-from .quality import (
-    build_quality_rule_generation_prompt,
-    parse_ai_quality_rule_candidates,
-)
 
 
 def _now_iso() -> str:
@@ -990,10 +1009,7 @@ def run_dq_workflow(spark, df, quality_contract, dataset_name: str, table_name: 
 
 
 from datetime import datetime, timedelta, timezone
-import re
-from typing import Any
 
-import pandas as pd
 
 from fabric_data_product_framework.runtime import detect_dataframe_engine, validate_engine
 
@@ -1380,7 +1396,6 @@ def build_contract_validation_records(result: dict, *, run_id: str) -> list[dict
 
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any
 
 from fabric_data_product_framework.config import load_dataset_contract
 from fabric_data_product_framework.drift import (
@@ -1395,15 +1410,12 @@ from fabric_data_product_framework.drift import (
 from fabric_data_product_framework.lineage import build_lineage_records
 from fabric_data_product_framework.metadata import build_dataset_run_record, write_metadata_records
 from fabric_data_product_framework.profiling import flatten_profile_for_metadata, profile_dataframe
-from fabric_data_product_framework.quality import run_dq_workflow
 from fabric_data_product_framework.governance import (
     build_governance_classification_records,
     classify_columns,
     summarize_governance_classifications,
     write_governance_classifications,
 )
-from fabric_data_product_framework.quality import build_quality_result_records
-from fabric_data_product_framework.quality import split_valid_and_quarantine
 from fabric_data_product_framework.run_summary import build_run_summary, build_run_summary_record
 from fabric_data_product_framework.runtime import build_runtime_context
 from fabric_data_product_framework.technical_columns import add_audit_columns, add_hash_columns, default_technical_columns
@@ -2275,7 +2287,6 @@ def assert_data_product_passed(result: dict) -> None:
 """Compile AI layman DQ candidates into executable framework quality rules."""
 
 
-from .quality import SUPPORTED_RULE_TYPES
 
 
 def _skipped(candidate, message):
@@ -2414,9 +2425,7 @@ def build_rule_registry_records(compiled_rules, run_id, dataset_name, table_name
 """Row-level helpers to annotate and split valid/quarantine records."""
 
 
-import pandas as pd
 
-from .quality import _resolve_engine
 
 ROW_LEVEL_SUPPORTED = {"not_null", "regex_check", "accepted_values", "range_check", "unique", "unique_combination"}
 AGGREGATE_ONLY = {"row_count_min", "row_count_between", "freshness_check"}
@@ -2655,12 +2664,7 @@ def _add_spark(df, rules):
 """Provider-neutral helpers for AI-assisted data quality rule generation."""
 
 
-import json
-import re
-from datetime import datetime, timezone
-from typing import Any
 
-from .quality import SUPPORTED_RULE_TYPES
 
 SUPPORTED_CANDIDATE_FIELDS = {
     "rule_id", "table_name", "column", "columns", "layman_rule", "rule_type", "rule_config",

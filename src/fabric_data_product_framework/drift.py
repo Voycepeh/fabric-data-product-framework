@@ -334,7 +334,6 @@ def assert_no_blocking_schema_drift(result: dict) -> None:
 from datetime import datetime, timezone
 import json
 
-from fabric_data_product_framework.drift import build_partition_snapshot, compare_partition_snapshots, default_incremental_safety_policy
 from fabric_data_product_framework.profiling import to_jsonable
 
 
