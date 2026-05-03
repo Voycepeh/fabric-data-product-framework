@@ -131,6 +131,14 @@ def public_reference_link(symbol: str, docs_metadata: dict[str, dict[str, Any]],
     return f"../../reference/{step_slug}/{symbol}.md"
 
 
+def module_chip_link(module: str, href: str) -> str:
+    """Return an accessible clickable module chip for markdown tables."""
+    return (
+        f'<a class="api-chip api-chip-module api-chip-link" href="{href}" '
+        f'title="Open {module} module overview" aria-label="Open {module} module overview">{module}</a>'
+    )
+
+
 def main() -> None:
     public = parse_public_exports()
     module_data = {p.stem: parse_module(p) for p in PKG_DIR.glob("*.py") if p.name != "__init__.py"}
@@ -247,25 +255,25 @@ def main() -> None:
     (MODULE_DIR / "index.md").write_text("\n".join(module_index_lines) + "\n", encoding="utf-8", newline="\n")
 
     ref = ["# Callable Functions", "", "Generated step-first catalogue of callable functions sourced from `fabricops_kit.__all__`.", ""]
-    ref.extend(["## Modules", "", "| Module | Link |", "|---|---|"])
+    ref.extend(["## Modules", "", "| Module |", "|---|"])
     for module in sorted(module_data):
-        ref.append(f"| `{module}` | [Open module overview](../api/modules/{module}/) |")
+        ref.append(f"| {module_chip_link(module, f'../api/modules/{module}/')} |")
     ref.append("")
     for step in sorted(step_titles):
         ref.append(f"## Step {step}: {step_titles[step]}")
         ref.append("")
         entries = sorted(step_symbols.get(step, []), key=lambda x: x.name.lower())
         if entries:
-            ref.extend(["| Function / class | Module | Purpose | Related helpers | Module page |", "|---|---|---|---|---|"])
+            ref.extend(["| Function / class | Module | Purpose | Related helpers |", "|---|---|---|---|"])
             for s in entries:
                 info = module_data[s.module]
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
                 step_slug = step_slugs.get(step)
                 symbol_link = f"./{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.module}/#{s.name}"
+                module_link = module_chip_link(s.module, f"../api/modules/{s.module}/")
                 ref.append(
-                    f"| [`{s.name}`]({symbol_link}) | `{s.module}` | {s.summary or '—'} | "
-                    f"{', '.join(f'[`{r}`](./internal/{s.module}/{r}.md) (internal)' for r in related) or '—'} | "
-                    f"[module overview](../api/modules/{s.module}/) |"
+                    f"| [`{s.name}`]({symbol_link}) | {module_link} | {s.summary or '—'} | "
+                    f"{', '.join(f'[`{r}`](./internal/{s.module}/{r}.md) (internal)' for r in related) or '—'} |"
                 )
         else:
             ref.append("No public callable currently mapped to this step.")

@@ -38,3 +38,13 @@
   font-size: 0.82rem;
   color: var(--md-default-fg-color--light);
 }
+
+a.api-chip-link {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a.api-chip-link:hover,
+a.api-chip-link:focus-visible {
+  text-decoration: underline;
+}
