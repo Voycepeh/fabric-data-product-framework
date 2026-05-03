@@ -5,7 +5,7 @@ This folder contains reusable notebook starters for Microsoft Fabric workflows.
 ## Included files
 
 - `fabric_data_product_mvp.py`: primary MVP starter notebook template.
-- `fabric_data_product_mvp.md`: usage notes aligned to the 13-step MVP flow.
+- `fabric_data_product_mvp.md`: usage notes aligned to the 10-step lifecycle flow.
 
 ## Design goals
 

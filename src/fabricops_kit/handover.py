@@ -3,7 +3,7 @@
 
 
 # --- merged from mvp_steps.py ---
-"""Canonical 13-step MVP lifecycle registry and artifact validation helpers."""
+"""Canonical 10-step lifecycle registry and artifact validation helpers."""
 
 from typing import Any
 
@@ -113,7 +113,7 @@ _OWNER_TYPES = {"human", "ai_assisted", "framework", "mixed"}
 
 
 def get_mvp_step_registry() -> list[dict[str, Any]]:
-    """Return the canonical 13-step MVP lifecycle registry."""
+    """Return the canonical 10-step lifecycle registry."""
 
     return [dict(step) for step in MVP_STEP_REGISTRY]
 
@@ -125,7 +125,7 @@ def get_mvp_step_names() -> list[str]:
 
 
 def validate_mvp_artifacts(artifacts: dict[str, Any]) -> dict[str, Any]:
-    """Validate provided artifacts against the canonical MVP registry."""
+    """Validate provided artifacts against the canonical lifecycle registry."""
 
     expected = sorted({name for step in MVP_STEP_REGISTRY for name in step["expected_artifacts"]})
     available = sorted([name for name in expected if artifacts.get(name) is not None])
@@ -210,16 +210,16 @@ def create_pipeline_notebook_template(
         raise FileExistsError(f"Output already exists: {path}")
 
     content = f'''# %% [markdown]
-# # 1. Introduction
+# # 1. Purpose and governance ownership
 # Notebook template for dataset: `{dataset_name}`.
 
 # %% [markdown]
-# # 2. Dataset purpose and approved usage
+# # 2. Runtime, environment, and path setup
 # - Describe business purpose.
 # - List approved and non-approved usage.
 
 # %% [markdown]
-# # 3. Configuration and setup
+# # 3. Source contract and ingestion
 
 # %%
 import fabricops_kit as fw
@@ -262,7 +262,7 @@ df_source = lakehouse_table_read(lh_in, source_table)
 print(df_source.count())
 
 # %% [markdown]
-# # 6. Source profiling metadata
+# # 4. Source contract validation and metadata profiling
 
 # %%
 df_source_profile = generate_metadata_profile(
@@ -278,11 +278,11 @@ lakehouse_table_write(
 )
 
 # %% [markdown]
-# # 7. Human EDA notes
+# # 5. Exploration and rationale
 # Capture manual observations, anomalies, and assumptions.
 
 # %% [markdown]
-# # 8. Core transformation
+# # 6. Production transformation and target output
 # Replace this section with the actual business transformation.
 
 # %%
@@ -312,7 +312,7 @@ df_output = df_source
 # )
 
 # %% [markdown]
-# # 10. Data quality rules placeholder
+# # 8. AI-assisted DQ rule generation/review
 # Add explicit must-fail and warning rules from evidence.
 
 # %% [markdown]
@@ -337,7 +337,7 @@ lakehouse_table_write(
 # )
 
 # %% [markdown]
-# # 12. Output profiling metadata
+# # 7. Output validation and target metadata
 
 # %%
 df_output_read = lakehouse_table_read(lh_out, output_table)
@@ -355,7 +355,7 @@ lakehouse_table_write(
 )
 
 # %% [markdown]
-# # 13. Notebook lineage (scan-first)
+# # 9. AI-assisted classification/sensitivity review
 # Deterministic scanner extracts structure first; AI enrichment is optional; Copilot prompt is fallback only.
 
 # %%
@@ -376,7 +376,7 @@ display(lineage_record)
 fw.plot_lineage_steps(lineage_record, title=f"{dataset_name} Notebook Lineage")
 
 # %% [markdown]
-# # 14. Run summary and handover notes
+# # 10. AI-assisted lineage and handover documentation
 # Confirm assumptions, known gaps, and next-owner actions.
 '''
 
@@ -441,7 +441,7 @@ def create_actual_data_mvp_template(
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     content = f'''# %% [markdown]
-# # 1. Introduction
+# # 1. Purpose and governance ownership
 # This notebook runs one data product contract end to end.
 #
 # Edit only the contract and `transform(df, ctx)` function.
@@ -551,7 +551,7 @@ fw.plot_lineage_steps(
 
 
 # --- merged from mvp_steps.py ---
-"""Canonical MVP workflow registry for the Fabric data product framework."""
+"""Canonical lifecycle registry for the Fabric data product framework."""
 
 
 from copy import deepcopy

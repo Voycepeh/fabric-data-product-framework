@@ -1,26 +1,21 @@
 # Fabric data product MVP notebook template
 
-This guide explains how to use `fabric_data_product_mvp.py` as a runnable, end-to-end Fabric MVP flow after attaching an Environment with the installed framework wheel.
+This guide explains how to use `fabric_data_product_mvp.py` as a runnable, end-to-end Fabric lifecycle workflow after attaching an Environment with the installed framework wheel.
 
 ## Lifecycle flow (run-all)
 
-The template keeps one contract lifecycle in a single notebook flow:
+Use the canonical 10-step order from the [Lifecycle Operating Model](../../docs/lifecycle-operating-model.md):
 
-1. Package and environment verification.
-2. Runtime parameters (safe defaults).
-3. Source declaration (sample mode by default).
-4. Source profiling and metadata preview.
-5. AI-assisted DQ rule candidates (with deterministic fallback).
-6. Human approval checkpoint for DQ rules.
-7. DQ validation and failure summary.
-8. Drift guard checkpoints (baseline + compare model).
-9. Transformation and technical columns.
-10. Output profiling.
-11. Governance classification suggestions (human approval required).
-12. Lineage records and transformation summary.
-13. Target write gate (disabled by default).
-14. Run summary and AI handover context export.
-15. Final release gate (`READY_FOR_FABRIC_WRITE` / `NOT_READY`).
+1. Purpose and governance ownership.
+2. Runtime, environment, and path setup.
+3. Source contract declaration and source ingestion.
+4. Source contract validation and metadata profiling.
+5. Exploration and transformation / DQ rationale capture.
+6. Production transformation and target output write path.
+7. Output validation and target metadata persistence.
+8. AI-assisted DQ rule generation/review/configuration.
+9. AI-assisted classification/sensitivity suggestion review.
+10. AI-assisted lineage and handover documentation generation.
 
 ## Safety defaults
 

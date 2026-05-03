@@ -1,4 +1,4 @@
-"""Canonical 13-step MVP notebook template for onboarding and smoke tests."""
+"""Canonical 10-step lifecycle notebook template for onboarding and smoke tests."""
 
 from __future__ import annotations
 
