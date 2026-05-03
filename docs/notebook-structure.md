@@ -1,37 +1,30 @@
 # Notebook Structure
 
-Use this finalized notebook model in each Fabric environment workspace.
+![Workspace notebook setup](assets/notebook-structure.png)
 
-```text
-<env> Workspace
-├── 00_env_config
-│   └── One reusable config notebook per environment workspace
-│
-├── 01_data_sharing_agreement_<agreement>
-│   └── Governance, approved usage, permissions, restrictions
-│
-├── Exploration notebooks (many)
-│   ├── 02_ex_<agreement>_source_profile
-│   └── 02_ex_<agreement>_event_logic
-│
-└── Pipeline contract notebooks (many)
-    ├── 03_pc_<agreement>_<from>_to_<to>
-    │   └── Executable pipeline + handover
-    └── 03_pc_<agreement>_<from>_to_<to>
-        └── Executable pipeline + handover
-```
+*Figure: Notebook organization in a Fabric workspace, linking shared configuration and agreement context to exploration and production pipeline notebooks.*
 
-## Notebook roles
+Notebook structure should follow the end-to-end delivery flow, not isolated utility functions.
 
-- `00_env_config` is the shared runtime/config notebook for that environment workspace.
-- `01_data_sharing_agreement_<agreement>` is the governance artifact for one agreement.
-- `02_ex_<agreement>_*` notebooks are manual exploration notebooks and are not scheduled.
-- `03_pc_<agreement>_<from>_to_<to>` notebooks are scheduled operational notebooks and include executable pipeline logic plus handover in the same notebook.
+## How the structure supports the lifecycle
 
-## Relationship model
+A well-structured notebook sequence keeps implementation and governance aligned:
 
-- One agreement can connect to many exploration notebooks.
-- One agreement can connect to many pipeline contract notebooks.
-- Pipeline stage movement is encoded inside `<from>_to_<to>`, not by changing notebook type prefixes.
+1. **Purpose**: define business intent and approved usage context.
+2. **Config**: load reusable environment and runtime configuration.
+3. **Ingestion**: declare source inputs and ingest data.
+4. **Exploration/profiling**: profile and inspect source behavior.
+5. **Core transformation**: build and explain transformation logic.
+6. **Standardization**: apply reusable cleaning rules and technical columns.
+7. **Output**: publish validated output tables/files.
+8. **Metadata**: write run evidence and governance metadata.
+9. **Lineage**: capture upstream/downstream traceability notes.
+10. **Handover**: produce concise summaries and support artifacts.
 
-For workflow steps and execution order, use [Quick Start](quick-start.md).
+## Notebook role guidance
+
+- Use shared environment/config notebooks to avoid repeating runtime setup.
+- Keep exploration notebooks separate from scheduled operational notebooks.
+- Keep pipeline notebooks executable end to end so validation, publish, metadata, lineage, and handover are produced in one governed run.
+
+For architecture boundaries, see [Architecture](architecture.md). For full flow sequencing, see [Lifecycle Operating Model](lifecycle-operating-model.md).
