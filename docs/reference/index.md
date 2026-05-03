@@ -96,25 +96,25 @@ No public callable currently mapped to this step.
 | Function / class | Module | Purpose | Related helpers | API link |
 |---|---|---|---|---|
 | `build_governance_classification_records` | `governance` | Build governance classification records. | — | [module API](../api/modules/governance.md) |
-| `build_lineage_from_notebook_code` | `lineage` | — | — | [module API](../api/modules/lineage.md) |
-| `build_lineage_handover_markdown` | `lineage` | — | — | [module API](../api/modules/lineage.md) |
-| `build_lineage_record_from_steps` | `lineage` | — | — | [module API](../api/modules/lineage.md) |
+| `build_lineage_from_notebook_code` | `lineage` | Scan, optionally enrich, and validate lineage from notebook source code. | — | [module API](../api/modules/lineage.md) |
+| `build_lineage_handover_markdown` | `lineage` | Create a concise markdown handover summary from lineage execution results. | — | [module API](../api/modules/lineage.md) |
+| `build_lineage_record_from_steps` | `lineage` | Create metadata-ready lineage records from validated lineage steps. | — | [module API](../api/modules/lineage.md) |
 | `classify_column` | `governance` | Classify column. | `_match_terms` (internal), `_phrase_in_text` (internal) | [module API](../api/modules/governance.md) |
 | `classify_columns` | `governance` | Classify columns. | `_column_name` (internal), `_normalize_columns` (internal) | [module API](../api/modules/governance.md) |
-| `enrich_lineage_steps_with_ai` | `lineage` | — | — | [module API](../api/modules/lineage.md) |
-| `fallback_copilot_lineage_prompt` | `lineage` | — | — | [module API](../api/modules/lineage.md) |
-| `plot_lineage_steps` | `lineage` | — | — | [module API](../api/modules/lineage.md) |
-| `scan_notebook_cells` | `lineage` | — | — | [module API](../api/modules/lineage.md) |
-| `scan_notebook_lineage` | `lineage` | — | `_call_name` (internal), `_flatten_chain` (internal), `_name` (internal), `_resolve_write_target` (internal), `_step` (internal) | [module API](../api/modules/lineage.md) |
+| `enrich_lineage_steps_with_ai` | `lineage` | Optionally enrich deterministic lineage steps using an AI helper callable. | — | [module API](../api/modules/lineage.md) |
+| `fallback_copilot_lineage_prompt` | `lineage` | Build a fallback Copilot prompt for manual lineage enrichment. | — | [module API](../api/modules/lineage.md) |
+| `plot_lineage_steps` | `lineage` | Render lineage steps as a directed graph figure. | — | [module API](../api/modules/lineage.md) |
+| `scan_notebook_cells` | `lineage` | Scan multiple notebook cells and append cell references to lineage steps. | — | [module API](../api/modules/lineage.md) |
+| `scan_notebook_lineage` | `lineage` | Extract deterministic lineage steps from notebook code using AST parsing. | `_call_name` (internal), `_flatten_chain` (internal), `_name` (internal), `_resolve_write_target` (internal), `_step` (internal) | [module API](../api/modules/lineage.md) |
 | `summarize_governance_classifications` | `governance` | Summarize governance classifications. | — | [module API](../api/modules/governance.md) |
-| `validate_lineage_steps` | `lineage` | — | — | [module API](../api/modules/lineage.md) |
+| `validate_lineage_steps` | `lineage` | Validate lineage step structure and flag records requiring human review. | — | [module API](../api/modules/lineage.md) |
 | `write_governance_classifications` | `governance` | Write governance classifications. | `_spark_create_governance_metadata_dataframe` (internal) | [module API](../api/modules/governance.md) |
 
 ## Step 13: Run summary and handover package
 
 | Function / class | Module | Purpose | Related helpers | API link |
 |---|---|---|---|---|
-| `build_lineage_records` | `lineage` | — | — | [module API](../api/modules/lineage.md) |
+| `build_lineage_records` | `lineage` | Build compact lineage records for downstream metadata sinks. | — | [module API](../api/modules/lineage.md) |
 | `build_run_summary` | `run_summary` | Build run summary. | — | [module API](../api/modules/run_summary.md) |
 | `render_run_summary_markdown` | `run_summary` | Render run summary markdown. | `_status_of` (internal) | [module API](../api/modules/run_summary.md) |
 
