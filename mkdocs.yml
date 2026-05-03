@@ -19,8 +19,7 @@ theme:
 nav:
   - Home: index.md
   - Quick Start: quick-start.md
-  - Notebook Conventions:
-      - Notebook Structure: notebook-structure.md
+  - Notebook Structure: notebook-structure.md
   - Lifecycle: lifecycle-operating-model.md
   - Architecture: architecture.md
   - Function Reference: reference/index.md

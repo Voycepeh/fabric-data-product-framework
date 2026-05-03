@@ -557,7 +557,7 @@ fw.plot_lineage_steps(
 from copy import deepcopy
 from typing import Any
 
-MVP_STEPS = [
+LEGACY_MVP_STEPS = [
     {"step_id": 1, "name": "Define data product", "actor": "Human led", "description": "Define purpose, grain, usage, and context.", "required_inputs": ["data product purpose", "expected grain", "approved usage"], "output_artifacts": ["data_product_context"], "fabric_test_hint": "Record context cell output or metadata row."},
     {"step_id": 2, "name": "Setup config and environment", "actor": "Framework led", "description": "Build runtime config and execution context.", "required_inputs": ["environment", "source/target placeholders"], "output_artifacts": ["runtime_config"], "fabric_test_hint": "Validate runtime context and notebook naming checks."},
     {"step_id": 3, "name": "Declare source and ingest data", "actor": "Framework led", "description": "Declare source table and read data.", "required_inputs": ["source declaration", "adapter reader"], "output_artifacts": ["source_declaration"], "fabric_test_hint": "Read synthetic source table in DRY_RUN mode."},
@@ -576,7 +576,7 @@ MVP_STEPS = [
 REQUIRED_HANDOVER_PACK_KEYS = ["profile", "dq", "governance", "lineage", "run_summary", "caveats"]
 
 
-def get_mvp_step_registry() -> list[dict[str, Any]]:
+def _get_legacy_mvp_steps() -> list[dict[str, Any]]:
     """Get mvp step registry.
 
     Run `get_mvp_step_registry`.
@@ -595,7 +595,7 @@ def get_mvp_step_registry() -> list[dict[str, Any]]:
     --------
     >>> get_mvp_step_registry()
     """
-    return deepcopy(MVP_STEPS)
+    return deepcopy(LEGACY_MVP_STEPS)
 
 
 def validate_mvp_artifacts(artifacts: dict[str, Any]) -> dict[str, Any]:
@@ -617,7 +617,7 @@ def validate_mvp_artifacts(artifacts: dict[str, Any]) -> dict[str, Any]:
     --------
     >>> validate_mvp_artifacts(artifacts)
     """
-    expected_top_level = sorted({a for s in MVP_STEPS for a in s["output_artifacts"]})
+    expected_top_level = sorted({a for s in LEGACY_MVP_STEPS for a in s["output_artifacts"]})
     missing_top_level = [name for name in expected_top_level if name not in artifacts]
     invalid_fields: list[dict[str, str]] = []
 

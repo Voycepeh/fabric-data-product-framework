@@ -38,6 +38,10 @@ Guide agent/Codex contributions for this repository so changes stay reusable, pu
 - If a public callable depends on important internal helpers, keep those helpers documented enough that generated relationship lists remain useful.
 - Do not maintain manual duplicate function/member lists across docs. Regenerate the callable catalogue instead.
 - PRs that add/remove/rename public callables must run `PYTHONPATH=src python scripts/generate_function_reference.py` and include generated docs updates in the same PR.
+- New public callables must be added to `__all__`, mapped to the 13-step reference flow (or intentionally placed under Other Utilities), and documented with useful non-placeholder docstrings.
+- Internal-only modules should not appear as public modules in the module API catalogue unless clearly labeled as internal-only.
+- Deprecated callables must not be promoted as the recommended path when a replacement callable exists.
+- If `__all__`, module names, public callable mappings, or docstrings change, regenerate the reference and module catalogue docs in the same PR.
 
 ## Docstring requirements for public APIs
 
