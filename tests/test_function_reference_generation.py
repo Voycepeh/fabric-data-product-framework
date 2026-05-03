@@ -60,14 +60,24 @@ def test_step_specific_callable_placement() -> None:
     step1 = section(content, "Step 1: Package and runtime setup")
     step2 = section(content, "Step 2: Fabric config and paths")
     step3 = section(content, "Step 3: Pull source data")
-    step11 = section(content, "Step 11: Write output and profile output")
+    step10 = section(content, "Step 10: Standard technical columns")
+    step11 = section(content, "Step 11: Output write, output profiling, and metadata logging")
+    other = section(content, "Other Utilities")
 
     assert "`lakehouse_table_read`" in step3
     assert "`lakehouse_table_read`" not in step1
-    assert "`lakehouse_table_write`" in step11 or "lakehouse_table_write" not in public_exports()
+    assert "`add_audit_columns`" in step10
+    assert "`add_datetime_features`" in step10
+    assert "`add_hash_columns`" in step10
+    assert "`default_technical_columns`" in step10
+    assert "`lakehouse_table_write`" in step11
     assert "`warehouse_write`" in step11
     assert "`warehouse_write`" not in step1
     assert "`get_path`" in step2
+    assert "`add_audit_columns`" not in other
+    assert "`add_datetime_features`" not in other
+    assert "`add_hash_columns`" not in other
+    assert "`default_technical_columns`" not in other
 
 
 def test_not_all_public_exports_land_in_other_utilities() -> None:

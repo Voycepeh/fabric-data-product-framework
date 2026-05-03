@@ -10,6 +10,7 @@
 | `lakehouse_excel_read_as_spark` | function | Read an Excel file from a Fabric lakehouse Files path. | `_get_spark` (internal) |
 | `lakehouse_parquet_read_as_spark` | function | Read a Parquet file from a Fabric lakehouse Files path. | `_convert_single_parquet_ns_to_us` (internal), `_get_spark` (internal) |
 | `lakehouse_table_read` | function | Read a Delta table from a Fabric lakehouse. | `_get_spark` (internal) |
+| `lakehouse_table_write` | function | Write a Spark DataFrame to a Fabric lakehouse Delta table. | — |
 | `load_fabric_config` | function | Validate and return a Fabric config mapping. | — |
 | `warehouse_read` | function | Read a table from a Microsoft Fabric warehouse. | `_get_spark` (internal) |
 | `warehouse_write` | function | Write a Spark DataFrame to a Microsoft Fabric warehouse table. | — |
