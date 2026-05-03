@@ -1,43 +1,39 @@
 # Lifecycle Operating Model
 
-This page defines the **canonical 13-step MVP lifecycle** for the framework.
+This page defines the single end-to-end workflow for FabricOps Starter Kit.
 
-## Reader mental model
+## Operating roles
 
-- **Humans** define purpose, approve business meaning, review AI outputs, and accept governance/DQ decisions.
-- The **framework** runs reusable profiling, validation, drift, DQ, metadata, lineage, and handover utilities.
-- **AI** proposes DQ rules, sensitivity labels, lineage, transformation summaries, and documentation from structured context.
-- **Fabric** executes notebooks and stores data/metadata outputs.
+- **Human-led steps** define intent, approve business thresholds, and make release decisions.
+- **Framework-assisted deterministic checks** execute reusable validation, profiling, drift, and metadata routines.
+- **AI-assisted steps** propose rule candidates, summaries, and classifications that humans review.
 
-AI proposes. Humans approve. The framework validates, logs, and packages artifacts.
+## 13-step end-to-end workflow
 
 ```mermaid
 flowchart TD
-    A[1 Define data product\nHuman led] --> B[2 Setup config and environment\nStarter-kit led]
-    B --> C[3 Declare source and ingest data\nStarter-kit led]
-    C --> D[4 Profile source and capture metadata\nStarter-kit led]
-    D --> E[5 Explore data\nHuman led]
-    E --> F[6 Explain transformation logic\nHuman led]
-    F --> G[7 Build transformation pipeline\nStarter-kit led]
-    G --> H[8 AI generate DQ rules\nAI assisted]
-    H --> I[9 Human review DQ rules\nHuman led]
-    I --> J[10 AI suggest sensitivity labels\nAI assisted]
-    J --> K[11 Human review and governance gate\nHuman led]
-    K --> L[12 AI generated lineage and transformation summary\nAI assisted]
-    L --> M[13 Handover starter kit pack\nStarter-kit led]
-
-    D -. source profile .-> H
-    D -. profile evidence .-> J
-    F -. transformation rationale .-> L
-    G -. transformation summary .-> L
-
-    M --> N[Handover includes:\nDQ, governance, lineage, profile, run summary, caveats]
+    A[1 Define data product intent\nHuman-led] --> B[2 Configure runtime and environment\nFramework-assisted]
+    B --> C[3 Declare and read source data\nFramework-assisted]
+    C --> D[4 Profile source metadata\nFramework-assisted]
+    D --> E[5 Generate/define quality checks\nAI-assisted + Human-led]
+    E --> F[6 Review quality and governance intent\nHuman-led]
+    F --> G[7 Apply quality checks\nFramework-assisted]
+    G --> H[8 Detect schema/profile/partition drift\nFramework-assisted]
+    H --> I[9 Execute transformations\nHuman-led + Framework-assisted]
+    I --> J[10 Add technical columns and write prep\nFramework-assisted]
+    J --> K[11 Write outputs and profile outputs\nFramework-assisted]
+    K --> L[12 Generate governance metadata and lineage\nAI-assisted + Framework-assisted]
+    L --> M[13 Produce handover and final validation\nHuman-led + Framework-assisted]
 
     classDef human fill:#fef3c7,stroke:#92400e,color:#111827;
     classDef framework fill:#dbeafe,stroke:#1d4ed8,color:#111827;
     classDef ai fill:#dcfce7,stroke:#166534,color:#111827;
 
-    class A,E,F,I,K human;
-    class B,C,D,G,M framework;
-    class H,J,L ai;
+    class A,F,I,M human;
+    class B,C,D,G,H,J,K framework;
+    class E,L ai;
 ```
+
+## Practical use
+
+Use [Quick Start](quick-start.md) to execute the workflow and [Reference](reference/index.md) to locate callable functions by step.
