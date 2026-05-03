@@ -94,7 +94,7 @@ MVP_STEP_REGISTRY: list[dict[str, Any]] = [
         "step_number": 12,
         "step_name": "Governance classification and lineage",
         "owner_type": "mixed",
-        "canonical_modules": ["governance.py", "lineage.py", "ai_lineage_summary.py"],
+        "canonical_modules": ["governance.py", "lineage.py", "lineage_ai_enrichment.py"],
         "expected_artifacts": ["governance_labels", "lineage_records"],
         "description": "Classify governance tags and record lineage with human approval for AI-assisted suggestions.",
     },
@@ -359,7 +359,7 @@ lakehouse_table_write(
 # Copilot scans the notebook and drafts lineage_steps. Framework validates and renders lineage.
 
 # %%
-prompt = fw.get_fabric_copilot_lineage_prompt()
+prompt = fw.fallback_copilot_lineage_prompt(lineage_steps)
 print(prompt)
 
 # %% [markdown]
@@ -379,7 +379,7 @@ lineage_record = fw.build_lineage_record_from_steps(dataset_name=dataset_name, l
 display(lineage_record)
 
 # %%
-fw.plot_lineage_networkx(lineage_record, title=f"{dataset_name} Notebook Lineage")
+fw.plot_lineage_steps(lineage_record, title=f"{dataset_name} Notebook Lineage")
 
 # %% [markdown]
 # # 14. Run summary and handover notes
@@ -525,7 +525,7 @@ fw.assert_data_product_passed(result)
 # human reviews low-confidence or ambiguous items before storage.
 
 # %%
-prompt = fw.get_fabric_copilot_lineage_prompt()
+prompt = fw.fallback_copilot_lineage_prompt(lineage_steps)
 print(prompt)
 
 # %% [markdown]
@@ -551,7 +551,7 @@ lineage_record = fw.build_lineage_record_from_steps(
 display(lineage_record)
 
 # %%
-fw.plot_lineage_networkx(
+fw.plot_lineage_steps(
     lineage_record,
     title=f"{{contract.dataset.name}} Notebook Lineage",
 )
