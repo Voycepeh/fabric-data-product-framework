@@ -1,6 +1,6 @@
-# Documentation Portal
+# FabricOps Starter Kit Documentation
 
-Use this site as the **operating manual** for running and understanding the framework.
+Use this site as the **operating manual** for running notebook-driven FabricOps workflows with the starter kit.
 
 - The root [README](../README.md) is the **high-level repository overview**.
 - This GitHub Pages site is the **detailed guide** for testing, operating, and extending the canonical 13-step MVP lifecycle in Fabric.
@@ -19,3 +19,8 @@ Use this site as the **operating manual** for running and understanding the fram
 2. Read the [lifecycle operating model](lifecycle-operating-model.md).
 3. Review the [architecture](architecture.md).
 4. Use the [function reference](reference/) while adapting notebooks.
+
+
+## Package/import compatibility note
+
+The Python package/import path remains `fabric_data_product_framework` for compatibility in this release.

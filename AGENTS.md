@@ -154,3 +154,11 @@ PY
 - Run `uv run python -m compileall src tests`.
 - Run `uv run python -m pytest -q`.
 - Run `uv run mkdocs build`.
+
+
+## Branding guidance
+
+- Public brand name is **FabricOps Starter Kit**.
+- Preferred wording: **governed, quality-checked, AI-ready notebooks in Microsoft Fabric**.
+- Avoid reintroducing **Fabric Data Product Framework** as the public-facing brand.
+- Do not position the project as a full data product platform.

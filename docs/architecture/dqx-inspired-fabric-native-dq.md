@@ -59,7 +59,7 @@ In confidentiality-constrained organizations, do not assume external internet ac
 
 ```mermaid
 flowchart TD
-    DEV[Local VS Code development] --> WHL[Build framework wheel file]
+    DEV[Local VS Code development] --> WHL[Build starter kit wheel file]
     WHL --> ENV[Fabric Environment installs custom library]
     ENV --> NB[Fabric notebooks execute data product workflow]
 
