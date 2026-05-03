@@ -4,10 +4,10 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| `check_partition_drift` | function | Check partition drift. | — |
-| `check_profile_drift` | function | Check profile drift. | — |
-| `check_schema_drift` | function | Check schema drift. | — |
-| `summarize_drift_results` | function | Summarize drift results. | — |
+| [`check_partition_drift`](#check_partition_drift) | function | Check partition drift. | — |
+| [`check_profile_drift`](#check_profile_drift) | function | Check profile drift. | — |
+| [`check_schema_drift`](#check_schema_drift) | function | Check schema drift. | — |
+| [`summarize_drift_results`](#summarize_drift_results) | function | Summarize drift results. | — |
 
 ## Internal helpers (module-level)
 

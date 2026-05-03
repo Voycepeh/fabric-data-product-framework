@@ -163,33 +163,9 @@ for symbol, dotted_path in other_utilities:
         fd.write("      docstring_style: numpy\n")
         fd.write("      docstring_section_style: table\n")
 
-with mkdocs_gen_files.open("reference/index.md", "w") as fd:
-    fd.write("# Callable Reference\n\n")
-    fd.write(
-        "The callable reference is arranged by the 13-step Fabric data product workflow, "
-        "not by Python module name.\n\n"
-    )
-
-    for step in WORKFLOW_STEPS:
-        step_number = step["number"]
-        step_slug = step["slug"]
-        step_title = step["title"]
-        fd.write(f"## Step {step_number}: {step_title}\n\n")
-
-        for symbol, _ in symbols_by_step.get(step_number, []):
-            fd.write(f"- [`{symbol}`]({step_slug}/{symbol}.md)\n")
-
-        note = step.get("note")
-        if note:
-            fd.write(f"\n{note}\n")
-
-        fd.write("\n")
-
-    if other_utilities:
-        fd.write("## Other Utilities\n\n")
-        for symbol, _ in other_utilities:
-            fd.write(f"- [`{symbol}`](other-utilities/{symbol}.md)\n")
-        fd.write("\n")
+# NOTE:
+# `docs/reference/index.md` is intentionally maintained by hand as the
+# Function Reference landing page and must never be generated here.
 
 with mkdocs_gen_files.open("reference/SUMMARY.md", "w") as fd:
     fd.write("- [Reference Home](index.md)\n")
