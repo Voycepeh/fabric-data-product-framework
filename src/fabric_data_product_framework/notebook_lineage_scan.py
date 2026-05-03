@@ -31,6 +31,28 @@ def _flatten_chain(node: ast.AST) -> tuple[str | None, list[str]]:
 def _step(source:str,target:str,transformation:str,source_type:str,target_type:str,confidence:str,lineno:int,ops:list[str],notes:str="") -> dict[str, Any]:
     return {"source": source,"target": target,"transformation": transformation,"reason": "","source_type": source_type,"target_type": target_type,"confidence": confidence,"notes": notes,"operation_types": ops,"code_refs": [f"line:{lineno}"]}
 
+
+def _literal(node: ast.AST) -> str | None:
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return node.value
+    if isinstance(node, ast.Name):
+        return node.id
+    return None
+
+
+def _resolve_write_target(cname: str, call: ast.Call) -> str:
+    if cname == "lakehouse_table_write":
+        if len(call.args) >= 3:
+            return _literal(call.args[2]) or "unknown_lakehouse_table"
+        return "unknown_lakehouse_table"
+    if cname == "warehouse_write":
+        if len(call.args) >= 5:
+            schema = _literal(call.args[3]) or "schema"
+            table = _literal(call.args[4]) or "table"
+            return f"{schema}.{table}"
+        return "unknown_warehouse_table"
+    return "unknown_target"
+
 def scan_notebook_lineage(code: str) -> list[dict[str, Any]]:
     """Scan Python notebook/code text and return deterministic lineage steps."""
     tree = ast.parse(code)
@@ -59,7 +81,7 @@ def scan_notebook_lineage(code: str) -> list[dict[str, Any]]:
             if cname in WRITE_HELPERS and call.args:
                 src = _name(call.args[0]) or "unknown"
                 conf = "high" if src != "unknown" else "medium"
-                steps.append(_step(src, cname, f"write via {cname}", "dataframe" if src != "unknown" else "unknown", WRITE_HELPERS[cname], conf, node.lineno, ["write"]))
+                steps.append(_step(src, _resolve_write_target(cname, call), f"write via {cname}", "dataframe" if src != "unknown" else "unknown", WRITE_HELPERS[cname], conf, node.lineno, ["write"]))
             if cname == "save" and isinstance(call.func, ast.Attribute):
                 src, _ = _flatten_chain(call.func.value)
                 steps.append(_step(src or "unknown", "external_target", "write via df.write", "dataframe" if src else "unknown", "unknown", "medium", node.lineno, ["write"], "target format/path not resolved"))

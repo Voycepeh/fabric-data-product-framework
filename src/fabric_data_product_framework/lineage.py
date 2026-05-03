@@ -20,6 +20,10 @@ def validate_lineage_steps(lineage_steps: Any) -> dict[str, Any]:
     if not lineage_steps:
         return {"is_valid": False, "errors": ["lineage_steps cannot be empty."], "warnings": [], "review_required": True}
     for i, step in enumerate(lineage_steps, 1):
+        if not isinstance(step, dict):
+            errors.append(f"Step {i}: each lineage step must be a dict.")
+            review_required = True
+            continue
         for f in required:
             if f not in step:
                 errors.append(f"Step {i}: missing required field '{f}'.")

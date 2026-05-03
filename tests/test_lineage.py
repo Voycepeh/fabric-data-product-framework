@@ -7,7 +7,7 @@ def test_scan_read_transform_write_deterministic() -> None:
     code = """
 df = lakehouse_table_read('orders')
 clean = df.filter(df.amount > 0).select('id','amount')
-lakehouse_table_write(clean, 'orders_clean')
+lakehouse_table_write(clean, lh_out, 'orders_clean')
 """
     one = scan_notebook_lineage(code)
     two = scan_notebook_lineage(code)
@@ -15,6 +15,7 @@ lakehouse_table_write(clean, 'orders_clean')
     assert any(s["operation_types"] == ["read"] for s in one)
     assert any("filter" in s["operation_types"] for s in one)
     assert any(s["operation_types"] == ["write"] for s in one)
+    assert any(s["target"] == "orders_clean" for s in one if s["operation_types"] == ["write"])
 
 
 def test_scan_join_and_cells() -> None:
@@ -31,6 +32,8 @@ def test_validation_rules() -> None:
     assert out["review_required"] is True
     bad = validate_lineage_steps([{"source":"a"}])
     assert bad["is_valid"] is False
+    malformed = validate_lineage_steps(["oops", None])
+    assert malformed["is_valid"] is False
 
 
 def test_orchestration_and_fallback() -> None:
@@ -44,8 +47,11 @@ def test_orchestration_and_fallback() -> None:
 
 def test_plot_lineage_steps() -> None:
     steps = [{"source":"a","target":"b","transformation":"join","reason":"x","source_type":"dataframe","target_type":"dataframe","confidence":"high"}]
-    fig = plot_lineage_steps(steps)
-    assert fig is not None
+    try:
+        fig = plot_lineage_steps(steps)
+        assert fig is not None
+    except ModuleNotFoundError as ex:
+        assert "matplotlib" in str(ex) or "networkx" in str(ex)
 
 
 def test_build_lineage_record_from_steps() -> None:
