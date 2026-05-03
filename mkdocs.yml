@@ -24,7 +24,7 @@ nav:
   - Architecture: architecture.md
   - Setup:
       - Fabric Wheel Install: setup/fabric-wheel-install.md
-  - Reference: reference/index.md
+  - Functions: reference/index.md
 
 markdown_extensions:
   - admonition
