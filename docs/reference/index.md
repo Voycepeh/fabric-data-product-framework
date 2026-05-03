@@ -95,10 +95,10 @@ No public callable currently mapped to this step.
 
 | Function / class | Module | Purpose | Related helpers | API link |
 |---|---|---|---|---|
+| `build_governance_classification_records` | `governance` | Build governance classification records. | — | [module API](../api/modules/governance.md) |
 | `build_lineage_from_notebook_code` | `lineage` | — | — | [module API](../api/modules/lineage.md) |
 | `build_lineage_handover_markdown` | `lineage` | — | — | [module API](../api/modules/lineage.md) |
 | `build_lineage_record_from_steps` | `lineage` | — | — | [module API](../api/modules/lineage.md) |
-| `build_governance_classification_records` | `governance` | Build governance classification records. | — | [module API](../api/modules/governance.md) |
 | `classify_column` | `governance` | Classify column. | `_match_terms` (internal), `_phrase_in_text` (internal) | [module API](../api/modules/governance.md) |
 | `classify_columns` | `governance` | Classify columns. | `_column_name` (internal), `_normalize_columns` (internal) | [module API](../api/modules/governance.md) |
 | `enrich_lineage_steps_with_ai` | `lineage` | — | — | [module API](../api/modules/lineage.md) |

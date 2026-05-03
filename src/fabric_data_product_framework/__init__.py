@@ -1,6 +1,5 @@
 """Public notebook-friendly entrypoints for the Fabric Data Product Framework."""
 
-from .quality import load_data_contract, run_data_product
 from .drift import check_partition_drift, check_profile_drift, check_schema_drift, summarize_drift_results
 from .fabric_io import (
     Housepath,
@@ -14,7 +13,6 @@ from .fabric_io import (
     warehouse_read,
     warehouse_write,
 )
-from .governance import classify_columns, summarize_governance_classifications
 from .lineage import (
     build_lineage_from_notebook_code,
     build_lineage_handover_markdown,
@@ -27,8 +25,6 @@ from .lineage import (
     scan_notebook_lineage,
     validate_lineage_steps,
 )
-from .metadata import write_multiple_metadata_outputs
-from .profiling import profile_dataframe, summarize_profile
 from .governance import (
     build_governance_classification_records,
     classify_column,
@@ -36,7 +32,6 @@ from .governance import (
     summarize_governance_classifications,
     write_governance_classifications,
 )
-from .lineage import LineageRecorder, build_lineage_records, build_transformation_summary_markdown, generate_mermaid_lineage
 from .metadata import (
     build_dataset_run_record,
     build_quality_result_records,
@@ -51,7 +46,7 @@ from .profiling import (
     profile_dataframe_to_metadata,
     profile_metadata_to_records,
 )
-from .quality import run_quality_rules
+from .quality import load_data_contract, run_data_product, run_quality_rules
 from .run_summary import build_run_summary, render_run_summary_markdown
 from .runtime import assert_notebook_name_valid, build_runtime_context, generate_run_id, validate_notebook_name
 from .technical_columns import add_audit_columns, add_datetime_features, add_hash_columns, default_technical_columns

@@ -18,8 +18,8 @@ import pandas as pd
 
 from fabric_data_product_framework.lineage import (
     build_lineage_records,
-    build_transformation_summary_markdown,
-    generate_mermaid_lineage,
+    build_lineage_handover_markdown,
+    plot_lineage_steps,
 )
 from fabric_data_product_framework.profiling import profile_dataframe
 from fabric_data_product_framework.quality import run_quality_rules
@@ -97,13 +97,13 @@ summary = {
     "columns_created": [],
 }
 
-mermaid = generate_mermaid_lineage(
+mermaid = plot_lineage_steps(
     source_tables=["local.inline_dataframe"],
     target_table=f"local.{table_name}",
     transformation_steps=steps,
 )
 
-summary_md = build_transformation_summary_markdown(summary)
+summary_md = build_lineage_handover_markdown(summary)
 
 print(profile)
 print(dq_result)

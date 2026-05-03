@@ -12,7 +12,7 @@ AI-assisted transformation summaries help bridge technical lineage and business 
 
 ```mermaid
 flowchart TD
-    A[Notebook transformation code] --> B[LineageRecorder steps]
+    A[Notebook transformation code] --> B[build_lineage_from_notebook_code steps]
     B --> C[Framework builds AI prompt context]
     C --> D[Fabric AI response summarises transformations]
     D --> E[Framework parses summary candidates]
@@ -24,8 +24,8 @@ flowchart TD
 
 ## Recommended implementation pattern
 
-1. Record transformation steps with `LineageRecorder`.
-2. Build lineage summary with `LineageRecorder.build_summary()`.
+1. Record notebook transformation code and scan it with `build_lineage_from_notebook_code(...)`.
+2. Review and validate detected steps from the returned lineage summary payload.
 3. Build AI prompt context with `build_transformation_summary_prompt_context(...)`.
 4. Generate strict prompt with `build_transformation_summary_generation_prompt(...)`.
 5. Call Fabric AI summarise/generate response in the notebook layer.
