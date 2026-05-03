@@ -1,4 +1,4 @@
-# `config` module
+# `config` module (internal)
 
 ## Public callables from `__all__`
 
@@ -14,4 +14,4 @@ No public exports in this module.
 
 ## Full module API
 
-::: fabric_data_product_framework.config
+This module is internal-only and is intentionally excluded from full public API rendering.

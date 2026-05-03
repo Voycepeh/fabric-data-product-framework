@@ -14,10 +14,28 @@ from .fabric_io import (
     warehouse_read,
     warehouse_write,
 )
-from .governance import classify_columns, summarize_governance_classifications
+from .governance import (
+    build_governance_classification_records,
+    classify_column,
+    classify_columns,
+    summarize_governance_classifications,
+    write_governance_classifications,
+)
 from .lineage import LineageRecorder, build_lineage_records, build_transformation_summary_markdown, generate_mermaid_lineage
-from .metadata import write_multiple_metadata_outputs
-from .profiling import profile_dataframe, summarize_profile
+from .metadata import (
+    build_dataset_run_record,
+    build_quality_result_records,
+    build_schema_drift_records,
+    build_schema_snapshot_records,
+    write_metadata_records,
+    write_multiple_metadata_outputs,
+)
+from .profiling import (
+    build_ai_quality_context,
+    profile_dataframe,
+    profile_dataframe_to_metadata,
+    profile_metadata_to_records,
+)
 from .quality import run_quality_rules
 from .run_summary import build_run_summary, render_run_summary_markdown
 from .runtime import assert_notebook_name_valid, build_runtime_context, generate_run_id, validate_notebook_name
@@ -41,13 +59,18 @@ __all__ = [
     "validate_notebook_name",
     "assert_notebook_name_valid",
     "profile_dataframe",
-    "summarize_profile",
+    "profile_dataframe_to_metadata",
+    "profile_metadata_to_records",
+    "build_ai_quality_context",
     "run_quality_rules",
     "check_schema_drift",
     "check_partition_drift",
     "check_profile_drift",
     "summarize_drift_results",
+    "classify_column",
     "classify_columns",
+    "build_governance_classification_records",
+    "write_governance_classifications",
     "summarize_governance_classifications",
     "LineageRecorder",
     "build_lineage_records",
@@ -55,6 +78,11 @@ __all__ = [
     "build_transformation_summary_markdown",
     "build_run_summary",
     "render_run_summary_markdown",
+    "build_dataset_run_record",
+    "build_schema_snapshot_records",
+    "build_schema_drift_records",
+    "build_quality_result_records",
+    "write_metadata_records",
     "write_multiple_metadata_outputs",
     "load_data_contract",
     "run_data_product",

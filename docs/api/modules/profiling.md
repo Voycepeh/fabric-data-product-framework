@@ -4,8 +4,10 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
+| `build_ai_quality_context` | function | Build deterministic AI-ready context from standard metadata profile rows. | — |
 | `profile_dataframe` | function | Build a lightweight profile for pandas or Spark-like DataFrames. | — |
-| `summarize_profile` | function | Deprecated legacy API. | — |
+| `profile_dataframe_to_metadata` | function | Profile a Spark/Fabric DataFrame into ODI-compatible metadata rows. | — |
+| `profile_metadata_to_records` | function | Convert Spark metadata profile rows into JSON-friendly dictionaries. | — |
 
 ## Internal helpers (module-level)
 
