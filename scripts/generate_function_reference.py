@@ -10,6 +10,21 @@ PKG_DIR = ROOT / "src" / "fabric_data_product_framework"
 INIT_PATH = PKG_DIR / "__init__.py"
 REFERENCE_PATH = ROOT / "docs" / "reference" / "index.md"
 MODULE_DIR = ROOT / "docs" / "api" / "modules"
+REFERENCE_STEP_SLUGS = {
+    1: "step-01-purpose-setup",
+    2: "step-02-runtime-configuration",
+    3: "step-03-source-declaration-paths",
+    4: "step-04-source-ingestion-read-helpers",
+    5: "step-05-source-profiling-metadata",
+    6: "step-06-drift-checks",
+    7: "step-07-ai-rule-generation-review",
+    8: "step-08-quality-rule-execution",
+    9: "step-09-core-transformation-business-logic",
+    10: "step-10-technical-columns-write-prep",
+    11: "step-11-output-write-metadata-logging",
+    12: "step-12-governance-classification",
+    13: "step-13-lineage-summary-handover",
+}
 
 STEP_FALLBACK_NOTES = {
     5: "No public callable is currently exported for this step. Use notebook prompts for AI-assisted rule drafting.",
@@ -185,7 +200,14 @@ def main() -> None:
         public_in_module = [s for s in symbol_map.values() if s.module == module]
         is_internal_only = not public_in_module
         title = f"# `{module}` module" if not is_internal_only else f"# `{module}` module (internal)"
-        lines = [title, "", "## Public callables from `__all__`", ""]
+        status_banner = (
+            "!!! warning \"Internal-only module\"\n"
+            "    Not intended as a primary user-facing API surface."
+            if is_internal_only
+            else "!!! info \"Module overview\"\n"
+            "    This page summarizes public callables and related internal helpers."
+        )
+        lines = [title, "", status_banner, "", "## Public callables from `__all__`", ""]
         if public_in_module:
             lines.extend(["| Callable | Type | Summary | Related helpers |", "|---|---|---|---|"])
             for s in sorted(public_in_module, key=lambda x: x.name.lower()):
@@ -223,14 +245,16 @@ def main() -> None:
         ref.append("")
         entries = sorted(step_symbols.get(step, []), key=lambda x: x.name.lower())
         if entries:
-            ref.extend(["| Function / class | Module | Purpose | Related helpers | API link |", "|---|---|---|---|---|"])
+            ref.extend(["| Function / class | Module | Purpose | Related helpers | Module page |", "|---|---|---|---|---|"])
             for s in entries:
                 info = module_data[s.module]
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
+                step_slug = REFERENCE_STEP_SLUGS.get(step)
+                symbol_link = f"./{step_slug}/{s.name}.md" if step_slug else f"../api/modules/{s.module}.md#{s.name}"
                 ref.append(
-                    f"| [`{s.name}`](../api/modules/{s.module}.md#{s.name}) | `{s.module}` | {s.summary or '—'} | "
+                    f"| [`{s.name}`]({symbol_link}) | `{s.module}` | {s.summary or '—'} | "
                     f"{', '.join(f'`{r}` (internal)' for r in related) or '—'} | "
-                    f"[module API](../api/modules/{s.module}.md#{s.name}) |"
+                    f"[module overview](../api/modules/{s.module}.md) |"
                 )
         else:
             ref.append("No public callable currently mapped to this step.")
@@ -240,7 +264,7 @@ def main() -> None:
     if other:
         ref.extend(["## Other Utilities", ""])
         for s in sorted(other, key=lambda x: x.name.lower()):
-            ref.append(f"- [`{s.name}`](../api/modules/{s.module}.md#{s.name}) (`{s.module}`) → [module API](../api/modules/{s.module}.md#{s.name})")
+            ref.append(f"- [`{s.name}`](./other-utilities/{s.name}.md) (`{s.module}`) → [module overview](../api/modules/{s.module}.md)")
 
     REFERENCE_PATH.parent.mkdir(parents=True, exist_ok=True)
     REFERENCE_PATH.write_text("\n".join(ref) + "\n", encoding="utf-8", newline="\n")
