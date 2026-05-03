@@ -6,11 +6,13 @@ Framework documentation: https://voycepeh.github.io/fabric-data-product-framewor
 
 Function reference: https://voycepeh.github.io/fabric-data-product-framework/reference/
 
+Package/import compatibility: the public brand is FabricOps Starter Kit, but the Python package/import path remains `fabric_data_product_framework` for this release.
+
 FabricOps Starter Kit helps teams structure Microsoft Fabric notebooks with reusable configuration, runtime validation, profiling, quality checks, lineage, metadata logging, and handover patterns.
 
 ## What this starter kit sets out to do?
 
-Most notebook pipelines start as one-off analysis work. Over time, they become difficult to rerun, review, govern, and hand over.
+Most Fabric notebooks start as one-off analysis work. Over time, they become difficult to rerun, review, govern, and hand over.
 
 FabricOps Starter Kit gives notebook-driven work in Fabric a standard delivery path.
 
@@ -37,7 +39,7 @@ The outcome is faster delivery, more trusted outputs, easier onboarding, and bet
 | Repetitive notebook setup and Fabric path handling | Reusable runtime/config and notebook workflow structure. |
 | Profiling results are not reusable metadata | Profiling artifacts are captured as reusable metadata outputs. |
 | Manual DQ rule writing is slow | AI-assisted and deterministic DQ candidate generation with human approval. |
-| Schema drift, data drift, and incremental refresh risk | Drift/safety checks are integrated into the data product path. |
+| Schema drift, data drift, and incremental refresh risk | Drift/safety checks are integrated into the notebook workflow path. |
 | Governance and sensitivity review are disconnected from execution | Governance suggestions and approval artifacts are included in the same workflow. |
 | Handover is hard when logic lives only in notebooks | Lineage, run summaries, and handover pack artifacts are assembled for transfer. |
 

@@ -2,7 +2,7 @@
 
 ## Scope
 - **Step 12:** AI generated lineage and transformation summary.
-- **Step 13:** Handover framework pack.
+- **Step 13:** Handover starter kit pack.
 
 Users should not manually write lineage step-by-step where avoidable.
 

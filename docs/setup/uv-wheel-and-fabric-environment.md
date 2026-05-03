@@ -1,10 +1,10 @@
-# Build and install the framework wheel in Microsoft Fabric
+# Build and install the starter kit wheel in Microsoft Fabric
 
 This **Fabric-first, notebook-friendly, AI-in-the-loop starter kit** is designed to ship as a reusable package, not copy-paste helper cells in every notebook.
 
 ## Why use a wheel
 A wheel-based install lets you:
-- version framework behavior explicitly
+- version starter kit behavior explicitly
 - upload once to a Fabric Environment and reuse across notebooks
 - test locally in VS Code and deploy consistently into Fabric
 - keep notebook code focused on business context and transformation intent
@@ -73,7 +73,7 @@ Expected output artifact:
 
 ```python
 import fabric_data_product_framework as fdpf
-print("Framework loaded")
+print("FabricOps Starter Kit loaded")
 ```
 
 You can also import helpers directly:
@@ -112,7 +112,7 @@ What you edit:
 - Data quality expectations
 - Governance/sensitivity requirements
 
-What the framework handles:
+What the starter kit handles:
 - Path resolution
 - Lakehouse/warehouse IO helpers
 - Profiling metadata capture

@@ -21,6 +21,6 @@ Status legend:
 | 10 AI suggest sensitivity labels | governance classification section | `sensitivity_suggestions` | Suggestions generated via classifier heuristic (or AI in Fabric) | Executable now (stubbed AI) |
 | 11 Human review and governance gate | governance approval section | `approved_governance_labels` | Approved governance labels artifact exists | Executable now |
 | 12 AI generated lineage and transformation summary | lineage build section | `lineage_record` | Lineage record generated with framework helper | Executable now (AI summary optional) |
-| 13 Handover framework pack | handover + validation section | `handover_pack` | Pack includes `profile`, `dq`, `governance`, `lineage`, `run_summary`, `caveats`; validation passes | Executable now |
+| 13 Handover starter kit pack | handover + validation section | `handover_pack` | Pack includes `profile`, `dq`, `governance`, `lineage`, `run_summary`, `caveats`; validation passes | Executable now |
 
 For fully AI-authored outputs (steps 8/10/12), run in Fabric notebook runtime with configured AI/Copilot and keep human approval before production use.

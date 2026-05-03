@@ -13,18 +13,18 @@ AI proposes. Humans approve. The framework validates, logs, and packages artifac
 
 ```mermaid
 flowchart TD
-    A[1 Define data product\nHuman led] --> B[2 Setup config and environment\nFramework led]
-    B --> C[3 Declare source and ingest data\nFramework led]
-    C --> D[4 Profile source and capture metadata\nFramework led]
+    A[1 Define data product\nHuman led] --> B[2 Setup config and environment\nStarter-kit led]
+    B --> C[3 Declare source and ingest data\nStarter-kit led]
+    C --> D[4 Profile source and capture metadata\nStarter-kit led]
     D --> E[5 Explore data\nHuman led]
     E --> F[6 Explain transformation logic\nHuman led]
-    F --> G[7 Build transformation pipeline\nFramework led]
+    F --> G[7 Build transformation pipeline\nStarter-kit led]
     G --> H[8 AI generate DQ rules\nAI assisted]
     H --> I[9 Human review DQ rules\nHuman led]
     I --> J[10 AI suggest sensitivity labels\nAI assisted]
     J --> K[11 Human review and governance gate\nHuman led]
     K --> L[12 AI generated lineage and transformation summary\nAI assisted]
-    L --> M[13 Handover framework pack\nFramework led]
+    L --> M[13 Handover starter kit pack\nStarter-kit led]
 
     D -. source profile .-> H
     D -. profile evidence .-> J

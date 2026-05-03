@@ -16,4 +16,4 @@ Status values: **Implemented**, **Partial**, **Pattern only**, **Not implemented
 | 10. AI suggest sensitivity labels | Partial | Governance classification helpers exist but end-to-end AI review pipeline is incomplete. |
 | 11. Human review and governance gate | Partial | Governance review artifacts/gates are possible but not fully productized. |
 | 12. AI generated lineage and transformation summary | Partial | Lineage + transformation summary functions exist with human validation expected. |
-| 13. Handover framework pack | Partial | Core summary/lineage artifacts exist; one-command full export remains partial. |
+| 13. Handover starter kit pack | Partial | Core summary/lineage artifacts exist; one-command full export remains partial. |
