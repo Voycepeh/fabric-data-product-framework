@@ -8,10 +8,10 @@ import pytest
 from scripts.generate_function_reference import main as generate_reference
 
 ROOT = Path(__file__).resolve().parents[1]
-INIT_FILE = ROOT / "src" / "fabric_data_product_framework" / "__init__.py"
+INIT_FILE = ROOT / "src" / "fabricops_kit" / "__init__.py"
 REFERENCE_FILE = ROOT / "docs" / "reference" / "index.md"
 MODULE_INDEX_FILE = ROOT / "docs" / "api" / "modules" / "index.md"
-DOCS_METADATA_FILE = ROOT / "src" / "fabric_data_product_framework" / "docs_metadata.py"
+DOCS_METADATA_FILE = ROOT / "src" / "fabricops_kit" / "docs_metadata.py"
 
 
 def public_exports() -> list[str]:
@@ -56,7 +56,7 @@ def test_every_public_export_is_listed_and_linked() -> None:
 
 
 def test_every_public_callable_has_docstring_first_sentence() -> None:
-    import fabric_data_product_framework as fdpf
+    import fabricops_kit as fdpf
 
     missing: list[str] = []
     for name in public_exports():
@@ -114,7 +114,7 @@ def test_docs_metadata_matches_public_exports() -> None:
 
 
 def test_build_quality_result_records_metadata_module_matches_exported_symbol_module() -> None:
-    import fabric_data_product_framework as fdpf
+    import fabricops_kit as fdpf
 
     metadata_row = next(row for row in public_symbol_docs() if row["symbol_name"] == "build_quality_result_records")
     exported_module = getattr(fdpf.build_quality_result_records, "__module__", "").split(".")[-1]
@@ -158,7 +158,7 @@ def test_all_exports_appear_exactly_once_in_reference() -> None:
 
 
 def test_handover_uses_single_canonical_registry_symbol() -> None:
-    handover = (ROOT / "src" / "fabric_data_product_framework" / "handover.py").read_text(encoding="utf-8")
+    handover = (ROOT / "src" / "fabricops_kit" / "handover.py").read_text(encoding="utf-8")
     assert "MVP_STEP_REGISTRY" in handover
     assert "LEGACY_MVP_STEPS" in handover
     assert handover.count("def get_mvp_step_registry(") == 1

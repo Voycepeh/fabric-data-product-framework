@@ -24,4 +24,4 @@ The built wheel is produced in the `dist/` folder.
 
 ## Notebook usage note
 
-After the Fabric Environment is attached, notebooks can import framework modules (for example, `import fabric_data_product_framework as fw`) and call reusable functions without embedding large utility code directly in notebook cells.
+After the Fabric Environment is attached, notebooks can import framework modules (for example, `import fabricops_kit as fw`) and call reusable functions without embedding large utility code directly in notebook cells.

@@ -2,11 +2,11 @@
 
 A practical starter kit for building governed, quality-checked, AI-ready notebooks in Microsoft Fabric.
 
-Framework documentation: https://voycepeh.github.io/fabric-data-product-framework/  
+Documentation: https://voycepeh.github.io/fabricops-kit/  
 
-Function reference: https://voycepeh.github.io/fabric-data-product-framework/reference/
+Function reference: https://voycepeh.github.io/fabricops-kit/reference/
 
-Package/import compatibility: the public brand is FabricOps Starter Kit, but the Python package/import path remains `fabric_data_product_framework` for this release.
+The package has been rebranded to `fabricops_kit`. The previous import path `fabric_data_product_framework` remains available temporarily as a compatibility shim.
 
 FabricOps Starter Kit helps teams structure Microsoft Fabric notebooks with reusable configuration, runtime validation, profiling, quality checks, lineage, metadata logging, and handover patterns.
 

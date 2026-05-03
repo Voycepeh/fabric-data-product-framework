@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from fabric_data_product_framework.runtime import (
+from fabricops_kit.runtime import (
     NotebookNamingError,
     assert_notebook_name_valid,
     build_runtime_context,
@@ -67,7 +67,7 @@ def test_build_runtime_context_generates_run_id_using_dataset_prefix():
 
 
 def test_validate_notebook_name_reads_prefixes_from_framework_config():
-    from fabric_data_product_framework.config import (
+    from fabricops_kit.config import (
         create_ai_prompt_config,
         create_framework_config,
         create_governance_config,
@@ -76,7 +76,7 @@ def test_validate_notebook_name_reads_prefixes_from_framework_config():
         create_path_config,
         create_quality_config,
     )
-    from fabric_data_product_framework.fabric_io import Housepath
+    from fabricops_kit.fabric_io import Housepath
 
     config = create_framework_config(
         path_config=create_path_config({"Sandbox": {"Source": Housepath("w", "h", "n", "abfss://x")}}),

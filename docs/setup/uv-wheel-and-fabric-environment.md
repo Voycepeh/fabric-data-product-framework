@@ -21,8 +21,8 @@ This is the preferred path for MVP testing. `%run 00_config` can still be used a
 
 ## 1. Clone the repo
 ```bash
-git clone https://github.com/Voycepeh/fabric-data-product-framework.git
-cd fabric-data-product-framework
+git clone https://github.com/Voycepeh/fabricops-kit.git
+cd fabricops-kit
 ```
 
 ## 2. Install uv
@@ -54,7 +54,7 @@ uv build --wheel
 
 Expected output artifact:
 
-`dist/fabric_data_product_framework-0.1.0-py3-none-any.whl`
+`dist/fabricops_kit-0.1.0-py3-none-any.whl`
 
 ## 5. Upload wheel to Microsoft Fabric Environment
 1. Go to Microsoft Fabric.
@@ -72,14 +72,14 @@ Expected output artifact:
 4. Run an import test.
 
 ```python
-import fabric_data_product_framework as fdpf
+import fabricops_kit as fdpf
 print("FabricOps Starter Kit loaded")
 ```
 
 You can also import helpers directly:
 
 ```python
-from fabric_data_product_framework import get_path, lakehouse_table_read, lakehouse_table_write
+from fabricops_kit import get_path, lakehouse_table_read, lakehouse_table_write
 
 lh_in = get_path("Sandbox", "Source")
 lh_out = get_path("Sandbox", "Unified")
@@ -150,7 +150,7 @@ When sharing with other users or teams, bump the package version first so they c
 - **Old code still running:** Notebook session is using cached runtime state; restart the session.
 - **Fabric-specific imports fail locally:** Expected outside Fabric for some adapters; keep Fabric-specific imports lazy inside functions where possible.
 - **Wheel file not found:** Run `uv build --wheel` and confirm the `dist/` folder was created.
-- **Package imports but functions missing:** Check `src/fabric_data_product_framework/__init__.py` exports.
+- **Package imports but functions missing:** Check `src/fabricops_kit/__init__.py` exports.
 - **Dependency unavailable in Fabric:** Add dependency to `pyproject.toml` only if needed, then rebuild/re-upload/publish.
 
 ## MVP validation checklist

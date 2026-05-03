@@ -3,7 +3,7 @@ import json
 import pandas as pd
 import pytest
 
-from fabric_data_product_framework.drift import (
+from fabricops_kit.drift import (
     SchemaDriftError,
     UnsupportedDataFrameEngineError,
     assert_no_blocking_schema_drift,

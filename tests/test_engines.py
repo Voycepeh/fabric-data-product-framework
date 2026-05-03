@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from fabric_data_product_framework.runtime import (
+from fabricops_kit.runtime import (
     UnsupportedDataFrameEngineError,
     detect_dataframe_engine,
     validate_engine,

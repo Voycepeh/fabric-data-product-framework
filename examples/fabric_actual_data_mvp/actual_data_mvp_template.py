@@ -20,7 +20,7 @@
 # # 2. Setup
 
 # %%
-import fabric_data_product_framework as fw
+import fabricops_kit as fw
 from pyspark.sql import functions as F
 
 print(f"Framework package: {fw.__name__}")

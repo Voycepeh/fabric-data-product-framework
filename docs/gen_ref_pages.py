@@ -6,9 +6,9 @@ import importlib
 from pathlib import Path
 
 import mkdocs_gen_files
-from fabric_data_product_framework.docs_metadata import PUBLIC_SYMBOL_DOCS, WORKFLOW_STEP_DOCS
+from fabricops_kit.docs_metadata import PUBLIC_SYMBOL_DOCS, WORKFLOW_STEP_DOCS
 
-PACKAGE = "fabric_data_product_framework"
+PACKAGE = "fabricops_kit"
 pkg = importlib.import_module(PACKAGE)
 
 PUBLIC_SYMBOLS = list(getattr(pkg, "__all__", []))

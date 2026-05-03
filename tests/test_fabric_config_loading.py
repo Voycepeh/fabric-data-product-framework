@@ -1,6 +1,6 @@
 import pytest
 
-from fabric_data_product_framework.config import (
+from fabricops_kit.config import (
     FrameworkConfig,
     create_ai_prompt_config,
     create_framework_config,
@@ -10,7 +10,7 @@ from fabric_data_product_framework.config import (
     create_path_config,
     create_quality_config,
 )
-from fabric_data_product_framework.fabric_io import Housepath, get_path, load_fabric_config
+from fabricops_kit.fabric_io import Housepath, get_path, load_fabric_config
 
 
 def _sample_framework_config() -> FrameworkConfig:

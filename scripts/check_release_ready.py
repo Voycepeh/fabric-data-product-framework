@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PYPROJECT_PATH = ROOT / "pyproject.toml"
-INIT_PATH = ROOT / "src" / "fabric_data_product_framework" / "__init__.py"
+INIT_PATH = ROOT / "src" / "fabricops_kit" / "__init__.py"
 
 
 def get_pyproject_version(pyproject_text: str) -> str:
@@ -43,7 +43,7 @@ def get_init_version(init_text: str) -> str:
     """Extract __version__ from package __init__.py text."""
     match = re.search(r'__version__\s*=\s*["\']([^"\']+)["\']', init_text)
     if not match:
-        raise ValueError("Could not find __version__ in src/fabric_data_product_framework/__init__.py")
+        raise ValueError("Could not find __version__ in src/fabricops_kit/__init__.py")
     return match.group(1)
 
 
@@ -58,7 +58,7 @@ def main() -> int:
     print(
         "❌ Release-ready version check failed: "
         f"pyproject.toml [project].version={pyproject_version} "
-        f"!= src/fabric_data_product_framework/__init__.py __version__={init_version}"
+        f"!= src/fabricops_kit/__init__.py __version__={init_version}"
     )
     return 1
 

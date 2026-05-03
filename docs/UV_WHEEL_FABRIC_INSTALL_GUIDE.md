@@ -68,7 +68,7 @@ For Fabric notebook environments, upload the `.whl` artifact.
 Package version currently needs to stay aligned between:
 
 - `pyproject.toml` under `[project].version`
-- `src/fabric_data_product_framework/__init__.py` in `__version__`
+- `src/fabricops_kit/__init__.py` in `__version__`
 
 Recommended versioning practice for this framework:
 
@@ -104,13 +104,13 @@ You may also see **Public libraries** in the same UI area; for this repo package
 The package import path for this repository is:
 
 ```python
-import fabric_data_product_framework as fdpf
+import fabricops_kit as fdpf
 ```
 
 Practical verification cells:
 
 ```python
-import fabric_data_product_framework as fdpf
+import fabricops_kit as fdpf
 
 print("Package loaded:", fdpf.__name__)
 print("Module path:", fdpf.__file__)
@@ -118,7 +118,7 @@ print("Package version:", getattr(fdpf, "__version__", "unknown"))
 ```
 
 ```python
-from fabric_data_product_framework.profiling import profile_dataframe
+from fabricops_kit.profiling import profile_dataframe
 import pandas as pd
 
 sample_df = pd.DataFrame(
@@ -134,8 +134,8 @@ print("Profile keys:", list(profile.keys())[:10])
 ```
 
 ```python
-import fabric_data_product_framework
-print([name for name in dir(fabric_data_product_framework) if not name.startswith("_")][:25])
+import fabricops_kit
+print([name for name in dir(fabricops_kit) if not name.startswith("_")][:25])
 ```
 
 ## Use with the MVP notebook template
@@ -154,18 +154,18 @@ After wheel installation, use this flow:
 10. Write metadata/run summary artifacts.
 11. Export AI handoff/lineage context where your workflow requires it.
 
-For long-term maintainability, prefer package imports from `fabric_data_product_framework` over `%run 00_config`-style helper reuse.
+For long-term maintainability, prefer package imports from `fabricops_kit` over `%run 00_config`-style helper reuse.
 
 ## Troubleshooting
 
 - **Old framework behavior still appears:** old wheel version may still be active in the Environment or running session.
 - **Import still fails after upload:** restart notebook session/kernel and confirm Environment publish finished.
 - **Wrong Environment attached:** verify notebook is bound to the Environment where your wheel was uploaded.
-- **Import path mismatch:** use `import fabric_data_product_framework` (module name), not package distribution name with hyphens.
+- **Import path mismatch:** use `import fabricops_kit` (module name), not package distribution name with hyphens.
 - **Missing dependencies:** check `pyproject.toml` dependencies and rebuild/re-upload.
 - **Runtime dependency conflict in Fabric:** review Fabric Environment libraries (custom/public) for conflicting versions.
 - **Wheel built before version bump:** increment version, rebuild, re-upload, publish, restart.
-- **Imported version is not the version you expected:** ensure both `pyproject.toml` and `src/fabric_data_product_framework/__init__.py` were bumped, rebuild the wheel, re-upload it, publish the Environment, and restart the notebook session.
+- **Imported version is not the version you expected:** ensure both `pyproject.toml` and `src/fabricops_kit/__init__.py` were bumped, rebuild the wheel, re-upload it, publish the Environment, and restart the notebook session.
 - **Local tests pass but Fabric calls fail:** some runtime behavior depends on Fabric-only execution context and must be validated in Fabric.
 
 ## Recommended release checklist

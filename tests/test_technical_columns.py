@@ -6,8 +6,8 @@ import types
 import pandas as pd
 import pytest
 
-from fabric_data_product_framework.runtime import detect_dataframe_engine
-from fabric_data_product_framework.technical_columns import (
+from fabricops_kit.runtime import detect_dataframe_engine
+from fabricops_kit.technical_columns import (
     _non_technical_columns,
     add_audit_columns,
     add_datetime_features,
@@ -226,6 +226,6 @@ def test_fake_spark_paths_for_core_functions():
 def test_module_imports_without_pyspark_installed():
     sys.modules.pop("pyspark", None)
     sys.modules.pop("pyspark.sql", None)
-    module = importlib.reload(importlib.import_module("fabric_data_product_framework.technical_columns"))
+    module = importlib.reload(importlib.import_module("fabricops_kit.technical_columns"))
     assert hasattr(module, "add_audit_columns")
     assert "pyspark.sql" not in sys.modules

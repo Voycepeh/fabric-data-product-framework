@@ -1,4 +1,4 @@
-"""Sample reusable framework config notebook for Fabric Data Product Framework."""
+"""Sample reusable framework config notebook for FabricOps Starter Kit."""
 
 # EDIT THESE VALUES BEFORE USE:
 # 1) Replace all sample workspace_id / house_id / house_name / root values.
@@ -6,7 +6,7 @@
 # 3) Tune notebook prefixes and default AI/quality/governance/lineage behavior.
 # 4) Keep this notebook reusable and run `%run 00_config` from operational notebooks.
 
-from fabric_data_product_framework import (
+from fabricops_kit import (
     Housepath,
     create_ai_prompt_config,
     create_framework_config,

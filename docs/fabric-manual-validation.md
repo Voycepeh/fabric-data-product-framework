@@ -13,8 +13,8 @@ import os
 import sys
 import zipfile
 
-zip_path = "/lakehouse/default/Files/fabric-data-product-framework.zip"
-package_dir = "/lakehouse/default/Files/fabric-data-product-framework"
+zip_path = "/lakehouse/default/Files/fabricops-kit.zip"
+package_dir = "/lakehouse/default/Files/fabricops-kit"
 
 os.makedirs(package_dir, exist_ok=True)
 with zipfile.ZipFile(zip_path, "r") as zf:
@@ -26,9 +26,9 @@ sys.path.append(package_dir)
 ## 2) Import recommended modules
 
 ```python
-import fabric_data_product_framework.profiling as profiling
-import fabric_data_product_framework.technical_columns as tech
-import fabric_data_product_framework.runtime as runtime
+import fabricops_kit.profiling as profiling
+import fabricops_kit.technical_columns as tech
+import fabricops_kit.runtime as runtime
 ```
 
 ## 3) Create synthetic Spark input dataframe

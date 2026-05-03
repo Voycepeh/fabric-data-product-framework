@@ -23,7 +23,7 @@ This roadmap defines the canonical lifecycle for the MVP notebook flow used in M
 ## Source of truth files
 
 - MVP execution template: `templates/notebooks/fabric_data_product_mvp.py`
-- Registry and artifact validation: `src/fabric_data_product_framework/mvp_steps.py`
+- Registry and artifact validation: `src/fabricops_kit/mvp_steps.py`
 
 ## Scope note
 

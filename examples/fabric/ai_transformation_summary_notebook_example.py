@@ -1,11 +1,11 @@
 """Notebook-style example for AI-assisted transformation summary workflow."""
 
-from fabric_data_product_framework.ai_lineage_summary import (
+from fabricops_kit.ai_lineage_summary import (
     build_transformation_summary_generation_prompt,
     build_transformation_summary_records,
     parse_ai_transformation_summaries,
 )
-from fabric_data_product_framework.lineage import (
+from fabricops_kit.lineage import (
     build_lineage_from_notebook_code,
     build_lineage_handover_markdown,
     plot_lineage_steps,

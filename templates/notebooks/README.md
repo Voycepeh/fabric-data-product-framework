@@ -23,7 +23,7 @@ This folder contains reusable notebook starters for Microsoft Fabric workflows.
 
 ## Package-based usage in Fabric
 
-For reusable notebook execution, build and upload the framework wheel to a Fabric Environment first, then attach that Environment to your notebook and import from `fabric_data_product_framework`. Prefer this over long-term `%run 00_config`-style helper sharing, which can remain only as a legacy fallback during migration.
+For reusable notebook execution, build and upload the framework wheel to a Fabric Environment first, then attach that Environment to your notebook and import from `fabricops_kit`. Prefer this over long-term `%run 00_config`-style helper sharing, which can remain only as a legacy fallback during migration.
 
 
 ## How to test the MVP template

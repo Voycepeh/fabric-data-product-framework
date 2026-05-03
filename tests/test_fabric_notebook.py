@@ -1,6 +1,6 @@
 import pytest
 
-from fabric_data_product_framework.fabric_io import (
+from fabricops_kit.fabric_io import (
     Housepath,
     ODI_METADATA_LOGGER,
     check_naming_convention,
@@ -9,7 +9,7 @@ from fabric_data_product_framework.fabric_io import (
     lakehouse_table_write,
 )
 
-from fabric_data_product_framework.technical_columns import add_audit_columns, add_datetime_features
+from fabricops_kit.technical_columns import add_audit_columns, add_datetime_features
 
 class FakeWriter:
     def __init__(self):

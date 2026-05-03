@@ -7,8 +7,8 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-PKG_DIR = ROOT / "src" / "fabric_data_product_framework"
-PACKAGE_NAME = "fabric_data_product_framework"
+PKG_DIR = ROOT / "src" / "fabricops_kit"
+PACKAGE_NAME = "fabricops_kit"
 INIT_PATH = PKG_DIR / "__init__.py"
 DOCS_METADATA_PATH = PKG_DIR / "docs_metadata.py"
 REFERENCE_PATH = ROOT / "docs" / "reference" / "index.md"
@@ -236,7 +236,7 @@ def main() -> None:
             raise RuntimeError(f"Public callable details section should not be rendered for {module}")
         if any("## Full module API" in line for line in lines):
             raise RuntimeError(f"Full module API section should not be rendered for {module}")
-        if any(line.strip().startswith("::: fabric_data_product_framework.") for line in lines):
+        if any(line.strip().startswith("::: fabricops_kit.") for line in lines):
             raise RuntimeError(f"Mkdocstrings directives should not be rendered on module page for {module}")
         module_md.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
         if not is_internal_only:
@@ -246,7 +246,7 @@ def main() -> None:
 
     (MODULE_DIR / "index.md").write_text("\n".join(module_index_lines) + "\n", encoding="utf-8", newline="\n")
 
-    ref = ["# Callable Reference", "", "Generated step-first function catalogue sourced from `fabric_data_product_framework.__all__`.", ""]
+    ref = ["# Callable Reference", "", "Generated step-first function catalogue sourced from `fabricops_kit.__all__`.", ""]
     for step in sorted(step_titles):
         ref.append(f"## Step {step}: {step_titles[step]}")
         ref.append("")

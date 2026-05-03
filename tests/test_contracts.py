@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 import pandas as pd
 import pytest
 
-from fabric_data_product_framework import contracts
+from fabricops_kit import contracts
 
 
 def _contract(expected_freshness: str = "2 days"):

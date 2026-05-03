@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from fabric_data_product_framework.handover import create_actual_data_mvp_template
+from fabricops_kit.handover import create_actual_data_mvp_template
 
 
 def test_actual_data_mvp_assets_exist_and_contain_runner_calls(tmp_path: Path):
@@ -49,14 +49,14 @@ def test_actual_data_mvp_assets_exist_and_contain_runner_calls(tmp_path: Path):
     assert 'result.get("quarantine_summary")' not in generated_text
 
 
-from fabric_data_product_framework.handover import create_pipeline_notebook_template
+from fabricops_kit.handover import create_pipeline_notebook_template
 
 
 def test_pipeline_template_lineage_calls_are_namespaced_and_defined(tmp_path: Path):
     out = tmp_path / "pipeline_template.py"
     create_pipeline_notebook_template(str(out), dataset_name="orders")
     text = out.read_text(encoding="utf-8")
-    assert "import fabric_data_product_framework as fw" in text
+    assert "import fabricops_kit as fw" in text
     assert "fw.build_lineage_from_notebook_code" in text
     assert "lineage_result.get(\"validation\", {})" in text
     assert "fw.build_lineage_record_from_steps" in text

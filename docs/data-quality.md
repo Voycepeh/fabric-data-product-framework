@@ -63,7 +63,7 @@ Use `build_quality_result_records()` to flatten results into row records for met
 ## Example
 
 ```python
-from fabric_data_product_framework.quality import (
+from fabricops_kit.quality import (
     run_quality_rules,
     assert_quality_gate,
 )
@@ -84,7 +84,7 @@ assert_quality_gate(quality_result)
 Use this compact Spark notebook check when CI does not run Spark tests:
 
 ```python
-from fabric_data_product_framework.quality import run_quality_rules, assert_quality_gate
+from fabricops_kit.quality import run_quality_rules, assert_quality_gate
 
 rules = [
     {"rule_id": "DQ001", "rule_type": "not_null", "column": "customer_id", "severity": "critical"},

@@ -1,6 +1,6 @@
 import pytest
 
-from fabric_data_product_framework.profiling import (
+from fabricops_kit.profiling import (
     ODI_METADATA_LOGGER,
     profile_dataframe_to_metadata,
 )

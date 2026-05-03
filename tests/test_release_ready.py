@@ -5,7 +5,7 @@ from scripts.check_release_ready import get_init_version, get_pyproject_version
 
 
 def test_repo_versions_match() -> None:
-    from fabric_data_product_framework import __version__
+    from fabricops_kit import __version__
 
     with open("pyproject.toml", "rb") as f:
         pyproject_bytes = f.read()
@@ -32,7 +32,7 @@ def test_script_runs_from_repo_root() -> None:
 def test_parsers_handle_mismatch_samples() -> None:
     pyproject_text = """
 [project]
-name = "fabric-data-product-framework"
+name = "fabricops-kit"
 version = "1.2.3"
 """
     init_text = '__version__ = "1.2.4"\n'

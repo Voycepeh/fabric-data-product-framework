@@ -25,7 +25,7 @@ This checklist is for preparing a clean wheel before uploading it into Microsoft
 11. Run import/version check:
 
 ```python
-import fabric_data_product_framework as fdpf
+import fabricops_kit as fdpf
 print(fdpf.__file__)
 print(getattr(fdpf, "__version__", "unknown"))
 ```
@@ -41,4 +41,4 @@ print(getattr(fdpf, "__version__", "unknown"))
     - result
     - known limitations
 
-> ⚠️ Do not upload a changed wheel with the same version into Fabric. Bump both `pyproject.toml` and `src/fabric_data_product_framework/__init__.py` `__version__`, rebuild, re-upload, publish, and restart the notebook session.
+> ⚠️ Do not upload a changed wheel with the same version into Fabric. Bump both `pyproject.toml` and `src/fabricops_kit/__init__.py` `__version__`, rebuild, re-upload, publish, and restart the notebook session.

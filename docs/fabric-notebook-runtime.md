@@ -2,7 +2,7 @@
 
 This framework keeps **GitHub as the source of truth** and treats the **Fabric notebook as the execution environment**.
 
-The helpers in `fabric_data_product_framework.runtime` and `fabric_data_product_framework.fabric_io` provide a lightweight way to standardize runtime setup now, without waiting for full engine features.
+The helpers in `fabricops_kit.runtime` and `fabricops_kit.fabric_io` provide a lightweight way to standardize runtime setup now, without waiting for full engine features.
 
 ## Recommended notebook startup pattern
 
@@ -11,11 +11,11 @@ The helpers in `fabric_data_product_framework.runtime` and `fabric_data_product_
 3. Build table identifiers and call adapter-based read/write helpers.
 
 ```python
-from fabric_data_product_framework.runtime import (
+from fabricops_kit.runtime import (
     assert_notebook_name_valid,
     build_runtime_context,
 )
-from fabric_data_product_framework.fabric_io import build_table_identifier, read_table, write_table
+from fabricops_kit.fabric_io import build_table_identifier, read_table, write_table
 
 ctx = build_runtime_context(
     dataset_name="synthetic_orders",

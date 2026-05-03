@@ -1,6 +1,6 @@
 # Callable Reference
 
-Generated step-first function catalogue sourced from `fabric_data_product_framework.__all__`.
+Generated step-first function catalogue sourced from `fabricops_kit.__all__`.
 
 ## Step 1: Package and runtime setup
 
@@ -44,8 +44,10 @@ Generated step-first function catalogue sourced from `fabric_data_product_framew
 | Function / class | Module | Purpose | Related helpers | Module page |
 |---|---|---|---|---|
 | [`build_ai_quality_context`](./step-04-source-ingestion-read-helpers/build_ai_quality_context/) | `profiling` | Build deterministic AI-ready context from standard metadata profile rows. | — | [module overview](../api/modules/profiling/) |
+| [`generate_metadata_profile`](./step-04-source-ingestion-read-helpers/generate_metadata_profile/) | `profiling` | Generate standard metadata profile rows for a Spark/Fabric DataFrame. | — | [module overview](../api/modules/profiling/) |
+| [`ODI_METADATA_LOGGER`](./step-04-source-ingestion-read-helpers/ODI_METADATA_LOGGER/) | `profiling` | Deprecated alias for generate_metadata_profile. | — | [module overview](../api/modules/profiling/) |
 | [`profile_dataframe`](./step-04-source-ingestion-read-helpers/profile_dataframe/) | `profiling` | Build a lightweight profile for pandas or Spark-like DataFrames. | — | [module overview](../api/modules/profiling/) |
-| [`profile_dataframe_to_metadata`](./step-04-source-ingestion-read-helpers/profile_dataframe_to_metadata/) | `profiling` | Profile a Spark/Fabric DataFrame into ODI-compatible metadata rows. | — | [module overview](../api/modules/profiling/) |
+| [`profile_dataframe_to_metadata`](./step-04-source-ingestion-read-helpers/profile_dataframe_to_metadata/) | `profiling` | Profile a Spark/Fabric DataFrame into metadata-compatible metadata rows. | — | [module overview](../api/modules/profiling/) |
 | [`profile_metadata_to_records`](./step-04-source-ingestion-read-helpers/profile_metadata_to_records/) | `profiling` | Convert Spark metadata profile rows into JSON-friendly dictionaries. | — | [module overview](../api/modules/profiling/) |
 
 ## Step 5: AI assisted DQ rule drafting
@@ -80,7 +82,7 @@ No public callable currently mapped to this step.
 
 | Function / class | Module | Purpose | Related helpers | Module page |
 |---|---|---|---|---|
-| [`run_data_product`](./step-09-core-transformation-business-logic/run_data_product/) | `quality` | Run the framework pipeline end-to-end for a data product. | [`_effective_contract_dict`](./internal/quality/_effective_contract_dict.md) (internal), [`_refresh_mode`](./internal/quality/_refresh_mode.md) (internal), [`_runtime_validation_contract`](./internal/quality/_runtime_validation_contract.md) (internal), [`_write_dataframe_to_table`](./internal/quality/_write_dataframe_to_table.md) (internal), [`_write_records_spark`](./internal/quality/_write_records_spark.md) (internal) | [module overview](../api/modules/quality/) |
+| [`run_data_product`](./step-09-core-transformation-business-logic/run_data_product/) | `quality` | Run the starter kit workflow end-to-end for a data product outcome. | [`_effective_contract_dict`](./internal/quality/_effective_contract_dict.md) (internal), [`_refresh_mode`](./internal/quality/_refresh_mode.md) (internal), [`_runtime_validation_contract`](./internal/quality/_runtime_validation_contract.md) (internal), [`_write_dataframe_to_table`](./internal/quality/_write_dataframe_to_table.md) (internal), [`_write_records_spark`](./internal/quality/_write_records_spark.md) (internal) | [module overview](../api/modules/quality/) |
 
 ## Step 10: Standard technical columns
 

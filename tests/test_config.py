@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from fabric_data_product_framework.config import (
+from fabricops_kit.config import (
     DatasetContractValidationError,
     assert_valid_dataset_contract,
     load_and_validate_dataset_contract,
@@ -79,7 +79,7 @@ def test_load_and_validate_dataset_contract_returns_contract_and_errors() -> Non
 
 
 def test_default_schema_loading_from_package_resource_path() -> None:
-    schema_resource = files("fabric_data_product_framework.schemas").joinpath(
+    schema_resource = files("fabricops_kit.schemas").joinpath(
         "dataset_contract.schema.json"
     )
 

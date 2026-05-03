@@ -16,4 +16,4 @@
 | 12. AI generated lineage and transformation summary | AI assisted | Review draft summary | Build lineage records | Draft summary/lineage text | Lineage record/summary generated | `lineage_record` |
 | 13. Handover starter kit pack | Starter-kit led | Review final pack | Assemble pack and caveats | Draft handover narrative | Handover export/assembly confirmed | `handover_pack` |
 
-Source of truth in code: `src/fabric_data_product_framework/mvp_steps.py`.
+Source of truth in code: `src/fabricops_kit/mvp_steps.py`.

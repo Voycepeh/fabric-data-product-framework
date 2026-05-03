@@ -78,7 +78,7 @@ Schema drift gates reduce incremental refresh risk by preventing runs from proce
 
 ```python
 import pandas as pd
-from fabric_data_product_framework.drift import (
+from fabricops_kit.drift import (
     SchemaDriftError,
     build_schema_snapshot,
     compare_schema_snapshots,

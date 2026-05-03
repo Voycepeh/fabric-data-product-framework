@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 import pandas as pd
 import pytest
 
-from fabric_data_product_framework.quality import (
+from fabricops_kit.quality import (
     DataQualityError,
     assert_quality_gate,
     build_quality_result_records,
@@ -97,7 +97,7 @@ def test_range_check_missing_min_and_max_is_invalid_rule():
     assert "requires at least one of min_value or max_value" in result["results"][0]["message"]
 
 def test_import_without_pyspark_and_auto_detection_and_invalid_engine():
-    module = importlib.import_module("fabric_data_product_framework.quality")
+    module = importlib.import_module("fabricops_kit.quality")
     assert module is not None
     df = pd.DataFrame({"a": [1]})
     assert run_quality_rules(df, [], engine="auto")["engine"] == "pandas"
