@@ -48,6 +48,7 @@ PUBLIC_CALLABLE_STEP_REGISTRY = {
     "add_datetime_features": 10,
     "add_audit_columns": 10,
     "add_hash_columns": 10,
+    "lakehouse_table_write": 11,
     "warehouse_write": 11,
     "classify_column": 12,
     "classify_columns": 12,
