@@ -6,31 +6,37 @@ Documentation: https://voycepeh.github.io/fabricops-kit/
 
 Function reference: https://voycepeh.github.io/fabricops-kit/reference/
 
-
-
 FabricOps Starter Kit helps teams structure Microsoft Fabric notebooks with reusable configuration, runtime validation, profiling, quality checks, lineage, metadata logging, and handover patterns.
 
-## What this starter kit sets out to do?
+## Why this starter kit exists
 
-Most Fabric notebooks start as one-off analysis work. Over time, they become difficult to rerun, review, govern, and hand over.
+![Before vs after using the starter kit](docs/assets/before-after.png)
 
-FabricOps Starter Kit gives notebook-driven work in Fabric a standard delivery path.
+Fabric notebooks often begin as analysis work, then slowly become recurring operational work. FabricOps Starter Kit gives that transition a clearer structure: reusable configuration, checks, governance review, lineage, and handover.
 
-It helps teams define the data contract clearly, profile and store metadata early, separate exploration from engineering, generate data quality rules with AI support, apply confidentiality and governance checks before release, and produce lineage, documentation, and handover materials as part of the workflow.
+## What users get
 
-The outcome is faster delivery, more trusted outputs, easier onboarding, and better continuity when another person takes over.
+![Benefits of the FabricOps Starter Kit](docs/assets/framework-benefits.png)
 
-### What users get
-![Framework benefits](docs/assets/framework-benefits.png)
+Governance and engineering work often gets repeated across every notebook: configuration, profiling, quality checks, sensitivity review, lineage, and handover. FabricOps Starter Kit turns those repeated steps into reusable patterns, with AI helping to draft the tedious parts while humans review the decisions that matter.
 
-### Before vs after
-![Before and after](docs/assets/before-after.png)
+## How it fits into a Fabric data platform
 
-### End to end flow
-![MVP flow](docs/assets/mvp-flow.png)
+![Generic data platform architecture](docs/assets/data-platform-architecture.png)
 
-### Workspace Notebooks Setup
-![Notebooks](docs/assets/notebook-structure.png)
+Fabric work often spans dev and prod environments, plus multiple lakehouses and warehouses. Since a Fabric notebook only has one default attached data store through the UI, the starter kit uses reusable configuration and code-based paths to make cross-store notebook work clearer and repeatable.
+
+## Notebook operating model
+
+![Workspace notebook setup](docs/assets/notebook-structure.png)
+
+The notebooks share upstream context instead of standing alone. One environment config can support many agreements and notebooks, while one data sharing agreement can branch into many exploration and pipeline contract notebooks.
+
+## End-to-end workflow
+
+![FabricOps Starter Kit end-to-end workflow](docs/assets/mvp-flow.png)
+
+The 13-step workflow gives each notebook a clear path: define the purpose, configure the environment, declare and profile the source, explore and explain the transformation, build the executable logic, review AI-assisted DQ and governance suggestions, then finish with lineage and handover.
 
 ## What problems it aims to solve?
 
