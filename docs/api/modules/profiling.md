@@ -8,10 +8,10 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`build_ai_quality_context`](../../reference/profiling/build_ai_quality_context.md) | function | Build deterministic AI-ready context from standard metadata profile rows. | — |
-| [`profile_dataframe`](../../reference/profiling/profile_dataframe.md) | function | Build a lightweight profile for pandas or Spark-like DataFrames. | — |
-| [`profile_dataframe_to_metadata`](../../reference/profiling/profile_dataframe_to_metadata.md) | function | Profile a Spark/Fabric DataFrame into ODI-compatible metadata rows. | — |
-| [`profile_metadata_to_records`](../../reference/profiling/profile_metadata_to_records.md) | function | Convert Spark metadata profile rows into JSON-friendly dictionaries. | — |
+| [`build_ai_quality_context`](../../reference/step-04-source-ingestion-read-helpers/build_ai_quality_context.md) | function | Build deterministic AI-ready context from standard metadata profile rows. | — |
+| [`profile_dataframe`](../../reference/step-04-source-ingestion-read-helpers/profile_dataframe.md) | function | Build a lightweight profile for pandas or Spark-like DataFrames. | — |
+| [`profile_dataframe_to_metadata`](../../reference/step-04-source-ingestion-read-helpers/profile_dataframe_to_metadata.md) | function | Profile a Spark/Fabric DataFrame into ODI-compatible metadata rows. | — |
+| [`profile_metadata_to_records`](../../reference/step-04-source-ingestion-read-helpers/profile_metadata_to_records.md) | function | Convert Spark metadata profile rows into JSON-friendly dictionaries. | — |
 
 ## Internal helpers
 

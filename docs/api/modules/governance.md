@@ -8,19 +8,19 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`build_governance_classification_records`](../../reference/governance/build_governance_classification_records.md) | function | Build governance classification records. | — |
-| [`classify_column`](../../reference/governance/classify_column.md) | function | Classify column. | [`_match_terms`](../../reference/internal/governance/_match_terms.md) (internal), [`_phrase_in_text`](../../reference/internal/governance/_phrase_in_text.md) (internal) |
-| [`classify_columns`](../../reference/governance/classify_columns.md) | function | Classify columns. | [`_column_name`](../../reference/internal/governance/_column_name.md) (internal), [`_normalize_columns`](../../reference/internal/governance/_normalize_columns.md) (internal) |
-| [`summarize_governance_classifications`](../../reference/governance/summarize_governance_classifications.md) | function | Summarize governance classifications. | — |
-| [`write_governance_classifications`](../../reference/governance/write_governance_classifications.md) | function | Write governance classifications. | [`_spark_create_governance_metadata_dataframe`](../../reference/internal/governance/_spark_create_governance_metadata_dataframe.md) (internal) |
+| [`build_governance_classification_records`](../../reference/step-12-governance-classification/build_governance_classification_records.md) | function | Build governance classification records. | — |
+| [`classify_column`](../../reference/step-12-governance-classification/classify_column.md) | function | Classify column. | [`_match_terms`](../../reference/internal/governance/_match_terms.md) (internal), [`_phrase_in_text`](../../reference/internal/governance/_phrase_in_text.md) (internal) |
+| [`classify_columns`](../../reference/step-12-governance-classification/classify_columns.md) | function | Classify columns. | [`_column_name`](../../reference/internal/governance/_column_name.md) (internal), [`_normalize_columns`](../../reference/internal/governance/_normalize_columns.md) (internal) |
+| [`summarize_governance_classifications`](../../reference/step-12-governance-classification/summarize_governance_classifications.md) | function | Summarize governance classifications. | — |
+| [`write_governance_classifications`](../../reference/step-12-governance-classification/write_governance_classifications.md) | function | Write governance classifications. | [`_spark_create_governance_metadata_dataframe`](../../reference/internal/governance/_spark_create_governance_metadata_dataframe.md) (internal) |
 
 ## Internal helpers
 
 | Helper | Related public callables |
 |---|---|
-| [`_column_name`](../../reference/internal/governance/_column_name.md) | [`classify_columns`](../../reference/governance/classify_columns.md) |
-| [`_match_terms`](../../reference/internal/governance/_match_terms.md) | [`classify_column`](../../reference/governance/classify_column.md) |
-| [`_normalize_columns`](../../reference/internal/governance/_normalize_columns.md) | [`classify_columns`](../../reference/governance/classify_columns.md) |
-| [`_phrase_in_text`](../../reference/internal/governance/_phrase_in_text.md) | [`classify_column`](../../reference/governance/classify_column.md) |
-| [`_spark_create_governance_metadata_dataframe`](../../reference/internal/governance/_spark_create_governance_metadata_dataframe.md) | [`write_governance_classifications`](../../reference/governance/write_governance_classifications.md) |
+| [`_column_name`](../../reference/internal/governance/_column_name.md) | [`classify_columns`](../../reference/step-12-governance-classification/classify_columns.md) |
+| [`_match_terms`](../../reference/internal/governance/_match_terms.md) | [`classify_column`](../../reference/step-12-governance-classification/classify_column.md) |
+| [`_normalize_columns`](../../reference/internal/governance/_normalize_columns.md) | [`classify_columns`](../../reference/step-12-governance-classification/classify_columns.md) |
+| [`_phrase_in_text`](../../reference/internal/governance/_phrase_in_text.md) | [`classify_column`](../../reference/step-12-governance-classification/classify_column.md) |
+| [`_spark_create_governance_metadata_dataframe`](../../reference/internal/governance/_spark_create_governance_metadata_dataframe.md) | [`write_governance_classifications`](../../reference/step-12-governance-classification/write_governance_classifications.md) |
 | [`_tokenize_text`](../../reference/internal/governance/_tokenize_text.md) | — |

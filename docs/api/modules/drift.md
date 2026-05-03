@@ -8,10 +8,10 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`check_partition_drift`](../../reference/drift/check_partition_drift.md) | function | Check partition drift. | — |
-| [`check_profile_drift`](../../reference/drift/check_profile_drift.md) | function | Check profile drift. | — |
-| [`check_schema_drift`](../../reference/drift/check_schema_drift.md) | function | Check schema drift. | — |
-| [`summarize_drift_results`](../../reference/drift/summarize_drift_results.md) | function | Summarize drift results. | — |
+| [`check_partition_drift`](../../reference/step-08-quality-rule-execution/check_partition_drift.md) | function | Check partition drift. | — |
+| [`check_profile_drift`](../../reference/step-08-quality-rule-execution/check_profile_drift.md) | function | Check profile drift. | — |
+| [`check_schema_drift`](../../reference/step-08-quality-rule-execution/check_schema_drift.md) | function | Check schema drift. | — |
+| [`summarize_drift_results`](../../reference/step-08-quality-rule-execution/summarize_drift_results.md) | function | Summarize drift results. | — |
 
 ## Internal helpers
 

@@ -120,9 +120,15 @@ def internal_helper_link(module: str, helper: str) -> str:
     return f"../../reference/internal/{module}/{helper}.md"
 
 
-def public_reference_link(module: str, symbol: str) -> str:
+def public_reference_link(symbol: str, docs_metadata: dict[str, dict[str, Any]], step_slugs: dict[int, str]) -> str:
     """Return docs-relative link target for a public callable reference page."""
-    return f"../../reference/{module}/{symbol}.md"
+    if symbol not in docs_metadata:
+        raise RuntimeError(f"Missing PUBLIC_SYMBOL_DOCS entry for exported symbol: {symbol}")
+    step = docs_metadata[symbol]["workflow_step"]
+    step_slug = step_slugs.get(step)
+    if not step_slug:
+        raise RuntimeError(f"Missing WORKFLOW_STEP_DOCS slug mapping for workflow step {step} ({symbol})")
+    return f"../../reference/{step_slug}/{symbol}.md"
 
 
 def main() -> None:
@@ -197,7 +203,7 @@ def main() -> None:
             for s in sorted(public_in_module, key=lambda x: x.name.lower()):
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
                 lines.append(
-                    f"| [`{s.name}`]({public_reference_link(module, s.name)}) | {s.obj_type} | {s.summary or '—'} | "
+                    f"| [`{s.name}`]({public_reference_link(s.name, docs_metadata, step_slugs)}) | {s.obj_type} | {s.summary or '—'} | "
                     f"{', '.join(f'[`{r}`]({internal_helper_link(module, r)}) (internal)' for r in related) or '—'} |"
                 )
         else:
@@ -208,16 +214,20 @@ def main() -> None:
             lines.extend(["| Helper | Related public callables |", "|---|---|"])
             for helper in internal_fns:
                 users = sorted([u for u in info["used_by"].get(helper, set()) if u in {p.name for p in public_in_module}])
-                users_links = ", ".join(f"[`{u}`]({public_reference_link(module, u)})" for u in users) or "—"
+                users_links = ", ".join(f"[`{u}`]({public_reference_link(u, docs_metadata, step_slugs)})" for u in users) or "—"
                 lines.append(f"| [`{helper}`]({internal_helper_link(module, helper)}) | {users_links} |")
         else:
             lines.append("No module-level internal helpers detected.")
 
         if public_in_module:
             for s in sorted(public_in_module, key=lambda x: x.name.lower()):
-                expected_link = f"[`{s.name}`]({public_reference_link(module, s.name)})"
+                expected_link = f"[`{s.name}`]({public_reference_link(s.name, docs_metadata, step_slugs)})"
                 if not any(expected_link in line for line in lines):
                     raise RuntimeError(f"Missing callable table link for {module}.{s.name}")
+                if f"../../reference/{module}/{s.name}.md" in "\n".join(lines):
+                    raise RuntimeError(
+                        f"Found deprecated module-path public link for {module}.{s.name}; expected workflow-step slug path."
+                    )
         for helper in internal_fns:
             expected_helper_link = f"[`{helper}`]({internal_helper_link(module, helper)})"
             if not any(expected_helper_link in line for line in lines):
