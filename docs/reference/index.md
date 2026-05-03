@@ -1,6 +1,6 @@
-# Callable Reference
+# Callable Functions
 
-Generated step-first function catalogue sourced from `fabricops_kit.__all__`.
+Generated step-first catalogue of callable functions sourced from `fabricops_kit.__all__`.
 
 ## Step 1: Package and runtime setup
 
