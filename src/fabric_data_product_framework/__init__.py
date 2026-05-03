@@ -14,6 +14,21 @@ from .fabric_io import (
     warehouse_read,
     warehouse_write,
 )
+from .governance import classify_columns, summarize_governance_classifications
+from .lineage import (
+    build_lineage_from_notebook_code,
+    build_lineage_handover_markdown,
+    build_lineage_record_from_steps,
+    build_lineage_records,
+    enrich_lineage_steps_with_ai,
+    fallback_copilot_lineage_prompt,
+    plot_lineage_steps,
+    scan_notebook_cells,
+    scan_notebook_lineage,
+    validate_lineage_steps,
+)
+from .metadata import write_multiple_metadata_outputs
+from .profiling import profile_dataframe, summarize_profile
 from .governance import (
     build_governance_classification_records,
     classify_column,
@@ -72,10 +87,16 @@ __all__ = [
     "build_governance_classification_records",
     "write_governance_classifications",
     "summarize_governance_classifications",
-    "LineageRecorder",
     "build_lineage_records",
-    "generate_mermaid_lineage",
-    "build_transformation_summary_markdown",
+    "scan_notebook_lineage",
+    "scan_notebook_cells",
+    "enrich_lineage_steps_with_ai",
+    "fallback_copilot_lineage_prompt",
+    "validate_lineage_steps",
+    "build_lineage_record_from_steps",
+    "build_lineage_from_notebook_code",
+    "build_lineage_handover_markdown",
+    "plot_lineage_steps",
     "build_run_summary",
     "render_run_summary_markdown",
     "build_dataset_run_record",

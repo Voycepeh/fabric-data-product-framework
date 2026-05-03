@@ -94,7 +94,7 @@ MVP_STEP_REGISTRY: list[dict[str, Any]] = [
         "step_number": 12,
         "step_name": "Governance classification and lineage",
         "owner_type": "mixed",
-        "canonical_modules": ["governance.py", "lineage.py", "ai_lineage_summary.py"],
+        "canonical_modules": ["governance.py", "lineage.py"],
         "expected_artifacts": ["governance_labels", "lineage_records"],
         "description": "Classify governance tags and record lineage with human approval for AI-assisted suggestions.",
     },
@@ -355,31 +355,25 @@ lakehouse_table_write(
 )
 
 # %% [markdown]
-# # 13. AI-assisted notebook lineage
-# Copilot scans the notebook and drafts lineage_steps. Framework validates and renders lineage.
+# # 13. Notebook lineage (scan-first)
+# Deterministic scanner extracts structure first; AI enrichment is optional; Copilot prompt is fallback only.
 
 # %%
-prompt = fw.get_fabric_copilot_lineage_prompt()
-print(prompt)
-
-# %% [markdown]
-# Paste the prompt into Fabric Copilot, then paste returned Python code in the next cell.
-
-# %%
-lineage_steps = [
-    # Copilot generated steps go here.
-]
-
-# %%
-lineage_validation = fw.validate_lineage_steps(lineage_steps)
+lineage_result = fw.build_lineage_from_notebook_code(__doc__ or "", use_ai=True)
+lineage_steps = lineage_result.get("steps", [])
+lineage_validation = lineage_result.get("validation", {{}})
 display(lineage_validation)
+
+# %%
+if not lineage_result.get("ai_used") and lineage_result.get("fallback_prompt"):
+    print(lineage_result["fallback_prompt"])
 
 # %%
 lineage_record = fw.build_lineage_record_from_steps(dataset_name=dataset_name, lineage_steps=lineage_steps, run_id=run_id)
 display(lineage_record)
 
 # %%
-fw.plot_lineage_networkx(lineage_record, title=f"{dataset_name} Notebook Lineage")
+fw.plot_lineage_steps(lineage_record, title=f"{dataset_name} Notebook Lineage")
 
 # %% [markdown]
 # # 14. Run summary and handover notes
@@ -402,8 +396,8 @@ fw.plot_lineage_networkx(lineage_record, title=f"{dataset_name} Notebook Lineage
 # - data quality risk
 
 # %% [markdown]
-# **AI prompt: Data lineage**
-# Ask Copilot to identify important dataframes in this notebook and draft lineage_steps using the framework schema. Avoid Mermaid and keep low-confidence items marked for human review.
+# **AI prompt: Data lineage fallback**
+# Only if AI helper is unavailable: use the printed fallback prompt to enrich reasons/notes for already-scanned lineage steps.
 
 # %% [markdown]
 # **AI prompt: Data quality rules**
@@ -520,26 +514,18 @@ print(result.get("quarantine"))
 fw.assert_data_product_passed(result)
 
 # %% [markdown]
-# # 9. AI-assisted notebook lineage
-# Copilot drafts lineage_steps by scanning this notebook; framework validates/renders;
-# human reviews low-confidence or ambiguous items before storage.
+# # 9. AI-assisted notebook lineage (scan-first)
+# Deterministic scanner extracts lineage structure first. AI/Copilot is enrichment-only fallback.
 
 # %%
-prompt = fw.get_fabric_copilot_lineage_prompt()
-print(prompt)
-
-# %% [markdown]
-# Paste the printed prompt into Fabric Copilot. It should return only Python code assigning
-# lineage_steps = [...]. Paste that output into the next cell.
-
-# %%
-lineage_steps = [
-    # Copilot generated steps go here.
-]
-
-# %%
-lineage_validation = fw.validate_lineage_steps(lineage_steps)
+lineage_result = fw.build_lineage_from_notebook_code(__doc__ or "", use_ai=True)
+lineage_steps = lineage_result.get("steps", [])
+lineage_validation = lineage_result.get("validation", {{}})
 display(lineage_validation)
+
+# %%
+if not lineage_result.get("ai_used") and lineage_result.get("fallback_prompt"):
+    print(lineage_result["fallback_prompt"])
 
 # %%
 lineage_record = fw.build_lineage_record_from_steps(
@@ -551,7 +537,7 @@ lineage_record = fw.build_lineage_record_from_steps(
 display(lineage_record)
 
 # %%
-fw.plot_lineage_networkx(
+fw.plot_lineage_steps(
     lineage_record,
     title=f"{{contract.dataset.name}} Notebook Lineage",
 )

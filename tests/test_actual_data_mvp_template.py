@@ -57,10 +57,10 @@ def test_pipeline_template_lineage_calls_are_namespaced_and_defined(tmp_path: Pa
     create_pipeline_notebook_template(str(out), dataset_name="orders")
     text = out.read_text(encoding="utf-8")
     assert "import fabric_data_product_framework as fw" in text
-    assert "fw.get_fabric_copilot_lineage_prompt()" in text
-    assert "fw.validate_lineage_steps(lineage_steps)" in text
+    assert "fw.build_lineage_from_notebook_code" in text
+    assert "lineage_result.get(\"validation\", {})" in text
     assert "fw.build_lineage_record_from_steps" in text
-    assert "fw.plot_lineage_networkx" in text
+    assert "fw.plot_lineage_steps" in text
 
 
 def test_pipeline_template_no_undefined_dataset_or_run_vars(tmp_path: Path):
@@ -77,8 +77,8 @@ def test_generated_actual_data_mvp_contains_ai_assisted_lineage_section(tmp_path
     generated = tmp_path / "generated_actual_data_mvp_lineage.py"
     create_actual_data_mvp_template(str(generated))
     text = generated.read_text(encoding="utf-8")
-    assert "fw.get_fabric_copilot_lineage_prompt()" in text
-    assert "lineage_steps = [" in text
-    assert "fw.validate_lineage_steps(lineage_steps)" in text
+    assert "fw.build_lineage_from_notebook_code" in text
+    assert "lineage_steps = lineage_result.get(\"steps\", [])" in text
+    assert "lineage_result.get(\"validation\", {})" in text
     assert "fw.build_lineage_record_from_steps(" in text
-    assert "fw.plot_lineage_networkx(" in text
+    assert "fw.plot_lineage_steps(" in text
