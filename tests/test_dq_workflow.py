@@ -1,6 +1,6 @@
 import pandas as pd
 
-from fabric_data_product_framework.contracts import normalize_data_product_contract, run_data_product
+from fabric_data_product_framework.quality import normalize_data_product_contract, run_data_product
 import fabric_data_product_framework.quality as dq
 from fabric_data_product_framework.quality import (
     build_dq_rule_records,

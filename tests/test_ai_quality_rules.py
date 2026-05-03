@@ -1,13 +1,13 @@
 import pandas as pd
 
-from fabric_data_product_framework.ai_quality_rules import (
+from fabric_data_product_framework.quality import (
     build_layman_rule_records,
     build_quality_rule_generation_prompt,
     build_quality_rule_prompt_context,
     parse_ai_quality_rule_candidates,
 )
-from fabric_data_product_framework.quarantine import add_dq_failure_columns, split_valid_and_quarantine
-from fabric_data_product_framework.rule_compiler import compile_layman_rules_to_quality_rules
+from fabric_data_product_framework.quality import add_dq_failure_columns, split_valid_and_quarantine
+from fabric_data_product_framework.quality import compile_layman_rules_to_quality_rules
 
 
 def test_prompt_context_and_prompt_instructions():

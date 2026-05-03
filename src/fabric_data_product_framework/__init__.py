@@ -1,6 +1,6 @@
 """Public notebook-friendly entrypoints for the Fabric Data Product Framework."""
 
-from .contracts import load_data_contract, run_data_product
+from .quality import load_data_contract, run_data_product
 from .drift import check_partition_drift, check_profile_drift, check_schema_drift, summarize_drift_results
 from .fabric_io import (
     Housepath,

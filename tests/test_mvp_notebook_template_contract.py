@@ -4,7 +4,7 @@ import os
 import subprocess
 import sys
 
-from fabric_data_product_framework.mvp_steps import get_mvp_step_registry
+from fabric_data_product_framework.handover import get_mvp_step_registry
 
 
 def _run_template() -> subprocess.CompletedProcess[str]:
