@@ -247,25 +247,26 @@ def main() -> None:
     (MODULE_DIR / "index.md").write_text("\n".join(module_index_lines) + "\n", encoding="utf-8", newline="\n")
 
     ref = ["# Callable Functions", "", "Generated step-first catalogue of callable functions sourced from `fabricops_kit.__all__`.", ""]
-    ref.extend(["## Modules", "", "| Module | Link |", "|---|---|"])
+    ref.extend(["## Modules", "", "| Module |", "|---|"])
     for module in sorted(module_data):
-        ref.append(f"| `{module}` | [Open module overview](../api/modules/{module}/) |")
+        ref.append(
+            f"| <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{module}/\" title=\"Open {module} module page\" aria-label=\"Open {module} module page\">{module}</a> |"
+        )
     ref.append("")
     for step in sorted(step_titles):
         ref.append(f"## Step {step}: {step_titles[step]}")
         ref.append("")
         entries = sorted(step_symbols.get(step, []), key=lambda x: x.name.lower())
         if entries:
-            ref.extend(["| Function / class | Module | Purpose | Related helpers | Module page |", "|---|---|---|---|---|"])
+            ref.extend(["| Function / class | Module | Purpose | Related helpers |", "|---|---|---|---|"])
             for s in entries:
                 info = module_data[s.module]
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
                 step_slug = step_slugs.get(step)
                 symbol_link = f"./{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.module}/#{s.name}"
                 ref.append(
-                    f"| [`{s.name}`]({symbol_link}) | `{s.module}` | {s.summary or '—'} | "
-                    f"{', '.join(f'[`{r}`](./internal/{s.module}/{r}.md) (internal)' for r in related) or '—'} | "
-                    f"[module overview](../api/modules/{s.module}/) |"
+                    f"| [`{s.name}`]({symbol_link}) | <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{s.module}/\" title=\"Open {s.module} module page\" aria-label=\"Open {s.module} module page\">{s.module}</a> | {s.summary or '—'} | "
+                    f"{', '.join(f'[`{r}`](./internal/{s.module}/{r}.md) (internal)' for r in related) or '—'} |"
                 )
         else:
             ref.append("No public callable currently mapped to this step.")

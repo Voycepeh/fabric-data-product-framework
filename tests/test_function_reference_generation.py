@@ -52,7 +52,8 @@ def test_every_public_export_is_listed_and_linked() -> None:
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     for name in public_exports():
         assert f"`{name}`" in content
-        assert "module overview" in content
+        assert "module overview" not in content
+        assert "api-chip-link" in content
 
 
 def test_every_public_callable_has_docstring_first_sentence() -> None:
