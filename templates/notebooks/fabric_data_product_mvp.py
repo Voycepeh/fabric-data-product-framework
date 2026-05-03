@@ -1,4 +1,4 @@
-"""Canonical 13-step MVP notebook template for onboarding and smoke tests."""
+"""Canonical 10-step lifecycle notebook template for onboarding and smoke tests."""
 
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ from fabricops_kit import (
 from fabricops_kit.mvp_steps import get_mvp_step_registry, validate_mvp_artifacts
 
 # ==========================================================
-# 1) Package and runtime setup [Framework]
+# 1) Define purpose, approved usage & governance ownership [Governance]
 # ==========================================================
 print("framework module:", getattr(fdpf, "__file__", "unknown"))
 print("framework version:", getattr(fdpf, "__version__", "unknown"))
@@ -45,7 +45,7 @@ for step in get_mvp_step_registry():
     print(f"{step['step_number']}. {step['step_name']} [{step['owner_type']}]")
 
 # ==========================================================
-# 2) Fabric config and paths [Human]
+# 2) Configure runtime, environment & path rules [Starter kit]
 # ==========================================================
 # In Fabric notebooks, run `%run 00_config` before this template.
 config = fdpf.load_fabric_config(CONFIG)
@@ -59,7 +59,7 @@ fabric_config = {"environment": "Sandbox"}
 path_context = {"source_path": lh_source.root, "target_path": lh_unified.root}
 
 # ==========================================================
-# 3) Pull source data [Framework]
+# 3) Declare source contract & ingest source data [Starter kit]
 # ==========================================================
 if USE_SAMPLE_DATA:
     source_dataframe = pd.DataFrame(
@@ -85,7 +85,7 @@ else:
 # display(df_wh.limit(10))
 
 # ==========================================================
-# 4) Source profiling [Framework]
+# 4) Validate source against contract & capture metadata [Starter kit]
 # ==========================================================
 source_profile = profile_dataframe(source_dataframe, dataset_name=DATASET_NAME, engine="pandas")
 print("Source profile:", json.dumps(summarize_profile(source_profile), indent=2, default=str))
@@ -124,7 +124,7 @@ else:
     print(manual_dq_prompt["prompt"])
 
 # ==========================================================
-# 5) AI assisted DQ rule drafting [AI Assisted]
+# 5) Explore data & capture transformation / DQ rationale [Analyst / Data scientist notebook]
 # ==========================================================
 draft_dq_rules = [
     {"rule_id": "order_id_required", "rule_type": "not_null", "column": "order_id", "severity": "critical"},
@@ -132,38 +132,38 @@ draft_dq_rules = [
 ]
 
 # ==========================================================
-# 6) Human review of rules and metadata [Human]
+# 6) Build production transformation & write target output [Data engineer notebook]
 # ==========================================================
 approved_dq_rules = draft_dq_rules
 approved_metadata_notes = {"reviewer": "sample_reviewer", "notes": "Approved for smoke-test execution."}
 
 # ==========================================================
-# 7) Compile and run DQ checks [Framework]
+# 7) Validate output & persist target metadata [Starter kit]
 # ==========================================================
 compiled_dq_rules = approved_dq_rules
 dq_results = run_quality_rules(source_dataframe, compiled_dq_rules, dataset_name=DATASET_NAME, table_name=SOURCE_TABLE, engine="pandas")
 print("DQ summary:", dq_results.get("summary"))
 
 # ==========================================================
-# 8) Schema/profile/data drift checks [Framework]
+# 8) Generate, review & configure DQ rules [AI-assisted + human review]
 # ==========================================================
 drift_results = {"status": "todo_baseline_required", "critical_drift_detected": False}
 
 # ==========================================================
-# 9) Core transformation [Mixed]
+# 9) Generate & review classification / sensitivity suggestions [AI-assisted + human review]
 # ==========================================================
 transformed_dataframe = source_dataframe.copy()
 transformed_dataframe["order_status"] = transformed_dataframe["order_status"].astype(str).str.upper()
 
 # ==========================================================
-# 10) Standard technical columns [Framework]
+# 10) Generate data lineage and handover documentation [AI-assisted handover document generation]
 # ==========================================================
 output_with_technical_columns = transformed_dataframe.copy()
 output_with_technical_columns["_pipeline_run_id"] = RUN_ID
 output_with_technical_columns["_record_loaded_timestamp"] = datetime.now(timezone.utc)
 
 # ==========================================================
-# 11) Write output and profile output [Framework]
+# Supporting execution block: safe write/profile behavior
 # ==========================================================
 if ENABLE_FABRIC_WRITES:
     raise NotImplementedError("TODO: implement target write for Fabric runtime.")
@@ -172,7 +172,7 @@ target_write_result = {"status": "safe_mode_skipped", "row_count": int(len(outpu
 output_profile = profile_dataframe(output_with_technical_columns, dataset_name=f"{DATASET_NAME}_output", engine="pandas")
 
 # ==========================================================
-# 12) Governance classification and lineage [Mixed]
+# Supporting execution block: governance and lineage helpers
 # ==========================================================
 governance_labels = classify_columns(
     profile={"columns": [{"column_name": c, "data_type": str(output_with_technical_columns[c].dtype)} for c in output_with_technical_columns.columns]},
@@ -187,7 +187,7 @@ lineage_records = build_lineage_records(
 )
 
 # ==========================================================
-# 13) Run summary and handover package [Framework]
+# Supporting execution block: lifecycle summary payload
 # ==========================================================
 run_summary = {
     "dataset_name": DATASET_NAME,
@@ -228,7 +228,7 @@ artifacts = {
 }
 
 artifact_validation_result = validate_mvp_artifacts(artifacts)
-print("MVP ARTIFACT VALIDATION")
+print("LIFECYCLE ARTIFACT VALIDATION")
 print(json.dumps(artifact_validation_result, indent=2, default=str))
 print("RUN SUMMARY")
 print(json.dumps(run_summary, indent=2, default=str))

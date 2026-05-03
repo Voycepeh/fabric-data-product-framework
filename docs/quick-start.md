@@ -1,6 +1,6 @@
-# Quick Start: End-to-End Workflow
+# Quick Start: End-to-End Lifecycle Workflow
 
-Use this page as the primary runbook for executing the framework end to end in Microsoft Fabric.
+Use this page as the runbook for executing FabricOps Starter Kit in Microsoft Fabric.
 
 ## Prerequisites
 
@@ -25,23 +25,20 @@ For Fabric Environment install steps, use [Fabric Wheel Install](setup/fabric-wh
 - Attach the Fabric Environment that contains the package wheel.
 - Create or load runtime/framework config (paths, dataset IDs, output targets, run context).
 
-## 3) Run the 13-step end-to-end workflow
+## 3) Execute in canonical 10-step order
 
-This run path maps to the [Lifecycle Operating Model](lifecycle-operating-model.md):
+Follow this sequence (details in [Lifecycle Operating Model](lifecycle-operating-model.md)):
 
-1. Validate notebook naming.
-2. Create/load runtime and path config.
-3. Read source data.
-4. Profile source metadata.
-5. Generate or define quality checks.
-6. Human review of quality/governance intent.
-7. Apply quality checks.
-8. Detect schema/profile/partition drift.
-9. Run core transformations.
-10. Add technical columns and write prep.
-11. Write output and profile output.
-12. Generate governance metadata and lineage.
-13. Generate handover/run summary and validate final product readiness.
+1. Define purpose, approved usage, and governance ownership.
+2. Configure runtime, environment, and path rules.
+3. Declare source contract and ingest source data.
+4. Validate source against contract and capture metadata.
+5. Explore data and capture transformation / DQ rationale.
+6. Build production transformation and write target output.
+7. Validate output and persist target metadata.
+8. Generate, review, and configure DQ rules.
+9. Generate and review classification / sensitivity suggestions.
+10. Generate data lineage and handover documentation.
 
 ## 4) Validate completion criteria
 
@@ -50,14 +47,13 @@ A successful run should leave you with:
 - source and output profiling artifacts,
 - quality and drift results,
 - written output table(s),
-- governance metadata,
+- governance metadata and reviewer decisions,
 - lineage output,
-- handover/run summary artifacts,
-- explicit human sign-off for release decisions.
+- handover documentation artifacts.
 
 ## 5) Next references
 
+- Canonical lifecycle detail: [Lifecycle Operating Model](lifecycle-operating-model.md)
 - Notebook conventions: [Notebook Structure](notebook-structure.md)
-- Workflow model: [Lifecycle Operating Model](lifecycle-operating-model.md)
 - Architecture: [Architecture](architecture.md)
 - Callable catalogue: [Reference](reference/index.md)

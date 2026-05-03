@@ -1,7 +1,7 @@
 # AI-generated lineage and handover (MVP steps 12 and 13)
 
 ## Scope
-- **Step 12:** AI generated lineage and transformation summary.
+- **Step 10:** Generate data lineage and handover documentation.
 - **Step 13:** Handover starter kit pack.
 
 Users should not manually write lineage step-by-step where avoidable.

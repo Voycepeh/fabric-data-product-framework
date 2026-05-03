@@ -31,11 +31,15 @@ Fabric work often spans dev and prod environments, plus multiple lakehouses and 
 
 The notebooks share upstream context instead of standing alone. One environment config can support many agreements and notebooks, while one data sharing agreement can branch into many exploration and pipeline contract notebooks.
 
-## End-to-end workflow
+## Canonical lifecycle workflow
 
-![FabricOps Starter Kit end-to-end workflow](docs/assets/mvp-flow.png)
+![FabricOps Starter Kit canonical lifecycle workflow](docs/assets/mvp-flow.png)
 
-The 13-step workflow gives each notebook a clear path: define the purpose, configure the environment, declare and profile the source, explore and explain the transformation, build the executable logic, review AI-assisted DQ and governance suggestions, then finish with lineage and handover.
+FabricOps Starter Kit uses a canonical **10-step lifecycle** with governance first, reusable starter-kit engineering steps in the middle, and AI-assisted enhancements at the end. Detailed step guidance lives in [Lifecycle Operating Model](docs/lifecycle-operating-model.md).
+
+- Governance owns purpose, approved usage, and accountability first.
+- Starter kit patterns handle repeated runtime, contract, validation, and metadata engineering work.
+- AI-assisted steps help draft DQ rules, classification/sensitivity suggestions, and lineage/handover documentation, with human review of governance and DQ decisions.
 
 ## What problems it aims to solve?
 

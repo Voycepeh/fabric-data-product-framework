@@ -2,12 +2,12 @@
 
 ## Purpose
 
-Use this smoke test to validate the end-to-end Microsoft Fabric MVP workflow after packaging and environment setup. It confirms that the framework can:
+Use this smoke test to validate the end-to-end Microsoft Fabric lifecycle workflow after packaging and environment setup. It confirms that the framework can:
 
 - build as a wheel
 - install into a Fabric Environment
 - import correctly inside a Fabric notebook
-- run the MVP workflow in safe sample mode
+- run the lifecycle workflow in safe sample mode
 - generate profiling output
 - generate or load DQ rules
 - run DQ validation
