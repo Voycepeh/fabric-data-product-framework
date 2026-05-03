@@ -1,6 +1,6 @@
 site_name: FabricOps Starter Kit
-repo_url: https://github.com/Voycepeh/fabricops-kit
-site_url: https://voycepeh.github.io/fabricops-kit/
+repo_url: https://github.com/Voycepeh/FabricOps-Starter-Kit
+site_url: https://voycepeh.github.io/FabricOps-Starter-Kit/
 
 theme:
   name: material
