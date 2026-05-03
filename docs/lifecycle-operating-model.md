@@ -1,43 +1,24 @@
 # Lifecycle Operating Model
 
-This page defines the **canonical 13-step MVP lifecycle** for the framework.
+![FabricOps Starter Kit end-to-end workflow](assets/mvp-flow.png)
 
-## Reader mental model
+*Figure: The practical end-to-end workflow used to move from approved purpose to publishable, governed outputs and handover artifacts.*
 
-- **Humans** define purpose, approve business meaning, review AI outputs, and accept governance/DQ decisions.
-- The **framework** runs reusable profiling, validation, drift, DQ, metadata, lineage, and handover utilities.
-- **AI** proposes DQ rules, sensitivity labels, lineage, transformation summaries, and documentation from structured context.
-- **Fabric** executes notebooks and stores data/metadata outputs.
+This page defines the canonical lifecycle as a practical operating model for notebook delivery.
 
-AI proposes. Humans approve. The framework validates, logs, and packages artifacts.
+## Practical operating flow
 
-```mermaid
-flowchart TD
-    A[1 Define data product\nHuman led] --> B[2 Setup config and environment\nStarter-kit led]
-    B --> C[3 Declare source and ingest data\nStarter-kit led]
-    C --> D[4 Profile source and capture metadata\nStarter-kit led]
-    D --> E[5 Explore data\nHuman led]
-    E --> F[6 Explain transformation logic\nHuman led]
-    F --> G[7 Build transformation pipeline\nStarter-kit led]
-    G --> H[8 AI generate DQ rules\nAI assisted]
-    H --> I[9 Human review DQ rules\nHuman led]
-    I --> J[10 AI suggest sensitivity labels\nAI assisted]
-    J --> K[11 Human review and governance gate\nHuman led]
-    K --> L[12 AI generated lineage and transformation summary\nAI assisted]
-    L --> M[13 Handover starter kit pack\nStarter-kit led]
+1. Start with purpose, approved usage, and governance context.
+2. Configure environment settings, runtime dependencies, and path rules.
+3. Ingest source data and capture baseline profiling evidence.
+4. Design the target transformations and business logic.
+5. Apply reusable cleaning patterns and technical columns.
+6. Generate or apply data quality checks.
+7. Validate drift, thresholds, and quality outcomes.
+8. Publish validated output data for consumption.
+9. Write operational and governance metadata.
+10. Produce lineage notes and handover-ready documentation.
 
-    D -. source profile .-> H
-    D -. profile evidence .-> J
-    F -. transformation rationale .-> L
-    G -. transformation summary .-> L
+## Operating principle
 
-    M --> N[Handover includes:\nDQ, governance, lineage, profile, run summary, caveats]
-
-    classDef human fill:#fef3c7,stroke:#92400e,color:#111827;
-    classDef framework fill:#dbeafe,stroke:#1d4ed8,color:#111827;
-    classDef ai fill:#dcfce7,stroke:#166534,color:#111827;
-
-    class A,E,F,I,K human;
-    class B,C,D,G,M framework;
-    class H,J,L ai;
-```
+AI can help draft DQ, governance, lineage, and summary artifacts, but humans approve business meaning and release decisions.
