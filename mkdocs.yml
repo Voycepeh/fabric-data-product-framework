@@ -20,10 +20,11 @@ nav:
   - Home: index.md
   - Quick Start: quick-start.md
   - Notebook Structure: notebook-structure.md
-  - Lifecycle: lifecycle-operating-model.md
+  - Lifecycle Operating Model: lifecycle-operating-model.md
   - Architecture: architecture.md
-  - Function Reference: reference/index.md
-  - Module API Catalogue: api/modules/index.md
+  - Setup:
+      - Fabric Wheel Install: setup/fabric-wheel-install.md
+  - Reference: reference/index.md
 
 markdown_extensions:
   - admonition

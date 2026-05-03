@@ -32,7 +32,7 @@ Run this recipe:
 Before running this smoke test, confirm:
 
 - latest `main` pulled locally
-- wheel built using `docs/UV_WHEEL_FABRIC_INSTALL_GUIDE.md`
+- wheel built using `docs/setup/fabric-wheel-install.md`
 - wheel uploaded to Fabric Environment custom libraries
 - Environment published
 - Environment attached to notebook
@@ -42,7 +42,7 @@ Before running this smoke test, confirm:
 
 References:
 
-- [UV wheel build + Fabric install guide](../UV_WHEEL_FABRIC_INSTALL_GUIDE.md)
+- [UV wheel build + Fabric install guide](../setup/fabric-wheel-install.md)
 - [MVP notebook template](../../templates/notebooks/fabric_data_product_mvp.py)
 
 ## Test mode matrix

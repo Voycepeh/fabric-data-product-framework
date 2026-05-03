@@ -1,26 +1,24 @@
-# FabricOps Starter Kit Documentation
+# FabricOps Starter Kit
 
-Use this site as the **operating manual** for running notebook-driven FabricOps workflows with the starter kit.
+FabricOps Starter Kit is a lightweight, Fabric-first notebook framework for building reusable, documented, quality-checked, drift-aware, governed, AI-ready data products.
 
-- The root [README](../README.md) is the **high-level repository overview**.
-- This GitHub Pages site is the **detailed guide** for testing, operating, and extending the canonical 13-step MVP lifecycle in Fabric.
+It is designed to reduce repeated governance and engineering work across data product delivery:
 
-## Choose your path
+- move consistently from **source → unified → product** datasets,
+- keep a practical **dev-to-prod operating flow**,
+- support multiple Microsoft Fabric stores (Lakehouse and Warehouse), and
+- keep **AI in the loop** for metadata, quality checks, lineage, and handover acceleration.
 
-- **I want to test the MVP in Fabric** → [Quick Start runbook](quick-start.md)
-- **I want to understand the lifecycle** → [Canonical 13-step MVP lifecycle](lifecycle-operating-model.md)
-- **I want to understand the architecture** → [Architecture overview](architecture.md)
-- **I want to build a wheel and install in Fabric** → [UV wheel + Fabric install guide](UV_WHEEL_FABRIC_INSTALL_GUIDE.md)
-- **I want to inspect callable functions** → [Function Reference — generated list of callable framework functions.](reference/)
+## Start here
 
-## Suggested flow for first-time users
+- **What is this?** → This page
+- **How do I run it end to end?** → [Quick Start](quick-start.md)
+- **How should notebooks be structured?** → [Notebook Structure](notebook-structure.md)
+- **What is the full lifecycle?** → [Lifecycle Operating Model](lifecycle-operating-model.md)
+- **How does the architecture work?** → [Architecture](architecture.md)
+- **What functions exist?** → [Reference](reference/index.md)
+- **How do I install the wheel in Fabric?** → [Setup: Fabric Wheel Install](setup/fabric-wheel-install.md)
 
-1. Run the [Quick Start](quick-start.md).
-2. Read the [lifecycle operating model](lifecycle-operating-model.md).
-3. Review the [architecture](architecture.md).
-4. Use the [function reference](reference/) while adapting notebooks.
+## Compatibility note
 
-
-## Package/import compatibility note
-
-The Python package/import path remains `fabricops_kit` for compatibility in this release.
+The Python package import path remains `fabricops_kit`.
