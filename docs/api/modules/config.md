@@ -1,0 +1,17 @@
+# `config` module
+
+## Public callables from `__all__`
+
+No public exports in this module.
+
+## Internal helpers (module-level)
+
+| Helper | Related public callables |
+|---|---|
+| `_default_schema_text` | — |
+| `_format_error_path` | — |
+| `_load_schema` | — |
+
+## Full module API
+
+::: fabric_data_product_framework.config
