@@ -72,3 +72,10 @@ def test_get_path_missing_values_raise_clean_errors():
         get_path("Prod", "Source", config=config)
     with pytest.raises(ValueError, match="Target 'Warehouse' was not found"):
         get_path("Sandbox", "Warehouse", config=config.path_config)
+
+
+def test_create_ai_prompt_config_requires_explicit_templates():
+    with pytest.raises(ValueError, match="dq_rule_candidate_template"):
+        create_ai_prompt_config("", "g", "h")
+    with pytest.raises(TypeError):
+        create_ai_prompt_config(dq_rule_candidate_template="dq", governance_candidate_template="g")
