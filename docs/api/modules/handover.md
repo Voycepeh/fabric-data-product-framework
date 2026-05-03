@@ -1,4 +1,4 @@
-# `handover` module
+# `handover` module (internal)
 
 ## Public callables from `__all__`
 
@@ -6,8 +6,10 @@ No public exports in this module.
 
 ## Internal helpers (module-level)
 
-No module-level internal helpers detected.
+| Helper | Related public callables |
+|---|---|
+| `_get_legacy_mvp_steps` | — |
 
 ## Full module API
 
-::: fabric_data_product_framework.handover
+This module is internal-only and is intentionally excluded from full public API rendering.

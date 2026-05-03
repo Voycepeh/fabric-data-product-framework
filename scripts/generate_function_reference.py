@@ -29,7 +29,14 @@ PUBLIC_CALLABLE_STEP_REGISTRY = {
     "lakehouse_parquet_read_as_spark": 3,
     "warehouse_read": 3,
     "profile_dataframe": 4,
-    "summarize_profile": 4,
+    "profile_dataframe_to_metadata": 4,
+    "profile_metadata_to_records": 4,
+    "build_ai_quality_context": 4,
+    "build_dataset_run_record": 11,
+    "build_schema_snapshot_records": 11,
+    "build_schema_drift_records": 11,
+    "build_quality_result_records": 11,
+    "write_metadata_records": 11,
     "write_multiple_metadata_outputs": 11,
     "run_quality_rules": 7,
     "load_data_contract": 7,
@@ -42,7 +49,10 @@ PUBLIC_CALLABLE_STEP_REGISTRY = {
     "add_audit_columns": 10,
     "add_hash_columns": 10,
     "warehouse_write": 11,
+    "classify_column": 12,
     "classify_columns": 12,
+    "build_governance_classification_records": 12,
+    "write_governance_classifications": 12,
     "summarize_governance_classifications": 12,
     "build_lineage_records": 13,
     "generate_mermaid_lineage": 13,
@@ -166,7 +176,9 @@ def main() -> None:
         info = module_data[module]
         module_md = MODULE_DIR / f"{module}.md"
         public_in_module = [s for s in symbol_map.values() if s.module == module]
-        lines = [f"# `{module}` module", "", "## Public callables from `__all__`", ""]
+        is_internal_only = not public_in_module
+        title = f"# `{module}` module" if not is_internal_only else f"# `{module}` module (internal)"
+        lines = [title, "", "## Public callables from `__all__`", ""]
         if public_in_module:
             lines.extend(["| Callable | Type | Summary | Related helpers |", "|---|---|---|---|"])
             for s in sorted(public_in_module, key=lambda x: x.name.lower()):
@@ -183,9 +195,15 @@ def main() -> None:
                 lines.append(f"| `{helper}` | {', '.join(f'`{u}`' for u in users) or '—'} |")
         else:
             lines.append("No module-level internal helpers detected.")
-        lines.extend(["", "## Full module API", "", f"::: fabric_data_product_framework.{module}"])
+        if not is_internal_only:
+            lines.extend(["", "## Full module API", "", f"::: fabric_data_product_framework.{module}"])
+        else:
+            lines.extend(["", "## Full module API", "", "This module is internal-only and is intentionally excluded from full public API rendering."])
         module_md.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
-        module_index_lines.append(f"- [`{module}`]({module}.md)")
+        if not is_internal_only:
+            module_index_lines.append(f"- [`{module}`]({module}.md)")
+        else:
+            module_index_lines.append(f"- [`{module}`]({module}.md) *(internal-only)*")
 
     (MODULE_DIR / "index.md").write_text("\n".join(module_index_lines) + "\n", encoding="utf-8", newline="\n")
 

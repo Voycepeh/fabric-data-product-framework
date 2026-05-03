@@ -2,11 +2,11 @@
 
 Generated module summaries with public exports and related internal helpers.
 
-- [`config`](config.md)
+- [`config`](config.md) *(internal-only)*
 - [`drift`](drift.md)
 - [`fabric_io`](fabric_io.md)
 - [`governance`](governance.md)
-- [`handover`](handover.md)
+- [`handover`](handover.md) *(internal-only)*
 - [`lineage`](lineage.md)
 - [`metadata`](metadata.md)
 - [`profiling`](profiling.md)

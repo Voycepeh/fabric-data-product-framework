@@ -33,8 +33,10 @@ Generated step-first function catalogue sourced from `fabric_data_product_framew
 
 | Function / class | Module | Purpose | Related helpers | API link |
 |---|---|---|---|---|
+| `build_ai_quality_context` | `profiling` | Build deterministic AI-ready context from standard metadata profile rows. | — | [module API](../api/modules/profiling.md) |
 | `profile_dataframe` | `profiling` | Build a lightweight profile for pandas or Spark-like DataFrames. | — | [module API](../api/modules/profiling.md) |
-| `summarize_profile` | `profiling` | Deprecated legacy API. | — | [module API](../api/modules/profiling.md) |
+| `profile_dataframe_to_metadata` | `profiling` | Profile a Spark/Fabric DataFrame into ODI-compatible metadata rows. | — | [module API](../api/modules/profiling.md) |
+| `profile_metadata_to_records` | `profiling` | Convert Spark metadata profile rows into JSON-friendly dictionaries. | — | [module API](../api/modules/profiling.md) |
 
 ## Step 5: AI assisted DQ rule drafting
 
@@ -80,15 +82,23 @@ No public callable currently mapped to this step.
 
 | Function / class | Module | Purpose | Related helpers | API link |
 |---|---|---|---|---|
+| `build_dataset_run_record` | `metadata` | Build dataset run record. | — | [module API](../api/modules/metadata.md) |
+| `build_quality_result_records` | `metadata` | Build quality result records. | — | [module API](../api/modules/metadata.md) |
+| `build_schema_drift_records` | `metadata` | Build schema drift records. | — | [module API](../api/modules/metadata.md) |
+| `build_schema_snapshot_records` | `metadata` | Build schema snapshot records. | — | [module API](../api/modules/metadata.md) |
 | `warehouse_write` | `fabric_io` | Write a Spark DataFrame to a Microsoft Fabric warehouse table. | — | [module API](../api/modules/fabric_io.md) |
+| `write_metadata_records` | `metadata` | Write metadata records. | — | [module API](../api/modules/metadata.md) |
 | `write_multiple_metadata_outputs` | `metadata` | Write multiple metadata outputs. | — | [module API](../api/modules/metadata.md) |
 
 ## Step 12: Governance classification and lineage
 
 | Function / class | Module | Purpose | Related helpers | API link |
 |---|---|---|---|---|
+| `build_governance_classification_records` | `governance` | Build governance classification records. | — | [module API](../api/modules/governance.md) |
+| `classify_column` | `governance` | Classify column. | `_match_terms` (internal), `_phrase_in_text` (internal) | [module API](../api/modules/governance.md) |
 | `classify_columns` | `governance` | Classify columns. | `_column_name` (internal), `_normalize_columns` (internal) | [module API](../api/modules/governance.md) |
 | `summarize_governance_classifications` | `governance` | Summarize governance classifications. | — | [module API](../api/modules/governance.md) |
+| `write_governance_classifications` | `governance` | Write governance classifications. | `_spark_create_governance_metadata_dataframe` (internal) | [module API](../api/modules/governance.md) |
 
 ## Step 13: Run summary and handover package
 

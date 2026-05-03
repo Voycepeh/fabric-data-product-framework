@@ -8,6 +8,7 @@ from scripts.generate_function_reference import PUBLIC_CALLABLE_STEP_REGISTRY, m
 ROOT = Path(__file__).resolve().parents[1]
 INIT_FILE = ROOT / "src" / "fabric_data_product_framework" / "__init__.py"
 REFERENCE_FILE = ROOT / "docs" / "reference" / "index.md"
+MODULE_INDEX_FILE = ROOT / "docs" / "api" / "modules" / "index.md"
 
 
 def public_exports() -> list[str]:
@@ -92,3 +93,34 @@ def test_generated_docs_are_multiline_readable() -> None:
     for doc in docs_files:
         text = doc.read_text(encoding="utf-8")
         assert text.count("\n") > 5, f"{doc} appears to be a single-line/generated-compressed file"
+
+
+def test_no_public_looking_module_page_for_internal_only_modules() -> None:
+    generate_reference()
+    for module_doc in (ROOT / "docs" / "api" / "modules").glob("*.md"):
+        text = module_doc.read_text(encoding="utf-8")
+        if "No public exports in this module." in text:
+            assert "(internal)" in text
+            assert "intentionally excluded from full public API rendering" in text
+
+
+def test_all_exports_appear_exactly_once_in_reference() -> None:
+    generate_reference()
+    text = REFERENCE_FILE.read_text(encoding="utf-8")
+    for name in public_exports():
+        assert text.count(f"`{name}`") == 1
+
+
+def test_handover_uses_single_canonical_registry_symbol() -> None:
+    handover = (ROOT / "src" / "fabric_data_product_framework" / "handover.py").read_text(encoding="utf-8")
+    assert "MVP_STEP_REGISTRY" in handover
+    assert "LEGACY_MVP_STEPS" in handover
+    assert handover.count("def get_mvp_step_registry(") == 1
+
+
+def test_generated_docs_use_lf_newlines() -> None:
+    generate_reference()
+    docs_files = [REFERENCE_FILE, MODULE_INDEX_FILE, *((ROOT / "docs" / "api" / "modules").glob("*.md"))]
+    for doc in docs_files:
+        raw = doc.read_bytes()
+        assert b"\r\n" not in raw, f"{doc} contains CRLF newlines"
