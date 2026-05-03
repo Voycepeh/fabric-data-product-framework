@@ -8,7 +8,7 @@ Preserved helper names include:
 - `lakehouse_table_write`
 - `clean_datetime_columns`
 - `add_system_technical_columns`
-- `ODI_METADATA_LOGGER`
+- `generate_metadata_profile`
 
 Use `create_pipeline_notebook_template(...)` to generate a cell-separated `.py` notebook source with `# %%` / `# %% [markdown]` sections.
 

@@ -59,7 +59,6 @@ PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [
     {"symbol_name": "profile_dataframe_to_metadata", "module": "profiling", "kind": "function", "workflow_step": 4, "summary_override": None},
     {"symbol_name": "profile_metadata_to_records", "module": "profiling", "kind": "function", "workflow_step": 4, "summary_override": None},
     {"symbol_name": "generate_metadata_profile", "module": "profiling", "kind": "function", "workflow_step": 4, "summary_override": None},
-    {"symbol_name": "ODI_METADATA_LOGGER", "module": "profiling", "kind": "function", "workflow_step": 4, "summary_override": "Deprecated alias for generate_metadata_profile."},
     {"symbol_name": "build_ai_quality_context", "module": "profiling", "kind": "function", "workflow_step": 4, "summary_override": None},
     {"symbol_name": "run_quality_rules", "module": "quality", "kind": "function", "workflow_step": 7, "summary_override": None},
     {"symbol_name": "check_fabric_ai_functions_available", "module": "ai", "kind": "function", "workflow_step": 1, "summary_override": None},

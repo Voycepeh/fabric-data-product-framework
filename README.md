@@ -6,7 +6,7 @@ Documentation: https://voycepeh.github.io/fabricops-kit/
 
 Function reference: https://voycepeh.github.io/fabricops-kit/reference/
 
-The package has been rebranded to `fabricops_kit`. The previous import path `fabric_data_product_framework` remains available temporarily as a compatibility shim.
+
 
 FabricOps Starter Kit helps teams structure Microsoft Fabric notebooks with reusable configuration, runtime validation, profiling, quality checks, lineage, metadata logging, and handover patterns.
 

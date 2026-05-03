@@ -56,7 +56,6 @@ from .profiling import (
     profile_dataframe_to_metadata,
     profile_metadata_to_records,
     generate_metadata_profile,
-    ODI_METADATA_LOGGER,
 )
 from .ai import (
     build_dq_rule_candidate_prompt,
@@ -106,7 +105,6 @@ __all__ = [
     "profile_dataframe_to_metadata",
     "profile_metadata_to_records",
     "generate_metadata_profile",
-    "ODI_METADATA_LOGGER",
     "build_ai_quality_context",
     "run_quality_rules",
     "check_fabric_ai_functions_available",

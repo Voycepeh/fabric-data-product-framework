@@ -45,7 +45,6 @@ Generated step-first function catalogue sourced from `fabricops_kit.__all__`.
 |---|---|---|---|---|
 | [`build_ai_quality_context`](./step-04-source-ingestion-read-helpers/build_ai_quality_context/) | `profiling` | Build deterministic AI-ready context from standard metadata profile rows. | — | [module overview](../api/modules/profiling/) |
 | [`generate_metadata_profile`](./step-04-source-ingestion-read-helpers/generate_metadata_profile/) | `profiling` | Generate standard metadata profile rows for a Spark/Fabric DataFrame. | — | [module overview](../api/modules/profiling/) |
-| [`ODI_METADATA_LOGGER`](./step-04-source-ingestion-read-helpers/ODI_METADATA_LOGGER/) | `profiling` | Deprecated alias for generate_metadata_profile. | — | [module overview](../api/modules/profiling/) |
 | [`profile_dataframe`](./step-04-source-ingestion-read-helpers/profile_dataframe/) | `profiling` | Build a lightweight profile for pandas or Spark-like DataFrames. | — | [module overview](../api/modules/profiling/) |
 | [`profile_dataframe_to_metadata`](./step-04-source-ingestion-read-helpers/profile_dataframe_to_metadata/) | `profiling` | Profile a Spark/Fabric DataFrame into metadata-compatible metadata rows. | — | [module overview](../api/modules/profiling/) |
 | [`profile_metadata_to_records`](./step-04-source-ingestion-read-helpers/profile_metadata_to_records/) | `profiling` | Convert Spark metadata profile rows into JSON-friendly dictionaries. | — | [module overview](../api/modules/profiling/) |

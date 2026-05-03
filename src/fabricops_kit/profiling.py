@@ -324,7 +324,7 @@ def build_ai_quality_context(
     }
 
 
-# Legacy compatibility shims
+# Legacy helper utilities
 def profile_dataframe(df, dataset_name: str = "unknown", sample_size: int = 5, top_n: int = 5, engine: str = "auto") -> dict[str, Any]:
     """Build a lightweight profile for pandas or Spark-like DataFrames."""
     selected_engine = validate_engine(engine)
@@ -445,10 +445,3 @@ def flatten_profile_for_metadata(
             }
         )
     return rows
-
-
-def ODI_METADATA_LOGGER(df, tablename: str, exclude_columns=None, run_timestamp_timezone="Asia/Singapore"):
-    """Deprecated alias for :func:`generate_metadata_profile`."""
-    import warnings
-    warnings.warn("ODI_METADATA_LOGGER is deprecated. Use generate_metadata_profile instead.", DeprecationWarning, stacklevel=2)
-    return generate_metadata_profile(df=df, table_name=tablename, exclude_columns=exclude_columns, run_timestamp_timezone=run_timestamp_timezone)

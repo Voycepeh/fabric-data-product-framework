@@ -161,6 +161,6 @@ When sharing with other users or teams, bump the package version first so they c
 - Notebook imports the framework without `%run 00_config`.
 - `get_path("Sandbox", "Source")` returns a configured path object.
 - `lakehouse_table_read` can read a known test/source table.
-- `ODI_METADATA_LOGGER` can profile a test DataFrame.
+- `generate_metadata_profile` can profile a test DataFrame.
 - `lakehouse_table_write` can write to a test output table.
 - Template notebook can run end to end on real data.

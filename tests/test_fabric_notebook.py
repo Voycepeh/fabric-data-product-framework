@@ -1,14 +1,15 @@
 import pytest
 
+from fabricops_kit.config import PathConfig
 from fabricops_kit.fabric_io import (
     Housepath,
-    ODI_METADATA_LOGGER,
     check_naming_convention,
     get_path,
     lakehouse_table_read,
     lakehouse_table_write,
 )
 
+from fabricops_kit.profiling import generate_metadata_profile
 from fabricops_kit.technical_columns import add_audit_columns, add_datetime_features
 
 class FakeWriter:
@@ -69,7 +70,7 @@ class FakeSpark:
 
 
 def test_get_path_with_injected_config():
-    cfg = {"Sandbox": {"Source": Housepath("w", "h", "n", "abfss://root")}}
+    cfg = PathConfig(paths={"Sandbox": {"Source": Housepath("w", "h", "n", "abfss://root")}})
     p = get_path("Sandbox", "Source", config=cfg)
     assert p.house_name == "n"
 
@@ -80,7 +81,7 @@ def test_get_path_invalid_raises():
 
 
 def test_check_naming_convention_passes():
-    result = check_naming_convention("dex_source_to_dex_unified_orders")
+    result = check_naming_convention("dex_source_to_dex_unified_orders", allowed_prefixes=["dex_"], fail_on_error=False)
     assert result["compliant"] is True
 
 
@@ -135,4 +136,4 @@ def test_add_datetime_features_validates_missing_col_early():
 
 
 def test_odi_metadata_logger_importable():
-    assert callable(ODI_METADATA_LOGGER)
+    assert callable(generate_metadata_profile)

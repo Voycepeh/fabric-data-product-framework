@@ -231,7 +231,7 @@ from fabricops_kit.fabric_io import (
     check_naming_convention,
     lakehouse_table_read,
     lakehouse_table_write,
-    ODI_METADATA_LOGGER,
+    generate_metadata_profile,
 )
 from fabricops_kit.technical_columns import (
     add_audit_columns,
@@ -265,7 +265,7 @@ print(df_source.count())
 # # 6. Source profiling metadata
 
 # %%
-df_source_profile = ODI_METADATA_LOGGER(
+df_source_profile = generate_metadata_profile(
     df_source,
     f"{{lh_in.house_name}}|{{source_table}}"
 )
@@ -342,7 +342,7 @@ lakehouse_table_write(
 # %%
 df_output_read = lakehouse_table_read(lh_out, output_table)
 
-df_output_profile = ODI_METADATA_LOGGER(
+df_output_profile = generate_metadata_profile(
     df_output_read,
     f"{{lh_out.house_name}}|{{output_table}}"
 )

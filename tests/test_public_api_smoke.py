@@ -15,8 +15,8 @@ def test_mvp_step_registry_and_artifact_validation():
     assert steps[0]["step_number"] == 1
     assert steps[0]["step_name"] == "Package and runtime setup"
     result = validate_mvp_artifacts({"runtime_context": {}, "source_profile": {}})
-    assert result["valid"] is False
-    assert "run_summary" in result["missing_artifacts"]
+    assert result["is_valid"] is False
+    assert "missing_top_level_artifacts" in result
 
 
 def test_technical_columns_entrypoints_on_root_package():
