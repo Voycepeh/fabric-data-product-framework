@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import ast
+import importlib
+import inspect
+import pkgutil
 from pathlib import Path
 
 import pytest
@@ -156,6 +159,45 @@ def test_all_exports_appear_exactly_once_in_reference() -> None:
     text = REFERENCE_FILE.read_text(encoding="utf-8")
     for name in public_exports():
         assert text.count(f"`{name}`") == 1
+
+
+def test_reference_lists_all_exported_callables() -> None:
+    generate_reference()
+    content = REFERENCE_FILE.read_text(encoding="utf-8")
+    exported_callables = []
+    import fabricops_kit as fdpf
+
+    for name in public_exports():
+        obj = getattr(fdpf, name)
+        if callable(obj):
+            exported_callables.append(name)
+    missing = [name for name in exported_callables if f"`{name}`" not in content]
+    assert missing == []
+    assert "## Other exported callables" in content
+    assert "| Function / class | Module | Importance | Purpose |" in content
+
+
+def test_public_callables_are_exported_or_private() -> None:
+    import fabricops_kit as fdpf
+
+    exported = set(public_exports())
+    package_dir = ROOT / "src" / "fabricops_kit"
+    public_missing: list[str] = []
+    for module_info in pkgutil.iter_modules([str(package_dir)]):
+        mod_name = module_info.name
+        if mod_name.startswith("_") or mod_name in {"schemas"}:
+            continue
+        module = importlib.import_module(f"fabricops_kit.{mod_name}")
+        for attr_name, attr_val in inspect.getmembers(module):
+            if attr_name.startswith("_"):
+                continue
+            if inspect.ismodule(attr_val):
+                continue
+            if getattr(attr_val, "__module__", "") != module.__name__:
+                continue
+            if callable(attr_val) and attr_name not in exported:
+                public_missing.append(f"{module.__name__}.{attr_name}")
+    assert public_missing == []
 
 
 def test_handover_uses_single_canonical_registry_symbol() -> None:

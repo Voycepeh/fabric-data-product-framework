@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import ast
-import importlib
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -23,6 +22,8 @@ class Symbol:
     module: str
     obj_type: str
     summary: str
+    importance: str = "Optional"
+    purpose: str = ""
 
 
 def first_sentence(doc: str | None) -> str:
@@ -124,7 +125,9 @@ def public_reference_link(symbol: str, docs_metadata: dict[str, dict[str, Any]],
     """Return docs-relative link target for a public callable reference page."""
     if symbol not in docs_metadata:
         raise RuntimeError(f"Missing PUBLIC_SYMBOL_DOCS entry for exported symbol: {symbol}")
-    step = docs_metadata[symbol]["workflow_step"]
+    step = docs_metadata[symbol].get("workflow_step")
+    if step is None:
+        raise RuntimeError(f"Missing workflow_step metadata for exported symbol: {symbol}")
     step_slug = step_slugs.get(step)
     if not step_slug:
         raise RuntimeError(f"Missing WORKFLOW_STEP_DOCS slug mapping for workflow step {step} ({symbol})")
@@ -134,21 +137,6 @@ def public_reference_link(symbol: str, docs_metadata: dict[str, dict[str, Any]],
 def main() -> None:
     public = parse_public_exports()
     module_data = {p.stem: parse_module(p) for p in PKG_DIR.glob("*.py") if p.name != "__init__.py"}
-    pkg = importlib.import_module(PACKAGE_NAME)
-
-    symbol_map: dict[str, Symbol] = {}
-    for name in public:
-        obj = getattr(pkg, name)
-        obj_module = getattr(obj, "__module__", PACKAGE_NAME).split(".")[-1]
-        for module, info in module_data.items():
-            if module != obj_module:
-                continue
-            if name in info["functions"]:
-                symbol_map[name] = Symbol(name, module, "function", info["functions"][name])
-                break
-            if name in info["classes"]:
-                symbol_map[name] = Symbol(name, module, "class", info["classes"][name])
-                break
 
     step_registry = parse_step_registry()
     docs_metadata = parse_docs_metadata()
@@ -156,6 +144,7 @@ def main() -> None:
     step_titles = {s["step_number"]: s["step_name"] for s in step_registry}
     step_slugs = {int(step["number"]): step["slug"] for step in step_docs}
     step_symbols: dict[int, list[Symbol]] = {s["step_number"]: [] for s in step_registry}
+    mapped_symbols: set[str] = set()
 
     missing_metadata = sorted(name for name in public if name not in docs_metadata)
     if missing_metadata:
@@ -165,6 +154,21 @@ def main() -> None:
     if unknown_metadata:
         raise RuntimeError("PUBLIC_SYMBOL_DOCS contains symbols not exported in __all__: " + ", ".join(unknown_metadata))
 
+    symbol_map: dict[str, Symbol] = {}
+    for name in public:
+        preferred_module = docs_metadata[name]["module"]
+        modules_to_check = [preferred_module] + [m for m in module_data if m != preferred_module]
+        for module in modules_to_check:
+            info = module_data[module]
+            if name in info["functions"]:
+                symbol_map[name] = Symbol(name, module, "function", info["functions"][name])
+                break
+            if name in info["classes"]:
+                symbol_map[name] = Symbol(name, module, "class", info["classes"][name])
+                break
+        if name not in symbol_map:
+            raise RuntimeError(f"Could not resolve exported symbol {name} to a module-level function/class.")
+
     for symbol in symbol_map.values():
         meta = docs_metadata[symbol.name]
         if meta["module"] != symbol.module:
@@ -173,11 +177,17 @@ def main() -> None:
             )
         if meta["kind"] != symbol.obj_type:
             raise RuntimeError(f"Metadata kind mismatch for {symbol.name}: expected {symbol.obj_type}, found {meta['kind']}")
-        step = meta["workflow_step"]
-        if step not in step_symbols:
+        step = meta.get("workflow_step")
+        if step is not None and step not in step_symbols:
             raise RuntimeError(f"Invalid workflow_step {step} for {symbol.name}; expected one of {sorted(step_symbols)}")
         symbol.summary = meta.get("summary_override") or symbol.summary
-        step_symbols[step].append(symbol)
+        symbol.purpose = meta.get("purpose") or symbol.summary or "—"
+        symbol.importance = meta.get("importance") or ("Essential" if step is not None and int(step) <= 7 else "Optional")
+        if symbol.importance not in {"Essential", "Optional"}:
+            raise RuntimeError(f"Invalid importance {symbol.importance!r} for {symbol.name}; expected Essential or Optional")
+        if step is not None:
+            step_symbols[step].append(symbol)
+            mapped_symbols.add(symbol.name)
 
     MODULE_DIR.mkdir(parents=True, exist_ok=True)
     module_index_lines = ["# Module API Catalogue", "", "Generated module summaries with public exports and related internal helpers.", ""]
@@ -258,14 +268,14 @@ def main() -> None:
         ref.append("")
         entries = sorted(step_symbols.get(step, []), key=lambda x: x.name.lower())
         if entries:
-            ref.extend(["| Function / class | Module | Purpose | Related helpers |", "|---|---|---|---|"])
+            ref.extend(["| Function / class | Module | Importance | Purpose | Related helpers |", "|---|---|---|---|---|"])
             for s in entries:
                 info = module_data[s.module]
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
                 step_slug = step_slugs.get(step)
                 symbol_link = f"./{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.module}/#{s.name}"
                 ref.append(
-                    f"| [`{s.name}`]({symbol_link}) | <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{s.module}/\" title=\"Open {s.module} module page\" aria-label=\"Open {s.module} module page\">{s.module}</a> | {s.summary or '—'} | "
+                    f"| [`{s.name}`]({symbol_link}) | <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{s.module}/\" title=\"Open {s.module} module page\" aria-label=\"Open {s.module} module page\">{s.module}</a> | {s.importance} | {s.purpose or '—'} | "
                     f"{', '.join(f'[`{r}`](./internal/{s.module}/{r}.md) (internal)' for r in related) or '—'} |"
                 )
         else:
@@ -273,6 +283,28 @@ def main() -> None:
             if step in STEP_FALLBACK_NOTES:
                 ref.extend(["", STEP_FALLBACK_NOTES[step]])
         ref.append("")
+    unmapped = sorted((set(symbol_map) - mapped_symbols), key=str.lower)
+    ref.extend(
+        [
+            "## Other exported callables",
+            "",
+            "These callables are exported by `fabricops_kit.__all__` but are not currently mapped to a lifecycle step. They are listed here so the public reference remains complete.",
+            "",
+        ]
+    )
+    if unmapped:
+        ref.extend(["| Function / class | Module | Importance | Purpose | Related helpers |", "|---|---|---|---|---|"])
+        for name in unmapped:
+            s = symbol_map[name]
+            info = module_data[s.module]
+            related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
+            ref.append(
+                f"| [`{s.name}`](../api/modules/{s.module}/) | <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{s.module}/\" title=\"Open {s.module} module page\" aria-label=\"Open {s.module} module page\">{s.module}</a> | {s.importance} | {s.purpose or s.summary or '—'} | "
+                f"{', '.join(f'[`{r}`](./internal/{s.module}/{r}.md) (internal)' for r in related) or '—'} |"
+            )
+    else:
+        ref.append("No unmapped exported callables.")
+    ref.append("")
     REFERENCE_PATH.parent.mkdir(parents=True, exist_ok=True)
     REFERENCE_PATH.write_text("\n".join(ref) + "\n", encoding="utf-8", newline="\n")
 

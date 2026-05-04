@@ -11,7 +11,9 @@ class PublicSymbolDocMetadata(TypedDict):
     symbol_name: str
     module: str
     kind: str
-    workflow_step: int
+    workflow_step: int | None
+    importance: str
+    purpose: str
     summary_override: str | None
 
 
