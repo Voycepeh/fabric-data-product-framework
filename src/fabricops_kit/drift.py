@@ -37,24 +37,37 @@ VALID_ENGINES = {"auto", "pandas", "spark"}
 
 
 def default_schema_drift_policy() -> dict:
-    """Default schema drift policy.
-
-    Run `default_schema_drift_policy`.
-
-    Parameters
-    ----------
-    None
-        This callable does not require user-provided parameters.
-
-    Returns
-    -------
-    result : dict
-        Return value from `default_schema_drift_policy`.
-
-    Examples
-    --------
-    >>> default_schema_drift_policy()
-    """
+    """Execute the `default_schema_drift_policy` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        None
+            This function does not require explicit parameters.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> default_schema_drift_policy()
+        """
     return {
         "block_on_removed_column": True,
         "block_on_type_change": True,
@@ -66,29 +79,37 @@ def default_schema_drift_policy() -> dict:
 
 
 def detect_dataframe_engine(df) -> str:
-    """Detect dataframe engine.
-
-    Run `detect_dataframe_engine`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-
-    Returns
-    -------
-    result : str
-        Return value from `detect_dataframe_engine`.
-
-    Raises
-    ------
-    UnsupportedDataFrameEngineError
-        Raised when input validation or runtime checks fail.
-
-    Examples
-    --------
-    >>> detect_dataframe_engine(df)
-    """
+    """Execute the `detect_dataframe_engine` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        df : Any
+            Input parameter `df`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> detect_dataframe_engine(...)
+        """
     module_name = type(df).__module__
     if module_name.startswith("pandas") and hasattr(df, "dtypes") and hasattr(df, "columns"):
         return "pandas"
@@ -159,37 +180,43 @@ def _build_spark_schema_snapshot(df, dataset_name: str, table_name: str) -> dict
 
 
 def build_schema_snapshot(df, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "auto") -> dict:
-    """Build schema snapshot.
-
-    Run `build_schema_snapshot`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    dataset_name : str, optional
-        Parameter `dataset_name`.
-    table_name : str, optional
-        Parameter `table_name`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `build_schema_snapshot`.
-
-    Raises
-    ------
-    UnsupportedDataFrameEngineError
-        Raised when input validation or runtime checks fail.
-    ValueError
-        Raised when input validation or runtime checks fail.
-
-    Examples
-    --------
-    >>> build_schema_snapshot(df, dataset_name)
-    """
+    """Execute the `build_schema_snapshot` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        df : Any
+            Input parameter `df`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        table_name : Any
+            Input parameter `table_name`.
+        engine : Any
+            Input parameter `engine`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_schema_snapshot(..., ..., ..., ...)
+        """
     if engine not in VALID_ENGINES:
         raise ValueError(f"Unsupported engine '{engine}'. Expected one of: {sorted(VALID_ENGINES)}")
 
@@ -212,28 +239,41 @@ def _resolve_change_behavior(is_warning: bool, is_blocking: bool) -> tuple[str, 
 
 
 def compare_schema_snapshots(baseline_snapshot: dict, current_snapshot: dict, policy: dict | None = None) -> dict:
-    """Compare schema snapshots.
-
-    Run `compare_schema_snapshots`.
-
-    Parameters
-    ----------
-    baseline_snapshot : dict
-        Parameter `baseline_snapshot`.
-    current_snapshot : dict
-        Parameter `current_snapshot`.
-    policy : dict | None, optional
-        Parameter `policy`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `compare_schema_snapshots`.
-
-    Examples
-    --------
-    >>> compare_schema_snapshots(baseline_snapshot, current_snapshot)
-    """
+    """Execute the `compare_schema_snapshots` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        baseline_snapshot : Any
+            Input parameter `baseline_snapshot`.
+        current_snapshot : Any
+            Input parameter `current_snapshot`.
+        policy : Any
+            Input parameter `policy`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> compare_schema_snapshots(..., ..., ...)
+        """
     active_policy = {**default_schema_drift_policy(), **(policy or {})}
 
     baseline_columns = {col["column_name"]: col for col in baseline_snapshot.get("columns", [])}
@@ -306,29 +346,37 @@ def compare_schema_snapshots(baseline_snapshot: dict, current_snapshot: dict, po
 
 
 def assert_no_blocking_schema_drift(result: dict) -> None:
-    """Assert no blocking schema drift.
-
-    Run `assert_no_blocking_schema_drift`.
-
-    Parameters
-    ----------
-    result : dict
-        Parameter `result`.
-
-    Returns
-    -------
-    result : None
-        Return value from `assert_no_blocking_schema_drift`.
-
-    Raises
-    ------
-    SchemaDriftError
-        Raised when input validation or runtime checks fail.
-
-    Examples
-    --------
-    >>> assert_no_blocking_schema_drift(result)
-    """
+    """Execute the `assert_no_blocking_schema_drift` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        result : Any
+            Input parameter `result`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> assert_no_blocking_schema_drift(...)
+        """
     if not bool(result.get("can_continue", True)):
         raise SchemaDriftError("Blocking schema drift detected.")
 
@@ -372,34 +420,47 @@ def _write_metadata_rows(spark, metadata_table: str, records: list[dict], mode: 
 
 
 def check_schema_drift(df, dataset_name: str, table_name: str, baseline_snapshot: dict | None = None, policy: dict | None = None, engine: str = "spark") -> dict:
-    """Check schema drift.
-
-    Run `check_schema_drift`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    dataset_name : str
-        Parameter `dataset_name`.
-    table_name : str
-        Parameter `table_name`.
-    baseline_snapshot : dict | None, optional
-        Parameter `baseline_snapshot`.
-    policy : dict | None, optional
-        Parameter `policy`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `check_schema_drift`.
-
-    Examples
-    --------
-    >>> check_schema_drift(df, dataset_name)
-    """
+    """Execute the `check_schema_drift` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        df : Any
+            Input parameter `df`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        table_name : Any
+            Input parameter `table_name`.
+        baseline_snapshot : Any
+            Input parameter `baseline_snapshot`.
+        policy : Any
+            Input parameter `policy`.
+        engine : Any
+            Input parameter `engine`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> check_schema_drift(..., ..., ..., ..., ..., ...)
+        """
     current_snapshot = build_schema_snapshot(df, dataset_name=dataset_name, table_name=table_name, engine=engine)
     if baseline_snapshot is None:
         return {
@@ -428,38 +489,51 @@ def check_schema_drift(df, dataset_name: str, table_name: str, baseline_snapshot
 
 
 def build_and_write_schema_snapshot(spark, df, dataset_name: str, table_name: str, metadata_table: str, run_id: str | None = None, mode: str = "append", engine: str = "spark") -> dict:
-    """Build and write schema snapshot.
-
-    Run `build_and_write_schema_snapshot`.
-
-    Parameters
-    ----------
-    spark : Any
-        Parameter `spark`.
-    df : Any
-        Parameter `df`.
-    dataset_name : str
-        Parameter `dataset_name`.
-    table_name : str
-        Parameter `table_name`.
-    metadata_table : str
-        Parameter `metadata_table`.
-    run_id : str | None, optional
-        Parameter `run_id`.
-    mode : str, optional
-        Parameter `mode`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `build_and_write_schema_snapshot`.
-
-    Examples
-    --------
-    >>> build_and_write_schema_snapshot(spark, df)
-    """
+    """Execute the `build_and_write_schema_snapshot` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        spark : Any
+            Input parameter `spark`.
+        df : Any
+            Input parameter `df`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        table_name : Any
+            Input parameter `table_name`.
+        metadata_table : Any
+            Input parameter `metadata_table`.
+        run_id : Any
+            Input parameter `run_id`.
+        mode : Any
+            Input parameter `mode`.
+        engine : Any
+            Input parameter `engine`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_and_write_schema_snapshot(..., ..., ..., ..., ..., ..., ..., ...)
+        """
     snapshot = build_schema_snapshot(df, dataset_name=dataset_name, table_name=table_name, engine=engine)
     records = [
         {
@@ -476,30 +550,43 @@ def build_and_write_schema_snapshot(spark, df, dataset_name: str, table_name: st
 
 
 def load_latest_schema_snapshot(spark, metadata_table: str, dataset_name: str, table_name: str) -> dict | None:
-    """Load latest schema snapshot.
-
-    Run `load_latest_schema_snapshot`.
-
-    Parameters
-    ----------
-    spark : Any
-        Parameter `spark`.
-    metadata_table : str
-        Parameter `metadata_table`.
-    dataset_name : str
-        Parameter `dataset_name`.
-    table_name : str
-        Parameter `table_name`.
-
-    Returns
-    -------
-    result : dict | None
-        Return value from `load_latest_schema_snapshot`.
-
-    Examples
-    --------
-    >>> load_latest_schema_snapshot(spark, metadata_table)
-    """
+    """Execute the `load_latest_schema_snapshot` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        spark : Any
+            Input parameter `spark`.
+        metadata_table : Any
+            Input parameter `metadata_table`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        table_name : Any
+            Input parameter `table_name`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> load_latest_schema_snapshot(..., ..., ..., ...)
+        """
     try:
         df = spark.table(metadata_table)
         if hasattr(df, "filter") and hasattr(df, "orderBy") and hasattr(df, "limit"):
@@ -534,47 +621,55 @@ def load_latest_schema_snapshot(spark, metadata_table: str, dataset_name: str, t
 
 
 def check_partition_drift(df, dataset_name: str, table_name: str, partition_column: str, business_keys: list[str] | None = None, watermark_column: str | None = None, baseline_snapshot: list[dict] | dict | None = None, policy: dict | None = None, run_id: str | None = None, engine: str = "spark") -> dict:
-    """Check partition drift.
-
-    Run `check_partition_drift`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    dataset_name : str
-        Parameter `dataset_name`.
-    table_name : str
-        Parameter `table_name`.
-    partition_column : str
-        Parameter `partition_column`.
-    business_keys : list[str] | None, optional
-        Parameter `business_keys`.
-    watermark_column : str | None, optional
-        Parameter `watermark_column`.
-    baseline_snapshot : list[dict] | dict | None, optional
-        Parameter `baseline_snapshot`.
-    policy : dict | None, optional
-        Parameter `policy`.
-    run_id : str | None, optional
-        Parameter `run_id`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `check_partition_drift`.
-
-    Raises
-    ------
-    ValueError
-        Raised when input validation or runtime checks fail.
-
-    Examples
-    --------
-    >>> check_partition_drift(df, dataset_name)
-    """
+    """Execute the `check_partition_drift` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        df : Any
+            Input parameter `df`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        table_name : Any
+            Input parameter `table_name`.
+        partition_column : Any
+            Input parameter `partition_column`.
+        business_keys : Any
+            Input parameter `business_keys`.
+        watermark_column : Any
+            Input parameter `watermark_column`.
+        baseline_snapshot : Any
+            Input parameter `baseline_snapshot`.
+        policy : Any
+            Input parameter `policy`.
+        run_id : Any
+            Input parameter `run_id`.
+        engine : Any
+            Input parameter `engine`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> check_partition_drift(..., ..., ..., ..., ..., ..., ..., ..., ..., ...)
+        """
     keys = business_keys or []
     if not keys:
         raise ValueError("business_keys must contain at least one column for partition drift checks.")
@@ -616,49 +711,57 @@ def check_partition_drift(df, dataset_name: str, table_name: str, partition_colu
 
 
 def build_and_write_partition_snapshot(spark, df, dataset_name: str, table_name: str, metadata_table: str, partition_column: str, business_keys: list[str] | None = None, watermark_column: str | None = None, run_id: str | None = None, mode: str = "append", engine: str = "spark") -> dict:
-    """Build and write partition snapshot.
-
-    Run `build_and_write_partition_snapshot`.
-
-    Parameters
-    ----------
-    spark : Any
-        Parameter `spark`.
-    df : Any
-        Parameter `df`.
-    dataset_name : str
-        Parameter `dataset_name`.
-    table_name : str
-        Parameter `table_name`.
-    metadata_table : str
-        Parameter `metadata_table`.
-    partition_column : str
-        Parameter `partition_column`.
-    business_keys : list[str] | None, optional
-        Parameter `business_keys`.
-    watermark_column : str | None, optional
-        Parameter `watermark_column`.
-    run_id : str | None, optional
-        Parameter `run_id`.
-    mode : str, optional
-        Parameter `mode`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `build_and_write_partition_snapshot`.
-
-    Raises
-    ------
-    ValueError
-        Raised when input validation or runtime checks fail.
-
-    Examples
-    --------
-    >>> build_and_write_partition_snapshot(spark, df)
-    """
+    """Execute the `build_and_write_partition_snapshot` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        spark : Any
+            Input parameter `spark`.
+        df : Any
+            Input parameter `df`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        table_name : Any
+            Input parameter `table_name`.
+        metadata_table : Any
+            Input parameter `metadata_table`.
+        partition_column : Any
+            Input parameter `partition_column`.
+        business_keys : Any
+            Input parameter `business_keys`.
+        watermark_column : Any
+            Input parameter `watermark_column`.
+        run_id : Any
+            Input parameter `run_id`.
+        mode : Any
+            Input parameter `mode`.
+        engine : Any
+            Input parameter `engine`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_and_write_partition_snapshot(..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ...)
+        """
     keys = business_keys or []
     if not keys:
         raise ValueError("business_keys must contain at least one column for partition snapshots.")
@@ -690,30 +793,43 @@ def build_and_write_partition_snapshot(spark, df, dataset_name: str, table_name:
 
 
 def load_latest_partition_snapshot(spark, metadata_table: str, dataset_name: str, table_name: str) -> list[dict] | dict | None:
-    """Load latest partition snapshot.
-
-    Run `load_latest_partition_snapshot`.
-
-    Parameters
-    ----------
-    spark : Any
-        Parameter `spark`.
-    metadata_table : str
-        Parameter `metadata_table`.
-    dataset_name : str
-        Parameter `dataset_name`.
-    table_name : str
-        Parameter `table_name`.
-
-    Returns
-    -------
-    result : list[dict] | dict | None
-        Return value from `load_latest_partition_snapshot`.
-
-    Examples
-    --------
-    >>> load_latest_partition_snapshot(spark, metadata_table)
-    """
+    """Execute the `load_latest_partition_snapshot` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        spark : Any
+            Input parameter `spark`.
+        metadata_table : Any
+            Input parameter `metadata_table`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        table_name : Any
+            Input parameter `table_name`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> load_latest_partition_snapshot(..., ..., ..., ...)
+        """
     try:
         df = spark.table(metadata_table)
         if hasattr(df, "filter") and hasattr(df, "orderBy") and hasattr(df, "limit"):
@@ -746,28 +862,41 @@ def load_latest_partition_snapshot(spark, metadata_table: str, dataset_name: str
 
 
 def check_profile_drift(current_profile: dict, baseline_profile: dict | None = None, policy: dict | None = None) -> dict:
-    """Check profile drift.
-
-    Run `check_profile_drift`.
-
-    Parameters
-    ----------
-    current_profile : dict
-        Parameter `current_profile`.
-    baseline_profile : dict | None, optional
-        Parameter `baseline_profile`.
-    policy : dict | None, optional
-        Parameter `policy`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `check_profile_drift`.
-
-    Examples
-    --------
-    >>> check_profile_drift(current_profile, baseline_profile)
-    """
+    """Execute the `check_profile_drift` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        current_profile : Any
+            Input parameter `current_profile`.
+        baseline_profile : Any
+            Input parameter `baseline_profile`.
+        policy : Any
+            Input parameter `policy`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> check_profile_drift(..., ..., ...)
+        """
     active = {
         "max_row_count_change_percent": 50,
         "max_null_percent_change_points": 20,
@@ -816,28 +945,41 @@ def check_profile_drift(current_profile: dict, baseline_profile: dict | None = N
 
 
 def summarize_drift_results(schema_drift_result: dict | None = None, partition_drift_result: dict | None = None, profile_drift_result: dict | None = None) -> dict:
-    """Summarize drift results.
-
-    Run `summarize_drift_results`.
-
-    Parameters
-    ----------
-    schema_drift_result : dict | None, optional
-        Parameter `schema_drift_result`.
-    partition_drift_result : dict | None, optional
-        Parameter `partition_drift_result`.
-    profile_drift_result : dict | None, optional
-        Parameter `profile_drift_result`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `summarize_drift_results`.
-
-    Examples
-    --------
-    >>> summarize_drift_results(schema_drift_result, partition_drift_result)
-    """
+    """Execute the `summarize_drift_results` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        schema_drift_result : Any
+            Input parameter `schema_drift_result`.
+        partition_drift_result : Any
+            Input parameter `partition_drift_result`.
+        profile_drift_result : Any
+            Input parameter `profile_drift_result`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> summarize_drift_results(..., ..., ...)
+        """
     results = {"schema": schema_drift_result, "partition": partition_drift_result, "profile": profile_drift_result}
     statuses = {k: (v or {}).get("status") for k, v in results.items()}
     failed = [k for k, v in results.items() if v and (v.get("status") == "failed" or not v.get("can_continue", True))]
@@ -886,24 +1028,37 @@ class IncrementalSafetyError(Exception):
 
 
 def default_incremental_safety_policy() -> dict:
-    """Default incremental safety policy.
-
-    Run `default_incremental_safety_policy`.
-
-    Parameters
-    ----------
-    None
-        This callable does not require user-provided parameters.
-
-    Returns
-    -------
-    result : dict
-        Return value from `default_incremental_safety_policy`.
-
-    Examples
-    --------
-    >>> default_incremental_safety_policy()
-    """
+    """Execute the `default_incremental_safety_policy` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        None
+            This function does not require explicit parameters.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> default_incremental_safety_policy()
+        """
     return {
         "block_on_historical_partition_change": True,
         "closed_partition_grace_days": 1,
@@ -1017,43 +1172,37 @@ def _build_spark_partition_snapshot(df, *, dataset_name: str, table_name: str, p
 
 
 def build_partition_snapshot(df, *, dataset_name: str = "unknown", table_name: str = "unknown", partition_column: str, business_keys: list[str], watermark_column: str | None = None, run_id: str | None = None, engine: str = "auto") -> list[dict]:
-    """Build partition snapshot.
-
-    Run `build_partition_snapshot`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    dataset_name : str, optional
-        Parameter `dataset_name`.
-    table_name : str, optional
-        Parameter `table_name`.
-    partition_column : str
-        Parameter `partition_column`.
-    business_keys : list[str]
-        Parameter `business_keys`.
-    watermark_column : str | None, optional
-        Parameter `watermark_column`.
-    run_id : str | None, optional
-        Parameter `run_id`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : list[dict]
-        Return value from `build_partition_snapshot`.
-
-    Raises
-    ------
-    ValueError
-        Raised when input validation or runtime checks fail.
-
-    Examples
-    --------
-    >>> build_partition_snapshot(df, dataset_name)
-    """
+    """Execute the `build_partition_snapshot` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        df : Any
+            Input parameter `df`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_partition_snapshot(...)
+        """
     selected_engine = validate_engine(engine)
     if selected_engine == "auto":
         selected_engine = detect_dataframe_engine(df)
@@ -1089,28 +1238,41 @@ def _is_closed_partition(partition_value: Any, grace_days: int) -> bool:
 
 
 def compare_partition_snapshots(baseline_snapshots: list[dict], current_snapshots: list[dict], policy: dict | None = None) -> dict:
-    """Compare partition snapshots.
-
-    Run `compare_partition_snapshots`.
-
-    Parameters
-    ----------
-    baseline_snapshots : list[dict]
-        Parameter `baseline_snapshots`.
-    current_snapshots : list[dict]
-        Parameter `current_snapshots`.
-    policy : dict | None, optional
-        Parameter `policy`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `compare_partition_snapshots`.
-
-    Examples
-    --------
-    >>> compare_partition_snapshots(baseline_snapshots, current_snapshots)
-    """
+    """Execute the `compare_partition_snapshots` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        baseline_snapshots : Any
+            Input parameter `baseline_snapshots`.
+        current_snapshots : Any
+            Input parameter `current_snapshots`.
+        policy : Any
+            Input parameter `policy`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> compare_partition_snapshots(..., ..., ...)
+        """
     active_policy = {**default_incremental_safety_policy(), **(policy or {})}
     baseline = {str(s.get("partition_value")): s for s in baseline_snapshots}
     current = {str(s.get("partition_value")): s for s in current_snapshots}
@@ -1155,58 +1317,73 @@ def compare_partition_snapshots(baseline_snapshots: list[dict], current_snapshot
 
 
 def assert_incremental_safe(result: dict) -> None:
-    """Assert incremental safe.
-
-    Run `assert_incremental_safe`.
-
-    Parameters
-    ----------
-    result : dict
-        Parameter `result`.
-
-    Returns
-    -------
-    result : None
-        Return value from `assert_incremental_safe`.
-
-    Raises
-    ------
-    IncrementalSafetyError
-        Raised when input validation or runtime checks fail.
-
-    Examples
-    --------
-    >>> assert_incremental_safe(result)
-    """
+    """Execute the `assert_incremental_safe` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        result : Any
+            Input parameter `result`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> assert_incremental_safe(...)
+        """
     if not bool(result.get("can_continue", True)):
         raise IncrementalSafetyError("Blocking incremental partition safety changes detected.")
 
 
 def build_incremental_safety_records(result: dict, *, run_id: str, dataset_name: str, table_name: str) -> list[dict]:
-    """Build incremental safety records.
-
-    Run `build_incremental_safety_records`.
-
-    Parameters
-    ----------
-    result : dict
-        Parameter `result`.
-    run_id : str
-        Parameter `run_id`.
-    dataset_name : str
-        Parameter `dataset_name`.
-    table_name : str
-        Parameter `table_name`.
-
-    Returns
-    -------
-    result : list[dict]
-        Return value from `build_incremental_safety_records`.
-
-    Examples
-    --------
-    >>> build_incremental_safety_records(result, run_id)
-    """
+    """Execute the `build_incremental_safety_records` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        result : Any
+            Input parameter `result`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_incremental_safety_records(...)
+        """
     changes = result.get("changes", []) or [
         {
             "drift_type": "none",
