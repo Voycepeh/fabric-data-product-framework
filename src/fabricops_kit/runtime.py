@@ -1,4 +1,9 @@
-"""Notebook runtime helpers for Fabric-oriented execution patterns."""
+"""Runtime validation helpers for fail-fast Fabric notebook execution.
+
+This module validates notebook naming and runtime context so pipelines stop
+early when orchestration contracts are violated, before IO, quality, and
+lineage artifacts are produced with ambiguous run metadata.
+"""
 
 from __future__ import annotations
 
@@ -242,29 +247,37 @@ class UnsupportedDataFrameEngineError(TypeError):
 
 
 def validate_engine(engine: str) -> str:
-    """Validate engine.
-
-    Run `validate_engine`.
-
-    Parameters
-    ----------
-    engine : str
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : str
-        Return value from `validate_engine`.
-
-    Raises
-    ------
-    ValueError
-        Raised when input validation or runtime checks fail.
-
-    Examples
-    --------
-    >>> validate_engine(engine)
-    """
+    """Execute the `validate_engine` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        engine : Any
+            Input parameter `engine`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> validate_engine(...)
+        """
     normalized = (engine or "").strip().lower()
     if normalized not in SUPPORTED_ENGINES:
         raise ValueError(f"Unsupported engine '{engine}'. Expected one of: auto, pandas, spark.")
@@ -272,29 +285,37 @@ def validate_engine(engine: str) -> str:
 
 
 def detect_dataframe_engine(df: Any) -> str:
-    """Detect dataframe engine.
-
-    Run `detect_dataframe_engine`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-
-    Returns
-    -------
-    result : str
-        Return value from `detect_dataframe_engine`.
-
-    Raises
-    ------
-    UnsupportedDataFrameEngineError
-        Raised when input validation or runtime checks fail.
-
-    Examples
-    --------
-    >>> detect_dataframe_engine(df)
-    """
+    """Execute the `detect_dataframe_engine` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        df : Any
+            Input parameter `df`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> detect_dataframe_engine(...)
+        """
     if isinstance(df, pd.DataFrame):
         return "pandas"
 

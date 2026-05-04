@@ -1,4 +1,4 @@
-"""Fabric path and IO helpers.
+"""Fabric path and IO helpers for cross-environment lakehouse/warehouse routing.
 
 This module contains the framework helpers used at the start and end of a
 Fabric notebook workflow:

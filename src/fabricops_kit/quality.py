@@ -1,4 +1,8 @@
-"""Lightweight data quality rule execution for pandas and Spark."""
+"""Executable data-quality checks and AI-assisted rule generation workflows.
+
+This module evaluates reusable DQ rules, enforces quality gates, and provides
+optional AI prompt/parse utilities to draft candidate rules for human review.
+"""
 
 from __future__ import annotations
 
@@ -226,32 +230,39 @@ def _spark_rule(df: Any, rule: dict[str, Any], row_count: int) -> tuple[int, int
 
 
 def run_quality_rules(df: Any, rules: list[dict], *, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "auto") -> dict:
-    """Run quality rules.
-
-    Run `run_quality_rules`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    rules : list[dict]
-        Parameter `rules`.
-    dataset_name : str, optional
-        Parameter `dataset_name`.
-    table_name : str, optional
-        Parameter `table_name`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `run_quality_rules`.
-
-    Examples
-    --------
-    >>> run_quality_rules(df, rules)
-    """
+    """Execute the `run_quality_rules` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        df : Any
+            Input parameter `df`.
+        rules : Any
+            Input parameter `rules`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> run_quality_rules(..., ...)
+        """
     resolved_engine = _resolve_engine(df, engine)
     row_count = len(df) if resolved_engine == "pandas" else df.count()
     results = []
@@ -340,33 +351,39 @@ def run_quality_rules(df: Any, rules: list[dict], *, dataset_name: str = "unknow
 
 
 def assert_quality_gate(result: dict, fail_on: str = "critical") -> None:
-    """Assert quality gate.
-
-    Run `assert_quality_gate`.
-
-    Parameters
-    ----------
-    result : dict
-        Parameter `result`.
-    fail_on : str, optional
-        Parameter `fail_on`.
-
-    Returns
-    -------
-    result : None
-        Return value from `assert_quality_gate`.
-
-    Raises
-    ------
-    DataQualityError
-        Raised when input validation or runtime checks fail.
-    ValueError
-        Raised when input validation or runtime checks fail.
-
-    Examples
-    --------
-    >>> assert_quality_gate(result, fail_on)
-    """
+    """Execute the `assert_quality_gate` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        result : Any
+            Input parameter `result`.
+        fail_on : Any
+            Input parameter `fail_on`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> assert_quality_gate(..., ...)
+        """
     if fail_on != "critical":
         raise ValueError("Only fail_on='critical' is supported in MVP")
     if not result.get("can_continue", True):
@@ -374,26 +391,37 @@ def assert_quality_gate(result: dict, fail_on: str = "critical") -> None:
 
 
 def build_quality_result_records(result: dict, *, run_id: str) -> list[dict]:
-    """Build quality result records.
-
-    Run `build_quality_result_records`.
-
-    Parameters
-    ----------
-    result : dict
-        Parameter `result`.
-    run_id : str
-        Parameter `run_id`.
-
-    Returns
-    -------
-    result : list[dict]
-        Return value from `build_quality_result_records`.
-
-    Examples
-    --------
-    >>> build_quality_result_records(result, run_id)
-    """
+    """Execute the `build_quality_result_records` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        result : Any
+            Input parameter `result`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_quality_result_records(...)
+        """
     rows = []
     for r in result.get("results", []):
         rows.append(
@@ -440,32 +468,45 @@ def generate_dq_rule_candidates(
     dataset_name: str | None = None,
     table_name: str | None = None,
 ) -> list[dict]:
-    """Generate dq rule candidates.
-
-    Run `generate_dq_rule_candidates`.
-
-    Parameters
-    ----------
-    profile : dict
-        Parameter `profile`.
-    metadata : dict | None, optional
-        Parameter `metadata`.
-    business_context : str | dict | None, optional
-        Parameter `business_context`.
-    dataset_name : str | None, optional
-        Parameter `dataset_name`.
-    table_name : str | None, optional
-        Parameter `table_name`.
-
-    Returns
-    -------
-    result : list[dict]
-        Return value from `generate_dq_rule_candidates`.
-
-    Examples
-    --------
-    >>> generate_dq_rule_candidates(profile, metadata)
-    """
+    """Execute the `generate_dq_rule_candidates` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        profile : Any
+            Input parameter `profile`.
+        metadata : Any
+            Input parameter `metadata`.
+        business_context : Any
+            Input parameter `business_context`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        table_name : Any
+            Input parameter `table_name`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> generate_dq_rule_candidates(..., ..., ..., ..., ...)
+        """
     profile = profile or {}
     metadata = metadata or {}
     candidates: list[dict[str, Any]] = []
@@ -503,24 +544,37 @@ def generate_dq_rule_candidates(
 
 
 def normalize_dq_rule(rule: dict) -> dict:
-    """Normalize dq rule.
-
-    Run `normalize_dq_rule`.
-
-    Parameters
-    ----------
-    rule : dict
-        Parameter `rule`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `normalize_dq_rule`.
-
-    Examples
-    --------
-    >>> normalize_dq_rule(rule)
-    """
+    """Execute the `normalize_dq_rule` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        rule : Any
+            Input parameter `rule`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> normalize_dq_rule(...)
+        """
     r = dict(rule or {})
     if "rule_id" not in r:
         r["rule_id"] = r.get("id") or r.get("name") or "DQ_RULE"
@@ -564,56 +618,82 @@ def normalize_dq_rule(rule: dict) -> dict:
 
 
 def normalize_dq_rules(rules: list[dict] | None) -> list[dict]:
-    """Normalize dq rules.
-
-    Run `normalize_dq_rules`.
-
-    Parameters
-    ----------
-    rules : list[dict] | None
-        Parameter `rules`.
-
-    Returns
-    -------
-    result : list[dict]
-        Return value from `normalize_dq_rules`.
-
-    Examples
-    --------
-    >>> normalize_dq_rules(rules)
-    """
+    """Execute the `normalize_dq_rules` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        rules : Any
+            Input parameter `rules`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> normalize_dq_rules(...)
+        """
     return [normalize_dq_rule(r) for r in (rules or [])]
 
 
 def build_dq_rule_records(rules: list[dict], dataset_name: str, table_name: str, run_id: str | None = None, status: str = "candidate", generated_by: str = "framework") -> list[dict]:
-    """Build dq rule records.
-
-    Run `build_dq_rule_records`.
-
-    Parameters
-    ----------
-    rules : list[dict]
-        Parameter `rules`.
-    dataset_name : str
-        Parameter `dataset_name`.
-    table_name : str
-        Parameter `table_name`.
-    run_id : str | None, optional
-        Parameter `run_id`.
-    status : str, optional
-        Parameter `status`.
-    generated_by : str, optional
-        Parameter `generated_by`.
-
-    Returns
-    -------
-    result : list[dict]
-        Return value from `build_dq_rule_records`.
-
-    Examples
-    --------
-    >>> build_dq_rule_records(rules, dataset_name)
-    """
+    """Execute the `build_dq_rule_records` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        rules : Any
+            Input parameter `rules`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        table_name : Any
+            Input parameter `table_name`.
+        run_id : Any
+            Input parameter `run_id`.
+        status : Any
+            Input parameter `status`.
+        generated_by : Any
+            Input parameter `generated_by`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_dq_rule_records(..., ..., ..., ..., ..., ...)
+        """
     created_at = _now_iso()
     rows = []
     for rule in normalize_dq_rules(rules):
@@ -633,40 +713,53 @@ def build_dq_rule_records(rules: list[dict], dataset_name: str, table_name: str,
 
 
 def store_dq_rules(spark, rules: list[dict], table_name: str, dataset_name: str | None = None, source_table: str | None = None, run_id: str | None = None, status: str = "candidate", generated_by: str = "framework", mode: str = "append") -> list[dict]:
-    """Store dq rules.
-
-    Run `store_dq_rules`.
-
-    Parameters
-    ----------
-    spark : Any
-        Parameter `spark`.
-    rules : list[dict]
-        Parameter `rules`.
-    table_name : str
-        Parameter `table_name`.
-    dataset_name : str | None, optional
-        Parameter `dataset_name`.
-    source_table : str | None, optional
-        Parameter `source_table`.
-    run_id : str | None, optional
-        Parameter `run_id`.
-    status : str, optional
-        Parameter `status`.
-    generated_by : str, optional
-        Parameter `generated_by`.
-    mode : str, optional
-        Parameter `mode`.
-
-    Returns
-    -------
-    result : list[dict]
-        Return value from `store_dq_rules`.
-
-    Examples
-    --------
-    >>> store_dq_rules(spark, rules)
-    """
+    """Execute the `store_dq_rules` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        spark : Any
+            Input parameter `spark`.
+        rules : Any
+            Input parameter `rules`.
+        table_name : Any
+            Input parameter `table_name`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        source_table : Any
+            Input parameter `source_table`.
+        run_id : Any
+            Input parameter `run_id`.
+        status : Any
+            Input parameter `status`.
+        generated_by : Any
+            Input parameter `generated_by`.
+        mode : Any
+            Input parameter `mode`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> store_dq_rules(..., ..., ..., ..., ..., ..., ..., ..., ...)
+        """
     ds = dataset_name or "unknown"
     st = source_table or "unknown"
     records = build_dq_rule_records(rules, dataset_name=ds, table_name=st, run_id=run_id, status=status, generated_by=generated_by)
@@ -676,32 +769,45 @@ def store_dq_rules(spark, rules: list[dict], table_name: str, dataset_name: str 
 
 
 def load_dq_rules(spark, table_name: str, dataset_name: str | None = None, source_table: str | None = None, status: str | list[str] = "approved") -> list[dict]:
-    """Load dq rules.
-
-    Run `load_dq_rules`.
-
-    Parameters
-    ----------
-    spark : Any
-        Parameter `spark`.
-    table_name : str
-        Parameter `table_name`.
-    dataset_name : str | None, optional
-        Parameter `dataset_name`.
-    source_table : str | None, optional
-        Parameter `source_table`.
-    status : str | list[str], optional
-        Parameter `status`.
-
-    Returns
-    -------
-    result : list[dict]
-        Return value from `load_dq_rules`.
-
-    Examples
-    --------
-    >>> load_dq_rules(spark, table_name)
-    """
+    """Execute the `load_dq_rules` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        spark : Any
+            Input parameter `spark`.
+        table_name : Any
+            Input parameter `table_name`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        source_table : Any
+            Input parameter `source_table`.
+        status : Any
+            Input parameter `status`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> load_dq_rules(..., ..., ..., ..., ...)
+        """
     rows = spark.table(table_name)
     if dataset_name is not None:
         rows = rows[rows["dataset_name"] == dataset_name] if hasattr(rows, "__getitem__") and "dataset_name" in rows.columns else rows
@@ -730,34 +836,47 @@ def load_dq_rules(spark, table_name: str, dataset_name: str | None = None, sourc
 
 
 def run_dq_rules(df, rules: list[dict], dataset_name: str, table_name: str, engine: str = "spark", fail_on: str = "critical") -> dict:
-    """Run dq rules.
-
-    Run `run_dq_rules`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    rules : list[dict]
-        Parameter `rules`.
-    dataset_name : str
-        Parameter `dataset_name`.
-    table_name : str
-        Parameter `table_name`.
-    engine : str, optional
-        Parameter `engine`.
-    fail_on : str, optional
-        Parameter `fail_on`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `run_dq_rules`.
-
-    Examples
-    --------
-    >>> run_dq_rules(df, rules)
-    """
+    """Execute the `run_dq_rules` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        df : Any
+            Input parameter `df`.
+        rules : Any
+            Input parameter `rules`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        table_name : Any
+            Input parameter `table_name`.
+        engine : Any
+            Input parameter `engine`.
+        fail_on : Any
+            Input parameter `fail_on`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> run_dq_rules(..., ..., ..., ..., ..., ...)
+        """
     normalized = normalize_dq_rules(rules)
     result = run_quality_rules(df, normalized, dataset_name=dataset_name, table_name=table_name, engine=engine)
     supported = sorted(SUPPORTED_RULE_TYPES)
@@ -780,42 +899,55 @@ def run_dq_rules(df, rules: list[dict], dataset_name: str, table_name: str, engi
 
 
 def run_dq_workflow(spark, df, quality_contract, dataset_name: str, table_name: str, run_id: str | None = None, profile: dict | None = None, metadata: dict | None = None, business_context: str | dict | None = None, engine: str = "spark") -> dict:
-    """Run dq workflow.
-
-    Run `run_dq_workflow`.
-
-    Parameters
-    ----------
-    spark : Any
-        Parameter `spark`.
-    df : Any
-        Parameter `df`.
-    quality_contract : Any
-        Parameter `quality_contract`.
-    dataset_name : str
-        Parameter `dataset_name`.
-    table_name : str
-        Parameter `table_name`.
-    run_id : str | None, optional
-        Parameter `run_id`.
-    profile : dict | None, optional
-        Parameter `profile`.
-    metadata : dict | None, optional
-        Parameter `metadata`.
-    business_context : str | dict | None, optional
-        Parameter `business_context`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `run_dq_workflow`.
-
-    Examples
-    --------
-    >>> run_dq_workflow(spark, df)
-    """
+    """Execute the `run_dq_workflow` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        spark : Any
+            Input parameter `spark`.
+        df : Any
+            Input parameter `df`.
+        quality_contract : Any
+            Input parameter `quality_contract`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        table_name : Any
+            Input parameter `table_name`.
+        run_id : Any
+            Input parameter `run_id`.
+        profile : Any
+            Input parameter `profile`.
+        metadata : Any
+            Input parameter `metadata`.
+        business_context : Any
+            Input parameter `business_context`.
+        engine : Any
+            Input parameter `engine`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> run_dq_workflow(..., ..., ..., ..., ..., ..., ..., ..., ..., ...)
+        """
     qc = quality_contract
     explicit_rules = list(getattr(qc, "rules", None) or (qc.get("rules") if isinstance(qc, dict) else []) or [])
     loaded_rules: list[dict] = []
@@ -922,36 +1054,39 @@ def _parse_freshness_timedelta(value: str | None) -> timedelta | None:
 
 
 def validate_required_columns(df, expected_columns: list[str], *, dataset_name: str = "unknown", table_name: str = "unknown", check_name: str = "required_columns", severity: str = "critical", engine: str = "auto") -> dict:
-    """Validate required columns.
-
-    Run `validate_required_columns`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    expected_columns : list[str]
-        Parameter `expected_columns`.
-    dataset_name : str, optional
-        Parameter `dataset_name`.
-    table_name : str, optional
-        Parameter `table_name`.
-    check_name : str, optional
-        Parameter `check_name`.
-    severity : str, optional
-        Parameter `severity`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `validate_required_columns`.
-
-    Examples
-    --------
-    >>> validate_required_columns(df, expected_columns)
-    """
+    """Execute the `validate_required_columns` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        df : Any
+            Input parameter `df`.
+        expected_columns : Any
+            Input parameter `expected_columns`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> validate_required_columns(..., ...)
+        """
     resolved = _resolve_engine(df, engine)
     actual_columns = list(df.columns) if resolved in {"pandas", "spark"} else []
     missing = [c for c in expected_columns if c not in actual_columns]
@@ -962,34 +1097,39 @@ def validate_required_columns(df, expected_columns: list[str], *, dataset_name: 
 
 
 def validate_grain(df, business_keys: list[str], *, dataset_name: str = "unknown", table_name: str = "unknown", severity: str = "critical", engine: str = "auto") -> dict:
-    """Validate grain.
-
-    Run `validate_grain`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    business_keys : list[str]
-        Parameter `business_keys`.
-    dataset_name : str, optional
-        Parameter `dataset_name`.
-    table_name : str, optional
-        Parameter `table_name`.
-    severity : str, optional
-        Parameter `severity`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `validate_grain`.
-
-    Examples
-    --------
-    >>> validate_grain(df, business_keys)
-    """
+    """Execute the `validate_grain` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        df : Any
+            Input parameter `df`.
+        business_keys : Any
+            Input parameter `business_keys`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> validate_grain(..., ...)
+        """
     resolved = _resolve_engine(df, engine)
     missing = [k for k in business_keys if k not in getattr(df, "columns", [])]
     if missing:
@@ -1024,38 +1164,39 @@ def validate_grain(df, business_keys: list[str], *, dataset_name: str = "unknown
 
 
 def validate_freshness(df, watermark_column: str, *, max_age_days: int | None = None, max_age_timedelta: timedelta | None = None, dataset_name: str = "unknown", table_name: str = "unknown", severity: str = "critical", engine: str = "auto") -> dict:
-    """Validate freshness.
-
-    Run `validate_freshness`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    watermark_column : str
-        Parameter `watermark_column`.
-    max_age_days : int | None, optional
-        Parameter `max_age_days`.
-    max_age_timedelta : timedelta | None, optional
-        Parameter `max_age_timedelta`.
-    dataset_name : str, optional
-        Parameter `dataset_name`.
-    table_name : str, optional
-        Parameter `table_name`.
-    severity : str, optional
-        Parameter `severity`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `validate_freshness`.
-
-    Examples
-    --------
-    >>> validate_freshness(df, watermark_column)
-    """
+    """Execute the `validate_freshness` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        df : Any
+            Input parameter `df`.
+        watermark_column : Any
+            Input parameter `watermark_column`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> validate_freshness(..., ...)
+        """
     resolved = _resolve_engine(df, engine)
     threshold = max_age_timedelta if max_age_timedelta is not None else (timedelta(days=max_age_days) if max_age_days is not None else None)
     if threshold is None:
@@ -1088,32 +1229,39 @@ def _combine_contract_checks(dataset_name: str, table_name: str, contract_type: 
 
 
 def validate_upstream_contract(df, contract: dict, *, dataset_name: str | None = None, table_name: str | None = None, engine: str = "auto") -> dict:
-    """Validate upstream contract.
-
-    Run `validate_upstream_contract`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    contract : dict
-        Parameter `contract`.
-    dataset_name : str | None, optional
-        Parameter `dataset_name`.
-    table_name : str | None, optional
-        Parameter `table_name`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `validate_upstream_contract`.
-
-    Examples
-    --------
-    >>> validate_upstream_contract(df, contract)
-    """
+    """Execute the `validate_upstream_contract` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        df : Any
+            Input parameter `df`.
+        contract : Any
+            Input parameter `contract`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> validate_upstream_contract(..., ...)
+        """
     dataset_name = dataset_name or contract.get("dataset", {}).get("name", "unknown")
     table_name = table_name or contract.get("source", {}).get("table", "unknown")
     up = contract.get("contracts", {}).get("upstream", {})
@@ -1126,32 +1274,39 @@ def validate_upstream_contract(df, contract: dict, *, dataset_name: str | None =
 
 
 def validate_downstream_contract(df, contract: dict, *, dataset_name: str | None = None, table_name: str | None = None, engine: str = "auto") -> dict:
-    """Validate downstream contract.
-
-    Run `validate_downstream_contract`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    contract : dict
-        Parameter `contract`.
-    dataset_name : str | None, optional
-        Parameter `dataset_name`.
-    table_name : str | None, optional
-        Parameter `table_name`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `validate_downstream_contract`.
-
-    Examples
-    --------
-    >>> validate_downstream_contract(df, contract)
-    """
+    """Execute the `validate_downstream_contract` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        df : Any
+            Input parameter `df`.
+        contract : Any
+            Input parameter `contract`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> validate_downstream_contract(..., ...)
+        """
     dataset_name = dataset_name or contract.get("dataset", {}).get("name", "unknown")
     table_name = table_name or contract.get("target", {}).get("table", "unknown")
     down = contract.get("contracts", {}).get("downstream", {})
@@ -1160,30 +1315,37 @@ def validate_downstream_contract(df, contract: dict, *, dataset_name: str | None
 
 
 def validate_runtime_contracts(*, source_df=None, output_df=None, contract: dict, engine: str = "auto") -> dict:
-    """Validate runtime contracts.
-
-    Run `validate_runtime_contracts`.
-
-    Parameters
-    ----------
-    source_df : object, optional
-        Parameter `source_df`.
-    output_df : object, optional
-        Parameter `output_df`.
-    contract : dict
-        Parameter `contract`.
-    engine : str, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `validate_runtime_contracts`.
-
-    Examples
-    --------
-    >>> validate_runtime_contracts(source_df, output_df)
-    """
+    """Execute the `validate_runtime_contracts` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        None
+            This function does not require explicit parameters.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> validate_runtime_contracts()
+        """
     results = []
     if source_df is not None:
         results.append(validate_upstream_contract(source_df, contract, engine=engine))
@@ -1199,54 +1361,73 @@ def validate_runtime_contracts(*, source_df=None, output_df=None, contract: dict
 
 
 def assert_contracts_valid(result: dict) -> None:
-    """Assert contracts valid.
-
-    Run `assert_contracts_valid`.
-
-    Parameters
-    ----------
-    result : dict
-        Parameter `result`.
-
-    Returns
-    -------
-    result : None
-        Return value from `assert_contracts_valid`.
-
-    Raises
-    ------
-    ContractValidationError
-        Raised when input validation or runtime checks fail.
-
-    Examples
-    --------
-    >>> assert_contracts_valid(result)
-    """
+    """Execute the `assert_contracts_valid` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        result : Any
+            Input parameter `result`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> assert_contracts_valid(...)
+        """
     if not result.get("can_continue", False):
         raise ContractValidationError("Contract validation returned blocking failures")
 
 
 def build_contract_validation_records(result: dict, *, run_id: str) -> list[dict]:
-    """Build contract validation records.
-
-    Run `build_contract_validation_records`.
-
-    Parameters
-    ----------
-    result : dict
-        Parameter `result`.
-    run_id : str
-        Parameter `run_id`.
-
-    Returns
-    -------
-    result : list[dict]
-        Return value from `build_contract_validation_records`.
-
-    Examples
-    --------
-    >>> build_contract_validation_records(result, run_id)
-    """
+    """Execute the `build_contract_validation_records` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        result : Any
+            Input parameter `result`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_contract_validation_records(...)
+        """
     records: list[dict] = []
     for section in result.get("results", []):
         for check in section.get("checks", []):
@@ -1449,24 +1630,37 @@ def _dict(config: dict | None) -> dict:
 
 
 def build_source_contract(config: dict) -> SourceContract:
-    """Build source contract.
-
-    Run `build_source_contract`.
-
-    Parameters
-    ----------
-    config : dict
-        Parameter `config`.
-
-    Returns
-    -------
-    result : SourceContract
-        Return value from `build_source_contract`.
-
-    Examples
-    --------
-    >>> build_source_contract(config)
-    """
+    """Execute the `build_source_contract` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        config : Any
+            Input parameter `config`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_source_contract(...)
+        """
     c = _dict(config)
     return SourceContract(
         name=c.get("name"),
@@ -1483,24 +1677,37 @@ def build_source_contract(config: dict) -> SourceContract:
 
 
 def build_target_contract(config: dict) -> TargetContract:
-    """Build target contract.
-
-    Run `build_target_contract`.
-
-    Parameters
-    ----------
-    config : dict
-        Parameter `config`.
-
-    Returns
-    -------
-    result : TargetContract
-        Return value from `build_target_contract`.
-
-    Examples
-    --------
-    >>> build_target_contract(config)
-    """
+    """Execute the `build_target_contract` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        config : Any
+            Input parameter `config`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_target_contract(...)
+        """
     c = _dict(config)
     return TargetContract(
         table=c.get("table"),
@@ -1514,24 +1721,37 @@ def build_target_contract(config: dict) -> TargetContract:
 
 
 def build_quality_contract(config: dict) -> QualityContract:
-    """Build quality contract.
-
-    Run `build_quality_contract`.
-
-    Parameters
-    ----------
-    config : dict
-        Parameter `config`.
-
-    Returns
-    -------
-    result : QualityContract
-        Return value from `build_quality_contract`.
-
-    Examples
-    --------
-    >>> build_quality_contract(config)
-    """
+    """Execute the `build_quality_contract` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        config : Any
+            Input parameter `config`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_quality_contract(...)
+        """
     c = _dict(config)
     return QualityContract(
         rules=list(c.get("rules") or []),
@@ -1547,24 +1767,37 @@ def build_quality_contract(config: dict) -> QualityContract:
 
 
 def build_drift_contract(config: dict) -> DriftContract:
-    """Build drift contract.
-
-    Run `build_drift_contract`.
-
-    Parameters
-    ----------
-    config : dict
-        Parameter `config`.
-
-    Returns
-    -------
-    result : DriftContract
-        Return value from `build_drift_contract`.
-
-    Examples
-    --------
-    >>> build_drift_contract(config)
-    """
+    """Execute the `build_drift_contract` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        config : Any
+            Input parameter `config`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_drift_contract(...)
+        """
     c = _dict(config)
     return DriftContract(
         schema_enabled=bool(c.get("schema_enabled", True)),
@@ -1577,24 +1810,37 @@ def build_drift_contract(config: dict) -> DriftContract:
 
 
 def build_governance_contract(config: dict) -> GovernanceContract:
-    """Build governance contract.
-
-    Run `build_governance_contract`.
-
-    Parameters
-    ----------
-    config : dict
-        Parameter `config`.
-
-    Returns
-    -------
-    result : GovernanceContract
-        Return value from `build_governance_contract`.
-
-    Examples
-    --------
-    >>> build_governance_contract(config)
-    """
+    """Execute the `build_governance_contract` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        config : Any
+            Input parameter `config`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_governance_contract(...)
+        """
     c = _dict(config)
     return GovernanceContract(
         classify_columns=bool(c.get("classify_columns", False)),
@@ -1605,24 +1851,37 @@ def build_governance_contract(config: dict) -> GovernanceContract:
 
 
 def build_metadata_contract(config: dict) -> MetadataContract:
-    """Build metadata contract.
-
-    Run `build_metadata_contract`.
-
-    Parameters
-    ----------
-    config : dict
-        Parameter `config`.
-
-    Returns
-    -------
-    result : MetadataContract
-        Return value from `build_metadata_contract`.
-
-    Examples
-    --------
-    >>> build_metadata_contract(config)
-    """
+    """Execute the `build_metadata_contract` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        config : Any
+            Input parameter `config`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_metadata_contract(...)
+        """
     c = _dict(config)
     return MetadataContract(
         schema=str(c.get("schema") or "fw_metadata"),
@@ -1641,24 +1900,37 @@ def build_metadata_contract(config: dict) -> MetadataContract:
 
 
 def build_runtime_contract(config: dict) -> RuntimeContract:
-    """Build runtime contract.
-
-    Run `build_runtime_contract`.
-
-    Parameters
-    ----------
-    config : dict
-        Parameter `config`.
-
-    Returns
-    -------
-    result : RuntimeContract
-        Return value from `build_runtime_contract`.
-
-    Examples
-    --------
-    >>> build_runtime_contract(config)
-    """
+    """Execute the `build_runtime_contract` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        config : Any
+            Input parameter `config`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_runtime_contract(...)
+        """
     c = _dict(config)
     return RuntimeContract(
         dataset_name=str(c.get("dataset_name") or ""),
@@ -1671,24 +1943,37 @@ def build_runtime_contract(config: dict) -> RuntimeContract:
 
 
 def normalize_data_product_contract(contract: dict | DataProductContract) -> DataProductContract:
-    """Normalize data product contract.
-
-    Run `normalize_data_product_contract`.
-
-    Parameters
-    ----------
-    contract : dict | DataProductContract
-        Parameter `contract`.
-
-    Returns
-    -------
-    result : DataProductContract
-        Return value from `normalize_data_product_contract`.
-
-    Examples
-    --------
-    >>> normalize_data_product_contract(contract)
-    """
+    """Execute the `normalize_data_product_contract` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        contract : Any
+            Input parameter `contract`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> normalize_data_product_contract(...)
+        """
     if isinstance(contract, DataProductContract):
         return contract
     raw = dict(contract)
@@ -1741,24 +2026,37 @@ def normalize_data_product_contract(contract: dict | DataProductContract) -> Dat
 
 
 def data_product_contract_to_dict(contract: DataProductContract) -> dict:
-    """Data product contract to dict.
-
-    Run `data_product_contract_to_dict`.
-
-    Parameters
-    ----------
-    contract : DataProductContract
-        Parameter `contract`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `data_product_contract_to_dict`.
-
-    Examples
-    --------
-    >>> data_product_contract_to_dict(contract)
-    """
+    """Execute the `data_product_contract_to_dict` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        contract : Any
+            Input parameter `contract`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> data_product_contract_to_dict(...)
+        """
     return asdict(contract)
 
 
@@ -1790,24 +2088,37 @@ def _effective_contract_dict(contract: dict | DataProductContract) -> dict:
 
 
 def load_data_contract(path_or_dict: str | Path | dict) -> DataProductContract:
-    """Load data contract.
-
-    Run `load_data_contract`.
-
-    Parameters
-    ----------
-    path_or_dict : str | Path | dict
-        Parameter `path_or_dict`.
-
-    Returns
-    -------
-    result : DataProductContract
-        Return value from `load_data_contract`.
-
-    Examples
-    --------
-    >>> load_data_contract(path_or_dict)
-    """
+    """Execute the `load_data_contract` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        path_or_dict : Any
+            Input parameter `path_or_dict`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> load_data_contract(...)
+        """
     raw = dict(path_or_dict) if isinstance(path_or_dict, dict) else load_dataset_contract(path_or_dict)
     return normalize_data_product_contract(raw)
 
@@ -1817,24 +2128,37 @@ def _refresh_mode(contract: dict) -> str:
 
 
 def validate_data_contract_shape(contract: dict | DataProductContract) -> list[str]:
-    """Validate data contract shape.
-
-    Run `validate_data_contract_shape`.
-
-    Parameters
-    ----------
-    contract : dict | DataProductContract
-        Parameter `contract`.
-
-    Returns
-    -------
-    result : list[str]
-        Return value from `validate_data_contract_shape`.
-
-    Examples
-    --------
-    >>> validate_data_contract_shape(contract)
-    """
+    """Execute the `validate_data_contract_shape` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        contract : Any
+            Input parameter `contract`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> validate_data_contract_shape(...)
+        """
     n = normalize_data_product_contract(contract)
     raw = _effective_contract_dict(n)
     errors: list[str] = []
@@ -1862,26 +2186,39 @@ def validate_data_contract_shape(contract: dict | DataProductContract) -> list[s
 
 
 def build_runtime_context_from_contract(contract: dict | DataProductContract, overrides: dict | None = None) -> dict:
-    """Build runtime context from contract.
-
-    Run `build_runtime_context_from_contract`.
-
-    Parameters
-    ----------
-    contract : dict | DataProductContract
-        Parameter `contract`.
-    overrides : dict | None, optional
-        Parameter `overrides`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `build_runtime_context_from_contract`.
-
-    Examples
-    --------
-    >>> build_runtime_context_from_contract(contract, overrides)
-    """
+    """Execute the `build_runtime_context_from_contract` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        contract : Any
+            Input parameter `contract`.
+        overrides : Any
+            Input parameter `overrides`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_runtime_context_from_contract(..., ...)
+        """
     n = normalize_data_product_contract(contract)
     context = build_runtime_context(dataset_name=n.dataset.get("name", ""), environment=n.runtime.environment, source_table=n.source.table or "", target_table=n.target.table or "", notebook_name=n.runtime.notebook_name, run_id=(overrides or {}).get("run_id"))
     if overrides:
@@ -1911,36 +2248,45 @@ def _runtime_validation_contract(contract: dict | DataProductContract) -> dict:
 
 
 def run_data_product(spark, contract: dict | DataProductContract, transform=None, source_df=None, write: bool | None = None, *, write_target: bool = True, write_metadata: bool = True) -> dict:
-    """Run data product.
-
-    Run `run_data_product`.
-
-    Parameters
-    ----------
-    spark : Any
-        Parameter `spark`.
-    contract : dict | DataProductContract
-        Parameter `contract`.
-    transform : object, optional
-        Parameter `transform`.
-    source_df : object, optional
-        Parameter `source_df`.
-    write : bool | None, optional
-        Parameter `write`.
-    write_target : bool, optional
-        Parameter `write_target`.
-    write_metadata : bool, optional
-        Parameter `write_metadata`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `run_data_product`.
-
-    Examples
-    --------
-    >>> run_data_product(spark, contract)
-    """
+    """Execute the `run_data_product` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        spark : Any
+            Input parameter `spark`.
+        contract : Any
+            Input parameter `contract`.
+        transform : Any
+            Input parameter `transform`.
+        source_df : Any
+            Input parameter `source_df`.
+        write : Any
+            Input parameter `write`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> run_data_product(..., ..., ..., ..., ...)
+        """
     n = normalize_data_product_contract(contract)
     if write is False:
         write_target = False
@@ -2113,29 +2459,37 @@ def run_data_product(spark, contract: dict | DataProductContract, transform=None
 
 
 def assert_data_product_passed(result: dict) -> None:
-    """Assert data product passed.
-
-    Run `assert_data_product_passed`.
-
-    Parameters
-    ----------
-    result : dict
-        Parameter `result`.
-
-    Returns
-    -------
-    result : None
-        Return value from `assert_data_product_passed`.
-
-    Raises
-    ------
-    RuntimeError
-        Raised when input validation or runtime checks fail.
-
-    Examples
-    --------
-    >>> assert_data_product_passed(result)
-    """
+    """Execute the `assert_data_product_passed` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        result : Any
+            Input parameter `result`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> assert_data_product_passed(...)
+        """
     if result.get("status") != "passed":
         raise RuntimeError("Data product run failed contract/quality gates")
 
@@ -2160,24 +2514,37 @@ def _skipped(candidate, message):
 
 
 def compile_layman_rule_to_quality_rule(candidate):
-    """Compile layman rule to quality rule.
-
-    Run `compile_layman_rule_to_quality_rule`.
-
-    Parameters
-    ----------
-    candidate : Any
-        Parameter `candidate`.
-
-    Returns
-    -------
-    result : object
-        Return value from `compile_layman_rule_to_quality_rule`.
-
-    Examples
-    --------
-    >>> compile_layman_rule_to_quality_rule(candidate)
-    """
+    """Execute the `compile_layman_rule_to_quality_rule` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        candidate : Any
+            Input parameter `candidate`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> compile_layman_rule_to_quality_rule(...)
+        """
     rule_type = str(candidate.get("rule_type", "")).strip().lower()
     if rule_type not in SUPPORTED_RULE_TYPES:
         return _skipped(candidate, f"Unsupported rule_type: {rule_type}")
@@ -2228,53 +2595,79 @@ def compile_layman_rule_to_quality_rule(candidate):
 
 
 def compile_layman_rules_to_quality_rules(candidates):
-    """Compile layman rules to quality rules.
-
-    Run `compile_layman_rules_to_quality_rules`.
-
-    Parameters
-    ----------
-    candidates : Any
-        Parameter `candidates`.
-
-    Returns
-    -------
-    result : object
-        Return value from `compile_layman_rules_to_quality_rules`.
-
-    Examples
-    --------
-    >>> compile_layman_rules_to_quality_rules(candidates)
-    """
+    """Execute the `compile_layman_rules_to_quality_rules` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        candidates : Any
+            Input parameter `candidates`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> compile_layman_rules_to_quality_rules(...)
+        """
     records = [compile_layman_rule_to_quality_rule(c) for c in candidates]
     return {"compiled_rules": [r["quality_rule"] for r in records if r["status"] == "compiled"], "records": records, "summary": {"total": len(records), "compiled": sum(r["status"] == "compiled" for r in records), "skipped": sum(r["status"] == "skipped" for r in records)}}
 
 
 def build_rule_registry_records(compiled_rules, run_id, dataset_name, table_name):
-    """Build rule registry records.
-
-    Run `build_rule_registry_records`.
-
-    Parameters
-    ----------
-    compiled_rules : Any
-        Parameter `compiled_rules`.
-    run_id : Any
-        Parameter `run_id`.
-    dataset_name : Any
-        Parameter `dataset_name`.
-    table_name : Any
-        Parameter `table_name`.
-
-    Returns
-    -------
-    result : object
-        Return value from `build_rule_registry_records`.
-
-    Examples
-    --------
-    >>> build_rule_registry_records(compiled_rules, run_id)
-    """
+    """Execute the `build_rule_registry_records` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        compiled_rules : Any
+            Input parameter `compiled_rules`.
+        run_id : Any
+            Input parameter `run_id`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        table_name : Any
+            Input parameter `table_name`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_rule_registry_records(..., ..., ..., ...)
+        """
     return [{"run_id": run_id, "dataset_name": dataset_name, "table_name": table_name, "rule_id": r.get("rule_id"), "rule_type": r.get("rule_type"), "severity": r.get("severity"), "column": r.get("column"), "columns": r.get("columns"), "reason": r.get("reason"), "rule_json": r} for r in compiled_rules]
 
 
@@ -2294,30 +2687,43 @@ def _severity_bucket(severity: str) -> str:
 
 
 def build_quarantine_rule_coverage_records(rules, run_id, dataset_name, table_name):
-    """Build quarantine rule coverage records.
-
-    Run `build_quarantine_rule_coverage_records`.
-
-    Parameters
-    ----------
-    rules : Any
-        Parameter `rules`.
-    run_id : Any
-        Parameter `run_id`.
-    dataset_name : Any
-        Parameter `dataset_name`.
-    table_name : Any
-        Parameter `table_name`.
-
-    Returns
-    -------
-    result : object
-        Return value from `build_quarantine_rule_coverage_records`.
-
-    Examples
-    --------
-    >>> build_quarantine_rule_coverage_records(rules, run_id)
-    """
+    """Execute the `build_quarantine_rule_coverage_records` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        rules : Any
+            Input parameter `rules`.
+        run_id : Any
+            Input parameter `run_id`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        table_name : Any
+            Input parameter `table_name`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_quarantine_rule_coverage_records(..., ..., ..., ...)
+        """
     rows = []
     for i, rule in enumerate(rules):
         rt = rule.get("rule_type")
@@ -2332,55 +2738,81 @@ def build_quarantine_rule_coverage_records(rules, run_id, dataset_name, table_na
 
 
 def add_dq_failure_columns(df, rules, engine="auto"):
-    """Add dq failure columns.
-
-    Run `add_dq_failure_columns`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    rules : Any
-        Parameter `rules`.
-    engine : object, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : object
-        Return value from `add_dq_failure_columns`.
-
-    Examples
-    --------
-    >>> add_dq_failure_columns(df, rules)
-    """
+    """Execute the `add_dq_failure_columns` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        df : Any
+            Input parameter `df`.
+        rules : Any
+            Input parameter `rules`.
+        engine : Any
+            Input parameter `engine`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> add_dq_failure_columns(..., ..., ...)
+        """
     resolved = _resolve_engine(df, engine)
     return _add_spark(df, rules) if resolved == "spark" else _add_pandas(df, rules)
 
 
 def split_valid_and_quarantine(df, rules, engine="auto"):
-    """Split valid and quarantine.
-
-    Run `split_valid_and_quarantine`.
-
-    Parameters
-    ----------
-    df : Any
-        Parameter `df`.
-    rules : Any
-        Parameter `rules`.
-    engine : object, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : object
-        Return value from `split_valid_and_quarantine`.
-
-    Examples
-    --------
-    >>> split_valid_and_quarantine(df, rules)
-    """
+    """Execute the `split_valid_and_quarantine` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        df : Any
+            Input parameter `df`.
+        rules : Any
+            Input parameter `rules`.
+        engine : Any
+            Input parameter `engine`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> split_valid_and_quarantine(..., ..., ...)
+        """
     enriched = add_dq_failure_columns(df, rules, engine=engine)
     if _resolve_engine(enriched, engine) == "spark":
         from pyspark.sql import functions as F
@@ -2390,32 +2822,45 @@ def split_valid_and_quarantine(df, rules, engine="auto"):
 
 
 def build_quarantine_summary_records(quarantine_df, run_id, dataset_name, table_name, engine="auto"):
-    """Build quarantine summary records.
-
-    Run `build_quarantine_summary_records`.
-
-    Parameters
-    ----------
-    quarantine_df : Any
-        Parameter `quarantine_df`.
-    run_id : Any
-        Parameter `run_id`.
-    dataset_name : Any
-        Parameter `dataset_name`.
-    table_name : Any
-        Parameter `table_name`.
-    engine : object, optional
-        Parameter `engine`.
-
-    Returns
-    -------
-    result : object
-        Return value from `build_quarantine_summary_records`.
-
-    Examples
-    --------
-    >>> build_quarantine_summary_records(quarantine_df, run_id)
-    """
+    """Execute the `build_quarantine_summary_records` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        quarantine_df : Any
+            Input parameter `quarantine_df`.
+        run_id : Any
+            Input parameter `run_id`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        table_name : Any
+            Input parameter `table_name`.
+        engine : Any
+            Input parameter `engine`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_quarantine_summary_records(..., ..., ..., ..., ...)
+        """
     resolved = _resolve_engine(quarantine_df, engine)
     q_count = quarantine_df.count() if resolved == "spark" else len(quarantine_df)
     return [{"run_id": run_id, "dataset_name": dataset_name, "table_name": table_name, "quarantine_row_count": int(q_count), "engine": resolved}]
@@ -2541,32 +2986,45 @@ def _jsonable(value: Any) -> Any:
 
 
 def build_quality_rule_prompt_context(profile, contract=None, business_context=None, table_name=None, dataset_name=None):
-    """Build quality rule prompt context.
-
-    Run `build_quality_rule_prompt_context`.
-
-    Parameters
-    ----------
-    profile : Any
-        Parameter `profile`.
-    contract : object, optional
-        Parameter `contract`.
-    business_context : object, optional
-        Parameter `business_context`.
-    table_name : object, optional
-        Parameter `table_name`.
-    dataset_name : object, optional
-        Parameter `dataset_name`.
-
-    Returns
-    -------
-    result : object
-        Return value from `build_quality_rule_prompt_context`.
-
-    Examples
-    --------
-    >>> build_quality_rule_prompt_context(profile, contract)
-    """
+    """Execute the `build_quality_rule_prompt_context` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        profile : Any
+            Input parameter `profile`.
+        contract : Any
+            Input parameter `contract`.
+        business_context : Any
+            Input parameter `business_context`.
+        table_name : Any
+            Input parameter `table_name`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_quality_rule_prompt_context(..., ..., ..., ..., ...)
+        """
     profile = profile or {}
     return {
         "dataset_name": dataset_name or profile.get("dataset_name", "unknown"),
@@ -2580,32 +3038,45 @@ def build_quality_rule_prompt_context(profile, contract=None, business_context=N
 
 
 def build_quality_rule_generation_prompt(profile, contract=None, business_context=None, table_name=None, dataset_name=None):
-    """Build quality rule generation prompt.
-
-    Run `build_quality_rule_generation_prompt`.
-
-    Parameters
-    ----------
-    profile : Any
-        Parameter `profile`.
-    contract : object, optional
-        Parameter `contract`.
-    business_context : object, optional
-        Parameter `business_context`.
-    table_name : object, optional
-        Parameter `table_name`.
-    dataset_name : object, optional
-        Parameter `dataset_name`.
-
-    Returns
-    -------
-    result : object
-        Return value from `build_quality_rule_generation_prompt`.
-
-    Examples
-    --------
-    >>> build_quality_rule_generation_prompt(profile, contract)
-    """
+    """Execute the `build_quality_rule_generation_prompt` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        profile : Any
+            Input parameter `profile`.
+        contract : Any
+            Input parameter `contract`.
+        business_context : Any
+            Input parameter `business_context`.
+        table_name : Any
+            Input parameter `table_name`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_quality_rule_generation_prompt(..., ..., ..., ..., ...)
+        """
     context = build_quality_rule_prompt_context(profile, contract, business_context, table_name, dataset_name)
     return (
         "You are generating conservative data quality rule candidates for Fabric data product workflows.\n"
@@ -2628,24 +3099,37 @@ def _strip_json_fences(text: str) -> str:
 
 
 def parse_ai_quality_rule_candidates(raw_response):
-    """Parse ai quality rule candidates.
-
-    Run `parse_ai_quality_rule_candidates`.
-
-    Parameters
-    ----------
-    raw_response : Any
-        Parameter `raw_response`.
-
-    Returns
-    -------
-    result : object
-        Return value from `parse_ai_quality_rule_candidates`.
-
-    Examples
-    --------
-    >>> parse_ai_quality_rule_candidates(raw_response)
-    """
+    """Execute the `parse_ai_quality_rule_candidates` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        raw_response : Any
+            Input parameter `raw_response`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> parse_ai_quality_rule_candidates(...)
+        """
     try:
         parsed = json.loads(_strip_json_fences(raw_response)) if isinstance(raw_response, str) else raw_response
     except Exception as exc:
@@ -2672,24 +3156,37 @@ def parse_ai_quality_rule_candidates(raw_response):
 
 
 def normalize_quality_rule_candidate(candidate):
-    """Normalize quality rule candidate.
-
-    Run `normalize_quality_rule_candidate`.
-
-    Parameters
-    ----------
-    candidate : Any
-        Parameter `candidate`.
-
-    Returns
-    -------
-    result : object
-        Return value from `normalize_quality_rule_candidate`.
-
-    Examples
-    --------
-    >>> normalize_quality_rule_candidate(candidate)
-    """
+    """Execute the `normalize_quality_rule_candidate` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        candidate : Any
+            Input parameter `candidate`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> normalize_quality_rule_candidate(...)
+        """
     out = {k: v for k, v in candidate.items() if k in SUPPORTED_CANDIDATE_FIELDS}
     out["rule_type"] = str(out.get("rule_type", "")).strip().lower()
     out["severity"] = str(out.get("severity", "warning")).strip().lower() or "warning"
@@ -2704,24 +3201,37 @@ def normalize_quality_rule_candidate(candidate):
 
 
 def validate_ai_quality_rule_candidate(candidate):
-    """Validate ai quality rule candidate.
-
-    Run `validate_ai_quality_rule_candidate`.
-
-    Parameters
-    ----------
-    candidate : Any
-        Parameter `candidate`.
-
-    Returns
-    -------
-    result : object
-        Return value from `validate_ai_quality_rule_candidate`.
-
-    Examples
-    --------
-    >>> validate_ai_quality_rule_candidate(candidate)
-    """
+    """Execute the `validate_ai_quality_rule_candidate` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        candidate : Any
+            Input parameter `candidate`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> validate_ai_quality_rule_candidate(...)
+        """
     rt = candidate.get("rule_type")
     if not rt:
         return {"is_valid": False, "message": "Missing rule_type"}
@@ -2735,30 +3245,43 @@ def validate_ai_quality_rule_candidate(candidate):
 
 
 def build_layman_rule_records(candidates, run_id, dataset_name, table_name):
-    """Build layman rule records.
-
-    Run `build_layman_rule_records`.
-
-    Parameters
-    ----------
-    candidates : Any
-        Parameter `candidates`.
-    run_id : Any
-        Parameter `run_id`.
-    dataset_name : Any
-        Parameter `dataset_name`.
-    table_name : Any
-        Parameter `table_name`.
-
-    Returns
-    -------
-    result : object
-        Return value from `build_layman_rule_records`.
-
-    Examples
-    --------
-    >>> build_layman_rule_records(candidates, run_id)
-    """
+    """Execute the `build_layman_rule_records` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        candidates : Any
+            Input parameter `candidates`.
+        run_id : Any
+            Input parameter `run_id`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        table_name : Any
+            Input parameter `table_name`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_layman_rule_records(..., ..., ..., ...)
+        """
     rows = []
     for i, c in enumerate(candidates):
         can_compile = bool(c.get("can_compile")) if "can_compile" in c else validate_ai_quality_rule_candidate(c)["is_valid"]

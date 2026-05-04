@@ -1,4 +1,8 @@
-"""Capability-based technical column helpers for pandas and Spark DataFrames."""
+"""Technical/audit column helpers for traceable FabricOps datasets.
+
+Use these functions before output writes to stamp run IDs, timestamps, and
+derived partition buckets that support lineage, replayability, and handover.
+"""
 
 from __future__ import annotations
 

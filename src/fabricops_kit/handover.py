@@ -57,47 +57,55 @@ def create_pipeline_notebook_template(
     include_ai_prompts=True,
     overwrite=False,
 ):
-    """Create pipeline notebook template.
-
-    Run `create_pipeline_notebook_template`.
-
-    Parameters
-    ----------
-    output_path : Any
-        Parameter `output_path`.
-    dataset_name : object, optional
-        Parameter `dataset_name`.
-    source_table : object, optional
-        Parameter `source_table`.
-    output_table : object, optional
-        Parameter `output_table`.
-    source_env : object, optional
-        Parameter `source_env`.
-    source_target : object, optional
-        Parameter `source_target`.
-    output_env : object, optional
-        Parameter `output_env`.
-    output_target : object, optional
-        Parameter `output_target`.
-    include_ai_prompts : object, optional
-        Parameter `include_ai_prompts`.
-    overwrite : object, optional
-        Parameter `overwrite`.
-
-    Returns
-    -------
-    result : object
-        Return value from `create_pipeline_notebook_template`.
-
-    Raises
-    ------
-    FileExistsError
-        Raised when input validation or runtime checks fail.
-
-    Examples
-    --------
-    >>> create_pipeline_notebook_template(output_path, dataset_name)
-    """
+    """Execute the `create_pipeline_notebook_template` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        output_path : Any
+            Input parameter `output_path`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        source_table : Any
+            Input parameter `source_table`.
+        output_table : Any
+            Input parameter `output_table`.
+        source_env : Any
+            Input parameter `source_env`.
+        source_target : Any
+            Input parameter `source_target`.
+        output_env : Any
+            Input parameter `output_env`.
+        output_target : Any
+            Input parameter `output_target`.
+        include_ai_prompts : Any
+            Input parameter `include_ai_prompts`.
+        overwrite : Any
+            Input parameter `overwrite`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> create_pipeline_notebook_template(..., ..., ..., ..., ..., ..., ..., ..., ..., ...)
+        """
     path = Path(output_path)
     if path.exists() and not overwrite:
         raise FileExistsError(f"Output already exists: {path}")
@@ -311,26 +319,39 @@ def create_actual_data_mvp_template(
     output_path: str,
     contract_path: str = "contracts/examples/actual_data_mvp_contract.yml",
 ) -> str:
-    """Create actual data mvp template.
-
-    Run `create_actual_data_mvp_template`.
-
-    Parameters
-    ----------
-    output_path : str
-        Parameter `output_path`.
-    contract_path : str, optional
-        Parameter `contract_path`.
-
-    Returns
-    -------
-    result : str
-        Return value from `create_actual_data_mvp_template`.
-
-    Examples
-    --------
-    >>> create_actual_data_mvp_template(output_path, contract_path)
-    """
+    """Execute the `create_actual_data_mvp_template` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        output_path : Any
+            Input parameter `output_path`.
+        contract_path : Any
+            Input parameter `contract_path`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> create_actual_data_mvp_template(..., ...)
+        """
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     content = f'''# %% [markdown]

@@ -89,34 +89,47 @@ def classify_column(
     business_context: str | dict | None = None,
     rules: list[dict] | None = None,
 ) -> dict:
-    """Classify column.
-
-    Run `classify_column`.
-
-    Parameters
-    ----------
-    column_name : str
-        Parameter `column_name`.
-    data_type : str | None, optional
-        Parameter `data_type`.
-    profile : dict | None, optional
-        Parameter `profile`.
-    metadata : dict | None, optional
-        Parameter `metadata`.
-    business_context : str | dict | None, optional
-        Parameter `business_context`.
-    rules : list[dict] | None, optional
-        Parameter `rules`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `classify_column`.
-
-    Examples
-    --------
-    >>> classify_column(column_name, data_type)
-    """
+    """Execute the `classify_column` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        column_name : Any
+            Input parameter `column_name`.
+        data_type : Any
+            Input parameter `data_type`.
+        profile : Any
+            Input parameter `profile`.
+        metadata : Any
+            Input parameter `metadata`.
+        business_context : Any
+            Input parameter `business_context`.
+        rules : Any
+            Input parameter `rules`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> classify_column(..., ..., ..., ..., ..., ...)
+        """
     profile = profile or {}
     metadata = metadata or {}
     text_parts = [column_name, str(metadata.get("description") or ""), str(metadata.get("business_term") or "")]
@@ -205,36 +218,49 @@ def classify_column(
 
 
 def classify_columns(profile: dict | list[dict], metadata: dict | list[dict] | None = None, business_context: str | dict | None = None, rules: list[dict] | None = None, dataset_name: str | None = None, table_name: str | None = None, run_id: str | None = None) -> list[dict]:
-    """Classify columns.
-
-    Run `classify_columns`.
-
-    Parameters
-    ----------
-    profile : dict | list[dict]
-        Parameter `profile`.
-    metadata : dict | list[dict] | None, optional
-        Parameter `metadata`.
-    business_context : str | dict | None, optional
-        Parameter `business_context`.
-    rules : list[dict] | None, optional
-        Parameter `rules`.
-    dataset_name : str | None, optional
-        Parameter `dataset_name`.
-    table_name : str | None, optional
-        Parameter `table_name`.
-    run_id : str | None, optional
-        Parameter `run_id`.
-
-    Returns
-    -------
-    result : list[dict]
-        Return value from `classify_columns`.
-
-    Examples
-    --------
-    >>> classify_columns(profile, metadata)
-    """
+    """Execute the `classify_columns` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        profile : Any
+            Input parameter `profile`.
+        metadata : Any
+            Input parameter `metadata`.
+        business_context : Any
+            Input parameter `business_context`.
+        rules : Any
+            Input parameter `rules`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        table_name : Any
+            Input parameter `table_name`.
+        run_id : Any
+            Input parameter `run_id`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> classify_columns(..., ..., ..., ..., ..., ..., ...)
+        """
     del dataset_name, table_name, run_id
     columns = _normalize_columns(profile)
     meta_lookup: dict[str, dict] = {}
@@ -256,34 +282,47 @@ def classify_columns(profile: dict | list[dict], metadata: dict | list[dict] | N
 
 
 def build_governance_classification_records(classifications: list[dict], dataset_name: str, table_name: str, run_id: str | None = None, status: str = "suggested", generated_by: str = "framework") -> list[dict]:
-    """Build governance classification records.
-
-    Run `build_governance_classification_records`.
-
-    Parameters
-    ----------
-    classifications : list[dict]
-        Parameter `classifications`.
-    dataset_name : str
-        Parameter `dataset_name`.
-    table_name : str
-        Parameter `table_name`.
-    run_id : str | None, optional
-        Parameter `run_id`.
-    status : str, optional
-        Parameter `status`.
-    generated_by : str, optional
-        Parameter `generated_by`.
-
-    Returns
-    -------
-    result : list[dict]
-        Return value from `build_governance_classification_records`.
-
-    Examples
-    --------
-    >>> build_governance_classification_records(classifications, dataset_name)
-    """
+    """Execute the `build_governance_classification_records` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        classifications : Any
+            Input parameter `classifications`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        table_name : Any
+            Input parameter `table_name`.
+        run_id : Any
+            Input parameter `run_id`.
+        status : Any
+            Input parameter `status`.
+        generated_by : Any
+            Input parameter `generated_by`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> build_governance_classification_records(..., ..., ..., ..., ..., ...)
+        """
     rows = []
     for item in classifications:
         safe_item = to_jsonable(item)
@@ -318,40 +357,53 @@ def _spark_create_governance_metadata_dataframe(spark, rows: list[dict]):
 
 
 def write_governance_classifications(spark, classifications: list[dict], table_name: str, dataset_name: str | None = None, source_table: str | None = None, run_id: str | None = None, status: str = "suggested", generated_by: str = "framework", mode: str = "append") -> list[dict]:
-    """Write governance classifications.
-
-    Run `write_governance_classifications`.
-
-    Parameters
-    ----------
-    spark : Any
-        Parameter `spark`.
-    classifications : list[dict]
-        Parameter `classifications`.
-    table_name : str
-        Parameter `table_name`.
-    dataset_name : str | None, optional
-        Parameter `dataset_name`.
-    source_table : str | None, optional
-        Parameter `source_table`.
-    run_id : str | None, optional
-        Parameter `run_id`.
-    status : str, optional
-        Parameter `status`.
-    generated_by : str, optional
-        Parameter `generated_by`.
-    mode : str, optional
-        Parameter `mode`.
-
-    Returns
-    -------
-    result : list[dict]
-        Return value from `write_governance_classifications`.
-
-    Examples
-    --------
-    >>> write_governance_classifications(spark, classifications)
-    """
+    """Execute the `write_governance_classifications` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        spark : Any
+            Input parameter `spark`.
+        classifications : Any
+            Input parameter `classifications`.
+        table_name : Any
+            Input parameter `table_name`.
+        dataset_name : Any
+            Input parameter `dataset_name`.
+        source_table : Any
+            Input parameter `source_table`.
+        run_id : Any
+            Input parameter `run_id`.
+        status : Any
+            Input parameter `status`.
+        generated_by : Any
+            Input parameter `generated_by`.
+        mode : Any
+            Input parameter `mode`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> write_governance_classifications(..., ..., ..., ..., ..., ..., ..., ..., ...)
+        """
     dataset = dataset_name or "unknown"
     source = source_table or table_name
     records = build_governance_classification_records(classifications=classifications, dataset_name=dataset, table_name=source, run_id=run_id, status=status, generated_by=generated_by)
@@ -368,24 +420,37 @@ def write_governance_classifications(spark, classifications: list[dict], table_n
 
 
 def summarize_governance_classifications(classifications: list[dict]) -> dict:
-    """Summarize governance classifications.
-
-    Run `summarize_governance_classifications`.
-
-    Parameters
-    ----------
-    classifications : list[dict]
-        Parameter `classifications`.
-
-    Returns
-    -------
-    result : dict
-        Return value from `summarize_governance_classifications`.
-
-    Examples
-    --------
-    >>> summarize_governance_classifications(classifications)
-    """
+    """Execute the `summarize_governance_classifications` workflow step in FabricOps.
+    
+        Use this callable at its corresponding stage of the pipeline contract
+        (configuration, IO, profiling, quality, drift, lineage, or handover)
+        to produce deterministic artifacts and validation evidence.
+    
+        Parameters
+        ----------
+        classifications : Any
+            Input parameter `classifications`.
+    
+        Returns
+        -------
+        Any
+            Function output used by downstream FabricOps workflow steps.
+    
+        Raises
+        ------
+        Exception
+            Propagates validation, runtime, or storage errors from underlying
+            operations when execution cannot continue safely.
+    
+        Notes
+        -----
+        Side effects may include metadata writes, quality evidence generation,
+        or persisted drift/lineage/handover artifacts depending on the function.
+    
+        Examples
+        --------
+        >>> summarize_governance_classifications(...)
+        """
     by_classification = Counter(c.get("suggested_classification", "unknown") for c in classifications)
     by_action = Counter(c.get("suggested_action", "review") for c in classifications)
     review_required_count = sum(1 for c in classifications if c.get("suggested_action") in {"review", "restrict_access", "mask_or_tokenize", "classify_in_catalog"})

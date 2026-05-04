@@ -1,4 +1,9 @@
-"""Microsoft Fabric AI Functions helpers for optional AI-in-the-loop workflows."""
+"""AI-assistance helpers for governance, quality, and handover generation in FabricOps.
+
+This module separates runtime availability checks, optional AI-function
+configuration, prompt construction, AI execution, and manual-response parsing
+so notebook pipelines can gracefully fall back when Fabric AI is unavailable.
+"""
 from __future__ import annotations
 
 import json
