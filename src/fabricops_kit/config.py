@@ -381,8 +381,26 @@ def _get_fabric_runtime_metadata(notebook_name: str | None = None) -> dict[str, 
         metadata["runtime_available"] = True
         context = getattr(nb_runtime, "context", None)
         if context is not None:
-            metadata["workspace_name"] = getattr(context, "workspaceName", None) or getattr(context, "workspace_name", None)
-            metadata["user_name"] = getattr(context, "userName", None) or getattr(context, "user_name", None)
+            def _ctx_value(*keys: str) -> Any:
+                for key in keys:
+                    if hasattr(context, key):
+                        value = getattr(context, key, None)
+                        if value is not None:
+                            return value
+                    if isinstance(context, dict):
+                        value = context.get(key)
+                        if value is not None:
+                            return value
+                    get_method = getattr(context, "get", None)
+                    if callable(get_method):
+                        value = get_method(key)
+                        if value is not None:
+                            return value
+                return None
+
+            metadata["notebook_name"] = metadata["notebook_name"] or _ctx_value("currentNotebookName", "current_notebook_name")
+            metadata["workspace_name"] = _ctx_value("currentWorkspaceName", "workspaceName", "workspace_name")
+            metadata["user_name"] = _ctx_value("userName", "user_name")
     except Exception:
         pass
     return metadata

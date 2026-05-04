@@ -85,7 +85,15 @@ def test_get_path_missing_config_raises_helpful_error():
 
 
 def test_runtime_checks_with_mocks(monkeypatch):
-    monkeypatch.setitem(sys.modules, "notebookutils.runtime", types.SimpleNamespace(context={"session": "x"}))
+    runtime_mod = types.SimpleNamespace(
+        context={
+            "currentNotebookName": "00_env_config",
+            "currentWorkspaceName": "SandboxWS",
+            "userName": "tester@example.com",
+        }
+    )
+    monkeypatch.setitem(sys.modules, "notebookutils", types.SimpleNamespace(runtime=runtime_mod))
+    monkeypatch.setitem(sys.modules, "notebookutils.runtime", runtime_mod)
     monkeypatch.setattr("fabricops_kit.config.spark", object(), raising=False)
     results = run_config_smoke_tests(config=_cfg(), check_ai=False)
     statuses = {r.name: r.status for r in results}
