@@ -1,4 +1,11 @@
-"""Framework configuration builders and dataset-contract validation helpers."""
+"""Configuration bootstrap and contract validation for FabricOps notebook pipelines.
+
+This module is the workflow entrypoint for establishing the ``00_env_config``
+contract, standard environment path definitions, notebook prefix policies, AI
+prompt templates, and smoke-check validation before data movement starts.
+Use it early in a Fabric run so downstream IO, quality, lineage, and handover
+steps execute with explicit, validated runtime context.
+"""
 
 from __future__ import annotations
 
@@ -426,6 +433,26 @@ def _format_error_path(error_path: list[object], message: str, validator: str) -
     return base_path or "$"
 
 def load_dataset_contract(path: str | Path) -> dict:
+    """Load a dataset contract YAML file into a dictionary.
+
+    Parameters
+    ----------
+    path : str or Path
+        Path to a dataset-contract file, typically versioned beside pipeline
+        notebooks or in a shared config folder.
+
+    Returns
+    -------
+    dict
+        Parsed contract content. Empty files return ``{}``; non-mapping YAML
+        values are wrapped as ``{"value": <loaded_value>}`` for safer handling.
+
+    Examples
+    --------
+    >>> contract = load_dataset_contract("configs/sales_contract.yml")
+    >>> isinstance(contract, dict)
+    True
+    """
     contract_path = Path(path)
     with contract_path.open("r", encoding="utf-8") as handle:
         loaded = yaml.safe_load(handle)
@@ -442,16 +469,73 @@ def _load_schema(schema_path: str | Path | None = None) -> dict:
         return yaml.safe_load(handle)
 
 def validate_dataset_contract(contract: dict, schema_path: str | Path | None = None) -> list[str]:
+    """Validate a loaded dataset contract against the JSON schema.
+
+    Parameters
+    ----------
+    contract : dict
+        Dataset contract content produced by :func:`load_dataset_contract`.
+    schema_path : str or Path or None, default=None
+        Optional custom schema location. When omitted, the packaged FabricOps
+        dataset-contract schema is used.
+
+    Returns
+    -------
+    list of str
+        Validation error messages using normalized property paths that are
+        suitable for notebook run summaries and handover logs.
+
+    Notes
+    -----
+    This function does not raise by default, allowing notebook orchestration to
+    collect all schema issues before deciding whether to fail fast.
+    """
     schema = _load_schema(schema_path=schema_path)
     validator = Draft202012Validator(schema)
     errors = sorted(validator.iter_errors(contract), key=lambda error: (list(error.path), error.message))
     return [f"{_format_error_path(list(error.path), error.message, error.validator)}: {error.message}" for error in errors]
 
 def assert_valid_dataset_contract(contract: dict, schema_path: str | Path | None = None) -> None:
+    """Raise when a dataset contract violates the expected schema.
+
+    Parameters
+    ----------
+    contract : dict
+        Contract content to validate before executing ingestion, quality, and
+        metadata stages.
+    schema_path : str or Path or None, default=None
+        Optional custom schema location. The built-in schema is used when this
+        value is ``None``.
+
+    Raises
+    ------
+    DatasetContractValidationError
+        Raised when one or more validation issues are found.
+    """
     errors = validate_dataset_contract(contract, schema_path=schema_path)
     if errors:
         raise DatasetContractValidationError("Dataset contract validation failed:\n" + "\n".join(f"- {e}" for e in errors))
 
 def load_and_validate_dataset_contract(path: str | Path, schema_path: str | Path | None = None) -> tuple[dict, list[str]]:
+    """Load a dataset contract file and return schema validation findings.
+
+    Parameters
+    ----------
+    path : str or Path
+        Contract YAML path used by a Fabric notebook or pipeline run.
+    schema_path : str or Path or None, default=None
+        Optional schema override for custom contract extensions.
+
+    Returns
+    -------
+    tuple of (dict, list of str)
+        Loaded contract payload and a list of validation errors.
+
+    Examples
+    --------
+    >>> contract, errors = load_and_validate_dataset_contract("configs/orders.yml")
+    >>> len(errors) >= 0
+    True
+    """
     contract = load_dataset_contract(path)
     return contract, validate_dataset_contract(contract, schema_path=schema_path)
