@@ -273,6 +273,13 @@ def run_config_smoke_tests(
 
     results: list[ConfigSmokeCheckResult] = []
     required_targets = required_targets or ["Source", "Unified"]
+    spark_ready, spark_message = _check_spark_session()
+    results.append(ConfigSmokeCheckResult("spark_session", "pass" if spark_ready else "warn", spark_message))
+
+    runtime_meta = _get_fabric_runtime_metadata(notebook_name=notebook_name)
+    runtime_status = "pass" if runtime_meta.get("runtime_available") else "skipped"
+    runtime_message = "Fabric runtime context is readable." if runtime_meta.get("runtime_available") else "notebookutils.runtime unavailable outside Fabric runtime."
+    results.append(ConfigSmokeCheckResult("fabric_runtime_context", runtime_status, runtime_message))
     try:
         for target in required_targets:
             p = get_path(env=env, target=target, config=config)
@@ -324,6 +331,7 @@ def bootstrap_fabric_env(
     required_targets = required_targets or ["Source", "Unified"]
     resolved_paths = {target: get_path(env=env, target=target, config=normalized) for target in required_targets}
     ai_result = check_fabric_ai_functions_available() if check_ai else {"available": None, "message": "AI check disabled."}
+    runtime_meta = _get_fabric_runtime_metadata(notebook_name=notebook_name)
     smoke = run_config_smoke_tests(
         normalized,
         env=env,
@@ -337,7 +345,7 @@ def bootstrap_fabric_env(
     return ConfigBootstrapResult(
         environment=env,
         paths=resolved_paths,
-        runtime_metadata={"notebook_name": notebook_name},
+        runtime_metadata=runtime_meta,
         ai_availability=ai_result,
         smoke_test_results=smoke,
         readiness_status=status,
@@ -349,6 +357,35 @@ def check_fabric_ai_functions_available() -> dict[str, Any]:
     from .ai import check_fabric_ai_functions_available as _check
 
     return _check()
+
+
+def _check_spark_session() -> tuple[bool, str]:
+    """Check whether a Spark session is available."""
+    spark_obj = globals().get("spark")
+    if spark_obj is not None:
+        return True, "Spark session is available."
+    return False, "Spark session not found; local fallback mode."
+
+
+def _get_fabric_runtime_metadata(notebook_name: str | None = None) -> dict[str, Any]:
+    """Best-effort retrieval of Fabric runtime metadata."""
+    metadata: dict[str, Any] = {
+        "notebook_name": notebook_name,
+        "workspace_name": None,
+        "user_name": None,
+        "runtime_available": False,
+    }
+    try:
+        import notebookutils.runtime as nb_runtime  # type: ignore
+
+        metadata["runtime_available"] = True
+        context = getattr(nb_runtime, "context", None)
+        if context is not None:
+            metadata["workspace_name"] = getattr(context, "workspaceName", None) or getattr(context, "workspace_name", None)
+            metadata["user_name"] = getattr(context, "userName", None) or getattr(context, "user_name", None)
+    except Exception:
+        pass
+    return metadata
 
 
 def _default_schema_text() -> str:
@@ -400,19 +437,3 @@ def assert_valid_dataset_contract(contract: dict, schema_path: str | Path | None
 def load_and_validate_dataset_contract(path: str | Path, schema_path: str | Path | None = None) -> tuple[dict, list[str]]:
     contract = load_dataset_contract(path)
     return contract, validate_dataset_contract(contract, schema_path=schema_path)
-    try:
-        spark_obj = globals().get("spark")
-        if spark_obj is not None:
-            results.append(ConfigSmokeCheckResult("spark_session", "pass", "Spark session is available."))
-        else:
-            results.append(ConfigSmokeCheckResult("spark_session", "warn", "Spark session not found; local fallback mode."))
-    except Exception as exc:
-        results.append(ConfigSmokeCheckResult("spark_session", "warn", f"Spark check skipped: {exc}"))
-
-    try:
-        import notebookutils.runtime as nb_runtime  # type: ignore
-
-        _ = getattr(nb_runtime, "context", None)
-        results.append(ConfigSmokeCheckResult("fabric_runtime_context", "pass", "Fabric runtime context is readable."))
-    except Exception:
-        results.append(ConfigSmokeCheckResult("fabric_runtime_context", "skipped", "notebookutils.runtime unavailable outside Fabric runtime."))
