@@ -245,13 +245,17 @@ def load_fabric_config(config: FrameworkConfig | dict[str, Any]) -> FrameworkCon
     return validate_framework_config(config)
 
 
-def get_path(env: str, target: str, config: FrameworkConfig | PathConfig) -> Any:
+def get_path(env: str, target: str, config: FrameworkConfig | PathConfig | None) -> Any:
     """Resolve a configured environment/target entry into a path object."""
+    if config is None:
+        raise ValueError("No Fabric config was provided. Pass a FrameworkConfig or PathConfig instance.")
     paths = config.path_config.paths if isinstance(config, FrameworkConfig) else config.paths
     if env not in paths:
-        raise ValueError(f"Environment '{env}' was not found in Fabric config.")
+        available_envs = ", ".join(sorted(paths.keys())) or "<none>"
+        raise ValueError(f"Environment '{env}' was not found in Fabric config. Available environments: {available_envs}.")
     if target not in paths[env]:
-        raise ValueError(f"Target '{target}' was not found under environment '{env}'.")
+        available_targets = ", ".join(sorted(paths[env].keys())) or "<none>"
+        raise ValueError(f"Target '{target}' was not found under environment '{env}'. Available targets: {available_targets}.")
     return paths[env][target]
 
 
@@ -260,11 +264,11 @@ def run_config_smoke_tests(
     env: str = "Sandbox",
     required_targets: list[str] | None = None,
     check_ai: bool = True,
-    check_io: bool = False,
+    check_io_import: bool = False,
     notebook_name: str | None = None,
+    ai_result: dict[str, Any] | None = None,
 ) -> list[ConfigSmokeCheckResult]:
     """Run readiness-oriented config checks with optional lightweight IO checks."""
-    from .ai import check_fabric_ai_functions_available
     from .runtime import validate_notebook_name
 
     results: list[ConfigSmokeCheckResult] = []
@@ -289,19 +293,19 @@ def run_config_smoke_tests(
         results.append(ConfigSmokeCheckResult("notebook_naming", "skipped", "Notebook name check skipped."))
 
     if check_ai:
-        ai_result = check_fabric_ai_functions_available()
-        results.append(ConfigSmokeCheckResult("fabric_ai", "pass" if ai_result.get("available") else "warn", ai_result.get("message", "")))
+        ai_status = ai_result or check_fabric_ai_functions_available()
+        results.append(ConfigSmokeCheckResult("fabric_ai", "pass" if ai_status.get("available") else "warn", ai_status.get("message", "")))
     else:
         results.append(ConfigSmokeCheckResult("fabric_ai", "skipped", "AI check disabled."))
 
-    if check_io:
+    if check_io_import:
         try:
             from .fabric_io import lakehouse_table_read  # noqa: F401
             results.append(ConfigSmokeCheckResult("fabric_io_import", "pass", "fabric_io helpers are importable."))
         except Exception as exc:
             results.append(ConfigSmokeCheckResult("fabric_io_import", "fail", str(exc)))
     else:
-        results.append(ConfigSmokeCheckResult("fabric_io_import", "skipped", "IO check disabled."))
+        results.append(ConfigSmokeCheckResult("fabric_io_import", "skipped", "IO import check disabled."))
     return results
 
 
@@ -319,9 +323,16 @@ def bootstrap_fabric_env(
         raise ValueError("config is required for bootstrap_fabric_env.")
     required_targets = required_targets or ["Source", "Unified"]
     resolved_paths = {target: get_path(env=env, target=target, config=normalized) for target in required_targets}
-    smoke = run_config_smoke_tests(normalized, env=env, required_targets=required_targets, check_ai=check_ai, check_io=False, notebook_name=notebook_name) if smoke_test else []
-    from .ai import check_fabric_ai_functions_available
     ai_result = check_fabric_ai_functions_available() if check_ai else {"available": None, "message": "AI check disabled."}
+    smoke = run_config_smoke_tests(
+        normalized,
+        env=env,
+        required_targets=required_targets,
+        check_ai=check_ai,
+        check_io_import=False,
+        notebook_name=notebook_name,
+        ai_result=ai_result,
+    ) if smoke_test else []
     status = "ready" if all(r.status in {"pass", "skipped", "warn"} for r in smoke) else "not_ready"
     return ConfigBootstrapResult(
         environment=env,
@@ -389,3 +400,19 @@ def assert_valid_dataset_contract(contract: dict, schema_path: str | Path | None
 def load_and_validate_dataset_contract(path: str | Path, schema_path: str | Path | None = None) -> tuple[dict, list[str]]:
     contract = load_dataset_contract(path)
     return contract, validate_dataset_contract(contract, schema_path=schema_path)
+    try:
+        spark_obj = globals().get("spark")
+        if spark_obj is not None:
+            results.append(ConfigSmokeCheckResult("spark_session", "pass", "Spark session is available."))
+        else:
+            results.append(ConfigSmokeCheckResult("spark_session", "warn", "Spark session not found; local fallback mode."))
+    except Exception as exc:
+        results.append(ConfigSmokeCheckResult("spark_session", "warn", f"Spark check skipped: {exc}"))
+
+    try:
+        import notebookutils.runtime as nb_runtime  # type: ignore
+
+        _ = getattr(nb_runtime, "context", None)
+        results.append(ConfigSmokeCheckResult("fabric_runtime_context", "pass", "Fabric runtime context is readable."))
+    except Exception:
+        results.append(ConfigSmokeCheckResult("fabric_runtime_context", "skipped", "notebookutils.runtime unavailable outside Fabric runtime."))

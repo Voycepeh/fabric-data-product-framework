@@ -80,3 +80,6 @@ lh_out = ctx.paths["Unified"]
 df = lakehouse_table_read(lh_in, "MY_TABLE")
 lakehouse_table_write(df, lh_out, "MY_OUTPUT", mode="overwrite")
 ```
+
+
+`config` owns setup, readiness, path resolution, runtime checks, AI availability checks, and smoke orchestration. `fabric_io` owns actual reads and writes. Optional IO smoke checks are safe and non-destructive by default.

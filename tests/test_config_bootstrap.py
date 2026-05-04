@@ -1,4 +1,10 @@
+import importlib
+import sys
+import types
+
 import pytest
+
+sys.modules.setdefault("pandas", types.SimpleNamespace(DataFrame=object))
 
 from fabricops_kit.config import (
     ConfigSmokeCheckResult,
@@ -10,6 +16,7 @@ from fabricops_kit.config import (
     create_notebook_runtime_config,
     create_path_config,
     create_quality_config,
+    get_path,
     run_config_smoke_tests,
 )
 from fabricops_kit.fabric_io import Housepath
@@ -51,7 +58,7 @@ def test_config_validation_catches_missing_fields():
 
 
 def test_smoke_result_formatting_statuses():
-    results = run_config_smoke_tests(config=_cfg(), check_ai=False, check_io=True, notebook_name="00_env_config")
+    results = run_config_smoke_tests(config=_cfg(), check_ai=False, check_io_import=True, notebook_name="00_env_config")
     assert all(isinstance(r, ConfigSmokeCheckResult) for r in results)
     assert {r.status for r in results}.issubset({"pass", "fail", "warn", "skipped"})
 
@@ -70,3 +77,25 @@ def test_bootstrap_with_mocked_ai_true_false(monkeypatch):
     monkeypatch.setattr("fabricops_kit.config.check_fabric_ai_functions_available", lambda: {"available": False, "message": "no"})
     ctx_false = bootstrap_fabric_env(config=_cfg(), check_ai=True, smoke_test=False)
     assert ctx_false.ai_availability["available"] is False
+
+
+def test_get_path_missing_config_raises_helpful_error():
+    with pytest.raises(ValueError, match="No Fabric config was provided"):
+        get_path("Sandbox", "Source", config=None)
+
+
+def test_runtime_checks_with_mocks(monkeypatch):
+    monkeypatch.setitem(sys.modules, "notebookutils.runtime", types.SimpleNamespace(context={"session": "x"}))
+    monkeypatch.setattr("fabricops_kit.config.spark", object(), raising=False)
+    results = run_config_smoke_tests(config=_cfg(), check_ai=False)
+    statuses = {r.name: r.status for r in results}
+    assert statuses["spark_session"] == "pass"
+    assert statuses["fabric_runtime_context"] == "pass"
+
+
+def test_fabric_io_consumes_config_get_path(monkeypatch):
+    mod = importlib.import_module("fabricops_kit.fabric_io")
+    sentinel = object()
+    monkeypatch.setattr("fabricops_kit.config.get_path", lambda *args, **kwargs: sentinel)
+    monkeypatch.setattr(mod, "get_path", lambda *args, **kwargs: sentinel)
+    assert mod.get_path("Sandbox", "Source", config={"Sandbox": {"Source": sentinel}}) is sentinel
