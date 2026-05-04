@@ -134,6 +134,16 @@ def public_reference_link(symbol: str, docs_metadata: dict[str, dict[str, Any]],
     return f"../../reference/{step_slug}/{symbol}.md"
 
 
+def callable_docs_link(
+    symbol_name: str, module: str, docs_metadata: dict[str, dict[str, Any]], step_slugs: dict[int, str]
+) -> str:
+    """Return a safe docs link for a public callable."""
+    workflow_step = docs_metadata[symbol_name].get("workflow_step")
+    if workflow_step is not None:
+        return public_reference_link(symbol_name, docs_metadata, step_slugs)
+    return f"../modules/{module}/#{symbol_name}"
+
+
 def main() -> None:
     public = parse_public_exports()
     module_data = {p.stem: parse_module(p) for p in PKG_DIR.glob("*.py") if p.name != "__init__.py"}
@@ -212,12 +222,7 @@ def main() -> None:
             lines.extend(["| Callable | Type | Summary | Related helpers |", "|---|---|---|---|"])
             for s in sorted(public_in_module, key=lambda x: x.name.lower()):
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
-                workflow_step = docs_metadata[s.name].get("workflow_step")
-                callable_link = (
-                    public_reference_link(s.name, docs_metadata, step_slugs)
-                    if workflow_step is not None
-                    else f"../modules/{module}/#{s.name}"
-                )
+                callable_link = callable_docs_link(s.name, module, docs_metadata, step_slugs)
                 lines.append(
                     f"| [`{s.name}`]({callable_link}) | {s.obj_type} | {s.summary or '—'} | "
                     f"{', '.join(f'[`{r}`]({internal_helper_link(module, r)}) (internal)' for r in related) or '—'} |"
@@ -230,19 +235,16 @@ def main() -> None:
             lines.extend(["| Helper | Related public callables |", "|---|---|"])
             for helper in internal_fns:
                 users = sorted([u for u in info["used_by"].get(helper, set()) if u in {p.name for p in public_in_module}])
-                users_links = ", ".join(f"[`{u}`]({public_reference_link(u, docs_metadata, step_slugs)})" for u in users) or "—"
+                users_links = ", ".join(
+                    f"[`{u}`]({callable_docs_link(u, module, docs_metadata, step_slugs)})" for u in users
+                ) or "—"
                 lines.append(f"| [`{helper}`]({internal_helper_link(module, helper)}) | {users_links} |")
         else:
             lines.append("No module-level internal helpers detected.")
 
         if public_in_module:
             for s in sorted(public_in_module, key=lambda x: x.name.lower()):
-                workflow_step = docs_metadata[s.name].get("workflow_step")
-                expected_target = (
-                    public_reference_link(s.name, docs_metadata, step_slugs)
-                    if workflow_step is not None
-                    else f"../modules/{module}/#{s.name}"
-                )
+                expected_target = callable_docs_link(s.name, module, docs_metadata, step_slugs)
                 expected_link = f"[`{s.name}`]({expected_target})"
                 if not any(expected_link in line for line in lines):
                     raise RuntimeError(f"Missing callable table link for {module}.{s.name}")

@@ -196,7 +196,7 @@ def test_workflow_step_none_moves_symbol_to_other_exported_callables(monkeypatch
     from scripts import generate_function_reference as gen
 
     bad = dict(gen.parse_docs_metadata())
-    target = "get_path"
+    target = "lakehouse_table_read"
     bad[target] = dict(bad[target])
     bad[target]["workflow_step"] = None
     monkeypatch.setattr(gen, "parse_docs_metadata", lambda: bad)
@@ -204,7 +204,7 @@ def test_workflow_step_none_moves_symbol_to_other_exported_callables(monkeypatch
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     assert "## Other exported callables" in content
     other = section(content, "Other exported callables")
-    assert "`get_path`" in other
+    assert "`lakehouse_table_read`" in other
 
 
 def test_handover_uses_single_canonical_registry_symbol() -> None:
