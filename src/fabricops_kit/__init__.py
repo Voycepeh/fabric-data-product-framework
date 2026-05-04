@@ -92,6 +92,7 @@ __all__ = [
     "create_path_config",
     "bootstrap_fabric_env",
     "run_config_smoke_tests",
+    "check_fabric_ai_functions_available",
     "load_fabric_config",
     "get_path",
     "lakehouse_table_read",
