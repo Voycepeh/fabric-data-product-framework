@@ -2,6 +2,8 @@
 
 from .drift import check_partition_drift, check_profile_drift, check_schema_drift, summarize_drift_results
 from .config import (
+    bootstrap_fabric_env,
+    check_fabric_ai_functions_available,
     create_ai_prompt_config,
     create_framework_config,
     create_governance_config,
@@ -9,11 +11,12 @@ from .config import (
     create_notebook_runtime_config,
     create_path_config,
     create_quality_config,
+    get_path,
+    run_config_smoke_tests,
     validate_framework_config,
 )
 from .fabric_io import (
     Housepath,
-    get_path,
     lakehouse_csv_read,
     lakehouse_excel_read_as_spark,
     lakehouse_parquet_read_as_spark,
@@ -64,7 +67,6 @@ from .ai import (
     build_manual_dq_rule_prompt_package,
     build_manual_governance_prompt_package,
     build_manual_handover_prompt_package,
-    check_fabric_ai_functions_available,
     configure_fabric_ai_functions,
     generate_dq_rule_candidates_with_fabric_ai,
     generate_governance_candidates_with_fabric_ai,
@@ -88,6 +90,9 @@ __all__ = [
     "create_ai_prompt_config",
     "create_notebook_runtime_config",
     "create_path_config",
+    "bootstrap_fabric_env",
+    "run_config_smoke_tests",
+    "check_fabric_ai_functions_available",
     "load_fabric_config",
     "get_path",
     "lakehouse_table_read",
@@ -107,7 +112,6 @@ __all__ = [
     "generate_metadata_profile",
     "build_ai_quality_context",
     "run_quality_rules",
-    "check_fabric_ai_functions_available",
     "parse_manual_ai_json_response",
     "build_manual_handover_prompt_package",
     "build_manual_governance_prompt_package",

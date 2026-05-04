@@ -24,3 +24,6 @@
 | [`_default_schema_text`](../../reference/internal/config/_default_schema_text.md) | — |
 | [`_format_error_path`](../../reference/internal/config/_format_error_path.md) | — |
 | [`_load_schema`](../../reference/internal/config/_load_schema.md) | — |
+
+
+Added readiness APIs: `bootstrap_fabric_env`, `run_config_smoke_tests`, and `check_fabric_ai_functions_available` under config. IO helpers remain under `fabric_io`.

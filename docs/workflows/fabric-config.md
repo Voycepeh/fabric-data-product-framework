@@ -1,6 +1,6 @@
 # Fabric config loading
 
-Use `load_fabric_config(...)` to validate and load a user-supplied framework `CONFIG` object at notebook runtime.
+Use `bootstrap_fabric_env(...)` for one-call readiness checks. Use `fabric_io` helpers for actual lakehouse/warehouse/file IO.
 
 `load_fabric_config` does **not** create Fabric resources (workspaces, lakehouses, warehouses, tables, or files).
 
@@ -66,3 +66,20 @@ config = load_fabric_config(CONFIG)
 ```
 
 With this pattern, project teams edit prompt templates in `00_config` without changing `ai.py`.
+
+
+## Recommended split
+
+```python
+from fabricops_kit.config import bootstrap_fabric_env
+from fabricops_kit.fabric_io import lakehouse_table_read, lakehouse_table_write
+
+ctx = bootstrap_fabric_env(env="Sandbox", required_targets=["Source", "Unified"], config=CONFIG)
+lh_in = ctx.paths["Source"]
+lh_out = ctx.paths["Unified"]
+df = lakehouse_table_read(lh_in, "MY_TABLE")
+lakehouse_table_write(df, lh_out, "MY_OUTPUT", mode="overwrite")
+```
+
+
+`config` owns setup, readiness, path resolution, runtime checks, AI availability checks, and smoke orchestration. `fabric_io` owns actual reads and writes. Optional IO smoke checks are safe and non-destructive by default.
