@@ -212,8 +212,14 @@ def main() -> None:
             lines.extend(["| Callable | Type | Summary | Related helpers |", "|---|---|---|---|"])
             for s in sorted(public_in_module, key=lambda x: x.name.lower()):
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
+                workflow_step = docs_metadata[s.name].get("workflow_step")
+                callable_link = (
+                    public_reference_link(s.name, docs_metadata, step_slugs)
+                    if workflow_step is not None
+                    else f"../modules/{module}/#{s.name}"
+                )
                 lines.append(
-                    f"| [`{s.name}`]({public_reference_link(s.name, docs_metadata, step_slugs)}) | {s.obj_type} | {s.summary or '—'} | "
+                    f"| [`{s.name}`]({callable_link}) | {s.obj_type} | {s.summary or '—'} | "
                     f"{', '.join(f'[`{r}`]({internal_helper_link(module, r)}) (internal)' for r in related) or '—'} |"
                 )
         else:
@@ -231,7 +237,13 @@ def main() -> None:
 
         if public_in_module:
             for s in sorted(public_in_module, key=lambda x: x.name.lower()):
-                expected_link = f"[`{s.name}`]({public_reference_link(s.name, docs_metadata, step_slugs)})"
+                workflow_step = docs_metadata[s.name].get("workflow_step")
+                expected_target = (
+                    public_reference_link(s.name, docs_metadata, step_slugs)
+                    if workflow_step is not None
+                    else f"../modules/{module}/#{s.name}"
+                )
+                expected_link = f"[`{s.name}`]({expected_target})"
                 if not any(expected_link in line for line in lines):
                     raise RuntimeError(f"Missing callable table link for {module}.{s.name}")
                 if f"../../reference/{module}/{s.name}.md" in "\n".join(lines):

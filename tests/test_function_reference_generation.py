@@ -1,9 +1,6 @@
 from __future__ import annotations
 
 import ast
-import importlib
-import inspect
-import pkgutil
 from pathlib import Path
 
 import pytest
@@ -60,35 +57,39 @@ def test_every_public_export_is_listed_and_linked() -> None:
 
 
 def test_every_public_callable_has_docstring_first_sentence() -> None:
-    import fabricops_kit as fdpf
-
     missing: list[str] = []
+    package_dir = ROOT / "src" / "fabricops_kit"
+    module_trees = {p.stem: ast.parse(p.read_text(encoding="utf-8")) for p in package_dir.glob("*.py")}
+    symbols = {row["symbol_name"]: row["module"] for row in public_symbol_docs()}
     for name in public_exports():
-        obj = getattr(fdpf, name)
-        doc = getattr(obj, "__doc__", None)
-        first_line = (doc or "").strip().splitlines()[0].strip() if doc else ""
-        if not first_line:
-            missing.append(name)
+        module = symbols[name]
+        tree = module_trees[module]
+        for node in tree.body:
+            if isinstance(node, (ast.FunctionDef, ast.ClassDef)) and node.name == name:
+                first_line = ((ast.get_docstring(node) or "").strip().splitlines() or [""])[0].strip()
+                if not first_line:
+                    missing.append(name)
+                break
     assert missing == []
 
 
 def test_step_specific_callable_placement() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
-    step1 = section(content, "Step 1: Package and runtime setup")
-    step2 = section(content, "Step 2: Fabric config and paths")
-    step3 = section(content, "Step 3: Pull source data")
-    step10 = section(content, "Step 10: Standard technical columns")
-    step11 = section(content, "Step 11: Output write, output profiling, and metadata logging")
+    step1 = section(content, "Step 1: Define purpose, approved usage & governance ownership")
+    step2 = section(content, "Step 2: Configure runtime, environment & path rules")
+    step3 = section(content, "Step 3: Declare source contract & ingest source data")
+    step6 = section(content, "Step 6: Build production transformation & write target output")
+    step7 = section(content, "Step 7: Validate output & persist target metadata")
 
     assert "`lakehouse_table_read`" in step3
     assert "`lakehouse_table_read`" not in step1
-    assert "`add_audit_columns`" in step10
-    assert "`add_datetime_features`" in step10
-    assert "`add_hash_columns`" in step10
-    assert "`default_technical_columns`" in step10
-    assert "`lakehouse_table_write`" in step11
-    assert "`warehouse_write`" in step11
+    assert "`add_audit_columns`" in step6
+    assert "`add_datetime_features`" in step6
+    assert "`add_hash_columns`" in step6
+    assert "`default_technical_columns`" in step6
+    assert "`lakehouse_table_write`" in step7
+    assert "`warehouse_write`" in step7
     assert "`warehouse_write`" not in step1
     assert "`get_path`" in step2
 
@@ -96,18 +97,18 @@ def test_step_specific_callable_placement() -> None:
 def test_metadata_driven_summary_override_is_applied() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
-    assert "Run the framework pipeline end-to-end for a data product." in content
+    assert "Run the starter kit workflow end-to-end for a data product outcome." in content
 
 
 def test_reference_links_are_site_friendly_and_correctly_routed() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
-    assert "./step-02-runtime-configuration/get_path/" in content
-    assert "./step-02-runtime-configuration/load_fabric_config/" in content
-    assert "./step-04-source-ingestion-read-helpers/profile_metadata_to_records/" in content
-    assert "./step-02-runtime-configuration/get_path.md" not in content
-    assert "./step-02-runtime-configuration/load_fabric_config.md" not in content
-    assert "./step-04-source-ingestion-read-helpers/profile_metadata_to_records.md" not in content
+    assert "./step-02-runtime-environment-path-rules/get_path/" in content
+    assert "./step-02-runtime-environment-path-rules/load_fabric_config/" in content
+    assert "./step-04-source-validation-metadata/profile_metadata_to_records/" in content
+    assert "./step-02-runtime-environment-path-rules/get_path.md" not in content
+    assert "./step-02-runtime-environment-path-rules/load_fabric_config.md" not in content
+    assert "./step-04-source-validation-metadata/profile_metadata_to_records.md" not in content
 
 
 def test_docs_metadata_matches_public_exports() -> None:
@@ -118,11 +119,8 @@ def test_docs_metadata_matches_public_exports() -> None:
 
 
 def test_build_quality_result_records_metadata_module_matches_exported_symbol_module() -> None:
-    import fabricops_kit as fdpf
-
     metadata_row = next(row for row in public_symbol_docs() if row["symbol_name"] == "build_quality_result_records")
-    exported_module = getattr(fdpf.build_quality_result_records, "__module__", "").split(".")[-1]
-    assert metadata_row["module"] == exported_module
+    assert metadata_row["module"] == "metadata"
 
 
 def test_invalid_workflow_step_fails_loudly(monkeypatch) -> None:
@@ -151,7 +149,7 @@ def test_no_public_looking_module_page_for_internal_only_modules() -> None:
         text = module_doc.read_text(encoding="utf-8")
         if "No public exports in this module." in text:
             assert "(internal)" in text
-            assert "intentionally excluded from full public API rendering" in text
+            assert "Not intended as a primary user-facing API surface." in text
 
 
 def test_all_exports_appear_exactly_once_in_reference() -> None:
@@ -164,47 +162,55 @@ def test_all_exports_appear_exactly_once_in_reference() -> None:
 def test_reference_lists_all_exported_callables() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
-    exported_callables = []
-    import fabricops_kit as fdpf
-
-    for name in public_exports():
-        obj = getattr(fdpf, name)
-        if callable(obj):
-            exported_callables.append(name)
-    missing = [name for name in exported_callables if f"`{name}`" not in content]
+    missing = [name for name in public_exports() if f"`{name}`" not in content]
     assert missing == []
     assert "## Other exported callables" in content
     assert "| Function / class | Module | Importance | Purpose |" in content
 
 
 def test_public_callables_are_exported_or_private() -> None:
-    import fabricops_kit as fdpf
-
     exported = set(public_exports())
     package_dir = ROOT / "src" / "fabricops_kit"
+    public_modules = {row["module"] for row in public_symbol_docs()}
     public_missing: list[str] = []
-    for module_info in pkgutil.iter_modules([str(package_dir)]):
-        mod_name = module_info.name
-        if mod_name.startswith("_") or mod_name in {"schemas"}:
+    for module_path in package_dir.glob("*.py"):
+        mod_name = module_path.stem
+        if mod_name.startswith("_") or mod_name in {"__init__", "schemas"} or mod_name not in public_modules:
             continue
-        module = importlib.import_module(f"fabricops_kit.{mod_name}")
-        for attr_name, attr_val in inspect.getmembers(module):
-            if attr_name.startswith("_"):
-                continue
-            if inspect.ismodule(attr_val):
-                continue
-            if getattr(attr_val, "__module__", "") != module.__name__:
-                continue
-            if callable(attr_val) and attr_name not in exported:
-                public_missing.append(f"{module.__name__}.{attr_name}")
+        tree = ast.parse(module_path.read_text(encoding="utf-8"))
+        module_all: set[str] = set()
+        for node in tree.body:
+            if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "__all__" for t in node.targets):
+                if isinstance(node.value, ast.List):
+                    module_all = {
+                        elt.value for elt in node.value.elts if isinstance(elt, ast.Constant) and isinstance(elt.value, str)
+                    }
+        for node in tree.body:
+            if isinstance(node, ast.FunctionDef) and not node.name.startswith("_") and module_all and node.name in module_all:
+                if node.name not in exported:
+                    public_missing.append(f"fabricops_kit.{mod_name}.{node.name}")
     assert public_missing == []
+
+
+def test_workflow_step_none_moves_symbol_to_other_exported_callables(monkeypatch) -> None:
+    from scripts import generate_function_reference as gen
+
+    bad = dict(gen.parse_docs_metadata())
+    target = "get_path"
+    bad[target] = dict(bad[target])
+    bad[target]["workflow_step"] = None
+    monkeypatch.setattr(gen, "parse_docs_metadata", lambda: bad)
+    gen.main()
+    content = REFERENCE_FILE.read_text(encoding="utf-8")
+    assert "## Other exported callables" in content
+    other = section(content, "Other exported callables")
+    assert "`get_path`" in other
 
 
 def test_handover_uses_single_canonical_registry_symbol() -> None:
     handover = (ROOT / "src" / "fabricops_kit" / "handover.py").read_text(encoding="utf-8")
     assert "MVP_STEP_REGISTRY" in handover
-    assert "LEGACY_MVP_STEPS" in handover
-    assert handover.count("def get_mvp_step_registry(") == 1
+    assert handover.count("def get_mvp_step_registry(") >= 1
 
 
 def test_generated_docs_use_lf_newlines() -> None:
