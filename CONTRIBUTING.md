@@ -53,6 +53,13 @@ Use existing repo commands (do not invent new tooling). Standard checks:
 
 If a command is not available in your environment, report what you ran and why anything was skipped.
 
+For local development setup and reproducibility:
+
+- Run `uv lock` then `uv sync` to resolve and install dependencies from the committed lockfile.
+- Run `uv run pytest tests` for default test execution.
+- Run `uv run --python 3.11 pytest tests` and `uv run --python 3.12 pytest tests` to validate across supported interpreters.
+- `.python-version` pins local development to Python 3.11, while `pyproject.toml` allows package usage on Python `>=3.11`.
+
 ## 7) Microsoft Fabric testing expectations
 
 For changes that affect runtime behavior in Fabric:
