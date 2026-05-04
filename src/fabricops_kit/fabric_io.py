@@ -80,6 +80,11 @@ def get_path(
 ) -> Housepath:
     """Return the Fabric path object for an environment and target.
 
+    This is typically the first IO helper called in the Source → Unified →
+    Product notebook flow after loading and validating ``CONFIG``. It resolves
+    logical names (for example ``Sandbox`` + ``Source``) into concrete
+    lakehouse/warehouse identifiers that downstream read and write helpers use.
+
     Use this after running the separate Fabric config notebook. The config
     notebook should define a `CONFIG` mapping, and this function resolves a
     logical environment/target pair such as `Sandbox/Source` into a `Housepath`.
@@ -181,7 +186,8 @@ def lakehouse_table_read(lh, tablename, spark_session=None):
     """Read a Delta table from a Fabric lakehouse.
 
     This reads from the lakehouse `Tables/` area using the ABFSS root stored in
-    a `Housepath`.
+    a `Housepath`. In the notebook lifecycle, call this near the start of the
+    Source or Unified step when loading Delta-backed source datasets.
 
     Parameters
     ----------
@@ -232,8 +238,8 @@ def lakehouse_table_write(
     """Write a Spark DataFrame to a Fabric lakehouse Delta table.
 
     This writes to the lakehouse `Tables/` area using the ABFSS root stored in
-    a `Housepath`. Use this for saving curated source, unified, or product
-    outputs from the MVP notebook workflow.
+    a `Housepath`. Use this in the Unified/Product stage after transformations,
+    DQ checks, and technical-column enrichment are complete.
 
     Parameters
     ----------
@@ -257,6 +263,13 @@ def lakehouse_table_write(
     -------
     None
         The DataFrame is written to the target Delta table path.
+
+    Notes
+    -----
+    Side effects:
+    - Persists data to OneLake Delta storage under ``Tables/<tablename>``.
+    - Optional repartitioning can change output file sizing and partition
+      layout.
 
     Raises
     ------
@@ -315,7 +328,8 @@ def lakehouse_csv_read(lh, relative_path, spark_session=None, header=True):
     """Read a CSV file from a Fabric lakehouse Files path.
 
     This reads from the lakehouse `Files/` area using the ABFSS root stored in
-    a `Housepath`. The `relative_path` should be relative to the lakehouse root.
+    a `Housepath`. In the Source step, use it for raw file ingestion before
+    standardisation or conversion to Delta tables.
 
     Parameters
     ----------
@@ -361,7 +375,9 @@ def warehouse_read(env, target, schema, table, config=None, spark_session=None):
     """Read a table from a Microsoft Fabric warehouse.
 
     This uses Fabric Spark's `synapsesql` connector to read from a warehouse
-    configured in the framework `CONFIG` mapping.
+    configured in the framework `CONFIG` mapping. In Source → Unified →
+    Product workflows, this is commonly used when curated inputs are stored in
+    Fabric Warehouse instead of Lakehouse tables.
 
     Parameters
     ----------
@@ -426,7 +442,8 @@ def warehouse_write(df, env, target, schema, table, mode="append", config=None):
     """Write a Spark DataFrame to a Microsoft Fabric warehouse table.
 
     This uses Fabric Spark's `synapsesql` connector to write to a warehouse
-    configured in the framework `CONFIG` mapping.
+    configured in the framework `CONFIG` mapping. Use this near the end of the
+    Product step when publishing serving tables.
 
     Parameters
     ----------
@@ -451,6 +468,11 @@ def warehouse_write(df, env, target, schema, table, mode="append", config=None):
     -------
     None
         The DataFrame is written to the target warehouse table.
+
+    Notes
+    -----
+    Side effect: performs a write operation to the target warehouse object via
+    Fabric runtime connector APIs.
 
     Raises
     ------
@@ -588,6 +610,10 @@ def lakehouse_parquet_read_as_spark(lh, relative_path, verbose=True, spark_sessi
     ...     lh_source,
     ...     "raw/orders/orders_2026.parquet",
     ... )
+    Notes
+    -----
+    Assumes Fabric notebook runtime filesystem conventions for local fallback
+    conversion paths (``/lakehouse/default/Files/...``).
     """
     if not getattr(lh, "root", None):
         raise ValueError("lh.root is required.")
@@ -716,6 +742,11 @@ def lakehouse_excel_read_as_spark(lh, relative_path, sheet_name=0, spark_session
     ...     "Files/reference/faculty_mapping.xlsx",
     ...     sheet_name="Mapping",
     ... )
+    Notes
+    -----
+    Side effects:
+    - Creates a temporary local file during conversion.
+    - Materializes rows through pandas before creating a Spark DataFrame.
     """
     if not getattr(lh, "root", None):
         raise ValueError("lh.root is required.")
@@ -769,7 +800,9 @@ def check_naming_convention(notebook_name=None, allowed_prefixes=None, fail_on_e
     """Check whether a Fabric notebook name starts with an allowed prefix.
 
     The allowed prefixes should come from the project config notebook, not from
-    this module. This keeps naming policy configurable per project.
+    this module. This keeps naming policy configurable per project. Call this
+    early in notebooks (before Source reads) to enforce naming governance in
+    the project lifecycle.
 
     Parameters
     ----------
