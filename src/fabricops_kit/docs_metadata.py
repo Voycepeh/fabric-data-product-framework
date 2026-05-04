@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TypedDict
+from typing import NotRequired, TypedDict
 
 
 class PublicSymbolDocMetadata(TypedDict):
@@ -11,7 +11,9 @@ class PublicSymbolDocMetadata(TypedDict):
     symbol_name: str
     module: str
     kind: str
-    workflow_step: int
+    workflow_step: int | None
+    importance: NotRequired[str]
+    purpose: NotRequired[str]
     summary_override: str | None
 
 
