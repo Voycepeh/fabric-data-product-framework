@@ -1,4 +1,8 @@
-"""Lightweight data quality rule execution for pandas and Spark."""
+"""Executable data-quality checks and AI-assisted rule generation workflows.
+
+This module evaluates reusable DQ rules, enforces quality gates, and provides
+optional AI prompt/parse utilities to draft candidate rules for human review.
+"""
 
 from __future__ import annotations
 

@@ -1,4 +1,9 @@
-"""Schema drift snapshot and comparison helpers."""
+"""Schema and data drift safeguards for source-contract validation.
+
+Use these helpers after ingestion/profile stages and before publication to
+compare observed schema/partition/profile signals against historical snapshots
+and enforce drift policies in a repeatable, auditable workflow.
+"""
 
 from __future__ import annotations
 

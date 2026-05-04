@@ -1,4 +1,9 @@
-"""Notebook runtime helpers for Fabric-oriented execution patterns."""
+"""Runtime validation helpers for fail-fast Fabric notebook execution.
+
+This module validates notebook naming and runtime context so pipelines stop
+early when orchestration contracts are violated, before IO, quality, and
+lineage artifacts are produced with ambiguous run metadata.
+"""
 
 from __future__ import annotations
 
