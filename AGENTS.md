@@ -43,6 +43,20 @@ Guide agent/Codex contributions for this repository so changes stay reusable, pu
 - Deprecated callables must not be promoted as the recommended path when a replacement callable exists.
 - If `__all__`, module names, public callable mappings, or docstrings change, regenerate the reference and module catalogue docs in the same PR.
 
+## Docs and API reference generation
+
+- GitHub Pages may auto-deploy after merge, but deployment only publishes what was built; it does not discover new Python callables unless API/reference pages are regenerated in the docs build workflow.
+- When changing public functions, module boundaries, `__all__`, docstrings, or module ownership, always verify whether generated docs/reference files must be refreshed.
+- For edits under `src/fabricops_kit/*.py`, confirm affected pages in `docs/api/modules/` and `docs/reference/` are updated, or confirm CI regenerates them during `mkdocs build`.
+- If a module page is generated from `__all__`, ensure new public callables are exported in `__all__` and visible in the generated module table.
+- New public functions must be discoverable from the relevant module page and, where appropriate, the step-based reference page.
+- Run the docs generation command when available. If no explicit generator is documented, inspect `scripts/`, `mkdocs.yml`, and docs tooling before assuming `mkdocs build` alone is enough.
+- Run `mkdocs build` after docs/reference generation changes when possible.
+- Do not assume GitHub Pages will fix stale generated docs on its own.
+
+Example (PR-132-style):
+- If you add `bootstrap_fabric_env`, `run_config_smoke_tests`, `check_fabric_ai_functions_available`, or add `get_path` to `config`, also update/regenerate the config API/module page so those callables appear.
+
 ## Docstring requirements for public APIs
 
 For every new or modified public API under `src/fabricops_kit/` (public function, class, dataclass, and important public method):
