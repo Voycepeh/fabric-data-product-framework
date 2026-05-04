@@ -12,7 +12,7 @@ Before starting, confirm you have:
 
 - VS Code
 - Git
-- Python `>=3.10` (matches `pyproject.toml`)
+- Python `>=3.11` (matches `pyproject.toml`)
 - `uv` installed locally
 - Access to a Microsoft Fabric workspace and Environment management
 - This repository cloned locally
