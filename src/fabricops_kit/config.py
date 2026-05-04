@@ -105,14 +105,60 @@ class ConfigBootstrapResult:
 
 
 def create_path_config(paths: dict[str, dict[str, Any]]) -> PathConfig:
-    """Create a validated :class:`PathConfig` object."""
+    """Create environment-to-target routing used by Fabric IO helpers.
+
+    Use this in the ``00_env_config`` bootstrap stage to define which
+    workspace/lakehouse/warehouse targets are valid for each environment
+    (for example, ``dev`` and ``prod``).
+
+    Parameters
+    ----------
+    paths : dict[str, dict[str, Any]]
+        Mapping of environment names to target mappings. Each target value is
+        typically a ``Housepath``-compatible object used later by
+        :func:`get_path` and read/write helpers.
+
+    Returns
+    -------
+    PathConfig
+        Immutable path configuration wrapper.
+
+    Raises
+    ------
+    ValueError
+        Raised when ``paths`` is empty or not a mapping.
+
+    Examples
+    --------
+    >>> create_path_config({"dev": {"raw": object()}}).paths["dev"] is not None
+    True
+    """
     if not isinstance(paths, dict) or not paths:
         raise ValueError("paths must be a non-empty mapping of environments to targets.")
     return PathConfig(paths=paths)
 
 
 def create_notebook_runtime_config(allowed_notebook_prefixes: list[str] | tuple[str, ...]) -> NotebookRuntimeConfig:
-    """Create notebook runtime configuration."""
+    """Create notebook naming-policy configuration for runtime guards.
+
+    This is typically configured during ``00_env_config`` so notebook
+    validation helpers can enforce a consistent execution contract.
+
+    Parameters
+    ----------
+    allowed_notebook_prefixes : list[str] | tuple[str, ...]
+        Prefixes accepted by notebook-name validation helpers.
+
+    Returns
+    -------
+    NotebookRuntimeConfig
+        Immutable runtime policy containing normalized prefixes.
+
+    Raises
+    ------
+    ValueError
+        Raised when no non-empty prefix remains after normalization.
+    """
     prefixes = tuple(prefix.strip() for prefix in allowed_notebook_prefixes if str(prefix).strip())
     if not prefixes:
         raise ValueError("allowed_notebook_prefixes must contain at least one non-empty prefix.")
@@ -124,7 +170,41 @@ def create_ai_prompt_config(
     governance_candidate_template: str,
     handover_summary_template: str,
 ) -> AIPromptConfig:
-    """Create AI prompt-template configuration."""
+    """Create the AI prompt-template configuration used by FabricOps.
+
+    Use this in ``00_env_config`` to register the prompt templates that power
+    AI-assisted DQ rule generation, governance suggestion generation, and
+    handover summary drafting before downstream notebooks execute.
+
+    Parameters
+    ----------
+    dq_rule_candidate_template : str
+        Template used to ask Fabric AI for candidate DQ rules.
+    governance_candidate_template : str
+        Template used to ask Fabric AI for governance and classification suggestions.
+    handover_summary_template : str
+        Template used to ask Fabric AI for pipeline handover summaries.
+
+    Returns
+    -------
+    AIPromptConfig
+        Frozen configuration object containing the validated prompt templates.
+
+    Raises
+    ------
+    ValueError
+        Raised when any prompt template is empty or not a string.
+
+    Examples
+    --------
+    >>> ai_prompts = create_ai_prompt_config(
+    ...     dq_rule_candidate_template="Generate DQ checks for {table_name}",
+    ...     governance_candidate_template="Suggest governance metadata for {dataset_name}",
+    ...     handover_summary_template="Summarize lineage and handover notes for {pipeline_name}",
+    ... )
+    >>> ai_prompts.dq_rule_candidate_template
+    'Generate DQ checks for {table_name}'
+    """
     for label, value in {
         "dq_rule_candidate_template": dq_rule_candidate_template,
         "governance_candidate_template": governance_candidate_template,
