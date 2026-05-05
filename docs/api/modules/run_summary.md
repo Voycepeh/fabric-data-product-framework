@@ -8,8 +8,8 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`build_run_summary`](../../reference/step-10-lineage-handover-documentation/build_run_summary.md) | function | Execute the `build_run_summary` workflow step in FabricOps. | — |
-| [`render_run_summary_markdown`](../../reference/step-10-lineage-handover-documentation/render_run_summary_markdown.md) | function | Execute the `render_run_summary_markdown` workflow step in FabricOps. | [`_status_of`](../../reference/internal/run_summary/_status_of.md) (internal) |
+| [`build_run_summary`](../../reference/step-10-lineage-handover-documentation/build_run_summary.md) | function | Build a compact handover summary from pipeline run evidence. | — |
+| [`render_run_summary_markdown`](../../reference/step-10-lineage-handover-documentation/render_run_summary_markdown.md) | function | Render a pipeline run summary as handover-ready Markdown. | [`_status_of`](../../reference/internal/run_summary/_status_of.md) (internal) |
 
 ## Internal helpers
 

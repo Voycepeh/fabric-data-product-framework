@@ -8,11 +8,11 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`build_governance_classification_records`](../../reference/step-09-classification-sensitivity/build_governance_classification_records.md) | function | Execute the `build_governance_classification_records` workflow step in FabricOps. | — |
-| [`classify_column`](../../reference/step-09-classification-sensitivity/classify_column.md) | function | Execute the `classify_column` workflow step in FabricOps. | [`_match_terms`](../../reference/internal/governance/_match_terms.md) (internal), [`_phrase_in_text`](../../reference/internal/governance/_phrase_in_text.md) (internal) |
-| [`classify_columns`](../../reference/step-09-classification-sensitivity/classify_columns.md) | function | Execute the `classify_columns` workflow step in FabricOps. | [`_column_name`](../../reference/internal/governance/_column_name.md) (internal), [`_normalize_columns`](../../reference/internal/governance/_normalize_columns.md) (internal) |
-| [`summarize_governance_classifications`](../../reference/step-09-classification-sensitivity/summarize_governance_classifications.md) | function | Execute the `summarize_governance_classifications` workflow step in FabricOps. | — |
-| [`write_governance_classifications`](../../reference/step-09-classification-sensitivity/write_governance_classifications.md) | function | Execute the `write_governance_classifications` workflow step in FabricOps. | [`_spark_create_governance_metadata_dataframe`](../../reference/internal/governance/_spark_create_governance_metadata_dataframe.md) (internal) |
+| [`build_governance_classification_records`](../../reference/step-09-classification-sensitivity/build_governance_classification_records.md) | function | Build metadata-ready governance classification records. | — |
+| [`classify_column`](../../reference/step-09-classification-sensitivity/classify_column.md) | function | Classify one column using governance sensitivity terms. | [`_match_terms`](../../reference/internal/governance/_match_terms.md) (internal), [`_phrase_in_text`](../../reference/internal/governance/_phrase_in_text.md) (internal) |
+| [`classify_columns`](../../reference/step-09-classification-sensitivity/classify_columns.md) | function | Classify multiple columns using governance sensitivity terms. | [`_column_name`](../../reference/internal/governance/_column_name.md) (internal), [`_normalize_columns`](../../reference/internal/governance/_normalize_columns.md) (internal) |
+| [`summarize_governance_classifications`](../../reference/step-09-classification-sensitivity/summarize_governance_classifications.md) | function | Summarize governance classification results by classification label. | — |
+| [`write_governance_classifications`](../../reference/step-09-classification-sensitivity/write_governance_classifications.md) | function | Write governance classification records to a metadata table. | [`_spark_create_governance_metadata_dataframe`](../../reference/internal/governance/_spark_create_governance_metadata_dataframe.md) (internal) |
 
 ## Internal helpers
 

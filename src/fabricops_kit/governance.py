@@ -89,7 +89,7 @@ def classify_column(
     business_context: str | dict | None = None,
     rules: list[dict] | None = None,
 ) -> dict:
-    """Execute the `classify_column` workflow step in FabricOps.
+    """Classify one column using governance sensitivity terms.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -218,7 +218,7 @@ def classify_column(
 
 
 def classify_columns(profile: dict | list[dict], metadata: dict | list[dict] | None = None, business_context: str | dict | None = None, rules: list[dict] | None = None, dataset_name: str | None = None, table_name: str | None = None, run_id: str | None = None) -> list[dict]:
-    """Execute the `classify_columns` workflow step in FabricOps.
+    """Classify multiple columns using governance sensitivity terms.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -282,7 +282,7 @@ def classify_columns(profile: dict | list[dict], metadata: dict | list[dict] | N
 
 
 def build_governance_classification_records(classifications: list[dict], dataset_name: str, table_name: str, run_id: str | None = None, status: str = "suggested", generated_by: str = "framework") -> list[dict]:
-    """Execute the `build_governance_classification_records` workflow step in FabricOps.
+    """Build metadata-ready governance classification records.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -357,7 +357,7 @@ def _spark_create_governance_metadata_dataframe(spark, rows: list[dict]):
 
 
 def write_governance_classifications(spark, classifications: list[dict], table_name: str, dataset_name: str | None = None, source_table: str | None = None, run_id: str | None = None, status: str = "suggested", generated_by: str = "framework", mode: str = "append") -> list[dict]:
-    """Execute the `write_governance_classifications` workflow step in FabricOps.
+    """Write governance classification records to a metadata table.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -420,7 +420,7 @@ def write_governance_classifications(spark, classifications: list[dict], table_n
 
 
 def summarize_governance_classifications(classifications: list[dict]) -> dict:
-    """Execute the `summarize_governance_classifications` workflow step in FabricOps.
+    """Summarize governance classification results by classification label.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)

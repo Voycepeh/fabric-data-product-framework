@@ -230,7 +230,7 @@ def _spark_rule(df: Any, rule: dict[str, Any], row_count: int) -> tuple[int, int
 
 
 def run_quality_rules(df: Any, rules: list[dict], *, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "auto") -> dict:
-    """Execute the `run_quality_rules` workflow step in FabricOps.
+    """Run configured data quality rules against a DataFrame.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -2088,7 +2088,7 @@ def _effective_contract_dict(contract: dict | DataProductContract) -> dict:
 
 
 def load_data_contract(path_or_dict: str | Path | dict) -> DataProductContract:
-    """Execute the `load_data_contract` workflow step in FabricOps.
+    """Load a data contract used by ingestion, quality, and metadata checks.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -2248,7 +2248,7 @@ def _runtime_validation_contract(contract: dict | DataProductContract) -> dict:
 
 
 def run_data_product(spark, contract: dict | DataProductContract, transform=None, source_df=None, write: bool | None = None, *, write_target: bool = True, write_metadata: bool = True) -> dict:
-    """Execute the `run_data_product` workflow step in FabricOps.
+    """Run the configured data product workflow end to end.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)

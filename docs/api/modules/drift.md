@@ -8,10 +8,10 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`check_partition_drift`](../../reference/step-04-source-validation-metadata/check_partition_drift.md) | function | Execute the `check_partition_drift` workflow step in FabricOps. | — |
-| [`check_profile_drift`](../../reference/step-04-source-validation-metadata/check_profile_drift.md) | function | Execute the `check_profile_drift` workflow step in FabricOps. | — |
-| [`check_schema_drift`](../../reference/step-04-source-validation-metadata/check_schema_drift.md) | function | Execute the `check_schema_drift` workflow step in FabricOps. | — |
-| [`summarize_drift_results`](../../reference/step-04-source-validation-metadata/summarize_drift_results.md) | function | Execute the `summarize_drift_results` workflow step in FabricOps. | — |
+| [`check_partition_drift`](../../reference/step-04-source-validation-metadata/check_partition_drift.md) | function | Check partition-level drift using business keys and partition signals. | — |
+| [`check_profile_drift`](../../reference/step-04-source-validation-metadata/check_profile_drift.md) | function | Compare current profile metrics against a baseline profile. | — |
+| [`check_schema_drift`](../../reference/step-04-source-validation-metadata/check_schema_drift.md) | function | Check current DataFrame schema against an optional baseline snapshot. | — |
+| [`summarize_drift_results`](../../reference/step-04-source-validation-metadata/summarize_drift_results.md) | function | Summarize multiple drift check results into one pipeline status. | — |
 
 ## Internal helpers
 

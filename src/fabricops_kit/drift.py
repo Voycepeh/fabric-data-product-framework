@@ -37,7 +37,7 @@ VALID_ENGINES = {"auto", "pandas", "spark"}
 
 
 def default_schema_drift_policy() -> dict:
-    """Execute the `default_schema_drift_policy` workflow step in FabricOps.
+    """Return the default policy used to evaluate schema drift.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -79,7 +79,7 @@ def default_schema_drift_policy() -> dict:
 
 
 def detect_dataframe_engine(df) -> str:
-    """Execute the `detect_dataframe_engine` workflow step in FabricOps.
+    """Detect whether a DataFrame-like object is pandas or Spark.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -180,7 +180,7 @@ def _build_spark_schema_snapshot(df, dataset_name: str, table_name: str) -> dict
 
 
 def build_schema_snapshot(df, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "auto") -> dict:
-    """Execute the `build_schema_snapshot` workflow step in FabricOps.
+    """Build a schema snapshot from a pandas or Spark DataFrame.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -239,7 +239,7 @@ def _resolve_change_behavior(is_warning: bool, is_blocking: bool) -> tuple[str, 
 
 
 def compare_schema_snapshots(baseline_snapshot: dict, current_snapshot: dict, policy: dict | None = None) -> dict:
-    """Execute the `compare_schema_snapshots` workflow step in FabricOps.
+    """Compare two schema snapshots and classify schema drift.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -346,7 +346,7 @@ def compare_schema_snapshots(baseline_snapshot: dict, current_snapshot: dict, po
 
 
 def assert_no_blocking_schema_drift(result: dict) -> None:
-    """Execute the `assert_no_blocking_schema_drift` workflow step in FabricOps.
+    """Raise when a schema drift result contains blocking changes.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -420,7 +420,7 @@ def _write_metadata_rows(spark, metadata_table: str, records: list[dict], mode: 
 
 
 def check_schema_drift(df, dataset_name: str, table_name: str, baseline_snapshot: dict | None = None, policy: dict | None = None, engine: str = "spark") -> dict:
-    """Execute the `check_schema_drift` workflow step in FabricOps.
+    """Check current DataFrame schema against an optional baseline snapshot.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -489,7 +489,7 @@ def check_schema_drift(df, dataset_name: str, table_name: str, baseline_snapshot
 
 
 def build_and_write_schema_snapshot(spark, df, dataset_name: str, table_name: str, metadata_table: str, run_id: str | None = None, mode: str = "append", engine: str = "spark") -> dict:
-    """Execute the `build_and_write_schema_snapshot` workflow step in FabricOps.
+    """Build a schema snapshot and write it to a metadata table.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -550,7 +550,7 @@ def build_and_write_schema_snapshot(spark, df, dataset_name: str, table_name: st
 
 
 def load_latest_schema_snapshot(spark, metadata_table: str, dataset_name: str, table_name: str) -> dict | None:
-    """Execute the `load_latest_schema_snapshot` workflow step in FabricOps.
+    """Load the latest schema snapshot for a dataset table.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -621,7 +621,7 @@ def load_latest_schema_snapshot(spark, metadata_table: str, dataset_name: str, t
 
 
 def check_partition_drift(df, dataset_name: str, table_name: str, partition_column: str, business_keys: list[str] | None = None, watermark_column: str | None = None, baseline_snapshot: list[dict] | dict | None = None, policy: dict | None = None, run_id: str | None = None, engine: str = "spark") -> dict:
-    """Execute the `check_partition_drift` workflow step in FabricOps.
+    """Check partition-level drift using business keys and partition signals.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -711,7 +711,7 @@ def check_partition_drift(df, dataset_name: str, table_name: str, partition_colu
 
 
 def build_and_write_partition_snapshot(spark, df, dataset_name: str, table_name: str, metadata_table: str, partition_column: str, business_keys: list[str] | None = None, watermark_column: str | None = None, run_id: str | None = None, mode: str = "append", engine: str = "spark") -> dict:
-    """Execute the `build_and_write_partition_snapshot` workflow step in FabricOps.
+    """Build a partition snapshot and write it to a metadata table.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -793,7 +793,7 @@ def build_and_write_partition_snapshot(spark, df, dataset_name: str, table_name:
 
 
 def load_latest_partition_snapshot(spark, metadata_table: str, dataset_name: str, table_name: str) -> list[dict] | dict | None:
-    """Execute the `load_latest_partition_snapshot` workflow step in FabricOps.
+    """Load the latest partition snapshot for a dataset table.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -862,7 +862,7 @@ def load_latest_partition_snapshot(spark, metadata_table: str, dataset_name: str
 
 
 def check_profile_drift(current_profile: dict, baseline_profile: dict | None = None, policy: dict | None = None) -> dict:
-    """Execute the `check_profile_drift` workflow step in FabricOps.
+    """Compare current profile metrics against a baseline profile.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -945,7 +945,7 @@ def check_profile_drift(current_profile: dict, baseline_profile: dict | None = N
 
 
 def summarize_drift_results(schema_drift_result: dict | None = None, partition_drift_result: dict | None = None, profile_drift_result: dict | None = None) -> dict:
-    """Execute the `summarize_drift_results` workflow step in FabricOps.
+    """Summarize multiple drift check results into one pipeline status.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)

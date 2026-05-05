@@ -253,7 +253,28 @@ def load_fabric_config(config: FrameworkConfig | dict[str, Any]) -> FrameworkCon
 
 
 def get_path(env: str, target: str, config: FrameworkConfig | PathConfig | None) -> Any:
-    """Resolve an environment/target entry into a configured Fabric path object."""
+    """Resolve a configured Fabric path for an environment and target.
+
+    Parameters
+    ----------
+    env : str
+        Environment name, for example ``"Sandbox"``.
+    target : str
+        Target name under the selected environment, for example ``"Source"``.
+    config : FrameworkConfig or PathConfig or None
+        Configuration object containing environment-to-target path mappings.
+
+    Returns
+    -------
+    Any
+        Configured path object for the requested environment and target.
+
+    Raises
+    ------
+    ValueError
+        If the config is missing, the environment is unknown, or the target
+        is not configured under the environment.
+    """
     if config is None:
         raise ValueError("No Fabric config was provided. Pass a FrameworkConfig or PathConfig instance.")
     paths = config.path_config.paths if isinstance(config, FrameworkConfig) else config.paths

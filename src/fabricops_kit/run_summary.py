@@ -15,37 +15,7 @@ def _status_of(section: dict | None) -> str:
 
 
 def build_run_summary(*, runtime_context: dict, contract: dict | None = None, source_profile: dict | None = None, output_profile: dict | None = None, schema_drift_result: dict | None = None, incremental_safety_result: dict | None = None, quality_result: dict | None = None, contract_validation_result: dict | None = None, lineage_summary: dict | None = None, notes: list[str] | None = None) -> dict:
-    """Execute the `build_run_summary` workflow step in FabricOps.
-    
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
-    
-        Parameters
-        ----------
-        None
-            This function does not require explicit parameters.
-    
-        Returns
-        -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
-    
-        Raises
-        ------
-        Exception
-            Propagates validation, runtime, or storage errors from underlying
-            operations when execution cannot continue safely.
-    
-        Notes
-        -----
-        Side effects may include metadata writes, quality evidence generation,
-        or persisted drift/lineage/handover artifacts depending on the function.
-    
-        Examples
-        --------
-        >>> build_run_summary()
-        """
+    """Build a compact handover summary from pipeline run evidence."""
     sections = {"purpose": (contract or {}).get("dataset", {}).get("purpose"), "source_profile": source_profile, "output_profile": output_profile, "schema_drift": schema_drift_result, "incremental_safety": incremental_safety_result, "quality": quality_result, "contracts": contract_validation_result, "lineage": lineage_summary, "notes": notes or []}
     not_provided_sections = [k for k in SECTION_KEYS if sections.get(k) is None]
     considered = [sections[k] for k in SECTION_KEYS if sections.get(k)]
@@ -63,37 +33,7 @@ def build_run_summary(*, runtime_context: dict, contract: dict | None = None, so
 
 
 def render_run_summary_markdown(summary: dict) -> str:
-    """Execute the `render_run_summary_markdown` workflow step in FabricOps.
-    
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
-    
-        Parameters
-        ----------
-        summary : Any
-            Input parameter `summary`.
-    
-        Returns
-        -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
-    
-        Raises
-        ------
-        Exception
-            Propagates validation, runtime, or storage errors from underlying
-            operations when execution cannot continue safely.
-    
-        Notes
-        -----
-        Side effects may include metadata writes, quality evidence generation,
-        or persisted drift/lineage/handover artifacts depending on the function.
-    
-        Examples
-        --------
-        >>> render_run_summary_markdown(...)
-        """
+    """Render a pipeline run summary as handover-ready Markdown."""
     s = summary.get("sections", {})
     lines = [f"# Run Summary — {summary.get('dataset_name', 'unknown')}", f"- Run ID: `{summary.get('run_id', 'unknown')}`", f"- Environment: `{summary.get('environment', 'unknown')}`", f"- Overall status: **{summary.get('overall_status', 'unknown')}**", "", "## Run Context", f"- Source table: `{summary.get('source_table', 'unknown')}`", f"- Target table: `{summary.get('target_table', 'unknown')}`", f"- Started at (UTC): `{summary.get('started_at_utc', 'unknown')}`", "", "## Dataset Purpose", f"{s.get('purpose') or 'Not provided.'}", "", "## Section Status", f"- Schema drift: **{_status_of(s.get('schema_drift'))}**", f"- Incremental safety: **{_status_of(s.get('incremental_safety'))}**", f"- Quality: **{_status_of(s.get('quality'))}**", f"- Contracts: **{_status_of(s.get('contracts'))}**"]
     lines.extend(["", "## Not Provided Sections"])

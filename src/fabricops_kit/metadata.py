@@ -21,7 +21,7 @@ def build_dataset_run_record(
     row_count_output: int | None = None,
     notes: str | None = None,
 ) -> dict:
-    """Execute the `build_dataset_run_record` workflow step in FabricOps.
+    """Build a dataset run metadata record for audit and handover.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -70,7 +70,7 @@ def build_dataset_run_record(
 
 
 def build_schema_snapshot_records(snapshot: dict, *, run_id: str, table_stage: str) -> list[dict]:
-    """Execute the `build_schema_snapshot_records` workflow step in FabricOps.
+    """Convert schema snapshot output into metadata records.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -125,7 +125,7 @@ def build_schema_snapshot_records(snapshot: dict, *, run_id: str, table_stage: s
 
 
 def build_schema_drift_records(drift_result: dict, *, run_id: str, table_stage: str) -> list[dict]:
-    """Execute the `build_schema_drift_records` workflow step in FabricOps.
+    """Convert schema drift findings into metadata records.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -208,7 +208,7 @@ def build_quality_result_records(
     table_name: str,
     table_stage: str,
 ) -> list[dict]:
-    """Execute the `build_quality_result_records` workflow step in FabricOps.
+    """Convert quality rule results into metadata records.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
