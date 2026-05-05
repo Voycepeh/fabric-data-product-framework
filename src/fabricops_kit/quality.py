@@ -231,38 +231,25 @@ def _spark_rule(df: Any, rule: dict[str, Any], row_count: int) -> tuple[int, int
 
 def run_quality_rules(df: Any, rules: list[dict], *, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "auto") -> dict:
     """Run configured data quality rules against a DataFrame.
-    
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
-    
-        Parameters
-        ----------
-        df : Any
-            Input parameter `df`.
-        rules : Any
-            Input parameter `rules`.
-    
-        Returns
-        -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
-    
-        Raises
-        ------
-        Exception
-            Propagates validation, runtime, or storage errors from underlying
-            operations when execution cannot continue safely.
-    
-        Notes
-        -----
-        Side effects may include metadata writes, quality evidence generation,
-        or persisted drift/lineage/handover artifacts depending on the function.
-    
-        Examples
-        --------
-        >>> run_quality_rules(..., ...)
-        """
+
+    Parameters
+    ----------
+    df : Any
+        pandas or Spark DataFrame to validate.
+    rules : list[dict]
+        Quality rules to execute.
+    dataset_name : str, default "unknown"
+        Logical dataset name for evidence output.
+    table_name : str, default "unknown"
+        Logical table name for evidence output.
+    engine : str, default "auto"
+        DataFrame engine to use.
+
+    Returns
+    -------
+    dict
+        Rule-level results, summary status, and continuation signal.
+    """
     resolved_engine = _resolve_engine(df, engine)
     row_count = len(df) if resolved_engine == "pandas" else df.count()
     results = []
@@ -2089,36 +2076,22 @@ def _effective_contract_dict(contract: dict | DataProductContract) -> dict:
 
 def load_data_contract(path_or_dict: str | Path | dict) -> DataProductContract:
     """Load a data contract used by ingestion, quality, and metadata checks.
-    
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
-    
-        Parameters
-        ----------
-        path_or_dict : Any
-            Input parameter `path_or_dict`.
-    
-        Returns
-        -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
-    
-        Raises
-        ------
-        Exception
-            Propagates validation, runtime, or storage errors from underlying
-            operations when execution cannot continue safely.
-    
-        Notes
-        -----
-        Side effects may include metadata writes, quality evidence generation,
-        or persisted drift/lineage/handover artifacts depending on the function.
-    
-        Examples
-        --------
-        >>> load_data_contract(...)
-        """
+
+    Parameters
+    ----------
+    contract : DataProductContract or dict or str or Path
+        Contract object, mapping, or file path.
+
+    Returns
+    -------
+    DataProductContract
+        Normalized contract object.
+
+    Raises
+    ------
+    TypeError
+        If the contract input type is unsupported.
+    """
     raw = dict(path_or_dict) if isinstance(path_or_dict, dict) else load_dataset_contract(path_or_dict)
     return normalize_data_product_contract(raw)
 
@@ -2249,44 +2222,19 @@ def _runtime_validation_contract(contract: dict | DataProductContract) -> dict:
 
 def run_data_product(spark, contract: dict | DataProductContract, transform=None, source_df=None, write: bool | None = None, *, write_target: bool = True, write_metadata: bool = True) -> dict:
     """Run the configured data product workflow end to end.
-    
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
-    
-        Parameters
-        ----------
-        spark : Any
-            Input parameter `spark`.
-        contract : Any
-            Input parameter `contract`.
-        transform : Any
-            Input parameter `transform`.
-        source_df : Any
-            Input parameter `source_df`.
-        write : Any
-            Input parameter `write`.
-    
-        Returns
-        -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
-    
-        Raises
-        ------
-        Exception
-            Propagates validation, runtime, or storage errors from underlying
-            operations when execution cannot continue safely.
-    
-        Notes
-        -----
-        Side effects may include metadata writes, quality evidence generation,
-        or persisted drift/lineage/handover artifacts depending on the function.
-    
-        Examples
-        --------
-        >>> run_data_product(..., ..., ..., ..., ...)
-        """
+
+    Parameters
+    ----------
+    df : Any
+        Input DataFrame to process.
+    contract : DataProductContract or dict or str or Path
+        Data product contract definition.
+
+    Returns
+    -------
+    dict
+        Workflow outputs including quality, contract, and publish results.
+    """
     n = normalize_data_product_contract(contract)
     if write is False:
         write_target = False

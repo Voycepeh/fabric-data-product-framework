@@ -8,7 +8,7 @@ from __future__ import annotations
 import json
 import re
 from collections import Counter
-from typing import Any
+from typing import object
 
 from fabricops_kit.metadata import write_metadata_records
 from fabricops_kit.profiling import to_jsonable
@@ -91,29 +91,26 @@ def classify_column(
 ) -> dict:
     """Classify one column using governance sensitivity terms.
     
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
-    
+            
         Parameters
         ----------
-        column_name : Any
-            Input parameter `column_name`.
-        data_type : Any
-            Input parameter `data_type`.
-        profile : Any
-            Input parameter `profile`.
-        metadata : Any
-            Input parameter `metadata`.
-        business_context : Any
-            Input parameter `business_context`.
-        rules : Any
-            Input parameter `rules`.
+        column_name : object
+            
+        data_type : object
+            
+        profile : object
+            
+        metadata : object
+            
+        business_context : object
+            
+        rules : object
+            
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
+        object
+            
     
         Raises
         ------
@@ -220,31 +217,28 @@ def classify_column(
 def classify_columns(profile: dict | list[dict], metadata: dict | list[dict] | None = None, business_context: str | dict | None = None, rules: list[dict] | None = None, dataset_name: str | None = None, table_name: str | None = None, run_id: str | None = None) -> list[dict]:
     """Classify multiple columns using governance sensitivity terms.
     
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
-    
+            
         Parameters
         ----------
-        profile : Any
-            Input parameter `profile`.
-        metadata : Any
-            Input parameter `metadata`.
-        business_context : Any
-            Input parameter `business_context`.
-        rules : Any
-            Input parameter `rules`.
-        dataset_name : Any
+        profile : object
+            
+        metadata : object
+            
+        business_context : object
+            
+        rules : object
+            
+        dataset_name : object
             Input parameter `dataset_name`.
-        table_name : Any
+        table_name : object
             Input parameter `table_name`.
-        run_id : Any
+        run_id : object
             Input parameter `run_id`.
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
+        object
+            
     
         Raises
         ------
@@ -284,29 +278,26 @@ def classify_columns(profile: dict | list[dict], metadata: dict | list[dict] | N
 def build_governance_classification_records(classifications: list[dict], dataset_name: str, table_name: str, run_id: str | None = None, status: str = "suggested", generated_by: str = "framework") -> list[dict]:
     """Build metadata-ready governance classification records.
     
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
-    
+            
         Parameters
         ----------
-        classifications : Any
-            Input parameter `classifications`.
-        dataset_name : Any
+        classifications : object
+            
+        dataset_name : object
             Input parameter `dataset_name`.
-        table_name : Any
+        table_name : object
             Input parameter `table_name`.
-        run_id : Any
+        run_id : object
             Input parameter `run_id`.
-        status : Any
+        status : object
             Input parameter `status`.
-        generated_by : Any
+        generated_by : object
             Input parameter `generated_by`.
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
+        object
+            
     
         Raises
         ------
@@ -359,35 +350,32 @@ def _spark_create_governance_metadata_dataframe(spark, rows: list[dict]):
 def write_governance_classifications(spark, classifications: list[dict], table_name: str, dataset_name: str | None = None, source_table: str | None = None, run_id: str | None = None, status: str = "suggested", generated_by: str = "framework", mode: str = "append") -> list[dict]:
     """Write governance classification records to a metadata table.
     
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
-    
+            
         Parameters
         ----------
-        spark : Any
+        spark : object
             Input parameter `spark`.
-        classifications : Any
-            Input parameter `classifications`.
-        table_name : Any
+        classifications : object
+            
+        table_name : object
             Input parameter `table_name`.
-        dataset_name : Any
+        dataset_name : object
             Input parameter `dataset_name`.
-        source_table : Any
+        source_table : object
             Input parameter `source_table`.
-        run_id : Any
+        run_id : object
             Input parameter `run_id`.
-        status : Any
+        status : object
             Input parameter `status`.
-        generated_by : Any
+        generated_by : object
             Input parameter `generated_by`.
-        mode : Any
+        mode : object
             Input parameter `mode`.
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
+        object
+            
     
         Raises
         ------
@@ -422,19 +410,16 @@ def write_governance_classifications(spark, classifications: list[dict], table_n
 def summarize_governance_classifications(classifications: list[dict]) -> dict:
     """Summarize governance classification results by classification label.
     
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
-    
+            
         Parameters
         ----------
-        classifications : Any
-            Input parameter `classifications`.
+        classifications : object
+            
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
+        object
+            
     
         Raises
         ------

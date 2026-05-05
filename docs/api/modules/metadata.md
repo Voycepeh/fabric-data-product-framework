@@ -13,7 +13,7 @@
 | [`build_schema_drift_records`](../../reference/step-04-source-validation-metadata/build_schema_drift_records.md) | function | Convert schema drift findings into metadata records. | — |
 | [`build_schema_snapshot_records`](../../reference/step-04-source-validation-metadata/build_schema_snapshot_records.md) | function | Convert schema snapshot output into metadata records. | — |
 | [`write_metadata_records`](../../reference/step-07-output-validation-target-metadata/write_metadata_records.md) | function | Write metadata records to the configured metadata sink. | — |
-| [`write_multiple_metadata_outputs`](../../reference/step-07-output-validation-target-metadata/write_multiple_metadata_outputs.md) | function | Execute the `write_multiple_metadata_outputs` workflow step in FabricOps. | — |
+| [`write_multiple_metadata_outputs`](../../reference/step-07-output-validation-target-metadata/write_multiple_metadata_outputs.md) | function | Write multiple groups of metadata records in one orchestration step. | — |
 
 ## Internal helpers
 

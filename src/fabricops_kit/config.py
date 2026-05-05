@@ -296,7 +296,30 @@ def run_config_smoke_tests(
     notebook_name: str | None = None,
     ai_result: dict[str, Any] | None = None,
 ) -> list[ConfigSmokeCheckResult]:
-    """Orchestrate config smoke tests for runtime, paths, naming, and optional checks."""
+    """Run readiness checks for config, runtime context, and optional dependencies.
+
+    Parameters
+    ----------
+    config : FrameworkConfig
+        Normalized framework configuration.
+    env : str, default "Sandbox"
+        Environment name to validate.
+    required_targets : list of str, optional
+        Required targets that must resolve for the selected environment.
+    check_ai : bool, default True
+        Whether to include Fabric AI availability checks.
+    check_io_import : bool, default False
+        Whether to verify ``fabric_io`` imports.
+    notebook_name : str, optional
+        Notebook name used for naming-policy validation.
+    ai_result : dict, optional
+        Precomputed AI availability result to reuse.
+
+    Returns
+    -------
+    list[ConfigSmokeCheckResult]
+        Ordered list of smoke-check outcomes.
+    """
     from .runtime import validate_notebook_name
 
     results: list[ConfigSmokeCheckResult] = []
@@ -352,7 +375,34 @@ def bootstrap_fabric_env(
     config: FrameworkConfig | dict[str, Any] | None = None,
     notebook_name: str | None = None,
 ) -> ConfigBootstrapResult:
-    """Run a one-line environment bootstrap for Fabric notebook readiness."""
+    """Bootstrap Fabric environment readiness in one call.
+
+    Parameters
+    ----------
+    env : str, default "Sandbox"
+        Environment to bootstrap.
+    required_targets : list of str, optional
+        Targets that must resolve before execution.
+    check_ai : bool, default True
+        Whether to run Fabric AI availability checks.
+    smoke_test : bool, default True
+        Whether to run smoke checks during bootstrap.
+    config : FrameworkConfig or dict, optional
+        Framework configuration to validate and load.
+    notebook_name : str, optional
+        Notebook name used for runtime metadata and naming checks.
+
+    Returns
+    -------
+    ConfigBootstrapResult
+        Bootstrap result with resolved paths, runtime metadata, smoke checks,
+        and readiness status.
+
+    Raises
+    ------
+    ValueError
+        If ``config`` is not provided.
+    """
     normalized = load_fabric_config(config) if config is not None else None
     if normalized is None:
         raise ValueError("config is required for bootstrap_fabric_env.")
@@ -381,7 +431,13 @@ def bootstrap_fabric_env(
 
 
 def check_fabric_ai_functions_available() -> dict[str, Any]:
-    """Check Fabric AI readiness from the config/readiness API surface."""
+    """Check whether Fabric AI functions are available in the current runtime.
+
+    Returns
+    -------
+    dict[str, Any]
+        Availability payload including boolean status and message.
+    """
     from .ai import check_fabric_ai_functions_available as _check
 
     return _check()

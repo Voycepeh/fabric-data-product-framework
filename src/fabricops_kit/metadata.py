@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import object
 
 from fabricops_kit.profiling import to_jsonable
 
@@ -23,10 +23,7 @@ def build_dataset_run_record(
 ) -> dict:
     """Build a dataset run metadata record for audit and handover.
     
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
-    
+            
         Parameters
         ----------
         None
@@ -34,8 +31,8 @@ def build_dataset_run_record(
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
+        object
+            
     
         Raises
         ------
@@ -72,19 +69,16 @@ def build_dataset_run_record(
 def build_schema_snapshot_records(snapshot: dict, *, run_id: str, table_stage: str) -> list[dict]:
     """Convert schema snapshot output into metadata records.
     
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
-    
+            
         Parameters
         ----------
-        snapshot : Any
-            Input parameter `snapshot`.
+        snapshot : object
+            
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
+        object
+            
     
         Raises
         ------
@@ -127,19 +121,16 @@ def build_schema_snapshot_records(snapshot: dict, *, run_id: str, table_stage: s
 def build_schema_drift_records(drift_result: dict, *, run_id: str, table_stage: str) -> list[dict]:
     """Convert schema drift findings into metadata records.
     
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
-    
+            
         Parameters
         ----------
-        drift_result : Any
+        drift_result : object
             Input parameter `drift_result`.
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
+        object
+            
     
         Raises
         ------
@@ -210,19 +201,16 @@ def build_quality_result_records(
 ) -> list[dict]:
     """Convert quality rule results into metadata records.
     
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
-    
+            
         Parameters
         ----------
-        quality_result : Any
+        quality_result : object
             Input parameter `quality_result`.
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
+        object
+            
     
         Raises
         ------
@@ -273,25 +261,22 @@ def build_quality_result_records(
 def write_metadata_records(records: list[dict], table_identifier: str, writer=None, mode: str = "append", **options):
     """Write metadata records to the configured metadata sink.
     
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
-    
+            
         Parameters
         ----------
-        records : Any
-            Input parameter `records`.
-        table_identifier : Any
-            Input parameter `table_identifier`.
-        writer : Any
-            Input parameter `writer`.
-        mode : Any
+        records : object
+            
+        table_identifier : object
+            
+        writer : object
+            
+        mode : object
             Input parameter `mode`.
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
+        object
+            
     
         Raises
         ------
@@ -324,27 +309,24 @@ def write_multiple_metadata_outputs(
     mode: str = "append",
     **options,
 ) -> dict:
-    """Execute the `write_multiple_metadata_outputs` workflow step in FabricOps.
+    """Write multiple groups of metadata records in one orchestration step.
     
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
-    
+            
         Parameters
         ----------
-        outputs : Any
+        outputs : object
             Input parameter `outputs`.
-        table_mapping : Any
+        table_mapping : object
             Input parameter `table_mapping`.
-        writer : Any
-            Input parameter `writer`.
-        mode : Any
+        writer : object
+            
+        mode : object
             Input parameter `mode`.
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
+        object
+            
     
         Raises
         ------

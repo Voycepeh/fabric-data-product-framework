@@ -15,7 +15,25 @@ def _status_of(section: dict | None) -> str:
 
 
 def build_run_summary(*, runtime_context: dict, contract: dict | None = None, source_profile: dict | None = None, output_profile: dict | None = None, schema_drift_result: dict | None = None, incremental_safety_result: dict | None = None, quality_result: dict | None = None, contract_validation_result: dict | None = None, lineage_summary: dict | None = None, notes: list[str] | None = None) -> dict:
-    """Build a compact handover summary from pipeline run evidence."""
+    """Build a compact handover summary from pipeline run evidence.
+
+    Parameters
+    ----------
+    runtime_context : dict
+        Run context containing identifiers and environment details.
+    contract : dict, optional
+        Dataset contract used for purpose and dataset metadata.
+    source_profile, output_profile, schema_drift_result, incremental_safety_result, quality_result, contract_validation_result, lineage_summary : dict, optional
+        Optional section payloads included in the consolidated summary.
+    notes : list of str, optional
+        Additional handover notes.
+
+    Returns
+    -------
+    dict
+        Structured run summary with overall status, continuation signal,
+        section payloads, and action items.
+    """
     sections = {"purpose": (contract or {}).get("dataset", {}).get("purpose"), "source_profile": source_profile, "output_profile": output_profile, "schema_drift": schema_drift_result, "incremental_safety": incremental_safety_result, "quality": quality_result, "contracts": contract_validation_result, "lineage": lineage_summary, "notes": notes or []}
     not_provided_sections = [k for k in SECTION_KEYS if sections.get(k) is None]
     considered = [sections[k] for k in SECTION_KEYS if sections.get(k)]
@@ -33,7 +51,18 @@ def build_run_summary(*, runtime_context: dict, contract: dict | None = None, so
 
 
 def render_run_summary_markdown(summary: dict) -> str:
-    """Render a pipeline run summary as handover-ready Markdown."""
+    """Render a pipeline run summary as handover-ready Markdown.
+
+    Parameters
+    ----------
+    summary : dict
+        Summary object produced by :func:`build_run_summary`.
+
+    Returns
+    -------
+    str
+        Markdown text suitable for handover or release notes.
+    """
     s = summary.get("sections", {})
     lines = [f"# Run Summary — {summary.get('dataset_name', 'unknown')}", f"- Run ID: `{summary.get('run_id', 'unknown')}`", f"- Environment: `{summary.get('environment', 'unknown')}`", f"- Overall status: **{summary.get('overall_status', 'unknown')}**", "", "## Run Context", f"- Source table: `{summary.get('source_table', 'unknown')}`", f"- Target table: `{summary.get('target_table', 'unknown')}`", f"- Started at (UTC): `{summary.get('started_at_utc', 'unknown')}`", "", "## Dataset Purpose", f"{s.get('purpose') or 'Not provided.'}", "", "## Section Status", f"- Schema drift: **{_status_of(s.get('schema_drift'))}**", f"- Incremental safety: **{_status_of(s.get('incremental_safety'))}**", f"- Quality: **{_status_of(s.get('quality'))}**", f"- Contracts: **{_status_of(s.get('contracts'))}**"]
     lines.extend(["", "## Not Provided Sections"])
