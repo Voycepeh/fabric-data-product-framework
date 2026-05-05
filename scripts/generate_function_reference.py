@@ -33,6 +33,15 @@ def first_sentence(doc: str | None) -> str:
     return line.split(".")[0].strip() + ("." if "." in line else "")
 
 
+def _assert_non_placeholder_summary(symbol_name: str, field_name: str, text: str) -> None:
+    """Fail fast when placeholder-style summary text is detected."""
+    normalized = text.strip()
+    if normalized.startswith("Execute the `"):
+        raise RuntimeError(f"{symbol_name} has placeholder {field_name}: {normalized}")
+    if "Input parameter `" in normalized:
+        raise RuntimeError(f"{symbol_name} has placeholder {field_name}: {normalized}")
+
+
 def parse_module(path: Path) -> dict[str, Any]:
     tree = ast.parse(path.read_text(encoding="utf-8"))
     functions: dict[str, str] = {}
@@ -192,6 +201,11 @@ def main() -> None:
             raise RuntimeError(f"Invalid workflow_step {step} for {symbol.name}; expected one of {sorted(step_symbols)}")
         symbol.summary = meta.get("summary_override") or symbol.summary
         symbol.purpose = meta.get("purpose") or symbol.summary or "—"
+        enforce_placeholder_guard = symbol.module in {"config", "ai"}
+        if enforce_placeholder_guard and symbol.summary:
+            _assert_non_placeholder_summary(symbol.name, "summary", symbol.summary)
+        if enforce_placeholder_guard and symbol.purpose and symbol.purpose != "—":
+            _assert_non_placeholder_summary(symbol.name, "purpose", symbol.purpose)
         symbol.importance = meta.get("importance") or ("Essential" if step is not None and int(step) <= 7 else "Optional")
         if symbol.importance not in {"Essential", "Optional"}:
             raise RuntimeError(f"Invalid importance {symbol.importance!r} for {symbol.name}; expected Essential or Optional")
