@@ -271,7 +271,7 @@ def build_quality_result_records(
 
 
 def write_metadata_records(records: list[dict], table_identifier: str, writer=None, mode: str = "append", **options):
-    """Execute the `write_metadata_records` workflow step in FabricOps.
+    """Write metadata records to the configured metadata sink.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
