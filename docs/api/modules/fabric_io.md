@@ -8,7 +8,6 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`get_path`](../../reference/step-02-runtime-environment-path-rules/get_path.md) | function | Return the Fabric path object for an environment and target. | — |
 | [`Housepath`](../../reference/step-02-runtime-environment-path-rules/Housepath.md) | class | Fabric lakehouse or warehouse connection details. | — |
 | [`lakehouse_csv_read`](../../reference/step-03-source-contract-ingestion/lakehouse_csv_read.md) | function | Read a CSV file from a Fabric lakehouse Files path. | [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) (internal) |
 | [`lakehouse_excel_read_as_spark`](../../reference/step-03-source-contract-ingestion/lakehouse_excel_read_as_spark.md) | function | Read an Excel file from a Fabric lakehouse Files path. | [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) (internal) |

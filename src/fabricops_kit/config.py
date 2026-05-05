@@ -253,7 +253,7 @@ def load_fabric_config(config: FrameworkConfig | dict[str, Any]) -> FrameworkCon
 
 
 def get_path(env: str, target: str, config: FrameworkConfig | PathConfig | None) -> Any:
-    """Resolve a configured environment/target entry into a path object."""
+    """Resolve an environment/target entry into a configured Fabric path object."""
     if config is None:
         raise ValueError("No Fabric config was provided. Pass a FrameworkConfig or PathConfig instance.")
     paths = config.path_config.paths if isinstance(config, FrameworkConfig) else config.paths
@@ -275,7 +275,7 @@ def run_config_smoke_tests(
     notebook_name: str | None = None,
     ai_result: dict[str, Any] | None = None,
 ) -> list[ConfigSmokeCheckResult]:
-    """Run readiness-oriented config checks with optional lightweight IO checks."""
+    """Orchestrate config smoke tests for runtime, paths, naming, and optional checks."""
     from .runtime import validate_notebook_name
 
     results: list[ConfigSmokeCheckResult] = []
@@ -331,7 +331,7 @@ def bootstrap_fabric_env(
     config: FrameworkConfig | dict[str, Any] | None = None,
     notebook_name: str | None = None,
 ) -> ConfigBootstrapResult:
-    """Bootstrap environment readiness for notebook execution."""
+    """Run a one-line environment bootstrap for Fabric notebook readiness."""
     normalized = load_fabric_config(config) if config is not None else None
     if normalized is None:
         raise ValueError("config is required for bootstrap_fabric_env.")
@@ -360,7 +360,7 @@ def bootstrap_fabric_env(
 
 
 def check_fabric_ai_functions_available() -> dict[str, Any]:
-    """Return Fabric AI availability from the config/readiness API surface."""
+    """Check Fabric AI readiness from the config/readiness API surface."""
     from .ai import check_fabric_ai_functions_available as _check
 
     return _check()
