@@ -9,6 +9,7 @@
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
 | [`bootstrap_fabric_env`](../../reference/step-02-runtime-environment-path-rules/bootstrap_fabric_env.md) | function | Bootstrap 00_env_config environment readiness for FabricOps notebooks. | [`_get_fabric_runtime_metadata`](../../reference/internal/config/_get_fabric_runtime_metadata.md) (internal) |
+| [`check_fabric_ai_functions_available`](../../reference/step-02-runtime-environment-path-rules/check_fabric_ai_functions_available.md) | function | Check whether Fabric AI Functions are available in the current runtime. | — |
 | [`create_ai_prompt_config`](../../reference/step-02-runtime-environment-path-rules/create_ai_prompt_config.md) | function | Create the AI prompt-template configuration used by FabricOps. | — |
 | [`create_framework_config`](../../reference/step-02-runtime-environment-path-rules/create_framework_config.md) | function | Create the top-level framework configuration object. | — |
 | [`create_governance_config`](../../reference/step-02-runtime-environment-path-rules/create_governance_config.md) | function | Create governance-default configuration. | — |
@@ -16,7 +17,7 @@
 | [`create_notebook_runtime_config`](../../reference/step-02-runtime-environment-path-rules/create_notebook_runtime_config.md) | function | Create notebook naming-policy configuration for runtime guards. | — |
 | [`create_path_config`](../../reference/step-02-runtime-environment-path-rules/create_path_config.md) | function | Create environment-to-target routing used by Fabric IO helpers. | — |
 | [`create_quality_config`](../../reference/step-02-runtime-environment-path-rules/create_quality_config.md) | function | Create quality-default configuration. | — |
-| [`get_path`](../../reference/step-02-runtime-environment-path-rules/get_path.md) | function | Resolve a configured environment/target entry into a path object. | — |
+| [`get_path`](../../reference/step-02-runtime-environment-path-rules/get_path.md) | function | Resolve a configured Fabric path for an environment and target. | — |
 | [`run_config_smoke_tests`](../../reference/step-02-runtime-environment-path-rules/run_config_smoke_tests.md) | function | Run 00_env_config readiness smoke checks for configuration bootstrap. | [`_check_spark_session`](../../reference/internal/config/_check_spark_session.md) (internal), [`_get_fabric_runtime_metadata`](../../reference/internal/config/_get_fabric_runtime_metadata.md) (internal) |
 | [`validate_framework_config`](../../reference/step-02-runtime-environment-path-rules/validate_framework_config.md) | function | Validate and normalize framework config input. | — |
 
