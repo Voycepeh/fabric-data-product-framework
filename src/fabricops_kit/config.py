@@ -333,7 +333,32 @@ def load_fabric_config(config: FrameworkConfig | dict[str, Any]) -> FrameworkCon
 
 
 def get_path(env: str, target: str, config: FrameworkConfig | PathConfig | None) -> Any:
-    """Resolve a configured environment/target entry into a path object."""
+    """Resolve a configured Fabric path for an environment and target.
+
+    Parameters
+    ----------
+    env : str
+        Environment key such as ``Sandbox``, ``DE``, or ``Prod``.
+    target : str
+        Target key such as ``Source``, ``Unified``, ``Product``, or ``Warehouse``.
+    config : FrameworkConfig | PathConfig | None
+        Configuration that contains environment-to-target path mappings.
+
+    Returns
+    -------
+    Any
+        Housepath-style object with ``workspace_id``, ``house_id``, ``house_name``, and ``root``.
+
+    Raises
+    ------
+    ValueError
+        If config is missing, or if the environment/target mapping does not exist.
+
+    Examples
+    --------
+    >>> get_path("Sandbox", "Source", config=CONFIG)
+    Housepath(...)
+    """
     if config is None:
         raise ValueError("No Fabric config was provided. Pass a FrameworkConfig or PathConfig instance.")
     paths = config.path_config.paths if isinstance(config, FrameworkConfig) else config.paths
@@ -532,7 +557,17 @@ def bootstrap_fabric_env(
 
 
 def check_fabric_ai_functions_available() -> dict[str, Any]:
-    """Return Fabric AI availability from the config/readiness API surface."""
+    """Check whether Fabric AI Functions are available in the current runtime.
+
+    Returns
+    -------
+    dict[str, Any]
+        Diagnostic payload containing an ``available`` flag and a message.
+
+    Notes
+    -----
+    This is a config-facing wrapper around the AI module so readiness checks are callable from ``config``.
+    """
     from .ai import check_fabric_ai_functions_available as _check
 
     return _check()

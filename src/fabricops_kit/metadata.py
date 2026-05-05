@@ -21,37 +21,18 @@ def build_dataset_run_record(
     row_count_output: int | None = None,
     notes: str | None = None,
 ) -> dict:
-    """Execute the `build_dataset_run_record` workflow step in FabricOps.
-    
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
+    """Build a dataset-run metadata record for operational tracking.
     
         Parameters
         ----------
         None
-            This function does not require explicit parameters.
+            This callable does not require input parameters.
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
-    
-        Raises
-        ------
-        Exception
-            Propagates validation, runtime, or storage errors from underlying
-            operations when execution cannot continue safely.
-    
-        Notes
-        -----
-        Side effects may include metadata writes, quality evidence generation,
-        or persisted drift/lineage/handover artifacts depending on the function.
-    
-        Examples
-        --------
-        >>> build_dataset_run_record()
-        """
+        dict
+            Structured output produced by this callable.
+    """
     return to_jsonable(
         {
             "run_id": run_id,
@@ -70,37 +51,18 @@ def build_dataset_run_record(
 
 
 def build_schema_snapshot_records(snapshot: dict, *, run_id: str, table_stage: str) -> list[dict]:
-    """Execute the `build_schema_snapshot_records` workflow step in FabricOps.
-    
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
+    """Convert a schema snapshot into row-wise metadata records.
     
         Parameters
         ----------
         snapshot : Any
-            Input parameter `snapshot`.
+            Value used by this callable.
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
-    
-        Raises
-        ------
-        Exception
-            Propagates validation, runtime, or storage errors from underlying
-            operations when execution cannot continue safely.
-    
-        Notes
-        -----
-        Side effects may include metadata writes, quality evidence generation,
-        or persisted drift/lineage/handover artifacts depending on the function.
-    
-        Examples
-        --------
-        >>> build_schema_snapshot_records(...)
-        """
+        list[dict]
+            Structured output produced by this callable.
+    """
     base = {
         "run_id": run_id,
         "dataset_name": snapshot.get("dataset_name"),
@@ -125,37 +87,18 @@ def build_schema_snapshot_records(snapshot: dict, *, run_id: str, table_stage: s
 
 
 def build_schema_drift_records(drift_result: dict, *, run_id: str, table_stage: str) -> list[dict]:
-    """Execute the `build_schema_drift_records` workflow step in FabricOps.
-    
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
+    """Convert schema drift results into metadata records for audit trails.
     
         Parameters
         ----------
         drift_result : Any
-            Input parameter `drift_result`.
+            Value used by this callable.
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
-    
-        Raises
-        ------
-        Exception
-            Propagates validation, runtime, or storage errors from underlying
-            operations when execution cannot continue safely.
-    
-        Notes
-        -----
-        Side effects may include metadata writes, quality evidence generation,
-        or persisted drift/lineage/handover artifacts depending on the function.
-    
-        Examples
-        --------
-        >>> build_schema_drift_records(...)
-        """
+        list[dict]
+            Structured output produced by this callable.
+    """
     base = {
         "run_id": run_id,
         "dataset_name": drift_result.get("dataset_name"),
@@ -208,37 +151,18 @@ def build_quality_result_records(
     table_name: str,
     table_stage: str,
 ) -> list[dict]:
-    """Execute the `build_quality_result_records` workflow step in FabricOps.
-    
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
+    """Convert quality-rule execution output into metadata evidence records.
     
         Parameters
         ----------
         quality_result : Any
-            Input parameter `quality_result`.
+            Value used by this callable.
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
-    
-        Raises
-        ------
-        Exception
-            Propagates validation, runtime, or storage errors from underlying
-            operations when execution cannot continue safely.
-    
-        Notes
-        -----
-        Side effects may include metadata writes, quality evidence generation,
-        or persisted drift/lineage/handover artifacts depending on the function.
-    
-        Examples
-        --------
-        >>> build_quality_result_records(...)
-        """
+        list[dict]
+            Structured output produced by this callable.
+    """
     results: list[dict[str, Any]]
     if isinstance(quality_result, dict):
         results = list(quality_result.get("results", []))
@@ -271,43 +195,24 @@ def build_quality_result_records(
 
 
 def write_metadata_records(records: list[dict], table_identifier: str, writer=None, mode: str = "append", **options):
-    """Execute the `write_metadata_records` workflow step in FabricOps.
-    
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
+    """Write metadata records to a configured metadata sink.
     
         Parameters
         ----------
         records : Any
-            Input parameter `records`.
+            Value used by this callable.
         table_identifier : Any
-            Input parameter `table_identifier`.
+            Value used by this callable.
         writer : Any
-            Input parameter `writer`.
+            Value used by this callable.
         mode : Any
-            Input parameter `mode`.
+            Value used by this callable.
     
         Returns
         -------
         Any
-            Function output used by downstream FabricOps workflow steps.
-    
-        Raises
-        ------
-        Exception
-            Propagates validation, runtime, or storage errors from underlying
-            operations when execution cannot continue safely.
-    
-        Notes
-        -----
-        Side effects may include metadata writes, quality evidence generation,
-        or persisted drift/lineage/handover artifacts depending on the function.
-    
-        Examples
-        --------
-        >>> write_metadata_records(..., ..., ..., ...)
-        """
+            Structured output produced by this callable.
+    """
     if not records:
         return None
     if writer is None:
@@ -324,43 +229,24 @@ def write_multiple_metadata_outputs(
     mode: str = "append",
     **options,
 ) -> dict:
-    """Execute the `write_multiple_metadata_outputs` workflow step in FabricOps.
-    
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
+    """Write multiple metadata payloads to their configured destinations.
     
         Parameters
         ----------
         outputs : Any
-            Input parameter `outputs`.
+            Value used by this callable.
         table_mapping : Any
-            Input parameter `table_mapping`.
+            Value used by this callable.
         writer : Any
-            Input parameter `writer`.
+            Value used by this callable.
         mode : Any
-            Input parameter `mode`.
+            Value used by this callable.
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
-    
-        Raises
-        ------
-        Exception
-            Propagates validation, runtime, or storage errors from underlying
-            operations when execution cannot continue safely.
-    
-        Notes
-        -----
-        Side effects may include metadata writes, quality evidence generation,
-        or persisted drift/lineage/handover artifacts depending on the function.
-    
-        Examples
-        --------
-        >>> write_multiple_metadata_outputs(..., ..., ..., ...)
-        """
+        dict
+            Structured output produced by this callable.
+    """
     results = {}
     for output_name, records in outputs.items():
         if not records:

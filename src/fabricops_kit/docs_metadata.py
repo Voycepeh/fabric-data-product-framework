@@ -77,7 +77,7 @@ PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [
     {"symbol_name": "generate_metadata_profile", "module": "profiling", "kind": "function", "workflow_step": 4, "summary_override": None},
     {"symbol_name": "build_ai_quality_context", "module": "profiling", "kind": "function", "workflow_step": 4, "summary_override": None},
     {"symbol_name": "run_quality_rules", "module": "quality", "kind": "function", "workflow_step": 8, "summary_override": None},
-    {"symbol_name": "check_fabric_ai_functions_available", "module": "ai", "kind": "function", "workflow_step": 1, "summary_override": None},
+    {"symbol_name": "check_fabric_ai_functions_available", "module": "config", "kind": "function", "workflow_step": 2, "summary_override": None},
     {"symbol_name": "build_dq_rule_candidate_prompt", "module": "ai", "kind": "function", "workflow_step": 8, "summary_override": None},
     {"symbol_name": "build_governance_candidate_prompt", "module": "ai", "kind": "function", "workflow_step": 9, "summary_override": None},
     {"symbol_name": "build_handover_summary_prompt", "module": "ai", "kind": "function", "workflow_step": 10, "summary_override": None},
