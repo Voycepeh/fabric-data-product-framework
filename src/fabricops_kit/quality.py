@@ -230,39 +230,20 @@ def _spark_rule(df: Any, rule: dict[str, Any], row_count: int) -> tuple[int, int
 
 
 def run_quality_rules(df: Any, rules: list[dict], *, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "auto") -> dict:
-    """Execute the `run_quality_rules` workflow step in FabricOps.
-    
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
+    """Execute quality rules against a dataframe and return structured results.
     
         Parameters
         ----------
         df : Any
-            Input parameter `df`.
+            Value used by this callable.
         rules : Any
-            Input parameter `rules`.
+            Value used by this callable.
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
-    
-        Raises
-        ------
-        Exception
-            Propagates validation, runtime, or storage errors from underlying
-            operations when execution cannot continue safely.
-    
-        Notes
-        -----
-        Side effects may include metadata writes, quality evidence generation,
-        or persisted drift/lineage/handover artifacts depending on the function.
-    
-        Examples
-        --------
-        >>> run_quality_rules(..., ...)
-        """
+        dict
+            Structured output produced by this callable.
+    """
     resolved_engine = _resolve_engine(df, engine)
     row_count = len(df) if resolved_engine == "pandas" else df.count()
     results = []
@@ -2088,37 +2069,18 @@ def _effective_contract_dict(contract: dict | DataProductContract) -> dict:
 
 
 def load_data_contract(path_or_dict: str | Path | dict) -> DataProductContract:
-    """Execute the `load_data_contract` workflow step in FabricOps.
-    
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
+    """Load and normalize a data product contract from file path or dictionary.
     
         Parameters
         ----------
         path_or_dict : Any
-            Input parameter `path_or_dict`.
+            Value used by this callable.
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
-    
-        Raises
-        ------
-        Exception
-            Propagates validation, runtime, or storage errors from underlying
-            operations when execution cannot continue safely.
-    
-        Notes
-        -----
-        Side effects may include metadata writes, quality evidence generation,
-        or persisted drift/lineage/handover artifacts depending on the function.
-    
-        Examples
-        --------
-        >>> load_data_contract(...)
-        """
+        DataProductContract
+            Structured output produced by this callable.
+    """
     raw = dict(path_or_dict) if isinstance(path_or_dict, dict) else load_dataset_contract(path_or_dict)
     return normalize_data_product_contract(raw)
 

@@ -420,47 +420,28 @@ def _write_metadata_rows(spark, metadata_table: str, records: list[dict], mode: 
 
 
 def check_schema_drift(df, dataset_name: str, table_name: str, baseline_snapshot: dict | None = None, policy: dict | None = None, engine: str = "spark") -> dict:
-    """Execute the `check_schema_drift` workflow step in FabricOps.
-    
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
+    """Compare a current dataframe schema against a baseline schema snapshot.
     
         Parameters
         ----------
         df : Any
-            Input parameter `df`.
+            Value used by this callable.
         dataset_name : Any
-            Input parameter `dataset_name`.
+            Value used by this callable.
         table_name : Any
-            Input parameter `table_name`.
+            Value used by this callable.
         baseline_snapshot : Any
-            Input parameter `baseline_snapshot`.
+            Value used by this callable.
         policy : Any
-            Input parameter `policy`.
+            Value used by this callable.
         engine : Any
-            Input parameter `engine`.
+            Value used by this callable.
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
-    
-        Raises
-        ------
-        Exception
-            Propagates validation, runtime, or storage errors from underlying
-            operations when execution cannot continue safely.
-    
-        Notes
-        -----
-        Side effects may include metadata writes, quality evidence generation,
-        or persisted drift/lineage/handover artifacts depending on the function.
-    
-        Examples
-        --------
-        >>> check_schema_drift(..., ..., ..., ..., ..., ...)
-        """
+        dict
+            Structured output produced by this callable.
+    """
     current_snapshot = build_schema_snapshot(df, dataset_name=dataset_name, table_name=table_name, engine=engine)
     if baseline_snapshot is None:
         return {
@@ -621,55 +602,36 @@ def load_latest_schema_snapshot(spark, metadata_table: str, dataset_name: str, t
 
 
 def check_partition_drift(df, dataset_name: str, table_name: str, partition_column: str, business_keys: list[str] | None = None, watermark_column: str | None = None, baseline_snapshot: list[dict] | dict | None = None, policy: dict | None = None, run_id: str | None = None, engine: str = "spark") -> dict:
-    """Execute the `check_partition_drift` workflow step in FabricOps.
-    
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
+    """Check partition-level drift using keys, partitions, and optional watermark baselines.
     
         Parameters
         ----------
         df : Any
-            Input parameter `df`.
+            Value used by this callable.
         dataset_name : Any
-            Input parameter `dataset_name`.
+            Value used by this callable.
         table_name : Any
-            Input parameter `table_name`.
+            Value used by this callable.
         partition_column : Any
-            Input parameter `partition_column`.
+            Value used by this callable.
         business_keys : Any
-            Input parameter `business_keys`.
+            Value used by this callable.
         watermark_column : Any
-            Input parameter `watermark_column`.
+            Value used by this callable.
         baseline_snapshot : Any
-            Input parameter `baseline_snapshot`.
+            Value used by this callable.
         policy : Any
-            Input parameter `policy`.
+            Value used by this callable.
         run_id : Any
-            Input parameter `run_id`.
+            Value used by this callable.
         engine : Any
-            Input parameter `engine`.
+            Value used by this callable.
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
-    
-        Raises
-        ------
-        Exception
-            Propagates validation, runtime, or storage errors from underlying
-            operations when execution cannot continue safely.
-    
-        Notes
-        -----
-        Side effects may include metadata writes, quality evidence generation,
-        or persisted drift/lineage/handover artifacts depending on the function.
-    
-        Examples
-        --------
-        >>> check_partition_drift(..., ..., ..., ..., ..., ..., ..., ..., ..., ...)
-        """
+        dict
+            Structured output produced by this callable.
+    """
     keys = business_keys or []
     if not keys:
         raise ValueError("business_keys must contain at least one column for partition drift checks.")
@@ -862,41 +824,22 @@ def load_latest_partition_snapshot(spark, metadata_table: str, dataset_name: str
 
 
 def check_profile_drift(current_profile: dict, baseline_profile: dict | None = None, policy: dict | None = None) -> dict:
-    """Execute the `check_profile_drift` workflow step in FabricOps.
-    
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
+    """Compare profile metrics against a baseline profile and drift thresholds.
     
         Parameters
         ----------
         current_profile : Any
-            Input parameter `current_profile`.
+            Value used by this callable.
         baseline_profile : Any
-            Input parameter `baseline_profile`.
+            Value used by this callable.
         policy : Any
-            Input parameter `policy`.
+            Value used by this callable.
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
-    
-        Raises
-        ------
-        Exception
-            Propagates validation, runtime, or storage errors from underlying
-            operations when execution cannot continue safely.
-    
-        Notes
-        -----
-        Side effects may include metadata writes, quality evidence generation,
-        or persisted drift/lineage/handover artifacts depending on the function.
-    
-        Examples
-        --------
-        >>> check_profile_drift(..., ..., ...)
-        """
+        dict
+            Structured output produced by this callable.
+    """
     active = {
         "max_row_count_change_percent": 50,
         "max_null_percent_change_points": 20,
@@ -945,41 +888,22 @@ def check_profile_drift(current_profile: dict, baseline_profile: dict | None = N
 
 
 def summarize_drift_results(schema_drift_result: dict | None = None, partition_drift_result: dict | None = None, profile_drift_result: dict | None = None) -> dict:
-    """Execute the `summarize_drift_results` workflow step in FabricOps.
-    
-        Use this callable at its corresponding stage of the pipeline contract
-        (configuration, IO, profiling, quality, drift, lineage, or handover)
-        to produce deterministic artifacts and validation evidence.
+    """Summarize schema, partition, and profile drift outcomes into one decision.
     
         Parameters
         ----------
         schema_drift_result : Any
-            Input parameter `schema_drift_result`.
+            Value used by this callable.
         partition_drift_result : Any
-            Input parameter `partition_drift_result`.
+            Value used by this callable.
         profile_drift_result : Any
-            Input parameter `profile_drift_result`.
+            Value used by this callable.
     
         Returns
         -------
-        Any
-            Function output used by downstream FabricOps workflow steps.
-    
-        Raises
-        ------
-        Exception
-            Propagates validation, runtime, or storage errors from underlying
-            operations when execution cannot continue safely.
-    
-        Notes
-        -----
-        Side effects may include metadata writes, quality evidence generation,
-        or persisted drift/lineage/handover artifacts depending on the function.
-    
-        Examples
-        --------
-        >>> summarize_drift_results(..., ..., ...)
-        """
+        dict
+            Structured output produced by this callable.
+    """
     results = {"schema": schema_drift_result, "partition": partition_drift_result, "profile": profile_drift_result}
     statuses = {k: (v or {}).get("status") for k, v in results.items()}
     failed = [k for k, v in results.items() if v and (v.get("status") == "failed" or not v.get("can_continue", True))]

@@ -8,12 +8,12 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`build_dataset_run_record`](../../reference/step-07-output-validation-target-metadata/build_dataset_run_record.md) | function | Execute the `build_dataset_run_record` workflow step in FabricOps. | — |
-| [`build_quality_result_records`](../../reference/step-07-output-validation-target-metadata/build_quality_result_records.md) | function | Execute the `build_quality_result_records` workflow step in FabricOps. | — |
-| [`build_schema_drift_records`](../../reference/step-04-source-validation-metadata/build_schema_drift_records.md) | function | Execute the `build_schema_drift_records` workflow step in FabricOps. | — |
-| [`build_schema_snapshot_records`](../../reference/step-04-source-validation-metadata/build_schema_snapshot_records.md) | function | Execute the `build_schema_snapshot_records` workflow step in FabricOps. | — |
-| [`write_metadata_records`](../../reference/step-07-output-validation-target-metadata/write_metadata_records.md) | function | Execute the `write_metadata_records` workflow step in FabricOps. | — |
-| [`write_multiple_metadata_outputs`](../../reference/step-07-output-validation-target-metadata/write_multiple_metadata_outputs.md) | function | Execute the `write_multiple_metadata_outputs` workflow step in FabricOps. | — |
+| [`build_dataset_run_record`](../../reference/step-07-output-validation-target-metadata/build_dataset_run_record.md) | function | Build a dataset-run metadata record for operational tracking. | — |
+| [`build_quality_result_records`](../../reference/step-07-output-validation-target-metadata/build_quality_result_records.md) | function | Convert quality-rule execution output into metadata evidence records. | — |
+| [`build_schema_drift_records`](../../reference/step-04-source-validation-metadata/build_schema_drift_records.md) | function | Convert schema drift results into metadata records for audit trails. | — |
+| [`build_schema_snapshot_records`](../../reference/step-04-source-validation-metadata/build_schema_snapshot_records.md) | function | Convert a schema snapshot into row-wise metadata records. | — |
+| [`write_metadata_records`](../../reference/step-07-output-validation-target-metadata/write_metadata_records.md) | function | Write metadata records to a configured metadata sink. | — |
+| [`write_multiple_metadata_outputs`](../../reference/step-07-output-validation-target-metadata/write_multiple_metadata_outputs.md) | function | Write multiple metadata payloads to their configured destinations. | — |
 
 ## Internal helpers
 
