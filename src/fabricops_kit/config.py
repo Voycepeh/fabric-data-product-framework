@@ -105,14 +105,60 @@ class ConfigBootstrapResult:
 
 
 def create_path_config(paths: dict[str, dict[str, Any]]) -> PathConfig:
-    """Create a validated :class:`PathConfig` object."""
+    """Create environment-to-target routing used by Fabric IO helpers.
+
+    Use this in the ``00_env_config`` bootstrap stage to define which
+    workspace/lakehouse/warehouse targets are valid for each environment
+    (for example, ``dev`` and ``prod``).
+
+    Parameters
+    ----------
+    paths : dict[str, dict[str, Any]]
+        Mapping of environment names to target mappings. Each target value is
+        typically a ``Housepath``-compatible object used later by
+        :func:`get_path` and read/write helpers.
+
+    Returns
+    -------
+    PathConfig
+        Immutable path configuration wrapper.
+
+    Raises
+    ------
+    ValueError
+        Raised when ``paths`` is empty or not a mapping.
+
+    Examples
+    --------
+    >>> create_path_config({"dev": {"raw": object()}}).paths["dev"] is not None
+    True
+    """
     if not isinstance(paths, dict) or not paths:
         raise ValueError("paths must be a non-empty mapping of environments to targets.")
     return PathConfig(paths=paths)
 
 
 def create_notebook_runtime_config(allowed_notebook_prefixes: list[str] | tuple[str, ...]) -> NotebookRuntimeConfig:
-    """Create notebook runtime configuration."""
+    """Create notebook naming-policy configuration for runtime guards.
+
+    This is typically configured during ``00_env_config`` so notebook
+    validation helpers can enforce a consistent execution contract.
+
+    Parameters
+    ----------
+    allowed_notebook_prefixes : list[str] | tuple[str, ...]
+        Prefixes accepted by notebook-name validation helpers.
+
+    Returns
+    -------
+    NotebookRuntimeConfig
+        Immutable runtime policy containing normalized prefixes.
+
+    Raises
+    ------
+    ValueError
+        Raised when no non-empty prefix remains after normalization.
+    """
     prefixes = tuple(prefix.strip() for prefix in allowed_notebook_prefixes if str(prefix).strip())
     if not prefixes:
         raise ValueError("allowed_notebook_prefixes must contain at least one non-empty prefix.")
@@ -124,7 +170,41 @@ def create_ai_prompt_config(
     governance_candidate_template: str,
     handover_summary_template: str,
 ) -> AIPromptConfig:
-    """Create AI prompt-template configuration."""
+    """Create the AI prompt-template configuration used by FabricOps.
+
+    Use this in ``00_env_config`` to register the prompt templates that power
+    AI-assisted DQ rule generation, governance suggestion generation, and
+    handover summary drafting before downstream notebooks execute.
+
+    Parameters
+    ----------
+    dq_rule_candidate_template : str
+        Template used to ask Fabric AI for candidate DQ rules.
+    governance_candidate_template : str
+        Template used to ask Fabric AI for governance and classification suggestions.
+    handover_summary_template : str
+        Template used to ask Fabric AI for pipeline handover summaries.
+
+    Returns
+    -------
+    AIPromptConfig
+        Frozen configuration object containing the validated prompt templates.
+
+    Raises
+    ------
+    ValueError
+        Raised when any prompt template is empty or not a string.
+
+    Examples
+    --------
+    >>> ai_prompts = create_ai_prompt_config(
+    ...     dq_rule_candidate_template="Generate DQ checks for {table_name}",
+    ...     governance_candidate_template="Suggest governance metadata for {dataset_name}",
+    ...     handover_summary_template="Summarize lineage and handover notes for {pipeline_name}",
+    ... )
+    >>> ai_prompts.dq_rule_candidate_template
+    'Generate DQ checks for {table_name}'
+    """
     for label, value in {
         "dq_rule_candidate_template": dq_rule_candidate_template,
         "governance_candidate_template": governance_candidate_template,
@@ -275,7 +355,54 @@ def run_config_smoke_tests(
     notebook_name: str | None = None,
     ai_result: dict[str, Any] | None = None,
 ) -> list[ConfigSmokeCheckResult]:
-    """Run readiness-oriented config checks with optional lightweight IO checks."""
+    """Run 00_env_config readiness smoke checks for configuration bootstrap.
+
+    Use this during environment bootstrap to verify Spark availability, Fabric
+    runtime context access, required path mappings, notebook naming policy, and
+    optional AI/IO import readiness before executing downstream notebook steps.
+
+    Parameters
+    ----------
+    config : FrameworkConfig
+        Validated framework configuration to evaluate.
+    env : str, default="Sandbox"
+        Environment key used when resolving required target paths.
+    required_targets : list[str] | None, optional
+        Required targets expected in ``config.path_config``. Defaults to
+        ``["Source", "Unified"]`` when not provided.
+    check_ai : bool, default=True
+        Whether to run the Fabric AI availability check.
+    check_io_import : bool, default=False
+        Whether to test importability of ``fabric_io`` helpers.
+    notebook_name : str | None, optional
+        Notebook name to validate against configured naming prefixes.
+    ai_result : dict[str, Any] | None, optional
+        Optional precomputed AI availability payload to reuse instead of
+        re-running the runtime import check.
+
+    Returns
+    -------
+    list[ConfigSmokeCheckResult]
+        Ordered check results with ``pass``, ``warn``, ``fail``, or ``skipped``
+        statuses for each readiness dimension.
+
+    Raises
+    ------
+    ValueError
+        Propagated from config/path validation helpers when required targets or
+        configured environments are invalid.
+
+    Notes
+    -----
+    This helper performs validation and lightweight import/runtime checks only.
+    It does not create or mutate Fabric resources.
+
+    Examples
+    --------
+    >>> checks = run_config_smoke_tests(config=my_config, env="Sandbox", notebook_name="00_env_config")
+    >>> any(c.status == "fail" for c in checks)
+    False
+    """
     from .runtime import validate_notebook_name
 
     results: list[ConfigSmokeCheckResult] = []
@@ -331,7 +458,52 @@ def bootstrap_fabric_env(
     config: FrameworkConfig | dict[str, Any] | None = None,
     notebook_name: str | None = None,
 ) -> ConfigBootstrapResult:
-    """Bootstrap environment readiness for notebook execution."""
+    """Bootstrap 00_env_config environment readiness for FabricOps notebooks.
+
+    This is a one-call bootstrap helper used at the start of a FabricOps run.
+    It validates/loads configuration, resolves required environment targets,
+    gathers runtime and AI availability metadata, and optionally executes smoke
+    checks before quality/governance/lineage workflows continue.
+
+    Parameters
+    ----------
+    env : str, default="Sandbox"
+        Environment key to bootstrap from ``path_config``.
+    required_targets : list[str] | None, optional
+        Target names that must resolve for the selected environment. Defaults
+        to ``["Source", "Unified"]``.
+    check_ai : bool, default=True
+        Whether to include Fabric AI availability checks.
+    smoke_test : bool, default=True
+        Whether to execute :func:`run_config_smoke_tests`.
+    config : FrameworkConfig | dict[str, Any] | None, optional
+        Framework configuration object or compatible mapping.
+    notebook_name : str | None, optional
+        Notebook name used in runtime metadata and naming checks.
+
+    Returns
+    -------
+    ConfigBootstrapResult
+        Structured bootstrap result containing resolved paths, runtime metadata,
+        AI status, smoke-check results, and overall readiness status.
+
+    Raises
+    ------
+    ValueError
+        Raised when ``config`` is missing or fails configuration/path
+        validation.
+
+    Notes
+    -----
+    Side effects are limited to runtime/import checks. The helper does not
+    create Fabric assets or write persistent state.
+
+    Examples
+    --------
+    >>> result = bootstrap_fabric_env(config=my_config, env="Sandbox", notebook_name="00_env_config")
+    >>> result.readiness_status in {"ready", "not_ready"}
+    True
+    """
     normalized = load_fabric_config(config) if config is not None else None
     if normalized is None:
         raise ValueError("config is required for bootstrap_fabric_env.")

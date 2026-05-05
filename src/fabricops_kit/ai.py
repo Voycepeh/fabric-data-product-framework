@@ -103,7 +103,11 @@ def configure_fabric_ai_functions(deployment_name: str | None = None, temperatur
 
 
 def build_dq_rule_candidate_prompt(business_context="", dataset_name=None, config: FrameworkConfig | None = None) -> str:
-    """Build standardized prompt text for AI-assisted DQ candidate generation.
+    """Build the DQ-candidate prompt used in AI-assisted quality drafting.
+
+    In the FabricOps workflow, this supports early quality planning after
+    profiling and before deterministic rule approval.
+
 
     Parameters
     ----------
@@ -129,7 +133,11 @@ def build_dq_rule_candidate_prompt(business_context="", dataset_name=None, confi
 
 
 def build_governance_candidate_prompt(business_context="", dataset_name=None, config: FrameworkConfig | None = None) -> str:
-    """Build standardized prompt text for AI-assisted governance suggestions.
+    """Build the governance-candidate prompt for AI-assisted classification drafts.
+
+    In the workflow, this is used before final governance labels are approved
+    and written to metadata outputs.
+
 
     Parameters
     ----------
@@ -155,7 +163,11 @@ def build_governance_candidate_prompt(business_context="", dataset_name=None, co
 
 
 def build_handover_summary_prompt(business_context="", config: FrameworkConfig | None = None) -> str:
-    """Build standardized prompt text for AI-assisted handover summary suggestions.
+    """Build the handover-summary prompt for AI-assisted run handoff drafting.
+
+    This fits near the end of the FabricOps flow when teams prepare notebook
+    lineage and operational handover notes.
+
 
     Parameters
     ----------
@@ -185,7 +197,11 @@ def _require_fabric_ai_dataframe(df, helper_name: str):
 
 
 def generate_dq_rule_candidates_with_fabric_ai(profile_df, business_context="", dataset_name=None, output_col="ai_dq_rule_candidate", error_col="ai_dq_rule_error", response_format="json_object", concurrency=20, config: FrameworkConfig | None = None):
-    """Execute Fabric AI Functions to append DQ candidate suggestions to a DataFrame.
+    """Append AI-suggested DQ rule candidates to a profiling DataFrame.
+
+    Use this after profiling and before rule approval to accelerate candidate
+    generation while keeping deterministic enforcement separate.
+
 
     Parameters
     ----------
