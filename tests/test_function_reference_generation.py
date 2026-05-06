@@ -32,6 +32,16 @@ def public_symbol_docs() -> list[dict[str, object]]:
     raise AssertionError("PUBLIC_SYMBOL_DOCS missing")
 
 
+def workflow_step_docs() -> list[dict[str, object]]:
+    tree = ast.parse(DOCS_METADATA_FILE.read_text(encoding="utf-8"))
+    for node in tree.body:
+        is_assign = isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "WORKFLOW_STEP_DOCS" for t in node.targets)
+        is_annassign = isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and node.target.id == "WORKFLOW_STEP_DOCS"
+        if (is_assign or is_annassign) and node.value is not None:
+            return ast.literal_eval(node.value)
+    raise AssertionError("WORKFLOW_STEP_DOCS missing")
+
+
 def section(content: str, title: str) -> str:
     marker = f"## {title}"
     start = content.find(marker)
@@ -219,3 +229,19 @@ def test_generated_docs_use_lf_newlines() -> None:
     for doc in docs_files:
         raw = doc.read_bytes()
         assert b"\r\n" not in raw, f"{doc} contains CRLF newlines"
+
+
+def test_gen_ref_pages_normalizes_workflow_steps_to_string_keys() -> None:
+    content = (ROOT / "docs" / "gen_ref_pages.py").read_text(encoding="utf-8")
+    assert 'symbols_by_step: dict[str, list[tuple[str, str]]]' in content
+    assert 'str(step["number"])' in content
+    assert 'step_key = str(workflow_step_by_symbol[symbol])' in content
+
+
+def test_docs_metadata_includes_alphanumeric_workflow_steps() -> None:
+    step_numbers = {str(step["number"]) for step in workflow_step_docs()}
+    # Ensure split workflow sections remain represented in metadata.
+    assert "2A" in step_numbers
+    assert "2B" in step_numbers
+    assert "6A" in step_numbers
+    assert "6D" in step_numbers

@@ -15,12 +15,13 @@ PUBLIC_SYMBOLS = list(getattr(pkg, "__all__", []))
 
 WORKFLOW_STEPS = WORKFLOW_STEP_DOCS
 workflow_step_by_symbol = {row["symbol_name"]: row["workflow_step"] for row in PUBLIC_SYMBOL_DOCS}
-symbols_by_step: dict[int, list[tuple[str, str]]] = {int(step["number"]): [] for step in WORKFLOW_STEPS}
+symbols_by_step: dict[str, list[tuple[str, str]]] = {str(step["number"]): [] for step in WORKFLOW_STEPS}
 for symbol in PUBLIC_SYMBOLS:
     obj = getattr(pkg, symbol)
     module_name = getattr(obj, "__module__", PACKAGE)
     dotted_path = f"{module_name}.{symbol}"
-    symbols_by_step[workflow_step_by_symbol[symbol]].append((symbol, dotted_path))
+    step_key = str(workflow_step_by_symbol[symbol])
+    symbols_by_step[step_key].append((symbol, dotted_path))
 
 for items in symbols_by_step.values():
     items.sort(key=lambda item: item[0].lower())
@@ -47,7 +48,7 @@ def _load_internal_helpers() -> dict[str, list[str]]:
 internal_helpers_by_module = _load_internal_helpers()
 
 for step in WORKFLOW_STEPS:
-    step_number = step["number"]
+    step_number = str(step["number"])
     step_slug = step["slug"]
     for symbol, dotted_path in symbols_by_step.get(step_number, []):
         doc_path = f"reference/{step_slug}/{symbol}.md"
@@ -87,7 +88,7 @@ with mkdocs_gen_files.open("reference/SUMMARY.md", "w") as fd:
     fd.write("- [Reference Home](index.md)\n")
 
     for step in WORKFLOW_STEPS:
-        step_number = step["number"]
+        step_number = str(step["number"])
         step_slug = step["slug"]
         step_title = step["title"]
         fd.write(f"- Step {step_number}: {step_title}\n")
