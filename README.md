@@ -33,7 +33,6 @@ The notebooks share upstream context instead of standing alone. One environment 
 
 ## Canonical lifecycle workflow
 
-![FabricOps Starter Kit canonical lifecycle workflow](docs/assets/mvp-flow.png)
 
 FabricOps Starter Kit uses a canonical **10-step lifecycle** with governance first, reusable starter-kit engineering steps in the middle, and AI-assisted enhancements at the end. Detailed step guidance lives in [Lifecycle Operating Model](docs/lifecycle-operating-model.md).
 
