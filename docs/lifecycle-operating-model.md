@@ -1,4 +1,5 @@
 # Lifecycle Operating Model
+![FabricOps Starter Kit canonical lifecycle workflow](docs/assets/mvp-flow.png)
 
 FabricOps Starter Kit uses a 10-step lifecycle as a **business operating model** for data products in Microsoft Fabric. It is not only a notebook sequence: it connects governance intent, source expectations, transformation controls, and handover obligations from start to finish.
 
