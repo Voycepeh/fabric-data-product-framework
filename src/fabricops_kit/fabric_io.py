@@ -65,11 +65,40 @@ DEFAULT_TARGET = "Source"
 
 
 def load_fabric_config(config: FrameworkConfig | dict) -> FrameworkConfig:
-    """Validate and return a framework config mapping.
+    """Validate and return a user-supplied framework configuration.
 
-    This helper validates a user-maintained ``CONFIG`` object (for example from
-    ``00_config``) and returns the normalized framework config. It does not
-    create Fabric resources.
+    This public wrapper is typically called from ``00_env_config`` notebooks
+    before any read/write helper runs, so path/policy defaults are validated
+    early in the workflow.
+
+    Parameters
+    ----------
+    config : FrameworkConfig | dict
+        Framework config object or compatible mapping assembled during
+        notebook bootstrap.
+
+    Returns
+    -------
+    FrameworkConfig
+        Validated framework configuration ready for bootstrap/runtime and IO
+        helper consumption.
+
+    Raises
+    ------
+    ValueError
+        Propagated when validation fails for required config sections or path
+        target structure.
+
+    Notes
+    -----
+    This function validates policy/routing/default configuration only. It does
+    not create Fabric resources, execute data IO, or mutate external state.
+
+    Examples
+    --------
+    >>> cfg = load_fabric_config(framework_config)
+    >>> isinstance(cfg, FrameworkConfig)
+    True
     """
     return load_framework_config(config)
 

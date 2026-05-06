@@ -48,7 +48,19 @@ class AIPromptConfig:
 
 @dataclass(frozen=True)
 class QualityConfig:
-    """Default quality-policy options."""
+    """Default quality-policy options for FabricOps validation stages.
+
+    Parameters
+    ----------
+    default_severity : str, default="warning"
+        Baseline severity label applied when rule-level severity is not set.
+    fail_on_critical : bool, default=True
+        Whether critical findings should mark the run as failed in downstream
+        orchestration decisions.
+    quarantine_on_failure : bool, default=False
+        Whether failed records should be routed to a quarantine path when that
+        workflow is enabled by runtime helpers.
+    """
 
     default_severity: str = "warning"
     fail_on_critical: bool = True
@@ -57,7 +69,16 @@ class QualityConfig:
 
 @dataclass(frozen=True)
 class GovernanceConfig:
-    """Default governance-policy options."""
+    """Default governance-policy options for metadata/classification checks.
+
+    Parameters
+    ----------
+    required_classification : bool, default=True
+        Whether governed datasets are expected to carry classification metadata.
+    sensitivity_rules : dict[str, str]
+        Mapping of rule keys to expected sensitivity labels used by governance
+        notebook checks and reporting summaries.
+    """
 
     required_classification: bool = True
     sensitivity_rules: dict[str, str] = field(default_factory=dict)
@@ -65,7 +86,16 @@ class GovernanceConfig:
 
 @dataclass(frozen=True)
 class LineageConfig:
-    """Default lineage-capture behavior."""
+    """Default lineage-capture behavior for pipeline traceability.
+
+    Parameters
+    ----------
+    capture_ai_summaries : bool, default=True
+        Whether AI-generated summaries should be retained in lineage artifacts.
+    capture_transformation_steps : bool, default=True
+        Whether transformation-level steps should be included in lineage
+        capture payloads.
+    """
 
     capture_ai_summaries: bool = True
     capture_transformation_steps: bool = True
@@ -225,7 +255,44 @@ def create_quality_config(
     fail_on_critical: bool = True,
     quarantine_on_failure: bool = False,
 ) -> QualityConfig:
-    """Create quality-default configuration."""
+    """Create the default quality policy used during FabricOps checks.
+
+    This helper is typically called in ``00_env_config`` to define baseline
+    severity and failure-routing behavior consumed later by quality notebooks.
+    The returned object only stores policy defaults and performs no IO.
+
+    Parameters
+    ----------
+    default_severity : str, default="warning"
+        Baseline severity for checks that do not set an explicit level.
+        Supported values are ``"info"``, ``"warning"``, and ``"critical"``.
+    fail_on_critical : bool, default=True
+        Whether critical findings should fail readiness/quality outcomes.
+    quarantine_on_failure : bool, default=False
+        Whether downstream workflows should quarantine failed data when
+        quarantine handling is available.
+
+    Returns
+    -------
+    QualityConfig
+        Immutable quality-policy configuration for framework composition.
+
+    Raises
+    ------
+    ValueError
+        Raised when ``default_severity`` is not one of the supported values.
+
+    Notes
+    -----
+    This function validates and normalizes config values only. It does not
+    create Fabric resources, move data, or write to storage.
+
+    Examples
+    --------
+    >>> quality = create_quality_config(default_severity="critical", fail_on_critical=True)
+    >>> quality.default_severity
+    'critical'
+    """
     severity = str(default_severity).strip().lower()
     if severity not in {"info", "warning", "critical"}:
         raise ValueError("default_severity must be one of: info, warning, critical.")
@@ -240,7 +307,36 @@ def create_governance_config(
     required_classification: bool = True,
     sensitivity_rules: dict[str, str] | None = None,
 ) -> GovernanceConfig:
-    """Create governance-default configuration."""
+    """Create governance policy defaults for FabricOps runtime checks.
+
+    Parameters
+    ----------
+    required_classification : bool, default=True
+        Whether dataset classification is required by default in governance
+        validation and handover checks.
+    sensitivity_rules : dict[str, str] | None, optional
+        Optional sensitivity mapping such as column-pattern to expected label.
+        ``None`` produces an empty mapping.
+
+    Returns
+    -------
+    GovernanceConfig
+        Immutable governance-policy configuration.
+
+    Notes
+    -----
+    This helper only defines policy defaults and does not query metadata
+    services, create Fabric assets, or perform IO.
+
+    Examples
+    --------
+    >>> gov = create_governance_config(
+    ...     required_classification=True,
+    ...     sensitivity_rules={"customer_email": "Confidential"},
+    ... )
+    >>> gov.required_classification
+    True
+    """
     return GovernanceConfig(
         required_classification=bool(required_classification),
         sensitivity_rules=dict(sensitivity_rules or {}),
@@ -251,7 +347,32 @@ def create_lineage_config(
     capture_ai_summaries: bool = True,
     capture_transformation_steps: bool = True,
 ) -> LineageConfig:
-    """Create lineage-default configuration."""
+    """Create lineage capture defaults for FabricOps handover traceability.
+
+    Parameters
+    ----------
+    capture_ai_summaries : bool, default=True
+        Whether AI-generated summaries should be retained in lineage context.
+    capture_transformation_steps : bool, default=True
+        Whether transformation-level operations should be included in lineage
+        reporting payloads.
+
+    Returns
+    -------
+    LineageConfig
+        Immutable lineage policy used by runtime orchestration and reporting.
+
+    Notes
+    -----
+    This helper sets routing/capture defaults only. It does not collect or
+    persist lineage records by itself.
+
+    Examples
+    --------
+    >>> lineage = create_lineage_config(capture_ai_summaries=False)
+    >>> lineage.capture_ai_summaries
+    False
+    """
     return LineageConfig(
         capture_ai_summaries=bool(capture_ai_summaries),
         capture_transformation_steps=bool(capture_transformation_steps),
@@ -266,7 +387,39 @@ def create_framework_config(
     governance_config: GovernanceConfig,
     lineage_config: LineageConfig,
 ) -> FrameworkConfig:
-    """Create the top-level framework configuration object."""
+    """Create the top-level FabricOps framework configuration contract.
+
+    Parameters
+    ----------
+    path_config : PathConfig
+        Environment-to-target routing policy used by IO helpers.
+    notebook_runtime_config : NotebookRuntimeConfig
+        Notebook naming/runtime guard policy.
+    ai_prompt_config : AIPromptConfig
+        Prompt templates used by AI-assisted helper workflows.
+    quality_config : QualityConfig
+        Default quality policy settings.
+    governance_config : GovernanceConfig
+        Default governance policy settings.
+    lineage_config : LineageConfig
+        Default lineage capture settings.
+
+    Returns
+    -------
+    FrameworkConfig
+        Frozen composition object used by bootstrap and validation helpers.
+
+    Notes
+    -----
+    This constructor composes config objects only and has no Fabric-side
+    side effects.
+
+    Examples
+    --------
+    >>> framework = create_framework_config(path_cfg, runtime_cfg, ai_cfg, quality_cfg, gov_cfg, lineage_cfg)
+    >>> isinstance(framework, FrameworkConfig)
+    True
+    """
     return FrameworkConfig(
         path_config=path_config,
         notebook_runtime_config=notebook_runtime_config,
@@ -278,7 +431,36 @@ def create_framework_config(
 
 
 def validate_framework_config(config: FrameworkConfig | dict[str, Any]) -> FrameworkConfig:
-    """Validate and normalize framework config input."""
+    """Validate and normalize framework configuration input.
+
+    Parameters
+    ----------
+    config : FrameworkConfig | dict[str, Any]
+        Existing framework config object or compatible mapping containing all
+        required component configs.
+
+    Returns
+    -------
+    FrameworkConfig
+        Normalized, validated framework config object.
+
+    Raises
+    ------
+    ValueError
+        Raised when required sections are missing, component types are invalid,
+        or configured path targets are incomplete.
+
+    Notes
+    -----
+    Validation checks configuration shape and required Housepath-style fields.
+    It does not perform external IO or provision Fabric resources.
+
+    Examples
+    --------
+    >>> normalized = validate_framework_config(framework_config)
+    >>> isinstance(normalized, FrameworkConfig)
+    True
+    """
     if isinstance(config, FrameworkConfig):
         normalized = config
     elif isinstance(config, dict):
@@ -324,10 +506,33 @@ def validate_framework_config(config: FrameworkConfig | dict[str, Any]) -> Frame
 def load_fabric_config(config: FrameworkConfig | dict[str, Any]) -> FrameworkConfig:
     """Validate and return a user-supplied framework configuration.
 
+    Parameters
+    ----------
+    config : FrameworkConfig | dict[str, Any]
+        Framework config object or compatible mapping typically assembled in
+        ``00_env_config``.
+
+    Returns
+    -------
+    FrameworkConfig
+        Validated framework configuration ready for bootstrap/runtime helpers.
+
+    Raises
+    ------
+    ValueError
+        Propagated when validation fails for required config sections or path
+        target structure.
+
     Notes
     -----
     This helper validates configuration objects only. It does not create or
     mutate Fabric resources such as workspaces, lakehouses, or warehouses.
+
+    Examples
+    --------
+    >>> cfg = load_fabric_config(framework_config)
+    >>> isinstance(cfg, FrameworkConfig)
+    True
     """
     return validate_framework_config(config)
 
