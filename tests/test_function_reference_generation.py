@@ -76,11 +76,11 @@ def test_every_public_callable_has_docstring_first_sentence() -> None:
 def test_step_specific_callable_placement() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
-    step1 = section(content, "Step 1: Define purpose, approved usage & governance ownership")
-    step2 = section(content, "Step 2: Configure runtime, environment & path rules")
-    step3 = section(content, "Step 3: Declare source contract & ingest source data")
-    step6 = section(content, "Step 6: Build production transformation & write target output")
-    step7 = section(content, "Step 7: Validate output & persist target metadata")
+    step1 = section(content, "Step 1: Governance context")
+    step2 = section(content, "Step 2A: Create shared runtime config")
+    step3 = section(content, "Step 3: Define source contract & ingestion pattern")
+    step6 = section(content, "Step 6B: Apply runtime standards")
+    step7 = section(content, "Step 6D: Write controlled outputs")
 
     assert "`lakehouse_table_read`" in step3
     assert "`lakehouse_table_read`" not in step1
@@ -103,12 +103,12 @@ def test_metadata_driven_summary_override_is_applied() -> None:
 def test_reference_links_are_site_friendly_and_correctly_routed() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
-    assert "./step-02-runtime-environment-path-rules/get_path/" in content
-    assert "./step-02-runtime-environment-path-rules/load_fabric_config/" in content
-    assert "./step-04-source-validation-metadata/profile_metadata_to_records/" in content
-    assert "./step-02-runtime-environment-path-rules/get_path.md" not in content
-    assert "./step-02-runtime-environment-path-rules/load_fabric_config.md" not in content
-    assert "./step-04-source-validation-metadata/profile_metadata_to_records.md" not in content
+    assert "./step-02a-shared-runtime-config/get_path/" in content
+    assert "./step-02a-shared-runtime-config/load_fabric_config/" in content
+    assert "./step-04-ingest-profile-store/profile_metadata_to_records/" in content
+    assert "./step-02a-shared-runtime-config/get_path.md" not in content
+    assert "./step-02a-shared-runtime-config/load_fabric_config.md" not in content
+    assert "./step-04-ingest-profile-store/profile_metadata_to_records.md" not in content
 
 
 def test_docs_metadata_matches_public_exports() -> None:

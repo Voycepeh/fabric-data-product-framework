@@ -13,7 +13,7 @@ DOCS_METADATA_PATH = PKG_DIR / "docs_metadata.py"
 REFERENCE_PATH = ROOT / "docs" / "reference" / "index.md"
 MODULE_DIR = ROOT / "docs" / "api" / "modules"
 STEP_FALLBACK_NOTES = {
-    5: "No public callable is currently exported for this step. Use notebook prompts for AI-assisted rule drafting.",
+    "5": "No public callable is currently exported for this step. Use notebook prompts for AI-assisted rule drafting.",
 }
 
 @dataclass
@@ -130,21 +130,21 @@ def internal_helper_link(module: str, helper: str) -> str:
     return f"../../reference/internal/{module}/{helper}.md"
 
 
-def public_reference_link(symbol: str, docs_metadata: dict[str, dict[str, Any]], step_slugs: dict[int, str]) -> str:
+def public_reference_link(symbol: str, docs_metadata: dict[str, dict[str, Any]], step_slugs: dict[str, str]) -> str:
     """Return docs-relative link target for a public callable reference page."""
     if symbol not in docs_metadata:
         raise RuntimeError(f"Missing PUBLIC_SYMBOL_DOCS entry for exported symbol: {symbol}")
     step = docs_metadata[symbol].get("workflow_step")
     if step is None:
         raise RuntimeError(f"Missing workflow_step metadata for exported symbol: {symbol}")
-    step_slug = step_slugs.get(step)
+    step_slug = step_slugs.get(str(step))
     if not step_slug:
         raise RuntimeError(f"Missing WORKFLOW_STEP_DOCS slug mapping for workflow step {step} ({symbol})")
     return f"../../reference/{step_slug}/{symbol}.md"
 
 
 def callable_docs_link(
-    symbol_name: str, module: str, docs_metadata: dict[str, dict[str, Any]], step_slugs: dict[int, str]
+    symbol_name: str, module: str, docs_metadata: dict[str, dict[str, Any]], step_slugs: dict[str, str]
 ) -> str:
     """Return a safe docs link for a public callable."""
     workflow_step = docs_metadata[symbol_name].get("workflow_step")
@@ -157,12 +157,12 @@ def main() -> None:
     public = parse_public_exports()
     module_data = {p.stem: parse_module(p) for p in PKG_DIR.glob("*.py") if p.name != "__init__.py"}
 
-    step_registry = parse_step_registry()
     docs_metadata = parse_docs_metadata()
     step_docs = parse_workflow_step_docs()
-    step_titles = {s["step_number"]: s["step_name"] for s in step_registry}
-    step_slugs = {int(step["number"]): step["slug"] for step in step_docs}
-    step_symbols: dict[int, list[Symbol]] = {s["step_number"]: [] for s in step_registry}
+    step_titles = {str(step["number"]): step["title"] for step in step_docs}
+    step_slugs = {str(step["number"]): step["slug"] for step in step_docs}
+    step_subtexts = {str(step["number"]): step.get("subtext", "") for step in step_docs}
+    step_symbols: dict[str, list[Symbol]] = {str(step["number"]): [] for step in step_docs}
     mapped_symbols: set[str] = set()
 
     missing_metadata = sorted(name for name in public if name not in docs_metadata)
@@ -197,7 +197,8 @@ def main() -> None:
         if meta["kind"] != symbol.obj_type:
             raise RuntimeError(f"Metadata kind mismatch for {symbol.name}: expected {symbol.obj_type}, found {meta['kind']}")
         step = meta.get("workflow_step")
-        if step is not None and step not in step_symbols:
+        step_key = str(step) if step is not None else None
+        if step_key is not None and step_key not in step_symbols:
             raise RuntimeError(f"Invalid workflow_step {step} for {symbol.name}; expected one of {sorted(step_symbols)}")
         symbol.summary = meta.get("summary_override") or symbol.summary
         symbol.purpose = meta.get("purpose") or symbol.summary or "—"
@@ -206,11 +207,12 @@ def main() -> None:
             _assert_non_placeholder_summary(symbol.name, "summary", symbol.summary)
         if enforce_placeholder_guard and symbol.purpose and symbol.purpose != "—":
             _assert_non_placeholder_summary(symbol.name, "purpose", symbol.purpose)
-        symbol.importance = meta.get("importance") or ("Essential" if step is not None and int(step) <= 7 else "Optional")
+        step_rank = int(str(step).split("A")[0].split("B")[0].split("C")[0].split("D")[0]) if step is not None else 99
+        symbol.importance = meta.get("importance") or ("Essential" if step is not None and step_rank <= 7 else "Optional")
         if symbol.importance not in {"Essential", "Optional"}:
             raise RuntimeError(f"Invalid importance {symbol.importance!r} for {symbol.name}; expected Essential or Optional")
-        if step is not None:
-            step_symbols[step].append(symbol)
+        if step_key is not None:
+            step_symbols[step_key].append(symbol)
             mapped_symbols.add(symbol.name)
 
     MODULE_DIR.mkdir(parents=True, exist_ok=True)
@@ -291,9 +293,12 @@ def main() -> None:
             f"| <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{module}/\" title=\"Open {module} module page\" aria-label=\"Open {module} module page\">{module}</a> |"
         )
     ref.append("")
-    for step in sorted(step_titles):
+    for step in [str(item["number"]) for item in step_docs]:
         ref.append(f"## Step {step}: {step_titles[step]}")
         ref.append("")
+        subtext = step_subtexts.get(step, "")
+        if subtext:
+            ref.extend([subtext, ""])
         entries = sorted(step_symbols.get(step, []), key=lambda x: x.name.lower())
         if entries:
             ref.extend(["| Function / class | Module | Importance | Purpose | Related helpers |", "|---|---|---|---|---|"])
