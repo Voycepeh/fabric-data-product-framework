@@ -40,7 +40,7 @@ This step applies standard runtime requirements such as technical columns, run I
 
 ### Step 6C: Enforce pipeline controls
 
-This step applies the controls that decide whether the pipeline output should be trusted. This includes data quality rules, schema checks, classification checks, and other contract validations before the output is released downstream.
+This step enforces approved pipeline controls that are available at runtime and determine whether output should be trusted. This includes approved data quality rules, schema checks, contract checks, and approved classification or sensitivity checks before release downstream.
 
 ### Step 6D: Write controlled outputs
 
@@ -58,7 +58,7 @@ This step uses AI in exploration notebooks to suggest possible data quality rule
 
 This step uses AI in exploration notebooks to suggest column classifications such as PII, sensitivity level, and governance labels for the planned output. These suggestions are advisory only; actual label assignment must be approved by governance or data stewards and enforced in the pipeline.
 
-### Step 10: Generate lineage & handover documentation
+### Step 10: Generate lineage & AI assisted handover documentation
 
 This step creates the final documentation needed for review, handover, and future maintenance. The goal is for another analyst, engineer, approver, or stakeholder to understand what was built, why it was built, and how to operate it.
 
