@@ -8,10 +8,10 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`check_partition_drift`](../../reference/step-04-source-validation-metadata/check_partition_drift.md) | function | Check partition-level drift using keys, partitions, and optional watermark baselines. | — |
-| [`check_profile_drift`](../../reference/step-04-source-validation-metadata/check_profile_drift.md) | function | Compare profile metrics against a baseline profile and drift thresholds. | — |
-| [`check_schema_drift`](../../reference/step-04-source-validation-metadata/check_schema_drift.md) | function | Compare a current dataframe schema against a baseline schema snapshot. | — |
-| [`summarize_drift_results`](../../reference/step-04-source-validation-metadata/summarize_drift_results.md) | function | Summarize schema, partition, and profile drift outcomes into one decision. | — |
+| [`check_partition_drift`](../../reference/step-04-ingest-profile-store/check_partition_drift.md) | function | Check partition-level drift using keys, partitions, and optional watermark baselines. | — |
+| [`check_profile_drift`](../../reference/step-04-ingest-profile-store/check_profile_drift.md) | function | Compare profile metrics against a baseline profile and drift thresholds. | — |
+| [`check_schema_drift`](../../reference/step-04-ingest-profile-store/check_schema_drift.md) | function | Compare a current dataframe schema against a baseline schema snapshot. | — |
+| [`summarize_drift_results`](../../reference/step-04-ingest-profile-store/summarize_drift_results.md) | function | Summarize schema, partition, and profile drift outcomes into one decision. | — |
 
 ## Internal helpers
 
