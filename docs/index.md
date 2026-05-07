@@ -1,39 +1,60 @@
 # FabricOps Starter Kit
 
-FabricOps Starter Kit is a practical starter kit for building **governed, quality-checked, AI-ready notebooks in Microsoft Fabric**.
+FabricOps Starter Kit helps teams build **governed, quality-checked, AI-ready Microsoft Fabric notebooks**.
 
-It gives teams a reusable way to move from exploration to controlled pipeline delivery with consistent metadata, quality evidence, lineage, and handover artifacts.
+It moves teams from exploration to controlled pipeline delivery with reusable metadata, DQ evidence, lineage, and handover artifacts.
 
-## Start here
+[Quick Start](quick-start.md){ .md-button .md-button--primary }
+[Lifecycle Operating Model](lifecycle-operating-model.md){ .md-button }
+
+## Navigate by goal
+
+### New user
 
 - [Quick Start](quick-start.md)
+- [Notebook Structure](notebook-structure.md)
+
+### Understand the operating model
+
 - [Lifecycle Operating Model](lifecycle-operating-model.md)
 - [Architecture](architecture.md)
+
+### Build governed pipelines
+
 - [Storage & Metadata Model](architecture/storage-model.md)
-- [Fabric-native Data Quality](architecture/dqx-inspired-fabric-native-dq.md)
-- [Notebook Structure](notebook-structure.md)
 - [Metadata and Contracts](metadata-and-contracts.md)
+- [Fabric-native Data Quality](architecture/dqx-inspired-fabric-native-dq.md)
+
+### Developer reference
+
 - [Function Reference](reference/index.md)
 - [Fabric Wheel Install](setup/fabric-wheel-install.md)
 
-## How the starter kit works
+## Workflow at a glance
 
-- `00_env_config` defines reusable environment settings used across notebooks.
-- Exploration notebooks profile and understand data before implementation decisions are finalized.
-- Pipeline contract notebooks enforce approved rules and write controlled outputs.
-- Metadata, DQ results, lineage, and handover notes are captured as reusable artifacts.
+1. `00_env_config` sets shared runtime and storage configuration.
+2. Exploration notebooks profile data and draft AI-assisted suggestions.
+3. Pipeline contract notebooks enforce approved decisions.
+4. Metadata, DQ results, lineage, and handover artifacts are written as controlled outputs.
+
+Exploration is where profiling and AI suggestions happen. Pipeline contract notebooks are where approved governance and quality decisions are enforced.
 
 ## AI in the loop
 
-- AI assists with metadata summaries, DQ rule suggestions, sensitivity classification suggestions, lineage, and handover notes.
+- AI suggests metadata summaries, DQ rules, sensitivity classification, lineage, and handover notes.
 - Humans approve governance and quality decisions.
-- Pipeline notebooks enforce approved decisions.
+- Pipeline notebooks enforce approved rules and write controlled outputs.
 
-## Architecture pages
+## What you get
 
-- [Platform Architecture](architecture.md) explains the overall workspace and data platform shape.
-- [Storage & Metadata Model](architecture/storage-model.md) explains where contracts, profiles, DQ results, lineage, and runtime artifacts live.
-- [Fabric-native Data Quality](architecture/dqx-inspired-fabric-native-dq.md) explains the DQX-inspired Fabric-native operating pattern.
+| Output | Purpose |
+| --- | --- |
+| Reusable config notebook | Standardizes environment and execution settings. |
+| Exploration notebook pattern | Supports profiling and decision preparation. |
+| Pipeline contract notebook | Executes approved rules in controlled pipelines. |
+| Metadata tables | Capture reusable contracts and context. |
+| DQ results | Record quality evidence for review and operations. |
+| Lineage and handover documentation | Preserve traceability and team handover context. |
 
 ## Compatibility note
 
