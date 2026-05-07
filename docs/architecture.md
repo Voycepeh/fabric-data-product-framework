@@ -8,7 +8,11 @@
 
 FabricOps Starter Kit supports the canonical 10-step lifecycle workflow in Microsoft Fabric where teams move data from source systems to governed, consumption-ready outputs.
 
-In practice, Fabric projects read from and write to multiple lakehouses, warehouses, files, workspaces, and environments. A Fabric notebook usually runs with one default attached item, so reusable configuration and path resolution helpers are needed to make cross-store and cross-environment data movement reliable and repeatable.
+In practice, Fabric projects read from and write to multiple lakehouses,
+warehouses, files, workspaces, and environments. A Fabric notebook
+usually runs with one default attached item, so reusable configuration
+and path resolution helpers are needed to make cross-store and
+cross-environment data movement reliable and repeatable.
 
 ## Platform shape
 

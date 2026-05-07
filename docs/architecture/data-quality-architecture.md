@@ -68,7 +68,10 @@ Fabric does not currently provide a one-for-one equivalent of Databricks Labs DQ
 
 ## Enterprise constraint for confidentiality-sensitive organizations
 
-For organizations with strict confidentiality constraints, do not assume external internet access or external LLM endpoints. The supported AI path in this framework is Fabric-native AI functions and Microsoft Copilot under organizational controls.
+For organizations with strict confidentiality constraints, do not
+assume external internet access or external LLM endpoints. The
+supported AI path in this framework is Fabric-native AI functions and
+Microsoft Copilot under organizational controls.
 
 ## Architecture diagram
 
@@ -111,7 +114,11 @@ flowchart TD
 
 ## How this evolves the original notebook template
 
-Earlier notebook patterns often kept quality logic as manual sections inside individual notebooks (setup checks, profiling notes, transformation logic, output logging, and Copilot prompts). This architecture reframes that approach into a reusable operating model with:
+Earlier notebook patterns often kept quality logic as manual
+sections inside individual notebooks (setup checks, profiling notes,
+transformation logic, output logging, and Copilot prompts). This
+architecture reframes that approach into a reusable operating model
+with:
 
 1. persisted metadata,
 2. a governed DQ rule lifecycle,

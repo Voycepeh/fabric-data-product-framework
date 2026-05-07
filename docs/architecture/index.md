@@ -1,6 +1,9 @@
 # Architecture overview
 
-FabricOps Starter Kit is a Fabric-native operating model for repeatable data product delivery. It combines local engineering discipline with notebook-first execution so teams can move from exploration to governed production handover without changing platforms.
+FabricOps Starter Kit is a Fabric-native operating model for repeatable
+data product delivery. It combines local engineering discipline with
+notebook-first execution so teams can move from exploration to governed
+production handover without changing platforms.
 
 ## The end-to-end story
 
