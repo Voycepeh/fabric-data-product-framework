@@ -8,49 +8,53 @@ It moves teams from exploration to controlled pipeline delivery with reusable me
 
 [Lifecycle Operating Model](lifecycle-operating-model.md){ .md-button }
 
+## Framework at a glance
+
 ![FabricOps workspace notebook structure](assets/notebook-structure.png)
 
 _Exploration explains the why. Pipeline contract notebooks enforce the approved what._
 
 ## Navigate by goal
 
-### New user
-
-- [Quick Start](quick-start.md)
-- [Notebook Structure](notebook-structure.md)
-
-### Understand the operating model
-
-- [Lifecycle Operating Model](lifecycle-operating-model.md)
-- [Architecture](architecture.md)
-
-### Build governed pipelines
-
-- [Storage & Metadata Model](architecture/storage-model.md)
-- [Metadata and Contracts](metadata-and-contracts.md)
-- [Fabric-native Data Quality](architecture/dqx-inspired-fabric-native-dq.md)
-
-### Developer reference
-
-- [Function Reference](reference/index.md)
-- [Fabric Wheel Install](setup/fabric-wheel-install.md)
+| Goal | Start with |
+| --- | --- |
+| New user | [Quick Start](quick-start.md), [Notebook Structure](notebook-structure.md) |
+| Understand the operating model | [Lifecycle Operating Model](lifecycle-operating-model.md), [Architecture](architecture.md) |
+| Build governed pipelines | [Storage & Metadata Model](architecture/storage-model.md), [Metadata and Contracts](metadata-and-contracts.md), [Fabric-native Data Quality](architecture/dqx-inspired-fabric-native-dq.md) |
+| Developer reference | [Function Reference](reference/index.md), [Fabric Wheel Install](setup/fabric-wheel-install.md) |
 
 ## Workflow at a glance
 
-1. `00_env_config` sets shared runtime and storage configuration.
-2. Exploration notebooks profile data and draft AI-assisted suggestions.
-3. Pipeline contract notebooks enforce approved decisions.
-4. Metadata, DQ results, lineage, and handover artifacts are written as controlled outputs.
+The workflow separates decision-making from enforcement:
 
-Exploration is where profiling and AI suggestions happen. Pipeline contract notebooks are where approved governance and quality decisions are enforced.
+- `00_env_config` defines reusable environment and storage settings.
+- Exploration notebooks profile data, test assumptions, and draft AI-assisted suggestions.
+- Approved contract metadata records required columns, DQ rules, classifications, and business keys.
+- Pipeline contract notebooks enforce approved decisions and write controlled outputs.
 
 ## AI in the loop
 
-- AI suggests metadata summaries, DQ rules, sensitivity classification, lineage, and handover notes.
-- Humans approve governance and quality decisions.
-- Pipeline notebooks enforce approved rules and write controlled outputs.
+AI suggests:
+- metadata summaries
+- DQ rules
+- sensitivity classifications
+- lineage and handover notes
+
+Humans approve:
+- governance decisions
+- quality rules
+- classifications
+- release readiness
+
+Pipelines enforce:
+- approved contracts
+- quality checks
+- controlled outputs
+- evidence capture
 
 ## What you get
+
+Every pipeline should leave behind reusable evidence, not just output tables.
 
 | Output | Purpose |
 | --- | --- |
