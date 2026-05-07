@@ -61,7 +61,7 @@ Read more: [Lifecycle Operating Model](https://voycepeh.github.io/FabricOps-Star
 - Slow, manual quality/governance drafting and review loops.
 - Weak lineage and handover evidence for operational ownership transfer.
 
-For contract behavior and storage, see [Metadata and Contracts](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/). For Fabric-native DQ architecture, see [Architecture > Fabric-native Data Quality](https://voycepeh.github.io/FabricOps-Starter-Kit/architecture/dqx-inspired-fabric-native-dq/).
+For contract behavior and storage, see [Metadata and Contracts](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/). For Fabric-native DQ architecture, see [Architecture > Fabric-native Data Quality](https://voycepeh.github.io/FabricOps-Starter-Kit/architecture/data-quality-architecture/).
 
 ## AI in the loop
 
