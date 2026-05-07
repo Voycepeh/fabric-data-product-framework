@@ -27,7 +27,23 @@ nav:
   - Notebook Structure: notebook-structure.md
   - Metadata and Contracts: metadata-and-contracts.md
   - Deployment and Promotion: deployment-and-promotion.md
-  - Functions: reference/index.md
+  - Functions:
+      - Function Reference: reference/index.md
+      - Modules:
+          - ai: api/modules/ai.md
+          - config: api/modules/config.md
+          - docs_metadata: api/modules/docs_metadata.md
+          - drift: api/modules/drift.md
+          - fabric_io: api/modules/fabric_io.md
+          - governance: api/modules/governance.md
+          - handover: api/modules/handover.md
+          - lineage: api/modules/lineage.md
+          - metadata: api/modules/metadata.md
+          - profiling: api/modules/profiling.md
+          - quality: api/modules/quality.md
+          - run_summary: api/modules/run_summary.md
+          - runtime: api/modules/runtime.md
+          - technical_columns: api/modules/technical_columns.md
   - Setup:
       - Fabric Wheel Install: setup/fabric-wheel-install.md
 

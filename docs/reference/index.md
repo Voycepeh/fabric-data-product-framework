@@ -1,45 +1,10 @@
 # Callable Functions
 
-Generated step-first catalogue of callable functions sourced from `fabricops_kit.__all__`.
+This step-first catalogue lists public callables exported from `fabricops_kit.__all__`.
 
-## Notebook template quickstart
-
-Use these notebook templates for an end-to-end lifecycle implementation:
-
-- [`00_env_config.ipynb`](../../templates/notebooks/00_env_config.ipynb): shared runtime setup (Step 1, Step 2A, Step 2B).
-- [`02_ex_agreement_topic.ipynb`](../../templates/notebooks/02_ex_agreement_topic.ipynb): exploration/profiling and AI-assisted advisory suggestions with human decisions (Step 3, Step 4, Step 5, Step 8, Step 9).
-- [`03_pc_agreement_source_to_target.ipynb`](../../templates/notebooks/03_pc_agreement_source_to_target.ipynb): run-all-safe pipeline enforcement and controlled delivery (Step 1, Step 2B, Step 3, Step 6A-6D, Step 7, Step 10).
-
-Clean split:
-- `00_env_config` = shared setup.
-- `02_ex` = exploration, profiling, AI suggestions, human decisions.
-- `03_pc` = approved enforcement and output.
-
-Step 8 and Step 9 AI functions belong in exploration notebooks. Pipeline notebooks should enforce approved rules and should not make AI decisions at runtime.
-
-- `02_ex` drafts contract expectations from profiling evidence and AI-assisted suggestions.
-- `03_pc` enforces approved contract expectations.
-- FabricOps uses Open Data Contract principles in a Fabric-first way: metadata tables are the operational source of truth, and ODCS YAML is an optional exchange/export format.
-
-
-## Modules
-
-| Module |
-|---|
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/docs_metadata/" title="Open docs_metadata module page" aria-label="Open docs_metadata module page">docs_metadata</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/drift/" title="Open drift module page" aria-label="Open drift module page">drift</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/governance/" title="Open governance module page" aria-label="Open governance module page">governance</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/handover/" title="Open handover module page" aria-label="Open handover module page">handover</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/lineage/" title="Open lineage module page" aria-label="Open lineage module page">lineage</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/metadata/" title="Open metadata module page" aria-label="Open metadata module page">metadata</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/profiling/" title="Open profiling module page" aria-label="Open profiling module page">profiling</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/quality/" title="Open quality module page" aria-label="Open quality module page">quality</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/run_summary/" title="Open run_summary module page" aria-label="Open run_summary module page">run_summary</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/runtime/" title="Open runtime module page" aria-label="Open runtime module page">runtime</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/technical_columns/" title="Open technical_columns module page" aria-label="Open technical_columns module page">technical_columns</a> |
+For notebook execution flow, see [Quick Start](../quick-start.md).
+For notebook responsibilities, see [Notebook Structure](../notebook-structure.md).
+Module-level API pages are available in the **Functions > Modules** sidebar.
 
 ## Step 1: Governance context
 
@@ -116,9 +81,7 @@ This step brings the source data into the framework, profiles it, and stores it 
 
 This step is where the analyst studies the profiled source data and explains why transformation is needed. There may not be many helper functions here today, but future functions could support standard EDA, AI assisted analysis, and documentation of business assumptions before the logic becomes part of the repeatable pipeline.
 
-No public callable currently mapped to this step.
-
-No public callable is currently exported for this step. Use notebook prompts for AI-assisted rule drafting.
+No public callable currently mapped to this step. Use exploration notebook prompts to capture transformation rationale before pipeline enforcement.
 
 ## Step 6A: Write transformation logic
 

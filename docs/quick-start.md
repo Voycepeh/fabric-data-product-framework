@@ -25,6 +25,13 @@ For Fabric Environment install steps, use [Fabric Wheel Install](setup/fabric-wh
 - Attach the Fabric Environment that contains the package wheel.
 - Create or load runtime/framework config (paths, dataset IDs, output targets, run context).
 
+Canonical notebook flow:
+
+- `00_env_config` = shared setup and runtime configuration baseline.
+- `01_data_sharing_agreement_<agreement>` = governance context, approved usage, ownership, and restrictions.
+- `02_ex_<agreement>_<topic>` = exploration, profiling, AI suggestions, and human decisions.
+- `03_pc_<agreement>_<topic>` = approved enforcement, outputs, metadata, lineage, and handover.
+
 ## 3) Execute in canonical 10-step order
 
 Follow this sequence (details in [Lifecycle Operating Model](lifecycle-operating-model.md)):
