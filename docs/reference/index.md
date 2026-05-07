@@ -1,45 +1,10 @@
 # Callable Functions
 
-Generated step-first catalogue of callable functions sourced from `fabricops_kit.__all__`.
+This step-first catalogue lists public callables exported from `fabricops_kit.__all__`.
 
-## Notebook template quickstart
-
-Use these notebook templates for an end-to-end lifecycle implementation:
-
-- [`00_env_config.ipynb`](../../templates/notebooks/00_env_config.ipynb): shared runtime setup (Step 1, Step 2A, Step 2B).
-- [`02_ex_agreement_topic.ipynb`](../../templates/notebooks/02_ex_agreement_topic.ipynb): exploration/profiling and AI-assisted advisory suggestions with human decisions (Step 3, Step 4, Step 5, Step 8, Step 9).
-- [`03_pc_agreement_source_to_target.ipynb`](../../templates/notebooks/03_pc_agreement_source_to_target.ipynb): run-all-safe pipeline enforcement and controlled delivery (Step 1, Step 2B, Step 3, Step 6A-6D, Step 7, Step 10).
-
-Clean split:
-- `00_env_config` = shared setup.
-- `02_ex` = exploration, profiling, AI suggestions, human decisions.
-- `03_pc` = approved enforcement and output.
-
-Step 8 and Step 9 AI functions belong in exploration notebooks. Pipeline notebooks should enforce approved rules and should not make AI decisions at runtime.
-
-- `02_ex` drafts contract expectations from profiling evidence and AI-assisted suggestions.
-- `03_pc` enforces approved contract expectations.
-- FabricOps uses Open Data Contract principles in a Fabric-first way: metadata tables are the operational source of truth, and ODCS YAML is an optional exchange/export format.
-
-
-## Modules
-
-| Module |
-|---|
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/docs_metadata/" title="Open docs_metadata module page" aria-label="Open docs_metadata module page">docs_metadata</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/drift/" title="Open drift module page" aria-label="Open drift module page">drift</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/governance/" title="Open governance module page" aria-label="Open governance module page">governance</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/handover/" title="Open handover module page" aria-label="Open handover module page">handover</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/lineage/" title="Open lineage module page" aria-label="Open lineage module page">lineage</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/metadata/" title="Open metadata module page" aria-label="Open metadata module page">metadata</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/profiling/" title="Open profiling module page" aria-label="Open profiling module page">profiling</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/quality/" title="Open quality module page" aria-label="Open quality module page">quality</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/run_summary/" title="Open run_summary module page" aria-label="Open run_summary module page">run_summary</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/runtime/" title="Open runtime module page" aria-label="Open runtime module page">runtime</a> |
-| <a class="api-chip api-chip-module api-chip-link" href="../api/modules/technical_columns/" title="Open technical_columns module page" aria-label="Open technical_columns module page">technical_columns</a> |
+For notebook execution flow, see [Quick Start](../quick-start.md).
+For notebook responsibilities, see [Notebook Structure](../notebook-structure.md).
+Module-level API pages are available in the **Functions > Modules** sidebar.
 
 ## Step 1: Governance context
 
@@ -48,10 +13,10 @@ This step captures the governance context: approved usage, owner, and data agree
 | Function / class | Module | Importance | Purpose | Related helpers |
 |---|---|---|---|---|
 | [`assert_notebook_name_valid`](./step-01-governance-context/assert_notebook_name_valid/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/runtime/" title="Open runtime module page" aria-label="Open runtime module page">runtime</a> | Essential | Raise :class:`NotebookNamingError` when a notebook name is invalid. | — |
-| [`build_runtime_context`](./step-01-governance-context/build_runtime_context/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/runtime/" title="Open runtime module page" aria-label="Open runtime module page">runtime</a> | Essential | Build a standard runtime context dictionary for Fabric notebooks. | — |
+| [`build_runtime_context`](./step-01-governance-context/build_runtime_context/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/runtime/" title="Open runtime module page" aria-label="Open runtime module page">runtime</a> | Essential | Build a standard runtime context dictionary for Fabric notebooks. | [`_infer_notebook_name_from_runtime`](./internal/runtime/_infer_notebook_name_from_runtime.md) (internal) |
 | [`configure_fabric_ai_functions`](./step-01-governance-context/configure_fabric_ai_functions/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> | Essential | Apply optional default Fabric AI Function configuration. | — |
 | [`generate_run_id`](./step-01-governance-context/generate_run_id/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/runtime/" title="Open runtime module page" aria-label="Open runtime module page">runtime</a> | Essential | Generate a notebook-safe run identifier. | — |
-| [`validate_notebook_name`](./step-01-governance-context/validate_notebook_name/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/runtime/" title="Open runtime module page" aria-label="Open runtime module page">runtime</a> | Essential | Validate notebook names against the framework workspace notebook model. | — |
+| [`validate_notebook_name`](./step-01-governance-context/validate_notebook_name/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/runtime/" title="Open runtime module page" aria-label="Open runtime module page">runtime</a> | Essential | Validate notebook names against the framework workspace notebook model. | [`_infer_notebook_name_from_runtime`](./internal/runtime/_infer_notebook_name_from_runtime.md) (internal) |
 
 ## Step 2A: Create shared runtime config
 
@@ -61,16 +26,16 @@ This step creates the shared config that other notebooks depend on, including en
 |---|---|---|---|---|
 | [`check_fabric_ai_functions_available`](./step-02a-shared-runtime-config/check_fabric_ai_functions_available/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> | Essential | Check whether Fabric AI Functions are available in the current runtime. | — |
 | [`create_ai_prompt_config`](./step-02a-shared-runtime-config/create_ai_prompt_config/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> | Essential | Create the AI prompt-template configuration used by FabricOps. | — |
-| [`create_framework_config`](./step-02a-shared-runtime-config/create_framework_config/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> | Essential | Create the top-level framework configuration object. | — |
-| [`create_governance_config`](./step-02a-shared-runtime-config/create_governance_config/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> | Essential | Create governance-default configuration. | — |
-| [`create_lineage_config`](./step-02a-shared-runtime-config/create_lineage_config/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> | Essential | Create lineage-default configuration. | — |
+| [`create_framework_config`](./step-02a-shared-runtime-config/create_framework_config/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> | Essential | Create the top-level FabricOps framework configuration contract. | — |
+| [`create_governance_config`](./step-02a-shared-runtime-config/create_governance_config/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> | Essential | Create governance policy defaults for FabricOps runtime checks. | — |
+| [`create_lineage_config`](./step-02a-shared-runtime-config/create_lineage_config/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> | Essential | Create lineage capture defaults for FabricOps handover traceability. | — |
 | [`create_notebook_runtime_config`](./step-02a-shared-runtime-config/create_notebook_runtime_config/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> | Essential | Create notebook naming-policy configuration for runtime guards. | — |
 | [`create_path_config`](./step-02a-shared-runtime-config/create_path_config/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> | Essential | Create environment-to-target routing used by Fabric IO helpers. | — |
-| [`create_quality_config`](./step-02a-shared-runtime-config/create_quality_config/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> | Essential | Create quality-default configuration. | — |
+| [`create_quality_config`](./step-02a-shared-runtime-config/create_quality_config/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> | Essential | Create the default quality policy used during FabricOps checks. | — |
 | [`get_path`](./step-02a-shared-runtime-config/get_path/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> | Essential | Resolve a configured Fabric path for an environment and target. | — |
 | [`Housepath`](./step-02a-shared-runtime-config/Housepath/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> | Essential | Fabric lakehouse or warehouse connection details. | — |
-| [`load_fabric_config`](./step-02a-shared-runtime-config/load_fabric_config/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> | Essential | Validate and return a framework config mapping. | — |
-| [`validate_framework_config`](./step-02a-shared-runtime-config/validate_framework_config/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> | Essential | Validate and normalize framework config input. | — |
+| [`load_fabric_config`](./step-02a-shared-runtime-config/load_fabric_config/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> | Essential | Validate and return a user-supplied framework configuration. | — |
+| [`validate_framework_config`](./step-02a-shared-runtime-config/validate_framework_config/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> | Essential | Validate and normalize framework configuration input. | — |
 
 ## Step 2B: Run notebook startup checks
 
@@ -87,11 +52,20 @@ This step defines the contract between the upstream source and this notebook. It
 
 | Function / class | Module | Importance | Purpose | Related helpers |
 |---|---|---|---|---|
+| [`extract_business_keys`](./step-03-source-contract-ingestion-pattern/extract_business_keys/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> | Essential | Extract business-key column names from a normalized contract. | — |
+| [`extract_classifications`](./step-03-source-contract-ingestion-pattern/extract_classifications/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> | Essential | Extract column classification mappings from a normalized contract. | — |
+| [`extract_optional_columns`](./step-03-source-contract-ingestion-pattern/extract_optional_columns/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> | Essential | Extract optional column names from a normalized contract. | — |
+| [`extract_quality_rules`](./step-03-source-contract-ingestion-pattern/extract_quality_rules/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> | Essential | Extract raw quality-rule definitions from a normalized contract. | — |
+| [`extract_required_columns`](./step-03-source-contract-ingestion-pattern/extract_required_columns/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> | Essential | Extract required column names from a normalized contract. | — |
 | [`lakehouse_csv_read`](./step-03-source-contract-ingestion-pattern/lakehouse_csv_read/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> | Essential | Read a CSV file from a Fabric lakehouse Files path. | [`_get_spark`](./internal/fabric_io/_get_spark.md) (internal) |
 | [`lakehouse_excel_read_as_spark`](./step-03-source-contract-ingestion-pattern/lakehouse_excel_read_as_spark/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> | Essential | Read an Excel file from a Fabric lakehouse Files path. | [`_get_spark`](./internal/fabric_io/_get_spark.md) (internal) |
 | [`lakehouse_parquet_read_as_spark`](./step-03-source-contract-ingestion-pattern/lakehouse_parquet_read_as_spark/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> | Essential | Read a Parquet file from a Fabric lakehouse Files path. | [`_convert_single_parquet_ns_to_us`](./internal/fabric_io/_convert_single_parquet_ns_to_us.md) (internal), [`_get_spark`](./internal/fabric_io/_get_spark.md) (internal) |
 | [`lakehouse_table_read`](./step-03-source-contract-ingestion-pattern/lakehouse_table_read/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> | Essential | Read a Delta table from a Fabric lakehouse. | [`_get_spark`](./internal/fabric_io/_get_spark.md) (internal) |
+| [`load_contract_from_lakehouse`](./step-03-source-contract-ingestion-pattern/load_contract_from_lakehouse/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> | Essential | Load one contract by ID/version from Fabric metadata storage. | [`_select_latest`](./internal/contracts/_select_latest.md) (internal), [`_to_records`](./internal/contracts/_to_records.md) (internal) |
 | [`load_data_contract`](./step-03-source-contract-ingestion-pattern/load_data_contract/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/quality/" title="Open quality module page" aria-label="Open quality module page">quality</a> | Essential | Load and normalize a data product contract from file path or dictionary. | — |
+| [`load_latest_approved_contract`](./step-03-source-contract-ingestion-pattern/load_latest_approved_contract/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> | Essential | Load the latest approved contract for a dataset/object pair. | [`_select_latest`](./internal/contracts/_select_latest.md) (internal), [`_to_records`](./internal/contracts/_to_records.md) (internal) |
+| [`normalize_contract_dict`](./step-03-source-contract-ingestion-pattern/normalize_contract_dict/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> | Essential | Normalize a notebook-authored contract dictionary to a stable shape. | — |
+| [`validate_contract_dict`](./step-03-source-contract-ingestion-pattern/validate_contract_dict/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> | Essential | Validate a contract dictionary and return error strings without raising. | — |
 | [`warehouse_read`](./step-03-source-contract-ingestion-pattern/warehouse_read/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> | Essential | Read a table from a Microsoft Fabric warehouse. | [`_get_spark`](./internal/fabric_io/_get_spark.md) (internal) |
 
 ## Step 4: Ingest, profile & store source data
@@ -116,9 +90,7 @@ This step brings the source data into the framework, profiles it, and stores it 
 
 This step is where the analyst studies the profiled source data and explains why transformation is needed. There may not be many helper functions here today, but future functions could support standard EDA, AI assisted analysis, and documentation of business assumptions before the logic becomes part of the repeatable pipeline.
 
-No public callable currently mapped to this step.
-
-No public callable is currently exported for this step. Use notebook prompts for AI-assisted rule drafting.
+No public callable is currently mapped to this step. Use exploration notebook prompts to capture transformation rationale before pipeline enforcement.
 
 ## Step 6A: Write transformation logic
 
@@ -145,6 +117,7 @@ This step enforces the controls that decide whether the pipeline output should b
 
 | Function / class | Module | Importance | Purpose | Related helpers |
 |---|---|---|---|---|
+| [`get_executable_quality_rules`](./step-06c-pipeline-controls/get_executable_quality_rules/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> | Essential | Return normalized quality rules ready for pipeline enforcement. | — |
 | [`run_quality_rules`](./step-06c-pipeline-controls/run_quality_rules/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/quality/" title="Open quality module page" aria-label="Open quality module page">quality</a> | Essential | Execute quality rules against a dataframe and return structured results. | [`_normalize_severity`](./internal/quality/_normalize_severity.md) (internal), [`_now_iso`](./internal/quality/_now_iso.md) (internal), [`_pandas_rule`](./internal/quality/_pandas_rule.md) (internal), [`_resolve_engine`](./internal/quality/_resolve_engine.md) (internal), [`_result_from_counts`](./internal/quality/_result_from_counts.md) (internal), [`_spark_rule`](./internal/quality/_spark_rule.md) (internal), [`_to_jsonable`](./internal/quality/_to_jsonable.md) (internal) |
 
 ## Step 6D: Write controlled outputs
@@ -162,8 +135,15 @@ This step profiles the created output, stores its metadata, and creates the data
 
 | Function / class | Module | Importance | Purpose | Related helpers |
 |---|---|---|---|---|
+| [`build_contract_column_records`](./step-07-output-profile-product-contract/build_contract_column_records/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> | Essential | Build normalized contract-column metadata records for persistence. | [`_now_utc_iso`](./internal/contracts/_now_utc_iso.md) (internal) |
+| [`build_contract_header_record`](./step-07-output-profile-product-contract/build_contract_header_record/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> | Essential | Build one header row for FABRICOPS_CONTRACTS. | [`_now_utc_iso`](./internal/contracts/_now_utc_iso.md) (internal) |
+| [`build_contract_records`](./step-07-output-profile-product-contract/build_contract_records/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> | Essential | Build grouped contract header, column, and rule metadata payloads. | — |
+| [`build_contract_rule_records`](./step-07-output-profile-product-contract/build_contract_rule_records/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> | Essential | Build quality-rule metadata records from a validated contract. | [`_now_utc_iso`](./internal/contracts/_now_utc_iso.md) (internal) |
+| [`build_contract_summary`](./step-07-output-profile-product-contract/build_contract_summary/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> | Essential | Build a concise contract summary for reviews and handover. | — |
 | [`build_dataset_run_record`](./step-07-output-profile-product-contract/build_dataset_run_record/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/metadata/" title="Open metadata module page" aria-label="Open metadata module page">metadata</a> | Essential | Build a dataset-run metadata record for operational tracking. | — |
 | [`build_quality_result_records`](./step-07-output-profile-product-contract/build_quality_result_records/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/metadata/" title="Open metadata module page" aria-label="Open metadata module page">metadata</a> | Essential | Convert quality-rule execution output into metadata evidence records. | — |
+| [`contract_records_to_spark`](./step-07-output-profile-product-contract/contract_records_to_spark/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> | Essential | Convert record dictionaries into a Spark DataFrame when Spark is available. | — |
+| [`write_contract_to_lakehouse`](./step-07-output-profile-product-contract/write_contract_to_lakehouse/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> | Essential | Validate and persist contract records into Fabric metadata tables. | — |
 | [`write_metadata_records`](./step-07-output-profile-product-contract/write_metadata_records/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/metadata/" title="Open metadata module page" aria-label="Open metadata module page">metadata</a> | Essential | Write metadata records to a configured metadata sink. | — |
 | [`write_multiple_metadata_outputs`](./step-07-output-profile-product-contract/write_multiple_metadata_outputs/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/metadata/" title="Open metadata module page" aria-label="Open metadata module page">metadata</a> | Essential | Write multiple metadata payloads to their configured destinations. | — |
 
@@ -221,10 +201,3 @@ These callables are exported by `fabricops_kit.__all__` but are not currently ma
 
 No unmapped exported callables.
 
-
-
-Use these `.ipynb` templates by importing/copying them into Fabric and renaming the actual notebook to the required lifecycle naming convention. Notebook name validation reads the running notebook name from Fabric runtime context when available.
-
-
-- Exploration notebooks can draft and approve contract records, then persist them via contract metadata helpers into the metadata target.
-- Pipeline notebooks load latest approved contract records from the metadata target for required columns, keys, and quality-rule enforcement.
