@@ -2,6 +2,22 @@
 
 Generated step-first catalogue of callable functions sourced from `fabricops_kit.__all__`.
 
+## Notebook template quickstart
+
+Use these notebook templates for an end-to-end lifecycle implementation:
+
+- [`00_env_config.ipynb`](../../templates/notebooks/00_env_config.ipynb): shared runtime setup (Step 1, Step 2A, Step 2B).
+- [`02_ex_agreement_topic.ipynb`](../../templates/notebooks/02_ex_agreement_topic.ipynb): exploration/profiling and AI-assisted advisory suggestions with human decisions (Step 3, Step 4, Step 5, Step 8, Step 9).
+- [`03_pc_agreement_source_to_target.ipynb`](../../templates/notebooks/03_pc_agreement_source_to_target.ipynb): run-all-safe pipeline enforcement and controlled delivery (Step 1, Step 2B, Step 3, Step 6A-6D, Step 7, Step 10).
+
+Clean split:
+- `00_env_config` = shared setup.
+- `02_ex` = exploration, profiling, AI suggestions, human decisions.
+- `03_pc` = approved enforcement and output.
+
+Step 8 and Step 9 AI functions belong in exploration notebooks. Pipeline notebooks should enforce approved rules and should not make AI decisions at runtime.
+
+
 ## Modules
 
 | Module |
@@ -201,3 +217,6 @@ These callables are exported by `fabricops_kit.__all__` but are not currently ma
 
 No unmapped exported callables.
 
+
+
+Use these `.ipynb` templates by importing/copying them into Fabric and renaming the actual notebook to the required lifecycle naming convention. Notebook name validation reads the running notebook name from Fabric runtime context when available.

@@ -73,13 +73,37 @@ def normalize_name(value: str) -> str:
     return normalized
 
 
-def validate_notebook_name(name: str, allowed_prefixes: list[str] | None = None, config: object | None = None) -> list[str]:
+
+
+def _infer_notebook_name_from_runtime() -> str | None:
+    """Infer current notebook name from Fabric runtime context when available."""
+    try:
+        from notebookutils import runtime  # type: ignore
+
+        context = runtime.context
+    except Exception:
+        return None
+
+    if isinstance(context, dict):
+        return context.get("currentNotebookName")
+    if hasattr(context, "get"):
+        try:
+            return context.get("currentNotebookName")
+        except Exception:
+            pass
+    return getattr(context, "currentNotebookName", None)
+
+
+def validate_notebook_name(name: str | None = None, allowed_prefixes: list[str] | None = None, config: object | None = None, local_fallback_name: str | None = None) -> list[str]:
     """Validate notebook names against the framework workspace notebook model.
 
     Parameters
     ----------
-    name : str
-        Notebook name to validate.
+    name : str | None, optional
+        Notebook name to validate. When omitted, the function attempts to infer
+        the current Fabric notebook name from runtime context.
+    local_fallback_name : str | None, optional
+        Local-development-only fallback when running outside Fabric runtime.
     allowed_prefixes : list[str] | None, optional
         Optional legacy prefix list retained for backward compatibility with
         older projects. New projects should use the default finalized model:
@@ -100,7 +124,8 @@ def validate_notebook_name(name: str, allowed_prefixes: list[str] | None = None,
     []
     """
     errors: list[str] = []
-    normalized_name = (name or "").strip()
+    runtime_name = name or _infer_notebook_name_from_runtime() or local_fallback_name
+    normalized_name = (runtime_name or "").strip()
     if not normalized_name:
         errors.append("Notebook name must not be empty.")
         return errors
@@ -144,13 +169,13 @@ def validate_notebook_name(name: str, allowed_prefixes: list[str] | None = None,
     return errors
 
 
-def assert_notebook_name_valid(name: str, allowed_prefixes: list[str] | None = None, config: object | None = None) -> None:
+def assert_notebook_name_valid(name: str | None = None, allowed_prefixes: list[str] | None = None, config: object | None = None, local_fallback_name: str | None = None) -> None:
     """Raise :class:`NotebookNamingError` when a notebook name is invalid.
 
     Parameters
     ----------
-    name : str
-        Notebook name.
+    name : str | None, optional
+        Notebook name. When omitted, inferred from Fabric runtime context.
     allowed_prefixes : list[str] | None, optional
         Optional legacy prefix list. When omitted, the finalized notebook model
         is enforced.
@@ -165,7 +190,7 @@ def assert_notebook_name_valid(name: str, allowed_prefixes: list[str] | None = N
     >>> assert_notebook_name_valid("02_ex_email_metadata_event_logic")
     >>> assert_notebook_name_valid("03_pc_email_metadata_source_to_unified")
     """
-    errors = validate_notebook_name(name=name, allowed_prefixes=allowed_prefixes, config=config)
+    errors = validate_notebook_name(name=name, allowed_prefixes=allowed_prefixes, config=config, local_fallback_name=local_fallback_name)
     if errors:
         raise NotebookNamingError(" ".join(errors))
 
@@ -212,12 +237,13 @@ def build_runtime_context(
     ... )  # doctest: +SKIP
     {'dataset_name': 'orders', ...}
     """
+    resolved_notebook_name = notebook_name or _infer_notebook_name_from_runtime()
     return {
         "dataset_name": str(dataset_name),
         "environment": str(environment),
         "source_table": str(source_table),
         "target_table": str(target_table),
-        "notebook_name": None if notebook_name is None else str(notebook_name),
+        "notebook_name": None if resolved_notebook_name is None else str(resolved_notebook_name),
         "run_id": str(run_id) if run_id else generate_run_id(str(dataset_name)),
         "started_at_utc": get_current_timestamp_utc(),
     }
