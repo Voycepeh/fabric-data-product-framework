@@ -77,6 +77,20 @@ from .quality import load_data_contract, run_data_product, run_quality_rules
 from .run_summary import build_run_summary, render_run_summary_markdown
 from .runtime import assert_notebook_name_valid, build_runtime_context, generate_run_id, validate_notebook_name
 from .technical_columns import add_audit_columns, add_datetime_features, add_hash_columns, default_technical_columns
+from .contracts import (
+    load_odcs_contract,
+    validate_odcs_contract,
+    get_odcs_object,
+    extract_required_columns,
+    extract_optional_columns,
+    extract_expected_types,
+    extract_business_keys,
+    extract_classifications,
+    extract_quality_rules,
+    map_odcs_quality_rules_to_fabricops_rules,
+    build_source_input_contract_summary,
+    build_output_contract_summary,
+)
 
 __version__ = "0.1.0"
 
@@ -156,4 +170,16 @@ __all__ = [
     "add_datetime_features",
     "add_audit_columns",
     "add_hash_columns",
+    "load_odcs_contract",
+    "validate_odcs_contract",
+    "get_odcs_object",
+    "extract_required_columns",
+    "extract_optional_columns",
+    "extract_expected_types",
+    "extract_business_keys",
+    "extract_classifications",
+    "extract_quality_rules",
+    "map_odcs_quality_rules_to_fabricops_rules",
+    "build_source_input_contract_summary",
+    "build_output_contract_summary",
 ]

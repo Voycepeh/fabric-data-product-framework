@@ -1,0 +1,101 @@
+apiVersion: v3.1.0
+kind: DataContract
+id: student_events_source_input_v1
+name: student_events_source_input
+version: 1.0.0
+status: draft
+domain: education
+dataProduct: student_events
+
+description:
+  purpose: Source input expectations for the student events FabricOps pipeline.
+  usage: Used by FabricOps pipeline notebooks to validate source readiness before transformation.
+  limitations: Example contract only. Replace with real approved business context.
+
+schema:
+  - name: raw_student_events
+    physicalType: table
+    physicalName: raw_student_events
+    description: Raw source event table used by the pipeline.
+    dataGranularityDescription: One row per student event.
+    properties:
+      - name: student_id
+        logicalType: string
+        physicalType: string
+        required: true
+        classification: confidential
+
+      - name: event_id
+        logicalType: string
+        physicalType: string
+        required: true
+        primaryKey: true
+        primaryKeyPosition: 1
+        classification: internal
+
+      - name: event_timestamp
+        logicalType: date
+        physicalType: timestamp
+        required: true
+        classification: internal
+
+      - name: event_type
+        logicalType: string
+        physicalType: string
+        required: true
+        classification: internal
+
+      - name: event_description
+        logicalType: string
+        physicalType: string
+        required: false
+        classification: internal
+
+quality:
+  - name: event_id_not_null
+    type: library
+    rule: not_null
+    dimension: completeness
+    severity: error
+    object: raw_student_events
+    column: event_id
+
+  - name: event_id_unique
+    type: library
+    rule: unique
+    dimension: uniqueness
+    severity: error
+    object: raw_student_events
+    column: event_id
+
+  - name: event_type_valid_values
+    type: library
+    rule: validValues
+    dimension: conformity
+    severity: warning
+    object: raw_student_events
+    column: event_type
+    validValues:
+      - login
+      - logout
+      - access
+
+  - name: minimum_row_count
+    type: library
+    rule: rowCount
+    dimension: completeness
+    severity: error
+    object: raw_student_events
+    mustBeGreaterOrEqualTo: 1
+
+roles:
+  - role: owner
+    name: Data Product Owner
+    email: owner@example.com
+
+customProperties:
+  x-fabricops:
+    lifecycle: source_input_contract
+    enforcedIn: 03_pc notebook
+    aiSuggestedIn: 02_ex notebook
+    humanApproved: true

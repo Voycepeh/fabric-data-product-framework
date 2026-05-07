@@ -31,3 +31,14 @@ This folder contains reusable notebook starters for Microsoft Fabric workflows.
 
 
 These three lifecycle templates are supported only as `.ipynb` for Fabric notebook use.
+
+
+## ODCS contract direction
+
+The lifecycle templates now recommend **Open Data Contract Standard (ODCS)** as the external contract shape.
+
+- `02_ex` profiles source data and can draft ODCS contract content with AI-assisted suggestions; human approval is required.
+- `03_pc` loads and enforces an approved ODCS contract through adapter helpers.
+- Example ODCS shape: [`templates/contracts/odcs_source_input_contract_example.yaml`](../contracts/odcs_source_input_contract_example.yaml).
+
+In this context, a **source input contract** describes the minimum upstream expectations required by the pipeline. It does not imply ownership of the upstream producer by FabricOps.

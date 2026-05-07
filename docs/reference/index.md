@@ -17,6 +17,8 @@ Clean split:
 
 Step 8 and Step 9 AI functions belong in exploration notebooks. Pipeline notebooks should enforce approved rules and should not make AI decisions at runtime.
 
+For contract lifecycle setup, start with the ODCS example contract at [`templates/contracts/odcs_source_input_contract_example.yaml`](../../templates/contracts/odcs_source_input_contract_example.yaml) and use adapter helpers such as `load_odcs_contract`, `validate_odcs_contract`, and `map_odcs_quality_rules_to_fabricops_rules` in `03_pc`.
+
 
 ## Modules
 
