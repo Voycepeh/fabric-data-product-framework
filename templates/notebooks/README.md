@@ -52,3 +52,11 @@ Recommended operational flow:
 
 "Source input contract" means the minimum expectations the pipeline requires from upstream data. It does not mean FabricOps owns the upstream producer.
 
+
+## Metadata target recommendation
+
+Use a dedicated metadata target per environment, such as `metadata`, to store FabricOps operational evidence: contracts, contract columns, approved DQ rules, classifications, run logs, quality results, lineage, and handover records.
+
+Source/unified/product stores hold data products. The metadata store holds framework evidence.
+
+Keep development and production metadata stores separate. A contract approved in `dev` is not automatically approved in `prod`; promote through explicit governance review.
