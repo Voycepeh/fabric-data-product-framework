@@ -21,16 +21,19 @@ For Fabric Environment install steps, use [Fabric Wheel Install](setup/fabric-wh
 
 ## 2) Open your Fabric notebook and load/create config
 
-- Start from `templates/notebooks/fabric_data_product_mvp.md`.
 - Attach the Fabric Environment that contains the package wheel.
 - Create or load runtime/framework config (paths, dataset IDs, output targets, run context).
 
 Canonical notebook flow:
 
-- `00_env_config` = shared setup and runtime configuration baseline.
+- `00_env_config.ipynb` = shared setup and runtime configuration baseline.
 - `01_data_sharing_agreement_<agreement>` = governance context, approved usage, ownership, and restrictions.
 - `02_ex_<agreement>_<topic>` = exploration, profiling, AI suggestions, and human decisions.
 - `03_pc_<agreement>_<topic>` = approved enforcement, outputs, metadata, lineage, and handover.
+
+`01_data_sharing_agreement_<agreement>` is currently a documented notebook pattern (see [Notebook Structure](notebook-structure.md)), not a shipped template file.
+
+Legacy reference only: `templates/notebooks/fabric_data_product_mvp.md`.
 
 ## 3) Execute in canonical 10-step order
 
