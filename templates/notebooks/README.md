@@ -4,9 +4,9 @@ This folder contains reusable notebook starters for Microsoft Fabric workflows.
 
 ## Lifecycle starter templates
 
-- `00_env_config.py`: shared setup notebook for governance context, runtime configuration creation, and startup checks (Step 1, Step 2A, Step 2B).
-- `02_ex_agreement_topic.py`: exploration notebook for source profiling, transformation rationale, AI-assisted suggestions, and human review decisions (Step 3, Step 4, Step 5, Step 8, Step 9).
-- `03_pc_agreement_source_to_target.py`: run-all-safe pipeline notebook for approved contract enforcement, quality controls, controlled output writes, metadata, and lineage handover (Step 1, Step 2B, Step 3, Step 6A–6D, Step 7, Step 10).
+- `00_env_config.ipynb`: shared setup notebook for governance context, runtime configuration creation, and startup checks (Step 1, Step 2A, Step 2B).
+- `02_ex_agreement_topic.ipynb`: exploration notebook for source profiling, transformation rationale, AI-assisted suggestions, and human review decisions (Step 3, Step 4, Step 5, Step 8, Step 9).
+- `03_pc_agreement_source_to_target.ipynb`: run-all-safe pipeline notebook for approved contract enforcement, quality controls, controlled output writes, metadata, and lineage handover (Step 1, Step 2B, Step 3, Step 6A–6D, Step 7, Step 10).
 - `fabric_data_product_mvp.py`: existing MVP starter notebook template.
 - `fabric_data_product_mvp.md`: usage notes aligned to the 10-step lifecycle flow.
 
@@ -23,7 +23,10 @@ This folder contains reusable notebook starters for Microsoft Fabric workflows.
 
 ## Suggested usage
 
-1. Run `00_env_config.py` first to define `CONFIG` and verify startup readiness.
-2. Use `02_ex_agreement_topic.py` to profile and document exploratory decisions.
-3. Transfer only approved rules/labels/contracts into `03_pc_agreement_source_to_target.py`.
+1. Run `00_env_config.ipynb` first to define `CONFIG` and verify startup readiness.
+2. Use `02_ex_agreement_topic.ipynb` to profile and document exploratory decisions.
+3. Transfer only approved rules/labels/contracts into `03_pc_agreement_source_to_target.ipynb`.
 4. Keep exploration logic out of production pipeline execution.
+
+
+> Note: `.py` versions are source-style exports for code review; `.ipynb` templates are the primary Fabric import format.
