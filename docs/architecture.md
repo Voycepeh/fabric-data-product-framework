@@ -8,7 +8,11 @@
 
 FabricOps Starter Kit supports the canonical 10-step lifecycle workflow in Microsoft Fabric where teams move data from source systems to governed, consumption-ready outputs.
 
-In practice, Fabric projects read from and write to multiple lakehouses, warehouses, files, workspaces, and environments. A Fabric notebook usually runs with one default attached item, so reusable configuration and path resolution helpers are needed to make cross-store and cross-environment data movement reliable and repeatable.
+In practice, Fabric projects read from and write to multiple lakehouses,
+warehouses, files, workspaces, and environments. A Fabric notebook
+usually runs with one default attached item, so reusable configuration
+and path resolution helpers are needed to make cross-store and
+cross-environment data movement reliable and repeatable.
 
 ## Platform shape
 
@@ -70,13 +74,12 @@ Each environment should have its own metadata target. Development metadata and p
 
 For environment promotion controls, see [Deployment and Promotion](deployment-and-promotion.md). For contract editing and storage behavior, see [Metadata and Contracts](metadata-and-contracts.md).
 
-
 ## Explore detailed architecture subpages
 
 For implementation-level details, use these focused pages:
 
-- [Storage & Metadata Model](architecture/storage-model.md) explains where metadata, contracts, profiles, data quality results, lineage, and runtime artifacts live.
-- [Fabric-native Data Quality](architecture/dqx-inspired-fabric-native-dq.md) describes the Fabric-native DQ operating pattern inspired by DQX.
+- [Storage model](architecture/storage-model.md) explains where metadata, contracts, profiles, data quality results, lineage, and runtime artifacts live.
+- [Data quality architecture](architecture/data-quality-architecture.md) describes the Fabric-native DQ operating pattern inspired by DQX.
 
 ## Cross-cutting controls
 
