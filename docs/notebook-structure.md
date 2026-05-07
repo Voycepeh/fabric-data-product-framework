@@ -28,3 +28,34 @@ A well-structured notebook sequence keeps implementation and governance aligned:
 - Keep pipeline notebooks executable end to end so validation, publish, metadata, lineage, and handover are produced in one governed run.
 
 For architecture boundaries, see [Architecture](architecture.md). For full flow sequencing, see [Lifecycle Operating Model](lifecycle-operating-model.md).
+
+## Core notebook responsibilities
+
+### `00_env_config`
+
+- Defines Source, Unified, Product, and Metadata targets for the current environment.
+- Should remain environment-local (dev config in dev, prod config in prod).
+- Must not accidentally point production notebooks to development stores.
+
+### `02_ex`
+
+- Profiles source data and explains the transformation *why*.
+- Drafts source input contract expectations.
+- Reviews AI-suggested DQ rules and classifications (advisory only).
+- Requires human/steward approval before writing approved contract records to metadata tables.
+
+### `03_pc`
+
+- Loads approved contract records from the metadata target.
+- Enforces required columns, business keys, approved DQ rules, classifications, and runtime standards.
+- Writes controlled outputs plus profiling/run/lineage evidence.
+- Must be run-all-safe for governed operations.
+
+> Exploration explains the why. Pipeline enforces the approved what.
+
+## Related documentation
+
+- Contract metadata model details: [Metadata and Contracts](metadata-and-contracts.md).
+- Promotion of notebooks and metadata: [Deployment and Promotion](deployment-and-promotion.md).
+- Business lifecycle responsibilities: [Lifecycle Operating Model](lifecycle-operating-model.md).
+- Platform boundaries and stores: [Architecture](architecture.md).

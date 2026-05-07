@@ -75,7 +75,7 @@ Contract records are operational metadata, not just source code artifacts.
 - Promote contracts through a controlled admin notebook or equivalent governed process.
 - Prod pipelines must not read dev metadata at runtime.
 
-Notebook code promotion and contract/metadata promotion should be treated as related but separate controls.
+Notebook code promotion and contract/metadata promotion should be treated as related but separate controls. For contract model and metadata table guidance, see [Metadata and Contracts](metadata-and-contracts.md).
 
 ## Admin notebooks for cross-environment operations
 
