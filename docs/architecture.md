@@ -76,7 +76,7 @@ For environment promotion controls, see [Deployment and Promotion](deployment-an
 For implementation-level details, use these focused pages:
 
 - [Storage & Metadata Model](architecture/storage-model.md) explains where metadata, contracts, profiles, data quality results, lineage, and runtime artifacts live.
-- [Fabric native Data Quality](architecture/dqx-inspired-fabric-native-dq.md) describes the Fabric-native DQ operating pattern inspired by DQX.
+- [Fabric-native Data Quality](architecture/dqx-inspired-fabric-native-dq.md) describes the Fabric-native DQ operating pattern inspired by DQX.
 
 ## Cross-cutting controls
 

@@ -1,23 +1,39 @@
 # FabricOps Starter Kit
 
-FabricOps Starter Kit is a lightweight, Fabric-first notebook framework for building reusable, documented, quality-checked, drift-aware, governed, AI-ready data products.
+FabricOps Starter Kit is a practical starter kit for building **governed, quality-checked, AI-ready notebooks in Microsoft Fabric**.
 
-It is designed to reduce repeated governance and engineering work across data product delivery:
-
-- move consistently from **source → unified → product** datasets,
-- keep a practical **dev-to-prod operating flow**,
-- support multiple Microsoft Fabric stores (Lakehouse and Warehouse), and
-- keep **AI in the loop** for metadata, quality checks, lineage, and handover acceleration.
+It gives teams a reusable way to move from exploration to controlled pipeline delivery with consistent metadata, quality evidence, lineage, and handover artifacts.
 
 ## Start here
 
-- **What is this?** → This page
-- **How do I run it end to end?** → [Quick Start](quick-start.md)
-- **How should notebooks be structured?** → [Notebook Structure](notebook-structure.md)
-- **What is the full lifecycle?** → [Lifecycle Operating Model](lifecycle-operating-model.md)
-- **How does the architecture work?** → [Architecture](architecture.md)
-- **What functions exist?** → [Reference](reference/index.md)
-- **How do I install the wheel in Fabric?** → [Setup: Fabric Wheel Install](setup/fabric-wheel-install.md)
+- [Quick Start](quick-start.md)
+- [Lifecycle Operating Model](lifecycle-operating-model.md)
+- [Architecture](architecture.md)
+- [Storage & Metadata Model](architecture/storage-model.md)
+- [Fabric-native Data Quality](architecture/dqx-inspired-fabric-native-dq.md)
+- [Notebook Structure](notebook-structure.md)
+- [Metadata and Contracts](metadata-and-contracts.md)
+- [Function Reference](reference/index.md)
+- [Fabric Wheel Install](setup/fabric-wheel-install.md)
+
+## How the starter kit works
+
+- `00_env_config` defines reusable environment settings used across notebooks.
+- Exploration notebooks profile and understand data before implementation decisions are finalized.
+- Pipeline contract notebooks enforce approved rules and write controlled outputs.
+- Metadata, DQ results, lineage, and handover notes are captured as reusable artifacts.
+
+## AI in the loop
+
+- AI assists with metadata summaries, DQ rule suggestions, sensitivity classification suggestions, lineage, and handover notes.
+- Humans approve governance and quality decisions.
+- Pipeline notebooks enforce approved decisions.
+
+## Architecture pages
+
+- [Platform Architecture](architecture.md) explains the overall workspace and data platform shape.
+- [Storage & Metadata Model](architecture/storage-model.md) explains where contracts, profiles, DQ results, lineage, and runtime artifacts live.
+- [Fabric-native Data Quality](architecture/dqx-inspired-fabric-native-dq.md) explains the DQX-inspired Fabric-native operating pattern.
 
 ## Compatibility note
 

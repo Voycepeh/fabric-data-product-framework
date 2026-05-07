@@ -6,13 +6,13 @@ Documentation: https://voycepeh.github.io/FabricOps-Starter-Kit/
 
 ## Start here
 
-- [Quick Start](docs/quick-start.md)
-- [Lifecycle Operating Model](docs/lifecycle-operating-model.md)
-- [Architecture](docs/architecture.md)
-- [Notebook Structure](docs/notebook-structure.md)
-- [Metadata and Contracts](docs/metadata-and-contracts.md)
-- [Function Reference](docs/reference/index.md)
-- [Fabric Wheel Install](docs/setup/fabric-wheel-install.md)
+- [Quick Start](https://voycepeh.github.io/FabricOps-Starter-Kit/quick-start/)
+- [Lifecycle Operating Model](https://voycepeh.github.io/FabricOps-Starter-Kit/lifecycle-operating-model/)
+- [Architecture](https://voycepeh.github.io/FabricOps-Starter-Kit/architecture/)
+- [Notebook Structure](https://voycepeh.github.io/FabricOps-Starter-Kit/notebook-structure/)
+- [Metadata and Contracts](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/)
+- [Function Reference](https://voycepeh.github.io/FabricOps-Starter-Kit/reference/)
+- [Fabric Wheel Install](https://voycepeh.github.io/FabricOps-Starter-Kit/setup/fabric-wheel-install/)
 
 ## Why this starter kit exists
 
@@ -20,7 +20,7 @@ Documentation: https://voycepeh.github.io/FabricOps-Starter-Kit/
 
 Fabric notebooks often begin as analysis work and then become recurring operations. This starter kit gives that transition a reusable structure for configuration, checks, governance review, lineage, and handover.
 
-Read more: [Quick Start](docs/quick-start.md) · [Lifecycle Operating Model](docs/lifecycle-operating-model.md)
+Read more: [Quick Start](https://voycepeh.github.io/FabricOps-Starter-Kit/quick-start/) · [Lifecycle Operating Model](https://voycepeh.github.io/FabricOps-Starter-Kit/lifecycle-operating-model/)
 
 ## What users get
 
@@ -28,7 +28,7 @@ Read more: [Quick Start](docs/quick-start.md) · [Lifecycle Operating Model](doc
 
 Teams get reusable patterns for profiling, quality checks, sensitivity review, lineage, metadata logging, and handover so these controls do not have to be rebuilt in every notebook.
 
-Read more: [Function Reference](docs/reference/index.md) · [Metadata and Contracts](docs/metadata-and-contracts.md)
+Read more: [Function Reference](https://voycepeh.github.io/FabricOps-Starter-Kit/reference/) · [Metadata and Contracts](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/)
 
 ## How it fits into a Fabric data platform
 
@@ -36,7 +36,7 @@ Read more: [Function Reference](docs/reference/index.md) · [Metadata and Contra
 
 The kit supports repeatable notebook execution across development and production patterns, with explicit handling for cross-store and cross-workspace data flows.
 
-Read more: [Architecture](docs/architecture.md)
+Read more: [Architecture](https://voycepeh.github.io/FabricOps-Starter-Kit/architecture/)
 
 ## Notebook operating model
 
@@ -44,7 +44,7 @@ Read more: [Architecture](docs/architecture.md)
 
 The notebook model keeps shared runtime context clear: one environment config can support many agreements and notebooks, and one agreement can branch into multiple notebook paths.
 
-Read more: [Notebook Structure](docs/notebook-structure.md)
+Read more: [Notebook Structure](https://voycepeh.github.io/FabricOps-Starter-Kit/notebook-structure/)
 
 ## Canonical lifecycle workflow
 
@@ -52,7 +52,7 @@ Read more: [Notebook Structure](docs/notebook-structure.md)
 
 The project follows a canonical 10-step lifecycle: governance-first, controlled engineering execution, then optional AI-assisted drafting and summarization.
 
-Read more: [Lifecycle Operating Model](docs/lifecycle-operating-model.md)
+Read more: [Lifecycle Operating Model](https://voycepeh.github.io/FabricOps-Starter-Kit/lifecycle-operating-model/)
 
 ## What problems it aims to solve
 
@@ -61,7 +61,7 @@ Read more: [Lifecycle Operating Model](docs/lifecycle-operating-model.md)
 - Slow, manual quality/governance drafting and review loops.
 - Weak lineage and handover evidence for operational ownership transfer.
 
-For contract behavior and storage, see [Metadata and Contracts](docs/metadata-and-contracts.md). For Fabric-native DQ architecture, see [Architecture > Fabric-native Data Quality](docs/architecture/dqx-inspired-fabric-native-dq.md).
+For contract behavior and storage, see [Metadata and Contracts](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/). For Fabric-native DQ architecture, see [Architecture > Fabric-native Data Quality](https://voycepeh.github.io/FabricOps-Starter-Kit/architecture/dqx-inspired-fabric-native-dq/).
 
 ## AI in the loop
 
