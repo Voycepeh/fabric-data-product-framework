@@ -4,7 +4,7 @@
 
 Use this guide to package this repository as a distributable Python wheel (`.whl`) with `uv`, then install that wheel into a Microsoft Fabric **Environment**.
 
-This keeps the MVP notebook focused on data product logic while loading framework capabilities from a versioned package, instead of copying helper code between notebooks.
+This keeps workflow notebooks focused on data product logic while loading framework capabilities from a versioned package, instead of copying helper code between notebooks.
 
 ## Prerequisites
 

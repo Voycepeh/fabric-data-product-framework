@@ -1,13 +1,13 @@
-# Fabric MVP Smoke Test Recipe
+# Fabric Notebook Workflow Smoke Test Recipe
 
 ## Purpose
 
-Use this smoke test to validate the end-to-end Microsoft Fabric lifecycle workflow after packaging and environment setup. It confirms that the framework can:
+Use this smoke test to validate the end-to-end Microsoft Fabric notebook workflow after packaging and environment setup. It confirms that the framework can:
 
 - build as a wheel
 - install into a Fabric Environment
 - import correctly inside a Fabric notebook
-- run the lifecycle workflow in safe sample mode
+- run the supported notebook workflow in safe sample mode
 - generate profiling output
 - generate or load DQ rules
 - run DQ validation
@@ -86,7 +86,7 @@ print("Package path:", fdpf.__file__)
 print("Package version:", getattr(fdpf, "__version__", "unknown"))
 ```
 
-### 3) MVP notebook safe sample run
+### 3) Notebook workflow safe sample run
 
 Expected settings:
 
@@ -182,6 +182,3 @@ Use this table template for each smoke-test execution:
 - writes disabled by default
 - AI-assisted sections disabled by default
 
-## Relationship to PR 69
-
-This recipe assumes the MVP notebook template exposes safe runtime flags such as `USE_SAMPLE_DATA` and `ENABLE_FABRIC_WRITES`. If PR 69 changes those names, rebase PR 70 and update this recipe before merge.
