@@ -29,4 +29,5 @@ This folder contains reusable notebook starters for Microsoft Fabric workflows.
 4. Keep exploration logic out of production pipeline execution.
 
 
-> Note: `.py` versions are source-style exports for code review; `.ipynb` templates are the primary Fabric import format.
+
+These three lifecycle templates are supported only as `.ipynb` for Fabric notebook use.
