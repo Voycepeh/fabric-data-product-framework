@@ -17,10 +17,13 @@ WORKFLOW_STEPS = WORKFLOW_STEP_DOCS
 workflow_step_by_symbol = {row["symbol_name"]: row["workflow_step"] for row in PUBLIC_SYMBOL_DOCS}
 symbols_by_step: dict[str, list[tuple[str, str]]] = {str(step["number"]): [] for step in WORKFLOW_STEPS}
 for symbol in PUBLIC_SYMBOLS:
+    workflow_step = workflow_step_by_symbol.get(symbol)
+    if workflow_step is None:
+        continue
     obj = getattr(pkg, symbol)
     module_name = getattr(obj, "__module__", PACKAGE)
     dotted_path = f"{module_name}.{symbol}"
-    step_key = str(workflow_step_by_symbol[symbol])
+    step_key = str(workflow_step)
     symbols_by_step[step_key].append((symbol, dotted_path))
 
 for items in symbols_by_step.values():
