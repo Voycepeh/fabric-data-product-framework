@@ -22,13 +22,13 @@ _Exploration explains the why. Pipeline contract notebooks enforce the approved 
 ### Understand the operating model
 
 - [Lifecycle Operating Model](lifecycle-operating-model.md)
-- [Architecture](architecture.md)
+- [Architecture](architecture/index.md)
 
 ### Build governed pipelines
 
 - [Storage & Metadata Model](architecture/storage-model.md)
 - [Metadata and Contracts](metadata-and-contracts.md)
-- [Fabric-native Data Quality](architecture/dqx-inspired-fabric-native-dq.md)
+- [Fabric-native Data Quality](architecture/data-quality-architecture.md)
 
 ### Developer reference
 

@@ -75,7 +75,7 @@ This step creates the final documentation needed for review, handover, and futur
 
 ## Related documentation
 
-- For detailed platform boundaries and store layout, see [Architecture](architecture.md).
+- For detailed platform boundaries and store layout, see [Architecture](architecture/index.md).
 - For notebook role boundaries and sequencing, see [Notebook Structure](notebook-structure.md).
 - For contract authoring/storage details, see [Metadata and Contracts](metadata-and-contracts.md).
 - For environment promotion controls, see [Deployment and Promotion](deployment-and-promotion.md).
