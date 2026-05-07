@@ -32,6 +32,7 @@ nav:
       - Modules:
           - ai: api/modules/ai.md
           - config: api/modules/config.md
+          - contracts: api/modules/contracts.md
           - docs_metadata: api/modules/docs_metadata.md
           - drift: api/modules/drift.md
           - fabric_io: api/modules/fabric_io.md
