@@ -35,18 +35,21 @@ The workflow separates decision-making from enforcement:
 ## AI in the loop
 
 AI suggests:
+
 - metadata summaries
 - DQ rules
 - sensitivity classifications
 - lineage and handover notes
 
 Humans approve:
+
 - governance decisions
 - quality rules
 - classifications
 - release readiness
 
 Pipelines enforce:
+
 - approved contracts
 - quality checks
 - controlled outputs
