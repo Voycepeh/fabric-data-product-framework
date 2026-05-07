@@ -138,21 +138,16 @@ import fabricops_kit
 print([name for name in dir(fabricops_kit) if not name.startswith("_")][:25])
 ```
 
-## Use with the MVP notebook template
+## Use with the current Fabric notebook workflow
 
 After wheel installation, use this flow:
 
 1. Attach the Environment (with the uploaded wheel) to the notebook session.
-2. Open/copy `templates/notebooks/fabric_data_product_mvp.py` into Fabric.
-3. Configure notebook parameters (`ENVIRONMENT`, source/target table values, dataset/run metadata).
-4. Declare source read logic.
-5. Run source profiling.
-6. Generate or load DQ rules.
-7. Run DQ validation.
-8. Run transformation logic.
-9. Write output.
-10. Write metadata/run summary artifacts.
-11. Export AI handoff/lineage context where your workflow requires it.
+2. Run `00_env_config.ipynb` to load environment/runtime config.
+3. Run `01_data_sharing_agreement_<agreement>` to capture governance context (where used).
+4. Run `02_ex_<agreement>_<topic>` for profiling and AI-assisted suggestions.
+5. Obtain human approval for DQ/classification decisions.
+6. Run `03_pc_<agreement>_<topic>` to enforce approved rules and write outputs/metadata.
 
 For long-term maintainability, prefer package imports from `fabricops_kit` over `%run 00_config`-style helper reuse.
 
@@ -177,5 +172,5 @@ For long-term maintainability, prefer package imports from `fabricops_kit` over 
 5. Upload the new wheel to Fabric Environment custom libraries.
 6. Publish/save the Environment.
 7. Restart notebook session.
-8. Run MVP notebook smoke test end to end.
+8. Run notebook smoke test end to end using the 00/01/02/03 operating model.
 9. Record tested package version in handover/release notes.

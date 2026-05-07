@@ -22,9 +22,9 @@ Use this smoke test to validate the end-to-end Microsoft Fabric lifecycle workfl
 Run this recipe:
 
 - after packaging changes
-- after MVP notebook template changes
+- after notebook starter changes (`00_env_config` / `02_ex` / `03_pc`)
 - after DQ/profiling/drift/governance/lineage/metadata/run summary changes
-- before full actual-data MVP testing
+- before full actual-data pipeline-contract testing
 - before publishing a new wheel for team use
 
 ## Prerequisites
@@ -37,13 +37,13 @@ Before running this smoke test, confirm:
 - Environment published
 - Environment attached to notebook
 - notebook session restarted
-- MVP notebook template available
+- supported starter notebooks available (`00_env_config`, `02_ex_*`, `03_pc_*`)
 - optional Fabric workspace access for write-enabled test
 
 References:
 
 - [UV wheel build + Fabric install guide](../setup/fabric-wheel-install.md)
-- [MVP notebook template](../../templates/notebooks/fabric_data_product_mvp.py)
+- [Notebook Structure](../notebook-structure.md)
 
 ## Test mode matrix
 

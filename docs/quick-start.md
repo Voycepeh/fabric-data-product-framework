@@ -24,11 +24,11 @@ To install the built wheel in Fabric, follow [Fabric Wheel Install](setup/fabric
 
 ## 2) Open your Fabric notebook workflow
 
-- Start from `templates/notebooks/fabric_data_product_mvp.md`.
 - Attach the Fabric Environment that contains the built package wheel.
+- Use the current starter notebooks and naming pattern from [Notebook Structure](notebook-structure.md).
 - Run notebooks in this operating sequence:
 
-1. `00_env_config`
+1. `00_env_config.ipynb`
    - Reusable environment and runtime configuration notebook.
 2. `01_data_sharing_agreement_<agreement>`
    - Governance agreement capture: approved usage, ownership, and restrictions.

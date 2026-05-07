@@ -22,5 +22,5 @@ These recipes show practical ways to test and use the framework.
 ## Related references
 
 - Generated function reference: `docs/reference/`
-- `templates/notebooks/fabric_data_product_mvp.py`
+- Notebook starters in `templates/notebooks/` (`00_env_config.ipynb`, `02_ex_agreement_topic.ipynb`, `03_pc_agreement_source_to_target.ipynb`)
 - Generated function reference pages in `docs/reference/`
