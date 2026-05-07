@@ -6,7 +6,7 @@ It moves teams from exploration to controlled pipeline delivery with reusable me
 
 [Quick Start](quick-start.md){ .md-button .md-button--primary }
 
-[Lifecycle Operating Model](lifecycle-operating-model.md){ .md-button }
+[Understand the lifecycle](lifecycle-operating-model.md){ .md-button .md-button--primary }
 
 ## Framework at a glance
 
@@ -14,59 +14,25 @@ It moves teams from exploration to controlled pipeline delivery with reusable me
 
 _Exploration explains the why. Pipeline contract notebooks enforce the approved what._
 
+## Plug and play setup
+
+Configure once, start from the notebook templates, and use the callable function reference when customising behavior.
+
+| Template | Use it for | Start here |
+| --- | --- | --- |
+| `00_env_config.ipynb` | Configuring shared environment, storage, and runtime settings before template execution. | [Open template](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb) |
+| `02_ex_agreement_topic.ipynb` | Running exploration profiling to draft governed metadata and quality requirements. | [Open template](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/02_ex_agreement_topic.ipynb) |
+| `03_pc_agreement_source_to_target.ipynb` | Enforcing approved contracts and quality checks in a controlled pipeline flow. | [Open template](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb) |
+
+[Browse all callable functions](reference/index.md){ .md-button .md-button--primary }
+
 ## Navigate by goal
 
 | Goal | Start with |
 | --- | --- |
-| New user | [Quick Start](quick-start.md), [Notebook Structure](notebook-structure.md) |
-| Understand the operating model | [Lifecycle Operating Model](lifecycle-operating-model.md), [Architecture](architecture/index.md) |
-| Build governed pipelines | [Storage & Metadata Model](architecture/storage-model.md), [Metadata and Contracts](metadata-and-contracts.md), [Fabric-native Data Quality](architecture/data-quality-architecture.md) |
-| Developer reference | [Function Reference](reference/index.md), [Fabric Wheel Install](setup/fabric-wheel-install.md) |
-
-## Workflow at a glance
-
-The workflow separates decision-making from enforcement:
-
-- `00_env_config` defines reusable environment and storage settings.
-- Exploration notebooks profile data, test assumptions, and draft AI-assisted suggestions.
-- Approved contract metadata records required columns, DQ rules, classifications, and business keys.
-- Pipeline contract notebooks enforce approved decisions and write controlled outputs.
-
-## AI in the loop
-
-AI suggests:
-
-- metadata summaries
-- DQ rules
-- sensitivity classifications
-- lineage and handover notes
-
-Humans approve:
-
-- governance decisions
-- quality rules
-- classifications
-- release readiness
-
-Pipelines enforce:
-
-- approved contracts
-- quality checks
-- controlled outputs
-- evidence capture
-
-## What you get
-
-Every pipeline should leave behind reusable evidence, not just output tables.
-
-| Output | Purpose |
-| --- | --- |
-| Reusable config notebook | Standardizes environment and execution settings. |
-| Exploration notebook pattern | Supports profiling and decision preparation. |
-| Pipeline contract notebook | Executes approved rules in controlled pipelines. |
-| Metadata tables | Capture reusable contracts and context. |
-| DQ results | Record quality evidence for review and operations. |
-| Lineage and handover documentation | Preserve traceability and team handover context. |
+| Plug and play setup | [Quick Start](quick-start.md), [`00_env_config.ipynb`](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb), [`02_ex_agreement_topic.ipynb`](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/02_ex_agreement_topic.ipynb), [`03_pc_agreement_source_to_target.ipynb`](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb) |
+| Understand lifecycle decisions and controls | [Lifecycle Operating Model](lifecycle-operating-model.md), [Architecture](architecture/index.md) |
+| Read code-level API docs | [Function Reference](reference/index.md), [Module API Catalog](api/modules/index.md) |
 
 ## Compatibility note
 
