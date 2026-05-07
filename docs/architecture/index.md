@@ -1,9 +1,44 @@
-# Architecture overview
+# FabricOps operating architecture
 
-FabricOps Starter Kit is a Fabric-native operating model for repeatable
-data product delivery. It combines local engineering discipline with
-notebook-first execution so teams can move from exploration to governed
-production handover without changing platforms.
+![Generic platform architecture for FabricOps Starter Kit](../assets/data-platform-architecture.png)
+
+*Figure: A generic platform shape with source systems, development and production workspaces, layered data stores, and governed consumption outputs.*
+
+FabricOps Starter Kit is designed for teams that need to move from ad hoc Fabric notebooks to repeatable, governed data product delivery.
+
+The architecture separates where data is developed, where data is released, where metadata evidence is stored, and where outputs are consumed.
+
+## Read this page as the platform map
+
+This page explains where notebooks, Fabric Environments, lakehouses, warehouses, metadata tables, and consumption outputs fit.
+
+It does not explain every function. Function-level behavior lives in the [Functions reference](../reference/index.md).
+
+## Why this architecture exists
+
+FabricOps Starter Kit supports the canonical 10-step lifecycle workflow in Microsoft Fabric where teams move data from source systems to governed, consumption-ready outputs.
+
+The architecture exists so each lifecycle step has a home:
+
+- governance and agreements live before engineering work starts
+- exploration notebooks generate profiling and suggestions
+- pipeline notebooks enforce approved contracts and rules
+- metadata tables preserve evidence
+- monitoring and handover make the product supportable
+
+In practice, Fabric projects read from and write to multiple lakehouses,
+warehouses, files, workspaces, and environments. A Fabric notebook
+usually runs with one default attached item, so reusable configuration
+and path resolution helpers are needed to make cross-store and
+cross-environment data movement reliable and repeatable.
+
+## Platform flow at a glance
+
+Source systems
+→ Development workspace
+→ Production workspace
+→ Metadata evidence
+→ Consumption outputs
 
 ## The end-to-end story
 
@@ -34,6 +69,68 @@ production handover without changing platforms.
 13. **Complete handover with documentation.**
     Teams publish run summaries and architecture-aware documentation for downstream owners.
 
+## Platform shape
+
+The operating shape aligns to four layers.
+
+### 1) Multiple source systems
+
+Typical source inputs include:
+
+- enterprise lakehouses
+- warehouses
+- files and object storage
+- APIs
+- SharePoint
+- manual file drops
+- other upstream systems
+
+### 2) Development workspace
+
+Development is where notebooks, rules, profiling, and transformations are tested before release. It uses a three-layer store pattern:
+
+- **Source** (or **Raw**) for source-aligned landing data
+- **Unified** (or **Bronze/Silver** depending on team naming) for cleaning, standardization, and reusable logic
+- **Product** (or **Gold**) for validated, consumption-ready development outputs
+
+### 3) Production workspace
+
+Production runs the same Source → Unified → Product pattern so promotion remains consistent and auditable:
+
+- **Source / Raw**
+- **Unified / Bronze-Silver**
+- **Product / Gold**
+
+This mapping keeps transformation intent understandable across teams even when naming conventions differ.
+
+### 4) Consumption outputs
+
+Production-ready outputs are consumed through:
+
+- Power BI semantic models, dashboards, and reports
+- downstream applications and agents
+- exports and integration feeds
+- handover packs for support and ownership transition
+
+## Metadata store
+
+The metadata store is the evidence layer of the framework. It records what was agreed, what was profiled, what rules were approved, what ran, what failed, and what was handed over.
+
+Source, Unified, and Product stores hold business data. FabricOps metadata should live in a dedicated metadata target that holds framework evidence, including:
+
+- contracts and contract versions
+- contract column definitions
+- approved data quality rules
+- approved classifications
+- run logs and dataset run evidence
+- quality execution results
+- lineage records
+- handover records
+
+Each environment should have its own metadata target. Development metadata and production metadata must remain separate.
+
+For environment promotion controls, see [Deployment and Promotion](../deployment-and-promotion.md). For contract editing and storage behavior, see [Metadata and Contracts](../metadata-and-contracts.md).
+
 ## Core design principles
 
 - **Fabric-native execution:** notebooks and Fabric storage are first-class, not afterthoughts.
@@ -42,7 +139,29 @@ production handover without changing platforms.
 - **Monitoring by default:** metadata and DQ outputs are persisted in forms suitable for Warehouse SQL and Power BI.
 - **Handover-friendly delivery:** architecture and run artifacts are organized so first-time readers can understand the operating model before diving into function-level references.
 
-## Where to go next
+## AI in the loop: suggestion vs approval vs enforcement
 
-- Read the **Storage model** page for responsibility boundaries across Lakehouse, Warehouse, files, environments, and notebooks.
-- Read the **Data quality architecture** page for the AI-in-the-loop quality lifecycle and governance flow.
+AI belongs mainly in the suggestion and documentation layer. It can help draft DQ rules, classifications, summaries, lineage notes, and handover material.
+
+Human stewards and engineers approve the outputs. Production pipelines enforce only approved rules and approved classifications.
+
+## Explore detailed architecture subpages
+
+- Read the [Storage model](storage-model.md) page for responsibility boundaries across Lakehouse, Warehouse, files, environments, and notebooks.
+- Read the [Data quality architecture](data-quality-architecture.md) page for the AI-in-the-loop quality lifecycle and governance flow.
+
+## Cross-cutting controls
+
+Across all layers, the framework keeps execution governed with reusable controls:
+
+- orchestration and run control
+- metadata capture
+- lineage notes and run traceability
+- data quality rule generation and validation
+- governance and approved usage context
+- monitoring and operational evidence
+- security-aware configuration and path handling
+
+## Where functions fit
+
+Function-level behavior stays in API/reference documentation, while this page stays focused on platform shape. For lifecycle sequencing and actor ownership, see [Lifecycle Operating Model](../lifecycle-operating-model.md). For callable details, see the [Function Reference](../reference/index.md).
