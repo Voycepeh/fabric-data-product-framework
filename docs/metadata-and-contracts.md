@@ -25,11 +25,11 @@ In intended operation, `02_ex` and `03_pc` have distinct responsibilities:
   - profiles source data
   - inspects schema, grain, keys, nulls, freshness, classifications, and candidate DQ rules
   - may use AI to suggest DQ rules/classifications
-  - requires human/steward approval
-  - writes approved contract records into metadata tables
+  - drafts contract metadata for review
+  - records approved contract metadata after human/steward approval
 
 - **`03_pc` notebook**
-  - does not invent contract values
+  - does not invent contract values or approvals
   - loads the latest approved contract from the metadata target
   - enforces required columns, business keys, approved DQ rules, and classifications
   - fails fast when contract requirements are not met

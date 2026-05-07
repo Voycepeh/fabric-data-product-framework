@@ -40,13 +40,13 @@ For architecture boundaries, see [Architecture](architecture.md). For full flow 
 ### `02_ex`
 
 - Profiles source data and explains the transformation *why*.
-- Drafts source input contract expectations.
+- Drafts source input contract expectations and proposed metadata records.
 - Reviews AI-suggested DQ rules and classifications (advisory only).
-- Requires human/steward approval before writing approved contract records to metadata tables.
+- Records approved contract metadata only after human/steward approval.
 
 ### `03_pc`
 
-- Loads approved contract records from the metadata target.
+- Loads approved contract metadata records from the metadata target.
 - Enforces required columns, business keys, approved DQ rules, classifications, and runtime standards.
 - Writes controlled outputs plus profiling/run/lineage evidence.
 - Must be run-all-safe for governed operations.
