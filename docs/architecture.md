@@ -53,6 +53,23 @@ Production-ready outputs are consumed through:
 - exports and integration feeds
 - handover packs for support and ownership transition
 
+## Metadata store
+
+Source, Unified, and Product stores hold business data. FabricOps metadata should live in a dedicated metadata target that holds framework evidence, including:
+
+- contracts and contract versions
+- contract column definitions
+- approved data quality rules
+- approved classifications
+- run logs and dataset run evidence
+- quality execution results
+- lineage records
+- handover records
+
+Each environment should have its own metadata target. Development metadata and production metadata must remain separate.
+
+For environment promotion controls, see [Deployment and Promotion](deployment-and-promotion.md). For contract editing and storage behavior, see [Metadata and Contracts](metadata-and-contracts.md).
+
 ## Cross-cutting controls
 
 Across all layers, the framework keeps execution governed with reusable controls:
