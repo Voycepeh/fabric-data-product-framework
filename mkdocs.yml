@@ -19,13 +19,14 @@ theme:
 nav:
   - Home: index.md
   - Quick Start: quick-start.md
-  - Notebook Structure: notebook-structure.md
   - Lifecycle Operating Model: lifecycle-operating-model.md
-  - Deployment and Promotion: deployment-and-promotion.md
   - Architecture: architecture.md
+  - Notebook Structure: notebook-structure.md
+  - Metadata and Contracts: metadata-and-contracts.md
+  - Deployment and Promotion: deployment-and-promotion.md
+  - Functions: reference/index.md
   - Setup:
       - Fabric Wheel Install: setup/fabric-wheel-install.md
-  - Functions: reference/index.md
 
 markdown_extensions:
   - admonition

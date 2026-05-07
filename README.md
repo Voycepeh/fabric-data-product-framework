@@ -9,6 +9,10 @@ FabricOps Starter Kit helps teams structure Microsoft Fabric notebooks with reus
 
 FabricOps adopts Open Data Contract principles in a Fabric-first form. Contracts are authored and approved through notebooks/tables, stored as metadata tables for operational enforcement, and can later be exported/imported as ODCS YAML for open-standard portability.
 
+## Documentation map
+
+FabricOps uses Open Data Contract principles in a Fabric-first way. See [Metadata and Contracts](docs/metadata-and-contracts.md) for how contracts are authored, stored, and enforced through metadata tables, and [Deployment and Promotion](docs/deployment-and-promotion.md) for how notebook code and contract metadata move across environments.
+
 ## Why this starter kit exists
 
 ![Before vs after using the starter kit](docs/assets/before-after.png)
