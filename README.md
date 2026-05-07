@@ -9,6 +9,10 @@ FabricOps Starter Kit helps teams structure Microsoft Fabric notebooks with reus
 
 FabricOps adopts Open Data Contract principles in a Fabric-first form. Contracts are authored and approved through notebooks/tables, stored as metadata tables for operational enforcement, and can later be exported/imported as ODCS YAML for open-standard portability.
 
+## Documentation map
+
+FabricOps uses Open Data Contract principles in a Fabric-first way. See [Metadata and Contracts](docs/metadata-and-contracts.md) for how contracts are authored, stored, and enforced through metadata tables, and [Deployment and Promotion](docs/deployment-and-promotion.md) for how notebook code and contract metadata move across environments.
+
 ## Why this starter kit exists
 
 ![Before vs after using the starter kit](docs/assets/before-after.png)
@@ -37,6 +41,7 @@ The notebooks share upstream context instead of standing alone. One environment 
 ![FabricOps Starter Kit canonical lifecycle workflow](docs/assets/mvp-flow.png)
 
 FabricOps Starter Kit uses a canonical **10-step lifecycle** with governance first, reusable starter-kit engineering steps in the middle, and AI-assisted enhancements at the end. Detailed step guidance lives in [Lifecycle Operating Model](docs/lifecycle-operating-model.md).
+Deployment guidance for enterprise promotion (including Git-restricted setups): [Deployment and promotion](docs/deployment-and-promotion.md).
 
 - Governance owns purpose, approved usage, and accountability first.
 - Starter kit patterns handle repeated runtime, contract, validation, and metadata engineering work.

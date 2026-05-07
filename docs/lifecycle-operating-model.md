@@ -22,7 +22,7 @@ This step confirms that every exploration or pipeline notebook starts from a kno
 
 ### Step 3: Define source contract & ingestion pattern
 
-This step defines the contract between the upstream source and the data product. It captures the expected schema, data types, update frequency, update method, watermark column, and whether the source is append only, overwritten, or slowly changing, so the correct ingestion and comparison pattern can be chosen.
+This step defines the source input contract expectations between the upstream source and the data product pipeline. It captures the expected schema, data types, update frequency, update method, watermark column, and whether the source is append only, overwritten, or slowly changing, so the correct ingestion and comparison pattern can be chosen.
 
 ### Step 4: Ingest, profile & store source data
 
@@ -42,7 +42,7 @@ This step applies standard runtime requirements such as technical columns, run I
 
 ### Step 6C: Enforce pipeline controls
 
-This step enforces approved pipeline controls that are available at runtime and determine whether output should be trusted. This includes approved data quality rules, schema checks, contract checks, and approved classification or sensitivity checks before release downstream.
+This step enforces approved pipeline controls at runtime to determine whether output should be trusted. Approved contract, data quality, and classification controls are enforced in pipeline notebooks before downstream release.
 
 ### Step 6D: Write controlled outputs
 
@@ -71,3 +71,11 @@ This step creates the final documentation needed for review, handover, and futur
 - Humans, governance owners, and data stewards approve.
 - Human engineers enforce approved rules and labels in pipeline notebooks.
 - AI does not directly approve or enforce governance controls.
+
+
+## Related documentation
+
+- For detailed platform boundaries and store layout, see [Architecture](architecture.md).
+- For notebook role boundaries and sequencing, see [Notebook Structure](notebook-structure.md).
+- For contract authoring/storage details, see [Metadata and Contracts](metadata-and-contracts.md).
+- For environment promotion controls, see [Deployment and Promotion](deployment-and-promotion.md).
