@@ -2,35 +2,28 @@
 
 This folder contains reusable notebook starters for Microsoft Fabric workflows.
 
-## Included files
+## Lifecycle starter templates
 
-- `fabric_data_product_mvp.py`: primary MVP starter notebook template.
+- `00_env_config.py`: shared setup notebook for governance context, runtime configuration creation, and startup checks (Step 1, Step 2A, Step 2B).
+- `02_ex_agreement_topic.py`: exploration notebook for source profiling, transformation rationale, AI-assisted suggestions, and human review decisions (Step 3, Step 4, Step 5, Step 8, Step 9).
+- `03_pc_agreement_source_to_target.py`: run-all-safe pipeline notebook for approved contract enforcement, quality controls, controlled output writes, metadata, and lineage handover (Step 1, Step 2B, Step 3, Step 6A–6D, Step 7, Step 10).
+- `fabric_data_product_mvp.py`: existing MVP starter notebook template.
 - `fabric_data_product_mvp.md`: usage notes aligned to the 10-step lifecycle flow.
 
-## Design goals
+## Clean split to follow
 
-- Keep a DRY_RUN-first setup for safe initial execution.
-- Keep profile -> DQ -> governance -> lineage -> handover sequence explicit.
-- Keep clear separation between human-authored logic and framework outputs.
-- Keep notebook content copy-pasteable and readable in raw GitHub view.
+- `00_env_config` = shared setup notebook.
+- `02_ex_*` = exploration-only notebook. AI outputs are advisory and must be human-approved.
+- `03_pc_*` = enforcement pipeline notebook. Applies only approved rules/labels and writes controlled outputs.
+
+## Important boundary
+
+- Step 8 and Step 9 AI helpers belong in exploration notebooks.
+- Production pipeline notebooks should enforce approved deterministic rules and contract checks, and should not make AI decisions during execution.
 
 ## Suggested usage
 
-1. Start with the local-safe recipe from `docs/recipes/local-safe-smoke.md`.
-2. Move to `fabric_data_product_mvp.py` in a Fabric notebook.
-3. Replace reader/writer stubs and transformation logic.
-4. Keep validation and governance review checkpoints before enabling writes.
-
-## Package-based usage in Fabric
-
-For reusable notebook execution, build and upload the framework wheel to a Fabric Environment first, then attach that Environment to your notebook and import from `fabricops_kit`. Prefer this over long-term `%run 00_config`-style helper sharing, which can remain only as a fallback for legacy notebook structure.
-
-
-## How to test the MVP template
-
-1. Install the framework wheel using the PR 68 packaging/install guide, then attach that Environment to your Fabric notebook.
-2. Open `fabric_data_product_mvp.py` and keep `USE_SAMPLE_DATA=True` and `ENABLE_FABRIC_WRITES=False` for the first run.
-3. Run all cells end to end.
-4. Review source/output profile summaries, DQ rule candidates and results, governance suggestions, lineage artifacts, run summary, and final gate status.
-5. Switch to actual Fabric source/target tables only after sample mode passes and human reviewers approve DQ/governance decisions.
-6. Enable writes only after confirming target table names and release readiness.
+1. Run `00_env_config.py` first to define `CONFIG` and verify startup readiness.
+2. Use `02_ex_agreement_topic.py` to profile and document exploratory decisions.
+3. Transfer only approved rules/labels/contracts into `03_pc_agreement_source_to_target.py`.
+4. Keep exploration logic out of production pipeline execution.

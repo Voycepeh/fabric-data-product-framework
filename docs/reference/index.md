@@ -2,6 +2,22 @@
 
 Generated step-first catalogue of callable functions sourced from `fabricops_kit.__all__`.
 
+## Notebook template quickstart
+
+Use these notebook templates for an end-to-end lifecycle implementation:
+
+- [`00_env_config.py`](../../templates/notebooks/00_env_config.py): shared runtime setup (Step 1, Step 2A, Step 2B).
+- [`02_ex_agreement_topic.py`](../../templates/notebooks/02_ex_agreement_topic.py): exploration/profiling and AI-assisted advisory suggestions with human decisions (Step 3, Step 4, Step 5, Step 8, Step 9).
+- [`03_pc_agreement_source_to_target.py`](../../templates/notebooks/03_pc_agreement_source_to_target.py): run-all-safe pipeline enforcement and controlled delivery (Step 1, Step 2B, Step 3, Step 6A-6D, Step 7, Step 10).
+
+Clean split:
+- `00_env_config` = shared setup.
+- `02_ex` = exploration, profiling, AI suggestions, human decisions.
+- `03_pc` = approved enforcement and output.
+
+Step 8 and Step 9 AI functions belong in exploration notebooks. Pipeline notebooks should enforce approved rules and should not make AI decisions at runtime.
+
+
 ## Modules
 
 | Module |
