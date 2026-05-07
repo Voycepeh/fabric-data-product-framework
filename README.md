@@ -19,12 +19,7 @@ A practical starter kit for building governed, quality-checked, AI-ready noteboo
 
 Fabric notebooks often begin as analysis work and then become recurring operations. This starter kit gives that transition a reusable structure for configuration, checks, governance review, lineage, and handover.
 
-Read more: 
-[Quick Start](https://voycepeh.github.io/FabricOps-Starter-Kit/quick-start/)
-[Lifecycle Operating Model](https://voycepeh.github.io/FabricOps-Starter-Kit/lifecycle-operating-model/)
-[Function Reference](https://voycepeh.github.io/FabricOps-Starter-Kit/reference/) 
-[Metadata and Contracts](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/)
-[Architecture](https://voycepeh.github.io/FabricOps-Starter-Kit/architecture/)
+Read more: [Quick Start](https://voycepeh.github.io/FabricOps-Starter-Kit/quick-start/) · [Lifecycle Operating Model](https://voycepeh.github.io/FabricOps-Starter-Kit/lifecycle-operating-model/) · [Function Reference](https://voycepeh.github.io/FabricOps-Starter-Kit/reference/)
 
 ## Design choices
 
@@ -66,6 +61,25 @@ The goal is not only to make one notebook run. The goal is to make the data prod
 
 ![Benefits of the FabricOps Starter Kit](docs/assets/framework-benefits.png)
 
-Teams get reusable patterns for profiling, quality checks, sensitivity review, lineage, metadata logging, and handover so these controls do not have to be rebuilt in every notebook.
+Reusable templates and callable functions for building governed Fabric notebook pipelines without rebuilding the same setup, profiling, quality, contract, lineage, and handover patterns each time.
 
-These patterns are inspired by open data contracts and DQX, but intentionally adapted to Fabric. For contract behavior and storage, see [Metadata and Contracts](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/). For Fabric-native DQ architecture, see [Architecture > Fabric-native Data Quality](https://voycepeh.github.io/FabricOps-Starter-Kit/architecture/dqx-inspired-fabric-native-dq/).
+<div align="center">
+
+[![Runtime Config Template](https://img.shields.io/badge/Template-Runtime%20Config-blue?style=for-the-badge)](https://github.com/Voycepeh/FabricOps-Starter-Kit/tree/main/templates/notebooks/00_env_config.ipynb)
+[![Pipeline Contract Template](https://img.shields.io/badge/Template-Pipeline%20Contract-blue?style=for-the-badge)](https://github.com/Voycepeh/FabricOps-Starter-Kit/tree/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb)
+[![Lifecycle Operating Model](https://img.shields.io/badge/Guide-Lifecycle%20Operating%20Model-green?style=for-the-badge)](https://voycepeh.github.io/FabricOps-Starter-Kit/lifecycle-operating-model/)
+[![Exploration Notebook Template](https://img.shields.io/badge/Template-Exploration%20Notebook-blue?style=for-the-badge)](https://github.com/Voycepeh/FabricOps-Starter-Kit/tree/main/templates/notebooks/02_ex_agreement_topic.ipynb)
+
+[![Function Reference](https://img.shields.io/badge/Reference-Callable%20Functions-purple?style=for-the-badge)](https://voycepeh.github.io/FabricOps-Starter-Kit/reference/)
+[![Metadata and Contracts](https://img.shields.io/badge/Guide-Metadata%20%26%20Contracts-orange?style=for-the-badge)](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/)
+[![Fabric Native DQ](https://img.shields.io/badge/Architecture-Fabric%20Native%20DQ-red?style=for-the-badge)](https://voycepeh.github.io/FabricOps-Starter-Kit/architecture/dqx-inspired-fabric-native-dq/)
+
+</div>
+
+These patterns are inspired by open data contracts and DQX, but intentionally adapted to Fabric.
+
+
+## Scope
+
+This is a Fabric-first notebook starter kit.
+It is not a full data platform, orchestration system, or governance product.
