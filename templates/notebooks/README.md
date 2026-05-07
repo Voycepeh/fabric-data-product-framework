@@ -7,8 +7,7 @@ This folder contains reusable notebook starters for Microsoft Fabric workflows.
 - `00_env_config.ipynb`: shared setup notebook for governance context, runtime configuration creation, and startup checks (Step 1, Step 2A, Step 2B).
 - `02_ex_agreement_topic.ipynb`: exploration notebook for source profiling, transformation rationale, AI-assisted suggestions, and human review decisions (Step 3, Step 4, Step 5, Step 8, Step 9).
 - `03_pc_agreement_source_to_target.ipynb`: run-all-safe pipeline notebook for approved contract enforcement, quality controls, controlled output writes, metadata, and lineage handover (Step 1, Step 2B, Step 3, Step 6A–6D, Step 7, Step 10).
-- `fabric_data_product_mvp.py`: existing MVP starter notebook template.
-- `fabric_data_product_mvp.md`: usage notes aligned to the 10-step lifecycle flow.
+- `01_data_sharing_agreement_<agreement>.ipynb` (if present in your workspace/repo variant): governance agreement notebook for approved usage, ownership, and restrictions.
 
 ## Clean split to follow
 
@@ -30,7 +29,7 @@ This folder contains reusable notebook starters for Microsoft Fabric workflows.
 
 
 
-These three lifecycle templates are supported only as `.ipynb` for Fabric notebook use.
+The supported lifecycle starters are `00_env_config.ipynb`, `02_ex_agreement_topic.ipynb`, and `03_pc_agreement_source_to_target.ipynb` (plus `01_data_sharing_agreement_<agreement>.ipynb` where provided). Use `.ipynb` notebooks for Fabric execution.
 
 ## Contract strategy: Open Data Contract principles, Fabric-first execution
 

@@ -6,8 +6,8 @@ These recipes show practical ways to test and use the framework.
 
 - [Local-safe smoke path](local-safe-smoke.md)
 - [Fabric dry run path](fabric-dry-run.md)
-- [Fabric MVP smoke test recipe](fabric_mvp_smoke_test.md)
-- [MVP wheel release checklist](mvp_wheel_release_checklist.md)
+- [Fabric notebook workflow smoke test recipe](fabric_mvp_smoke_test.md)
+- [Wheel release checklist](mvp_wheel_release_checklist.md)
 - [Contract-first one-call execution](contract-first-one-call.md)
 - [Profile to DQ to governance to lineage to handover](profile-dq-governance-lineage-handover.md)
 
@@ -22,5 +22,5 @@ These recipes show practical ways to test and use the framework.
 ## Related references
 
 - Generated function reference: `docs/reference/`
-- `templates/notebooks/fabric_data_product_mvp.py`
+- Notebook starters in `templates/notebooks/` (`00_env_config.ipynb`, `02_ex_agreement_topic.ipynb`, `03_pc_agreement_source_to_target.ipynb`)
 - Generated function reference pages in `docs/reference/`
