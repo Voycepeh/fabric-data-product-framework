@@ -70,6 +70,14 @@ Each environment should have its own metadata target. Development metadata and p
 
 For environment promotion controls, see [Deployment and Promotion](deployment-and-promotion.md). For contract editing and storage behavior, see [Metadata and Contracts](metadata-and-contracts.md).
 
+
+## Explore detailed architecture subpages
+
+For implementation-level details, use these focused pages:
+
+- [Storage & Metadata Model](architecture/storage-model.md) explains where metadata, contracts, profiles, data quality results, lineage, and runtime artifacts live.
+- [Fabric native Data Quality](architecture/dqx-inspired-fabric-native-dq.md) describes the Fabric-native DQ operating pattern inspired by DQX.
+
 ## Cross-cutting controls
 
 Across all layers, the framework keeps execution governed with reusable controls:
