@@ -2,7 +2,16 @@
 
 A practical starter kit for building governed, quality-checked, AI-ready notebooks in Microsoft Fabric.
 
-Documentation: https://voycepeh.github.io/FabricOps-Starter-Kit/
+## Documentation
+
+<div align="center">
+
+[![Open Documentation](https://img.shields.io/badge/Open%20Documentation-FabricOps%20Starter%20Kit-blue?style=for-the-badge)](https://voycepeh.github.io/FabricOps-Starter-Kit/)
+
+**Start with the Quick Start** to install the package and run the template flow.  
+**Use the Lifecycle Operating Model** to understand the governance, contract, quality, AI, and handover workflow.
+
+</div>
 
 ## Start here
 
