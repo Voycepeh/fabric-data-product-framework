@@ -24,7 +24,11 @@ Configure once, start from the notebook templates, and use the callable function
 | `02_ex_agreement_topic.ipynb` | Running exploration profiling to draft governed metadata and quality requirements. | [Open template](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/02_ex_agreement_topic.ipynb) |
 | `03_pc_agreement_source_to_target.ipynb` | Enforcing approved contracts and quality checks in a controlled pipeline flow. | [Open template](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb) |
 
+<div class="center-cta">
+
 [Browse all callable functions](reference/index.md){ .md-button .md-button--primary }
+
+</div>
 
 ## Navigate by goal
 

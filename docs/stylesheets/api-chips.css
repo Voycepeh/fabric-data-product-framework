@@ -48,3 +48,17 @@
 .api-chip-link:focus-visible {
   text-decoration: underline;
 }
+
+.center-cta {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0 0;
+}
+
+@media (max-width: 768px) {
+  .center-cta .md-button {
+    width: 100%;
+    max-width: 26rem;
+    text-align: center;
+  }
+}
