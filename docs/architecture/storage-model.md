@@ -1,13 +1,28 @@
-# Storage model (Fabric-native)
+# Storage model
 
-This page defines where framework artifacts live across Lakehouse, Warehouse, files, Fabric Environments, and notebooks.
+This page explains where FabricOps Starter Kit artifacts should live so delivery remains repeatable, auditable, and easy to hand over.
 
-## Lakehouse layer
+## Overview
 
-Primary storage and execution-adjacent persistence:
-1. Raw/bronze source tables.
-2. Curated data product tables.
-3. Metadata tables for:
+The storage model separates responsibilities across:
+
+- **Lakehouse** for operational data and execution-adjacent metadata.
+- **Warehouse** for SQL-first monitoring and BI consumption.
+- **Repository files** for versioned contracts and documentation artifacts.
+- **Fabric Environments** for runtime dependency control.
+- **Notebooks** for orchestration and execution checkpoints.
+
+Keeping these boundaries clear prevents operational drift and reduces ambiguity for first-time maintainers.
+
+## Lakehouse responsibilities
+
+Lakehouse is the primary persistence layer for pipeline execution and operational state.
+
+Recommended contents:
+
+1. Raw or bronze source-aligned tables.
+2. Curated product-facing Lakehouse tables.
+3. Metadata tables such as:
    - profile records,
    - schema snapshots,
    - partition snapshots,
@@ -15,46 +30,65 @@ Primary storage and execution-adjacent persistence:
    - DQ rule registry,
    - governance suggestions,
    - lineage,
-   - run summary,
+   - run summaries,
    - quarantine rows.
 
-JSON payload columns are acceptable for flexible metadata and evolving structures. For stable operational reporting, flatten key fields into explicit columns where useful.
+JSON payload columns are acceptable for flexible or evolving metadata structures. For stable operational reporting, flatten high-value fields into explicit columns.
 
-## Warehouse layer
+## Warehouse responsibilities
 
-The Warehouse is a SQL-friendly monitoring and serving layer. It does not mean every curated Lakehouse table must be physically duplicated into Warehouse. Use Warehouse views/tables where SQL-first access, governance monitoring, or Power BI semantic modelling benefits from it.
+Warehouse is the SQL-friendly monitoring and serving layer. It is not a requirement to duplicate every Lakehouse curated table physically into Warehouse.
 
-Consumption and monitoring surface:
-1. SQL-friendly reporting views over metadata tables.
-2. Governance and DQ monitoring views.
-3. Source layer for Power BI semantic models.
-4. Optional curated serving layer for downstream SQL-first consumers.
+Use Warehouse for:
+
+1. Reporting views over metadata and run-state tables.
+2. Governance and DQ monitoring datasets.
+3. Power BI semantic model sources.
+4. Optional SQL-first serving tables/views for downstream consumers.
 
 ## Files and repository assets
 
-Versioned artifacts and local development files:
+The repository is the source of truth for versioned, human-reviewed artifacts.
+
+Recommended contents:
+
 1. Contract YAML files.
 2. Example JSON rule payloads.
-3. Markdown handover artifacts.
-4. Local package build outputs (`dist/`) should not be committed unless explicitly required.
+3. Markdown runbooks and handover notes.
+4. Build outputs managed intentionally (for example, local `dist/` outputs should not be committed unless explicitly required).
 
-## Fabric Environment layer
+## Fabric Environment responsibilities
 
-Runtime dependency management:
-1. Install custom wheel built locally.
-2. Pin framework/runtime dependencies.
-3. Reuse the same environment across related notebooks to keep execution consistent.
+Fabric Environments provide dependency consistency across notebook execution.
 
-## Notebook layer
+Use them to:
 
-Execution/orchestration flow should remain thin and explicit:
-1. Execution and orchestration.
-2. Parameter loading.
-3. Source profiling.
-4. DQ candidate generation.
-5. Human review cells.
-6. DQ execution.
-7. Transformation.
-8. Target writes.
-9. Metadata writes.
-10. AI context and run summary export.
+1. Install the locally built framework wheel.
+2. Pin framework/runtime dependency versions.
+3. Reuse consistent runtime configuration across related notebooks.
+
+## Notebook responsibilities
+
+Notebooks should stay orchestration-focused and explicit.
+
+Typical responsibilities:
+
+1. Load parameters and runtime context.
+2. Execute source profiling.
+3. Stage DQ candidate generation inputs.
+4. Support human review checkpoints.
+5. Run approved DQ checks.
+6. Apply transformations.
+7. Write target data outputs.
+8. Persist metadata and run summaries.
+9. Export AI context and summary artifacts for monitoring and handover.
+
+## What should not live here
+
+To keep responsibilities clear, avoid placing these in the wrong layer:
+
+- Do not treat notebooks as long-term system-of-record storage.
+- Do not keep approval-only governance decisions in ad hoc local files.
+- Do not store curated operational monitoring solely in notebook markdown outputs.
+- Do not bypass the rule registry with hidden one-off DQ logic when pipeline enforcement is expected.
+- Do not rely on unpinned runtime dependencies when reproducibility is required.

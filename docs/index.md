@@ -8,9 +8,9 @@ It gives teams a reusable way to move from exploration to controlled pipeline de
 
 - [Quick Start](quick-start.md)
 - [Lifecycle Operating Model](lifecycle-operating-model.md)
-- [Architecture](architecture.md)
-- [Storage & Metadata Model](architecture/storage-model.md)
-- [Fabric-native Data Quality](architecture/dqx-inspired-fabric-native-dq.md)
+- [Architecture overview](architecture/index.md)
+- [Storage model](architecture/storage-model.md)
+- [Data quality architecture](architecture/data-quality-architecture.md)
 - [Notebook Structure](notebook-structure.md)
 - [Metadata and Contracts](metadata-and-contracts.md)
 - [Function Reference](reference/index.md)
@@ -32,8 +32,8 @@ It gives teams a reusable way to move from exploration to controlled pipeline de
 ## Architecture pages
 
 - [Platform Architecture](architecture.md) explains the overall workspace and data platform shape.
-- [Storage & Metadata Model](architecture/storage-model.md) explains where contracts, profiles, DQ results, lineage, and runtime artifacts live.
-- [Fabric-native Data Quality](architecture/dqx-inspired-fabric-native-dq.md) explains the DQX-inspired Fabric-native operating pattern.
+- [Storage model](architecture/storage-model.md) explains where contracts, profiles, DQ results, lineage, and runtime artifacts live.
+- [Data quality architecture](architecture/data-quality-architecture.md) explains the DQX-inspired Fabric-native operating pattern.
 
 ## Compatibility note
 
