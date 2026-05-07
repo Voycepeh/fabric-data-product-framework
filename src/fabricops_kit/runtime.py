@@ -78,15 +78,20 @@ def normalize_name(value: str) -> str:
 def _infer_notebook_name_from_runtime() -> str | None:
     """Infer current notebook name from Fabric runtime context when available."""
     try:
-        # Fabric runtime usually exposes notebookutils in notebooks.
-        context = notebookutils.runtime.context  # type: ignore[name-defined]
-        if isinstance(context, dict):
-            return context.get("currentNotebookName")
-        if hasattr(context, "get"):
-            return context.get("currentNotebookName")
+        from notebookutils import runtime  # type: ignore
+
+        context = runtime.context
     except Exception:
         return None
-    return None
+
+    if isinstance(context, dict):
+        return context.get("currentNotebookName")
+    if hasattr(context, "get"):
+        try:
+            return context.get("currentNotebookName")
+        except Exception:
+            pass
+    return getattr(context, "currentNotebookName", None)
 
 
 def validate_notebook_name(name: str | None = None, allowed_prefixes: list[str] | None = None, config: object | None = None, local_fallback_name: str | None = None) -> list[str]:
