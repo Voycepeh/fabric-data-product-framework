@@ -13,7 +13,7 @@ DOCS_METADATA_PATH = PKG_DIR / "docs_metadata.py"
 REFERENCE_PATH = ROOT / "docs" / "reference" / "index.md"
 MODULE_DIR = ROOT / "docs" / "api" / "modules"
 STEP_FALLBACK_NOTES = {
-    "5": "No public callable is currently exported for this step. Use notebook prompts for AI-assisted rule drafting.",
+    "5": "No public callable is currently mapped to this step. Use exploration notebook prompts to capture transformation rationale before pipeline enforcement.",
 }
 
 @dataclass
@@ -286,13 +286,16 @@ def main() -> None:
 
     (MODULE_DIR / "index.md").write_text("\n".join(module_index_lines) + "\n", encoding="utf-8", newline="\n")
 
-    ref = ["# Callable Functions", "", "Generated step-first catalogue of callable functions sourced from `fabricops_kit.__all__`.", ""]
-    ref.extend(["## Modules", "", "| Module |", "|---|"])
-    for module in sorted(module_data):
-        ref.append(
-            f"| <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{module}/\" title=\"Open {module} module page\" aria-label=\"Open {module} module page\">{module}</a> |"
-        )
-    ref.append("")
+    ref = [
+        "# Callable Functions",
+        "",
+        "This step-first catalogue lists public callables exported from `fabricops_kit.__all__`.",
+        "",
+        "For notebook execution flow, see [Quick Start](../quick-start.md).",
+        "For notebook responsibilities, see [Notebook Structure](../notebook-structure.md).",
+        "Module-level API pages are available in the **Functions > Modules** sidebar.",
+        "",
+    ]
     for step in [str(item["number"]) for item in step_docs]:
         ref.append(f"## Step {step}: {step_titles[step]}")
         ref.append("")
@@ -312,9 +315,10 @@ def main() -> None:
                     f"{', '.join(f'[`{r}`](./internal/{s.module}/{r}.md) (internal)' for r in related) or '—'} |"
                 )
         else:
-            ref.append("No public callable currently mapped to this step.")
             if step in STEP_FALLBACK_NOTES:
-                ref.extend(["", STEP_FALLBACK_NOTES[step]])
+                ref.append(STEP_FALLBACK_NOTES[step])
+            else:
+                ref.append("No public callable currently mapped to this step.")
         ref.append("")
     unmapped = sorted((set(symbol_map) - mapped_symbols), key=str.lower)
     ref.extend(

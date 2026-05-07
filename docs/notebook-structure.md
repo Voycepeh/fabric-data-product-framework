@@ -37,14 +37,20 @@ For architecture boundaries, see [Architecture](architecture.md). For full flow 
 - Should remain environment-local (dev config in dev, prod config in prod).
 - Must not accidentally point production notebooks to development stores.
 
-### `02_ex`
+### `01_data_sharing_agreement_<agreement>`
+
+- Captures governance-approved purpose, allowed usage, ownership, and restrictions.
+- Links notebook execution to an approved agreement record before implementation begins.
+- Provides the business guardrails used by both exploration and production pipeline notebooks.
+
+### `02_ex_<agreement>_<topic>`
 
 - Profiles source data and explains the transformation *why*.
 - Drafts source input contract expectations and proposed metadata records.
 - Reviews AI-suggested DQ rules and classifications (advisory only).
 - Records approved contract metadata only after human/steward approval.
 
-### `03_pc`
+### `03_pc_<agreement>_<topic>`
 
 - Loads approved contract metadata records from the metadata target.
 - Enforces required columns, business keys, approved DQ rules, classifications, and runtime standards.
