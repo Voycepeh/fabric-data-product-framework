@@ -1,13 +1,13 @@
-# Fabric MVP Smoke Test Recipe
+# Fabric Notebook Workflow Smoke Test Recipe
 
 ## Purpose
 
-Use this smoke test to validate the end-to-end Microsoft Fabric lifecycle workflow after packaging and environment setup. It confirms that the framework can:
+Use this smoke test to validate the end-to-end Microsoft Fabric notebook workflow after packaging and environment setup. It confirms that the framework can:
 
 - build as a wheel
 - install into a Fabric Environment
 - import correctly inside a Fabric notebook
-- run the lifecycle workflow in safe sample mode
+- run the supported notebook workflow in safe sample mode
 - generate profiling output
 - generate or load DQ rules
 - run DQ validation
@@ -22,9 +22,9 @@ Use this smoke test to validate the end-to-end Microsoft Fabric lifecycle workfl
 Run this recipe:
 
 - after packaging changes
-- after MVP notebook template changes
+- after notebook starter changes (`00_env_config` / `02_ex` / `03_pc`)
 - after DQ/profiling/drift/governance/lineage/metadata/run summary changes
-- before full actual-data MVP testing
+- before full actual-data pipeline-contract testing
 - before publishing a new wheel for team use
 
 ## Prerequisites
@@ -37,13 +37,13 @@ Before running this smoke test, confirm:
 - Environment published
 - Environment attached to notebook
 - notebook session restarted
-- MVP notebook template available
+- supported starter notebooks available (`00_env_config`, `02_ex_*`, `03_pc_*`)
 - optional Fabric workspace access for write-enabled test
 
 References:
 
 - [UV wheel build + Fabric install guide](../setup/fabric-wheel-install.md)
-- [MVP notebook template](../../templates/notebooks/fabric_data_product_mvp.py)
+- [Notebook Structure](../notebook-structure.md)
 
 ## Test mode matrix
 
@@ -86,7 +86,7 @@ print("Package path:", fdpf.__file__)
 print("Package version:", getattr(fdpf, "__version__", "unknown"))
 ```
 
-### 3) MVP notebook safe sample run
+### 3) Notebook workflow safe sample run
 
 Expected settings:
 
@@ -182,6 +182,3 @@ Use this table template for each smoke-test execution:
 - writes disabled by default
 - AI-assisted sections disabled by default
 
-## Relationship to PR 69
-
-This recipe assumes the MVP notebook template exposes safe runtime flags such as `USE_SAMPLE_DATA` and `ENABLE_FABRIC_WRITES`. If PR 69 changes those names, rebase PR 70 and update this recipe before merge.

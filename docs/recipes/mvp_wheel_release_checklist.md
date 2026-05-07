@@ -1,11 +1,11 @@
-# MVP Wheel Release Checklist
+# Wheel Release Checklist
 
-This checklist is for preparing a clean wheel before uploading it into Microsoft Fabric for MVP testing.
+This checklist is for preparing a clean wheel before uploading it into Microsoft Fabric for notebook workflow testing.
 
 ## Steps
 
 1. Pull latest `main`.
-2. Confirm PR 69 and PR 70 are merged.
+2. Confirm the notebook workflow docs and smoke-test recipe updates are merged.
 3. Check version alignment:
    `python scripts/check_release_ready.py`
 4. Run local validation:
@@ -30,7 +30,7 @@ print(fdpf.__file__)
 print(getattr(fdpf, "__version__", "unknown"))
 ```
 
-12. Run the Fabric MVP smoke test recipe.
+12. Run the Fabric notebook workflow smoke test recipe.
 13. Record evidence:
     - git commit SHA
     - package version
