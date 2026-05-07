@@ -101,9 +101,11 @@ These patterns are inspired by open data contracts and DQX, but intentionally ad
 
 ## AI in the loop
 
-AI assists with metadata summaries, data quality rule suggestions, sensitivity classification suggestions, lineage, and handover notes.
-Humans approve governance and quality decisions.
-Pipeline notebooks enforce approved decisions.
+AI assists with drafting and review work, but approved decisions are enforced by pipeline notebooks.
+
+Use AI for suggestions and summaries.
+Use governance review for approval.
+Use pipeline code for enforcement.
 
 ## Scope
 
