@@ -1,6 +1,7 @@
 # Metadata and Contracts
 
-## Fabric-first contract model
+## Fabric-first contract model 
+Based off https://github.com/bitol-io/open-data-contract-standard
 
 FabricOps adopts Open Data Contract principles in a Fabric-first form. Contracts are authored and reviewed through notebooks or tables, stored as approved metadata records in a dedicated Fabric metadata target, and enforced by pipeline notebooks. ODCS YAML can be added later as an import/export format for teams that also use Git-based contract workflows.
 
