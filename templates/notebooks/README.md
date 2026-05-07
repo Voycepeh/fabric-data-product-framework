@@ -31,3 +31,24 @@ This folder contains reusable notebook starters for Microsoft Fabric workflows.
 
 
 These three lifecycle templates are supported only as `.ipynb` for Fabric notebook use.
+
+## Contract strategy: Open Data Contract principles, Fabric-first execution
+
+FabricOps follows Open Data Contract principles, but adapts authoring and enforcement for Microsoft Fabric.
+
+FabricOps adopts Open Data Contract principles in a Fabric-first form. Contracts are authored and approved through notebooks/tables, stored as metadata tables for operational enforcement, and can later be exported/imported as ODCS YAML for open-standard portability.
+
+In a Fabric-first workflow:
+- Exploration notebooks help profile data and draft contract expectations.
+- AI may suggest required columns, DQ rules, and classifications, but humans approve them.
+- Approved contracts should be stored in Fabric metadata tables, not only in YAML files.
+- Pipeline notebooks load the approved contract from metadata tables and enforce it.
+- ODCS YAML is an optional import/export format for interoperability and Git-based workflows.
+
+Recommended operational flow:
+`02_ex` notebook -> profile source data -> draft contract as Python dict/table -> human/steward approval -> write approved contract to metadata tables
+
+`03_pc` notebook -> load approved contract from metadata tables -> enforce required columns, DQ rules, classifications, business keys -> write output and metadata records
+
+"Source input contract" means the minimum expectations the pipeline requires from upstream data. It does not mean FabricOps owns the upstream producer.
+
