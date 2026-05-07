@@ -2,90 +2,74 @@
 
 A practical starter kit for building governed, quality-checked, AI-ready notebooks in Microsoft Fabric.
 
-Quick Start and list of functions
-[https://voycepeh.github.io/fabricops-kit/  ](https://voycepeh.github.io/FabricOps-Starter-Kit/)
+Documentation: https://voycepeh.github.io/FabricOps-Starter-Kit/
 
-FabricOps Starter Kit helps teams structure Microsoft Fabric notebooks with reusable configuration, runtime validation, profiling, quality checks, lineage, metadata logging, and handover patterns.
+## Start here
 
-FabricOps adopts Open Data Contract principles in a Fabric-first form. Contracts are authored and approved through notebooks/tables, stored as metadata tables for operational enforcement, and can later be exported/imported as ODCS YAML for open-standard portability.
-
-## Documentation map
-
-FabricOps uses Open Data Contract principles in a Fabric-first way. See [Metadata and Contracts](docs/metadata-and-contracts.md) for how contracts are authored, stored, and enforced through metadata tables, and [Deployment and Promotion](docs/deployment-and-promotion.md) for how notebook code and contract metadata move across environments.
+- [Quick Start](docs/quick-start.md)
+- [Lifecycle Operating Model](docs/lifecycle-operating-model.md)
+- [Architecture](docs/architecture.md)
+- [Notebook Structure](docs/notebook-structure.md)
+- [Metadata and Contracts](docs/metadata-and-contracts.md)
+- [Function Reference](docs/reference/index.md)
+- [Fabric Wheel Install](docs/setup/fabric-wheel-install.md)
 
 ## Why this starter kit exists
 
 ![Before vs after using the starter kit](docs/assets/before-after.png)
 
-Fabric notebooks often begin as analysis work, then slowly become recurring operational work. FabricOps Starter Kit gives that transition a clearer structure: reusable configuration, checks, governance review, lineage, and handover.
+Fabric notebooks often begin as analysis work and then become recurring operations. This starter kit gives that transition a reusable structure for configuration, checks, governance review, lineage, and handover.
+
+Read more: [Quick Start](docs/quick-start.md) · [Lifecycle Operating Model](docs/lifecycle-operating-model.md)
 
 ## What users get
 
 ![Benefits of the FabricOps Starter Kit](docs/assets/framework-benefits.png)
 
-Governance and engineering work often gets repeated across every notebook: configuration, profiling, quality checks, sensitivity review, lineage, and handover. FabricOps Starter Kit turns those repeated steps into reusable patterns, with AI helping to draft the tedious parts while humans review the decisions that matter.
+Teams get reusable patterns for profiling, quality checks, sensitivity review, lineage, metadata logging, and handover so these controls do not have to be rebuilt in every notebook.
+
+Read more: [Function Reference](docs/reference/index.md) · [Metadata and Contracts](docs/metadata-and-contracts.md)
 
 ## How it fits into a Fabric data platform
 
 ![Generic data platform architecture](docs/assets/data-platform-architecture.png)
 
-Fabric work often spans dev and prod environments, plus multiple lakehouses and warehouses. Since a Fabric notebook only has one default attached data store through the UI, the starter kit uses reusable configuration and code-based paths to make cross-store notebook work clearer and repeatable.
+The kit supports repeatable notebook execution across development and production patterns, with explicit handling for cross-store and cross-workspace data flows.
+
+Read more: [Architecture](docs/architecture.md)
 
 ## Notebook operating model
 
 ![Workspace notebook setup](docs/assets/notebook-structure.png)
 
-The notebooks share upstream context instead of standing alone. One environment config can support many agreements and notebooks, while one data sharing agreement can branch into many exploration and pipeline contract notebooks.
+The notebook model keeps shared runtime context clear: one environment config can support many agreements and notebooks, and one agreement can branch into multiple notebook paths.
+
+Read more: [Notebook Structure](docs/notebook-structure.md)
 
 ## Canonical lifecycle workflow
+
 ![FabricOps Starter Kit canonical lifecycle workflow](docs/assets/mvp-flow.png)
 
-FabricOps Starter Kit uses a canonical **10-step lifecycle** with governance first, reusable starter-kit engineering steps in the middle, and AI-assisted enhancements at the end. Detailed step guidance lives in [Lifecycle Operating Model](docs/lifecycle-operating-model.md).
-Deployment guidance for enterprise promotion (including Git-restricted setups): [Deployment and promotion](docs/deployment-and-promotion.md).
+The project follows a canonical 10-step lifecycle: governance-first, controlled engineering execution, then optional AI-assisted drafting and summarization.
 
-- Governance owns purpose, approved usage, and accountability first.
-- Starter kit patterns handle repeated runtime, contract, validation, and metadata engineering work.
-- AI-assisted steps help draft DQ rules, classification/sensitivity suggestions, and lineage/handover documentation, with human review of governance and DQ decisions.
+Read more: [Lifecycle Operating Model](docs/lifecycle-operating-model.md)
 
-## What problems it aims to solve?
+## What problems it aims to solve
 
-| Problem | Starter kit response |
-|---|---|
-| Repetitive notebook setup and Fabric path handling | Reusable runtime/config and notebook workflow structure. |
-| Profiling results are not reusable metadata | Profiling artifacts are captured as reusable metadata outputs. |
-| Manual DQ rule writing is slow | AI-assisted and deterministic DQ candidate generation with human approval. |
-| Schema drift, data drift, and incremental refresh risk | Drift/safety checks are integrated into the notebook workflow path. |
-| Governance and sensitivity review are disconnected from execution | Governance suggestions and approval artifacts are included in the same workflow. |
-| Handover is hard when logic lives only in notebooks | Lineage, run summaries, and handover pack artifacts are assembled for transfer. |
+- Repetitive notebook setup and path handling.
+- Non-reusable profiling and validation outputs.
+- Slow, manual quality/governance drafting and review loops.
+- Weak lineage and handover evidence for operational ownership transfer.
 
-## DQX-inspired, Fabric-native
-This starter kit takes inspiration from [Databricks Labs DQX](https://databrickslabs.github.io/dqx/docs/guide/ai_assisted_quality_checks_generation/) patterns (profiling, quality rule generation, quality check storage, check execution, and quarantine/summary metrics).
+For contract behavior and storage, see [Metadata and Contracts](docs/metadata-and-contracts.md). For Fabric-native DQ architecture, see [Architecture > Fabric-native Data Quality](docs/architecture/dqx-inspired-fabric-native-dq.md).
 
-This repository adapts that pattern to Microsoft Fabric notebooks, Lakehouse/Warehouse, Fabric AI functions, and Copilot-style workflows.
+## AI in the loop
 
-## How does AI come into play?
-AI helps draft DQ rules, sensitivity labels, lineage, transformation summaries, and handover notes.
-We do it via creating functions within this starter kit that allow us to prompt the native [AI function](https://learn.microsoft.com/en-us/fabric/data-science/ai-functions/overview?tabs=pandas-pyspark%2Cpandas) or standardize prompts that we manually generate and paste into copilot.
+AI assists with metadata summaries, data quality rule suggestions, sensitivity classification suggestions, lineage, and handover notes.
+Humans approve governance and quality decisions.
+Pipeline notebooks enforce approved decisions.
 
-### Microsoft Fabric AI Functions prerequisites
-Fabric AI Functions are used as an optional AI in the loop layer for generating candidate metadata, quality rules, governance suggestions, and handover summaries from profiling evidence. They are not required for the deterministic core pipeline to run.
+## Scope
 
-Requirements:
-- Fabric Runtime 1.3 or later.
-- Paid Fabric capacity F2 or higher, or P capacity.
-- Tenant switch for Copilot / Azure OpenAI powered features enabled.
-- See Microsoft Learn: [AI Functions overview](https://learn.microsoft.com/en-us/fabric/data-science/ai-functions/overview).
-
-Dependency notes (runtime and DataFrame-type dependent):
-- Pandas with Python runtime: install `synapseml_internal` and `synapseml_core` wheel dependencies plus `openai`.
-- Pandas with PySpark runtime: install `openai`.
-- PySpark DataFrame with PySpark runtime: no installation required.
-
-Use the Microsoft Learn installation commands for your environment rather than pinning local versions unless Microsoft documentation requires specific versions.
-
-The starter kit supports native Fabric AI Functions when available.
-When Fabric AI Functions are unavailable, you can generate the same standardized prompts and manually paste them into Copilot or another LLM.
-Human-reviewed outputs should then be stored back into starter-kit metadata or rules tables.
-
-
-FabricOps uses Open Data Contract principles in a Fabric-first way. Approved contracts are authored through notebooks/tables, stored in a dedicated Fabric metadata store, and enforced by pipeline notebooks. ODCS YAML can be added later as an import/export format for teams that also use Git-based contract workflows.
+This is a Fabric-first notebook starter kit.
+It is not a full data platform, orchestration system, or governance product.

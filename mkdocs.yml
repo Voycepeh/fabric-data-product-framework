@@ -23,7 +23,7 @@ nav:
   - Architecture:
       - Platform Architecture: architecture.md
       - Storage & Metadata Model: architecture/storage-model.md
-      - Fabric native Data Quality: architecture/dqx-inspired-fabric-native-dq.md
+      - Fabric-native Data Quality: architecture/dqx-inspired-fabric-native-dq.md
   - Notebook Structure: notebook-structure.md
   - Metadata and Contracts: metadata-and-contracts.md
   - Deployment and Promotion: deployment-and-promotion.md
