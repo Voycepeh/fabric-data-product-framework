@@ -63,9 +63,9 @@ A successful quick-start run should leave:
 
 - [Lifecycle Operating Model](lifecycle-operating-model.md)
 - [Notebook Structure](notebook-structure.md)
-- [Architecture](architecture.md)
+- [Architecture](architecture/index.md)
 - [Storage & Metadata Model](architecture/storage-model.md)
-- [Fabric-native Data Quality](architecture/dqx-inspired-fabric-native-dq.md)
+- [Fabric-native Data Quality](architecture/data-quality-architecture.md)
 - [Metadata and Contracts](metadata-and-contracts.md)
 - [Function Reference](reference/index.md)
 - [Fabric Wheel Install](setup/fabric-wheel-install.md)

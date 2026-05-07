@@ -115,6 +115,6 @@ The pipeline notebook should be run-all-safe.
 
 - [Lifecycle Operating Model](lifecycle-operating-model.md)
 - [Function Reference](reference/function-reference.md)
-- [Architecture](architecture.md)
+- [Architecture](architecture/index.md)
 - [Metadata and Contracts](metadata-and-contracts.md)
 - [Deployment and Promotion](deployment-and-promotion.md)

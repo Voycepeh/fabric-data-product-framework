@@ -19,8 +19,8 @@ _Exploration explains the why. Pipeline contract notebooks enforce the approved 
 | Goal | Start with |
 | --- | --- |
 | New user | [Quick Start](quick-start.md), [Notebook Structure](notebook-structure.md) |
-| Understand the operating model | [Lifecycle Operating Model](lifecycle-operating-model.md), [Architecture](architecture.md) |
-| Build governed pipelines | [Storage & Metadata Model](architecture/storage-model.md), [Metadata and Contracts](metadata-and-contracts.md), [Fabric-native Data Quality](architecture/dqx-inspired-fabric-native-dq.md) |
+| Understand the operating model | [Lifecycle Operating Model](lifecycle-operating-model.md), [Architecture](architecture/index.md) |
+| Build governed pipelines | [Storage & Metadata Model](architecture/storage-model.md), [Metadata and Contracts](metadata-and-contracts.md), [Fabric-native Data Quality](architecture/data-quality-architecture.md) |
 | Developer reference | [Function Reference](reference/index.md), [Fabric Wheel Install](setup/fabric-wheel-install.md) |
 
 ## Workflow at a glance
