@@ -67,17 +67,12 @@ Reusable templates and callable functions for building governed Fabric notebook 
 
 [![Runtime Config Template](https://img.shields.io/badge/Template-Runtime%20Config-blue?style=for-the-badge)](https://github.com/Voycepeh/FabricOps-Starter-Kit/tree/main/templates/notebooks/00_env_config.ipynb)
 [![Pipeline Contract Template](https://img.shields.io/badge/Template-Pipeline%20Contract-blue?style=for-the-badge)](https://github.com/Voycepeh/FabricOps-Starter-Kit/tree/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb)
-[![Lifecycle Operating Model](https://img.shields.io/badge/Guide-Lifecycle%20Operating%20Model-green?style=for-the-badge)](https://voycepeh.github.io/FabricOps-Starter-Kit/lifecycle-operating-model/)
 [![Exploration Notebook Template](https://img.shields.io/badge/Template-Exploration%20Notebook-blue?style=for-the-badge)](https://github.com/Voycepeh/FabricOps-Starter-Kit/tree/main/templates/notebooks/02_ex_agreement_topic.ipynb)
 
 [![Function Reference](https://img.shields.io/badge/Reference-Callable%20Functions-purple?style=for-the-badge)](https://voycepeh.github.io/FabricOps-Starter-Kit/reference/)
-[![Metadata and Contracts](https://img.shields.io/badge/Guide-Metadata%20%26%20Contracts-orange?style=for-the-badge)](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/)
-[![Fabric Native DQ](https://img.shields.io/badge/Architecture-Fabric%20Native%20DQ-red?style=for-the-badge)](https://voycepeh.github.io/FabricOps-Starter-Kit/architecture/dqx-inspired-fabric-native-dq/)
-
 </div>
 
 These patterns are inspired by open data contracts and DQX, but intentionally adapted to Fabric.
-
 
 ## Scope
 
