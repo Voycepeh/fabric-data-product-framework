@@ -45,8 +45,19 @@ def normalize_contract_dict(contract: dict) -> dict:
 
 def validate_contract_dict(contract: dict) -> list[str]:
     """Validate a contract dictionary and return error strings without raising."""
-    c = normalize_contract_dict(contract)
+    raw = dict(contract or {})
     errors: list[str] = []
+    for field, expected_type in [
+        ("required_columns", list),
+        ("optional_columns", list),
+        ("business_keys", list),
+        ("classifications", dict),
+        ("quality_rules", list),
+    ]:
+        if field in raw and raw[field] is not None and not isinstance(raw[field], expected_type):
+            errors.append(f"{field} must be a {expected_type.__name__}")
+
+    c = normalize_contract_dict(contract)
     for key in ["contract_id", "contract_type", "dataset_name", "object_name", "version", "status"]:
         if not c.get(key):
             errors.append(f"Missing required field: {key}")
@@ -54,17 +65,6 @@ def validate_contract_dict(contract: dict) -> list[str]:
         errors.append("contract_type must be one of: source_input, output_product")
     if c.get("status") and c["status"] not in CONTRACT_STATUSES:
         errors.append("status must be one of: draft, approved, retired")
-    if not isinstance(c.get("required_columns"), list):
-        errors.append("required_columns must be a list")
-    if not isinstance(c.get("optional_columns"), list):
-        errors.append("optional_columns must be a list")
-    if not isinstance(c.get("business_keys"), list):
-        errors.append("business_keys must be a list")
-    if not isinstance(c.get("classifications"), dict):
-        errors.append("classifications must be a dict")
-    if not isinstance(c.get("quality_rules"), list):
-        errors.append("quality_rules must be a list")
-
     columns = set(c.get("required_columns", [])) | set(c.get("optional_columns", []))
     for idx, rule in enumerate(c.get("quality_rules", [])):
         if not isinstance(rule, dict):
@@ -84,7 +84,9 @@ def build_contract_header_record(contract: dict) -> dict:
     """Build one header row for FABRICOPS_CONTRACTS."""
     c = normalize_contract_dict(contract)
     timestamp = _now_utc_iso()
-    approved_at = timestamp if c.get("status") == "approved" else None
+    approved_at = c.get("approved_at_utc")
+    if c.get("status") == "approved" and not approved_at:
+        approved_at = timestamp
     return {
         "contract_id": c.get("contract_id"),
         "contract_type": c.get("contract_type"),
@@ -153,9 +155,12 @@ def write_contract_to_lakehouse(contract, metadata_path: Housepath, mode: str = 
     if errs:
         raise ValueError("Contract validation failed: " + " | ".join(errs))
     records = build_contract_records(contract)
-    lakehouse_table_write(records["contracts"], metadata_path.table("FABRICOPS_CONTRACTS"), mode=mode)
-    lakehouse_table_write(records["columns"], metadata_path.table("FABRICOPS_CONTRACT_COLUMNS"), mode=mode)
-    lakehouse_table_write(records["rules"], metadata_path.table("FABRICOPS_CONTRACT_RULES"), mode=mode)
+    contracts_df = contract_records_to_spark(records["contracts"])
+    columns_df = contract_records_to_spark(records["columns"])
+    rules_df = contract_records_to_spark(records["rules"])
+    lakehouse_table_write(contracts_df, metadata_path, "FABRICOPS_CONTRACTS", mode=mode)
+    lakehouse_table_write(columns_df, metadata_path, "FABRICOPS_CONTRACT_COLUMNS", mode=mode)
+    lakehouse_table_write(rules_df, metadata_path, "FABRICOPS_CONTRACT_RULES", mode=mode)
     return records
 
 
@@ -165,8 +170,29 @@ def _select_latest(records: list[dict]) -> dict | None:
     return sorted(records, key=lambda r: (str(r.get("approved_at_utc") or ""), str(r.get("created_at_utc") or ""), str(r.get("version") or "")), reverse=True)[0]
 
 
+def _to_records(table_result: Any) -> list[dict]:
+    """Convert Spark-like table read output to list-of-dict records."""
+    if table_result is None:
+        return []
+    if isinstance(table_result, list):
+        rows = []
+        for item in table_result:
+            if isinstance(item, dict):
+                rows.append(item)
+            elif hasattr(item, "asDict"):
+                rows.append(item.asDict(recursive=True))
+            else:
+                rows.append(dict(item))
+        return rows
+    if hasattr(table_result, "collect"):
+        return [row.asDict(recursive=True) if hasattr(row, "asDict") else dict(row) for row in table_result.collect()]
+    if hasattr(table_result, "toPandas"):
+        return table_result.toPandas().to_dict(orient="records")
+    return []
+
+
 def load_contract_from_lakehouse(metadata_path: Housepath, contract_id: str, version: str | None = None) -> dict:
-    headers = lakehouse_table_read(metadata_path.table("FABRICOPS_CONTRACTS"), as_format="records")
+    headers = _to_records(lakehouse_table_read(metadata_path, "FABRICOPS_CONTRACTS"))
     candidates = [r for r in headers if r.get("contract_id") == contract_id]
     if version is not None:
         candidates = [r for r in candidates if r.get("version") == version]
@@ -183,7 +209,7 @@ def load_contract_from_lakehouse(metadata_path: Housepath, contract_id: str, ver
 
 
 def load_latest_approved_contract(metadata_path: Housepath, dataset_name: str, object_name: str, contract_type: str = "source_input") -> dict:
-    headers = lakehouse_table_read(metadata_path.table("FABRICOPS_CONTRACTS"), as_format="records")
+    headers = _to_records(lakehouse_table_read(metadata_path, "FABRICOPS_CONTRACTS"))
     matches = [
         r for r in headers
         if r.get("dataset_name") == dataset_name and r.get("object_name") == object_name and r.get("contract_type") == contract_type and r.get("status") == "approved"
