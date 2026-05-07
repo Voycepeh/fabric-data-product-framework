@@ -13,16 +13,6 @@ A practical starter kit for building governed, quality-checked, AI-ready noteboo
 
 </div>
 
-## Start here
-
-- [Quick Start](https://voycepeh.github.io/FabricOps-Starter-Kit/quick-start/)
-- [Lifecycle Operating Model](https://voycepeh.github.io/FabricOps-Starter-Kit/lifecycle-operating-model/)
-- [Architecture](https://voycepeh.github.io/FabricOps-Starter-Kit/architecture/)
-- [Notebook Structure](https://voycepeh.github.io/FabricOps-Starter-Kit/notebook-structure/)
-- [Metadata and Contracts](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/)
-- [Function Reference](https://voycepeh.github.io/FabricOps-Starter-Kit/reference/)
-- [Fabric Wheel Install](https://voycepeh.github.io/FabricOps-Starter-Kit/setup/fabric-wheel-install/)
-
 ## Why this starter kit exists
 
 ![Before vs after using the starter kit](docs/assets/before-after.png)
