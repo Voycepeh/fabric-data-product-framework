@@ -21,6 +21,7 @@ nav:
   - Quick Start: quick-start.md
   - Notebook Structure: notebook-structure.md
   - Lifecycle Operating Model: lifecycle-operating-model.md
+  - Deployment and Promotion: deployment-and-promotion.md
   - Architecture: architecture.md
   - Setup:
       - Fabric Wheel Install: setup/fabric-wheel-install.md
