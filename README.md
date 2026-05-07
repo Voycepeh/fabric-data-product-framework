@@ -7,6 +7,8 @@ Quick Start and list of functions
 
 FabricOps Starter Kit helps teams structure Microsoft Fabric notebooks with reusable configuration, runtime validation, profiling, quality checks, lineage, metadata logging, and handover patterns.
 
+FabricOps adopts Open Data Contract principles in a Fabric-first form. Contracts are authored and approved through notebooks/tables, stored as metadata tables for operational enforcement, and can later be exported/imported as ODCS YAML for open-standard portability.
+
 ## Why this starter kit exists
 
 ![Before vs after using the starter kit](docs/assets/before-after.png)

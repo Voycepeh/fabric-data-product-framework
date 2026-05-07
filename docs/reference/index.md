@@ -17,7 +17,9 @@ Clean split:
 
 Step 8 and Step 9 AI functions belong in exploration notebooks. Pipeline notebooks should enforce approved rules and should not make AI decisions at runtime.
 
-For contract lifecycle setup, start with the ODCS example contract at [`templates/contracts/odcs_source_input_contract_example.yaml`](../../templates/contracts/odcs_source_input_contract_example.yaml) and use adapter helpers such as `load_odcs_contract`, `validate_odcs_contract`, and `map_odcs_quality_rules_to_fabricops_rules` in `03_pc`.
+- `02_ex` drafts contract expectations from profiling evidence and AI-assisted suggestions.
+- `03_pc` enforces approved contract expectations.
+- FabricOps uses Open Data Contract principles in a Fabric-first way: metadata tables are the operational source of truth, and ODCS YAML is an optional exchange/export format.
 
 
 ## Modules
