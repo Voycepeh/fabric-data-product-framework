@@ -1,61 +1,119 @@
 # Notebook Structure
 
+FabricOps Starter Kit uses a notebook-first operating model: exploration notebooks explain the *why*, pipeline contract notebooks enforce the approved *what*, and environment configuration keeps runtime setup reusable and safe.
+
 ![Workspace notebook setup](assets/notebook-structure.png)
 
 *Figure: Notebook organization in a Fabric workspace, linking shared configuration and agreement context to exploration and production pipeline notebooks.*
 
-Notebook structure should follow the end-to-end delivery flow, not isolated utility functions.
+## Recommended workspace layout
 
-## How the structure supports the lifecycle
+```text
+Workspace
+├── 00_env_config
+├── 01_data_sharing_agreement_<agreement>
+├── 02_ex_<agreement>_<topic>
+└── 03_pc_<agreement>_<pipeline>
+```
 
-A well-structured notebook sequence keeps implementation and governance aligned:
+- **`00_env_config`**: shared environment setup (stores, paths, runtime switches, smoke checks).
+- **`01_data_sharing_agreement_<agreement>`**: governance notebook describing approved usage, scope, and guardrails.
+- **`02_ex_<agreement>_<topic>`**: exploration and reasoning notebook for source understanding and AI-assisted proposals.
+- **`03_pc_<agreement>_<pipeline>`**: run-all-safe pipeline notebook that enforces approved contract behavior.
 
-1. **Purpose**: define business intent and approved usage context.
-2. **Config**: load reusable environment and runtime configuration.
-3. **Ingestion**: declare source inputs and ingest data.
-4. **Exploration/profiling**: profile and inspect source behavior.
-5. **Core transformation**: build and explain transformation logic.
-6. **Standardization**: apply reusable cleaning rules and technical columns.
-7. **Output**: publish validated output tables/files.
-8. **Metadata**: write run evidence and governance metadata.
-9. **Lineage**: capture upstream/downstream traceability notes.
-10. **Handover**: produce concise summaries and support artifacts.
+## The three main notebook types
 
-## Notebook role guidance
+| Notebook type | Purpose | Run mode | Owner |
+|---|---|---|---|
+| 00_env_config | Environment setup, paths, runtime settings, smoke checks | Reused by other notebooks | Platform / engineering |
+| 02_ex_<agreement>_<topic> | Profiling, exploration, AI-assisted suggestions, business reasoning | Human-led / not scheduled | Analyst / engineer |
+| 03_pc_<agreement>_<pipeline> | Approved contract enforcement, DQ checks, output, metadata, lineage | Run-all-safe / scheduled | Data engineer |
 
-- Use shared environment/config notebooks to avoid repeating runtime setup.
-- Keep exploration notebooks separate from scheduled operational notebooks.
-- Keep pipeline notebooks executable end to end so validation, publish, metadata, lineage, and handover are produced in one governed run.
+`01_data_sharing_agreement_<agreement>` sits alongside these as the governance and approved-usage notebook that anchors policy decisions.
 
-For architecture boundaries, see [Architecture](architecture.md). For full flow sequencing, see [Lifecycle Operating Model](lifecycle-operating-model.md).
+## How notebooks relate to the lifecycle
 
-## Core notebook responsibilities
+For full end-to-end sequencing, see [Lifecycle Operating Model](lifecycle-operating-model.md). This page focuses only on where work belongs.
 
-### `00_env_config`
+## 1. Governance and environment setup
 
-- Defines Source, Unified, Product, and Metadata targets for the current environment.
-- Should remain environment-local (dev config in dev, prod config in prod).
-- Must not accidentally point production notebooks to development stores.
+Handled by:
+- `00_env_config`
+- `01_data_sharing_agreement_<agreement>`
 
-### `02_ex`
+Covers:
+- approved usage
+- source and target stores
+- runtime config
+- naming rules
+- smoke checks
 
-- Profiles source data and explains the transformation *why*.
-- Drafts source input contract expectations and proposed metadata records.
-- Reviews AI-suggested DQ rules and classifications (advisory only).
-- Records approved contract metadata only after human/steward approval.
+## 2. Exploration notebook
 
-### `03_pc`
+Handled by:
+- `02_ex_<agreement>_<topic>`
 
-- Loads approved contract metadata records from the metadata target.
-- Enforces required columns, business keys, approved DQ rules, classifications, and runtime standards.
-- Writes controlled outputs plus profiling/run/lineage evidence.
-- Must be run-all-safe for governed operations.
+Covers:
+- source profiling
+- schema discovery
+- transformation reasoning
+- AI-suggested DQ rules
+- AI-suggested sensitivity classifications
+- proposed contract metadata
 
-> Exploration explains the why. Pipeline enforces the approved what.
+**Important boundary:** AI suggestions happen here, but nothing is enforced here.
+
+## 3. Pipeline contract notebook
+
+Handled by:
+- `03_pc_<agreement>_<pipeline>`
+
+Covers:
+- loading approved contract metadata
+- validating required columns and business keys
+- enforcing approved DQ rules
+- applying approved classifications
+- writing output tables
+- writing metadata, profiling, lineage, and handover evidence
+
+**Important boundary:** The pipeline notebook should be run-all-safe.
+
+## What goes where
+
+| Work item | 00_env_config | 02_ex | 03_pc |
+|---|---:|---:|---:|
+| Define lakehouse / warehouse paths | Yes | No | Load only |
+| Explore source data | No | Yes | No |
+| Generate AI DQ suggestions | No | Yes | No |
+| Approve DQ rules | No | Record decision | Enforce only |
+| Enforce DQ rules | No | No | Yes |
+| Generate AI classification suggestions | No | Yes | No |
+| Apply approved classifications | No | No | Yes |
+| Write output data | No | Usually no | Yes |
+| Write run evidence | No | Optional | Yes |
+| Generate lineage / handover | No | Optional draft | Yes |
+
+## Naming convention
+
+Use consistent, sortable prefixes so notebook purpose is clear at a glance:
+
+- `00_env_config`
+- `01_data_sharing_agreement_student_lifecycle`
+- `02_ex_student_lifecycle_source_profile`
+- `03_pc_student_lifecycle_source_to_unified`
+
+## Common mistakes
+
+- Do not put exploration-only diagnostic cells inside scheduled pipeline runs.
+- Do not enforce AI-generated rules before human or steward approval.
+- Do not hardcode dev/prod paths inside pipeline notebooks.
+- Do not use `03_pc` notebooks for open-ended discovery.
+- Do not duplicate lifecycle explanation here; link to the [Lifecycle Operating Model](lifecycle-operating-model.md) instead.
 
 ## Related documentation
 
-- Contract metadata model details: [Metadata and Contracts](metadata-and-contracts.md).
-- Promotion of notebooks and metadata: [Deployment and Promotion](deployment-and-promotion.md).
-- Business lifecycle responsibilities: [Lifecycle Operating Model](lifecycle-operating-model.md).
-- Platform boundaries and stores: [Architecture](architecture.md).
+- [Lifecycle Operating Model](lifecycle-operating-model.md)
+- [Function Reference](reference/function-reference.md)
+- [Architecture](architecture.md)
+- [Metadata and Contracts](metadata-and-contracts.md)
+- [Deployment and Promotion](deployment-and-promotion.md)
