@@ -100,6 +100,23 @@ def test_write_contract_to_lakehouse_uses_df_and_expected_signature(monkeypatch)
     assert all(c[1] is metadata_path for c in calls)
 
 
+def test_write_contract_to_lakehouse_allows_empty_quality_rules(monkeypatch):
+    calls = []
+    contract = _valid_contract()
+    contract["quality_rules"] = []
+
+    monkeypatch.setattr(contracts, "contract_records_to_spark", lambda rows, schema_name=None: {"rows": rows})
+    monkeypatch.setattr(
+        contracts,
+        "lakehouse_table_write",
+        lambda df, metadata_path, table_name, mode="append": calls.append((table_name, df)),
+    )
+
+    contracts.write_contract_to_lakehouse(contract, object())
+
+    assert [name for name, _df in calls] == ["FABRICOPS_CONTRACTS", "FABRICOPS_CONTRACT_COLUMNS"]
+
+
 class _Row:
     def __init__(self, data):
         self._data = data

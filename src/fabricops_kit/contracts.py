@@ -157,10 +157,11 @@ def write_contract_to_lakehouse(contract, metadata_path: Housepath, mode: str = 
     records = build_contract_records(contract)
     contracts_df = contract_records_to_spark(records["contracts"])
     columns_df = contract_records_to_spark(records["columns"])
-    rules_df = contract_records_to_spark(records["rules"])
     lakehouse_table_write(contracts_df, metadata_path, "FABRICOPS_CONTRACTS", mode=mode)
     lakehouse_table_write(columns_df, metadata_path, "FABRICOPS_CONTRACT_COLUMNS", mode=mode)
-    lakehouse_table_write(rules_df, metadata_path, "FABRICOPS_CONTRACT_RULES", mode=mode)
+    if records["rules"]:
+        rules_df = contract_records_to_spark(records["rules"])
+        lakehouse_table_write(rules_df, metadata_path, "FABRICOPS_CONTRACT_RULES", mode=mode)
     return records
 
 
