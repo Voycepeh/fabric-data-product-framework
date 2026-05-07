@@ -8,9 +8,9 @@ It moves teams from exploration to controlled pipeline delivery with reusable me
 
 [Lifecycle Operating Model](lifecycle-operating-model.md){ .md-button }
 
-![Notebook and workspace structure showing 00_env_config, 01_data_sharing_agreement, exploration notebooks, approved contract metadata, and pipeline contract notebooks.](assets/notebook-structure.png)
+![FabricOps workspace notebook structure](assets/notebook-structure.png)
 
-*Exploration explains the why. Pipeline contract notebooks enforce the approved what.*
+_Exploration explains the why. Pipeline contract notebooks enforce the approved what._
 
 ## Navigate by goal
 
@@ -42,9 +42,7 @@ It moves teams from exploration to controlled pipeline delivery with reusable me
 3. Pipeline contract notebooks enforce approved decisions.
 4. Metadata, DQ results, lineage, and handover artifacts are written as controlled outputs.
 
-Exploration is where profiling and AI suggestions happen.
-
-Pipeline contract notebooks are where approved governance and quality decisions are enforced.
+Exploration is where profiling and AI suggestions happen. Pipeline contract notebooks are where approved governance and quality decisions are enforced.
 
 ## AI in the loop
 
