@@ -224,3 +224,7 @@ No unmapped exported callables.
 
 
 Use these `.ipynb` templates by importing/copying them into Fabric and renaming the actual notebook to the required lifecycle naming convention. Notebook name validation reads the running notebook name from Fabric runtime context when available.
+
+
+- Exploration notebooks can draft and approve contract records, then persist them via contract metadata helpers into the metadata target.
+- Pipeline notebooks load latest approved contract records from the metadata target for required columns, keys, and quality-rule enforcement.

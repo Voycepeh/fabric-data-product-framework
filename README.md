@@ -81,3 +81,6 @@ Use the Microsoft Learn installation commands for your environment rather than p
 The starter kit supports native Fabric AI Functions when available.
 When Fabric AI Functions are unavailable, you can generate the same standardized prompts and manually paste them into Copilot or another LLM.
 Human-reviewed outputs should then be stored back into starter-kit metadata or rules tables.
+
+
+FabricOps uses Open Data Contract principles in a Fabric-first way. Approved contracts are authored through notebooks/tables, stored in a dedicated Fabric metadata store, and enforced by pipeline notebooks. ODCS YAML can be added later as an import/export format for teams that also use Git-based contract workflows.
