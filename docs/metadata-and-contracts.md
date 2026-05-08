@@ -22,7 +22,25 @@ The data contract is the promise between the notebook, the data engineer, the da
 
 The Open Data Contract Standard (ODCS) is a structured way to describe data contracts, commonly as YAML or JSON. It covers core ideas such as schema definitions, quality expectations, ownership, service-level expectations, governance metadata, and contract versioning.
 
-FabricOps uses ODCS as design inspiration for interoperability and governance clarity, but not as a YAML-first runtime requirement. In FabricOps, contracts are collected and reviewed through notebooks and tables, stored as metadata records in Fabric, and enforced by pipeline notebooks. ODCS YAML or JSON import/export can be added later for teams that need cross-platform exchange.
+FabricOps uses ODCS as design inspiration for interoperability and governance clarity, but not as a YAML-first runtime requirement. FabricOps follows the spirit of ODCS, but chooses a table-first operational model so contracts can be reviewed, queried, governed, and enforced inside Fabric. In FabricOps, contracts are collected and reviewed through notebooks and tables, stored as metadata records in Fabric, and enforced by pipeline notebooks. ODCS YAML or JSON import/export can be added later for teams that need cross-platform exchange.
+
+## Why FabricOps is not YAML-first
+
+YAML is useful for Git-based contract workflows, portability, and exchange with other tools. A YAML or JSON version of the contract can be useful later for interoperability with ODCS-style workflows.
+
+FabricOps does not make YAML the primary editing or runtime model because many Fabric teams work mainly through notebooks, Spark DataFrames, Lakehouse tables, Warehouse tables, and Power BI stewardship views.
+
+For those users, editing raw YAML is usually not the easiest review experience. Data stewards and analysts often need to see contracts as tables, notebook outputs, or Power BI-friendly metadata records.
+
+FabricOps therefore uses a Fabric-native flow:
+
+1. Exploration notebooks profile the data and draft the contract.
+2. Humans review and approve the contract content.
+3. Approved contract metadata is stored in Fabric metadata tables.
+4. Pipeline notebooks load the approved metadata and enforce it.
+5. YAML or JSON export can be added later as an interoperability layer.
+
+In short: YAML is a good exchange format, but Fabric metadata tables are the operational source of truth.
 
 ## FabricOps data contract model
 
