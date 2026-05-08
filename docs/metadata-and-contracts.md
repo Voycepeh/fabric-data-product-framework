@@ -10,7 +10,7 @@ In practice, the contract is built from:
 - `03_pc` pipeline contract notebook logic
 - FabricOps callable functions used by the notebooks
 
-![FabricOps data contract assembly](assets/data-contract-assembly.svg)
+![FabricOps data contract assembly](assets/data-contract.png)
 
 *In FabricOps, the data contract is assembled from configuration, approved usage, profiling, transformation logic, quality rules, and runtime evidence. It is reviewed by humans and enforced by the pipeline notebook.*
 
