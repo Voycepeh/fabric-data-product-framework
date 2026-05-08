@@ -70,7 +70,7 @@ def validate_dq_rules(rules: list[dict[str, Any]]) -> list[dict[str, Any]]:
             raise ValueError(f"Rule '{rule['rule_id']}' has unsupported rule_type '{rtype}'.")
         if not isinstance(cols, list) or not cols:
             raise ValueError(f"Rule '{rule['rule_id']}' must include a non-empty columns list.")
-        if rtype in {"accepted_values", "regex_format", "value_range"} and len(cols) != 1:
+        if rtype in {"not_null", "accepted_values", "regex_format", "value_range"} and len(cols) != 1:
             raise ValueError(f"Rule '{rule['rule_id']}' supports exactly one column in v1.")
         if rtype == "accepted_values" and "allowed_values" not in rule:
             raise ValueError(f"Rule '{rule['rule_id']}' requires allowed_values.")
