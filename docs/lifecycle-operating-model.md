@@ -2,67 +2,90 @@
 
 ![FabricOps Starter Kit canonical lifecycle workflow](assets/mvp-flow.png)
 
-FabricOps Starter Kit uses a 10-step lifecycle as a **business operating model** for data products in Microsoft Fabric. It is not only a notebook sequence: it connects governance intent, source expectations, transformation controls, and handover obligations from start to finish.
-
-The lifecycle moves a product from governed agreement, to source contract, to ingestion and profiling, to exploration, to controlled pipeline execution, to output contract, to AI-assisted suggestions, and finally to lineage and handover documentation.
+FabricOps Starter Kit uses a 10-step lifecycle as a **business operating model** for data products in Microsoft Fabric. It is not only a notebook sequence: it connects governance intent, source expectations, exploration evidence, controlled pipeline enforcement, and handover obligations from start to finish.
 
 ## 10-step business operating model
 
-### Step 1: Governance context
+### Step 1: Governance context  
+**Actor:** Governance
 
-This step captures the approved usage, owner, and data agreement before technical work begins. The agreement may live outside Fabric, such as in SharePoint documents, but the data product should stay tied to that approved business context throughout the lifecycle.
+Capture approved usage, ownership, and business agreement before technical work begins.
 
-### Step 2A: Create shared runtime config
+### Step 2: Configure runtime & startup checks  
+**Actor:** Starter kit
 
-This step defines the shared project setup, including environment paths, workspace targets, AI availability, and standard naming rules. The goal is to define the setup once so exploration and pipeline notebooks do not depend on hidden manual configuration.
+Define shared runtime configuration and validate notebook startup conditions so every run begins from a known-good environment.
 
-### Step 2B: Run notebook startup checks
+### Step 3: Define source + output contract expectations  
+**Actor:** Starter kit
 
-This step confirms that every exploration or pipeline notebook starts from a known valid state. The notebook should be running in the expected environment, follow naming rules, and have the required Fabric or AI capabilities before any data work begins.
+Set source and output contract expectations, including schema, keys, update pattern, and required controls.
 
-### Step 3: Define source contract & ingestion pattern
+### Step 4: Ingest, profile & store source data  
+**Actor:** Starter kit
 
-This step defines the source input contract expectations between the upstream source and the data product pipeline. It captures the expected schema, data types, update frequency, update method, watermark column, and whether the source is append only, overwritten, or slowly changing, so the correct ingestion and comparison pattern can be chosen.
+Ingest source data, profile it, and store source-aligned evidence for traceability.
 
-### Step 4: Ingest, profile & store source data
+### Step 5: Explore/profile data & draft contract metadata  
+**Actor:** Analyst / data scientist notebook
 
-This step brings the source data into the framework, profiles it, and stores the raw or source-aligned version. The goal is to preserve evidence of what arrived before business transformation begins.
+Explore profiled source data, validate business meaning, and draft contract metadata proposals for review.
 
-### Step 5: Explore data & explain transformation logic
+### Step 6: Execute controlled pipeline contract  
+**Actor:** Engineering + starter kit
 
-This step is where the analyst studies the profiled source data and explains why transformation is needed. The goal is to document findings, assumptions, and business reasoning before the logic becomes part of a repeatable pipeline.
+Pipeline notebooks enforce approved metadata deterministically. This includes:
 
-### Step 6A: Write transformation logic
+- load approved contract
+- validate schema + keys
+- enforce approved DQ rules
+- split accepted vs quarantined rows
+- write outputs + evidence
 
-This step defines the main logic that converts source-aligned data into the target output. The goal is to make the transformation consistent across development, testing, and scheduled refresh.
+### Step 7: Profile output & publish product contract  
+**Actor:** Starter kit
 
-### Step 6B: Apply runtime standards
+Profile curated output and publish the downstream product contract and related metadata.
 
-This step applies standard runtime requirements such as technical columns, run IDs, timestamps, partition keys, and repeatable audit conventions. The goal is to make the output easier to audit, troubleshoot, and operate at scale.
+### Step 8: Suggest AI-assisted DQ rules  
+**Actor:** AI-assisted + human review
 
-### Step 6C: Enforce pipeline controls
+Use AI to suggest candidate data quality rules from profiling and context. Suggestions remain advisory until approved.
 
-This step enforces approved pipeline controls at runtime to determine whether output should be trusted. Approved contract, data quality, and classification controls are enforced in pipeline notebooks before downstream release.
+### Step 9: Suggest AI-assisted column classification  
+**Actor:** AI-assisted + human review
 
-### Step 6D: Write controlled outputs
+Use AI to suggest sensitivity and classification labels for columns. Suggestions remain advisory until approved.
 
-This step writes the transformed output to the correct lakehouse, warehouse, or product layer. The goal is to make the write pattern explicit, repeatable, and aligned to the intended environment instead of relying on ad hoc exports.
+### Step 10: Generate lineage & handover documentation  
+**Actor:** AI-assisted handover generation
 
-### Step 7: Profile output & publish product contract
+Generate lineage, operational evidence, and handover documentation for review and reuse.
 
-This step profiles the created output, stores its metadata, and creates the data contract for the next notebook, pipeline, or consumer. The goal is to record what was produced and make the output understandable and reusable downstream.
+## Metadata as the operating source of truth
 
-### Step 8: Suggest AI assisted data quality rules
+The lifecycle is coordinated through approved metadata stored in Fabric metadata or lakehouse tables.
 
-This step uses AI in exploration notebooks to suggest possible data quality rules from profiling results, business context, and source knowledge. These suggestions are advisory only; the actual rule creation, approval, and enforcement happen later through human review and pipeline implementation.
+Core metadata includes:
 
-### Step 9: Suggest AI assisted column classification
+- `contracts`
+- `contract_columns`
+- `contract_rules`
+- `dataset_runs`
+- `quality_results`
+- `lineage_records`
 
-This step uses AI in exploration notebooks to suggest column classifications such as PII, sensitivity level, and governance labels for the planned output. These suggestions are advisory only; actual label assignment must be approved by governance or data stewards and enforced in the pipeline.
+Exploration notebooks draft and suggest metadata. Human reviewers approve it. Pipeline contract notebooks load approved metadata and enforce it deterministically.
 
-### Step 10: Generate lineage & AI assisted handover documentation
+## DQ rules and quarantine boundary
 
-This step creates the final documentation needed for review, handover, and future maintenance. The goal is for another analyst, engineer, approver, or stakeholder to understand what was built, why it was built, and how to operate it.
+DQ rules validate row-level and column-level value quality during pipeline enforcement.
+
+Approved DQ rules are enforced in pipeline contract notebooks. Rows that pass are written to curated or production output. Rows that fail are written to quarantine with failure reasons.
+
+Optional AI mapping is only a remediation path for quarantined rows that failed `accepted_values` or in-list checks. AI can suggest mappings, but humans must approve mappings before pipeline notebooks reapply them and re-evaluate the affected rows.
+
+Schema drift, data drift, freshness checks, and row-count monitoring remain part of the drift/contract layer, not the DQ rule engine.
 
 ## AI boundary and accountability
 
@@ -71,7 +94,6 @@ This step creates the final documentation needed for review, handover, and futur
 - Humans, governance owners, and data stewards approve.
 - Human engineers enforce approved rules and labels in pipeline notebooks.
 - AI does not directly approve or enforce governance controls.
-
 
 ## Related documentation
 
