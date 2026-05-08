@@ -62,7 +62,7 @@ FabricOps uses one data contract model with two perspectives.
 
 In FabricOps, the pipeline contract starts in the notebook.
 
-The 03_pc notebook is the executable version of the contract. It contains the source expectations, output expectations, quality rules, classification decisions, transformation logic, runtime checks, and evidence writing.
+The 03_pc notebook is the executable version of the contract. It contains the source expectations, output expectations, quality rules, approved classification metadata to load and enforce, transformation logic, runtime checks, and evidence writing.
 
 The metadata tables do not replace the notebook. They make the notebook contract queryable, reviewable, AI-readable, and auditable.
 
@@ -256,7 +256,7 @@ FabricOps stores approved contract definitions and run evidence in Fabric metada
 - min/max values
 - run timestamp
 
-### 7. Lineage and handover evidence
+### 7. Optional generated lineage and handover evidence
 
 - source object
 - target object
@@ -266,6 +266,8 @@ FabricOps stores approved contract definitions and run evidence in Fabric metada
 - notebook name
 - code/run identifier
 - run timestamp
+
+Lineage and transformation rationale may later be persisted as first-class metadata, but the first implementation can treat them as generated handover evidence rather than mandatory runtime enforcement tables.
 
 ## How notebooks use the contract
 
@@ -279,7 +281,7 @@ AI can suggest contract content in exploration, but humans approve the rules and
 
 ### Pipeline contract notebook: 03_pc
 
-The pipeline notebook enforces the approved contract. It loads the latest approved contract, validates required columns and business keys, runs approved quality rules, applies runtime standards, writes output data, then writes run evidence, quality results, and lineage metadata.
+The pipeline notebook enforces the approved contract. It loads the latest approved contract, validates required columns and business keys, runs approved quality rules, loads and enforces approved classification metadata, applies runtime standards, writes output data, then writes runtime evidence and quality results. Lineage and handover documentation are generated post-run or during handover workflows.
 
 The pipeline contract notebook should read approved contract metadata, not free-form handover prose.
 
