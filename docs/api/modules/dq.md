@@ -13,7 +13,6 @@
 | [`run_dq_rules`](../../reference/step-06c-pipeline-controls/run_dq_rules.md) | function | Run notebook-facing DQ rules and return a Spark DataFrame result. | [`_to_quality_rule`](../../reference/internal/dq/_to_quality_rule.md) (internal) |
 | [`suggest_dq_rules_prompt`](../../reference/step-08-ai-assisted-dq-suggestions/suggest_dq_rules_prompt.md) | function | Build a Copilot prompt for candidate DQ rule suggestions. | — |
 | [`validate_dq_rules`](../../reference/step-06c-pipeline-controls/validate_dq_rules.md) | function | Validate notebook-facing DQ rules. | — |
-| [`write_dq_results`](../../reference/step-06d-controlled-outputs/write_dq_results.md) | function | Write DQ result DataFrame to a lakehouse table. | — |
 
 ## Internal helpers
 

@@ -85,7 +85,6 @@ PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [
     {"symbol_name": "validate_dq_rules", "module": "dq", "kind": "function", "workflow_step": "6C", "importance": "Essential", "summary_override": None},
     {"symbol_name": "run_dq_rules", "module": "dq", "kind": "function", "workflow_step": "6C", "importance": "Essential", "summary_override": None},
     {"symbol_name": "assert_dq_passed", "module": "dq", "kind": "function", "workflow_step": "6D", "importance": "Essential", "summary_override": None},
-    {"symbol_name": "write_dq_results", "module": "dq", "kind": "function", "workflow_step": "6D", "importance": "Essential", "summary_override": None},
     {"symbol_name": "suggest_dq_rules_prompt", "module": "dq", "kind": "function", "workflow_step": 8, "importance": "Optional", "summary_override": None},
     {"symbol_name": "check_fabric_ai_functions_available", "module": "config", "kind": "function", "workflow_step": "2A", "summary_override": None},
     {"symbol_name": "build_dq_rule_candidate_prompt", "module": "ai", "kind": "function", "workflow_step": 8, "summary_override": None},
