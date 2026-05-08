@@ -25,9 +25,9 @@ Configure once, start from the notebook templates, and use the callable function
 | `03_pc_agreement_source_to_target.ipynb` | Enforcing approved contracts and quality checks in a controlled pipeline flow. | [Open template](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb) |
 
 <div class="center-cta">
-
-[Browse all callable functions](reference/index.md){ .md-button .md-button--primary }
-
+  <a class="md-button md-button--primary" href="reference/">
+    Browse all callable functions
+  </a>
 </div>
 
 ## Navigate by goal
