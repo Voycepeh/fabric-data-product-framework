@@ -33,7 +33,9 @@ DQ_RULES = get_default_dq_rule_templates()
 # candidate-only AI suggestions must be reviewed before being copied into DQ_RULES
 prompt = suggest_dq_rules_prompt(df_profile, "EMAIL_LOGS", business_context="Describe what this table is used for.")
 
-# enforce approved rules
-result = run_dq_rules(df_message_log, "EMAIL_LOGS", DQ_RULES["EMAIL_LOGS"], fail_on_error=True)
-write_dq_results(result, lh_out, table_name="DQ_RESULTS")
+# enforce approved rules with fail-after-logging
+result = run_dq_rules(df_message_log, "EMAIL_LOGS", DQ_RULES["EMAIL_LOGS"], fail_on_error=False)
+dq_results_path = get_path(ENV_NAME, "metadata", config=CONFIG)
+write_dq_results(result, dq_results_path, table_name="DQ_RESULTS")
+assert_dq_passed(result)
 ```

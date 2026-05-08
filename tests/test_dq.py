@@ -44,6 +44,27 @@ def test_suggest_dq_rules_prompt():
     assert "EMAIL_LOGS" in prompt
 
 
+
+
+def test_run_dq_rules_empty_rules_returns_empty_schema(spark_session):
+    df = spark_session.createDataFrame([{"id": 1}])
+    result = run_dq_rules(df, "EMAIL_LOGS", [], fail_on_error=False)
+    assert result.count() == 0
+    assert result.columns == [
+        "table_name",
+        "rule_id",
+        "rule_type",
+        "columns",
+        "severity",
+        "status",
+        "failed_count",
+        "total_count",
+        "failed_percent",
+        "description",
+        "run_timestamp",
+        "details",
+    ]
+
 def test_run_dq_rules_with_spark(spark_session):
     df = spark_session.createDataFrame([
         {"id": 1, "status": "A", "amount": 4, "email": "a@x.com"},
@@ -142,6 +163,7 @@ def test_notebook_templates_reference_defined_dq_names():
     assert "contract.target.required_columns" not in code
     assert "get_executable_quality_rules(contract)" not in code
     assert 'dq_results_path = get_path(ENV_NAME, "metadata", config=CONFIG)' in code
+    assert "row_count_target=" not in code
 
     ex = json.loads(Path("templates/notebooks/02_ex_agreement_topic.ipynb").read_text())
     ex_code = "\n".join("".join(c.get("source", [])) for c in ex["cells"] if c.get("cell_type") == "code")

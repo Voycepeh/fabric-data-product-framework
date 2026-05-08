@@ -98,6 +98,10 @@ def run_dq_rules(df, table_name: str, rules: list[dict[str, Any]], fail_on_error
     by_id = {r["rule_id"]: r for r in qres.get("results", [])}
     total_count = df.count()
     schema_map = {f.name: f.dataType.simpleString().lower() for f in df.schema.fields}
+    result_schema = "table_name string, rule_id string, rule_type string, columns string, severity string, status string, failed_count long, total_count long, failed_percent double, description string, run_timestamp string, details string"
+    if not rules:
+        return df.sparkSession.createDataFrame([], schema=result_schema)
+
     rows=[]
     for rule in rules:
         rtype=rule["rule_type"]
