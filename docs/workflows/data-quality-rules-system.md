@@ -17,9 +17,8 @@ FabricOps Starter Kit supports a lightweight, config-driven data quality (DQ) pa
 | `accepted_values` | Check one column is in allowed values. | `allowed_values` |
 | `value_range` | Check one column is between min and max values. | `min_value`, `max_value` |
 | `regex_format` | Check one string column matches regex. | `regex_pattern` |
-| `row_count_between` | Check table row count is in bounds. | `min_rows`, `max_rows` |
-| `schema_required_columns` | Check expected columns exist. | None |
-| `schema_data_type` | Check selected columns match expected types. | `expected_types` |
+| `accepted_values_ref` | Check one column value exists in a reference table column. | `reference_table`, `reference_column` |
+| `string_length_between` | Check one string column length is in bounds. | `min_length`, `max_length` |
 
 ## Template usage snippets
 
@@ -53,3 +52,25 @@ prompt = suggest_dq_rules_prompt(
     prompt_template=DQ_RULE_SUGGESTION_PROMPT_TEMPLATE,
 )
 ```
+
+
+## DQ scope boundary
+
+DQ rules validate row-level and column-level values **before writing to the next table**.
+
+- In scope for this DQ engine: `not_null`, `unique_key`, `accepted_values`, `accepted_values_ref`, `value_range`, `regex_format`, `string_length_between`.
+- Out of scope for this DQ engine: schema drift, data drift, row-count checks, and freshness checks. Use drift/contract modules for those controls.
+
+## Quarantine pattern (recommended)
+
+1. Evaluate approved DQ rules on the input DataFrame.
+2. Split records into **pass** and **fail** DataFrames based on deterministic rule outcomes.
+3. Write the pass DataFrame to the curated/next table.
+4. Write the fail DataFrame to a quarantine table that includes failure metadata (rule id/type/severity/details and run timestamp).
+
+## Accepted-value mapping flow
+
+- `accepted_values` checks whether a value is in an approved list.
+- `accepted_values_ref` checks whether a value exists in an approved reference table/column.
+- AI can suggest mappings from invalid values to approved values.
+- Only **human-approved** mappings should be applied in production pipelines.

@@ -24,9 +24,8 @@ def _rules():
         {"rule_id": "r3", "rule_type": "accepted_values", "columns": ["status"], "allowed_values": ["A", "B"], "severity": "warning", "description": "status"},
         {"rule_id": "r4", "rule_type": "value_range", "columns": ["amount"], "min_value": 0, "max_value": 10, "severity": "warning", "description": "range"},
         {"rule_id": "r5", "rule_type": "regex_format", "columns": ["email"], "regex_pattern": r"^[^@]+@[^@]+$", "severity": "warning", "description": "email"},
-        {"rule_id": "r6", "rule_type": "row_count_between", "columns": ["id"], "min_rows": 1, "max_rows": 10, "severity": "warning", "description": "rows"},
-        {"rule_id": "r7", "rule_type": "schema_required_columns", "columns": ["id", "status"], "severity": "error", "description": "schema"},
-        {"rule_id": "r8", "rule_type": "schema_data_type", "columns": ["id"], "expected_types": {"id": "bigint"}, "severity": "warning", "description": "types"},
+        {"rule_id": "r6", "rule_type": "accepted_values_ref", "columns": ["status"], "reference_table": "dim.status_codes", "reference_column": "status_code", "severity": "warning", "description": "status ref"},
+        {"rule_id": "r7", "rule_type": "string_length_between", "columns": ["email"], "min_length": 3, "max_length": 100, "severity": "warning", "description": "email length"},
     ]
 
 
@@ -50,9 +49,8 @@ def test_suggest_dq_rules_prompt_default_contains_required_guidance():
         "accepted_values",
         "value_range",
         "regex_format",
-        "row_count_between",
-        "schema_required_columns",
-        "schema_data_type",
+        "accepted_values_ref",
+        "string_length_between",
     ]:
         assert rule_type in prompt
     assert "advisory only" in prompt.lower()
@@ -76,9 +74,8 @@ def test_default_prompt_template_constant_includes_required_rule_types():
         "accepted_values",
         "value_range",
         "regex_format",
-        "row_count_between",
-        "schema_required_columns",
-        "schema_data_type",
+        "accepted_values_ref",
+        "string_length_between",
     ]:
         assert rule_type in DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
 
@@ -136,13 +133,6 @@ def test_public_api_exports():
     assert callable(get_default_dq_rule_templates)
     assert callable(_validate) and callable(_run) and callable(_suggest) and callable(_assert)
 
-
-def test_schema_data_type_missing_expected_type_key():
-    with pytest.raises(ValueError, match="expected_types missing columns"):
-        validate_dq_rules([{
-            "rule_id": "t", "rule_type": "schema_data_type", "columns": ["id", "x"],
-            "expected_types": {"id": "bigint"}, "severity": "warning", "description": "d"
-        }])
 
 
 def test_fail_log_then_assert_pattern(spark_session):
