@@ -128,6 +128,41 @@ def test_docs_metadata_matches_public_exports() -> None:
     assert metadata_symbols - exports == set()
 
 
+def test_docs_metadata_has_exactly_one_entry_per_exported_symbol() -> None:
+    exports = set(public_exports())
+    metadata_rows = public_symbol_docs()
+    counts: dict[str, int] = {name: 0 for name in exports}
+    for row in metadata_rows:
+        counts[row["symbol_name"]] = counts.get(row["symbol_name"], 0) + 1
+
+    duplicates = sorted(name for name, count in counts.items() if count > 1)
+    missing = sorted(name for name, count in counts.items() if count == 0)
+    assert duplicates == []
+    assert missing == []
+
+
+def test_dq_symbols_are_mapped_to_expected_workflow_steps_and_importance() -> None:
+    rows = {row["symbol_name"]: row for row in public_symbol_docs()}
+    expected = {
+        "get_default_dq_rule_templates": (8, "Optional"),
+        "suggest_dq_rules_prompt": (8, "Optional"),
+        "validate_dq_rules": ("6C", "Essential"),
+        "run_dq_rules": ("6C", "Essential"),
+        "assert_dq_passed": ("6D", "Essential"),
+        "write_dq_results": ("6D", "Essential"),
+    }
+    for symbol, (step, importance) in expected.items():
+        assert rows[symbol]["workflow_step"] == step
+        assert rows[symbol].get("importance") == importance
+
+
+def test_reference_file_is_in_sync_with_generator() -> None:
+    before = REFERENCE_FILE.read_text(encoding="utf-8")
+    generate_reference()
+    after = REFERENCE_FILE.read_text(encoding="utf-8")
+    assert after == before
+
+
 def test_build_quality_result_records_metadata_module_matches_exported_symbol_module() -> None:
     metadata_row = next(row for row in public_symbol_docs() if row["symbol_name"] == "build_quality_result_records")
     assert metadata_row["module"] == "metadata"
