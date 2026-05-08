@@ -16,6 +16,21 @@ Fabric notebooks often begin as analysis work and then become recurring operatio
 
 Read more: [Quick Start](https://voycepeh.github.io/FabricOps-Starter-Kit/quick-start/) · [Lifecycle Operating Model](https://voycepeh.github.io/FabricOps-Starter-Kit/lifecycle-operating-model/) · [Function Reference](https://voycepeh.github.io/FabricOps-Starter-Kit/reference/) · [Data contracts](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/)
 
+## What users get
+
+![Benefits of the FabricOps Starter Kit](docs/assets/framework-benefits.png)
+
+Reusable templates and callable functions for building governed Fabric notebook pipelines without rebuilding the same setup, profiling, quality, contract, lineage, and handover patterns each time.
+
+<div align="center">
+
+[![Runtime Config Template](https://img.shields.io/badge/Template-Runtime%20Config-blue?style=for-the-badge)](https://github.com/Voycepeh/FabricOps-Starter-Kit/tree/main/templates/notebooks/00_env_config.ipynb)
+[![Pipeline Contract Template](https://img.shields.io/badge/Template-Pipeline%20Contract-blue?style=for-the-badge)](https://github.com/Voycepeh/FabricOps-Starter-Kit/tree/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb)
+[![Exploration Notebook Template](https://img.shields.io/badge/Template-Exploration%20Notebook-blue?style=for-the-badge)](https://github.com/Voycepeh/FabricOps-Starter-Kit/tree/main/templates/notebooks/02_ex_agreement_topic.ipynb)
+
+[![Function Reference](https://img.shields.io/badge/Reference-Callable%20Functions-purple?style=for-the-badge)](https://voycepeh.github.io/FabricOps-Starter-Kit/reference/)
+</div>
+
 ## Design choices
 
 ### Fabric-first
@@ -51,23 +66,6 @@ AI does not replace approval. Governance owners, data stewards, and engineers re
 ### Handover-first
 
 The goal is not only to make one notebook run. The goal is to make the data product understandable to the next engineer, analyst, reviewer, or owner.
-
-## What users get
-
-![Benefits of the FabricOps Starter Kit](docs/assets/framework-benefits.png)
-
-Reusable templates and callable functions for building governed Fabric notebook pipelines without rebuilding the same setup, profiling, quality, contract, lineage, and handover patterns each time.
-
-<div align="center">
-
-[![Runtime Config Template](https://img.shields.io/badge/Template-Runtime%20Config-blue?style=for-the-badge)](https://github.com/Voycepeh/FabricOps-Starter-Kit/tree/main/templates/notebooks/00_env_config.ipynb)
-[![Pipeline Contract Template](https://img.shields.io/badge/Template-Pipeline%20Contract-blue?style=for-the-badge)](https://github.com/Voycepeh/FabricOps-Starter-Kit/tree/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb)
-[![Exploration Notebook Template](https://img.shields.io/badge/Template-Exploration%20Notebook-blue?style=for-the-badge)](https://github.com/Voycepeh/FabricOps-Starter-Kit/tree/main/templates/notebooks/02_ex_agreement_topic.ipynb)
-
-[![Function Reference](https://img.shields.io/badge/Reference-Callable%20Functions-purple?style=for-the-badge)](https://voycepeh.github.io/FabricOps-Starter-Kit/reference/)
-</div>
-
-These patterns are inspired by open data contracts and DQX, but intentionally adapted to Fabric.
 
 ## Scope
 
