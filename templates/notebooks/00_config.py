@@ -15,6 +15,7 @@ from fabricops_kit import (
     create_notebook_runtime_config,
     create_path_config,
     create_quality_config,
+    get_default_dq_rule_templates,
 )
 
 PATH_CONFIG = create_path_config(
@@ -54,3 +55,9 @@ CONFIG = create_framework_config(
     governance_config=GOVERNANCE_CONFIG,
     lineage_config=LINEAGE_CONFIG,
 )
+
+
+# Data Quality Rules
+# Copy and edit these rules per output table after profiling and business review.
+DQ_RULES = get_default_dq_rule_templates()
+

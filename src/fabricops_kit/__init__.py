@@ -94,6 +94,13 @@ from .ai import (
     parse_manual_ai_json_response,
 )
 from .quality import load_data_contract, run_data_product, run_quality_rules
+from .dq import (
+    get_default_dq_rule_templates,
+    run_dq_rules,
+    suggest_dq_rules_prompt,
+    validate_dq_rules,
+    write_dq_results,
+)
 from .run_summary import build_run_summary, render_run_summary_markdown
 from .runtime import assert_notebook_name_valid, build_runtime_context, generate_run_id, validate_notebook_name
 from .technical_columns import add_audit_columns, add_datetime_features, add_hash_columns, default_technical_columns
@@ -132,6 +139,11 @@ __all__ = [
     "generate_metadata_profile",
     "build_ai_quality_context",
     "run_quality_rules",
+    "suggest_dq_rules_prompt",
+    "write_dq_results",
+    "run_dq_rules",
+    "validate_dq_rules",
+    "get_default_dq_rule_templates",
     "parse_manual_ai_json_response",
     "build_manual_handover_prompt_package",
     "build_manual_governance_prompt_package",

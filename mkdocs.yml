@@ -19,6 +19,7 @@ theme:
 nav:
   - Home: index.md
   - Quick Start: quick-start.md
+  - Data Quality Rules System: workflows/data-quality-rules-system.md
   - Lifecycle Operating Model: lifecycle-operating-model.md
   - Architecture:
       - Overview: architecture/index.md
