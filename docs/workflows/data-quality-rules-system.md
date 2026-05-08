@@ -6,7 +6,7 @@ FabricOps Starter Kit supports a lightweight, config-driven data quality (DQ) pa
 2. **Use AI to suggest candidate rules** from profile metadata.
 3. **Human review and approval** required before any enforcement.
 4. **Pipeline contract notebook enforces approved rules** with `run_dq_rules`.
-5. **Persist results** to a `DQ_RESULTS` table with `write_dq_results`.
+5. **Persist results** to a `DQ_RESULTS` table with `lakehouse_table_write`.
 
 ## Supported rule types
 
@@ -36,6 +36,9 @@ prompt = suggest_dq_rules_prompt(df_profile, "EMAIL_LOGS", business_context="Des
 # enforce approved rules with fail-after-logging
 result = run_dq_rules(df_message_log, "EMAIL_LOGS", DQ_RULES["EMAIL_LOGS"], fail_on_error=False)
 dq_results_path = get_path(ENV_NAME, "metadata", config=CONFIG)
-write_dq_results(result, dq_results_path, table_name="DQ_RESULTS")
+lakehouse_table_write(result, dq_results_path, "DQ_RESULTS", mode="append")
 assert_dq_passed(result)
 ```
+
+
+DQ results are a standard Spark DataFrame, so write them with the same `lakehouse_table_write` helper used for other controlled outputs.
