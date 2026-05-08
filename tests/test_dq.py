@@ -1,3 +1,4 @@
+from pathlib import Path
 import pytest
 from pyspark.sql import SparkSession
 
@@ -62,3 +63,48 @@ def test_run_dq_rules_fail_on_error_raises(spark_session):
     rules = [{"rule_id": "r1", "rule_type": "not_null", "columns": ["id"], "severity": "error", "description": "id required"}]
     with pytest.raises(ValueError):
         run_dq_rules(df, "EMAIL_LOGS", rules, fail_on_error=True)
+
+
+def test_public_api_exports():
+    from fabricops_kit import (
+        get_default_dq_rule_templates,
+        validate_dq_rules as _validate,
+        run_dq_rules as _run,
+        write_dq_results as _write,
+        suggest_dq_rules_prompt as _suggest,
+        assert_dq_passed as _assert,
+    )
+    assert callable(get_default_dq_rule_templates)
+    assert callable(_validate) and callable(_run) and callable(_write) and callable(_suggest) and callable(_assert)
+
+
+def test_schema_data_type_missing_expected_type_key():
+    with pytest.raises(ValueError, match="expected_types missing columns"):
+        validate_dq_rules([{
+            "rule_id": "t", "rule_type": "schema_data_type", "columns": ["id", "x"],
+            "expected_types": {"id": "bigint"}, "severity": "warning", "description": "d"
+        }])
+
+
+def test_fail_log_then_assert_pattern(spark_session):
+    from fabricops_kit.dq import assert_dq_passed
+    df = spark_session.createDataFrame([{"id": None}])
+    rules = [{"rule_id": "r1", "rule_type": "not_null", "columns": ["id"], "severity": "error", "description": "id required"}]
+    result = run_dq_rules(df, "EMAIL_LOGS", rules, fail_on_error=False)
+    assert result.count() == 1
+    with pytest.raises(ValueError):
+        assert_dq_passed(result)
+
+
+def test_notebook_templates_reference_defined_dq_names():
+    import json
+    for path in [
+        "templates/notebooks/02_ex_agreement_topic.ipynb",
+        "templates/notebooks/03_pc_agreement_source_to_target.ipynb",
+    ]:
+        nb = json.loads(Path(path).read_text())
+        joined = "\n".join("".join(c.get("source", [])) for c in nb.get("cells", []) if c.get("cell_type") == "code")
+        assert "lh_out" not in joined
+    pc = json.loads(Path("templates/notebooks/03_pc_agreement_source_to_target.ipynb").read_text())
+    code = "\n".join("".join(c.get("source", [])) for c in pc["cells"] if c.get("cell_type") == "code")
+    assert "run_quality_rules(" not in code

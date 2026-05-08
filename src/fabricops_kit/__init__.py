@@ -97,6 +97,7 @@ from .quality import load_data_contract, run_data_product, run_quality_rules
 from .dq import (
     get_default_dq_rule_templates,
     run_dq_rules,
+    assert_dq_passed,
     suggest_dq_rules_prompt,
     validate_dq_rules,
     write_dq_results,
@@ -142,6 +143,7 @@ __all__ = [
     "suggest_dq_rules_prompt",
     "write_dq_results",
     "run_dq_rules",
+    "assert_dq_passed",
     "validate_dq_rules",
     "get_default_dq_rule_templates",
     "parse_manual_ai_json_response",
