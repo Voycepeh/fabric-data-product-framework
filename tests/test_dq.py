@@ -113,6 +113,43 @@ def test_run_dq_rules_with_spark(spark_session):
     assert rows["r3"]["status"] == "FAIL"
     assert rows["r4"]["status"] == "FAIL"
     assert rows["r5"]["status"] == "FAIL"
+    assert rows["r6"]["status"] == "FAIL"
+    assert "requires resolved reference values" in rows["r6"]["details"]
+    assert rows["r7"]["status"] == "FAIL"
+
+
+def test_string_length_between_passes_when_length_in_bounds(spark_session):
+    df = spark_session.createDataFrame([
+        {"email": "ok@x.com"},
+        {"email": None},
+    ])
+    rules = [{
+        "rule_id": "len_ok",
+        "rule_type": "string_length_between",
+        "columns": ["email"],
+        "min_length": 3,
+        "max_length": 100,
+        "severity": "warning",
+        "description": "email length",
+    }]
+    rows = {r["rule_id"]: r for r in run_dq_rules(df, "EMAIL_LOGS", rules, fail_on_error=False).collect()}
+    assert rows["len_ok"]["status"] == "PASS"
+
+
+def test_skipped_or_invalid_lower_engine_result_never_maps_to_pass(spark_session):
+    df = spark_session.createDataFrame([{"status": "A"}])
+    rules = [{
+        "rule_id": "ref_rule",
+        "rule_type": "accepted_values_ref",
+        "columns": ["status"],
+        "reference_table": "dim.status_codes",
+        "reference_column": "status_code",
+        "severity": "warning",
+        "description": "status in reference",
+    }]
+    rows = {r["rule_id"]: r for r in run_dq_rules(df, "EMAIL_LOGS", rules, fail_on_error=False).collect()}
+    assert rows["ref_rule"]["status"] == "FAIL"
+    assert "reference_table/reference_column metadata only" in rows["ref_rule"]["details"]
 
 
 def test_run_dq_rules_fail_on_error_raises(spark_session):

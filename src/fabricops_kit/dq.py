@@ -126,9 +126,10 @@ def run_dq_rules(df, table_name: str, rules: list[dict[str, Any]], fail_on_error
         rtype=rule["rule_type"]
         details=""
         item = by_id.get(rule["rule_id"], {})
+        lower_status = str(item.get("status", "failed")).lower()
         failed = int(item.get("failed_count", 1))
         details = item.get("message", "")
-        status = "PASS" if failed == 0 else "FAIL"
+        status = "PASS" if lower_status == "passed" and failed == 0 else "FAIL"
         rows.append({"table_name": table_name, "rule_id": rule["rule_id"], "rule_type": rtype, "columns": ",".join(rule["columns"]), "severity": rule["severity"], "status": status, "failed_count": failed, "total_count": int(total_count), "failed_percent": float(round((failed / total_count) * 100.0, 4)) if total_count else 0.0, "description": rule["description"], "run_timestamp": datetime.now(timezone.utc).isoformat(), "details": details})
     result_df = df.sparkSession.createDataFrame(rows)
     if fail_on_error:

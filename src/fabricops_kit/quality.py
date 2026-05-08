@@ -51,6 +51,8 @@ SUPPORTED_RULE_TYPES = {
     "row_count_min",
     "row_count_between",
     "freshness_check",
+    "accepted_values_ref",
+    "string_length_between",
 }
 SEVERITY_TO_ACTION = {"info": "allow", "warning": "warn", "critical": "block"}
 
@@ -170,6 +172,15 @@ def _pandas_rule(df: pd.DataFrame, rule: dict[str, Any], row_count: int) -> tupl
         max_ts = s.max()
         age_days = (pd.Timestamp.now(tz="UTC") - max_ts).total_seconds() / 86400
         return (1 if age_days > max_age else 0), row_count, {"max_age_days": max_age}, "Data is stale"
+    if rtype == "string_length_between":
+        c = rule["column"]
+        min_len = int(rule["min_length"])
+        max_len = int(rule["max_length"])
+        s = df[c]
+        bad = s.notna() & ((s.astype(str).str.len() < min_len) | (s.astype(str).str.len() > max_len))
+        return int(bad.sum()), row_count, {"min_length": min_len, "max_length": max_len}, f"Column '{c}' length is outside expected range"
+    if rtype == "accepted_values_ref":
+        raise ValueError("accepted_values_ref is not executable for pandas without a resolved reference dataset; provide explicit accepted_values or implement a reference loader.")
     raise ValueError("Unsupported rule type")
 
 
@@ -226,6 +237,18 @@ def _spark_rule(df: Any, rule: dict[str, Any], row_count: int) -> tuple[int, int
             max_ts = max_ts.replace(tzinfo=timezone.utc)
         age_days = (now_utc - max_ts).total_seconds() / 86400
         return (1 if age_days > max_age else 0), row_count, {"max_age_days": max_age}, "Data is stale"
+    if rtype == "string_length_between":
+        c = rule["column"]
+        min_len = int(rule["min_length"])
+        max_len = int(rule["max_length"])
+        failed = df.filter(
+            F.col(c).isNotNull() & ((F.length(F.col(c).cast("string")) < F.lit(min_len)) | (F.length(F.col(c).cast("string")) > F.lit(max_len)))
+        ).count()
+        return failed, row_count, {"min_length": min_len, "max_length": max_len}, f"Column '{c}' length is outside expected range"
+    if rtype == "accepted_values_ref":
+        raise ValueError(
+            "accepted_values_ref requires resolved reference values in the execution engine; rule received reference_table/reference_column metadata only."
+        )
     raise ValueError("Unsupported rule type")
 
 
@@ -287,6 +310,8 @@ def run_quality_rules(df: Any, rules: list[dict], *, dataset_name: str = "unknow
             "row_count_min": ["min_count"],
             "row_count_between": ["min_count", "max_count"],
             "freshness_check": ["column", "max_age_days"],
+            "accepted_values_ref": ["column", "reference_table", "reference_column"],
+            "string_length_between": ["column", "min_length", "max_length"],
         }[rule_type]
         missing_keys = [k for k in required if k not in rule]
         if missing_keys:
@@ -3263,4 +3288,3 @@ def build_layman_rule_records(candidates, run_id, dataset_name, table_name):
             "candidate_json": _jsonable(c),
         })
     return rows
-
