@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 import json
 from typing import Any
 
+from .fabric_io import lakehouse_table_write
 from .quality import run_quality_rules
 
 SUPPORTED_RULE_TYPES = {
@@ -158,6 +159,32 @@ def run_dq_rules(df, table_name: str, rules: list[dict[str, Any]], fail_on_error
             raise ValueError(f"Data quality failed for error-severity rules: {msg}")
     return result_df
 
+
+
+def write_dq_results(dq_result_df, output_path: str, table_name: str = "DQ_RESULTS", mode: str = "append") -> None:
+    """Persist data-quality results to a Fabric lakehouse table.
+
+    Parameters
+    ----------
+    dq_result_df : pyspark.sql.DataFrame
+        Data quality result dataframe returned by ``run_dq_rules``.
+    output_path : str
+        Lakehouse path where results should be written.
+    table_name : str, default="DQ_RESULTS"
+        Target table name for persisted results.
+    mode : str, default="append"
+        Write mode passed to ``lakehouse_table_write``.
+
+    Returns
+    -------
+    None
+        Writes records for downstream audit and control checks.
+
+    Notes
+    -----
+    Fabric notebook runtime required with PySpark DataFrame input.
+    """
+    lakehouse_table_write(dq_result_df, output_path, table_name, mode=mode)
 
 def assert_dq_passed(dq_result_df) -> None:
     """Raise when any error-severity DQ rule failed after results are logged."""

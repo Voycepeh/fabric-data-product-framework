@@ -131,6 +131,7 @@ This step writes the transformed output to the correct lakehouse, warehouse, or 
 | [`assert_dq_passed`](./step-06d-controlled-outputs/assert_dq_passed/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a> | Essential | Raise when any error-severity DQ rule failed after results are logged. | — |
 | [`lakehouse_table_write`](./step-06d-controlled-outputs/lakehouse_table_write/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> | Essential | Write a Spark DataFrame to a Fabric lakehouse Delta table. | — |
 | [`warehouse_write`](./step-06d-controlled-outputs/warehouse_write/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> | Essential | Write a Spark DataFrame to a Microsoft Fabric warehouse table. | — |
+| [`write_dq_results`](./step-06d-controlled-outputs/write_dq_results/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a> | Essential | Persist data-quality results to a Fabric lakehouse table. | — |
 
 ## Step 7: Profile output & publish product contract
 
