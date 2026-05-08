@@ -2,14 +2,11 @@
 
 A practical starter kit for building governed, quality-checked, AI-ready notebooks in Microsoft Fabric.
 
-## Documentation
-
 <div align="center">
 
 [![Open Documentation](https://img.shields.io/badge/Open%20Documentation-FabricOps%20Starter%20Kit-blue?style=for-the-badge)](https://voycepeh.github.io/FabricOps-Starter-Kit/)
-
-
-
+.
+.
 </div>
 
 ## Why this starter kit exists
