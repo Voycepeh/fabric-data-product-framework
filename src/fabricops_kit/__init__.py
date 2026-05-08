@@ -100,7 +100,6 @@ from .dq import (
     assert_dq_passed,
     suggest_dq_rules_prompt,
     validate_dq_rules,
-    write_dq_results,
 )
 from .run_summary import build_run_summary, render_run_summary_markdown
 from .runtime import assert_notebook_name_valid, build_runtime_context, generate_run_id, validate_notebook_name
@@ -141,7 +140,6 @@ __all__ = [
     "build_ai_quality_context",
     "run_quality_rules",
     "suggest_dq_rules_prompt",
-    "write_dq_results",
     "run_dq_rules",
     "assert_dq_passed",
     "validate_dq_rules",

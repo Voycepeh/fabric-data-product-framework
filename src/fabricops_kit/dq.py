@@ -6,7 +6,6 @@ from datetime import datetime, timezone
 import json
 from typing import Any
 
-from .fabric_io import lakehouse_table_write
 from .quality import run_quality_rules
 
 SUPPORTED_RULE_TYPES = {
@@ -158,11 +157,6 @@ def run_dq_rules(df, table_name: str, rules: list[dict[str, Any]], fail_on_error
             msg = ", ".join(f"{r['rule_id']}({r['failed_count']})" for r in failures)
             raise ValueError(f"Data quality failed for error-severity rules: {msg}")
     return result_df
-
-
-def write_dq_results(dq_result_df, lh, table_name: str = "DQ_RESULTS", mode: str = "append") -> None:
-    """Write DQ result DataFrame to a lakehouse table."""
-    lakehouse_table_write(dq_result_df, lh=lh, tablename=table_name, mode=mode)
 
 
 def assert_dq_passed(dq_result_df) -> None:

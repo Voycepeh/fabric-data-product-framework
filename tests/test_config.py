@@ -132,3 +132,72 @@ def test_assert_valid_dataset_contract_does_not_raise_on_valid_contract() -> Non
     contract = load_dataset_contract(VALID_FIXTURE)
 
     assert_valid_dataset_contract(contract)
+
+
+import sys
+import types
+
+from fabricops_kit.config import (
+    ConfigSmokeCheckResult,
+    bootstrap_fabric_env,
+    create_ai_prompt_config,
+    create_framework_config,
+    create_governance_config,
+    create_lineage_config,
+    create_notebook_runtime_config,
+    create_path_config,
+    create_quality_config,
+    get_path,
+    run_config_smoke_tests,
+)
+from fabricops_kit.fabric_io import Housepath, load_fabric_config
+
+
+def _sample_framework_config():
+    path_config = create_path_config(
+        {
+            "Sandbox": {
+                "Source": Housepath("w1", "h1", "SRC", "abfss://src"),
+                "Unified": Housepath("w1", "h2", "UNI", "abfss://uni"),
+            }
+        }
+    )
+    return create_framework_config(
+        path_config=path_config,
+        notebook_runtime_config=create_notebook_runtime_config(["00_", "03_"]),
+        ai_prompt_config=create_ai_prompt_config("quality {profile}", "lineage {steps}", "handover {context}"),
+        quality_config=create_quality_config(),
+        governance_config=create_governance_config(),
+        lineage_config=create_lineage_config(),
+    )
+
+
+def test_load_fabric_config_accepts_framework_config():
+    config = _sample_framework_config()
+    loaded = load_fabric_config(config)
+    assert loaded.path_config.paths["Sandbox"]["Source"].house_name == "SRC"
+
+
+def test_get_path_missing_values_raise_clean_errors():
+    config = _sample_framework_config()
+    with pytest.raises(ValueError, match="Environment 'Prod' was not found"):
+        get_path("Prod", "Source", config=config)
+
+
+def test_bootstrap_env_and_smoke_behavior(monkeypatch):
+    config = _sample_framework_config()
+    ctx = bootstrap_fabric_env(config=config, check_ai=False, smoke_test=False)
+    assert ctx.paths["Source"].house_name == "SRC"
+    assert ctx.smoke_test_results == []
+
+    runtime_mod = types.SimpleNamespace(context={"currentNotebookName": "00_env_config"})
+    monkeypatch.setitem(sys.modules, "notebookutils", types.SimpleNamespace(runtime=runtime_mod))
+    monkeypatch.setitem(sys.modules, "notebookutils.runtime", runtime_mod)
+    monkeypatch.setattr("fabricops_kit.config.spark", object(), raising=False)
+    results = run_config_smoke_tests(config=config, check_ai=False)
+    assert all(isinstance(r, ConfigSmokeCheckResult) for r in results)
+
+
+def test_bootstrap_invalid_env_raises_useful_error():
+    with pytest.raises(ValueError, match="Environment 'Prod'"):
+        bootstrap_fabric_env(env="Prod", config=_sample_framework_config(), smoke_test=False, check_ai=False)

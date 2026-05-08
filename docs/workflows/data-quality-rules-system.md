@@ -36,7 +36,7 @@ prompt = suggest_dq_rules_prompt(df_profile, "EMAIL_LOGS", business_context="Des
 # enforce approved rules with fail-after-logging
 result = run_dq_rules(df_message_log, "EMAIL_LOGS", DQ_RULES["EMAIL_LOGS"], fail_on_error=False)
 dq_results_path = get_path(ENV_NAME, "metadata", config=CONFIG)
-write_dq_results(result, dq_results_path, table_name="DQ_RESULTS")
+lakehouse_table_write(result, dq_results_path, "DQ_RESULTS", mode="append")
 assert_dq_passed(result)
 ```
 

@@ -130,12 +130,11 @@ def test_public_api_exports():
         get_default_dq_rule_templates,
         validate_dq_rules as _validate,
         run_dq_rules as _run,
-        write_dq_results as _write,
         suggest_dq_rules_prompt as _suggest,
         assert_dq_passed as _assert,
     )
     assert callable(get_default_dq_rule_templates)
-    assert callable(_validate) and callable(_run) and callable(_write) and callable(_suggest) and callable(_assert)
+    assert callable(_validate) and callable(_run) and callable(_suggest) and callable(_assert)
 
 
 def test_schema_data_type_missing_expected_type_key():
