@@ -57,6 +57,93 @@ FabricOps uses one data contract model with two perspectives.
 
 
 
+
+## The 03_pc notebook is the executable contract
+
+In FabricOps, the pipeline contract starts in the notebook.
+
+The 03_pc notebook is the executable version of the contract. It contains the source expectations, output expectations, quality rules, approved classification metadata to load and enforce, transformation logic, runtime checks, and evidence writing.
+
+The metadata tables do not replace the notebook. They make the notebook contract queryable, reviewable, AI-readable, and auditable.
+
+The data contract is the structured metadata summary of what the 03_pc notebook declares, checks, enforces, and records.
+
+| Contract view | Meaning |
+| --- | --- |
+| 03_pc notebook | Executable contract and enforcement logic |
+| Metadata tables | Queryable contract records and run evidence |
+| Handover document | Human narrative explaining why the pipeline exists and how to take over |
+| Generated contract summary | Human and AI-readable summary of the approved contract state |
+
+## From metadata logger to contract metadata
+
+FabricOps extends the metadata logger pattern.
+
+The basic pattern is:
+
+1. Profile a table.
+2. Store column-level metadata.
+3. Attach approved DQ rules to profiled columns.
+4. Attach approved classification or sensitivity decisions to profiled columns.
+5. Run the rules inside 03_pc.
+6. Store quality results, classification evidence, schema snapshots, and run evidence.
+7. Generate a contract summary from the stored metadata.
+
+Profile first, attach controls to profiled columns, enforce in 03_pc, then store evidence.
+
+| Metadata layer | Purpose |
+| --- | --- |
+| Profile metadata | Captures table, schema, column, type, nulls, distincts, min/max, and run timestamp |
+| DQ rule metadata | Stores approved quality rules joined to profiled columns |
+| Classification metadata | Stores approved sensitivity and governance decisions joined to profiled columns |
+| Runtime evidence | Stores rule results, row counts, failures, warnings, and run status |
+| Contract summary | Presents the current approved contract in a readable form |
+| Handover evidence | Explains transformation rationale, lineage summary context, caveats, and ownership context |
+
+## Column identity and joins
+
+Rules should not float separately from the profile. DQ rules, classification records, and runtime evidence should join back to the profiled column records.
+
+Use a stable column identity based on:
+
+- workspace or data store identity
+- schema name where relevant
+- table name
+- column name
+
+This can be stored as a composite key and/or a hash key.
+
+| Key | Purpose |
+| --- | --- |
+| column_contract_key | Stable key for joining column profile, DQ rules, and classification records |
+| run_id | Identifies one pipeline execution |
+| profile_timestamp | Identifies when a profile snapshot was captured |
+| contract_version | Identifies which approved contract state was enforced |
+
+The stable column key identifies the column across runs. The run ID and timestamp identify what happened during a specific execution.
+
+## DQ rules and classification use the same pattern
+
+Data quality and classification are different controls, but FabricOps should treat them with the same operating pattern.
+
+| Pattern | Data quality | Classification |
+| --- | --- | --- |
+| Target | Column or table | Column or table |
+| Draft source | Profiling, AI suggestion, human review | Profiling, AI suggestion, steward review |
+| Stored metadata | Rule type, threshold, severity, status | Sensitivity label, exposure rule, approval status |
+| Approval | Engineer or steward | Steward or governance reviewer |
+| Enforcement | Fail, warn, quarantine, or log | Mask, exclude, flag, or require approval |
+| Evidence | Quality result records | Classification audit or review records |
+
+AI can suggest DQ rules and classifications, but approved metadata remains the source of truth that humans review and 03_pc enforces.
+
+FabricOps uses two metadata categories:
+
+1. **Runtime contract metadata** used or produced directly by 03_pc: profile metadata, approved DQ rules, approved classification rules or labels, quality results, and run evidence.
+2. **Generated handover evidence** produced after notebook completion (especially in handover/documentation phases): transformation summaries, lineage summaries or diagrams, handover summaries, and AI context packs.
+
+Lineage and transformation rationale can later be persisted as first-class metadata tables, but the first practical implementation can treat them as generated handover evidence rather than runtime enforcement metadata.
+
 ## Data contract vs handover document
 
 A data contract and a handover document are related, but they are not the same thing.
@@ -65,15 +152,17 @@ The data contract is the structured agreement for a dataset. It defines what the
 
 The handover document is the wider operating guide for a human taking over the work. It explains the business context, notebook structure, design decisions, known caveats, transformation rationale, and where to find the important artifacts.
 
-In FabricOps, the data contract is one important part of the handover package. It does not replace the handover document.
+In FabricOps, the 03_pc notebook is the executable contract and the data contract is the enforceable metadata summary of what it declares and enforces.
+
+The handover document is the human story, and the data contract is part of that handover package. It does not replace the handover document.
 
 | Artifact | What it answers | Main reader | Stored as |
 | --- | --- | --- | --- |
 | Data contract | What must this dataset contain, what is approved, and what must be enforced? | Data engineer, steward, pipeline, AI assistant | Contract metadata records |
 | Handover document | Why was the pipeline built this way, and how should a human take over? | Engineer, analyst, steward | Markdown or generated documentation |
-| Metadata evidence | What happened during each run, and did the contract pass? | Pipeline owner, governance reviewer, AI assistant | Run, quality, schema, and lineage tables |
+| Metadata evidence | What happened during each run, and did the contract pass? | Pipeline owner, governance reviewer, AI assistant | Run, quality, and schema evidence tables |
 
-Put simply: the handover document tells the story; the data contract defines the enforceable agreement.
+Put simply: the handover document tells the story; the 03_pc notebook executes the contract; and the data contract captures the enforceable metadata summary.
 
 ## Designed for humans and AI assistants
 
@@ -88,7 +177,7 @@ For AI assistants, the same contract should be stored as structured metadata rec
 | Human reviewer | Clear explanation, reviewable tables, approval context | Plain English docs, notebook displays, metadata tables |
 | Pipeline notebook | Deterministic enforcement | Load approved contract records and fail fast when expectations are not met |
 | AI assistant | Structured context for suggestions | Contract JSON, column records, profile records, DQ rule records, classification metadata |
-| Governance reviewer | Evidence and audit trail | Approval fields, run records, quality results, lineage records |
+| Governance reviewer | Evidence and audit trail | Approval fields, run records, quality results, and generated handover evidence |
 
 AI can suggest rules, classifications, and documentation, but the approved contract remains the source of truth that humans review and pipelines enforce.
 
@@ -167,7 +256,7 @@ FabricOps stores approved contract definitions and run evidence in Fabric metada
 - min/max values
 - run timestamp
 
-### 7. Lineage and handover evidence
+### 7. Optional generated lineage and handover evidence
 
 - source object
 - target object
@@ -177,6 +266,8 @@ FabricOps stores approved contract definitions and run evidence in Fabric metada
 - notebook name
 - code/run identifier
 - run timestamp
+
+Lineage and transformation rationale may later be persisted as first-class metadata, but the first implementation can treat them as generated handover evidence rather than mandatory runtime enforcement tables.
 
 ## How notebooks use the contract
 
@@ -190,7 +281,7 @@ AI can suggest contract content in exploration, but humans approve the rules and
 
 ### Pipeline contract notebook: 03_pc
 
-The pipeline notebook enforces the approved contract. It loads the latest approved contract, validates required columns and business keys, runs approved quality rules, applies runtime standards, writes output data, then writes run evidence, quality results, and lineage metadata.
+The pipeline notebook enforces the approved contract. It loads the latest approved contract, validates required columns and business keys, runs approved quality rules, loads and enforces approved classification metadata, applies runtime standards, writes output data, then writes runtime evidence and quality results. Lineage and handover documentation are generated post-run or during handover workflows.
 
 The pipeline contract notebook should read approved contract metadata, not free-form handover prose.
 
