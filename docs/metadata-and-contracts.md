@@ -1,124 +1,147 @@
-# Metadata and Contracts
+# Data Contracts and Metadata
 
-## Fabric-first contract model 
-Based off https://github.com/bitol-io/open-data-contract-standard
+## What is a data contract?
 
-FabricOps adopts Open Data Contract principles in a Fabric-first form. Contracts are authored and reviewed through notebooks or tables, stored as approved metadata records in a dedicated Fabric metadata target, and enforced by pipeline notebooks. ODCS YAML can be added later as an import/export format for teams that also use Git-based contract workflows.
+A data contract is the agreement that makes a dataset safe to use. It defines what the data should contain, how it may be used, which quality checks must pass, who approved it, and what downstream users or pipelines can rely on.
 
-Open Data Contract principles remain the design direction for compatibility, governance clarity, and long-term interoperability. In FabricOps, YAML is not required as the runtime editing model. Instead, approved metadata tables are the operational source of truth inside Fabric.
+| Question | Why it matters |
+| --- | --- |
+| What dataset are we using or producing? | Identifies the exact source or output table. |
+| What is the approved usage? | Prevents reuse outside the approved purpose. |
+| What columns should exist? | Catches schema changes early. |
+| Which columns are required? | Prevents silent missing critical fields. |
+| What are the business keys and grain? | Makes joins, deduplication, and row meaning clear. |
+| What data quality rules must pass? | Stops bad data from flowing downstream unnoticed. |
+| Which columns are sensitive? | Supports classification, masking, and governance review. |
+| Who approved the contract? | Gives ownership and accountability. |
+| What happened during the run? | Supports audit, lineage, troubleshooting, and handover. |
 
-## Why not YAML-first in Fabric
+The data contract is the promise between the notebook, the data engineer, the data steward, and the downstream consumer.
 
-YAML is valuable for Git workflows, portability, and external contract exchange. However, many Fabric teams operate primarily through notebooks, Spark DataFrames, Lakehouse tables, Warehouse tables, and Power BI stewardship views.
+## What is the Open Data Contract Standard?
 
-In that context, editing raw YAML inside notebooks is usually not the best review and approval experience for stewards or operators. FabricOps therefore uses notebook-friendly Python dicts/tables first, with ODCS YAML import/export planned later for interoperability.
+The Open Data Contract Standard (ODCS) is a structured way to describe data contracts, commonly as YAML or JSON. It covers core ideas such as schema definitions, quality expectations, ownership, service-level expectations, governance metadata, and contract versioning.
 
-## Source input contract vs output product contract
+FabricOps uses ODCS as design inspiration for interoperability and governance clarity, but not as a YAML-first runtime requirement. In FabricOps, contracts are collected and reviewed through notebooks and tables, stored as metadata records in Fabric, and enforced by pipeline notebooks. ODCS YAML or JSON import/export can be added later for teams that need cross-platform exchange.
 
-- **Source input contract**: the minimum expectations a pipeline needs from an upstream source to run safely (schema, required columns, keys, freshness, and quality thresholds). This does **not** imply FabricOps owns or controls the upstream producer.
-- **Output product contract**: the expectations for produced downstream data (schema, metadata, classifications, and quality expectations) that consumers rely on.
+## FabricOps data contract model
 
-## How contracts are edited in Fabric
+FabricOps uses one data contract model with two perspectives.
 
-In intended operation, `02_ex` and `03_pc` have distinct responsibilities:
+| Perspective | What it means | Examples |
+| --- | --- | --- |
+| Input expectations | What the pipeline expects from the source before it can run safely | Source object, required columns, business keys, freshness, minimum quality thresholds |
+| Output expectations | What the pipeline promises to produce for downstream users | Target object, output schema, descriptions, classifications, approved DQ rules, consumer-facing metadata |
 
-- **`02_ex` notebook**
-  - profiles source data
-  - inspects schema, grain, keys, nulls, freshness, classifications, and candidate DQ rules
-  - may use AI to suggest DQ rules/classifications
-  - drafts contract metadata for review
-  - records approved contract metadata after human/steward approval
+> **One contract model, two perspectives.** Input expectations protect the pipeline. Output expectations protect downstream consumers.
 
-- **`03_pc` notebook**
-  - does not invent contract values or approvals
-  - loads the latest approved contract from the metadata target
-  - enforces required columns, business keys, approved DQ rules, and classifications
-  - fails fast when contract requirements are not met
+## What FabricOps stores in metadata
 
-Example draft contract structure:
+FabricOps stores approved contract definitions and run evidence in Fabric metadata tables (for example, in a dedicated Lakehouse or Warehouse), so runtime pipelines can enforce approved expectations and produce auditable evidence.
 
-```python
-SOURCE_INPUT_CONTRACT_DRAFT = {
-    "contract_id": "student_events_source_input_v1",
-    "contract_type": "source_input",
-    "dataset_name": "student_events",
-    "object_name": "raw_student_events",
-    "version": "0.1.0",
-    "status": "draft",
-    "grain": "one row per student event",
-    "required_columns": ["student_id", "event_id", "event_timestamp"],
-    "optional_columns": ["event_description"],
-    "business_keys": ["event_id"],
-    "classifications": {
-        "student_id": "confidential",
-        "event_id": "internal"
-    },
-    "quality_rules": [
-        {
-            "rule_id": "event_id_not_null",
-            "rule_type": "not_null",
-            "column": "event_id",
-            "severity": "critical"
-        }
-    ],
-    "approved_by": None,
-    "approval_note": None
-}
-```
+### 1. Contract header
 
-## Metadata target as operational source of truth
+- contract id
+- version
+- status
+- dataset name
+- source object
+- target object
+- data agreement id
+- approved usage
+- owner/steward
+- approval fields
+- full contract JSON
 
-The metadata target should be a dedicated Lakehouse or Warehouse per environment.
+### 2. Contract columns
 
-- Source/Unified/Product stores hold business data.
-- Metadata stores FabricOps framework evidence.
-- Approved contracts should not exist only as notebook variables.
-- Approved contracts should not exist only as YAML files.
-- Production pipelines must never read development metadata.
+- column name
+- data type
+- required flag
+- business key flag
+- nullable flag
+- description
+- classification
+- source mapping
+- output visibility
+- steward notes
 
-For promotion between environments, see [Deployment and Promotion](deployment-and-promotion.md).
+### 3. Contract rules
 
-## Recommended metadata tables
+- rule id
+- rule type
+- target column
+- severity
+- threshold
+- rule status
+- rule JSON
+- approval fields
 
-- **`FABRICOPS_CONTRACTS`**
-  - one row per contract version
-  - stores approval status, lifecycle status, semantic version, and full contract JSON
+### 4. Dataset run evidence
 
-- **`FABRICOPS_CONTRACT_COLUMNS`**
-  - one row per contract column
-  - stores required flag, business key flag, classification, logical/physical type, and description
+- run id
+- contract id/version
+- source object
+- target object
+- row counts
+- run status
+- runtime info
+- error summary
 
-- **`FABRICOPS_CONTRACT_RULES`**
-  - one row per approved DQ rule
-  - stores rule type, target column, severity, status, and full rule JSON
+### 5. Quality results
 
-- **`FABRICOPS_QUALITY_RESULTS`**
-  - stores quality execution outcomes from pipeline runs
+- run id
+- rule id
+- target column
+- pass/fail counts
+- result status
+- severity
+- sample failures where available
+- execution timestamp
 
-- **`FABRICOPS_DATASET_RUNS`**
-  - stores run-level evidence such as run ID, dataset, source, target, status, and row counts
+### 6. Schema/profile snapshots
 
-- **`FABRICOPS_LINEAGE_RECORDS`**
-  - stores source/target lineage and transformation summaries
+- table name
+- column name
+- data type
+- row count
+- null count/percent
+- distinct count/percent
+- min/max values
+- run timestamp
 
-Optional: classifications can initially live in `FABRICOPS_CONTRACT_COLUMNS`. A dedicated classification table can be added later if needed.
+### 7. Lineage and handover evidence
 
-## Notebook flow
+- source object
+- target object
+- transformation step
+- transformation summary
+- business reason
+- notebook name
+- code/run identifier
+- run timestamp
 
-`02_ex`
-→ profile source
-→ draft contract
-→ review AI suggestions
-→ approve contract
-→ write metadata records
+## How notebooks use the contract
 
-`03_pc`
-→ load latest approved contract
-→ enforce required columns
-→ enforce DQ rules
-→ apply runtime standards
-→ write output and evidence
+### Exploration notebook: 02_ex
 
-## ODCS relationship
+The exploration notebook discovers and drafts the contract. It profiles source data, checks schema, nulls, keys, and freshness, uses AI to suggest DQ rules and classifications, supports steward review/approval, and writes approved metadata.
 
-ODCS remains the open-standard direction. FabricOps stores operational contracts as metadata records first inside Fabric. ODCS YAML import/export should be added later as an interoperability feature, allowing Fabric-native stewardship and runtime while preserving a path to open-standard contract exchange.
+AI can suggest contract content in exploration, but humans approve the rules and classifications.
+
+### Pipeline contract notebook: 03_pc
+
+The pipeline notebook enforces the approved contract. It loads the latest approved contract, validates required columns and business keys, runs approved quality rules, applies runtime standards, writes output data, then writes run evidence, quality results, and lineage metadata.
+
+Pipeline notebooks should not invent rules at runtime. They enforce rules that were already approved.
+
+## Where to find the implementation helpers
+
+The callable implementation details are maintained in the generated Function Reference so this page does not become a second source of truth.
+
+- [Step 3: Declare source contract & ingest source data](reference.md#step-3-declare-source-contract--ingest-source-data)
+- [Step 4: Validate source against contract & capture metadata](reference.md#step-4-validate-source-against-contract--capture-metadata)
+- [Step 7: Validate output & persist target metadata](reference.md#step-7-validate-output--persist-target-metadata)
+- [Step 8: Generate, review & configure DQ rules](reference.md#step-8-generate-review--configure-dq-rules)
+- [Step 9: Generate & review classification / sensitivity suggestions](reference.md#step-9-generate--review-classification--sensitivity-suggestions)
+- [Step 10: Generate data lineage and handover documentation](reference.md#step-10-generate-data-lineage-and-handover-documentation)
