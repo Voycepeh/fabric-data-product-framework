@@ -40,7 +40,7 @@ The model separates exploration notebooks that capture profiling, reasoning, and
 Contracts are not standalone documents only. In this kit, contracts connect to notebook naming, approved usage, schema expectations, data quality rules, sensitivity review, metadata profiling, and output registration.
 
 This pattern is inspired by open data contract approaches, adapted to Fabric-native storage and execution.
-https://bitol-io.github.io/open-data-contract-standard/v3.1.0/
+[Data contracts](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/)
 
 ### DQX-inspired, Fabric-native quality checks
 
