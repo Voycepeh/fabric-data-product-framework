@@ -2,7 +2,12 @@ from pathlib import Path
 import pytest
 from pyspark.sql import SparkSession
 
-from fabricops_kit.dq import run_dq_rules, suggest_dq_rules_prompt, validate_dq_rules
+from fabricops_kit.dq import (
+    DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE,
+    run_dq_rules,
+    suggest_dq_rules_prompt,
+    validate_dq_rules,
+)
 
 
 @pytest.fixture(scope="module")
@@ -34,14 +39,48 @@ def test_validate_dq_rules_invalid_missing_field():
         validate_dq_rules([{"rule_id": "x"}])
 
 
-def test_suggest_dq_rules_prompt():
+def test_suggest_dq_rules_prompt_default_contains_required_guidance():
     import pandas as pd
 
     profile = pd.DataFrame([{"column_name": "id", "null_count": 0}])
     prompt = suggest_dq_rules_prompt(profile, "EMAIL_LOGS", business_context="Tracks outbound emails")
-    assert "suggestion-only" in prompt
-    assert "DQ_RULES" in prompt
-    assert "EMAIL_LOGS" in prompt
+    for rule_type in [
+        "not_null",
+        "unique_key",
+        "accepted_values",
+        "value_range",
+        "regex_format",
+        "row_count_between",
+        "schema_required_columns",
+        "schema_data_type",
+    ]:
+        assert rule_type in prompt
+    assert "advisory only" in prompt.lower()
+    assert "human" in prompt.lower() and "approve" in prompt.lower()
+    assert "Return only Python dictionary output named DQ_RULES" in prompt
+
+
+def test_suggest_dq_rules_prompt_custom_template_is_used():
+    import pandas as pd
+
+    profile = pd.DataFrame([{"column_name": "id"}])
+    custom = "TABLE={table_name}|CTX={business_context}|FMT={output_format}|JSON={profile_json}"
+    prompt = suggest_dq_rules_prompt(profile, "EMAIL_LOGS", business_context="x", prompt_template=custom)
+    assert prompt.startswith("TABLE=EMAIL_LOGS|CTX=x|FMT=python_config|JSON=")
+
+
+def test_default_prompt_template_constant_includes_required_rule_types():
+    for rule_type in [
+        "not_null",
+        "unique_key",
+        "accepted_values",
+        "value_range",
+        "regex_format",
+        "row_count_between",
+        "schema_required_columns",
+        "schema_data_type",
+    ]:
+        assert rule_type in DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
 
 
 

@@ -19,6 +19,32 @@ SUPPORTED_RULE_TYPES = {
     "schema_data_type",
 }
 
+DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE = """You are helping draft candidate data quality rules for table '{table_name}'.
+IMPORTANT: AI output is advisory only. A human must review and approve every suggestion before copying into DQ_RULES in 00_config.py.
+
+Business context:
+{business_context}
+
+Profile metadata:
+{profile_json}
+
+Supported rule types (use only these):
+- not_null
+- unique_key
+- accepted_values
+- value_range
+- regex_format
+- row_count_between
+- schema_required_columns
+- schema_data_type
+
+Hard constraints:
+- Return only Python dictionary output named DQ_RULES.
+- Do not include Great Expectations, Deequ, DQX, SQL, pseudocode, markdown, or explanatory text.
+- Do not invent unsupported rule types.
+
+Output format: {output_format}
+Required shape: DQ_RULES = {"TABLE_NAME": [<rule dictionaries>]}."""
 
 def _to_quality_rule(rule: dict[str, Any]) -> dict[str, Any]:
     """Map notebook-friendly DQ rule shape to quality.py rule shape."""
@@ -141,14 +167,20 @@ def assert_dq_passed(dq_result_df) -> None:
         raise ValueError(f"Data quality failed for error-severity rules: {msg}")
 
 
-def suggest_dq_rules_prompt(profile_df, table_name: str, business_context: str = "", output_format: str = "python_config") -> str:
-    """Build a Copilot prompt for candidate DQ rule suggestions."""
+def suggest_dq_rules_prompt(
+    profile_df,
+    table_name: str,
+    business_context: str = "",
+    output_format: str = "python_config",
+    prompt_template: str | None = None,
+) -> str:
+    """Build a prompt for candidate DQ rule suggestions."""
     profile_records = profile_df.toPandas().to_dict("records") if hasattr(profile_df, "toPandas") else profile_df.to_dict("records")
     profile_json = json.dumps(profile_records, indent=2, default=str)
-    return (
-        f"You are helping draft candidate data quality rules for table '{table_name}'.\n"
-        "IMPORTANT: Output is suggestion-only and must NOT be auto-enforced. A human must review and approve rules before copying into DQ_RULES in 00_env_config.\n\n"
-        f"Business context:\n{business_context or 'No business context supplied.'}\n\n"
-        f"Profile metadata:\n{profile_json}\n\n"
-        f"Return candidate rules in {output_format} format as a Python dictionary shaped like DQ_RULES = {{\"TABLE_NAME\": [<rule dictionaries>]}}."
+    template = prompt_template or DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
+    return template.format(
+        table_name=table_name,
+        business_context=business_context or "No business context supplied.",
+        profile_json=profile_json,
+        output_format=output_format,
     )

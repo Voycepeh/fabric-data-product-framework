@@ -6,7 +6,7 @@ FabricOps Starter Kit supports a lightweight, config-driven data quality (DQ) pa
 2. **Use AI to suggest candidate rules** from profile metadata.
 3. **Human review and approval** required before any enforcement.
 4. **Pipeline contract notebook enforces approved rules** with `run_dq_rules`.
-5. **Persist results** to a `DQ_RESULTS` table with `lakehouse_table_write`.
+5. **Persist results** via the generic `lakehouse_table_write` pattern.
 
 ## Supported rule types
 
@@ -41,4 +41,15 @@ assert_dq_passed(result)
 ```
 
 
-DQ results are a standard Spark DataFrame, so write them with the same `lakehouse_table_write` helper used for other controlled outputs.
+## Editable AI prompt template
+
+Set `DQ_RULE_SUGGESTION_PROMPT_TEMPLATE` in `templates/notebooks/00_config.py` to customize how AI suggests rule candidates without changing package code.
+
+```python
+prompt = suggest_dq_rules_prompt(
+    df_profile,
+    "EMAIL_LOGS",
+    business_context="Outbound email monitoring",
+    prompt_template=DQ_RULE_SUGGESTION_PROMPT_TEMPLATE,
+)
+```

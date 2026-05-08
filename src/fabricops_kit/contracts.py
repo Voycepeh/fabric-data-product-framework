@@ -105,6 +105,7 @@ def build_contract_header_record(contract: dict) -> dict:
 
 
 def build_contract_column_records(contract: dict) -> list[dict]:
+    """Build normalized column-level contract records for lakehouse persistence."""
     c = normalize_contract_dict(contract)
     ts = _now_utc_iso()
     keys = {v: i + 1 for i, v in enumerate(c.get("business_keys", []))}
@@ -124,6 +125,7 @@ def build_contract_column_records(contract: dict) -> list[dict]:
 
 
 def build_contract_rule_records(contract: dict) -> list[dict]:
+    """Build normalized quality-rule records for lakehouse persistence."""
     c = normalize_contract_dict(contract)
     ts = _now_utc_iso()
     rows = []
@@ -139,6 +141,7 @@ def build_contract_rule_records(contract: dict) -> list[dict]:
 
 
 def build_contract_records(contract: dict) -> dict:
+    """Build header, column, and rule record groups from a contract dictionary."""
     return {"contracts": [build_contract_header_record(contract)], "columns": build_contract_column_records(contract), "rules": build_contract_rule_records(contract)}
 
 
@@ -151,6 +154,7 @@ def contract_records_to_spark(records: list[dict], schema_name: str | None = Non
 
 
 def write_contract_to_lakehouse(contract, metadata_path: Housepath, mode: str = "append"):
+    """Validate and persist contract header, column, and rule records to lakehouse tables."""
     errs = validate_contract_dict(contract)
     if errs:
         raise ValueError("Contract validation failed: " + " | ".join(errs))
@@ -193,6 +197,7 @@ def _to_records(table_result: Any) -> list[dict]:
 
 
 def load_contract_from_lakehouse(metadata_path: Housepath, contract_id: str, version: str | None = None) -> dict:
+    """Load a contract by ID (and optional version) from contract metadata tables."""
     headers = _to_records(lakehouse_table_read(metadata_path, "FABRICOPS_CONTRACTS"))
     candidates = [r for r in headers if r.get("contract_id") == contract_id]
     if version is not None:
@@ -210,6 +215,7 @@ def load_contract_from_lakehouse(metadata_path: Housepath, contract_id: str, ver
 
 
 def load_latest_approved_contract(metadata_path: Housepath, dataset_name: str, object_name: str, contract_type: str = "source_input") -> dict:
+    """Load the latest approved contract for a dataset/object/contract-type tuple."""
     headers = _to_records(lakehouse_table_read(metadata_path, "FABRICOPS_CONTRACTS"))
     matches = [
         r for r in headers
@@ -222,30 +228,37 @@ def load_latest_approved_contract(metadata_path: Housepath, dataset_name: str, o
 
 
 def extract_required_columns(contract: dict) -> list[str]:
+    """Return required column names from a normalized contract dictionary."""
     return list(normalize_contract_dict(contract).get("required_columns", []))
 
 
 def extract_optional_columns(contract: dict) -> list[str]:
+    """Return optional column names from a normalized contract dictionary."""
     return list(normalize_contract_dict(contract).get("optional_columns", []))
 
 
 def extract_business_keys(contract: dict) -> list[str]:
+    """Return business key columns from a normalized contract dictionary."""
     return list(normalize_contract_dict(contract).get("business_keys", []))
 
 
 def extract_classifications(contract: dict) -> dict:
+    """Return per-column classifications from a normalized contract dictionary."""
     return dict(normalize_contract_dict(contract).get("classifications", {}))
 
 
 def extract_quality_rules(contract: dict) -> list[dict]:
+    """Return quality rule definitions from a normalized contract dictionary."""
     return list(normalize_contract_dict(contract).get("quality_rules", []))
 
 
 def get_executable_quality_rules(contract: dict) -> list[dict]:
+    """Return quality rules ready for execution by downstream DQ runners."""
     return extract_quality_rules(contract)
 
 
 def build_contract_summary(contract: dict) -> dict:
+    """Summarize contract shape and counts for diagnostics and logging."""
     c = normalize_contract_dict(contract)
     return {
         "contract_id": c.get("contract_id"), "contract_type": c.get("contract_type"), "dataset_name": c.get("dataset_name"),
