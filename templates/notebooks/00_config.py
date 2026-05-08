@@ -61,3 +61,14 @@ CONFIG = create_framework_config(
 # Copy and edit these rules per output table after profiling and business review.
 DQ_RULES = get_default_dq_rule_templates()
 
+# Editable AI suggestion prompt template for notebook users.
+DQ_RULE_SUGGESTION_PROMPT_TEMPLATE = """Suggest candidate DQ rules for table '{table_name}'.
+AI output is advisory only; human review and approval is required before adding rules to DQ_RULES.
+Use only: not_null, unique_key, accepted_values, value_range, regex_format, row_count_between, schema_required_columns, schema_data_type.
+Return only Python dictionary output named DQ_RULES in {output_format} format.
+Business context:
+{business_context}
+Profile metadata:
+{profile_json}
+"""
+
