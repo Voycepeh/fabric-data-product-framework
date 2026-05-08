@@ -8,8 +8,7 @@ A practical starter kit for building governed, quality-checked, AI-ready noteboo
 
 [![Open Documentation](https://img.shields.io/badge/Open%20Documentation-FabricOps%20Starter%20Kit-blue?style=for-the-badge)](https://voycepeh.github.io/FabricOps-Starter-Kit/)
 
-**Start with the Quick Start** to install the package and run the template flow.  
-**Use the Lifecycle Operating Model** to understand the governance, contract, quality, AI, and handover workflow.
+
 
 </div>
 
@@ -19,7 +18,7 @@ A practical starter kit for building governed, quality-checked, AI-ready noteboo
 
 Fabric notebooks often begin as analysis work and then become recurring operations. This starter kit gives that transition a reusable structure for configuration, checks, governance review, lineage, and handover.
 
-Read more: [Quick Start](https://voycepeh.github.io/FabricOps-Starter-Kit/quick-start/) · [Lifecycle Operating Model](https://voycepeh.github.io/FabricOps-Starter-Kit/lifecycle-operating-model/) · [Function Reference](https://voycepeh.github.io/FabricOps-Starter-Kit/reference/)
+Read more: [Quick Start](https://voycepeh.github.io/FabricOps-Starter-Kit/quick-start/) · [Lifecycle Operating Model](https://voycepeh.github.io/FabricOps-Starter-Kit/lifecycle-operating-model/) · [Function Reference](https://voycepeh.github.io/FabricOps-Starter-Kit/reference/) · [Data contracts](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/)
 
 ## Design choices
 
@@ -40,7 +39,6 @@ The model separates exploration notebooks that capture profiling, reasoning, and
 Contracts are not standalone documents only. In this kit, contracts connect to notebook naming, approved usage, schema expectations, data quality rules, sensitivity review, metadata profiling, and output registration.
 
 This pattern is inspired by open data contract approaches, adapted to Fabric-native storage and execution.
-[Data contracts](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/)
 
 ### DQX-inspired, Fabric-native quality checks
 
