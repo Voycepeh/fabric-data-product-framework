@@ -1,52 +1,30 @@
 # Contract model
 
-## Page purpose
+This page is the conceptual source of truth for what a FabricOps data contract contains.
 
-This page defines what a data contract means in FabricOps and how to reason about it during design and review.
+## What a FabricOps data contract must answer
 
-## What is a data contract?
-
-A data contract is the agreement that makes a dataset safe to use. It defines what the data should contain, how it may be used, which quality checks must pass, who approved it, and what downstream users or pipelines can rely on.
-
-| Question | Why it matters |
+| Contract question | Contract evidence |
 | --- | --- |
-| What dataset are we using or producing? | Identifies the exact source or output table. |
-| What is the approved usage? | Prevents reuse outside the approved purpose. |
-| What columns should exist? | Catches schema changes early. |
-| Which columns are required? | Prevents silent missing critical fields. |
-| What are the business keys and grain? | Makes joins, deduplication, and row meaning clear. |
-| What data quality rules must pass? | Stops bad data from flowing downstream unnoticed. |
-| Which columns are sensitive? | Supports classification, masking, and governance review. |
-| Who approved the contract? | Gives ownership and accountability. |
-| What happened during the run? | Supports audit, lineage, troubleshooting, and handover. |
+| What dataset is used or produced? | Source and target object identifiers, agreed dataset purpose, and schema context. |
+| What is the approved usage? | Approved usage boundaries from the data sharing agreement and governance review. |
+| What columns must exist? | Expected schema and structural column definitions. |
+| What are required columns? | Mandatory fields that must be present and non-null for the contract to pass. |
+| What are business keys and grain? | Key columns and row-grain definition used for uniqueness and joins. |
+| What DQ rules must pass? | Approved rule set, severity, and threshold expectations. |
+| Which columns are sensitive? | Approved sensitivity/classification labels and handling requirements. |
+| Who approved it? | Named owners/stewards and approval checkpoints. |
+| What run evidence is captured? | DQ results, failed-row evidence, schema/runtime snapshots, and run summaries. |
 
-## Open Data Contract Standard (ODCS) and FabricOps
+## Contract lifecycle (conceptual)
 
-The Open Data Contract Standard (ODCS) is a structured way to describe data contracts, commonly as YAML or JSON. It covers schema definitions, quality expectations, ownership, governance metadata, and contract versioning.
+1. Define approved usage and dataset intent.
+2. Profile source data and draft candidate metadata.
+3. Review and approve DQ and classification metadata.
+4. Persist approved contract metadata.
+5. Enforce approved contract metadata in `03_pc` pipeline runs.
+6. Persist runtime evidence for audit, monitoring, and handover.
 
-FabricOps uses ODCS as design inspiration for interoperability and governance clarity, but not as a YAML-first runtime requirement. FabricOps follows the spirit of ODCS while using a table-first operational model so contracts can be reviewed, queried, governed, and enforced inside Microsoft Fabric.
+## Relationship to notebook execution
 
-## Why FabricOps is not YAML-first
-
-YAML is useful for Git-based workflows and portability. A YAML or JSON version of the contract can be added as an interoperability layer.
-
-FabricOps does not make YAML the primary runtime editing model because many Fabric teams operate through notebooks, Spark DataFrames, Lakehouse tables, Warehouse tables, and Power BI stewardship views.
-
-FabricOps therefore uses a Fabric-native flow:
-
-1. Exploration notebooks profile data and draft contract candidates.
-2. Humans review and approve the contract content.
-3. Approved contract metadata is stored in Fabric metadata tables.
-4. Pipeline notebooks load approved metadata and enforce it.
-5. YAML or JSON export can be added later when cross-platform exchange is needed.
-
-## One contract model, two perspectives
-
-FabricOps uses one contract model with two perspectives.
-
-| Perspective | What it means | Examples |
-| --- | --- | --- |
-| Input expectations | What the pipeline expects from the source before it can run safely | Source object, required columns, business keys, freshness, minimum quality thresholds |
-| Output expectations | What the pipeline promises to produce for downstream users | Target object, output schema, descriptions, classifications, approved DQ rules, consumer-facing metadata |
-
-> **One contract model, two perspectives.** Input expectations protect the pipeline. Output expectations protect downstream consumers.
+`03_pc` notebooks enforce approved contract metadata at runtime. Notebook ownership and role boundaries are defined in [Notebook Structure](../notebook-structure.md).

@@ -1,12 +1,18 @@
-# Data quality rules system
+# Data Quality Rules System
 
-FabricOps Starter Kit supports a lightweight, config-driven data quality (DQ) pattern:
+## Purpose
 
-1. **Store approved rules in config** (for example, `DQ_RULES` in `00_env_config`).
-2. **Use AI to suggest candidate rules** from profile metadata.
-3. **Human review and approval** required before any enforcement.
-4. **Pipeline contract notebook enforces approved rules** with `run_dq_rules`.
-5. **Persist results** via the generic `lakehouse_table_write` pattern.
+Use this page as a practical guide for moving from candidate DQ ideas to approved, enforced checks in FabricOps.
+
+For architecture context, see [Data quality architecture](../architecture/data-quality-architecture.md).
+
+## The 5 step flow
+
+1. **Profile source data in `02_ex`.**
+2. **Use AI to suggest candidate rules** from profiling and business context.
+3. **Human reviews and approves/edits/rejects** candidates before promotion.
+4. **Store approved rules** in configuration or metadata tables.
+5. **`03_pc` enforces approved rules** and writes DQ results plus quarantine evidence.
 
 ## Supported rule types
 
@@ -15,82 +21,34 @@ FabricOps Starter Kit supports a lightweight, config-driven data quality (DQ) pa
 | `not_null` | Check selected columns are not null. | None |
 | `unique_key` | Check selected column combination is unique. | None |
 | `accepted_values` | Check one column is in allowed values. | `allowed_values` |
-| `value_range` | Check one column is between min and max values. | `min_value`, `max_value` |
-| `regex_format` | Check one string column matches regex. | `regex_pattern` |
-| `accepted_values_ref` | Check one column value exists in a reference table column. | `reference_table`, `reference_column` |
-| `string_length_between` | Check one string column length is in bounds. | `min_length`, `max_length` |
+| `value_range` | Check one column is within bounds. | `min_value`, `max_value` |
+| `regex_format` | Check one string column against a regex pattern. | `regex_pattern` |
+| `accepted_values_ref` | Check one column against values in a reference table column. | `reference_table`, `reference_column` |
+| `string_length_between` | Check one string column length is within bounds. | `min_length`, `max_length` |
 
-## Template usage snippets
+## Minimal notebook usage
 
 ```python
-# 00_env_config
-DQ_RULES = get_default_dq_rule_templates()
+# 02_ex: AI suggestion only
+prompt = suggest_dq_rules_prompt(df_profile, "CUSTOMERS", business_context="Customer master quality checks")
 ```
 
 ```python
-# pipeline contract notebook
-# candidate-only AI suggestions must be reviewed before being copied into DQ_RULES
-prompt = suggest_dq_rules_prompt(df_profile, "EMAIL_LOGS", business_context="Describe what this table is used for.")
-
-# enforce approved rules with fail-after-logging
-result = run_dq_rules(df_message_log, "EMAIL_LOGS", DQ_RULES["EMAIL_LOGS"], fail_on_error=False)
-dq_results_path = get_path(ENV_NAME, "metadata", config=CONFIG)
+# 03_pc: approved enforcement only
+result = run_dq_rules(df_customers, "CUSTOMERS", DQ_RULES["CUSTOMERS"], fail_on_error=False)
 lakehouse_table_write(result, dq_results_path, "DQ_RESULTS", mode="append")
 assert_dq_passed(result)
 ```
 
+## Quarantine pattern
 
-## Editable AI prompt template
+- Evaluate approved rules on the pipeline input DataFrame.
+- Split pass/fail rows using deterministic rule outcomes.
+- Write pass rows to curated output.
+- Write fail rows to quarantine with rule id/type/severity and run timestamp.
 
-Set `DQ_RULE_SUGGESTION_PROMPT_TEMPLATE` in `templates/notebooks/00_config.py` to customize how AI suggests rule candidates without changing package code.
+## Related pages
 
-```python
-prompt = suggest_dq_rules_prompt(
-    df_profile,
-    "EMAIL_LOGS",
-    business_context="Outbound email monitoring",
-    prompt_template=DQ_RULE_SUGGESTION_PROMPT_TEMPLATE,
-)
-```
-
-
-## DQ scope boundary
-
-DQ rules validate row-level and column-level values **before writing to the next table**.
-
-- In scope for this DQ engine: `not_null`, `unique_key`, `accepted_values`, `accepted_values_ref`, `value_range`, `regex_format`, `string_length_between`.
-- Out of scope for this DQ engine: schema drift, data drift, row-count checks, and freshness checks. Use drift/contract modules for those controls.
-
-## Quarantine pattern (recommended)
-
-1. Evaluate approved DQ rules on the input DataFrame.
-2. Split records into **pass** and **fail** DataFrames based on deterministic rule outcomes.
-3. Write the pass DataFrame to the curated/next table.
-4. Write the fail DataFrame to a quarantine table that includes failure metadata (rule id/type/severity/details and run timestamp).
-
-## Accepted-value mapping flow
-
-- `accepted_values` checks whether a value is in an approved list.
-- `accepted_values_ref` checks whether a value exists in an approved reference table/column.
-- AI can suggest mappings from invalid values to approved values.
-- Only **human-approved** mappings should be applied in production pipelines.
-
-### `accepted_values_ref` Spark/Fabric example
-
-Use a reference table that is readable from the current Spark session/workspace.
-
-```python
-DQ_RULES = {
-    "EMAIL_LOGS": [
-        {
-            "rule_id": "EMAIL_LOGS_STATUS_REF",
-            "rule_type": "accepted_values_ref",
-            "columns": ["status"],
-            "reference_table": "dim_status_codes",  # registered Spark/Fabric table
-            "reference_column": "status_code",
-            "severity": "warning",
-            "description": "Status must exist in approved reference codes.",
-        }
-    ]
-}
-```
+- [Data quality architecture](../architecture/data-quality-architecture.md)
+- [Contract model](../metadata-and-contracts/contract-model.md)
+- [Notebook Structure](../notebook-structure.md)
