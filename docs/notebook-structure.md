@@ -45,6 +45,6 @@ Workspace
 
 - [Metadata and Contracts](metadata-and-contracts.md)
 - [Contract model](metadata-and-contracts/contract-model.md)
-- [Data Quality Rules System](workflows/data-quality-rules-system.md)
+- [Data Quality Rules System](data-quality-rules-system.md)
 - [Data quality architecture](architecture/data-quality-architecture.md)
 - [Lifecycle Operating Model](lifecycle-operating-model.md)
