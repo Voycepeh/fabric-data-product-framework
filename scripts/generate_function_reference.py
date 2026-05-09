@@ -12,6 +12,36 @@ INIT_PATH = PKG_DIR / "__init__.py"
 DOCS_METADATA_PATH = PKG_DIR / "docs_metadata.py"
 REFERENCE_PATH = ROOT / "docs" / "reference" / "index.md"
 MODULE_DIR = ROOT / "docs" / "api" / "modules"
+
+PUBLIC_MODULE_PREFERRED_NAMES = {
+    "config": "environment_config",
+    "runtime": "runtime_context",
+    "fabric_io": "fabric_input_output",
+    "profiling": "data_profiling",
+    "contracts": "data_contracts",
+    "dq": "data_quality",
+    "drift": "data_drift",
+    "governance": "data_governance",
+    "metadata": "data_product_metadata",
+    "lineage": "data_lineage",
+    "run_summary": "handover_documentation",
+    "technical_columns": "technical_audit_columns",
+}
+VISIBLE_PUBLIC_MODULES = [
+    "environment_config",
+    "runtime_context",
+    "fabric_input_output",
+    "data_profiling",
+    "data_contracts",
+    "data_quality",
+    "data_drift",
+    "data_governance",
+    "data_product_metadata",
+    "data_lineage",
+    "handover_documentation",
+    "technical_audit_columns",
+]
+
 STEP_FALLBACK_NOTES = {
     "5": "No public callable is currently mapped to this step. Use exploration notebook prompts to capture transformation rationale before pipeline enforcement.",
 }
@@ -19,7 +49,8 @@ STEP_FALLBACK_NOTES = {
 @dataclass
 class Symbol:
     name: str
-    module: str
+    actual_module: str
+    public_module: str
     obj_type: str
     summary: str
     importance: str = "Optional"
@@ -46,6 +77,7 @@ def parse_module(path: Path) -> dict[str, Any]:
     tree = ast.parse(path.read_text(encoding="utf-8"))
     functions: dict[str, str] = {}
     classes: dict[str, str] = {}
+    constants: dict[str, str] = {}
     calls: dict[str, set[str]] = {}
     used_by: dict[str, set[str]] = {}
     for node in tree.body:
@@ -61,12 +93,16 @@ def parse_module(path: Path) -> dict[str, Any]:
             calls[node.name] = called
         elif isinstance(node, ast.ClassDef):
             classes[node.name] = first_sentence(ast.get_docstring(node))
+        elif isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name) and target.id.isupper():
+                    constants[target.id] = ""
     names = set(functions) | set(classes)
     for caller, callees in calls.items():
         for callee in names:
             if callee in callees:
                 used_by.setdefault(callee, set()).add(caller)
-    return {"functions": functions, "classes": classes, "calls": calls, "used_by": used_by}
+    return {"functions": functions, "classes": classes, "constants": constants, "calls": calls, "used_by": used_by}
 
 
 def parse_public_exports() -> list[str]:
@@ -125,9 +161,9 @@ def parse_workflow_step_docs() -> list[dict[str, Any]]:
     raise RuntimeError("Could not parse WORKFLOW_STEP_DOCS from docs_metadata.py")
 
 
-def internal_helper_link(module: str, helper: str) -> str:
+def internal_helper_link(actual_module: str, helper: str) -> str:
     """Return docs-relative link target for an internal helper page."""
-    return f"../../reference/internal/{module}/{helper}.md"
+    return f"../../reference/internal/{actual_module}/{helper}.md"
 
 
 def public_reference_link(symbol: str, docs_metadata: dict[str, dict[str, Any]], step_slugs: dict[str, str]) -> str:
@@ -180,20 +216,19 @@ def main() -> None:
         for module in modules_to_check:
             info = module_data[module]
             if name in info["functions"]:
-                symbol_map[name] = Symbol(name, module, "function", info["functions"][name])
+                symbol_map[name] = Symbol(name, module, preferred_module, "function", info["functions"][name])
                 break
             if name in info["classes"]:
-                symbol_map[name] = Symbol(name, module, "class", info["classes"][name])
+                symbol_map[name] = Symbol(name, module, preferred_module, "class", info["classes"][name])
+                break
+            if name in info["constants"]:
+                symbol_map[name] = Symbol(name, module, preferred_module, "constant", info["constants"][name])
                 break
         if name not in symbol_map:
             raise RuntimeError(f"Could not resolve exported symbol {name} to a module-level function/class.")
 
     for symbol in symbol_map.values():
         meta = docs_metadata[symbol.name]
-        if meta["module"] != symbol.module:
-            raise RuntimeError(
-                f"Metadata module mismatch for {symbol.name}: expected {symbol.module}, found {meta['module']}"
-            )
         if meta["kind"] != symbol.obj_type:
             raise RuntimeError(f"Metadata kind mismatch for {symbol.name}: expected {symbol.obj_type}, found {meta['kind']}")
         step = meta.get("workflow_step")
@@ -202,7 +237,7 @@ def main() -> None:
             raise RuntimeError(f"Invalid workflow_step {step} for {symbol.name}; expected one of {sorted(step_symbols)}")
         symbol.summary = meta.get("summary_override") or symbol.summary
         symbol.purpose = meta.get("purpose") or symbol.summary or "—"
-        enforce_placeholder_guard = symbol.module in {"config", "ai"}
+        enforce_placeholder_guard = symbol.actual_module in {"config", "ai"}
         if enforce_placeholder_guard and symbol.summary:
             _assert_non_placeholder_summary(symbol.name, "summary", symbol.summary)
         if enforce_placeholder_guard and symbol.purpose and symbol.purpose != "—":
@@ -216,11 +251,14 @@ def main() -> None:
             mapped_symbols.add(symbol.name)
 
     MODULE_DIR.mkdir(parents=True, exist_ok=True)
-    module_index_lines = ["# Module API Catalogue", "", "Generated module summaries with public exports and related internal helpers.", ""]
-    for module in sorted(module_data):
+    module_index_lines = ["# Module API Catalogue", "", "Function Reference/workflow pages are the primary entrypoint. Module pages below are secondary technical references.", "", "Short-form modules remain import-compatible aliases but are intentionally hidden from this user-facing catalogue.", ""]
+    for module in sorted(VISIBLE_PUBLIC_MODULES):
+        actual_module = next((k for k,v in PUBLIC_MODULE_PREFERRED_NAMES.items() if v==module), module)
+        info = module_data[actual_module]
+        module_data[module] = info
         info = module_data[module]
         module_md = MODULE_DIR / f"{module}.md"
-        public_in_module = [s for s in symbol_map.values() if s.module == module]
+        public_in_module = [s for s in symbol_map.values() if s.public_module == module]
         is_internal_only = not public_in_module
         title = f"# `{module}` module" if not is_internal_only else f"# `{module}` module (internal)"
         status_banner = (
@@ -241,7 +279,7 @@ def main() -> None:
                 callable_link = callable_docs_link(s.name, module, docs_metadata, step_slugs)
                 lines.append(
                     f"| [`{s.name}`]({callable_link}) | {s.obj_type} | {s.summary or '—'} | "
-                    f"{', '.join(f'[`{r}`]({internal_helper_link(module, r)}) (internal)' for r in related) or '—'} |"
+                    f"{', '.join(f'[`{r}`]({internal_helper_link(s.actual_module, r)}) (internal)' for r in related) or '—'} |"
                 )
         else:
             lines.append("No public exports in this module.")
@@ -254,7 +292,7 @@ def main() -> None:
                 users_links = ", ".join(
                     f"[`{u}`]({callable_docs_link(u, module, docs_metadata, step_slugs)})" for u in users
                 ) or "—"
-                lines.append(f"| [`{helper}`]({internal_helper_link(module, helper)}) | {users_links} |")
+                lines.append(f"| [`{helper}`]({internal_helper_link(actual_module, helper)}) | {users_links} |")
         else:
             lines.append("No module-level internal helpers detected.")
 
@@ -269,7 +307,7 @@ def main() -> None:
                         f"Found deprecated module-path public link for {module}.{s.name}; expected workflow-step slug path."
                     )
         for helper in internal_fns:
-            expected_helper_link = f"[`{helper}`]({internal_helper_link(module, helper)})"
+            expected_helper_link = f"[`{helper}`]({internal_helper_link(actual_module, helper)})"
             if not any(expected_helper_link in line for line in lines):
                 raise RuntimeError(f"Missing internal helper link for {module}.{helper}")
         if any("## Public callable details" in line for line in lines):
@@ -279,10 +317,7 @@ def main() -> None:
         if any(line.strip().startswith("::: fabricops_kit.") for line in lines):
             raise RuntimeError(f"Mkdocstrings directives should not be rendered on module page for {module}")
         module_md.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
-        if not is_internal_only:
-            module_index_lines.append(f"- [`{module}`]({module}.md)")
-        else:
-            module_index_lines.append(f"- [`{module}`]({module}.md) *(internal-only)*")
+        module_index_lines.append(f"- [`{module}`]({module}.md)")
 
     (MODULE_DIR / "index.md").write_text("\n".join(module_index_lines) + "\n", encoding="utf-8", newline="\n")
 
@@ -306,13 +341,15 @@ def main() -> None:
         if entries:
             ref.extend(["| Function / class | Module | Importance | Purpose | Related helpers |", "|---|---|---|---|---|"])
             for s in entries:
-                info = module_data[s.module]
-                related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
+                info = module_data[s.actual_module]
+                related = sorted(
+                    [c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")]
+                )
                 step_slug = step_slugs.get(step)
-                symbol_link = f"./{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.module}/#{s.name}"
+                symbol_link = f"./{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.public_module}/#{s.name}"
                 ref.append(
-                    f"| [`{s.name}`]({symbol_link}) | <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{s.module}/\" title=\"Open {s.module} module page\" aria-label=\"Open {s.module} module page\">{s.module}</a> | {s.importance} | {s.purpose or '—'} | "
-                    f"{', '.join(f'[`{r}`](./internal/{s.module}/{r}.md) (internal)' for r in related) or '—'} |"
+                    f"| [`{s.name}`]({symbol_link}) | <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{s.public_module}/\" title=\"Open {s.public_module} module page\" aria-label=\"Open {s.public_module} module page\">{s.public_module}</a> | {s.importance} | {s.purpose or '—'} | "
+                    f"{', '.join(f'[`{r}`](./internal/{s.actual_module}/{r}.md) (internal)' for r in related) or '—'} |"
                 )
         else:
             if step in STEP_FALLBACK_NOTES:
@@ -333,11 +370,11 @@ def main() -> None:
         ref.extend(["| Function / class | Module | Importance | Purpose | Related helpers |", "|---|---|---|---|---|"])
         for name in unmapped:
             s = symbol_map[name]
-            info = module_data[s.module]
+            info = module_data[s.actual_module]
             related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
             ref.append(
-                f"| [`{s.name}`](../api/modules/{s.module}/) | <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{s.module}/\" title=\"Open {s.module} module page\" aria-label=\"Open {s.module} module page\">{s.module}</a> | {s.importance} | {s.purpose or s.summary or '—'} | "
-                f"{', '.join(f'[`{r}`](./internal/{s.module}/{r}.md) (internal)' for r in related) or '—'} |"
+                f"| [`{s.name}`](../api/modules/{s.public_module}/) | <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{s.public_module}/\" title=\"Open {s.public_module} module page\" aria-label=\"Open {s.public_module} module page\">{s.public_module}</a> | {s.importance} | {s.purpose or s.summary or '—'} | "
+                f"{', '.join(f'[`{r}`](./internal/{s.actual_module}/{r}.md) (internal)' for r in related) or '—'} |"
             )
     else:
         ref.append("No unmapped exported callables.")
