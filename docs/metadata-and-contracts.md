@@ -19,5 +19,5 @@ Use the pages below for details:
 - [Contract model](metadata-and-contracts/contract-model.md)
 - [Metadata tables](metadata-and-contracts/metadata-tables.md)
 - [Notebook Structure](notebook-structure.md)
-- [Data Quality Rules System](workflows/data-quality-rules-system.md)
+- [Data Quality Rules System](data-quality-rules-system.md)
 - [Data quality architecture](architecture/data-quality-architecture.md)

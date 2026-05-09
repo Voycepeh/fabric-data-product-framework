@@ -6,7 +6,7 @@ Use this page as a practical guide for moving from candidate DQ ideas to approve
 
 For architecture context, see [Data quality architecture](../architecture/data-quality-architecture.md).
 
-![AI-assisted data quality rule flow](../assets/DQ-with-ai.png)
+![AI-assisted data quality rule flow](assets/DQ-with-ai.png)
 
 ## The 5 step flow
 

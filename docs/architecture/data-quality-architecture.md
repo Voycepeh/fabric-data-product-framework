@@ -50,6 +50,6 @@ The architecture persists contract and quality evidence so it is queryable and a
 
 ## Relationship to implementation guides
 
-- Use [Data Quality Rules System](../workflows/data-quality-rules-system.md) for practical notebook usage.
+- Use [Data Quality Rules System](../data-quality-rules-system.md) for practical notebook usage.
 - Use [Contract model](../metadata-and-contracts/contract-model.md) for conceptual contract scope.
 - Use [Notebook Structure](../notebook-structure.md) for notebook role boundaries.

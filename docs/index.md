@@ -17,7 +17,7 @@ Use this page as a guided front door into the docs.
 | Run the framework end to end | [Quick Start](quick-start/) |
 | Set up the three notebook types | [Notebook Structure](notebook-structure/) |
 | Understand data contracts and metadata | [Metadata and Contracts](metadata-and-contracts/) |
-| Add quality checks and DQ rules | [Data Quality Rules System](workflows/data-quality-rules-system/) |
+| Add quality checks and DQ rules | [Data Quality Rules System](data-quality-rules-system/) |
 | Find reusable templates and functions | [Functions](reference/) |
 | Install the wheel in Fabric | [Setup](setup/) |
 
@@ -35,7 +35,7 @@ Use this page as a guided front door into the docs.
 
 - **New user:** [Quick Start](quick-start/) → [Notebook Structure](notebook-structure/) → [Lifecycle Operating Model](lifecycle-operating-model/)
 - **Engineer:** [Setup](setup/) → [Functions](reference/) → [Metadata and Contracts](metadata-and-contracts/)
-- **Governance / steward:** [Lifecycle Operating Model](lifecycle-operating-model/) → [Metadata and Contracts](metadata-and-contracts/) → [Data Quality Rules System](workflows/data-quality-rules-system/)
+- **Governance / steward:** [Lifecycle Operating Model](lifecycle-operating-model/) → [Metadata and Contracts](metadata-and-contracts/) → [Data Quality Rules System](data-quality-rules-system/)
 
 ## Framework at a glance
 
