@@ -1,6 +1,6 @@
 # Function Reference
 
-Start from the notebook templates first. This page maps each template to the FabricOps helper functions and modules behind it. Use the callable tables below when you need API-level details.
+Start from the notebook templates first. Most users only need the templates and recommended entrypoints. Advanced helpers exist for customization.
 
 ## Start from the templates
 
@@ -8,11 +8,10 @@ Start from the notebook templates first. This page maps each template to the Fab
 
 [Open template notebook](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb)
 
-Defines environment paths, Fabric runtime checks, naming rules, AI prompt config, quality defaults, governance defaults, and lineage defaults.
+Defines environment paths, runtime checks, naming rules, AI prompt config, quality defaults, governance defaults, and lineage defaults. Runtime helper callables are available in supporting modules when needed.
 
 **Main modules**
 - [`environment_config`](../api/modules/environment_config/)
-- [`runtime_context`](../api/modules/runtime_context/)
 - [`fabric_input_output`](../api/modules/fabric_input_output/)
 
 ### 02_ex_<agreement>_<topic> — exploration and approval drafting
@@ -27,24 +26,19 @@ Profiles source data, builds AI-ready profiling context, drafts candidate DQ and
 - [`data_quality`](../api/modules/data_quality/)
 - [`data_governance`](../api/modules/data_governance/)
 - [`data_contracts`](../api/modules/data_contracts/)
-- [`data_drift`](../api/modules/data_drift/)
 
 ### 03_pc_<agreement>_<source>_to_<target> — deterministic pipeline enforcement
 
 [Open template notebook](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb)
 
-Loads approved contracts, reads source data, applies deterministic transformation, enforces approved DQ rules, writes controlled outputs, stores metadata evidence, and generates lineage/handover evidence.
+Loads approved contracts, reads source data, applies deterministic transformation, enforces approved DQ rules, writes controlled outputs, stores metadata evidence, and generates lineage/handover evidence. Audit columns, metadata evidence, and handover helper callables remain available as supporting modules.
 
 **Main modules**
 - [`environment_config`](../api/modules/environment_config/)
-- [`runtime_context`](../api/modules/runtime_context/)
 - [`fabric_input_output`](../api/modules/fabric_input_output/)
 - [`data_contracts`](../api/modules/data_contracts/)
 - [`data_quality`](../api/modules/data_quality/)
-- [`technical_audit_columns`](../api/modules/technical_audit_columns/)
-- [`data_product_metadata`](../api/modules/data_product_metadata/)
 - [`data_lineage`](../api/modules/data_lineage/)
-- [`handover_documentation`](../api/modules/handover_documentation/)
 
 ## Lifecycle flow
 
@@ -108,7 +102,7 @@ This step creates the shared config that other notebooks depend on, including en
 | [`create_quality_config`](./step-02a-shared-runtime-config/create_quality_config/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a> | Essential | Create the default quality policy used during FabricOps checks. | — |
 | [`get_path`](./step-02a-shared-runtime-config/get_path/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a> | Essential | Resolve a configured Fabric path for an environment and target. | — |
 | [`Housepath`](./step-02a-shared-runtime-config/Housepath/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a> | Essential | Fabric lakehouse or warehouse connection details. | — |
-| [`load_fabric_config`](./step-02a-shared-runtime-config/load_fabric_config/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a> | Essential | Validate and return a user-supplied framework configuration. | — |
+| [`load_fabric_config`](./step-02a-shared-runtime-config/load_fabric_config/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a> | Essential | Validate and return a user-supplied framework configuration. | — |
 | [`validate_framework_config`](./step-02a-shared-runtime-config/validate_framework_config/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a> | Essential | Validate and normalize framework configuration input. | — |
 
 ## Step 2B: Run notebook startup checks
@@ -192,9 +186,9 @@ This step enforces the controls that decide whether the pipeline output should b
 | Function / class | Module | Importance | Purpose | Related helpers |
 |---|---|---|---|---|
 | [`get_executable_quality_rules`](./step-06c-pipeline-controls/get_executable_quality_rules/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> | Essential | Return normalized quality rules ready for pipeline enforcement. | — |
-| [`run_dq_rules`](./step-06c-pipeline-controls/run_dq_rules/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> | Essential | Run notebook-facing DQ rules and return a Spark DataFrame result. | [`_to_quality_rule`](./internal/dq/_to_quality_rule.md) (internal) |
+| [`run_dq_rules`](./step-06c-pipeline-controls/run_dq_rules/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> | Essential | Run notebook-facing DQ rules and return a Spark DataFrame result. | — |
 | [`run_quality_rules`](./step-06c-pipeline-controls/run_quality_rules/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> | Essential | Execute quality rules against a dataframe and return structured results. | [`_normalize_severity`](./internal/quality/_normalize_severity.md) (internal), [`_now_iso`](./internal/quality/_now_iso.md) (internal), [`_pandas_rule`](./internal/quality/_pandas_rule.md) (internal), [`_resolve_engine`](./internal/quality/_resolve_engine.md) (internal), [`_result_from_counts`](./internal/quality/_result_from_counts.md) (internal), [`_spark_rule`](./internal/quality/_spark_rule.md) (internal), [`_to_jsonable`](./internal/quality/_to_jsonable.md) (internal) |
-| [`split_valid_and_quarantine`](./step-06c-pipeline-controls/split_valid_and_quarantine/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> | Optional | Split a Spark DataFrame into pass/quarantine outputs for row-level DQ rules. | — |
+| [`split_valid_and_quarantine`](./step-06c-pipeline-controls/split_valid_and_quarantine/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> | Optional | Split a Spark DataFrame into pass/quarantine outputs for row-level DQ rules. | [`_resolve_engine`](./internal/quality/_resolve_engine.md) (internal) |
 | [`validate_dq_rules`](./step-06c-pipeline-controls/validate_dq_rules/) | <a class="api-chip api-chip-module api-chip-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> | Essential | Validate notebook-facing DQ rules. | — |
 
 ## Step 6D: Write controlled outputs
