@@ -43,3 +43,13 @@ def test_generated_docs_use_full_module_names() -> None:
     for module in HIDDEN_MODULES:
         assert f"[`{module}`]({module}.md)" not in modules_index
         assert f"../api/modules/{module}/" not in reference_index
+
+    data_quality_page = (ROOT / "docs" / "api" / "modules" / "data_quality.md").read_text(encoding="utf-8")
+    assert "../../reference/internal/data_quality/" not in data_quality_page
+    assert "../../reference/internal/dq/" in data_quality_page
+
+    data_contracts_page = (ROOT / "docs" / "api" / "modules" / "data_contracts.md").read_text(encoding="utf-8")
+    assert "../../reference/internal/contracts/" in data_contracts_page
+
+    runtime_context_page = (ROOT / "docs" / "api" / "modules" / "runtime_context.md").read_text(encoding="utf-8")
+    assert "../../reference/internal/runtime/" in runtime_context_page

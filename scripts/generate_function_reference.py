@@ -161,9 +161,9 @@ def parse_workflow_step_docs() -> list[dict[str, Any]]:
     raise RuntimeError("Could not parse WORKFLOW_STEP_DOCS from docs_metadata.py")
 
 
-def internal_helper_link(module: str, helper: str) -> str:
+def internal_helper_link(actual_module: str, helper: str) -> str:
     """Return docs-relative link target for an internal helper page."""
-    return f"../../reference/internal/{module}/{helper}.md"
+    return f"../../reference/internal/{actual_module}/{helper}.md"
 
 
 def public_reference_link(symbol: str, docs_metadata: dict[str, dict[str, Any]], step_slugs: dict[str, str]) -> str:
@@ -279,7 +279,7 @@ def main() -> None:
                 callable_link = callable_docs_link(s.name, module, docs_metadata, step_slugs)
                 lines.append(
                     f"| [`{s.name}`]({callable_link}) | {s.obj_type} | {s.summary or '—'} | "
-                    f"{', '.join(f'[`{r}`]({internal_helper_link(module, r)}) (internal)' for r in related) or '—'} |"
+                    f"{', '.join(f'[`{r}`]({internal_helper_link(s.actual_module, r)}) (internal)' for r in related) or '—'} |"
                 )
         else:
             lines.append("No public exports in this module.")
@@ -292,7 +292,7 @@ def main() -> None:
                 users_links = ", ".join(
                     f"[`{u}`]({callable_docs_link(u, module, docs_metadata, step_slugs)})" for u in users
                 ) or "—"
-                lines.append(f"| [`{helper}`]({internal_helper_link(module, helper)}) | {users_links} |")
+                lines.append(f"| [`{helper}`]({internal_helper_link(actual_module, helper)}) | {users_links} |")
         else:
             lines.append("No module-level internal helpers detected.")
 
@@ -307,7 +307,7 @@ def main() -> None:
                         f"Found deprecated module-path public link for {module}.{s.name}; expected workflow-step slug path."
                     )
         for helper in internal_fns:
-            expected_helper_link = f"[`{helper}`]({internal_helper_link(module, helper)})"
+            expected_helper_link = f"[`{helper}`]({internal_helper_link(actual_module, helper)})"
             if not any(expected_helper_link in line for line in lines):
                 raise RuntimeError(f"Missing internal helper link for {module}.{helper}")
         if any("## Public callable details" in line for line in lines):
@@ -370,11 +370,11 @@ def main() -> None:
         ref.extend(["| Function / class | Module | Importance | Purpose | Related helpers |", "|---|---|---|---|---|"])
         for name in unmapped:
             s = symbol_map[name]
-            info = module_data[s.module]
+            info = module_data[s.actual_module]
             related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
             ref.append(
-                f"| [`{s.name}`](../api/modules/{s.module}/) | <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{s.module}/\" title=\"Open {s.module} module page\" aria-label=\"Open {s.module} module page\">{s.module}</a> | {s.importance} | {s.purpose or s.summary or '—'} | "
-                f"{', '.join(f'[`{r}`](./internal/{s.module}/{r}.md) (internal)' for r in related) or '—'} |"
+                f"| [`{s.name}`](../api/modules/{s.public_module}/) | <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{s.public_module}/\" title=\"Open {s.public_module} module page\" aria-label=\"Open {s.public_module} module page\">{s.public_module}</a> | {s.importance} | {s.purpose or s.summary or '—'} | "
+                f"{', '.join(f'[`{r}`](./internal/{s.actual_module}/{r}.md) (internal)' for r in related) or '—'} |"
             )
     else:
         ref.append("No unmapped exported callables.")
