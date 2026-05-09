@@ -24,3 +24,8 @@ These recipes show practical ways to test and use the framework.
 - Generated function reference: `docs/reference/`
 - Notebook starters in `templates/notebooks/` (`00_env_config.ipynb`, `02_ex_agreement_topic.ipynb`, `03_pc_agreement_source_to_target.ipynb`)
 - Generated function reference pages in `docs/reference/`
+
+
+## Minimal end-to-end sample
+
+Use notebook templates `00_env_config`, `02_ex_agreement_topic` (`USE_SAMPLE_DATA = True`), and `03_pc_agreement_source_to_target` (`USE_SAMPLE_DATA = True`) to validate the lightweight contract-first proof path.

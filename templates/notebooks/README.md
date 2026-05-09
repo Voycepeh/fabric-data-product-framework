@@ -23,3 +23,14 @@ These three notebooks are the plug-and-play lifecycle entry points. No additiona
 3. Promote approved rules/contracts into `03_pc_agreement_source_to_target.ipynb` for governed execution.
 
 Contracts, DQ rules, classifications, lineage, and handover evidence should be stored through the framework metadata workflow, not maintained as separate static template files.
+
+
+## Run the minimal end-to-end sample
+
+1. Run `00_env_config`.
+2. Run `02_ex_agreement_topic` with `USE_SAMPLE_DATA = True`.
+3. Run `03_pc_agreement_source_to_target` with `USE_SAMPLE_DATA = True`.
+
+This sample proves source profile creation, DQ suggestion prompt generation, approved-contract validation, contract-driven DQ, quarantine split, valid/quarantine outputs, metadata evidence artifacts, and lineage + handover summary.
+
+Templates are copy ready, not source ready. The sample proves the framework flow. For real projects, replace source/target paths, contract values, transformation logic, DQ approval, and lineage notes or exported notebook source.
