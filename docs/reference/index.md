@@ -87,11 +87,11 @@ Use this map at three levels:
 - **Store approved DQ rules/contracts**
   - Start with: [`write_contract_to_lakehouse`](./step-07-output-profile-product-contract/write_contract_to_lakehouse/), [`build_contract_records`](./step-07-output-profile-product-contract/build_contract_records/)
 - **Enforce DQ rules in a pipeline**
-  - Start with: [`apply_quality_rules`](./step-06b-apply-quality-rules/apply_quality_rules/), [`summarize_quality_results`](./step-06b-apply-quality-rules/summarize_quality_results/)
+  - Start with: [`run_quality_rules`](./step-06c-pipeline-controls/run_quality_rules/), [`run_dq_rules`](./step-06c-pipeline-controls/run_dq_rules/), [`validate_dq_rules`](./step-06c-pipeline-controls/validate_dq_rules/)
 - **Quarantine failed rows**
-  - Start with: [`split_pass_fail`](./step-06b-apply-quality-rules/split_pass_fail/), [`build_quarantine_record`](./step-06b-apply-quality-rules/build_quarantine_record/)
+  - Start with: [`assert_dq_passed`](./step-06d-controlled-outputs/assert_dq_passed/) before controlled output writes
 - **Write output table**
-  - Start with: [`lakehouse_table_write`](./step-06c-write-output/lakehouse_table_write/), [`warehouse_write`](./step-06c-write-output/warehouse_write/)
+  - Start with: [`lakehouse_table_write`](./step-06d-controlled-outputs/lakehouse_table_write/), [`warehouse_write`](./step-06d-controlled-outputs/warehouse_write/)
 - **Generate output metadata**
   - Start with: [`build_dataset_run_record`](./step-07-output-profile-product-contract/build_dataset_run_record/), [`write_metadata_records`](./step-07-output-profile-product-contract/write_metadata_records/)
 - **Produce handover/lineage documentation**
@@ -107,10 +107,11 @@ Need the complete callable inventory? Use the step pages and module catalogue:
   - [Step 2B: Startup checks](./step-02b-notebook-startup-checks/)
   - [Step 3: Source contract & ingestion pattern](./step-03-source-contract-ingestion-pattern/)
   - [Step 4: Ingest, profile & store source](./step-04-ingest-profile-store/)
-  - [Step 5: Explore data & explain logic](./step-05-explore-explain-transform/)
-  - [Step 6A: Write transformation logic](./step-06a-write-transformation-logic/)
-  - [Step 6B: Apply quality rules](./step-06b-apply-quality-rules/)
-  - [Step 6C: Write output](./step-06c-write-output/)
+  - [Step 5: Explore data & explain logic](./step-05-explore-transform-logic/)
+  - [Step 6A: Write transformation logic](./step-06a-transformation-logic/)
+  - [Step 6B: Apply runtime standards](./step-06b-runtime-standards/)
+  - [Step 6C: Enforce pipeline controls](./step-06c-pipeline-controls/)
+  - [Step 6D: Write controlled outputs](./step-06d-controlled-outputs/)
   - [Step 7: Output profile & product contract](./step-07-output-profile-product-contract/)
   - [Step 8: AI-assisted DQ suggestions](./step-08-ai-assisted-dq-suggestions/)
   - [Step 9: AI-assisted classification](./step-09-ai-assisted-classification/)
