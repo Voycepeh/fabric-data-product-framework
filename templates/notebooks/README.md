@@ -1,61 +1,25 @@
 # Notebook templates
 
-This folder contains reusable notebook starters for Microsoft Fabric workflows.
+This folder contains the only supported user-facing templates for FabricOps Starter Kit in Microsoft Fabric.
 
-## Lifecycle starter templates
+## Supported lifecycle starters
 
-- `00_env_config.ipynb`: shared setup notebook for governance context, runtime configuration creation, and startup checks (Step 1, Step 2A, Step 2B).
-- `02_ex_agreement_topic.ipynb`: exploration notebook for source profiling, transformation rationale, AI-assisted suggestions, and human review decisions (Step 3, Step 4, Step 5, Step 8, Step 9).
-- `03_pc_agreement_source_to_target.ipynb`: run-all-safe pipeline notebook for approved contract enforcement, quality controls, controlled output writes, metadata, and lineage handover (Step 1, Step 2B, Step 3, Step 6A–6D, Step 7, Step 10).
-- `01_data_sharing_agreement_<agreement>.ipynb` (if present in your workspace/repo variant): governance agreement notebook for approved usage, ownership, and restrictions.
+- `00_env_config.ipynb`: environment and runtime setup starter (configuration, startup checks, and execution readiness).
+- `02_ex_agreement_topic.ipynb`: exploration starter for profiling, AI-assisted suggestions, and human review/approval decisions.
+- `03_pc_agreement_source_to_target.ipynb`: pipeline contract starter for enforcing approved deterministic rules, running DQ checks, writing outputs, and capturing metadata/lineage handover evidence.
 
-## Clean split to follow
+These three notebooks are the plug-and-play lifecycle entry points. No additional template folders or placeholder files are required.
 
-- `00_env_config` = shared setup notebook.
-- `02_ex_*` = exploration-only notebook. AI outputs are advisory and must be human-approved.
-- `03_pc_*` = enforcement pipeline notebook. Applies only approved rules/labels and writes controlled outputs.
+## AI boundary (required)
 
-## Important boundary
+- Exploration (`02_ex`) may use AI for suggestions and analyst support.
+- Pipeline enforcement (`03_pc`) must apply only approved deterministic rules and contract checks.
+- AI should not make runtime production decisions inside enforcement execution.
 
-- Step 8 and Step 9 AI helpers belong in exploration notebooks.
-- Production pipeline notebooks should enforce approved deterministic rules and contract checks, and should not make AI decisions during execution.
+## Usage sequence
 
-## Suggested usage
+1. Run `00_env_config.ipynb` to initialize runtime configuration and environment checks.
+2. Use `02_ex_agreement_topic.ipynb` to explore source data and document human-approved decisions.
+3. Promote approved rules/contracts into `03_pc_agreement_source_to_target.ipynb` for governed execution.
 
-1. Run `00_env_config.ipynb` first to define `CONFIG` and verify startup readiness.
-2. Use `02_ex_agreement_topic.ipynb` to profile and document exploratory decisions.
-3. Transfer only approved rules/labels/contracts into `03_pc_agreement_source_to_target.ipynb`.
-4. Keep exploration logic out of production pipeline execution.
-
-
-
-The supported lifecycle starters are `00_env_config.ipynb`, `02_ex_agreement_topic.ipynb`, and `03_pc_agreement_source_to_target.ipynb` (plus `01_data_sharing_agreement_<agreement>.ipynb` where provided). Use `.ipynb` notebooks for Fabric execution.
-
-## Contract strategy: Open Data Contract principles, Fabric-first execution
-
-FabricOps follows Open Data Contract principles, but adapts authoring and enforcement for Microsoft Fabric.
-
-FabricOps adopts Open Data Contract principles in a Fabric-first form. Contracts are authored and approved through notebooks/tables, stored as metadata tables for operational enforcement, and can later be exported/imported as ODCS YAML for open-standard portability.
-
-In a Fabric-first workflow:
-- Exploration notebooks help profile data and draft contract expectations.
-- AI may suggest required columns, DQ rules, and classifications, but humans approve them.
-- Approved contracts should be stored in Fabric metadata tables, not only in YAML files.
-- Pipeline notebooks load the approved contract from metadata tables and enforce it.
-- ODCS YAML is an optional import/export format for interoperability and Git-based workflows.
-
-Recommended operational flow:
-`02_ex` notebook -> profile source data -> draft contract as Python dict/table -> human/steward approval -> write approved contract to metadata tables
-
-`03_pc` notebook -> load approved contract from metadata tables -> enforce required columns, DQ rules, classifications, business keys -> write output and metadata records
-
-"Source input contract" means the minimum expectations the pipeline requires from upstream data. It does not mean FabricOps owns the upstream producer.
-
-
-## Metadata target recommendation
-
-Use a dedicated metadata target per environment, such as `metadata`, to store FabricOps operational evidence: contracts, contract columns, approved DQ rules, classifications, run logs, quality results, lineage, and handover records.
-
-Source/unified/product stores hold data products. The metadata store holds framework evidence.
-
-Keep development and production metadata stores separate. A contract approved in `dev` is not automatically approved in `prod`; promote through explicit governance review.
+Contracts, DQ rules, classifications, lineage, and handover evidence should be stored through the framework metadata workflow, not maintained as separate static template files.
