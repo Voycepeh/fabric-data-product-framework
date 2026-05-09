@@ -54,6 +54,16 @@ Guide agent/Codex contributions for this repository so changes stay reusable, pu
 - Run `mkdocs build` after docs/reference generation changes when possible.
 - Do not assume GitHub Pages will fix stale generated docs on its own.
 
+- docs/reference/index.md is generated output.
+- Do not manually patch docs/reference/index.md as the only source of truth.
+- When changing the Function Reference page, update the reference generator first, then regenerate docs/reference/index.md.
+- The Function Reference page should remain template first:
+  1. Start with the three notebook templates.
+  2. Explain what runs where.
+  3. Keep AI functions advisory and pipeline notebooks as the enforcement point.
+  4. Preserve the workflow-step callable map.
+  5. Keep module/template links valid.
+
 Example (PR-132-style):
 - If you add `bootstrap_fabric_env`, `run_config_smoke_tests`, `check_fabric_ai_functions_available`, or add `get_path` to `config`, also update/regenerate the config API/module page so those callables appear.
 

@@ -15,9 +15,9 @@
 | [`generate_dq_rule_candidates_with_fabric_ai`](../../reference/step-08-ai-assisted-dq-suggestions/generate_dq_rule_candidates_with_fabric_ai.md) | function | Append AI-suggested DQ rule candidates to a profiling DataFrame. | — |
 | [`get_default_dq_rule_templates`](../../reference/step-08-ai-assisted-dq-suggestions/get_default_dq_rule_templates.md) | function | Return editable example data quality rules. | — |
 | [`run_data_product`](../../reference/step-06a-transformation-logic/run_data_product.md) | function | Run the starter kit workflow end-to-end for a data product outcome. | — |
-| [`run_dq_rules`](../../reference/step-06c-pipeline-controls/run_dq_rules.md) | function | Run notebook-facing DQ rules and return a Spark DataFrame result. | [`_to_quality_rule`](../../reference/internal/dq/_to_quality_rule.md) (internal) |
+| [`run_dq_rules`](../../reference/step-06c-pipeline-controls/run_dq_rules.md) | function | Execute the `run_dq_rules` workflow step in FabricOps. | [`_to_quality_rule`](../../reference/internal/quality/_to_quality_rule.md) (internal) |
 | [`run_quality_rules`](../../reference/step-06c-pipeline-controls/run_quality_rules.md) | function | Execute quality rules against a dataframe and return structured results. | — |
-| [`split_valid_and_quarantine`](../../reference/step-06c-pipeline-controls/split_valid_and_quarantine.md) | function | Split a Spark DataFrame into pass/quarantine outputs for row-level DQ rules. | — |
+| [`split_valid_and_quarantine`](../../reference/step-06c-pipeline-controls/split_valid_and_quarantine.md) | function | Execute the `split_valid_and_quarantine` workflow step in FabricOps. | — |
 | [`suggest_accepted_value_mapping_prompt`](../../reference/step-08-ai-assisted-dq-suggestions/suggest_accepted_value_mapping_prompt.md) | function | Build a constrained prompt for accepted-value mapping suggestions. | — |
 | [`suggest_closest_accepted_value`](../../reference/step-08-ai-assisted-dq-suggestions/suggest_closest_accepted_value.md) | function | Suggest a deterministic closest accepted value using ``difflib``. | — |
 | [`suggest_dq_rules_prompt`](../../reference/step-08-ai-assisted-dq-suggestions/suggest_dq_rules_prompt.md) | function | Build a prompt for candidate DQ rule suggestions. | — |

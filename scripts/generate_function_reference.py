@@ -324,83 +324,23 @@ def main() -> None:
     ref = [
         "# Function Reference",
         "",
-        "Start from the notebook templates first. This page maps each template to the FabricOps helper functions and modules behind it. Use the callable tables below when you need API-level details.",
+        "Use this page as an API lookup after you understand the notebook flow. Start with the three notebook templates, then use the callable map by workflow step for implementation details.",
         "",
         "## Start from the templates",
         "",
-        "### 00_env_config — shared runtime configuration",
+        "| Notebook | User goal | Main functions | Full template |",
+        "|---|---|---|---|",
+        "| `00_env_config` | Configure Fabric paths, runtime checks, AI config, naming rules, quality defaults, governance defaults, and lineage defaults. | `create_framework_config`, `load_fabric_config`, `get_path`, `run_config_smoke_tests`, `bootstrap_fabric_env` | [00_env_config.ipynb](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb) |",
+        "| `02_ex_<agreement>_<topic>` | Read and profile source data, build AI-ready context, suggest DQ and classification, and capture human-reviewed contract decisions. | `lakehouse_table_read`, `generate_metadata_profile`, `build_ai_quality_context`, `build_manual_dq_rule_prompt_package`, `classify_columns`, `build_contract_summary` | [02_ex_agreement_topic.ipynb](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/02_ex_agreement_topic.ipynb) |",
+        "| `03_pc_<agreement>_<pipeline>` | Load approved contract, read source, transform, enforce DQ, quarantine failures, write output, persist metadata, and produce lineage and handover evidence. | `load_latest_approved_contract`, `get_executable_quality_rules`, `run_dq_rules`, `split_valid_and_quarantine`, `assert_dq_passed`, `lakehouse_table_write`, `write_metadata_records` | [03_pc_agreement_source_to_target.ipynb](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb) |",
         "",
-        "[Open template notebook](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb)",
+        "## What runs where",
         "",
-        "Defines environment paths, Fabric runtime checks, naming rules, AI prompt config, quality defaults, governance defaults, and lineage defaults.",
+        "- `00_env_config` equals shared setup.",
+        "- `02_ex` equals AI-assisted exploration and human review.",
+        "- `03_pc` equals deterministic pipeline enforcement.",
         "",
-        "**Main modules**",
-        "- [`environment_config`](../api/modules/environment_config/)",
-        "- [`runtime_context`](../api/modules/runtime_context/)",
-        "- [`fabric_input_output`](../api/modules/fabric_input_output/)",
-        "",
-        "### 02_ex_<agreement>_<topic> — exploration and approval drafting",
-        "",
-        "[Open template notebook](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/02_ex_agreement_topic.ipynb)",
-        "",
-        "Profiles source data, builds AI-ready profiling context, drafts candidate DQ and governance suggestions, and captures human-reviewed contract decisions.",
-        "",
-        "**Main modules**",
-        "- [`fabric_input_output`](../api/modules/fabric_input_output/)",
-        "- [`data_profiling`](../api/modules/data_profiling/)",
-        "- [`data_quality`](../api/modules/data_quality/)",
-        "- [`data_governance`](../api/modules/data_governance/)",
-        "- [`data_contracts`](../api/modules/data_contracts/)",
-        "- [`data_drift`](../api/modules/data_drift/)",
-        "",
-        "### 03_pc_<agreement>_<source>_to_<target> — deterministic pipeline enforcement",
-        "",
-        "[Open template notebook](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb)",
-        "",
-        "Loads approved contracts, reads source data, applies deterministic transformation, enforces approved DQ rules, writes controlled outputs, stores metadata evidence, and generates lineage/handover evidence.",
-        "",
-        "**Main modules**",
-        "- [`environment_config`](../api/modules/environment_config/)",
-        "- [`runtime_context`](../api/modules/runtime_context/)",
-        "- [`fabric_input_output`](../api/modules/fabric_input_output/)",
-        "- [`data_contracts`](../api/modules/data_contracts/)",
-        "- [`data_quality`](../api/modules/data_quality/)",
-        "- [`technical_audit_columns`](../api/modules/technical_audit_columns/)",
-        "- [`data_product_metadata`](../api/modules/data_product_metadata/)",
-        "- [`data_lineage`](../api/modules/data_lineage/)",
-        "- [`handover_documentation`](../api/modules/handover_documentation/)",
-        "",
-        "## Lifecycle flow",
-        "",
-        "1. Configure environment and runtime.",
-        "2. Confirm agreement, purpose, and ownership.",
-        "3. Read source data.",
-        "4. Profile source and store metadata.",
-        "5. Explore transformation logic.",
-        "6. Use AI to suggest DQ rules or classification.",
-        "7. Human reviews and approves.",
-        "8. Run the pipeline contract.",
-        "9. Enforce approved DQ rules.",
-        "10. Quarantine failed rows where applicable.",
-        "11. Write accepted output.",
-        "12. Profile output and store evidence.",
-        "13. Generate lineage and handover notes.",
-        "",
-        "AI remains advisory. The approved pipeline contract is the enforcement point for production behavior.",
-        "",
-        "## Common recipes",
-        "",
-        "- Read from Fabric: [`fabric_input_output`](../api/modules/fabric_input_output/)",
-        "- Profile a source table: [`data_profiling`](../api/modules/data_profiling/)",
-        "- Build AI-ready context: [`data_profiling`](../api/modules/data_profiling/)",
-        "- Suggest DQ rules: [`data_quality`](../api/modules/data_quality/)",
-        "- Suggest column classification: [`data_governance`](../api/modules/data_governance/)",
-        "- Store approved contract: [`data_contracts`](../api/modules/data_contracts/)",
-        "- Enforce approved DQ rules: [`data_quality`](../api/modules/data_quality/) and [`data_contracts`](../api/modules/data_contracts/)",
-        "- Quarantine failed rows: [`data_quality`](../api/modules/data_quality/)",
-        "- Write output table: [`fabric_input_output`](../api/modules/fabric_input_output/)",
-        "- Store metadata evidence: [`data_product_metadata`](../api/modules/data_product_metadata/)",
-        "- Generate lineage and handover: [`data_lineage`](../api/modules/data_lineage/) and [`handover_documentation`](../api/modules/handover_documentation/)",
+        "AI functions are advisory. Approved contracts and pipeline notebooks are the enforcement point.",
         "",
         "## Callable map by workflow step",
         "",
@@ -413,7 +353,7 @@ def main() -> None:
             ref.extend([subtext, ""])
         entries = sorted(step_symbols.get(step, []), key=lambda x: x.name.lower())
         if entries:
-            ref.extend(["| Function / class | Module | Importance | Purpose | Related helpers |", "|---|---|---|---|---|"])
+            ref.extend(["| Function / class | Module | Importance | Purpose |", "|---|---|---|---|---|"])
             for s in entries:
                 info = module_data[s.actual_module]
                 related = sorted(
@@ -422,8 +362,7 @@ def main() -> None:
                 step_slug = step_slugs.get(step)
                 symbol_link = f"./{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.public_module}/#{s.name}"
                 ref.append(
-                    f"| [`{s.name}`]({symbol_link}) | <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{s.public_module}/\" title=\"Open {s.public_module} module page\" aria-label=\"Open {s.public_module} module page\">{s.public_module}</a> | {s.importance} | {s.purpose or '—'} | "
-                    f"{', '.join(f'[`{r}`](./internal/{s.actual_module}/{r}.md) (internal)' for r in related) or '—'} |"
+                    f"| [`{s.name}`]({symbol_link}) | <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{s.public_module}/\" title=\"Open {s.public_module} module page\" aria-label=\"Open {s.public_module} module page\">{s.public_module}</a> | {s.importance} | {s.purpose or '—'} |"
                 )
         else:
             if step in STEP_FALLBACK_NOTES:
@@ -441,14 +380,13 @@ def main() -> None:
         ]
     )
     if unmapped:
-        ref.extend(["| Function / class | Module | Importance | Purpose | Related helpers |", "|---|---|---|---|---|"])
+        ref.extend(["| Function / class | Module | Importance | Purpose |", "|---|---|---|---|---|"])
         for name in unmapped:
             s = symbol_map[name]
             info = module_data[s.actual_module]
             related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
             ref.append(
-                f"| [`{s.name}`](../api/modules/{s.public_module}/) | <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{s.public_module}/\" title=\"Open {s.public_module} module page\" aria-label=\"Open {s.public_module} module page\">{s.public_module}</a> | {s.importance} | {s.purpose or s.summary or '—'} | "
-                f"{', '.join(f'[`{r}`](./internal/{s.actual_module}/{r}.md) (internal)' for r in related) or '—'} |"
+                f"| [`{s.name}`](../api/modules/{s.public_module}/) | <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{s.public_module}/\" title=\"Open {s.public_module} module page\" aria-label=\"Open {s.public_module} module page\">{s.public_module}</a> | {s.importance} | {s.purpose or s.summary or '—'} |"
             )
     else:
         ref.append("No unmapped exported callables.")
