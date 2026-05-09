@@ -1,5 +1,7 @@
 # Notebook responsibilities
 
+This page explains which notebooks contribute each part of contract assembly and enforcement.
+
 ## `03_pc` is the executable contract
 
 In FabricOps, the pipeline contract starts in the notebook. The `03_pc` notebook is the executable contract: it contains source/output expectations, quality rules, approved classification metadata to enforce, transformation logic, runtime checks, and evidence writing.

@@ -1,5 +1,9 @@
 # Contract model
 
+## Page purpose
+
+This page defines what a data contract means in FabricOps and how to reason about it during design and review.
+
 ## What is a data contract?
 
 A data contract is the agreement that makes a dataset safe to use. It defines what the data should contain, how it may be used, which quality checks must pass, who approved it, and what downstream users or pipelines can rely on.
