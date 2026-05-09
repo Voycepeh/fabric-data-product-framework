@@ -12,6 +12,25 @@ INIT_PATH = PKG_DIR / "__init__.py"
 DOCS_METADATA_PATH = PKG_DIR / "docs_metadata.py"
 REFERENCE_PATH = ROOT / "docs" / "reference" / "index.md"
 MODULE_DIR = ROOT / "docs" / "api" / "modules"
+
+PUBLIC_MODULE_PREFERRED_NAMES = {
+    "config": "environment_config",
+    "runtime": "runtime_context",
+    "fabric_io": "fabric_input_output",
+    "profiling": "data_profiling",
+    "contracts": "data_contracts",
+    "dq": "data_quality",
+    "drift": "data_drift",
+    "governance": "data_governance",
+    "metadata": "data_product_metadata",
+    "lineage": "data_lineage",
+    "run_summary": "handover_documentation",
+    "technical_columns": "technical_audit_columns",
+}
+VISIBLE_PUBLIC_MODULES = [
+    "environment_config","runtime_context","fabric_input_output","data_profiling","data_contracts","data_quality","data_drift","data_governance","data_product_metadata","data_lineage","handover_documentation","technical_audit_columns"
+]
+
 STEP_FALLBACK_NOTES = {
     "5": "No public callable is currently mapped to this step. Use exploration notebook prompts to capture transformation rationale before pipeline enforcement.",
 }
@@ -216,11 +235,14 @@ def main() -> None:
             mapped_symbols.add(symbol.name)
 
     MODULE_DIR.mkdir(parents=True, exist_ok=True)
-    module_index_lines = ["# Module API Catalogue", "", "Generated module summaries with public exports and related internal helpers.", ""]
-    for module in sorted(module_data):
+    module_index_lines = ["# Module API Catalogue", "", "Function Reference/workflow pages are the primary entrypoint. Module pages below are secondary technical references.", "", "Short-form modules remain import-compatible aliases but are intentionally hidden from this user-facing catalogue.", ""]
+    for module in sorted(VISIBLE_PUBLIC_MODULES):
+        actual_module = next((k for k,v in PUBLIC_MODULE_PREFERRED_NAMES.items() if v==module), module)
+        info = module_data[actual_module]
+        module_data[module] = info
         info = module_data[module]
         module_md = MODULE_DIR / f"{module}.md"
-        public_in_module = [s for s in symbol_map.values() if s.module == module]
+        public_in_module = [s for s in symbol_map.values() if PUBLIC_MODULE_PREFERRED_NAMES.get(s.module, s.module) == module]
         is_internal_only = not public_in_module
         title = f"# `{module}` module" if not is_internal_only else f"# `{module}` module (internal)"
         status_banner = (
@@ -279,10 +301,7 @@ def main() -> None:
         if any(line.strip().startswith("::: fabricops_kit.") for line in lines):
             raise RuntimeError(f"Mkdocstrings directives should not be rendered on module page for {module}")
         module_md.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
-        if not is_internal_only:
-            module_index_lines.append(f"- [`{module}`]({module}.md)")
-        else:
-            module_index_lines.append(f"- [`{module}`]({module}.md) *(internal-only)*")
+        module_index_lines.append(f"- [`{module}`]({module}.md)")
 
     (MODULE_DIR / "index.md").write_text("\n".join(module_index_lines) + "\n", encoding="utf-8", newline="\n")
 
