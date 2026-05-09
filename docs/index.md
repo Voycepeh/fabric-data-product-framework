@@ -1,42 +1,47 @@
 # FabricOps Starter Kit
 
-FabricOps Starter Kit helps teams build **governed, quality-checked, AI-ready Microsoft Fabric notebooks**.
+FabricOps Starter Kit is a lightweight, Fabric-first notebook framework for building reusable, documented, quality-checked, drift-aware, governed, AI-ready data products.
 
-It moves teams from exploration to controlled pipeline delivery with reusable metadata, DQ evidence, lineage, and handover artifacts.
+Use this page as a guided front door into the docs.
 
-[Quick Start](quick-start.md){ .md-button .md-button--primary }
+<div class="center-cta">
+  <a class="md-button md-button--primary" href="quick-start/">Start with Quick Start</a>
+  <a class="md-button md-button--primary" href="lifecycle-operating-model/">See the lifecycle model</a>
+</div>
 
-[Understand the lifecycle](lifecycle-operating-model.md){ .md-button .md-button--primary }
+## Start here
+
+| I want to... | Go to |
+| --- | --- |
+| Understand the full operating model | [Lifecycle Operating Model](lifecycle-operating-model/) |
+| Run the framework end to end | [Quick Start](quick-start/) |
+| Set up the three notebook types | [Notebook Structure](notebook-structure/) |
+| Understand data contracts and metadata | [Metadata and Contracts](metadata-and-contracts/) |
+| Add quality checks and DQ rules | [Data Quality Rules System](workflows/data-quality-rules-system/) |
+| Find reusable templates and functions | [Functions](reference/) |
+| Install the wheel in Fabric | [Setup](setup/) |
+
+## How the pieces fit
+
+- Configure the Fabric environment.
+- Capture agreement, ownership, and approved usage.
+- Profile source data and store metadata.
+- Use AI to suggest quality checks, sensitivity labels, lineage, and documentation.
+- Review and approve the suggestions.
+- Enforce the approved rules in pipeline notebooks.
+- Promote trusted outputs from source to unified to product layers.
+
+## Main paths
+
+- **New user:** [Quick Start](quick-start/) → [Notebook Structure](notebook-structure/) → [Lifecycle Operating Model](lifecycle-operating-model/)
+- **Engineer:** [Setup](setup/) → [Functions](reference/) → [Metadata and Contracts](metadata-and-contracts/)
+- **Governance / steward:** [Lifecycle Operating Model](lifecycle-operating-model/) → [Metadata and Contracts](metadata-and-contracts/) → [Data Quality Rules System](workflows/data-quality-rules-system/)
 
 ## Framework at a glance
 
 ![FabricOps workspace notebook structure](assets/notebook-structure.png)
 
 _Exploration explains the why. Pipeline contract notebooks enforce the approved what._
-
-## Plug and play setup
-
-Configure once, start from the notebook templates, and use the callable function reference when customising behavior.
-
-| Template | Use it for | Start here |
-| --- | --- | --- |
-| `00_env_config.ipynb` | Configuring shared environment, storage, and runtime settings before template execution. | [Open template](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb) |
-| `02_ex_agreement_topic.ipynb` | Running exploration profiling to draft governed metadata and quality requirements. | [Open template](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/02_ex_agreement_topic.ipynb) |
-| `03_pc_agreement_source_to_target.ipynb` | Enforcing approved contracts and quality checks in a controlled pipeline flow. | [Open template](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb) |
-
-<div class="center-cta">
-  <a class="md-button md-button--primary" href="reference/">
-    Browse all callable functions
-  </a>
-</div>
-
-## Navigate by goal
-
-| Goal | Start with |
-| --- | --- |
-| Plug and play setup | [Quick Start](quick-start.md), [`00_env_config.ipynb`](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb), [`02_ex_agreement_topic.ipynb`](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/02_ex_agreement_topic.ipynb), [`03_pc_agreement_source_to_target.ipynb`](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb) |
-| Understand lifecycle decisions and controls | [Lifecycle Operating Model](lifecycle-operating-model.md), [Architecture](architecture/index.md) |
-| Read code-level API docs | [Function Reference](reference/index.md), [Module API Catalog](api/modules/index.md) |
 
 ## Compatibility note
 
