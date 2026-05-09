@@ -8,3 +8,6 @@ Run the minimal end to end sample:
 This proves the core flow: source read, profile, DQ suggestion, approved contract, contract driven DQ, valid/quarantine split, output write, and handover summary.
 
 Templates are copy ready, not source ready. For real projects, replace source paths, target paths, contract values, transformation logic, approval details, and lineage notes.
+
+
+In this sample flow, 02_ex creates the approved contract consumed by 03_pc.

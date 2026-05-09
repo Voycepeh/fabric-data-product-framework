@@ -26,3 +26,6 @@ Templates are copy ready, not source ready. For real projects, replace source pa
 2. Use the Fabric dry run path when validating setup inside Fabric.
 3. Use the contract-first path when your contract is already defined.
 4. Use the full chaining path when you want the metadata-first AI-in-the-loop workflow.
+
+
+In this sample flow, 02_ex creates the approved contract consumed by 03_pc.
