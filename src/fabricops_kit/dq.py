@@ -14,9 +14,8 @@ SUPPORTED_RULE_TYPES = {
     "accepted_values",
     "value_range",
     "regex_format",
-    "row_count_between",
-    "schema_required_columns",
-    "schema_data_type",
+    "accepted_values_ref",
+    "string_length_between",
 }
 
 DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE = """You are helping draft candidate data quality rules for table '{table_name}'.
@@ -34,9 +33,8 @@ Supported rule types (use only these):
 - accepted_values
 - value_range
 - regex_format
-- row_count_between
-- schema_required_columns
-- schema_data_type
+- accepted_values_ref
+- string_length_between
 
 Hard constraints:
 - Return only Python dictionary output named DQ_RULES.
@@ -68,8 +66,10 @@ def _to_quality_rule(rule: dict[str, Any]) -> dict[str, Any]:
         mapped.update({"rule_type": "range_check", "column": cols[0], "min_value": rule.get("min_value"), "max_value": rule.get("max_value")})
     elif rtype == "regex_format":
         mapped.update({"rule_type": "regex_check", "column": cols[0], "pattern": rule["regex_pattern"]})
-    elif rtype == "row_count_between":
-        mapped.update({"rule_type": "row_count_between", "min_count": int(rule["min_rows"]), "max_count": int(rule["max_rows"])})
+    elif rtype == "accepted_values_ref":
+        mapped.update({"rule_type": "accepted_values_ref", "column": cols[0], "reference_table": rule["reference_table"], "reference_column": rule["reference_column"]})
+    elif rtype == "string_length_between":
+        mapped.update({"rule_type": "string_length_between", "column": cols[0], "min_length": int(rule["min_length"]), "max_length": int(rule["max_length"])})
     return mapped
 
 
@@ -103,26 +103,20 @@ def validate_dq_rules(rules: list[dict[str, Any]]) -> list[dict[str, Any]]:
             raise ValueError(f"Rule '{rule['rule_id']}' requires min_value or max_value.")
         if rtype == "regex_format" and "regex_pattern" not in rule:
             raise ValueError(f"Rule '{rule['rule_id']}' requires regex_pattern.")
-        if rtype == "row_count_between" and ("min_rows" not in rule or "max_rows" not in rule):
-            raise ValueError(f"Rule '{rule['rule_id']}' requires min_rows and max_rows.")
-        if rtype == "schema_data_type":
-            expected = rule.get("expected_types")
-            if not isinstance(expected, dict):
-                raise ValueError(f"Rule '{rule['rule_id']}' requires expected_types mapping.")
-            missing = [c for c in cols if c not in expected]
-            if missing:
-                raise ValueError(f"Rule '{rule['rule_id']}' expected_types missing columns: {', '.join(missing)}")
+        if rtype == "accepted_values_ref" and ("reference_table" not in rule or "reference_column" not in rule):
+            raise ValueError(f"Rule '{rule['rule_id']}' requires reference_table and reference_column.")
+        if rtype == "string_length_between" and ("min_length" not in rule or "max_length" not in rule):
+            raise ValueError(f"Rule '{rule['rule_id']}' requires min_length and max_length.")
     return rules
 
 
 def run_dq_rules(df, table_name: str, rules: list[dict[str, Any]], fail_on_error: bool = True):
     """Run notebook-facing DQ rules and return a Spark DataFrame result."""
     validate_dq_rules(rules)
-    quality_compatible = [_to_quality_rule(r) for r in rules if r["rule_type"] not in {"schema_required_columns", "schema_data_type"}]
+    quality_compatible = [_to_quality_rule(r) for r in rules]
     qres = run_quality_rules(df, quality_compatible, dataset_name=table_name, table_name=table_name, engine="spark") if quality_compatible else {"results": []}
     by_id = {r["rule_id"]: r for r in qres.get("results", [])}
     total_count = df.count()
-    schema_map = {f.name: f.dataType.simpleString().lower() for f in df.schema.fields}
     result_schema = "table_name string, rule_id string, rule_type string, columns string, severity string, status string, failed_count long, total_count long, failed_percent double, description string, run_timestamp string, details string"
     if not rules:
         return df.sparkSession.createDataFrame([], schema=result_schema)
@@ -131,24 +125,11 @@ def run_dq_rules(df, table_name: str, rules: list[dict[str, Any]], fail_on_error
     for rule in rules:
         rtype=rule["rule_type"]
         details=""
-        if rtype == "schema_required_columns":
-            missing = sorted(set(rule["columns"]) - set(df.columns))
-            failed = 0 if not missing else 1
-            details = "" if not missing else f"Missing columns: {', '.join(missing)}"
-        elif rtype == "schema_data_type":
-            mismatches=[]
-            for c in rule["columns"]:
-                actual = schema_map.get(c, "missing")
-                expected = str(rule["expected_types"][c]).lower()
-                if actual != expected:
-                    mismatches.append(f"{c}: expected={expected}, actual={actual}")
-            failed = 0 if not mismatches else 1
-            details = "; ".join(mismatches)
-        else:
-            item = by_id.get(rule["rule_id"], {})
-            failed = int(item.get("failed_count", 1))
-            details = item.get("message", "")
-        status = "PASS" if failed == 0 else "FAIL"
+        item = by_id.get(rule["rule_id"], {})
+        lower_status = str(item.get("status", "failed")).lower()
+        failed = int(item.get("failed_count", 1))
+        details = item.get("message", "")
+        status = "PASS" if lower_status == "passed" and failed == 0 else "FAIL"
         rows.append({"table_name": table_name, "rule_id": rule["rule_id"], "rule_type": rtype, "columns": ",".join(rule["columns"]), "severity": rule["severity"], "status": status, "failed_count": failed, "total_count": int(total_count), "failed_percent": float(round((failed / total_count) * 100.0, 4)) if total_count else 0.0, "description": rule["description"], "run_timestamp": datetime.now(timezone.utc).isoformat(), "details": details})
     result_df = df.sparkSession.createDataFrame(rows)
     if fail_on_error:

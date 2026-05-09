@@ -24,9 +24,8 @@ def _rules():
         {"rule_id": "r3", "rule_type": "accepted_values", "columns": ["status"], "allowed_values": ["A", "B"], "severity": "warning", "description": "status"},
         {"rule_id": "r4", "rule_type": "value_range", "columns": ["amount"], "min_value": 0, "max_value": 10, "severity": "warning", "description": "range"},
         {"rule_id": "r5", "rule_type": "regex_format", "columns": ["email"], "regex_pattern": r"^[^@]+@[^@]+$", "severity": "warning", "description": "email"},
-        {"rule_id": "r6", "rule_type": "row_count_between", "columns": ["id"], "min_rows": 1, "max_rows": 10, "severity": "warning", "description": "rows"},
-        {"rule_id": "r7", "rule_type": "schema_required_columns", "columns": ["id", "status"], "severity": "error", "description": "schema"},
-        {"rule_id": "r8", "rule_type": "schema_data_type", "columns": ["id"], "expected_types": {"id": "bigint"}, "severity": "warning", "description": "types"},
+        {"rule_id": "r6", "rule_type": "accepted_values_ref", "columns": ["status"], "reference_table": "dim_status_codes", "reference_column": "status_code", "severity": "warning", "description": "status ref"},
+        {"rule_id": "r7", "rule_type": "string_length_between", "columns": ["email"], "min_length": 3, "max_length": 100, "severity": "warning", "description": "email length"},
     ]
 
 
@@ -50,9 +49,8 @@ def test_suggest_dq_rules_prompt_default_contains_required_guidance():
         "accepted_values",
         "value_range",
         "regex_format",
-        "row_count_between",
-        "schema_required_columns",
-        "schema_data_type",
+        "accepted_values_ref",
+        "string_length_between",
     ]:
         assert rule_type in prompt
     assert "advisory only" in prompt.lower()
@@ -76,9 +74,8 @@ def test_default_prompt_template_constant_includes_required_rule_types():
         "accepted_values",
         "value_range",
         "regex_format",
-        "row_count_between",
-        "schema_required_columns",
-        "schema_data_type",
+        "accepted_values_ref",
+        "string_length_between",
     ]:
         assert rule_type in DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
 
@@ -105,6 +102,9 @@ def test_run_dq_rules_empty_rules_returns_empty_schema(spark_session):
     ]
 
 def test_run_dq_rules_with_spark(spark_session):
+    spark_session.createDataFrame(
+        [{"status_code": "A"}, {"status_code": "B"}]
+    ).createOrReplaceTempView("dim_status_codes")
     df = spark_session.createDataFrame([
         {"id": 1, "status": "A", "amount": 4, "email": "a@x.com"},
         {"id": 1, "status": "C", "amount": 20, "email": "bad-email"},
@@ -116,6 +116,84 @@ def test_run_dq_rules_with_spark(spark_session):
     assert rows["r3"]["status"] == "FAIL"
     assert rows["r4"]["status"] == "FAIL"
     assert rows["r5"]["status"] == "FAIL"
+    assert rows["r6"]["status"] == "FAIL"
+    assert "not present in reference" in rows["r6"]["details"]
+    assert rows["r7"]["status"] == "FAIL"
+
+
+def test_string_length_between_passes_when_length_in_bounds(spark_session):
+    df = spark_session.createDataFrame([
+        {"email": "ok@x.com"},
+        {"email": None},
+    ])
+    rules = [{
+        "rule_id": "len_ok",
+        "rule_type": "string_length_between",
+        "columns": ["email"],
+        "min_length": 3,
+        "max_length": 100,
+        "severity": "warning",
+        "description": "email length",
+    }]
+    rows = {r["rule_id"]: r for r in run_dq_rules(df, "EMAIL_LOGS", rules, fail_on_error=False).collect()}
+    assert rows["len_ok"]["status"] == "PASS"
+
+
+def test_accepted_values_ref_passes_when_all_values_exist_in_reference(spark_session):
+    spark_session.createDataFrame(
+        [{"status_code": "A"}, {"status_code": "B"}]
+    ).createOrReplaceTempView("dim_status_codes")
+    df = spark_session.createDataFrame([{"status": "A"}, {"status": "B"}, {"status": None}])
+    rules = [{
+        "rule_id": "ref_rule_ok",
+        "rule_type": "accepted_values_ref",
+        "columns": ["status"],
+        "reference_table": "dim_status_codes",
+        "reference_column": "status_code",
+        "severity": "warning",
+        "description": "status in reference",
+    }]
+    rows = {r["rule_id"]: r for r in run_dq_rules(df, "EMAIL_LOGS", rules, fail_on_error=False).collect()}
+    assert rows["ref_rule_ok"]["status"] == "PASS"
+    assert rows["ref_rule_ok"]["failed_count"] == 0
+
+
+def test_missing_reference_table_never_maps_to_pass(spark_session):
+    df = spark_session.createDataFrame([{"status": "A"}])
+    rules = [{
+        "rule_id": "ref_rule",
+        "rule_type": "accepted_values_ref",
+        "columns": ["status"],
+        "reference_table": "missing_reference_table",
+        "reference_column": "status_code",
+        "severity": "warning",
+        "description": "status in reference",
+    }]
+    rows = {r["rule_id"]: r for r in run_dq_rules(df, "EMAIL_LOGS", rules, fail_on_error=False).collect()}
+    assert rows["ref_rule"]["status"] == "FAIL"
+    assert "could not load reference table" in rows["ref_rule"]["details"]
+
+
+def test_missing_reference_column_never_maps_to_pass(spark_session):
+    spark_session.createDataFrame(
+        [{"another_col": "A"}]
+    ).createOrReplaceTempView("dim_status_codes_no_column")
+    df = spark_session.createDataFrame([{"status": "A"}])
+    rules = [{
+        "rule_id": "ref_rule_missing_col",
+        "rule_type": "accepted_values_ref",
+        "columns": ["status"],
+        "reference_table": "dim_status_codes_no_column",
+        "reference_column": "status_code",
+        "severity": "warning",
+        "description": "status in reference",
+    }]
+    rows = {
+        r["rule_id"]: r
+        for r in run_dq_rules(df, "EMAIL_LOGS", rules, fail_on_error=False).collect()
+    }
+    assert rows["ref_rule_missing_col"]["status"] == "FAIL"
+    assert "reference column 'status_code' is missing" in rows["ref_rule_missing_col"]["details"]
 
 
 def test_run_dq_rules_fail_on_error_raises(spark_session):
@@ -136,13 +214,6 @@ def test_public_api_exports():
     assert callable(get_default_dq_rule_templates)
     assert callable(_validate) and callable(_run) and callable(_suggest) and callable(_assert)
 
-
-def test_schema_data_type_missing_expected_type_key():
-    with pytest.raises(ValueError, match="expected_types missing columns"):
-        validate_dq_rules([{
-            "rule_id": "t", "rule_type": "schema_data_type", "columns": ["id", "x"],
-            "expected_types": {"id": "bigint"}, "severity": "warning", "description": "d"
-        }])
 
 
 def test_fail_log_then_assert_pattern(spark_session):
