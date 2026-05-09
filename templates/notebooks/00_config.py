@@ -64,7 +64,8 @@ DQ_RULES = get_default_dq_rule_templates()
 # Editable AI suggestion prompt template for notebook users.
 DQ_RULE_SUGGESTION_PROMPT_TEMPLATE = """Suggest candidate DQ rules for table '{table_name}'.
 AI output is advisory only; human review and approval is required before adding rules to DQ_RULES.
-Use only: not_null, unique_key, accepted_values, accepted_values_ref, value_range, regex_format, string_length_between. Schema drift, data drift, row count, and freshness checks are out of scope and belong to drift/contract modules.
+Use only: not_null, unique_key, accepted_values, accepted_values_ref,
+value_range, regex_format, string_length_between.
 Return only Python dictionary output named DQ_RULES in {output_format} format.
 Business context:
 {business_context}
