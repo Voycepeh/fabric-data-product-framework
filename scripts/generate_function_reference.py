@@ -36,6 +36,13 @@ VISIBLE_PUBLIC_MODULES = [
     "data_governance",
     "data_lineage",
 ]
+HIDDEN_SUPPORTING_MODULES = [
+    "runtime_context",
+    "data_drift",
+    "data_product_metadata",
+    "handover_documentation",
+    "technical_audit_columns",
+]
 RECOMMENDED_ENTRYPOINTS = {
     "environment_config": {
         "create_path_config",
@@ -270,7 +277,8 @@ def main() -> None:
 
     MODULE_DIR.mkdir(parents=True, exist_ok=True)
     module_index_lines = ["# Module API Catalogue", "", "Function Reference/workflow pages are the primary entrypoint. Module pages below are secondary technical references.", "", "Short-form modules remain import-compatible aliases but are intentionally hidden from this user-facing catalogue.", ""]
-    for module in sorted(VISIBLE_PUBLIC_MODULES):
+    all_doc_modules = sorted(set(VISIBLE_PUBLIC_MODULES + HIDDEN_SUPPORTING_MODULES))
+    for module in all_doc_modules:
         actual_module = next((k for k,v in PUBLIC_MODULE_PREFERRED_NAMES.items() if v==module), module)
         info = module_data[actual_module]
         module_data[module] = info
@@ -279,16 +287,22 @@ def main() -> None:
         public_in_module = [s for s in symbol_map.values() if s.public_module == module]
         is_internal_only = not public_in_module
         title = f"# `{module}` module" if not is_internal_only else f"# `{module}` module (internal)"
-        status_banner = (
-            '<div class="api-status-block">\n'
-            '  <span class="api-chip api-chip-internal">Internal-only module</span>\n'
-            '  <div class="api-chip-subtitle">Not intended as a primary user-facing API surface.</div>\n'
-            '</div>'
-            if is_internal_only
-            else '<div class="api-status-block">\n'
-            '  <span class="api-chip api-chip-module">Module overview</span>\n'
-            '</div>'
-        )
+        if is_internal_only:
+            status_banner = (
+                '<div class="api-status-block">\n'
+                '  <span class="api-chip api-chip-internal">Internal-only module</span>\n'
+                '  <div class="api-chip-subtitle">Not intended as a primary user-facing API surface.</div>\n'
+                '</div>'
+            )
+        elif module in HIDDEN_SUPPORTING_MODULES:
+            status_banner = (
+                '<div class="api-status-block">\n'
+                '  <span class="api-chip api-chip-internal">Advanced supporting module</span>\n'
+                '  <div class="api-chip-subtitle">Used by workflow references but not promoted as a primary notebook module.</div>\n'
+                '</div>'
+            )
+        else:
+            status_banner = '<div class="api-status-block">\n  <span class="api-chip api-chip-module">Module overview</span>\n</div>'
         lines = [title, "", status_banner, ""]
         if public_in_module:
             recommended_names = RECOMMENDED_ENTRYPOINTS.get(module, set())
@@ -354,7 +368,8 @@ def main() -> None:
         if any(line.strip().startswith("::: fabricops_kit.") for line in lines):
             raise RuntimeError(f"Mkdocstrings directives should not be rendered on module page for {module}")
         module_md.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
-        module_index_lines.append(f"- [`{module}`]({module}.md)")
+        if module in VISIBLE_PUBLIC_MODULES:
+            module_index_lines.append(f"- [`{module}`]({module}.md)")
 
     (MODULE_DIR / "index.md").write_text("\n".join(module_index_lines) + "\n", encoding="utf-8", newline="\n")
 
@@ -369,11 +384,10 @@ def main() -> None:
         "",
         "[Open template notebook](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb)",
         "",
-        "Defines environment paths, Fabric runtime checks, naming rules, AI prompt config, quality defaults, governance defaults, and lineage defaults.",
+        "Defines environment paths, runtime checks, naming rules, AI prompt config, quality defaults, governance defaults, and lineage defaults. Runtime helper callables are available in supporting modules when needed.",
         "",
         "**Main modules**",
         "- [`environment_config`](../api/modules/environment_config/)",
-        "- [`runtime_context`](../api/modules/runtime_context/)",
         "- [`fabric_input_output`](../api/modules/fabric_input_output/)",
         "",
         "### 02_ex_<agreement>_<topic> — exploration and approval drafting",
@@ -388,24 +402,19 @@ def main() -> None:
         "- [`data_quality`](../api/modules/data_quality/)",
         "- [`data_governance`](../api/modules/data_governance/)",
         "- [`data_contracts`](../api/modules/data_contracts/)",
-        "- [`data_drift`](../api/modules/data_drift/)",
         "",
         "### 03_pc_<agreement>_<source>_to_<target> — deterministic pipeline enforcement",
         "",
         "[Open template notebook](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb)",
         "",
-        "Loads approved contracts, reads source data, applies deterministic transformation, enforces approved DQ rules, writes controlled outputs, stores metadata evidence, and generates lineage/handover evidence.",
+        "Loads approved contracts, reads source data, applies deterministic transformation, enforces approved DQ rules, writes controlled outputs, stores metadata evidence, and generates lineage/handover evidence. Audit columns, metadata evidence, and handover helper callables remain available as supporting modules.",
         "",
         "**Main modules**",
         "- [`environment_config`](../api/modules/environment_config/)",
-        "- [`runtime_context`](../api/modules/runtime_context/)",
         "- [`fabric_input_output`](../api/modules/fabric_input_output/)",
         "- [`data_contracts`](../api/modules/data_contracts/)",
         "- [`data_quality`](../api/modules/data_quality/)",
-        "- [`technical_audit_columns`](../api/modules/technical_audit_columns/)",
-        "- [`data_product_metadata`](../api/modules/data_product_metadata/)",
         "- [`data_lineage`](../api/modules/data_lineage/)",
-        "- [`handover_documentation`](../api/modules/handover_documentation/)",
         "",
         "## Lifecycle flow",
         "",

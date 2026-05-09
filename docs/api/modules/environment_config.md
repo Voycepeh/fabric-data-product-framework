@@ -12,6 +12,7 @@
 | [`create_framework_config`](../../reference/step-02a-shared-runtime-config/create_framework_config.md) | function | Create the top-level FabricOps framework configuration contract. | — |
 | [`create_path_config`](../../reference/step-02a-shared-runtime-config/create_path_config.md) | function | Create environment-to-target routing used by Fabric IO helpers. | — |
 | [`get_path`](../../reference/step-02a-shared-runtime-config/get_path.md) | function | Resolve a configured Fabric path for an environment and target. | — |
+| [`load_fabric_config`](../../reference/step-02a-shared-runtime-config/load_fabric_config.md) | function | Validate and return a user-supplied framework configuration. | — |
 | [`validate_framework_config`](../../reference/step-02a-shared-runtime-config/validate_framework_config.md) | function | Validate and normalize framework configuration input. | — |
 
 ## Advanced helpers

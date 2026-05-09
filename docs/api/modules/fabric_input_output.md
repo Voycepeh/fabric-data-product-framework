@@ -21,7 +21,6 @@
 | [`lakehouse_csv_read`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_csv_read.md) | function | Read a CSV file from a Fabric lakehouse Files path. | [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) (internal) |
 | [`lakehouse_excel_read_as_spark`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_excel_read_as_spark.md) | function | Read an Excel file from a Fabric lakehouse Files path. | [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) (internal) |
 | [`lakehouse_parquet_read_as_spark`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_parquet_read_as_spark.md) | function | Read a Parquet file from a Fabric lakehouse Files path. | [`_convert_single_parquet_ns_to_us`](../../reference/internal/fabric_io/_convert_single_parquet_ns_to_us.md) (internal), [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) (internal) |
-| [`load_fabric_config`](../../reference/step-02a-shared-runtime-config/load_fabric_config.md) | function | Validate and return a user-supplied framework configuration. | — |
 
 ## Internal helpers
 
