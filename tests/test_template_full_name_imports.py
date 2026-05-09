@@ -36,7 +36,13 @@ def _iter_template_notebook_imports() -> list[tuple[str, str]]:
         for cell in payload.get("cells", []):
             if cell.get("cell_type") != "code":
                 continue
-            tree = ast.parse("".join(cell.get("source", [])))
+            code = "".join(cell.get("source", []))
+            if code.lstrip().startswith("%"):
+                continue
+            try:
+                tree = ast.parse(code)
+            except SyntaxError:
+                continue
             for node in ast.walk(tree):
                 if isinstance(node, ast.ImportFrom) and node.module and node.module.startswith("fabricops_kit."):
                     for alias in node.names:
