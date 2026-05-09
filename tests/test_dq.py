@@ -7,6 +7,9 @@ from fabricops_kit.dq import (
     run_dq_rules,
     suggest_dq_rules_prompt,
     validate_dq_rules,
+    split_valid_and_quarantine,
+    suggest_accepted_value_mapping_prompt,
+    suggest_closest_accepted_value,
 )
 
 
@@ -203,19 +206,6 @@ def test_run_dq_rules_fail_on_error_raises(spark_session):
         run_dq_rules(df, "EMAIL_LOGS", rules, fail_on_error=True)
 
 
-def test_public_api_exports():
-    from fabricops_kit import (
-        get_default_dq_rule_templates,
-        validate_dq_rules as _validate,
-        run_dq_rules as _run,
-        suggest_dq_rules_prompt as _suggest,
-        assert_dq_passed as _assert,
-    )
-    assert callable(get_default_dq_rule_templates)
-    assert callable(_validate) and callable(_run) and callable(_suggest) and callable(_assert)
-
-
-
 def test_fail_log_then_assert_pattern(spark_session):
     from fabricops_kit.dq import assert_dq_passed
     df = spark_session.createDataFrame([{"id": None}])
@@ -277,3 +267,72 @@ def test_notebook_templates_reference_defined_dq_names():
     ex = json.loads(Path("templates/notebooks/02_ex_agreement_topic.ipynb").read_text())
     ex_code = "\n".join("".join(c.get("source", [])) for c in ex["cells"] if c.get("cell_type") == "code")
     assert "classification_candidates = classify_columns(" in ex_code
+
+
+def test_suggest_accepted_value_mapping_prompt_contains_constraints():
+    prompt = suggest_accepted_value_mapping_prompt(
+        source_value="nus",
+        approved_values=["National University of Singapore", "Nanyang Technological University"],
+    )
+    assert "Only choose from the approved values provided" in prompt
+    assert "needs_review" in prompt
+    assert "nus" in prompt
+
+
+def test_suggest_closest_accepted_value_returns_expected_candidate():
+    result = suggest_closest_accepted_value(
+        source_value="nus",
+        approved_values=["National University of Singapore", "Nanyang Technological University"],
+        min_score=0.1,
+    )
+    assert result["source_value"] == "nus"
+    assert result["suggested_value"] in {"National University of Singapore", "Nanyang Technological University"}
+    assert result["method"] == "difflib"
+    assert result["needs_review"] is True
+
+
+def test_suggest_closest_accepted_value_low_score_needs_review_none():
+    result = suggest_closest_accepted_value(
+        source_value="xyz",
+        approved_values=["National University of Singapore"],
+        min_score=0.99,
+    )
+    assert result["suggested_value"] is None
+    assert result["needs_review"] is True
+
+
+def test_split_valid_and_quarantine_spark_row_level_rules(spark_session):
+    df = spark_session.createDataFrame([
+        {"id": 1, "status": "A", "amount": 4, "email": "a@x.com"},
+        {"id": None, "status": "C", "amount": 20, "email": "bad-email"},
+    ])
+    rules = [
+        {"rule_id": "r1", "rule_type": "not_null", "columns": ["id"], "severity": "error", "description": "id required"},
+        {"rule_id": "r2", "rule_type": "accepted_values", "columns": ["status"], "allowed_values": ["A", "B"], "severity": "warning", "description": "status"},
+        {"rule_id": "r3", "rule_type": "value_range", "columns": ["amount"], "min_value": 0, "max_value": 10, "severity": "warning", "description": "range"},
+        {"rule_id": "r4", "rule_type": "regex_format", "columns": ["email"], "regex_pattern": r"^[^@]+@[^@]+$", "severity": "warning", "description": "email"},
+    ]
+    df_pass, df_quarantine = split_valid_and_quarantine(df, rules)
+    assert df_pass.count() == 1
+    assert df_quarantine.count() == 1
+    qrow = df_quarantine.collect()[0].asDict()
+    for col in ["dq_failed_rule_ids", "dq_failed_rule_types", "dq_failed_columns", "dq_failed_severities", "dq_quarantine_ts"]:
+        assert col in qrow
+
+
+def test_public_api_exports():
+    from fabricops_kit import (
+        get_default_dq_rule_templates,
+        validate_dq_rules as _validate,
+        run_dq_rules as _run,
+        suggest_dq_rules_prompt as _suggest,
+        assert_dq_passed as _assert,
+        DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE as _prompt,
+        split_valid_and_quarantine as _split,
+        suggest_accepted_value_mapping_prompt as _mapping_prompt,
+        suggest_closest_accepted_value as _closest,
+    )
+    assert callable(get_default_dq_rule_templates)
+    assert callable(_validate) and callable(_run) and callable(_suggest) and callable(_assert)
+    assert isinstance(_prompt, str)
+    assert callable(_split) and callable(_mapping_prompt) and callable(_closest)

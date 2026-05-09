@@ -22,9 +22,15 @@ FabricOps uses data quality (DQ) rules as approved expectations attached to the 
 ```python
 from pyspark.sql import Row
 from fabricops_kit import (
+    DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE,
     profile_dataframe_to_metadata,
     suggest_dq_rules_prompt,
-    DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE,
+    run_dq_rules,
+    assert_dq_passed,
+    split_valid_and_quarantine,
+    suggest_accepted_value_mapping_prompt,
+    suggest_closest_accepted_value,
+    lakehouse_table_write,
 )
 
 df_email_logs = spark.createDataFrame([
@@ -110,13 +116,6 @@ This is still candidate metadata. Nothing is enforced until human review and app
 `03_pc` is the pipeline contract notebook. It should be run-all-safe and should not call AI for enforcement.
 
 ```python
-from fabricops_kit import (
-    run_dq_rules,
-    assert_dq_passed,
-    split_valid_and_quarantine,
-    lakehouse_table_write,
-)
-
 DQ_RULES = {
     "EMAIL_LOGS": [
         {
@@ -201,10 +200,29 @@ Example input values:
 
 AI can assist with candidate mapping suggestions (not auto-correction):
 
-1. Use `ai.similarity` (or equivalent Fabric AI similarity scoring) to find closest approved value.
-2. Use `ai.response`/`generate_response` with a constrained prompt.
-3. Store the output as candidate mapping metadata.
-4. Human approves mapping before production use.
+```python
+mapping_prompt = suggest_accepted_value_mapping_prompt(
+    source_value="nus",
+    approved_values=allowed_universities,
+)
+
+deterministic_suggestion = suggest_closest_accepted_value(
+    source_value="nus",
+    approved_values=allowed_universities,
+)
+
+# Optional in Fabric AI-enabled runtime
+# mapping_df = invalid_values_df.ai.generate_response(
+#     prompt=mapping_prompt,
+#     is_prompt_template=False,
+#     output_col="ai_mapping_candidate",
+#     response_format="json_object",
+# )
+```
+
+- Deterministic similarity is a fallback candidate only.
+- AI response is candidate metadata only.
+- Human approval is required before production replacement.
 
 Prompt example:
 
