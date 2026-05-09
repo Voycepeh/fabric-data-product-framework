@@ -28,7 +28,18 @@ PUBLIC_MODULE_PREFERRED_NAMES = {
     "technical_columns": "technical_audit_columns",
 }
 VISIBLE_PUBLIC_MODULES = [
-    "environment_config","runtime_context","fabric_input_output","data_profiling","data_contracts","data_quality","data_drift","data_governance","data_product_metadata","data_lineage","handover_documentation","technical_audit_columns"
+    "environment_config",
+    "runtime_context",
+    "fabric_input_output",
+    "data_profiling",
+    "data_contracts",
+    "data_quality",
+    "data_drift",
+    "data_governance",
+    "data_product_metadata",
+    "data_lineage",
+    "handover_documentation",
+    "technical_audit_columns",
 ]
 
 STEP_FALLBACK_NOTES = {
@@ -38,7 +49,8 @@ STEP_FALLBACK_NOTES = {
 @dataclass
 class Symbol:
     name: str
-    module: str
+    actual_module: str
+    public_module: str
     obj_type: str
     summary: str
     importance: str = "Optional"
@@ -65,6 +77,7 @@ def parse_module(path: Path) -> dict[str, Any]:
     tree = ast.parse(path.read_text(encoding="utf-8"))
     functions: dict[str, str] = {}
     classes: dict[str, str] = {}
+    constants: dict[str, str] = {}
     calls: dict[str, set[str]] = {}
     used_by: dict[str, set[str]] = {}
     for node in tree.body:
@@ -80,12 +93,16 @@ def parse_module(path: Path) -> dict[str, Any]:
             calls[node.name] = called
         elif isinstance(node, ast.ClassDef):
             classes[node.name] = first_sentence(ast.get_docstring(node))
+        elif isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name) and target.id.isupper():
+                    constants[target.id] = ""
     names = set(functions) | set(classes)
     for caller, callees in calls.items():
         for callee in names:
             if callee in callees:
                 used_by.setdefault(callee, set()).add(caller)
-    return {"functions": functions, "classes": classes, "calls": calls, "used_by": used_by}
+    return {"functions": functions, "classes": classes, "constants": constants, "calls": calls, "used_by": used_by}
 
 
 def parse_public_exports() -> list[str]:
@@ -199,20 +216,19 @@ def main() -> None:
         for module in modules_to_check:
             info = module_data[module]
             if name in info["functions"]:
-                symbol_map[name] = Symbol(name, module, "function", info["functions"][name])
+                symbol_map[name] = Symbol(name, module, preferred_module, "function", info["functions"][name])
                 break
             if name in info["classes"]:
-                symbol_map[name] = Symbol(name, module, "class", info["classes"][name])
+                symbol_map[name] = Symbol(name, module, preferred_module, "class", info["classes"][name])
+                break
+            if name in info["constants"]:
+                symbol_map[name] = Symbol(name, module, preferred_module, "constant", info["constants"][name])
                 break
         if name not in symbol_map:
             raise RuntimeError(f"Could not resolve exported symbol {name} to a module-level function/class.")
 
     for symbol in symbol_map.values():
         meta = docs_metadata[symbol.name]
-        if meta["module"] != symbol.module:
-            raise RuntimeError(
-                f"Metadata module mismatch for {symbol.name}: expected {symbol.module}, found {meta['module']}"
-            )
         if meta["kind"] != symbol.obj_type:
             raise RuntimeError(f"Metadata kind mismatch for {symbol.name}: expected {symbol.obj_type}, found {meta['kind']}")
         step = meta.get("workflow_step")
@@ -221,7 +237,7 @@ def main() -> None:
             raise RuntimeError(f"Invalid workflow_step {step} for {symbol.name}; expected one of {sorted(step_symbols)}")
         symbol.summary = meta.get("summary_override") or symbol.summary
         symbol.purpose = meta.get("purpose") or symbol.summary or "—"
-        enforce_placeholder_guard = symbol.module in {"config", "ai"}
+        enforce_placeholder_guard = symbol.actual_module in {"config", "ai"}
         if enforce_placeholder_guard and symbol.summary:
             _assert_non_placeholder_summary(symbol.name, "summary", symbol.summary)
         if enforce_placeholder_guard and symbol.purpose and symbol.purpose != "—":
@@ -242,7 +258,7 @@ def main() -> None:
         module_data[module] = info
         info = module_data[module]
         module_md = MODULE_DIR / f"{module}.md"
-        public_in_module = [s for s in symbol_map.values() if PUBLIC_MODULE_PREFERRED_NAMES.get(s.module, s.module) == module]
+        public_in_module = [s for s in symbol_map.values() if s.public_module == module]
         is_internal_only = not public_in_module
         title = f"# `{module}` module" if not is_internal_only else f"# `{module}` module (internal)"
         status_banner = (
@@ -325,13 +341,15 @@ def main() -> None:
         if entries:
             ref.extend(["| Function / class | Module | Importance | Purpose | Related helpers |", "|---|---|---|---|---|"])
             for s in entries:
-                info = module_data[s.module]
-                related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
+                info = module_data[s.actual_module]
+                related = sorted(
+                    [c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")]
+                )
                 step_slug = step_slugs.get(step)
-                symbol_link = f"./{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.module}/#{s.name}"
+                symbol_link = f"./{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.public_module}/#{s.name}"
                 ref.append(
-                    f"| [`{s.name}`]({symbol_link}) | <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{s.module}/\" title=\"Open {s.module} module page\" aria-label=\"Open {s.module} module page\">{s.module}</a> | {s.importance} | {s.purpose or '—'} | "
-                    f"{', '.join(f'[`{r}`](./internal/{s.module}/{r}.md) (internal)' for r in related) or '—'} |"
+                    f"| [`{s.name}`]({symbol_link}) | <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{s.public_module}/\" title=\"Open {s.public_module} module page\" aria-label=\"Open {s.public_module} module page\">{s.public_module}</a> | {s.importance} | {s.purpose or '—'} | "
+                    f"{', '.join(f'[`{r}`](./internal/{s.actual_module}/{r}.md) (internal)' for r in related) or '—'} |"
                 )
         else:
             if step in STEP_FALLBACK_NOTES:
