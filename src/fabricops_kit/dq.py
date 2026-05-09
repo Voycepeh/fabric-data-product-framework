@@ -300,11 +300,12 @@ def split_valid_and_quarantine(df, rules: list[dict[str, Any]], engine: str = "a
         raise ValueError("engine must be 'auto' or 'spark' for this helper.")
 
     from pyspark.sql import functions as F
+    from pyspark.sql.window import Window
 
-    supported = {"not_null", "accepted_values", "value_range", "regex_format", "string_length_between"}
+    supported = {"not_null", "unique_key", "accepted_values", "value_range", "regex_format", "string_length_between"}
     eval_rules = [r for r in rules if r.get("rule_type") in supported]
     if not eval_rules:
-        raise ValueError("No row-level quarantine rules found. Supported rule types: not_null, accepted_values, value_range, regex_format, string_length_between.")
+        raise ValueError("No row-level quarantine rules found. Supported rule types: not_null, unique_key, accepted_values, value_range, regex_format, string_length_between.")
 
     working = df.withColumn("__dq_failed_rule_ids", F.array().cast("array<string>"))                .withColumn("__dq_failed_rule_types", F.array().cast("array<string>"))                .withColumn("__dq_failed_columns", F.array().cast("array<string>"))                .withColumn("__dq_failed_severities", F.array().cast("array<string>"))
 
@@ -315,6 +316,11 @@ def split_valid_and_quarantine(df, rules: list[dict[str, Any]], engine: str = "a
         sev = str(rule.get("severity", "warning"))
         if rtype == "not_null":
             failed = F.col(col).isNull()
+        elif rtype == "unique_key":
+            dup_ct_col = f"__dq_dup_count_{rid}"
+            key_cols = [F.col(c) for c in rule.get("columns", [])]
+            working = working.withColumn(dup_ct_col, F.count(F.lit(1)).over(Window.partitionBy(*key_cols)))
+            failed = F.col(dup_ct_col) > F.lit(1)
         elif rtype == "accepted_values":
             vals = rule.get("allowed_values", [])
             failed = F.col(col).isNotNull() & ~F.col(col).isin(vals)
@@ -336,6 +342,8 @@ def split_valid_and_quarantine(df, rules: list[dict[str, Any]], engine: str = "a
         working = working.withColumn("__dq_failed_rule_types", F.when(failed, F.array_union(F.col("__dq_failed_rule_types"), F.array(F.lit(rtype)))).otherwise(F.col("__dq_failed_rule_types")))
         working = working.withColumn("__dq_failed_columns", F.when(failed, F.array_union(F.col("__dq_failed_columns"), F.array(F.lit(col)))).otherwise(F.col("__dq_failed_columns")))
         working = working.withColumn("__dq_failed_severities", F.when(failed, F.array_union(F.col("__dq_failed_severities"), F.array(F.lit(sev)))).otherwise(F.col("__dq_failed_severities")))
+        if rtype == "unique_key":
+            working = working.drop(f"__dq_dup_count_{rid}")
 
     fail_cond = F.size(F.col("__dq_failed_rule_ids")) > F.lit(0)
     df_pass = working.filter(~fail_cond).drop("__dq_failed_rule_ids", "__dq_failed_rule_types", "__dq_failed_columns", "__dq_failed_severities")
