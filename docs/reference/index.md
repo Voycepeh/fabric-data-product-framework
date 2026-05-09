@@ -4,7 +4,7 @@ Start from the templates first. This page shows how the templates, lifecycle ste
 
 ## Start from the templates
 
-### [00_env_config](../../templates/notebooks/00_env_config.ipynb)
+### [00_env_config](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb)
 **Purpose:** Shared runtime configuration, Fabric checks, paths, and naming rules.
 
 **Use when:** Setting up the workspace or validating the framework before running templates.
@@ -12,7 +12,7 @@ Start from the templates first. This page shows how the templates, lifecycle ste
 **Main modules:**
 [`config`](../api/modules/config/) [`runtime`](../api/modules/runtime/) [`fabric_io`](../api/modules/fabric_io/)
 
-### [Exploration notebook](../../templates/notebooks/02_ex_agreement_topic.ipynb)
+### [Exploration notebook](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/02_ex_agreement_topic.ipynb)
 **Purpose:** Profile source data, capture metadata, explore logic, and use AI for suggestions.
 
 **Use when:** Understanding source data and preparing candidate DQ or governance rules.
@@ -20,7 +20,7 @@ Start from the templates first. This page shows how the templates, lifecycle ste
 **Main modules:**
 [`fabric_io`](../api/modules/fabric_io/) [`profiling`](../api/modules/profiling/) [`metadata`](../api/modules/metadata/) [`ai`](../api/modules/ai/) [`dq`](../api/modules/dq/) [`governance`](../api/modules/governance/) [`drift`](../api/modules/drift/)
 
-### [Pipeline contract notebook](../../templates/notebooks/03_pc_agreement_source_to_target.ipynb)
+### [Pipeline contract notebook](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb)
 **Purpose:** Run approved transformation, enforce rules, quarantine failures, write outputs, and store evidence.
 
 **Use when:** Turning approved exploration into a repeatable production pipeline.
@@ -51,7 +51,7 @@ AI remains advisory; the approved pipeline contract is the enforcement point for
 The module pages are the detailed API reference. This page is the workflow router.
 
 Use module pages when you need signatures, parameters, return values, and implementation details:
-- [Functions → Modules index](../api/modules/index.md)
+- [Functions → Modules index](../api/modules/)
 - [`config`](../api/modules/config/)
 - [`fabric_io`](../api/modules/fabric_io/)
 - [`quality`](../api/modules/quality/)
