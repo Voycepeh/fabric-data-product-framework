@@ -1,5 +1,7 @@
 # Metadata tables
 
+This page describes what contract evidence is stored and how those records support enforcement, review, and audit.
+
 FabricOps stores approved contract definitions and run evidence in Fabric metadata tables (for example, in a dedicated Lakehouse or Warehouse), so runtime pipelines can enforce approved expectations and produce auditable evidence.
 
 ## Core metadata records
