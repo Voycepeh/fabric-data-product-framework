@@ -8,13 +8,25 @@ A practical starter kit for building governed, quality-checked, AI-ready noteboo
 
 </div>
 
+## Start here
+
+| Need | Go to |
+| --- | --- |
+| Understand the full workflow | [Lifecycle Operating Model](https://voycepeh.github.io/FabricOps-Starter-Kit/lifecycle-operating-model/) |
+| Run the starter kit quickly | [Quick Start](https://voycepeh.github.io/FabricOps-Starter-Kit/quick-start/) |
+| Understand notebook naming and structure | [Notebook Structure](https://voycepeh.github.io/FabricOps-Starter-Kit/notebook-structure/) |
+| Understand metadata and data contracts | [Metadata and Contracts](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/) |
+| Add data quality checks | [Data Quality Rules System](https://voycepeh.github.io/FabricOps-Starter-Kit/workflows/data-quality-rules-system/) |
+| Find reusable callable functions | [Functions](https://voycepeh.github.io/FabricOps-Starter-Kit/reference/) |
+| Install and package the wheel | [Setup](https://voycepeh.github.io/FabricOps-Starter-Kit/setup/) |
+
 ## Why this starter kit exists
 
 ![Before vs after using the starter kit](docs/assets/before-after.png)
 
 Fabric notebooks often begin as analysis work and then become recurring operations. This starter kit gives that transition a reusable structure for configuration, checks, governance review, lineage, and handover.
 
-Read more: [Quick Start](https://voycepeh.github.io/FabricOps-Starter-Kit/quick-start/) · [Lifecycle Operating Model](https://voycepeh.github.io/FabricOps-Starter-Kit/lifecycle-operating-model/) · [Function Reference](https://voycepeh.github.io/FabricOps-Starter-Kit/reference/) · [Data contracts](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/)
+Read more: [Quick Start](https://voycepeh.github.io/FabricOps-Starter-Kit/quick-start/) · [Lifecycle Operating Model](https://voycepeh.github.io/FabricOps-Starter-Kit/lifecycle-operating-model/) · [Functions](https://voycepeh.github.io/FabricOps-Starter-Kit/reference/) · [Data contracts](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/)
 
 ## What users get
 
