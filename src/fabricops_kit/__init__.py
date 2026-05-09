@@ -95,9 +95,13 @@ from .ai import (
 )
 from .quality import load_data_contract, run_data_product, run_quality_rules
 from .dq import (
+    DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE,
     get_default_dq_rule_templates,
     run_dq_rules,
     assert_dq_passed,
+    split_valid_and_quarantine,
+    suggest_accepted_value_mapping_prompt,
+    suggest_closest_accepted_value,
     suggest_dq_rules_prompt,
     validate_dq_rules,
 )
@@ -139,9 +143,13 @@ __all__ = [
     "generate_metadata_profile",
     "build_ai_quality_context",
     "run_quality_rules",
+    "DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE",
     "suggest_dq_rules_prompt",
     "run_dq_rules",
     "assert_dq_passed",
+    "split_valid_and_quarantine",
+    "suggest_accepted_value_mapping_prompt",
+    "suggest_closest_accepted_value",
     "validate_dq_rules",
     "get_default_dq_rule_templates",
     "parse_manual_ai_json_response",
