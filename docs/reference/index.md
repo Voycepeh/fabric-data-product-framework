@@ -38,7 +38,7 @@ This step creates the shared config that other notebooks depend on, including en
 
 | Function / class | Module | Importance | Purpose |
 |---|---|---|---|
-| [`check_fabric_ai_functions_available`](./step-02a-shared-runtime-config/check_fabric_ai_functions_available/) | [`environment_config`](../api/modules/environment_config/) | Essential | Check whether Fabric AI Functions can be imported in the current runtime. |
+| [`check_fabric_ai_functions_available`](./step-02a-shared-runtime-config/check_fabric_ai_functions_available/) | [`environment_config`](../api/modules/environment_config/) | Essential | Check whether Fabric AI Functions are available in the current runtime. |
 | [`create_ai_prompt_config`](./step-02a-shared-runtime-config/create_ai_prompt_config/) | [`environment_config`](../api/modules/environment_config/) | Essential | Create the AI prompt-template configuration used by FabricOps. |
 | [`create_framework_config`](./step-02a-shared-runtime-config/create_framework_config/) | [`environment_config`](../api/modules/environment_config/) | Essential | Create the top-level FabricOps framework configuration contract. |
 | [`create_governance_config`](./step-02a-shared-runtime-config/create_governance_config/) | [`environment_config`](../api/modules/environment_config/) | Essential | Create governance policy defaults for FabricOps runtime checks. |

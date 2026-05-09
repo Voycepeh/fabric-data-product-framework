@@ -9,7 +9,7 @@
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
 | [`bootstrap_fabric_env`](../../reference/step-02b-notebook-startup-checks/bootstrap_fabric_env.md) | function | Bootstrap 00_env_config environment readiness for FabricOps notebooks. | [`_get_fabric_runtime_metadata`](../../reference/internal/config/_get_fabric_runtime_metadata.md) (internal) |
-| [`check_fabric_ai_functions_available`](../../reference/step-02a-shared-runtime-config/check_fabric_ai_functions_available.md) | function | Check whether Fabric AI Functions can be imported in the current runtime. | — |
+| [`check_fabric_ai_functions_available`](../../reference/step-02a-shared-runtime-config/check_fabric_ai_functions_available.md) | function | Check whether Fabric AI Functions are available in the current runtime. | — |
 | [`configure_fabric_ai_functions`](../../reference/step-01-governance-context/configure_fabric_ai_functions.md) | function | Apply optional default Fabric AI Function configuration. | — |
 | [`create_ai_prompt_config`](../../reference/step-02a-shared-runtime-config/create_ai_prompt_config.md) | function | Create the AI prompt-template configuration used by FabricOps. | — |
 | [`create_framework_config`](../../reference/step-02a-shared-runtime-config/create_framework_config.md) | function | Create the top-level FabricOps framework configuration contract. | — |
