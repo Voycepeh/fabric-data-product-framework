@@ -246,9 +246,38 @@ def _spark_rule(df: Any, rule: dict[str, Any], row_count: int) -> tuple[int, int
         ).count()
         return failed, row_count, {"min_length": min_len, "max_length": max_len}, f"Column '{c}' length is outside expected range"
     if rtype == "accepted_values_ref":
-        raise ValueError(
-            "accepted_values_ref requires resolved reference values in the execution engine; rule received reference_table/reference_column metadata only."
+        c = rule["column"]
+        reference_table = rule["reference_table"]
+        reference_column = rule["reference_column"]
+        try:
+            reference_df = df.sparkSession.table(reference_table)
+        except Exception as exc:
+            raise ValueError(
+                f"accepted_values_ref could not load reference table '{reference_table}': {exc}"
+            ) from exc
+
+        if reference_column not in reference_df.columns:
+            raise ValueError(
+                f"accepted_values_ref reference column '{reference_column}' is missing from table '{reference_table}'."
+            )
+
+        ref_values = (
+            reference_df.select(F.col(reference_column).alias("_ref_value"))
+            .where(F.col("_ref_value").isNotNull())
+            .distinct()
         )
+        failed = (
+            df.select(F.col(c).alias("_value"))
+            .where(F.col("_value").isNotNull())
+            .join(ref_values, F.col("_value") == F.col("_ref_value"), "left_anti")
+            .count()
+        )
+        threshold = {"reference_table": reference_table, "reference_column": reference_column}
+        message = (
+            f"Column '{c}' contains values not present in reference "
+            f"'{reference_table}.{reference_column}'"
+        )
+        return failed, row_count, threshold, message
     raise ValueError("Unsupported rule type")
 
 

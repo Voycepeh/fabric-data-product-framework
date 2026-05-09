@@ -74,3 +74,23 @@ DQ rules validate row-level and column-level values **before writing to the next
 - `accepted_values_ref` checks whether a value exists in an approved reference table/column.
 - AI can suggest mappings from invalid values to approved values.
 - Only **human-approved** mappings should be applied in production pipelines.
+
+### `accepted_values_ref` Spark/Fabric example
+
+Use a reference table that is readable from the current Spark session/workspace.
+
+```python
+DQ_RULES = {
+    "EMAIL_LOGS": [
+        {
+            "rule_id": "EMAIL_LOGS_STATUS_REF",
+            "rule_type": "accepted_values_ref",
+            "columns": ["status"],
+            "reference_table": "dim_status_codes",  # registered Spark/Fabric table
+            "reference_column": "status_code",
+            "severity": "warning",
+            "description": "Status must exist in approved reference codes.",
+        }
+    ]
+}
+```

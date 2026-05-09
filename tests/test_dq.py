@@ -24,7 +24,7 @@ def _rules():
         {"rule_id": "r3", "rule_type": "accepted_values", "columns": ["status"], "allowed_values": ["A", "B"], "severity": "warning", "description": "status"},
         {"rule_id": "r4", "rule_type": "value_range", "columns": ["amount"], "min_value": 0, "max_value": 10, "severity": "warning", "description": "range"},
         {"rule_id": "r5", "rule_type": "regex_format", "columns": ["email"], "regex_pattern": r"^[^@]+@[^@]+$", "severity": "warning", "description": "email"},
-        {"rule_id": "r6", "rule_type": "accepted_values_ref", "columns": ["status"], "reference_table": "dim.status_codes", "reference_column": "status_code", "severity": "warning", "description": "status ref"},
+        {"rule_id": "r6", "rule_type": "accepted_values_ref", "columns": ["status"], "reference_table": "dim_status_codes", "reference_column": "status_code", "severity": "warning", "description": "status ref"},
         {"rule_id": "r7", "rule_type": "string_length_between", "columns": ["email"], "min_length": 3, "max_length": 100, "severity": "warning", "description": "email length"},
     ]
 
@@ -102,6 +102,9 @@ def test_run_dq_rules_empty_rules_returns_empty_schema(spark_session):
     ]
 
 def test_run_dq_rules_with_spark(spark_session):
+    spark_session.createDataFrame(
+        [{"status_code": "A"}, {"status_code": "B"}]
+    ).createOrReplaceTempView("dim_status_codes")
     df = spark_session.createDataFrame([
         {"id": 1, "status": "A", "amount": 4, "email": "a@x.com"},
         {"id": 1, "status": "C", "amount": 20, "email": "bad-email"},
@@ -114,7 +117,7 @@ def test_run_dq_rules_with_spark(spark_session):
     assert rows["r4"]["status"] == "FAIL"
     assert rows["r5"]["status"] == "FAIL"
     assert rows["r6"]["status"] == "FAIL"
-    assert "requires resolved reference values" in rows["r6"]["details"]
+    assert "not present in reference" in rows["r6"]["details"]
     assert rows["r7"]["status"] == "FAIL"
 
 
@@ -136,20 +139,61 @@ def test_string_length_between_passes_when_length_in_bounds(spark_session):
     assert rows["len_ok"]["status"] == "PASS"
 
 
-def test_skipped_or_invalid_lower_engine_result_never_maps_to_pass(spark_session):
+def test_accepted_values_ref_passes_when_all_values_exist_in_reference(spark_session):
+    spark_session.createDataFrame(
+        [{"status_code": "A"}, {"status_code": "B"}]
+    ).createOrReplaceTempView("dim_status_codes")
+    df = spark_session.createDataFrame([{"status": "A"}, {"status": "B"}, {"status": None}])
+    rules = [{
+        "rule_id": "ref_rule_ok",
+        "rule_type": "accepted_values_ref",
+        "columns": ["status"],
+        "reference_table": "dim_status_codes",
+        "reference_column": "status_code",
+        "severity": "warning",
+        "description": "status in reference",
+    }]
+    rows = {r["rule_id"]: r for r in run_dq_rules(df, "EMAIL_LOGS", rules, fail_on_error=False).collect()}
+    assert rows["ref_rule_ok"]["status"] == "PASS"
+    assert rows["ref_rule_ok"]["failed_count"] == 0
+
+
+def test_missing_reference_table_never_maps_to_pass(spark_session):
     df = spark_session.createDataFrame([{"status": "A"}])
     rules = [{
         "rule_id": "ref_rule",
         "rule_type": "accepted_values_ref",
         "columns": ["status"],
-        "reference_table": "dim.status_codes",
+        "reference_table": "missing_reference_table",
         "reference_column": "status_code",
         "severity": "warning",
         "description": "status in reference",
     }]
     rows = {r["rule_id"]: r for r in run_dq_rules(df, "EMAIL_LOGS", rules, fail_on_error=False).collect()}
     assert rows["ref_rule"]["status"] == "FAIL"
-    assert "reference_table/reference_column metadata only" in rows["ref_rule"]["details"]
+    assert "could not load reference table" in rows["ref_rule"]["details"]
+
+
+def test_missing_reference_column_never_maps_to_pass(spark_session):
+    spark_session.createDataFrame(
+        [{"another_col": "A"}]
+    ).createOrReplaceTempView("dim_status_codes_no_column")
+    df = spark_session.createDataFrame([{"status": "A"}])
+    rules = [{
+        "rule_id": "ref_rule_missing_col",
+        "rule_type": "accepted_values_ref",
+        "columns": ["status"],
+        "reference_table": "dim_status_codes_no_column",
+        "reference_column": "status_code",
+        "severity": "warning",
+        "description": "status in reference",
+    }]
+    rows = {
+        r["rule_id"]: r
+        for r in run_dq_rules(df, "EMAIL_LOGS", rules, fail_on_error=False).collect()
+    }
+    assert rows["ref_rule_missing_col"]["status"] == "FAIL"
+    assert "reference column 'status_code' is missing" in rows["ref_rule_missing_col"]["details"]
 
 
 def test_run_dq_rules_fail_on_error_raises(spark_session):
