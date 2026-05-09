@@ -12,6 +12,17 @@ FabricOps follows a DQX-inspired operating approach, implemented with Fabric-nat
 - **Humans approve** (edit/reject/accept) before promotion.
 - **Pipelines enforce** only approved rules during `03_pc` execution.
 
+## Compact DQ lifecycle
+
+```mermaid
+flowchart LR
+    Profile[Profile in 02_ex] --> AI[AI suggests rules]
+    AI --> Review[Human review]
+    Review --> Approved[Approved rule metadata]
+    Approved --> Enforce[03_pc enforces]
+    Enforce --> Results[DQ results, quarantine, metrics]
+```
+
 ## Architecture responsibilities
 
 ### Design-time (human-led with AI assistance)

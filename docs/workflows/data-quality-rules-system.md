@@ -6,6 +6,8 @@ Use this page as a practical guide for moving from candidate DQ ideas to approve
 
 For architecture context, see [Data quality architecture](../architecture/data-quality-architecture.md).
 
+![AI-assisted data quality rule flow](../assets/DQ-with-ai.png)
+
 ## The 5 step flow
 
 1. **Profile source data in `02_ex`.**
@@ -29,12 +31,27 @@ For architecture context, see [Data quality architecture](../architecture/data-q
 ## Minimal notebook usage
 
 ```python
+# Approved rules in config or metadata (example)
+DQ_RULES = {
+    "CUSTOMERS": [
+        {
+            "rule_id": "CUSTOMERS_ID_NOT_NULL",
+            "rule_type": "not_null",
+            "columns": ["customer_id"],
+            "severity": "error",
+        }
+    ]
+}
+```
+
+```python
 # 02_ex: AI suggestion only
 prompt = suggest_dq_rules_prompt(df_profile, "CUSTOMERS", business_context="Customer master quality checks")
 ```
 
 ```python
 # 03_pc: approved enforcement only
+dq_results_path = get_path(ENV_NAME, "metadata", config=CONFIG)
 result = run_dq_rules(df_customers, "CUSTOMERS", DQ_RULES["CUSTOMERS"], fail_on_error=False)
 lakehouse_table_write(result, dq_results_path, "DQ_RESULTS", mode="append")
 assert_dq_passed(result)
