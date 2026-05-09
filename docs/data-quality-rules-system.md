@@ -149,7 +149,7 @@ dq_result = run_dq_rules(
     fail_on_error=False,
 )
 
-# Real helper available in fabricops_kit.quality
+# Notebook-friendly helper exported by fabricops_kit
 # Returns (valid_df, quarantine_df) based on row-level rule coverage.
 df_pass, df_quarantine = split_valid_and_quarantine(df_email_logs, approved_rules, engine="auto")
 
