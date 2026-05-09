@@ -21,7 +21,7 @@ In FabricOps, the contract is assembled from configuration, approved usage, prof
 
 The goal is simple: make the pipeline understandable, reviewable, and safe to operate.
 
-A new engineer should be able to open the contract notebook, understand the dataset purpose, see what rules are enforced, and find evidence from the latest run.
+A new engineer should be able to open the `03_pc` notebook, understand the dataset purpose, see what rules are enforced, and find evidence from the latest run.
 
 ## How FabricOps assembles the contract
 
