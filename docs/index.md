@@ -4,9 +4,10 @@ FabricOps Starter Kit is a lightweight, Fabric-first notebook framework for buil
 
 Use this page as a guided front door into the docs.
 
-[Start with Quick Start](quick-start/){ .md-button .md-button--primary }
-
-[See the lifecycle model](lifecycle-operating-model/){ .md-button .md-button--primary }
+<div class="center-cta">
+  <a class="md-button md-button--primary" href="quick-start/">Start with Quick Start</a>
+  <a class="md-button md-button--primary" href="lifecycle-operating-model/">See the lifecycle model</a>
+</div>
 
 ## Start here
 
@@ -17,7 +18,7 @@ Use this page as a guided front door into the docs.
 | Set up the three notebook types | [Notebook Structure](notebook-structure/) |
 | Understand data contracts and metadata | [Metadata and Contracts](metadata-and-contracts/) |
 | Add quality checks and DQ rules | [Data Quality Rules System](workflows/data-quality-rules-system/) |
-| Find reusable callable functions | [Functions](reference/) |
+| Find reusable templates and functions | [Functions](reference/) |
 | Install the wheel in Fabric | [Setup](setup/) |
 
 ## How the pieces fit
