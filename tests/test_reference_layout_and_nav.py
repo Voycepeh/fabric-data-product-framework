@@ -13,6 +13,20 @@ def test_reference_index_templates_first_sections_present() -> None:
     assert "../api/modules/quality/" not in text
 
 
+def test_reference_index_quality_guards() -> None:
+    text = Path("docs/reference/index.md").read_text(encoding="utf-8")
+
+    assert "## Start from the templates" in text
+    assert "`00_env_config`" in text
+    assert ("`02_ex_<agreement>_<topic>`" in text) or ("`02_ex_&lt;agreement&gt;_&lt;topic&gt;`" in text)
+    assert ("`03_pc_<agreement>_<pipeline>`" in text) or ("`03_pc_&lt;agreement&gt;_&lt;pipeline&gt;`" in text)
+    assert "## What runs where" in text
+    assert "AI functions are advisory" in text
+    assert "split_valid_and_quarantine" in text
+    assert "【" not in text
+    assert "|---|---|---|---|---|" not in text
+
+
 def test_mkdocs_nav_uses_full_module_names() -> None:
     text = Path("mkdocs.yml").read_text(encoding="utf-8")
 

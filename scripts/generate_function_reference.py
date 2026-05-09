@@ -279,7 +279,7 @@ def main() -> None:
                 callable_link = callable_docs_link(s.name, module, docs_metadata, step_slugs)
                 lines.append(
                     f"| [`{s.name}`]({callable_link}) | {s.obj_type} | {s.summary or '—'} | "
-                    f"{', '.join(f'[`{r}`]({internal_helper_link(s.actual_module, r)}) (internal)' for r in related) or '—'} |"
+                    f"{', '.join(f'[`{r}`]({internal_helper_link(actual_module, r)}) (internal)' for r in related) or '—'} |"
                 )
         else:
             lines.append("No public exports in this module.")
@@ -331,8 +331,8 @@ def main() -> None:
         "| Notebook | User goal | Main functions | Full template |",
         "|---|---|---|---|",
         "| `00_env_config` | Configure Fabric paths, runtime checks, AI config, naming rules, quality defaults, governance defaults, and lineage defaults. | `create_framework_config`, `load_fabric_config`, `get_path`, `run_config_smoke_tests`, `bootstrap_fabric_env` | [00_env_config.ipynb](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb) |",
-        "| `02_ex_<agreement>_<topic>` | Read and profile source data, build AI-ready context, suggest DQ and classification, and capture human-reviewed contract decisions. | `lakehouse_table_read`, `generate_metadata_profile`, `build_ai_quality_context`, `build_manual_dq_rule_prompt_package`, `classify_columns`, `build_contract_summary` | [02_ex_agreement_topic.ipynb](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/02_ex_agreement_topic.ipynb) |",
-        "| `03_pc_<agreement>_<pipeline>` | Load approved contract, read source, transform, enforce DQ, quarantine failures, write output, persist metadata, and produce lineage and handover evidence. | `load_latest_approved_contract`, `get_executable_quality_rules`, `run_dq_rules`, `split_valid_and_quarantine`, `assert_dq_passed`, `lakehouse_table_write`, `write_metadata_records` | [03_pc_agreement_source_to_target.ipynb](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb) |",
+        "| `02_ex_&lt;agreement&gt;_&lt;topic&gt;` | Read and profile source data, build AI-ready context, suggest DQ and classification, and capture human-reviewed contract decisions. | `lakehouse_table_read`, `generate_metadata_profile`, `build_ai_quality_context`, `build_manual_dq_rule_prompt_package`, `classify_columns`, `build_contract_summary` | [02_ex_agreement_topic.ipynb](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/02_ex_agreement_topic.ipynb) |",
+        "| `03_pc_&lt;agreement&gt;_&lt;pipeline&gt;` | Load approved contract, read source, transform, enforce DQ, quarantine failures, write output, persist metadata, and produce lineage and handover evidence. | `load_latest_approved_contract`, `get_executable_quality_rules`, `run_dq_rules`, `split_valid_and_quarantine`, `assert_dq_passed`, `lakehouse_table_write`, `write_metadata_records` | [03_pc_agreement_source_to_target.ipynb](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb) |",
         "",
         "## What runs where",
         "",
@@ -353,16 +353,12 @@ def main() -> None:
             ref.extend([subtext, ""])
         entries = sorted(step_symbols.get(step, []), key=lambda x: x.name.lower())
         if entries:
-            ref.extend(["| Function / class | Module | Importance | Purpose |", "|---|---|---|---|---|"])
+            ref.extend(["| Function / class | Module | Importance | Purpose |", "|---|---|---|---|"])
             for s in entries:
-                info = module_data[s.actual_module]
-                related = sorted(
-                    [c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")]
-                )
                 step_slug = step_slugs.get(step)
                 symbol_link = f"./{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.public_module}/#{s.name}"
                 ref.append(
-                    f"| [`{s.name}`]({symbol_link}) | <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{s.public_module}/\" title=\"Open {s.public_module} module page\" aria-label=\"Open {s.public_module} module page\">{s.public_module}</a> | {s.importance} | {s.purpose or '—'} |"
+                    f"| [`{s.name}`]({symbol_link}) | [`{s.public_module}`](../api/modules/{s.public_module}/) | {s.importance} | {s.purpose or '—'} |"
                 )
         else:
             if step in STEP_FALLBACK_NOTES:
@@ -380,13 +376,11 @@ def main() -> None:
         ]
     )
     if unmapped:
-        ref.extend(["| Function / class | Module | Importance | Purpose |", "|---|---|---|---|---|"])
+        ref.extend(["| Function / class | Module | Importance | Purpose |", "|---|---|---|---|"])
         for name in unmapped:
             s = symbol_map[name]
-            info = module_data[s.actual_module]
-            related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
             ref.append(
-                f"| [`{s.name}`](../api/modules/{s.public_module}/) | <a class=\"api-chip api-chip-module api-chip-link\" href=\"../api/modules/{s.public_module}/\" title=\"Open {s.public_module} module page\" aria-label=\"Open {s.public_module} module page\">{s.public_module}</a> | {s.importance} | {s.purpose or s.summary or '—'} |"
+                f"| [`{s.name}`](../api/modules/{s.public_module}/) | [`{s.public_module}`](../api/modules/{s.public_module}/) | {s.importance} | {s.purpose or s.summary or '—'} |"
             )
     else:
         ref.append("No unmapped exported callables.")
