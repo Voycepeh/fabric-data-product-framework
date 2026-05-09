@@ -35,17 +35,12 @@ nav:
       - Function Reference: reference/index.md
       - Modules:
           - environment_config: api/modules/environment_config.md
-          - runtime_context: api/modules/runtime_context.md
           - fabric_input_output: api/modules/fabric_input_output.md
           - data_profiling: api/modules/data_profiling.md
           - data_contracts: api/modules/data_contracts.md
           - data_quality: api/modules/data_quality.md
-          - data_drift: api/modules/data_drift.md
           - data_governance: api/modules/data_governance.md
-          - data_product_metadata: api/modules/data_product_metadata.md
           - data_lineage: api/modules/data_lineage.md
-          - handover_documentation: api/modules/handover_documentation.md
-          - technical_audit_columns: api/modules/technical_audit_columns.md
   - Setup:
       - Fabric Wheel Install: setup/fabric-wheel-install.md
 

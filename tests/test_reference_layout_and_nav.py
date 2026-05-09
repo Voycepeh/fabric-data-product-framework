@@ -21,6 +21,46 @@ def test_mkdocs_nav_uses_full_module_names() -> None:
     assert "quality: api/modules/quality.md" not in text
     assert "run_summary: api/modules/run_summary.md" not in text
     assert "docs_metadata: api/modules/docs_metadata.md" not in text
-    assert "data_quality: api/modules/data_quality.md" in text
-    assert "environment_config: api/modules/environment_config.md" in text
-    assert "handover_documentation: api/modules/handover_documentation.md" in text
+    for module_name in [
+        "environment_config",
+        "fabric_input_output",
+        "data_profiling",
+        "data_contracts",
+        "data_quality",
+        "data_governance",
+        "data_lineage",
+    ]:
+        assert f"{module_name}: api/modules/{module_name}.md" in text
+    for hidden_module in [
+        "runtime_context",
+        "data_drift",
+        "data_product_metadata",
+        "handover_documentation",
+        "technical_audit_columns",
+    ]:
+        assert f"{hidden_module}: api/modules/{hidden_module}.md" not in text
+
+
+def test_module_pages_split_recommended_and_advanced_sections() -> None:
+    contracts_text = Path("docs/api/modules/data_contracts.md").read_text(encoding="utf-8")
+    assert "## Recommended notebook entrypoints" in contracts_text
+    assert "## Advanced helpers" in contracts_text
+    recommended_block = contracts_text.split("## Recommended notebook entrypoints", 1)[1].split("## Advanced helpers", 1)[0]
+    assert "`build_contract_header_record`" not in recommended_block
+    assert "`build_contract_column_records`" not in recommended_block
+    assert "`build_contract_rule_records`" not in recommended_block
+
+    lineage_text = Path("docs/api/modules/data_lineage.md").read_text(encoding="utf-8")
+    recommended_lineage = lineage_text.split("## Recommended notebook entrypoints", 1)[1].split("## Advanced helpers", 1)[0]
+    assert "[`build_lineage_from_notebook_code`]" in recommended_lineage
+
+
+def test_advanced_modules_hidden_from_primary_docs_but_importable() -> None:
+    modules_index = Path("docs/api/modules/index.md").read_text(encoding="utf-8")
+    for hidden_module in [
+        "data_drift",
+        "data_product_metadata",
+        "handover_documentation",
+        "technical_audit_columns",
+    ]:
+        assert f"`{hidden_module}`" not in modules_index

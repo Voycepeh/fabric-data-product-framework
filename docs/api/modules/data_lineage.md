@@ -4,11 +4,16 @@
   <span class="api-chip api-chip-module">Module overview</span>
 </div>
 
-## Public callables from `__all__`
+## Recommended notebook entrypoints
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
 | [`build_lineage_from_notebook_code`](../../reference/step-10-lineage-handover-documentation/build_lineage_from_notebook_code.md) | function | Scan, optionally enrich, and validate lineage from notebook source code. | — |
+
+## Advanced helpers
+
+| Callable | Type | Summary | Related helpers |
+|---|---|---|---|
 | [`build_lineage_handover_markdown`](../../reference/step-10-lineage-handover-documentation/build_lineage_handover_markdown.md) | function | Create a concise markdown handover summary from lineage execution results. | — |
 | [`build_lineage_record_from_steps`](../../reference/step-10-lineage-handover-documentation/build_lineage_record_from_steps.md) | function | Create metadata-ready lineage records from validated lineage steps. | — |
 | [`build_lineage_records`](../../reference/step-10-lineage-handover-documentation/build_lineage_records.md) | function | Build compact lineage records for downstream metadata sinks. | — |

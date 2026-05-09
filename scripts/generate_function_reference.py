@@ -29,18 +29,36 @@ PUBLIC_MODULE_PREFERRED_NAMES = {
 }
 VISIBLE_PUBLIC_MODULES = [
     "environment_config",
-    "runtime_context",
     "fabric_input_output",
     "data_profiling",
     "data_contracts",
     "data_quality",
-    "data_drift",
     "data_governance",
-    "data_product_metadata",
     "data_lineage",
-    "handover_documentation",
-    "technical_audit_columns",
 ]
+RECOMMENDED_ENTRYPOINTS = {
+    "environment_config": {
+        "create_path_config",
+        "create_framework_config",
+        "validate_framework_config",
+        "load_fabric_config",
+        "get_path",
+        "bootstrap_fabric_env",
+    },
+    "fabric_input_output": {"Housepath", "lakehouse_table_read", "lakehouse_table_write", "warehouse_read", "warehouse_write"},
+    "data_profiling": {"generate_metadata_profile", "profile_dataframe_to_metadata", "build_ai_quality_context"},
+    "data_contracts": {
+        "load_latest_approved_contract",
+        "normalize_contract_dict",
+        "validate_contract_dict",
+        "get_executable_quality_rules",
+        "write_contract_to_lakehouse",
+        "build_contract_summary",
+    },
+    "data_quality": {"validate_dq_rules", "run_dq_rules", "assert_dq_passed", "split_valid_and_quarantine", "suggest_dq_rules_prompt"},
+    "data_governance": {"classify_columns", "summarize_governance_classifications", "build_governance_classification_records"},
+    "data_lineage": {"build_lineage_from_notebook_code"},
+}
 
 STEP_FALLBACK_NOTES = {
     "5": "No public callable is currently mapped to this step. Use exploration notebook prompts to capture transformation rationale before pipeline enforcement.",
@@ -271,18 +289,37 @@ def main() -> None:
             '  <span class="api-chip api-chip-module">Module overview</span>\n'
             '</div>'
         )
-        lines = [title, "", status_banner, "", "## Public callables from `__all__`", ""]
+        lines = [title, "", status_banner, ""]
         if public_in_module:
+            recommended_names = RECOMMENDED_ENTRYPOINTS.get(module, set())
+            recommended = sorted([s for s in public_in_module if s.name in recommended_names], key=lambda x: x.name.lower())
+            advanced = sorted([s for s in public_in_module if s.name not in recommended_names], key=lambda x: x.name.lower())
+            lines.extend(["## Recommended notebook entrypoints", ""])
             lines.extend(["| Callable | Type | Summary | Related helpers |", "|---|---|---|---|"])
-            for s in sorted(public_in_module, key=lambda x: x.name.lower()):
+            for s in recommended:
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
                 callable_link = callable_docs_link(s.name, module, docs_metadata, step_slugs)
                 lines.append(
                     f"| [`{s.name}`]({callable_link}) | {s.obj_type} | {s.summary or '—'} | "
                     f"{', '.join(f'[`{r}`]({internal_helper_link(s.actual_module, r)}) (internal)' for r in related) or '—'} |"
                 )
+            if not recommended:
+                lines.append("| — | — | No recommended entrypoints configured. | — |")
+
+            lines.extend(["", "## Advanced helpers", ""])
+            if advanced:
+                lines.extend(["| Callable | Type | Summary | Related helpers |", "|---|---|---|---|"])
+                for s in advanced:
+                    related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
+                    callable_link = callable_docs_link(s.name, module, docs_metadata, step_slugs)
+                    lines.append(
+                        f"| [`{s.name}`]({callable_link}) | {s.obj_type} | {s.summary or '—'} | "
+                        f"{', '.join(f'[`{r}`]({internal_helper_link(s.actual_module, r)}) (internal)' for r in related) or '—'} |"
+                    )
+            else:
+                lines.append("No advanced helpers listed for this module.")
         else:
-            lines.append("No public exports in this module.")
+            lines.extend(["## Recommended notebook entrypoints", "", "No public exports in this module.", "", "## Advanced helpers", "", "No advanced helpers listed for this module."])
         lines.extend(["", "## Internal helpers", ""])
         internal_fns = sorted([f for f in info["functions"] if f.startswith("_")])
         if internal_fns:
@@ -324,7 +361,7 @@ def main() -> None:
     ref = [
         "# Function Reference",
         "",
-        "Start from the notebook templates first. This page maps each template to the FabricOps helper functions and modules behind it. Use the callable tables below when you need API-level details.",
+        "Start from the notebook templates first. Most users only need the templates and recommended entrypoints. Advanced helpers exist for customization.",
         "",
         "## Start from the templates",
         "",
