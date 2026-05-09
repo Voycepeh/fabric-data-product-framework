@@ -1,1 +1,0 @@
-domain_name,source_system,schema_name,table_name,target_lakehouse,target_table,business_description,data_owner,technical_owner,refresh_type,refresh_frequency,primary_key,expected_row_count_range,sensitivity_level,is_active
