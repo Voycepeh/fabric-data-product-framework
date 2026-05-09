@@ -25,6 +25,9 @@ def test_03_pc_core_flow_markers_present():
     assert "split_valid_and_quarantine" in pc
     assert 'f\"{TARGET_TABLE}_QUARANTINE\"' in pc
     assert "Optional: metadata evidence for audit/handover" in pc
+    assert "handover_summary" in pc
+    assert "dataset_run.json" in pc
+    assert 'print("TODO")' not in pc
 
 
 def test_02_ex_core_flow_markers_present():
@@ -38,3 +41,5 @@ def test_docs_do_not_reference_yaml_contract():
     docs_text = Path("templates/notebooks/README.md").read_text(encoding="utf-8") + "\n" + Path("docs/recipes/index.md").read_text(encoding="utf-8")
     assert "minimal_source_contract.yml" not in docs_text
     assert "YAML" not in docs_text
+    assert "local-safe-smoke.md" in docs_text
+    assert "fabric-dry-run.md" in docs_text
