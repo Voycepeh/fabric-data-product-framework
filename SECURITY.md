@@ -8,4 +8,4 @@
 
 ## Reporting security concerns
 
-Please report security concerns through GitHub issues or the maintainer contact placeholder: `maintainer@example.org`.
+Please report security concerns through GitHub issues or the maintainer contact: `voycepeh@gmail.com'
