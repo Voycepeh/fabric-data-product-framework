@@ -13,6 +13,10 @@
     if (!container || !input || !status || !empty || rows.length === 0) {
       return;
     }
+    if (container.dataset.callableFinderInitialized === "true") {
+      return;
+    }
+    container.dataset.callableFinderInitialized = "true";
 
     const searchable = rows.map((row) => {
       const fields = [
@@ -52,7 +56,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", initCallableFinder);
-  if (document$.subscribe) {
+  if (typeof document$ !== "undefined" && document$.subscribe) {
     document$.subscribe(initCallableFinder);
   }
 })();

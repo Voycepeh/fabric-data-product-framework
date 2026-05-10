@@ -114,6 +114,8 @@ def test_reference_includes_callable_finder_block() -> None:
     assert 'data-callable-finder' in content
     assert 'id="callable-finder-input"' in content
     assert 'data-callable-finder-empty' in content
+    assert content.index("## Find a callable") < content.index("## All public functions")
+    assert content.index("## Find a callable") > content.index("## Starter path functions")
 
 
 def test_function_reference_tables_use_compact_module_links() -> None:

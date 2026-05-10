@@ -2,17 +2,6 @@
 
 Use this page as an API lookup after you understand the notebook flow.
 
-## Find a callable
-
-Search the callable catalogue by function name, module, starter path, or purpose. Site-wide search is still available from the top right.
-
-<div class="callable-finder" data-callable-finder>
-  <label class="callable-finder-label" for="callable-finder-input">Search callables</label>
-  <input id="callable-finder-input" class="callable-finder-input" type="search" placeholder="Search by function name, module, or what you want to do" aria-describedby="callable-finder-status" autocomplete="off">
-  <p id="callable-finder-status" class="callable-finder-status" aria-live="polite">Showing all callables.</p>
-  <p class="callable-finder-empty" data-callable-finder-empty hidden>No callables match your search.</p>
-</div>
-
 ## Start from the templates
 
 <table class="reference-template-table">
@@ -658,6 +647,17 @@ Pipeline-contract notebook flow for deterministic enforcement and controlled pub
     </tr>
   </tbody>
 </table>
+
+## Find a callable
+
+Search the callable catalogue by function name, module, starter path, or purpose. Site-wide search is still available from the top right.
+
+<div class="callable-finder" data-callable-finder>
+  <label class="callable-finder-label" for="callable-finder-input">Search callables</label>
+  <input id="callable-finder-input" class="callable-finder-input" type="search" placeholder="Search by function name, module, or what you want to do" aria-describedby="callable-finder-status" autocomplete="off">
+  <p id="callable-finder-status" class="callable-finder-status" aria-live="polite">Showing all callables.</p>
+  <p class="callable-finder-empty" data-callable-finder-empty hidden>No callables match your search.</p>
+</div>
 
 ## All public functions
 
