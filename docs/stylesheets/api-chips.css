@@ -55,6 +55,8 @@
   align-items: center;
   margin: 1.5rem 0 2rem;
   width: 100%;
+  gap: 0.85rem;
+  flex-wrap: wrap;
 }
 
 .center-cta .md-button {
@@ -62,6 +64,11 @@
 }
 
 @media screen and (max-width: 600px) {
+  .center-cta {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
   .center-cta .md-button {
     width: 100%;
     max-width: 360px;

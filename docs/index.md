@@ -6,7 +6,7 @@ Use this page as a guided front door into the docs.
 
 <div class="center-cta">
   <a class="md-button md-button--primary" href="quick-start/">Start with Quick Start</a>
-  <a class="md-button md-button--primary" href="lifecycle-operating-model/">See the lifecycle model</a>
+  <a class="md-button md-button--primary" href="reference/">Browse the functions</a>
 </div>
 
 ## Start here
@@ -39,9 +39,9 @@ Use this page as a guided front door into the docs.
 
 ## Framework at a glance
 
-![FabricOps workspace notebook structure](assets/notebook-structure.png)
+![FabricOps lifecycle operating model overview](assets/mvp-flow.png)
 
-_Exploration explains the why. Pipeline contract notebooks enforce the approved what._
+_FabricOps connects contracts, profiling, AI-assisted suggestions, human approval, pipeline enforcement, metadata, and handover across the lifecycle._
 
 ## Compatibility note
 
