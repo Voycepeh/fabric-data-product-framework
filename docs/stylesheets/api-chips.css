@@ -84,6 +84,37 @@
   vertical-align: top;
 }
 
+.reference-module-link {
+  display: inline;
+  font-size: 0.86rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.callable-finder {
+  margin: 0 0 1rem;
+}
+
+.callable-finder-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.callable-finder-input {
+  width: 100%;
+  max-width: 36rem;
+  padding: 0.5rem 0.65rem;
+}
+
+.callable-finder-status,
+.callable-finder-empty {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--md-default-fg-color--light);
+}
+
 @media screen and (max-width: 760px) {
   .reference-template-table thead,
   .reference-function-table thead,
