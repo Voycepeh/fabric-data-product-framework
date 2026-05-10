@@ -6,6 +6,10 @@ Shared environment bootstrap and validation before exploration or pipeline noteb
 
 > `00_env_config` is shared setup.
 
+## Segment 1: Explain the shared environment role
+
+Describe what this shared config notebook sets up and what downstream exploration or pipeline notebooks depend on.
+
 ## Segment 2: Define environment targets and notebook policy
 
 <table class="reference-function-table notebook-structure-function-table">

@@ -15,17 +15,17 @@ Use this page as an API lookup after you understand the notebook flow.
   <tbody>
     <tr>
       <td data-label="Notebook"><code>00_env_config</code></td>
-      <td data-label="Guided usage">Shared environment bootstrap and validation before exploration or pipeline notebooks run.</td>
+      <td data-label="Guided usage">Shared environment bootstrap and validation before exploration or pipeline notebooks run.<br><a href="../notebook-structure/00-env-config/">View guided structure</a></td>
       <td data-label="Full template"><a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb">Open notebook</a></td>
     </tr>
     <tr>
       <td data-label="Notebook"><code>02_ex_&lt;agreement&gt;_&lt;topic&gt;</code></td>
-      <td data-label="Guided usage">Exploration notebook flow used to profile source data and draft advisory AI outputs for human review.</td>
+      <td data-label="Guided usage">Exploration notebook flow used to profile source data and draft advisory AI outputs for human review.<br><a href="../notebook-structure/02-exploration/">View guided structure</a></td>
       <td data-label="Full template"><a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/02_ex_agreement_topic.ipynb">Open notebook</a></td>
     </tr>
     <tr>
       <td data-label="Notebook"><code>03_pc_&lt;agreement&gt;_&lt;pipeline&gt;</code></td>
-      <td data-label="Guided usage">Pipeline-contract notebook flow for deterministic enforcement and controlled publishing.</td>
+      <td data-label="Guided usage">Pipeline-contract notebook flow for deterministic enforcement and controlled publishing.<br><a href="../notebook-structure/03-pipeline-contract/">View guided structure</a></td>
       <td data-label="Full template"><a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb">Open notebook</a></td>
     </tr>
   </tbody>

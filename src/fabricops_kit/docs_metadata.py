@@ -24,6 +24,7 @@ class TemplateFlowSegmentMetadata(TypedDict):
 
     title: str
     symbols: list[str]
+    text: NotRequired[str]
 
 
 class TemplateFlowDocMetadata(TypedDict):
@@ -43,6 +44,11 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
         "template_path": "templates/notebooks/00_env_config.ipynb",
         "segment_intro": "Shared environment bootstrap and validation before exploration or pipeline notebooks run.",
         "segments": [
+            {
+                "title": "Segment 1: Explain the shared environment role",
+                "text": "Describe what this shared config notebook sets up and what downstream exploration or pipeline notebooks depend on.",
+                "symbols": [],
+            },
             {
                 "title": "Segment 2: Define environment targets and notebook policy",
                 "symbols": [
