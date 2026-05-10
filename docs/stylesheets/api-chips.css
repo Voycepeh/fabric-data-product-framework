@@ -212,6 +212,11 @@
   .notebook-structure-function-table td[data-label="Module"] {
     display: none;
   }
+
+  .reference-catalogue-table td[data-label="Starter path"],
+  .reference-catalogue-table td[data-label="Importance"] {
+    display: none;
+  }
 }
 
 @media screen and (min-width: 761px) {

@@ -532,7 +532,7 @@ def main() -> None:
         [
             "## Find a callable",
             "",
-            "Search the callable catalogue by function name, module, starter path, or purpose. Site-wide search is still available from the top right.",
+            "Use the finder below to look up public callables.",
             "",
             '<div class="callable-finder" data-callable-finder>',
             '  <label class="callable-finder-label" for="callable-finder-input">Search callables</label>',
