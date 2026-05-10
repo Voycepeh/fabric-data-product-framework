@@ -45,7 +45,9 @@ Search the callable catalogue by function name, module, starter path, or purpose
 
 <div class="callable-finder" data-callable-finder>
   <label class="callable-finder-label" for="callable-finder-input">Search callables</label>
-  <input id="callable-finder-input" class="callable-finder-input" type="search" placeholder="Search by function name, module, or what you want to do" aria-describedby="callable-finder-status" autocomplete="off">
+  <input id="callable-finder-input" class="callable-finder-input" type="search" placeholder="Search callables" aria-describedby="callable-finder-help callable-finder-status callable-finder-examples" autocomplete="off">
+  <p id="callable-finder-help" class="callable-finder-help">Search by function name, module, or what the function does.</p>
+  <p id="callable-finder-examples" class="callable-finder-examples">Try: <code>csv</code> · <code>data_quality</code> · <code>quarantine</code></p>
   <p id="callable-finder-status" class="callable-finder-status" aria-live="polite">Showing all callables.</p>
   <p class="callable-finder-empty" data-callable-finder-empty hidden>No callables match your search.</p>
 </div>
