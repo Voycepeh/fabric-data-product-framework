@@ -150,7 +150,6 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
                 "title": "Segment 2: Load approved contract and source data",
                 "symbols": [
                     "load_latest_approved_contract",
-                    "seed_minimal_sample_source_table",
                     "lakehouse_table_read",
                     "warehouse_read",
                 ],
