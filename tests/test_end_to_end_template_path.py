@@ -13,6 +13,12 @@ def test_seed_helper_is_available_and_notebook_uses_it():
     assert "minimal_source.csv" not in ex
 
 
+def test_03_pc_reads_seeded_source_without_reseeding():
+    pc = Path("templates/notebooks/03_pc_agreement_source_to_target.ipynb").read_text(encoding="utf-8")
+    assert "seed_minimal_sample_source_table" not in pc
+    assert "lakehouse_table_read(source_path, SOURCE_TABLE)" in pc
+
+
 def test_02_ex_contains_approved_contract_handoff_flow():
     ex = Path("templates/notebooks/02_ex_agreement_topic.ipynb").read_text(encoding="utf-8")
     assert "HUMAN_APPROVED_RULES" in ex
@@ -37,5 +43,5 @@ def test_docs_explain_02_ex_creates_contract_for_03_pc():
 
 def test_seed_helper_rows_and_columns_defined():
     io_text = Path("src/fabricops_kit/fabric_io.py").read_text(encoding="utf-8")
-    for expected in ["customer_id", "country", "amount", "is_active", "1001", "1004"]:
+    for expected in ["customer_id", "event_ts", "status", "amount", "email", "country_code", "user1001@example.com", "user1004@example.com"]:
         assert expected in io_text

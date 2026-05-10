@@ -874,10 +874,10 @@ def seed_minimal_sample_source_table(
     - Writes a tiny deterministic dataset for demo/tutorial workflows only.
     """
     rows = [
-        {"customer_id": 1001, "country": "SG", "amount": 120.5, "is_active": True},
-        {"customer_id": 1002, "country": "US", "amount": 89.0, "is_active": True},
-        {"customer_id": 1003, "country": "GB", "amount": 0.0, "is_active": False},
-        {"customer_id": 1004, "country": "SG", "amount": 410.2, "is_active": True},
+        {"customer_id": 1001, "event_ts": "2026-01-01T09:00:00Z", "status": "active", "amount": 120.5, "email": "user1001@example.com", "country_code": "SG"},
+        {"customer_id": 1002, "event_ts": "2026-01-02T10:15:00Z", "status": "inactive", "amount": 89.0, "email": "user1002@example.com", "country_code": "US"},
+        {"customer_id": 1003, "event_ts": "2026-01-03T12:30:00Z", "status": "active", "amount": 0.0, "email": "user1003@example.com", "country_code": "GB"},
+        {"customer_id": 1004, "event_ts": "2026-01-04T14:45:00Z", "status": "pending", "amount": 410.2, "email": "user1004@example.com", "country_code": "SG"},
     ]
     spark_obj = _get_spark(spark_session)
     df = spark_obj.createDataFrame(rows)
