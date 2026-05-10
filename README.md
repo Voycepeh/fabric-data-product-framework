@@ -16,9 +16,9 @@ A practical starter kit for building governed, quality-checked, AI-ready noteboo
 | Run the starter kit quickly | [Quick Start](https://voycepeh.github.io/FabricOps-Starter-Kit/quick-start/) |
 | Understand notebook naming and structure | [Notebook Structure](https://voycepeh.github.io/FabricOps-Starter-Kit/notebook-structure/) |
 | Understand metadata and data contracts | [Metadata and Contracts](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/) |
-| Add data quality checks | [Data Quality Rules System](https://voycepeh.github.io/FabricOps-Starter-Kit/workflows/data-quality-rules-system/) |
+| Use AI to suggest data quality rules | [AI-Assisted Data Quality](https://voycepeh.github.io/FabricOps-Starter-Kit/data-quality-rules-system/) |
 | Find reusable callable functions | [Functions](https://voycepeh.github.io/FabricOps-Starter-Kit/reference/) |
-| Install and package the wheel | [Setup](https://voycepeh.github.io/FabricOps-Starter-Kit/setup/) |
+| Install the wheel in Fabric | [Install in Fabric](https://voycepeh.github.io/FabricOps-Starter-Kit/setup/fabric-wheel-install/) |
 
 ## Why this starter kit exists
 
