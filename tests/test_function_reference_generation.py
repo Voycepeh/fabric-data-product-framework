@@ -57,7 +57,7 @@ def test_every_public_export_is_listed_exactly_once_in_all_functions_table() -> 
     all_functions = markdown_section(content, "All public functions")
     assert all_functions
     for name in public_exports():
-        assert all_functions.count(f"`{name}`") == 1
+        assert all_functions.count(f"<code>{name}</code>") == 1
 
 
 def test_reference_contains_template_first_starter_sections_and_segments() -> None:
@@ -81,9 +81,9 @@ def test_reference_contains_template_first_starter_sections_and_segments() -> No
 def test_template_used_functions_appear_in_expected_starter_segments() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
-    assert "#### Segment 2: Profile source and capture evidence" in content and "`generate_metadata_profile`" in content
-    assert "#### Segment 3: AI-assisted drafting (advisory only)" in content and "`suggest_dq_rules_prompt`" in content
-    assert "#### Segment 4: Run DQ, split outputs, and publish" in content and "`run_dq_rules`" in content
+    assert "#### Segment 2: Profile source and capture evidence" in content and "<code>generate_metadata_profile</code>" in content
+    assert "#### Segment 3: AI-assisted drafting (advisory only)" in content and "<code>suggest_dq_rules_prompt</code>" in content
+    assert "#### Segment 4: Run DQ, split outputs, and publish" in content and "<code>run_dq_rules</code>" in content
 
 
 def test_reference_no_longer_contains_old_step_headings() -> None:
@@ -99,15 +99,35 @@ def test_all_public_functions_table_contains_starter_path_column() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     assert "## All public functions" in content
-    assert "| Function / class | Module | Starter path | Importance | Purpose |" in content
-    assert "| [`load_fabric_config`]" in content
+    assert '<table class="reference-catalogue-table">' in content
+    assert 'data-label="Starter path"' in content
+    assert '<a href="./step-02a-shared-runtime-config/load_fabric_config/"><code>load_fabric_config</code></a>' in content
 
 
 def test_non_starter_callable_still_appears_in_complete_catalogue() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     assert "## Additional public functions" in content
-    assert "`run_data_product`" in content
+    assert "<code>run_data_product</code>" in content
+
+
+def test_reference_tables_include_mobile_friendly_classes_and_data_labels() -> None:
+    generate_reference()
+    content = REFERENCE_FILE.read_text(encoding="utf-8")
+    assert '<table class="reference-template-table">' in content
+    assert '<table class="reference-function-table">' in content
+    assert 'data-label="Function / class"' in content
+    assert 'data-label="Purpose"' in content
+
+
+def test_reference_html_tables_use_anchor_links_not_markdown_links() -> None:
+    generate_reference()
+    content = REFERENCE_FILE.read_text(encoding="utf-8")
+    assert '<td data-label="Full template"><a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb">Open notebook</a></td>' in content
+    assert '<td data-label="Function / class"><a href="./step-02a-shared-runtime-config/Housepath/"><code>Housepath</code></a></td>' in content
+    assert '<a href="./internal/config/_check_spark_session.md"><code>_check_spark_session</code></a> (internal)' in content
+    assert "[`Open notebook`](" not in content
+    assert "<code>`00_env_config`</code>" not in content
 
 
 def test_docs_metadata_matches_public_exports() -> None:
