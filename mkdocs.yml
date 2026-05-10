@@ -19,18 +19,6 @@ theme:
 nav:
   - Home: index.md
   - Quick Start: quick-start.md
-  - Data Quality Rules System: data-quality-rules-system.md
-  - Lifecycle Operating Model: lifecycle-operating-model.md
-  - Notebook Structure:
-      - Overview: notebook-structure.md
-      - 00_env_config: notebook-structure/00-env-config.md
-      - 02_ex: notebook-structure/02-exploration.md
-      - 03_pc: notebook-structure/03-pipeline-contract.md
-  - Metadata and Contracts:
-      - Overview: metadata-and-contracts.md
-      - Contract Model: metadata-and-contracts/contract-model.md
-      - Metadata Tables: metadata-and-contracts/metadata-tables.md
-  - Deployment and Promotion: deployment-and-promotion.md
   - Functions:
       - Function Reference: reference/index.md
       - Modules:
@@ -41,8 +29,19 @@ nav:
           - data_quality: api/modules/data_quality.md
           - data_governance: api/modules/data_governance.md
           - data_lineage: api/modules/data_lineage.md
-  - Setup:
-      - Fabric Wheel Install: setup/fabric-wheel-install.md
+  - Lifecycle Operating Model: lifecycle-operating-model.md
+  - AI-Assisted Data Quality: data-quality-rules-system.md
+  - Notebook Structure:
+      - Overview: notebook-structure.md
+      - 00_env_config: notebook-structure/00-env-config.md
+      - 02_ex: notebook-structure/02-exploration.md
+      - 03_pc: notebook-structure/03-pipeline-contract.md
+  - Metadata and Contracts:
+      - Overview: metadata-and-contracts.md
+      - Contract Model: metadata-and-contracts/contract-model.md
+      - Metadata Tables: metadata-and-contracts/metadata-tables.md
+  - Deployment and Promotion: deployment-and-promotion.md
+  - Install in Fabric: setup/fabric-wheel-install.md
 
 markdown_extensions:
   - admonition

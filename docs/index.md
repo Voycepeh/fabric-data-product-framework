@@ -37,12 +37,12 @@ _FabricOps connects contracts, profiling, AI-assisted suggestions, human approva
 | Run the framework end to end | [Quick Start](quick-start/) |
 | Set up the three notebook types | [Notebook Structure](notebook-structure/) |
 | Understand data contracts and metadata | [Metadata and Contracts](metadata-and-contracts/) |
-| Add quality checks and DQ rules | [Data Quality Rules System](data-quality-rules-system/) |
+| Use AI to suggest data quality rules | [AI-Assisted Data Quality](data-quality-rules-system/) |
 | Find reusable templates and functions | [Functions](reference/) |
-| Install the wheel in Fabric | [Setup](setup/) |
+| Install the wheel in Fabric | [Install in Fabric](setup/fabric-wheel-install/) |
 
 ### Suggested paths
 
 - **Run the framework:** [Quick Start](quick-start/) → [Notebook Structure](notebook-structure/) → [Functions](reference/)
-- **Build a governed data product:** [Metadata and Contracts](metadata-and-contracts/) → [Data Quality Rules System](data-quality-rules-system/) → [Functions](reference/)
+- **Build a governed data product:** [Metadata and Contracts](metadata-and-contracts/) → [AI-Assisted Data Quality](data-quality-rules-system/) → [Functions](reference/)
 - **Understand the operating model:** [Lifecycle Operating Model](lifecycle-operating-model/) → [Notebook Structure](notebook-structure/) → [Metadata and Contracts](metadata-and-contracts/)
