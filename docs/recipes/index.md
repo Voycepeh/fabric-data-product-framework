@@ -28,4 +28,4 @@ Templates are copy ready, not source ready. For real projects, replace source pa
 4. Use the full chaining path when you want the metadata-first AI-in-the-loop workflow.
 
 
-In this sample flow, 02_ex creates the approved contract consumed by 03_pc.
+In this sample flow, 02_ex creates the approved contract and writes it to metadata or local sample metadata, then 03_pc consumes that approved contract from metadata/local sample metadata.
