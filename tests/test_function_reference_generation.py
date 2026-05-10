@@ -99,8 +99,9 @@ def test_all_public_functions_table_contains_starter_path_column() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     assert "## All public functions" in content
-    assert "| Function / class | Module | Starter path | Importance | Purpose |" in content
-    assert "| [`load_fabric_config`]" in content
+    assert '<table class="reference-catalogue-table">' in content
+    assert 'data-label="Starter path"' in content
+    assert "[`load_fabric_config`]" in content
 
 
 def test_non_starter_callable_still_appears_in_complete_catalogue() -> None:
@@ -108,6 +109,15 @@ def test_non_starter_callable_still_appears_in_complete_catalogue() -> None:
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     assert "## Additional public functions" in content
     assert "`run_data_product`" in content
+
+
+def test_reference_tables_include_mobile_friendly_classes_and_data_labels() -> None:
+    generate_reference()
+    content = REFERENCE_FILE.read_text(encoding="utf-8")
+    assert '<table class="reference-template-table">' in content
+    assert '<table class="reference-function-table">' in content
+    assert 'data-label="Function / class"' in content
+    assert 'data-label="Purpose"' in content
 
 
 def test_docs_metadata_matches_public_exports() -> None:
