@@ -29,6 +29,13 @@ def metadata_literal(name: str) -> list[dict[str, object]]:
     raise AssertionError(f"{name} missing")
 
 
+def notebook_source_text(path: str) -> str:
+    import json
+
+    notebook = json.loads((ROOT / path).read_text(encoding="utf-8"))
+    return "\n".join("".join(cell.get("source", [])) for cell in notebook["cells"] if cell.get("cell_type") == "code")
+
+
 def test_reference_generator_runs_without_fabric_runtime() -> None:
     generate_reference()
     assert REFERENCE_FILE.exists()
@@ -118,3 +125,80 @@ def test_template_flow_symbols_are_exported() -> None:
         for segment in notebook["segments"]:
             for symbol in segment["symbols"]:
                 assert symbol in exports
+
+
+def test_template_flow_registry_matches_expected_symbol_sets() -> None:
+    template_docs = metadata_literal("TEMPLATE_FLOW_DOCS")
+    symbols_by_notebook: dict[str, set[str]] = {}
+    for notebook in template_docs:
+        symbols = symbols_by_notebook.setdefault(notebook["notebook_key"], set())
+        for segment in notebook["segments"]:
+            symbols.update(segment["symbols"])
+
+    expected = {
+        "00_env_config": {
+            "Housepath",
+            "create_path_config",
+            "create_notebook_runtime_config",
+            "create_ai_prompt_config",
+            "create_governance_config",
+            "create_quality_config",
+            "create_lineage_config",
+            "create_framework_config",
+            "validate_framework_config",
+            "load_fabric_config",
+            "run_config_smoke_tests",
+            "bootstrap_fabric_env",
+            "check_fabric_ai_functions_available",
+            "configure_fabric_ai_functions",
+            "get_path",
+        },
+        "02_ex": {
+            "load_fabric_config",
+            "validate_notebook_name",
+            "assert_notebook_name_valid",
+            "build_runtime_context",
+            "get_path",
+            "lakehouse_table_read",
+            "warehouse_read",
+            "generate_metadata_profile",
+            "profile_dataframe_to_metadata",
+            "suggest_dq_rules_prompt",
+            "normalize_contract_dict",
+            "validate_contract_dict",
+            "write_contract_to_lakehouse",
+            "build_lineage_from_notebook_code",
+        },
+        "03_pc": {
+            "load_fabric_config",
+            "validate_notebook_name",
+            "assert_notebook_name_valid",
+            "generate_run_id",
+            "build_runtime_context",
+            "get_path",
+            "load_latest_approved_contract",
+            "lakehouse_table_read",
+            "warehouse_read",
+            "extract_required_columns",
+            "get_executable_quality_rules",
+            "validate_dq_rules",
+            "run_dq_rules",
+            "split_valid_and_quarantine",
+            "lakehouse_table_write",
+            "warehouse_write",
+            "build_dataset_run_record",
+            "build_quality_result_records",
+            "build_contract_records",
+            "build_lineage_records",
+        },
+    }
+    assert symbols_by_notebook == expected
+
+
+def test_every_starter_flow_symbol_is_used_in_its_template_notebook() -> None:
+    template_docs = metadata_literal("TEMPLATE_FLOW_DOCS")
+    for notebook in template_docs:
+        code = notebook_source_text(notebook["template_path"])
+        for segment in notebook["segments"]:
+            for symbol in segment["symbols"]:
+                assert symbol in code, f"{symbol} is listed for {notebook['notebook_key']} but not used in notebook code"

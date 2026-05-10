@@ -44,19 +44,51 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
         "segment_intro": "Shared environment bootstrap and validation before exploration or pipeline notebooks run.",
         "segments": [
             {
-                "title": "Configure shared framework defaults",
+                "title": "Segment 1: Import configuration helpers",
                 "symbols": [
+                    "Housepath",
+                    "create_path_config",
+                    "create_notebook_runtime_config",
+                    "create_ai_prompt_config",
+                    "create_governance_config",
+                    "create_quality_config",
+                    "create_lineage_config",
                     "create_framework_config",
+                ],
+            },
+            {
+                "title": "Segment 2: Define environment targets and notebook policy",
+                "symbols": [
+                    "validate_framework_config",
                     "load_fabric_config",
                     "get_path",
                 ],
             },
             {
-                "title": "Run readiness and smoke checks",
+                "title": "Segment 3: Set AI, quality, governance, and lineage defaults",
+                "symbols": [
+                    "create_ai_prompt_config",
+                    "create_governance_config",
+                    "create_quality_config",
+                    "create_lineage_config",
+                ],
+            },
+            {
+                "title": "Segment 4: Assemble and validate framework config",
+                "symbols": [
+                    "create_framework_config",
+                    "validate_framework_config",
+                    "load_fabric_config",
+                ],
+            },
+            {
+                "title": "Segment 5: Run startup checks and show resolved paths",
                 "symbols": [
                     "run_config_smoke_tests",
                     "bootstrap_fabric_env",
                     "check_fabric_ai_functions_available",
+                    "configure_fabric_ai_functions",
+                    "get_path",
                 ],
             },
         ],
@@ -69,33 +101,41 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
         "segments": [
             {
                 "title": "Segment 1: Load shared config and runtime",
-                "symbols": ["load_fabric_config", "build_runtime_context"],
+                "symbols": [
+                    "load_fabric_config",
+                    "validate_notebook_name",
+                    "assert_notebook_name_valid",
+                    "build_runtime_context",
+                    "get_path",
+                ],
             },
             {
                 "title": "Segment 2: Profile source and capture evidence",
                 "symbols": [
                     "lakehouse_table_read",
+                    "warehouse_read",
                     "generate_metadata_profile",
-                    "profile_metadata_to_records",
-                    "write_metadata_records",
+                    "profile_dataframe_to_metadata",
                 ],
             },
             {
                 "title": "Segment 3: AI-assisted drafting (advisory only)",
                 "symbols": [
-                    "build_ai_quality_context",
-                    "build_manual_dq_rule_prompt_package",
-                    "build_manual_governance_prompt_package",
                     "suggest_dq_rules_prompt",
-                    "classify_columns",
                 ],
             },
             {
                 "title": "Segment 4: Human approval and contract write",
                 "symbols": [
+                    "normalize_contract_dict",
+                    "validate_contract_dict",
                     "build_contract_summary",
                     "write_contract_to_lakehouse",
                 ],
+            },
+            {
+                "title": "Optional lineage notes",
+                "symbols": ["build_lineage_from_notebook_code"],
             },
         ],
     },
@@ -107,13 +147,21 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
         "segments": [
             {
                 "title": "Segment 1: Load shared config and runtime context",
-                "symbols": ["load_fabric_config", "build_runtime_context"],
+                "symbols": [
+                    "load_fabric_config",
+                    "validate_notebook_name",
+                    "assert_notebook_name_valid",
+                    "generate_run_id",
+                    "build_runtime_context",
+                    "get_path",
+                ],
             },
             {
                 "title": "Segment 2: Load approved contract and source data",
                 "symbols": [
                     "load_latest_approved_contract",
                     "lakehouse_table_read",
+                    "warehouse_read",
                 ],
             },
             {
@@ -129,17 +177,17 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
                 "symbols": [
                     "run_dq_rules",
                     "split_valid_and_quarantine",
-                    "assert_dq_passed",
                     "lakehouse_table_write",
+                    "warehouse_write",
                 ],
             },
             {
                 "title": "Optional metadata / lineage / handover evidence",
                 "symbols": [
-                    "write_metadata_records",
-                    "build_lineage_from_notebook_code",
-                    "build_run_summary",
-                    "render_run_summary_markdown",
+                    "build_dataset_run_record",
+                    "build_quality_result_records",
+                    "build_contract_records",
+                    "build_lineage_records",
                 ],
             },
         ],
