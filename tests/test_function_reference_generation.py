@@ -102,6 +102,27 @@ def test_all_public_functions_table_contains_starter_path_column() -> None:
     assert '<table class="reference-catalogue-table">' in content
     assert 'data-label="Starter path"' in content
     assert '<a href="./step-02a-shared-runtime-config/load_fabric_config/"><code>load_fabric_config</code></a>' in content
+    assert "data-callable-row" in content
+    assert "data-callable-name=" in content
+    assert "data-callable-purpose=" in content
+
+
+def test_reference_includes_callable_finder_block() -> None:
+    generate_reference()
+    content = REFERENCE_FILE.read_text(encoding="utf-8")
+    assert "## Find a callable" in content
+    assert 'data-callable-finder' in content
+    assert 'id="callable-finder-input"' in content
+    assert 'data-callable-finder-empty' in content
+
+
+def test_function_reference_tables_use_compact_module_links() -> None:
+    generate_reference()
+    content = REFERENCE_FILE.read_text(encoding="utf-8")
+    assert 'class="reference-module-link"' in content
+    assert '<table class="reference-function-table">' in content
+    assert '<table class="reference-catalogue-table">' in content
+    assert 'api-chip api-chip-module api-chip-link' not in content
 
 
 def test_non_starter_callable_still_appears_in_complete_catalogue() -> None:

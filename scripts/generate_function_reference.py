@@ -395,13 +395,23 @@ def main() -> None:
             .replace('"', "&quot;")
         )
 
-    def _html_table(table_class: str, headers: list[str], rows: list[list[str]]) -> list[str]:
+    def _html_table(
+        table_class: str,
+        headers: list[str],
+        rows: list[list[str]],
+        *,
+        row_attrs: list[dict[str, str]] | None = None,
+    ) -> list[str]:
         lines = [f'<table class="{table_class}">', "  <thead>", "    <tr>"]
         for header in headers:
             lines.append(f"      <th>{_esc(header)}</th>")
         lines.extend(["    </tr>", "  </thead>", "  <tbody>"])
-        for row in rows:
-            lines.append("    <tr>")
+        for row_index, row in enumerate(rows):
+            attr_text = ""
+            if row_attrs and row_index < len(row_attrs):
+                attrs = row_attrs[row_index]
+                attr_text = "".join(f' {key}="{_esc(value)}"' for key, value in attrs.items())
+            lines.append(f"    <tr{attr_text}>")
             for idx, cell in enumerate(row):
                 lines.append(f'      <td data-label="{_esc(headers[idx])}">{cell}</td>')
             lines.append("    </tr>")
@@ -412,6 +422,12 @@ def main() -> None:
         content = f"<code>{_esc(text)}</code>" if code else _esc(text)
         return f'<a href="{_esc(href)}">{content}</a>'
 
+    def _module_link(module: str) -> str:
+        return (
+            f'<a class="reference-module-link" href="../api/modules/{_esc(module)}/" '
+            f'title="Open {module} module page" aria-label="Open {module} module page">{_esc(module)}</a>'
+        )
+
     def _strip_backticks(label: str) -> str:
         return label[1:-1] if label.startswith("`") and label.endswith("`") else label
 
@@ -419,6 +435,17 @@ def main() -> None:
         "# Function Reference",
         "",
         "Use this page as an API lookup after you understand the notebook flow.",
+        "",
+        "## Find a callable",
+        "",
+        "Search the callable catalogue by function name, module, starter path, or purpose. Site-wide search is still available from the top right.",
+        "",
+        '<div class="callable-finder" data-callable-finder>',
+        '  <label class="callable-finder-label" for="callable-finder-input">Search callables</label>',
+        '  <input id="callable-finder-input" class="callable-finder-input" type="search" placeholder="Search by function name, module, or what you want to do" aria-describedby="callable-finder-status" autocomplete="off">',
+        '  <p id="callable-finder-status" class="callable-finder-status" aria-live="polite">Showing all callables.</p>',
+        '  <p class="callable-finder-empty" data-callable-finder-empty hidden>No callables match your search.</p>',
+        "</div>",
         "",
         "## Start from the templates",
         "",
@@ -470,7 +497,7 @@ def main() -> None:
                 ) or "—"
                 segment_rows.append([
                     _anchor(symbol_link, s.name, code=True),
-                    f'<a class="api-chip api-chip-module api-chip-link" href="../api/modules/{s.public_module}/" title="Open {s.public_module} module page" aria-label="Open {s.public_module} module page">{s.public_module}</a>',
+                    _module_link(s.public_module),
                     s.importance,
                     s.purpose or "—",
                     related_links,
@@ -491,18 +518,36 @@ def main() -> None:
         ]
     )
     all_rows: list[list[str]] = []
+    all_row_attrs: list[dict[str, str]] = []
     for s in sorted(symbol_map.values(), key=lambda x: x.name.lower()):
         step_slug = step_slugs.get(str(docs_metadata[s.name]["workflow_step"]))
         symbol_link = f"./{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.public_module}/#{s.name}"
         starter_path = ", ".join(sorted(starter_symbol_to_notebooks.get(s.name, set()))) or "—"
         all_rows.append([
             _anchor(symbol_link, s.name, code=True),
-            f'<a class="api-chip api-chip-module api-chip-link" href="../api/modules/{s.public_module}/" title="Open {s.public_module} module page" aria-label="Open {s.public_module} module page">{s.public_module}</a>',
+            _module_link(s.public_module),
             starter_path,
             s.importance,
             s.purpose or s.summary or "—",
         ])
-    ref.extend(_html_table("reference-catalogue-table", ["Function / class", "Module", "Starter path", "Importance", "Purpose"], all_rows))
+        all_row_attrs.append(
+            {
+                "data-callable-row": "true",
+                "data-callable-name": s.name,
+                "data-callable-module": s.public_module,
+                "data-callable-starter-path": starter_path,
+                "data-callable-importance": s.importance,
+                "data-callable-purpose": s.purpose or s.summary or "—",
+            }
+        )
+    ref.extend(
+        _html_table(
+            "reference-catalogue-table",
+            ["Function / class", "Module", "Starter path", "Importance", "Purpose"],
+            all_rows,
+            row_attrs=all_row_attrs,
+        )
+    )
 
     non_starter = sorted([s for s in symbol_map.values() if s.name not in starter_symbol_to_notebooks], key=lambda x: x.name.lower())
     ref.extend(
@@ -526,7 +571,7 @@ def main() -> None:
             ) or "—"
             additional_rows.append([
                 _anchor(symbol_link, s.name, code=True),
-                f'<a class="api-chip api-chip-module api-chip-link" href="../api/modules/{s.public_module}/" title="Open {s.public_module} module page" aria-label="Open {s.public_module} module page">{s.public_module}</a>',
+                _module_link(s.public_module),
                 s.importance,
                 s.purpose or s.summary or "—",
                 related_links,
