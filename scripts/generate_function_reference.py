@@ -478,23 +478,17 @@ def main() -> None:
             for symbol_name in segment["symbols"]:
                 s = symbol_map[symbol_name]
                 info = module_data[s.actual_module]
-                related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
                 step_slug = step_slugs.get(str(docs_metadata[s.name]["workflow_step"]))
                 symbol_link = f"../../reference/{step_slug}/{s.name}/" if step_slug else f"../../api/modules/{s.public_module}/#{s.name}"
-                related_links = ", ".join(
-                    f"{_anchor(f'../../reference/internal/{s.actual_module}/{r}.md', r, code=True)} (internal)" for r in related
-                ) or "—"
                 segment_rows.append([
                     _anchor(symbol_link, s.name, code=True),
                     _module_link(s.public_module, base_prefix="../../"),
-                    s.importance,
                     s.purpose or "—",
-                    related_links,
                 ])
             notebook_lines.extend(
                 _html_table(
-                    "reference-function-table",
-                    ["Function / class", "Module", "Importance", "Purpose", "Related helpers"],
+                    "reference-function-table notebook-structure-function-table",
+                    ["Function / class", "Module", "Purpose"],
                     segment_rows,
                 )
             )
@@ -542,7 +536,9 @@ def main() -> None:
             "",
             '<div class="callable-finder" data-callable-finder>',
             '  <label class="callable-finder-label" for="callable-finder-input">Search callables</label>',
-            '  <input id="callable-finder-input" class="callable-finder-input" type="search" placeholder="Search by function name, module, or what you want to do" aria-describedby="callable-finder-status" autocomplete="off">',
+            '  <input id="callable-finder-input" class="callable-finder-input" type="search" placeholder="Search callables" aria-describedby="callable-finder-help callable-finder-status callable-finder-examples" autocomplete="off">',
+            '  <p id="callable-finder-help" class="callable-finder-help">Search by function name, module, or what the function does.</p>',
+            '  <p id="callable-finder-examples" class="callable-finder-examples">Try: <span class="callable-finder-chip">csv</span> <span class="callable-finder-chip">data_quality</span> <span class="callable-finder-chip">quarantine</span></p>',
             '  <p id="callable-finder-status" class="callable-finder-status" aria-live="polite">Showing all callables.</p>',
             '  <p class="callable-finder-empty" data-callable-finder-empty hidden>No callables match your search.</p>',
             "</div>",
