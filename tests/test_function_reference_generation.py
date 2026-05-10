@@ -120,6 +120,16 @@ def test_reference_tables_include_mobile_friendly_classes_and_data_labels() -> N
     assert 'data-label="Purpose"' in content
 
 
+def test_reference_html_tables_use_anchor_links_not_markdown_links() -> None:
+    generate_reference()
+    content = REFERENCE_FILE.read_text(encoding="utf-8")
+    assert '<td data-label="Full template"><a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb">Open notebook</a></td>' in content
+    assert '<td data-label="Function / class"><a href="./step-02a-shared-runtime-config/Housepath/"><code>Housepath</code></a></td>' in content
+    assert '<a href="./internal/config/_check_spark_session.md"><code>_check_spark_session</code></a> (internal)' in content
+    assert "[`Open notebook`](" not in content
+    assert "<code>`00_env_config`</code>" not in content
+
+
 def test_docs_metadata_matches_public_exports() -> None:
     exports = set(public_exports())
     metadata_symbols = {row["symbol_name"] for row in metadata_literal("PUBLIC_SYMBOL_DOCS")}

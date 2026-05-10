@@ -408,6 +408,13 @@ def main() -> None:
         lines.extend(["  </tbody>", "</table>"])
         return lines
 
+    def _anchor(href: str, text: str, *, code: bool = False) -> str:
+        content = f"<code>{_esc(text)}</code>" if code else _esc(text)
+        return f'<a href="{_esc(href)}">{content}</a>'
+
+    def _strip_backticks(label: str) -> str:
+        return label[1:-1] if label.startswith("`") and label.endswith("`") else label
+
     ref = [
         "# Function Reference",
         "",
@@ -420,10 +427,13 @@ def main() -> None:
     for row in template_flow_docs:
         template_path = ROOT / row["template_path"]
         if template_path.exists():
-            template_link = f"[`Open notebook`](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/{row['template_path']})"
+            template_link = _anchor(
+                f"https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/{row['template_path']}",
+                "Open notebook",
+            )
         else:
             template_link = "—"
-        template_rows.append([f"<code>{row['notebook_label']}</code>", row["segment_intro"], template_link])
+        template_rows.append([f"<code>{_esc(_strip_backticks(row['notebook_label']))}</code>", row["segment_intro"], template_link])
     ref.extend(_html_table("reference-template-table", ["Notebook", "Guided usage", "Full template"], template_rows))
 
     ref.extend([
@@ -455,12 +465,15 @@ def main() -> None:
                 )
                 step_slug = step_slugs.get(str(docs_metadata[s.name]["workflow_step"]))
                 symbol_link = f"./{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.public_module}/#{s.name}"
+                related_links = ", ".join(
+                    f"{_anchor(f'./internal/{s.actual_module}/{r}.md', r, code=True)} (internal)" for r in related
+                ) or "—"
                 segment_rows.append([
-                    f"[`{s.name}`]({symbol_link})",
+                    _anchor(symbol_link, s.name, code=True),
                     f'<a class="api-chip api-chip-module api-chip-link" href="../api/modules/{s.public_module}/" title="Open {s.public_module} module page" aria-label="Open {s.public_module} module page">{s.public_module}</a>',
                     s.importance,
                     s.purpose or "—",
-                    ", ".join(f"[`{r}`](./internal/{s.actual_module}/{r}.md) (internal)" for r in related) or "—",
+                    related_links,
                 ])
             ref.extend(
                 _html_table(
@@ -483,7 +496,7 @@ def main() -> None:
         symbol_link = f"./{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.public_module}/#{s.name}"
         starter_path = ", ".join(sorted(starter_symbol_to_notebooks.get(s.name, set()))) or "—"
         all_rows.append([
-            f"[`{s.name}`]({symbol_link})",
+            _anchor(symbol_link, s.name, code=True),
             f'<a class="api-chip api-chip-module api-chip-link" href="../api/modules/{s.public_module}/" title="Open {s.public_module} module page" aria-label="Open {s.public_module} module page">{s.public_module}</a>',
             starter_path,
             s.importance,
@@ -508,12 +521,15 @@ def main() -> None:
             related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
             step_slug = step_slugs.get(str(docs_metadata[s.name]["workflow_step"]))
             symbol_link = f"./{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.public_module}/#{s.name}"
+            related_links = ", ".join(
+                f"{_anchor(f'./internal/{s.actual_module}/{r}.md', r, code=True)} (internal)" for r in related
+            ) or "—"
             additional_rows.append([
-                f"[`{s.name}`]({symbol_link})",
+                _anchor(symbol_link, s.name, code=True),
                 f'<a class="api-chip api-chip-module api-chip-link" href="../api/modules/{s.public_module}/" title="Open {s.public_module} module page" aria-label="Open {s.public_module} module page">{s.public_module}</a>',
                 s.importance,
                 s.purpose or s.summary or "—",
-                ", ".join(f"[`{r}`](./internal/{s.actual_module}/{r}.md) (internal)" for r in related) or "—",
+                related_links,
             ])
         ref.extend(_html_table("reference-function-table", ["Function / class", "Module", "Importance", "Purpose", "Related helpers"], additional_rows))
     else:
