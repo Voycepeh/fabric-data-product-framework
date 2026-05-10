@@ -474,6 +474,10 @@ def main() -> None:
         for segment in flow["segments"]:
             notebook_lines.append(f"## {segment['title']}")
             notebook_lines.append("")
+            segment_text = str(segment.get("text", "")).strip()
+            if segment_text:
+                notebook_lines.append(segment_text)
+                notebook_lines.append("")
             segment_rows: list[list[str]] = []
             for symbol_name in segment["symbols"]:
                 s = symbol_map[symbol_name]
@@ -485,14 +489,15 @@ def main() -> None:
                     _module_link(s.public_module, base_prefix="../../"),
                     s.purpose or "—",
                 ])
-            notebook_lines.extend(
-                _html_table(
-                    "reference-function-table notebook-structure-function-table",
-                    ["Function / class", "Module", "Purpose"],
-                    segment_rows,
+            if segment_rows:
+                notebook_lines.extend(
+                    _html_table(
+                        "reference-function-table notebook-structure-function-table",
+                        ["Function / class", "Module", "Purpose"],
+                        segment_rows,
+                    )
                 )
-            )
-            notebook_lines.append("")
+                notebook_lines.append("")
         (NOTEBOOK_STRUCTURE_DIR / page_name).write_text("\n".join(notebook_lines) + "\n", encoding="utf-8", newline="\n")
 
     ref = [
@@ -503,6 +508,12 @@ def main() -> None:
         "## Start from the templates",
         "",
     ]
+    notebook_structure_links = {
+        "00_env_config": "../notebook-structure/00-env-config/",
+        "02_ex": "../notebook-structure/02-exploration/",
+        "03_pc": "../notebook-structure/03-pipeline-contract/",
+    }
+
     template_rows: list[list[str]] = []
     for row in template_flow_docs:
         template_path = ROOT / row["template_path"]
@@ -513,7 +524,11 @@ def main() -> None:
             )
         else:
             template_link = "—"
-        template_rows.append([f"<code>{_esc(_strip_backticks(row['notebook_label']))}</code>", row["segment_intro"], template_link])
+        guided_link = notebook_structure_links.get(row["notebook_key"], "")
+        guided_usage = row["segment_intro"]
+        if guided_link:
+            guided_usage = f"{guided_usage}<br><a href=\"{_esc(guided_link)}\">View guided structure</a>"
+        template_rows.append([f"<code>{_esc(_strip_backticks(row['notebook_label']))}</code>", guided_usage, template_link])
     ref.extend(_html_table("reference-template-table", ["Notebook", "Guided usage", "Full template"], template_rows))
 
     ref.extend([
