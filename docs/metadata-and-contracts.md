@@ -4,6 +4,8 @@ This section is the landing page for how FabricOps assembles a governed data con
 
 A data contract is the agreed expectation for a dataset: what it is, how it may be used, what quality must pass, and what evidence proves it ran safely.
 
+![FabricOps data contract assembly](assets/data-contract.png)
+
 A FabricOps data contract is assembled from:
 
 - environment configuration,
