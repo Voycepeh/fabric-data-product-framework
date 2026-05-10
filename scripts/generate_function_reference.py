@@ -11,6 +11,7 @@ PACKAGE_NAME = "fabricops_kit"
 INIT_PATH = PKG_DIR / "__init__.py"
 DOCS_METADATA_PATH = PKG_DIR / "docs_metadata.py"
 REFERENCE_PATH = ROOT / "docs" / "reference" / "index.md"
+NOTEBOOK_STRUCTURE_DIR = ROOT / "docs" / "notebook-structure"
 MODULE_DIR = ROOT / "docs" / "api" / "modules"
 
 PUBLIC_MODULE_PREFERRED_NAMES = {
@@ -431,6 +432,69 @@ def main() -> None:
     def _strip_backticks(label: str) -> str:
         return label[1:-1] if label.startswith("`") and label.endswith("`") else label
 
+    notebook_page_files = {
+        "00_env_config": "00-env-config.md",
+        "02_ex": "02-exploration.md",
+        "03_pc": "03-pipeline-contract.md",
+    }
+    notebook_boundary_notes = {
+        "00_env_config": "`00_env_config` is shared setup.",
+        "02_ex": "`02_ex` is AI-assisted exploration and human review.",
+        "03_pc": "`03_pc` is deterministic pipeline enforcement.",
+    }
+
+    NOTEBOOK_STRUCTURE_DIR.mkdir(parents=True, exist_ok=True)
+    for flow in template_flow_docs:
+        notebook_key = flow["notebook_key"]
+        page_name = notebook_page_files.get(notebook_key)
+        if not page_name:
+            continue
+        notebook_path = ROOT / flow["template_path"]
+        notebook_link = (
+            _anchor(f"https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/{flow['template_path']}", "Open template notebook")
+            if notebook_path.exists()
+            else "—"
+        )
+        notebook_lines = [
+            f"# {flow['notebook_label']}",
+            "",
+            flow["segment_intro"],
+            "",
+            f"> {notebook_link}",
+            "",
+            f"> {notebook_boundary_notes[notebook_key]}",
+            "",
+        ]
+        for segment in flow["segments"]:
+            notebook_lines.append(f"## {segment['title']}")
+            notebook_lines.append("")
+            segment_rows: list[list[str]] = []
+            for symbol_name in segment["symbols"]:
+                s = symbol_map[symbol_name]
+                info = module_data[s.actual_module]
+                related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
+                step_slug = step_slugs.get(str(docs_metadata[s.name]["workflow_step"]))
+                symbol_link = f"../reference/{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.public_module}/#{s.name}"
+                related_links = ", ".join(
+                    f"{_anchor(f'../reference/internal/{s.actual_module}/{r}.md', r, code=True)} (internal)" for r in related
+                ) or "—"
+                segment_rows.append([
+                    _anchor(symbol_link, s.name, code=True),
+                    _module_link(s.public_module),
+                    s.importance,
+                    s.purpose or "—",
+                    related_links,
+                ])
+            notebook_lines.extend(
+                _html_table(
+                    "reference-function-table",
+                    ["Function / class", "Module", "Importance", "Purpose", "Related helpers"],
+                    segment_rows,
+                )
+            )
+            notebook_lines.append("")
+        (NOTEBOOK_STRUCTURE_DIR / page_name).write_text("\n".join(notebook_lines) + "\n", encoding="utf-8", newline="\n")
+
     ref = [
         "# Function Reference",
         "",
@@ -462,43 +526,7 @@ def main() -> None:
         "",
         "AI functions are advisory. Approved contracts and pipeline notebooks are the enforcement point.",
         "",
-        "## Starter path functions",
-        "",
     ])
-    for flow in template_flow_docs:
-        ref.append(f"### {flow['notebook_label']}")
-        ref.append("")
-        ref.extend([flow["segment_intro"], ""])
-        for segment in flow["segments"]:
-            ref.append(f"#### {segment['title']}")
-            ref.append("")
-            segment_rows: list[list[str]] = []
-            for symbol_name in segment["symbols"]:
-                s = symbol_map[symbol_name]
-                info = module_data[s.actual_module]
-                related = sorted(
-                    [c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")]
-                )
-                step_slug = step_slugs.get(str(docs_metadata[s.name]["workflow_step"]))
-                symbol_link = f"./{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.public_module}/#{s.name}"
-                related_links = ", ".join(
-                    f"{_anchor(f'./internal/{s.actual_module}/{r}.md', r, code=True)} (internal)" for r in related
-                ) or "—"
-                segment_rows.append([
-                    _anchor(symbol_link, s.name, code=True),
-                    _module_link(s.public_module),
-                    s.importance,
-                    s.purpose or "—",
-                    related_links,
-                ])
-            ref.extend(
-                _html_table(
-                    "reference-function-table",
-                    ["Function / class", "Module", "Importance", "Purpose", "Related helpers"],
-                    segment_rows,
-                )
-            )
-            ref.append("")
 
     ref.extend(
         [
@@ -549,36 +577,6 @@ def main() -> None:
         )
     )
 
-    non_starter = sorted([s for s in symbol_map.values() if s.name not in starter_symbol_to_notebooks], key=lambda x: x.name.lower())
-    ref.extend(
-        [
-            "",
-            "## Additional public functions",
-            "",
-            "These exported callables are part of the complete catalogue above and are not directly used in the minimal starter template path.",
-            "",
-        ]
-    )
-    if non_starter:
-        additional_rows: list[list[str]] = []
-        for s in non_starter:
-            info = module_data[s.actual_module]
-            related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
-            step_slug = step_slugs.get(str(docs_metadata[s.name]["workflow_step"]))
-            symbol_link = f"./{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.public_module}/#{s.name}"
-            related_links = ", ".join(
-                f"{_anchor(f'./internal/{s.actual_module}/{r}.md', r, code=True)} (internal)" for r in related
-            ) or "—"
-            additional_rows.append([
-                _anchor(symbol_link, s.name, code=True),
-                _module_link(s.public_module),
-                s.importance,
-                s.purpose or s.summary or "—",
-                related_links,
-            ])
-        ref.extend(_html_table("reference-function-table", ["Function / class", "Module", "Importance", "Purpose", "Related helpers"], additional_rows))
-    else:
-        ref.append("All public callables are currently used in the starter template path.")
     ref.append("")
     REFERENCE_PATH.parent.mkdir(parents=True, exist_ok=True)
     REFERENCE_PATH.write_text("\n".join(ref) + "\n", encoding="utf-8", newline="\n")

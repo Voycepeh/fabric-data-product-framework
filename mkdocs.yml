@@ -21,7 +21,11 @@ nav:
   - Quick Start: quick-start.md
   - Data Quality Rules System: data-quality-rules-system.md
   - Lifecycle Operating Model: lifecycle-operating-model.md
-  - Notebook Structure: notebook-structure.md
+  - Notebook Structure:
+      - Overview: notebook-structure.md
+      - 00_env_config: notebook-structure/00-env-config.md
+      - 02_ex: notebook-structure/02-exploration.md
+      - 03_pc: notebook-structure/03-pipeline-contract.md
   - Metadata and Contracts:
       - Overview: metadata-and-contracts.md
       - Contract Model: metadata-and-contracts/contract-model.md

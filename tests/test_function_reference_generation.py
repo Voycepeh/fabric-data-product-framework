@@ -60,30 +60,15 @@ def test_every_public_export_is_listed_exactly_once_in_all_functions_table() -> 
         assert all_functions.count(f"<code>{name}</code>") == 1
 
 
-def test_reference_contains_template_first_starter_sections_and_segments() -> None:
+def test_reference_contains_required_sections_and_no_notebook_segments() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
-    assert "## Starter path functions" in content
-    assert "### `00_env_config`" in content
-    assert "### `02_ex_<agreement>_<topic>`" in content
-    assert "### `03_pc_<agreement>_<pipeline>`" in content
-    assert "#### Segment 1: Load shared config and runtime" in content
-    assert "#### Segment 2: Profile source and capture evidence" in content
-    assert "#### Segment 3: AI-assisted drafting (advisory only)" in content
-    assert "#### Segment 4: Human approval and contract write" in content
-    assert "#### Segment 1: Load shared config and runtime context" in content
-    assert "#### Segment 2: Load approved contract and source data" in content
-    assert "#### Segment 3: Validate columns, transform, and compile rules" in content
-    assert "#### Segment 4: Run DQ, split outputs, and publish" in content
-    assert "#### Optional metadata / lineage / handover evidence" in content
-
-
-def test_template_used_functions_appear_in_expected_starter_segments() -> None:
-    generate_reference()
-    content = REFERENCE_FILE.read_text(encoding="utf-8")
-    assert "#### Segment 2: Profile source and capture evidence" in content and "<code>generate_metadata_profile</code>" in content
-    assert "#### Segment 3: AI-assisted drafting (advisory only)" in content and "<code>suggest_dq_rules_prompt</code>" in content
-    assert "#### Segment 4: Run DQ, split outputs, and publish" in content and "<code>run_dq_rules</code>" in content
+    assert "## Start from the templates" in content
+    assert "## What runs where" in content
+    assert "## Find a callable" in content
+    assert "## All public functions" in content
+    assert "## Starter path functions" not in content
+    assert "## Additional public functions" not in content
 
 
 def test_reference_no_longer_contains_old_step_headings() -> None:
@@ -115,14 +100,13 @@ def test_reference_includes_callable_finder_block() -> None:
     assert 'id="callable-finder-input"' in content
     assert 'data-callable-finder-empty' in content
     assert content.index("## Find a callable") < content.index("## All public functions")
-    assert content.index("## Find a callable") > content.index("## Starter path functions")
+    assert content.index("## Find a callable") > content.index("## What runs where")
 
 
 def test_function_reference_tables_use_compact_module_links() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     assert 'class="reference-module-link"' in content
-    assert '<table class="reference-function-table">' in content
     assert '<table class="reference-catalogue-table">' in content
     assert 'api-chip api-chip-module api-chip-link' not in content
 
@@ -130,15 +114,14 @@ def test_function_reference_tables_use_compact_module_links() -> None:
 def test_non_starter_callable_still_appears_in_complete_catalogue() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
-    assert "## Additional public functions" in content
-    assert "<code>run_data_product</code>" in content
+    all_functions = markdown_section(content, "All public functions")
+    assert "<code>run_data_product</code>" in all_functions
 
 
 def test_reference_tables_include_mobile_friendly_classes_and_data_labels() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     assert '<table class="reference-template-table">' in content
-    assert '<table class="reference-function-table">' in content
     assert 'data-label="Function / class"' in content
     assert 'data-label="Purpose"' in content
 
@@ -148,7 +131,6 @@ def test_reference_html_tables_use_anchor_links_not_markdown_links() -> None:
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     assert '<td data-label="Full template"><a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb">Open notebook</a></td>' in content
     assert '<td data-label="Function / class"><a href="./step-02a-shared-runtime-config/Housepath/"><code>Housepath</code></a></td>' in content
-    assert '<a href="./internal/config/_check_spark_session.md"><code>_check_spark_session</code></a> (internal)' in content
     assert "[`Open notebook`](" not in content
     assert "<code>`00_env_config`</code>" not in content
 
@@ -219,6 +201,7 @@ def test_template_flow_registry_matches_expected_symbol_sets() -> None:
             "generate_metadata_profile",
             "profile_dataframe_to_metadata",
             "suggest_dq_rules_prompt",
+            "seed_minimal_sample_source_table",
             "normalize_contract_dict",
             "validate_contract_dict",
             "write_contract_to_lakehouse",
@@ -257,3 +240,46 @@ def test_every_starter_flow_symbol_is_used_in_its_template_notebook() -> None:
         for segment in notebook["segments"]:
             for symbol in segment["symbols"]:
                 assert symbol in code, f"{symbol} is listed for {notebook['notebook_key']} but not used in notebook code"
+
+
+def test_generated_notebook_detail_pages_exist_with_expected_content() -> None:
+    generate_reference()
+    expected = {
+        "docs/notebook-structure/00-env-config.md": [
+            "# `00_env_config`",
+            "Open template notebook",
+            "00_env_config.ipynb",
+            "## Segment 2: Define environment targets and notebook policy",
+            "## Segment 3: Set AI, quality, governance, and lineage defaults",
+            "## Segment 4: Assemble and validate framework config",
+            "## Segment 5: Run startup checks and show resolved paths",
+            "<code>load_fabric_config</code>",
+        ],
+        "docs/notebook-structure/02-exploration.md": [
+            "# `02_ex_<agreement>_<topic>`",
+            "Open template notebook",
+            "02_ex_agreement_topic.ipynb",
+            "## Segment 2: Profile source and capture evidence",
+            "## Segment 3: AI-assisted drafting (advisory only)",
+            "<code>suggest_dq_rules_prompt</code>",
+        ],
+        "docs/notebook-structure/03-pipeline-contract.md": [
+            "# `03_pc_<agreement>_<pipeline>`",
+            "Open template notebook",
+            "03_pc_agreement_source_to_target.ipynb",
+            "## Segment 4: Run DQ, split outputs, and publish",
+            "## Optional metadata / lineage / handover evidence",
+            "<code>run_dq_rules</code>",
+        ],
+    }
+    for path, checks in expected.items():
+        content = (ROOT / path).read_text(encoding="utf-8")
+        for marker in checks:
+            assert marker in content
+
+
+def test_notebook_structure_overview_links_to_notebook_detail_pages() -> None:
+    text = (ROOT / "docs/notebook-structure.md").read_text(encoding="utf-8")
+    assert "notebook-structure/00-env-config.md" in text
+    assert "notebook-structure/02-exploration.md" in text
+    assert "notebook-structure/03-pipeline-contract.md" in text

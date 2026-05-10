@@ -5,13 +5,17 @@ def test_reference_index_templates_first_sections_present() -> None:
     text = Path("docs/reference/index.md").read_text(encoding="utf-8")
 
     assert "## Start from the templates" in text
-    assert "## Starter path functions" in text
+    assert "## Starter path functions" not in text
+    assert "## Additional public functions" not in text
+    assert "## What runs where" in text
+    assert "## Find a callable" in text
+    assert "## All public functions" in text
     assert "https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb" in text
     assert "https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/02_ex_agreement_topic.ipynb" in text
     assert "https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb" in text
     assert "../api/modules/dq/" not in text
     assert "../api/modules/quality/" not in text
-    template_section = text.split("## Starter path functions", 1)[0]
+    template_section = text.split("## Find a callable", 1)[0]
     assert "../api/modules/runtime_context/" not in template_section
     assert "../api/modules/data_product_metadata/" not in template_section
     assert "../api/modules/technical_audit_columns/" not in template_section
@@ -44,6 +48,10 @@ def test_mkdocs_nav_uses_full_module_names() -> None:
         "technical_audit_columns",
     ]:
         assert f"{hidden_module}: api/modules/{hidden_module}.md" not in text
+    assert "Notebook Structure:\n      - Overview: notebook-structure.md" in text
+    assert "- 00_env_config: notebook-structure/00-env-config.md" in text
+    assert "- 02_ex: notebook-structure/02-exploration.md" in text
+    assert "- 03_pc: notebook-structure/03-pipeline-contract.md" in text
 
 
 def test_module_pages_split_recommended_and_advanced_sections() -> None:

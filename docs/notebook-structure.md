@@ -41,6 +41,12 @@ Workspace
 | Enforce approved DQ rules/classifications | No | No | No | Yes |
 | Write curated outputs and run evidence | No | No | Optional draft artifacts | Yes |
 
+## Notebook details
+
+- [`00_env_config`](notebook-structure/00-env-config.md)
+- [`02_ex_<agreement>_<topic>`](notebook-structure/02-exploration.md)
+- [`03_pc_<agreement>_<pipeline>`](notebook-structure/03-pipeline-contract.md)
+
 ## Related pages
 
 - [Metadata and Contracts](metadata-and-contracts.md)
