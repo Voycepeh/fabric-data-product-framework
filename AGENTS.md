@@ -53,6 +53,10 @@ Guide agent/Codex contributions for this repository so changes stay reusable, pu
 - Run the docs generation command when available. If no explicit generator is documented, inspect `scripts/`, `mkdocs.yml`, and docs tooling before assuming `mkdocs build` alone is enough.
 - Run `mkdocs build` after docs/reference generation changes when possible.
 - Do not assume GitHub Pages will fix stale generated docs on its own.
+- `docs/reference/index.md` is generated output.
+- Do not manually patch `docs/reference/index.md` as the only source of truth.
+- Update `scripts/generate_function_reference.py` first, then regenerate `docs/reference/index.md`.
+- Keep `/reference/` template-first.
 
 Example (PR-132-style):
 - If you add `bootstrap_fabric_env`, `run_config_smoke_tests`, `check_fabric_ai_functions_available`, or add `get_path` to `config`, also update/regenerate the config API/module page so those callables appear.

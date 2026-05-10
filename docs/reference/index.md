@@ -1,44 +1,22 @@
 # Function Reference
 
-Start from the notebook templates first. Most users only need the templates and recommended entrypoints. Advanced helpers exist for customization.
+Use this page as an API lookup after you understand the notebook flow.
 
 ## Start from the templates
 
-### 00_env_config — shared runtime configuration
+| Notebook | User goal | Main functions | Full template |
+|---|---|---|---|
+| `00_env_config` | Configure Fabric paths, runtime checks, AI config, naming rules, quality defaults, governance defaults, lineage defaults. | `create_framework_config`, `load_fabric_config`, `get_path`, `run_config_smoke_tests`, `bootstrap_fabric_env` | [`Open notebook`](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb) |
+| `02_ex_<agreement>_<topic>` | Read and profile source data, build AI-ready context, suggest DQ and classification, capture human-reviewed contract decisions. | `lakehouse_table_read`, `generate_metadata_profile`, `build_ai_quality_context`, `build_manual_dq_rule_prompt_package`, `classify_columns`, `build_contract_summary` | [`Open notebook`](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/02_ex_agreement_topic.ipynb) |
+| `03_pc_<agreement>_<pipeline>` | Load approved contract, read source, transform, enforce DQ, quarantine failures, write output, persist metadata, produce lineage and handover evidence. | `load_latest_approved_contract`, `get_executable_quality_rules`, `run_dq_rules`, `split_valid_and_quarantine`, `assert_dq_passed`, `lakehouse_table_write`, `write_metadata_records` | [`Open notebook`](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb) |
 
-[Open template notebook](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb)
+## What runs where
 
-Defines environment paths, runtime checks, naming rules, AI prompt config, quality defaults, governance defaults, and lineage defaults. Runtime helper callables are available in supporting modules when needed.
+- `00_env_config` is shared setup.
+- `02_ex` is AI-assisted exploration and human review.
+- `03_pc` is deterministic pipeline enforcement.
 
-**Main modules**
-- [`environment_config`](../api/modules/environment_config/)
-- [`fabric_input_output`](../api/modules/fabric_input_output/)
-
-### 02_ex_<agreement>_<topic> — exploration and approval drafting
-
-[Open template notebook](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/02_ex_agreement_topic.ipynb)
-
-Profiles source data, builds AI-ready profiling context, drafts candidate DQ and governance suggestions, and captures human-reviewed contract decisions.
-
-**Main modules**
-- [`fabric_input_output`](../api/modules/fabric_input_output/)
-- [`data_profiling`](../api/modules/data_profiling/)
-- [`data_quality`](../api/modules/data_quality/)
-- [`data_governance`](../api/modules/data_governance/)
-- [`data_contracts`](../api/modules/data_contracts/)
-
-### 03_pc_<agreement>_<source>_to_<target> — deterministic pipeline enforcement
-
-[Open template notebook](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb)
-
-Loads approved contracts, reads source data, applies deterministic transformation, enforces approved DQ rules, writes controlled outputs, stores metadata evidence, and generates lineage/handover evidence. Audit columns, metadata evidence, and handover helper callables remain available as supporting modules.
-
-**Main modules**
-- [`environment_config`](../api/modules/environment_config/)
-- [`fabric_input_output`](../api/modules/fabric_input_output/)
-- [`data_contracts`](../api/modules/data_contracts/)
-- [`data_quality`](../api/modules/data_quality/)
-- [`data_lineage`](../api/modules/data_lineage/)
+AI functions are advisory. Approved contracts and pipeline notebooks are the enforcement point.
 
 ## Lifecycle flow
 

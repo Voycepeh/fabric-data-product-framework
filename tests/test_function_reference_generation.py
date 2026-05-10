@@ -280,3 +280,16 @@ def test_docs_metadata_includes_alphanumeric_workflow_steps() -> None:
     assert "2B" in step_numbers
     assert "6A" in step_numbers
     assert "6D" in step_numbers
+
+
+def test_template_first_sections_and_markdown_safety() -> None:
+    generate_reference()
+    content = REFERENCE_FILE.read_text(encoding="utf-8")
+    assert "## Start from the templates" in content
+    assert "`00_env_config`" in content
+    assert "`02_ex_<agreement>_<topic>`" in content
+    assert "`03_pc_<agreement>_<pipeline>`" in content
+    assert "## What runs where" in content
+    assert "AI functions are advisory" in content
+    assert "# Function Reference Use this page" not in content
+    assert "【" not in content
