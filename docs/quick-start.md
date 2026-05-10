@@ -1,71 +1,59 @@
-# Quick Start: End-to-End Notebook Runbook
+# Quick Start
 
-Use this page as the concise runbook for executing FabricOps Starter Kit in Microsoft Fabric.
+Use this page to get FabricOps Starter Kit running quickly in Microsoft Fabric. For deeper operating guidance, use the linked canonical docs.
 
-## Prerequisites
+## What you need
 
-- Microsoft Fabric notebook runtime target: **Fabric Runtime 1.3 (Python 3.11)**.
-- Local development runtime: Python **>=3.11** with `uv` installed.
-- Access to a Microsoft Fabric workspace with:
-  - Fabric Environment permission (to attach environments/install wheel artifacts), and
-  - Lakehouse and/or Warehouse access for source and output operations.
-- A dataset agreement context with defined purpose, ownership, and usage constraints.
+- A Microsoft Fabric workspace with notebook, Lakehouse/Warehouse, and environment access.
+- Fabric notebook runtime (Fabric Runtime 1.3 / Python 3.11 recommended by this project).
+- A prepared Fabric environment with the project wheel installed (see [Fabric Wheel Install](setup/fabric-wheel-install.md)).
+- A clear data-sharing agreement context (purpose, ownership, approved usage).
+- If you plan to use AI-assisted functions, your organisation must first enable the relevant **Copilot and Azure OpenAI Service** tenant settings in Fabric:
+  - **Users can use Copilot and other features powered by Azure OpenAI**
+  - **Data sent to Azure OpenAI can be processed outside your capacity's geographic region, compliance boundary, or national cloud instance** when required for your tenant/capacity region
+  - **Data sent to Azure OpenAI can be stored outside your capacity's geographic region, compliance boundary, or national cloud instance** where your organisation permits that setting
+- AI-assisted functions are optional: the core framework can run without them, but AI suggestion features will not work until the required organisation-level settings are approved and enabled.
 
-## 1) Install and prepare
+## Start from these notebooks
 
-```bash
-git clone https://github.com/Voycepeh/FabricOps-Starter-Kit.git
-cd FabricOps-Starter-Kit
-uv sync --all-extras
-uv build
-```
+Create or copy the reusable notebook set described in [Notebook Structure](notebook-structure.md):
 
-To install the built wheel in Fabric, follow [Fabric Wheel Install](setup/fabric-wheel-install.md).
+- `00_env_config`
+  - Environment configuration notebook for shared runtime/settings used by downstream notebooks.
+- `01_data_sharing_agreement_<agreement>`
+  - Agreement notebook to capture governance context for a specific data-sharing agreement.
+- Pipeline notebooks for each agreement:
+  - `02_ex_<agreement>_<topic>` for exploration/profiling and AI-assisted suggestions.
+  - `03_pc_<agreement>_<pipeline>` for approved enforcement and production-style execution.
 
-## 2) Open your Fabric notebook workflow
+## Run them in this order
 
-- Attach the Fabric Environment that contains the built package wheel.
-- Use the current starter notebooks and naming pattern from [Notebook Structure](notebook-structure.md).
-- Run notebooks in this operating sequence:
+1. Configure the environment in `00_env_config`.
+2. Capture agreement context in `01_data_sharing_agreement_<agreement>`.
+3. Run exploration/profile work in `02_ex_<agreement>_<topic>`.
+4. Run the approved pipeline contract in `03_pc_<agreement>_<pipeline>`.
 
-1. `00_env_config.ipynb`
-   - Reusable environment and runtime configuration notebook.
-2. `01_data_sharing_agreement_<agreement>`
-   - Governance agreement capture: approved usage, ownership, and restrictions.
-3. `02_ex_<agreement>_<topic>`
-   - Exploration and profiling, transformation rationale, AI-suggested DQ rules, and AI-suggested classification/sensitivity labels.
-4. `03_pc_<agreement>_<topic>`
-   - Pipeline contract execution with approved DQ enforcement, approved classification enforcement, output writes, metadata capture, lineage generation, and handover artifact creation.
+## What to edit first
 
-## 3) Clarify exploration vs. pipeline enforcement
+- Environment paths, connection/runtime values, and shared config in `00_env_config`.
+- Agreement purpose, ownership, and approved usage in `01_data_sharing_agreement_<agreement>`.
+- Source and output expectations for your dataset/pipeline.
+- Approved DQ and classification decisions before enabling contract enforcement in `03_pc_<agreement>_<pipeline>`.
 
-- AI suggestions are produced in exploration/assistive workflows (typically `02_ex_*`).
-- Human approval is required before any DQ rule or classification/sensitivity rule is treated as enforceable.
-- Pipeline contract notebooks (`03_pc_*`) enforce only approved decisions.
+## What a successful first run should produce
 
-## 4) Keep the canonical lifecycle reference
+- Config loaded.
+- Agreement context captured.
+- Source profile and metadata stored.
+- Approved decisions available.
+- Curated output written.
+- DQ results and target metadata stored.
+- Lineage and handover artifacts generated.
 
-Use the canonical 10-step lifecycle as the control flow reference, and use [Lifecycle Operating Model](lifecycle-operating-model.md) for full detail.
+## Where to go next
 
-## 5) Validate completion criteria
-
-A successful quick-start run should leave:
-
-- environment config loaded,
-- agreement/governance context captured,
-- source profile and schema metadata captured,
-- approved DQ/classification decisions available,
-- pipeline output written,
-- DQ results and target metadata stored,
-- lineage and handover notes generated.
-
-## 6) Next references
-
-- [Lifecycle Operating Model](lifecycle-operating-model.md)
 - [Notebook Structure](notebook-structure.md)
-- [Architecture](architecture/index.md)
-- [Storage & Metadata Model](architecture/storage-model.md)
-- [Fabric-native Data Quality](architecture/data-quality-architecture.md)
+- [Lifecycle Operating Model](lifecycle-operating-model.md)
 - [Metadata and Contracts](metadata-and-contracts.md)
-- [Function Reference](reference/index.md)
+- [Functions / Reference](reference/index.md)
 - [Fabric Wheel Install](setup/fabric-wheel-install.md)
