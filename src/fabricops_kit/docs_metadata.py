@@ -119,7 +119,6 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
                 "symbols": [
                     "normalize_contract_dict",
                     "validate_contract_dict",
-                    "build_contract_summary",
                     "write_contract_to_lakehouse",
                 ],
             },
