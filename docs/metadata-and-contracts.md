@@ -20,4 +20,9 @@ Use the pages below for details:
 - [Metadata tables](metadata-and-contracts/metadata-tables.md)
 - [Notebook Structure](notebook-structure.md)
 - [Data Quality Rules System](data-quality-rules-system.md)
-- [Data quality architecture](architecture/data-quality-architecture.md)
+
+## Storage and metadata scope
+
+- Source, Unified, and Product stores hold business data.
+- The metadata target holds framework evidence such as contracts, approved rules, profiling outputs, run evidence, and handover records.
+- Metadata is environment-local, so dev and prod metadata remain separate.

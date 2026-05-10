@@ -9,6 +9,12 @@ Use this page as a guided front door into the docs.
   <a class="md-button" href="reference/">Browse the functions</a>
 </div>
 
+## How FabricOps fits into Fabric
+
+This diagram shows the lightweight operating shape assumed by the starter kit: source systems, dev/prod workspaces, layered stores, metadata evidence, and downstream consumption outputs.
+
+![FabricOps platform orientation](assets/data-platform-architecture.png)
+
 ## How FabricOps works
 
 ![FabricOps lifecycle operating model overview](assets/mvp-flow.png)

@@ -97,7 +97,7 @@ Schema drift, data drift, freshness checks, and row-count monitoring remain part
 
 ## Related documentation
 
-- For detailed platform boundaries and store layout, see [Architecture](architecture/index.md).
+- For platform boundaries and store responsibilities, use the guidance in [Metadata and Contracts](metadata-and-contracts.md) and [Deployment and Promotion](deployment-and-promotion.md).
 - For notebook role boundaries and sequencing, see [Notebook Structure](notebook-structure.md).
 - For contract authoring/storage details, see [Metadata and Contracts](metadata-and-contracts.md).
 - For environment promotion controls, see [Deployment and Promotion](deployment-and-promotion.md).
