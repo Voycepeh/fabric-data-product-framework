@@ -8,6 +8,9 @@ Use this page to get FabricOps Starter Kit running quickly in Microsoft Fabric. 
 - Fabric notebook runtime (Fabric Runtime 1.3 / Python 3.11 recommended by this project).
 - A prepared Fabric environment with the project wheel installed (see [Fabric Wheel Install](setup/fabric-wheel-install.md)).
 - A clear data-sharing agreement context (purpose, ownership, approved usage).
+- If you plan to use AI-assisted functions, your organisation must first enable tenant-level Fabric settings for **"Users can use Copilot and other features powered by Azure OpenAI"**.
+- Depending on tenant/capacity region and organisation policy, data sent to Azure OpenAI may be processed outside your capacity's geographic region, compliance boundary, or national cloud instance, and may also be stored outside those boundaries where that setting is permitted.
+- AI-assisted functions are optional: the core framework can run without them, but AI suggestion features will not work until the required organisation-level settings are approved and enabled.
 
 ## Start from these notebooks
 
