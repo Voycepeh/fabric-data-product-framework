@@ -25,6 +25,7 @@ from .fabric_io import (
     load_fabric_config,
     warehouse_read,
     warehouse_write,
+    seed_minimal_sample_source_table,
 )
 from .lineage import (
     build_lineage_from_notebook_code,
@@ -133,6 +134,7 @@ __all__ = [
     "lakehouse_excel_read_as_spark",
     "warehouse_read",
     "warehouse_write",
+    "seed_minimal_sample_source_table",
     "generate_run_id",
     "build_runtime_context",
     "validate_notebook_name",

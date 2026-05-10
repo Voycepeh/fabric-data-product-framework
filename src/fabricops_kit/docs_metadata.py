@@ -102,6 +102,7 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
             {
                 "title": "Segment 2: Profile source and capture evidence",
                 "symbols": [
+                    "seed_minimal_sample_source_table",
                     "lakehouse_table_read",
                     "warehouse_read",
                     "generate_metadata_profile",
@@ -149,6 +150,7 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
                 "title": "Segment 2: Load approved contract and source data",
                 "symbols": [
                     "load_latest_approved_contract",
+                    "seed_minimal_sample_source_table",
                     "lakehouse_table_read",
                     "warehouse_read",
                 ],
@@ -236,6 +238,8 @@ PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [
     {"symbol_name": "lakehouse_excel_read_as_spark", "module": "fabric_input_output", "kind": "function", "workflow_step": 3, "summary_override": None},
     {"symbol_name": "warehouse_read", "module": "fabric_input_output", "kind": "function", "workflow_step": 3, "summary_override": None},
     {"symbol_name": "warehouse_write", "module": "fabric_input_output", "kind": "function", "workflow_step": "6D", "summary_override": None},
+    {"symbol_name": "seed_minimal_sample_source_table", "module": "fabric_input_output", "kind": "function", "workflow_step": 4, "importance": "Optional", "summary_override": "Create and persist deterministic demo rows into a sample source table."},
+    
     {"symbol_name": "generate_run_id", "module": "runtime_context", "kind": "function", "workflow_step": 1, "summary_override": None},
     {"symbol_name": "build_runtime_context", "module": "runtime_context", "kind": "function", "workflow_step": 1, "summary_override": None},
     {"symbol_name": "validate_notebook_name", "module": "runtime_context", "kind": "function", "workflow_step": 1, "summary_override": None},
