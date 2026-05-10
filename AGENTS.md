@@ -34,11 +34,11 @@ Guide agent/Codex contributions for this repository so changes stay reusable, pu
 
 - Add a symbol to `src/fabricops_kit/__init__.py::__all__` only when it is intentionally user-facing.
 - Every public callable in `__all__` must have a complete NumPy-style docstring with a meaningful first sentence.
-- Public callables must be assignable to a 13-step workflow category through the central registry (`get_mvp_step_registry` / `MVP_STEP_REGISTRY`) consumed by the reference generator.
+- Public callables must remain documented and discoverable in the generated `/reference/` callable catalogue.
 - If a public callable depends on important internal helpers, keep those helpers documented enough that generated relationship lists remain useful.
 - Do not maintain manual duplicate function/member lists across docs. Regenerate the callable catalogue instead.
 - PRs that add/remove/rename public callables must run `PYTHONPATH=src python scripts/generate_function_reference.py` and include generated docs updates in the same PR.
-- New public callables must be added to `__all__`, mapped to the 13-step reference flow (or intentionally placed under Other Utilities), and documented with useful non-placeholder docstrings.
+- New public callables must be added to `__all__`, documented with useful non-placeholder docstrings, and surfaced in starter-template flow sections when they are part of the template journey.
 - Internal-only modules should not appear as public modules in the module API catalogue unless clearly labeled as internal-only.
 - Deprecated callables must not be promoted as the recommended path when a replacement callable exists.
 - If `__all__`, module names, public callable mappings, or docstrings change, regenerate the reference and module catalogue docs in the same PR.
@@ -49,7 +49,7 @@ Guide agent/Codex contributions for this repository so changes stay reusable, pu
 - When changing public functions, module boundaries, `__all__`, docstrings, or module ownership, always verify whether generated docs/reference files must be refreshed.
 - For edits under `src/fabricops_kit/*.py`, confirm affected pages in `docs/api/modules/` and `docs/reference/` are updated, or confirm CI regenerates them during `mkdocs build`.
 - If a module page is generated from `__all__`, ensure new public callables are exported in `__all__` and visible in the generated module table.
-- New public functions must be discoverable from the relevant module page and, where appropriate, the step-based reference page.
+- New public functions must be discoverable from the relevant module page and the generated `/reference/` catalogue; starter-path functions should also appear in the template-first flow sections.
 - Run the docs generation command when available. If no explicit generator is documented, inspect `scripts/`, `mkdocs.yml`, and docs tooling before assuming `mkdocs build` alone is enough.
 - Run `mkdocs build` after docs/reference generation changes when possible.
 - Do not assume GitHub Pages will fix stale generated docs on its own.

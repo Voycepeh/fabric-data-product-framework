@@ -17,6 +17,171 @@ class PublicSymbolDocMetadata(TypedDict):
     summary_override: str | None
 
 
+
+
+class TemplateFlowSegmentMetadata(TypedDict):
+    """Segment metadata for starter template guidance on the reference landing page."""
+
+    title: str
+    symbols: list[str]
+
+
+class TemplateFlowDocMetadata(TypedDict):
+    """Starter template metadata used to render the template-first function reference."""
+
+    notebook_key: str
+    notebook_label: str
+    template_path: str
+    segment_intro: str
+    segments: list[TemplateFlowSegmentMetadata]
+
+
+TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
+    {
+        "notebook_key": "00_env_config",
+        "notebook_label": "`00_env_config`",
+        "template_path": "templates/notebooks/00_env_config.ipynb",
+        "segment_intro": "Shared environment bootstrap and validation before exploration or pipeline notebooks run.",
+        "segments": [
+            {
+                "title": "Segment 2: Define environment targets and notebook policy",
+                "symbols": [
+                    "Housepath",
+                    "create_path_config",
+                    "create_notebook_runtime_config",
+                    "validate_framework_config",
+                    "load_fabric_config",
+                    "get_path",
+                ],
+            },
+            {
+                "title": "Segment 3: Set AI, quality, governance, and lineage defaults",
+                "symbols": [
+                    "create_ai_prompt_config",
+                    "create_governance_config",
+                    "create_quality_config",
+                    "create_lineage_config",
+                ],
+            },
+            {
+                "title": "Segment 4: Assemble and validate framework config",
+                "symbols": [
+                    "create_framework_config",
+                    "validate_framework_config",
+                    "load_fabric_config",
+                ],
+            },
+            {
+                "title": "Segment 5: Run startup checks and show resolved paths",
+                "symbols": [
+                    "run_config_smoke_tests",
+                    "bootstrap_fabric_env",
+                    "check_fabric_ai_functions_available",
+                    "configure_fabric_ai_functions",
+                    "get_path",
+                ],
+            },
+        ],
+    },
+    {
+        "notebook_key": "02_ex",
+        "notebook_label": "`02_ex_<agreement>_<topic>`",
+        "template_path": "templates/notebooks/02_ex_agreement_topic.ipynb",
+        "segment_intro": "Exploration notebook flow used to profile source data and draft advisory AI outputs for human review.",
+        "segments": [
+            {
+                "title": "Segment 1: Load shared config and runtime",
+                "symbols": [
+                    "load_fabric_config",
+                    "validate_notebook_name",
+                    "assert_notebook_name_valid",
+                    "build_runtime_context",
+                    "get_path",
+                ],
+            },
+            {
+                "title": "Segment 2: Profile source and capture evidence",
+                "symbols": [
+                    "lakehouse_table_read",
+                    "warehouse_read",
+                    "generate_metadata_profile",
+                    "profile_dataframe_to_metadata",
+                ],
+            },
+            {
+                "title": "Segment 3: AI-assisted drafting (advisory only)",
+                "symbols": [
+                    "suggest_dq_rules_prompt",
+                ],
+            },
+            {
+                "title": "Segment 4: Human approval and contract write",
+                "symbols": [
+                    "normalize_contract_dict",
+                    "validate_contract_dict",
+                    "write_contract_to_lakehouse",
+                ],
+            },
+            {
+                "title": "Optional lineage notes",
+                "symbols": ["build_lineage_from_notebook_code"],
+            },
+        ],
+    },
+    {
+        "notebook_key": "03_pc",
+        "notebook_label": "`03_pc_<agreement>_<pipeline>`",
+        "template_path": "templates/notebooks/03_pc_agreement_source_to_target.ipynb",
+        "segment_intro": "Pipeline-contract notebook flow for deterministic enforcement and controlled publishing.",
+        "segments": [
+            {
+                "title": "Segment 1: Load shared config and runtime context",
+                "symbols": [
+                    "load_fabric_config",
+                    "validate_notebook_name",
+                    "assert_notebook_name_valid",
+                    "generate_run_id",
+                    "build_runtime_context",
+                    "get_path",
+                ],
+            },
+            {
+                "title": "Segment 2: Load approved contract and source data",
+                "symbols": [
+                    "load_latest_approved_contract",
+                    "lakehouse_table_read",
+                    "warehouse_read",
+                ],
+            },
+            {
+                "title": "Segment 3: Validate columns, transform, and compile rules",
+                "symbols": [
+                    "extract_required_columns",
+                    "get_executable_quality_rules",
+                    "validate_dq_rules",
+                ],
+            },
+            {
+                "title": "Segment 4: Run DQ, split outputs, and publish",
+                "symbols": [
+                    "run_dq_rules",
+                    "split_valid_and_quarantine",
+                    "lakehouse_table_write",
+                    "warehouse_write",
+                ],
+            },
+            {
+                "title": "Optional metadata / lineage / handover evidence",
+                "symbols": [
+                    "build_dataset_run_record",
+                    "build_quality_result_records",
+                    "build_contract_records",
+                    "build_lineage_records",
+                ],
+            },
+        ],
+    },
+]
 WORKFLOW_STEP_DOCS: list[dict[str, int | str]] = [
     {"number": 1, "slug": "step-01-governance-context", "title": "Governance context", "subtext": "This step captures the governance context: approved usage, owner, and data agreement. The agreement may live outside Fabric, such as in SharePoint documents. Functions in this step mainly link notebooks back to that agreement so the technical work stays tied to the approved business context."},
     {"number": "2A", "slug": "step-02a-shared-runtime-config", "title": "Create shared runtime config", "subtext": "This step creates the shared config that other notebooks depend on, including environment paths, workspace targets, AI availability, and standard naming rules. The goal is to define the project setup once so exploration and pipeline notebooks do not repeat hidden manual configuration."},

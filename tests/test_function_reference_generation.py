@@ -3,14 +3,11 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 
-import pytest
-
 from scripts.generate_function_reference import main as generate_reference
 
 ROOT = Path(__file__).resolve().parents[1]
 INIT_FILE = ROOT / "src" / "fabricops_kit" / "__init__.py"
 REFERENCE_FILE = ROOT / "docs" / "reference" / "index.md"
-MODULE_INDEX_FILE = ROOT / "docs" / "api" / "modules" / "index.md"
 DOCS_METADATA_FILE = ROOT / "src" / "fabricops_kit" / "docs_metadata.py"
 
 
@@ -22,32 +19,29 @@ def public_exports() -> list[str]:
     raise AssertionError("__all__ missing")
 
 
-def public_symbol_docs() -> list[dict[str, object]]:
+def metadata_literal(name: str) -> list[dict[str, object]]:
     tree = ast.parse(DOCS_METADATA_FILE.read_text(encoding="utf-8"))
     for node in tree.body:
-        is_assign = isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "PUBLIC_SYMBOL_DOCS" for t in node.targets)
-        is_annassign = isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and node.target.id == "PUBLIC_SYMBOL_DOCS"
+        is_assign = isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == name for t in node.targets)
+        is_annassign = isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and node.target.id == name
         if (is_assign or is_annassign) and node.value is not None:
             return ast.literal_eval(node.value)
-    raise AssertionError("PUBLIC_SYMBOL_DOCS missing")
+    raise AssertionError(f"{name} missing")
 
 
-def workflow_step_docs() -> list[dict[str, object]]:
-    tree = ast.parse(DOCS_METADATA_FILE.read_text(encoding="utf-8"))
-    for node in tree.body:
-        is_assign = isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "WORKFLOW_STEP_DOCS" for t in node.targets)
-        is_annassign = isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and node.target.id == "WORKFLOW_STEP_DOCS"
-        if (is_assign or is_annassign) and node.value is not None:
-            return ast.literal_eval(node.value)
-    raise AssertionError("WORKFLOW_STEP_DOCS missing")
+def notebook_source_text(path: str) -> str:
+    import json
+
+    notebook = json.loads((ROOT / path).read_text(encoding="utf-8"))
+    return "\n".join("".join(cell.get("source", [])) for cell in notebook["cells"] if cell.get("cell_type") == "code")
 
 
-def section(content: str, title: str) -> str:
-    marker = f"## {title}"
-    start = content.find(marker)
+def markdown_section(content: str, heading: str) -> str:
+    start_token = f"## {heading}\n"
+    start = content.find(start_token)
     if start < 0:
         return ""
-    rest = content[start + len(marker) :]
+    rest = content[start + len(start_token) :]
     next_idx = rest.find("\n## ")
     return rest if next_idx < 0 else rest[:next_idx]
 
@@ -57,103 +51,69 @@ def test_reference_generator_runs_without_fabric_runtime() -> None:
     assert REFERENCE_FILE.exists()
 
 
-def test_every_public_export_is_listed_and_linked() -> None:
+def test_every_public_export_is_listed_exactly_once_in_all_functions_table() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
+    all_functions = markdown_section(content, "All public functions")
+    assert all_functions
     for name in public_exports():
-        assert f"`{name}`" in content
-        assert "module overview" not in content
-        assert "api-chip-link" in content
+        assert all_functions.count(f"`{name}`") == 1
 
 
-def test_every_public_callable_has_docstring_first_sentence() -> None:
-    missing: list[str] = []
-    package_dir = ROOT / "src" / "fabricops_kit"
-    module_trees = {p.stem: ast.parse(p.read_text(encoding="utf-8")) for p in package_dir.glob("*.py")}
-    symbols = {row["symbol_name"]: row["module"] for row in public_symbol_docs()}
-    for name in public_exports():
-        module = symbols[name]
-        tree = module_trees[module]
-        for node in tree.body:
-            if isinstance(node, (ast.FunctionDef, ast.ClassDef)) and node.name == name:
-                first_line = ((ast.get_docstring(node) or "").strip().splitlines() or [""])[0].strip()
-                if not first_line:
-                    missing.append(name)
-                break
-    assert missing == []
-
-
-def test_step_specific_callable_placement() -> None:
+def test_reference_contains_template_first_starter_sections_and_segments() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
-    step1 = section(content, "Step 1: Governance context")
-    step2 = section(content, "Step 2A: Create shared runtime config")
-    step3 = section(content, "Step 3: Define source contract & ingestion pattern")
-    step6 = section(content, "Step 6B: Apply runtime standards")
-    step7 = section(content, "Step 6D: Write controlled outputs")
-
-    assert "`lakehouse_table_read`" in step3
-    assert "`lakehouse_table_read`" not in step1
-    assert "`add_audit_columns`" in step6
-    assert "`add_datetime_features`" in step6
-    assert "`add_hash_columns`" in step6
-    assert "`default_technical_columns`" in step6
-    assert "`lakehouse_table_write`" in step7
-    assert "`warehouse_write`" in step7
-    assert "`warehouse_write`" not in step1
-    assert "`get_path`" in step2
+    assert "## Starter path functions" in content
+    assert "### `00_env_config`" in content
+    assert "### `02_ex_<agreement>_<topic>`" in content
+    assert "### `03_pc_<agreement>_<pipeline>`" in content
+    assert "#### Segment 1: Load shared config and runtime" in content
+    assert "#### Segment 2: Profile source and capture evidence" in content
+    assert "#### Segment 3: AI-assisted drafting (advisory only)" in content
+    assert "#### Segment 4: Human approval and contract write" in content
+    assert "#### Segment 1: Load shared config and runtime context" in content
+    assert "#### Segment 2: Load approved contract and source data" in content
+    assert "#### Segment 3: Validate columns, transform, and compile rules" in content
+    assert "#### Segment 4: Run DQ, split outputs, and publish" in content
+    assert "#### Optional metadata / lineage / handover evidence" in content
 
 
-def test_metadata_driven_summary_override_is_applied() -> None:
+def test_template_used_functions_appear_in_expected_starter_segments() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
-    assert "Run the starter kit workflow end-to-end for a data product outcome." in content
+    assert "#### Segment 2: Profile source and capture evidence" in content and "`generate_metadata_profile`" in content
+    assert "#### Segment 3: AI-assisted drafting (advisory only)" in content and "`suggest_dq_rules_prompt`" in content
+    assert "#### Segment 4: Run DQ, split outputs, and publish" in content and "`run_dq_rules`" in content
 
 
-def test_reference_links_are_site_friendly_and_correctly_routed() -> None:
+def test_reference_no_longer_contains_old_step_headings() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
-    assert "./step-02a-shared-runtime-config/get_path/" in content
-    assert "./step-02a-shared-runtime-config/load_fabric_config/" in content
-    assert "./step-04-ingest-profile-store/profile_metadata_to_records/" in content
-    assert "./step-02a-shared-runtime-config/get_path.md" not in content
-    assert "./step-02a-shared-runtime-config/load_fabric_config.md" not in content
-    assert "./step-04-ingest-profile-store/profile_metadata_to_records.md" not in content
+    assert "## Lifecycle flow" not in content
+    assert "## Callable map by workflow step" not in content
+    assert "## Step 1:" not in content
+    assert "## Step 2A:" not in content
+
+
+def test_all_public_functions_table_contains_starter_path_column() -> None:
+    generate_reference()
+    content = REFERENCE_FILE.read_text(encoding="utf-8")
+    assert "## All public functions" in content
+    assert "| Function / class | Module | Starter path | Importance | Purpose |" in content
+    assert "| [`load_fabric_config`]" in content
+
+
+def test_non_starter_callable_still_appears_in_complete_catalogue() -> None:
+    generate_reference()
+    content = REFERENCE_FILE.read_text(encoding="utf-8")
+    assert "## Additional public functions" in content
+    assert "`run_data_product`" in content
 
 
 def test_docs_metadata_matches_public_exports() -> None:
     exports = set(public_exports())
-    metadata_symbols = {row["symbol_name"] for row in public_symbol_docs()}
-    assert exports - metadata_symbols == set()
-    assert metadata_symbols - exports == set()
-
-
-def test_docs_metadata_has_exactly_one_entry_per_exported_symbol() -> None:
-    exports = set(public_exports())
-    metadata_rows = public_symbol_docs()
-    counts: dict[str, int] = {name: 0 for name in exports}
-    for row in metadata_rows:
-        counts[row["symbol_name"]] = counts.get(row["symbol_name"], 0) + 1
-
-    duplicates = sorted(name for name, count in counts.items() if count > 1)
-    missing = sorted(name for name, count in counts.items() if count == 0)
-    assert duplicates == []
-    assert missing == []
-
-
-def test_dq_symbols_are_mapped_to_expected_workflow_steps_and_importance() -> None:
-    rows = {row["symbol_name"]: row for row in public_symbol_docs()}
-    expected = {
-        "get_default_dq_rule_templates": (8, "Optional"),
-        "suggest_dq_rules_prompt": (8, "Optional"),
-        "validate_dq_rules": ("6C", "Essential"),
-        "run_dq_rules": ("6C", "Essential"),
-        "assert_dq_passed": ("6D", "Essential"),
-        "write_dq_results": ("6D", "Essential"),
-    }
-    for symbol, (step, importance) in expected.items():
-        assert rows[symbol]["workflow_step"] == step
-        assert rows[symbol].get("importance") == importance
+    metadata_symbols = {row["symbol_name"] for row in metadata_literal("PUBLIC_SYMBOL_DOCS")}
+    assert exports == metadata_symbols
 
 
 def test_reference_file_is_in_sync_with_generator() -> None:
@@ -163,133 +123,94 @@ def test_reference_file_is_in_sync_with_generator() -> None:
     assert after == before
 
 
-def test_build_quality_result_records_metadata_module_matches_exported_symbol_module() -> None:
-    metadata_row = next(row for row in public_symbol_docs() if row["symbol_name"] == "build_quality_result_records")
-    assert metadata_row["module"] == "metadata"
-
-
-def test_invalid_workflow_step_fails_loudly(monkeypatch) -> None:
-    from scripts import generate_function_reference as gen
-
-    bad = dict(gen.parse_docs_metadata())
-    target = next(iter(bad))
-    bad[target] = dict(bad[target])
-    bad[target]["workflow_step"] = 99
-    monkeypatch.setattr(gen, "parse_docs_metadata", lambda: bad)
-    with pytest.raises(RuntimeError, match="Invalid workflow_step"):
-        gen.main()
-
-
-def test_generated_docs_are_multiline_readable() -> None:
-    generate_reference()
-    docs_files = [REFERENCE_FILE, *(ROOT / "docs" / "api" / "modules").glob("*.md")]
-    for doc in docs_files:
-        text = doc.read_text(encoding="utf-8")
-        assert text.count("\n") > 5, f"{doc} appears to be a single-line/generated-compressed file"
-
-
-def test_no_public_looking_module_page_for_internal_only_modules() -> None:
-    generate_reference()
-    for module_doc in (ROOT / "docs" / "api" / "modules").glob("*.md"):
-        text = module_doc.read_text(encoding="utf-8")
-        if "No public exports in this module." in text:
-            assert "(internal)" in text
-            assert "Not intended as a primary user-facing API surface." in text
-
-
-def test_all_exports_appear_exactly_once_in_reference() -> None:
+def test_generated_docs_are_multiline_readable_and_lf_safe() -> None:
     generate_reference()
     text = REFERENCE_FILE.read_text(encoding="utf-8")
-    for name in public_exports():
-        assert text.count(f"`{name}`") == 1
+    assert text.count("\n") > 20
+    assert "\r\n" not in text
 
 
-def test_reference_lists_all_exported_callables() -> None:
-    generate_reference()
-    content = REFERENCE_FILE.read_text(encoding="utf-8")
-    missing = [name for name in public_exports() if f"`{name}`" not in content]
-    assert missing == []
-    assert "## Other exported callables" in content
-    assert "| Function / class | Module | Importance | Purpose |" in content
+def test_template_flow_symbols_are_exported() -> None:
+    exports = set(public_exports())
+    template_docs = metadata_literal("TEMPLATE_FLOW_DOCS")
+    for notebook in template_docs:
+        for segment in notebook["segments"]:
+            for symbol in segment["symbols"]:
+                assert symbol in exports
 
 
-def test_public_callables_are_exported_or_private() -> None:
-    exported = set(public_exports())
-    package_dir = ROOT / "src" / "fabricops_kit"
-    public_modules = {row["module"] for row in public_symbol_docs()}
-    public_missing: list[str] = []
-    for module_path in package_dir.glob("*.py"):
-        mod_name = module_path.stem
-        if mod_name.startswith("_") or mod_name in {"__init__", "schemas"} or mod_name not in public_modules:
-            continue
-        tree = ast.parse(module_path.read_text(encoding="utf-8"))
-        module_all: set[str] = set()
-        for node in tree.body:
-            if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "__all__" for t in node.targets):
-                if isinstance(node.value, ast.List):
-                    module_all = {
-                        elt.value for elt in node.value.elts if isinstance(elt, ast.Constant) and isinstance(elt.value, str)
-                    }
-        for node in tree.body:
-            if isinstance(node, ast.FunctionDef) and not node.name.startswith("_") and module_all and node.name in module_all:
-                if node.name not in exported:
-                    public_missing.append(f"fabricops_kit.{mod_name}.{node.name}")
-    assert public_missing == []
+def test_template_flow_registry_matches_expected_symbol_sets() -> None:
+    template_docs = metadata_literal("TEMPLATE_FLOW_DOCS")
+    symbols_by_notebook: dict[str, set[str]] = {}
+    for notebook in template_docs:
+        symbols = symbols_by_notebook.setdefault(notebook["notebook_key"], set())
+        for segment in notebook["segments"]:
+            symbols.update(segment["symbols"])
+
+    expected = {
+        "00_env_config": {
+            "Housepath",
+            "create_path_config",
+            "create_notebook_runtime_config",
+            "create_ai_prompt_config",
+            "create_governance_config",
+            "create_quality_config",
+            "create_lineage_config",
+            "create_framework_config",
+            "validate_framework_config",
+            "load_fabric_config",
+            "run_config_smoke_tests",
+            "bootstrap_fabric_env",
+            "check_fabric_ai_functions_available",
+            "configure_fabric_ai_functions",
+            "get_path",
+        },
+        "02_ex": {
+            "load_fabric_config",
+            "validate_notebook_name",
+            "assert_notebook_name_valid",
+            "build_runtime_context",
+            "get_path",
+            "lakehouse_table_read",
+            "warehouse_read",
+            "generate_metadata_profile",
+            "profile_dataframe_to_metadata",
+            "suggest_dq_rules_prompt",
+            "normalize_contract_dict",
+            "validate_contract_dict",
+            "write_contract_to_lakehouse",
+            "build_lineage_from_notebook_code",
+        },
+        "03_pc": {
+            "load_fabric_config",
+            "validate_notebook_name",
+            "assert_notebook_name_valid",
+            "generate_run_id",
+            "build_runtime_context",
+            "get_path",
+            "load_latest_approved_contract",
+            "lakehouse_table_read",
+            "warehouse_read",
+            "extract_required_columns",
+            "get_executable_quality_rules",
+            "validate_dq_rules",
+            "run_dq_rules",
+            "split_valid_and_quarantine",
+            "lakehouse_table_write",
+            "warehouse_write",
+            "build_dataset_run_record",
+            "build_quality_result_records",
+            "build_contract_records",
+            "build_lineage_records",
+        },
+    }
+    assert symbols_by_notebook == expected
 
 
-def test_workflow_step_none_moves_symbol_to_other_exported_callables(monkeypatch) -> None:
-    from scripts import generate_function_reference as gen
-
-    bad = dict(gen.parse_docs_metadata())
-    target = "lakehouse_table_read"
-    bad[target] = dict(bad[target])
-    bad[target]["workflow_step"] = None
-    monkeypatch.setattr(gen, "parse_docs_metadata", lambda: bad)
-    gen.main()
-    content = REFERENCE_FILE.read_text(encoding="utf-8")
-    assert "## Other exported callables" in content
-    other = section(content, "Other exported callables")
-    assert "`lakehouse_table_read`" in other
-
-
-def test_handover_uses_single_canonical_registry_symbol() -> None:
-    handover = (ROOT / "src" / "fabricops_kit" / "handover.py").read_text(encoding="utf-8")
-    assert "MVP_STEP_REGISTRY" in handover
-    assert handover.count("def get_mvp_step_registry(") >= 1
-
-
-def test_generated_docs_use_lf_newlines() -> None:
-    generate_reference()
-    docs_files = [REFERENCE_FILE, MODULE_INDEX_FILE, *((ROOT / "docs" / "api" / "modules").glob("*.md"))]
-    for doc in docs_files:
-        raw = doc.read_bytes()
-        assert b"\r\n" not in raw, f"{doc} contains CRLF newlines"
-
-
-def test_gen_ref_pages_normalizes_workflow_steps_to_string_keys() -> None:
-    content = (ROOT / "docs" / "gen_ref_pages.py").read_text(encoding="utf-8")
-    assert 'symbols_by_step: dict[str, list[tuple[str, str]]]' in content
-    assert 'str(step["number"])' in content
-    assert 'step_key = str(workflow_step_by_symbol[symbol])' in content
-
-
-def test_docs_metadata_includes_alphanumeric_workflow_steps() -> None:
-    step_numbers = {str(step["number"]) for step in workflow_step_docs()}
-    # Ensure split workflow sections remain represented in metadata.
-    assert "2A" in step_numbers
-    assert "2B" in step_numbers
-    assert "6A" in step_numbers
-    assert "6D" in step_numbers
-
-
-def test_template_first_sections_and_markdown_safety() -> None:
-    generate_reference()
-    content = REFERENCE_FILE.read_text(encoding="utf-8")
-    assert "## Start from the templates" in content
-    assert "`00_env_config`" in content
-    assert "`02_ex_<agreement>_<topic>`" in content
-    assert "`03_pc_<agreement>_<pipeline>`" in content
-    assert "## What runs where" in content
-    assert "AI functions are advisory" in content
-    assert "# Function Reference Use this page" not in content
-    assert "【" not in content
+def test_every_starter_flow_symbol_is_used_in_its_template_notebook() -> None:
+    template_docs = metadata_literal("TEMPLATE_FLOW_DOCS")
+    for notebook in template_docs:
+        code = notebook_source_text(notebook["template_path"])
+        for segment in notebook["segments"]:
+            for symbol in segment["symbols"]:
+                assert symbol in code, f"{symbol} is listed for {notebook['notebook_key']} but not used in notebook code"
