@@ -9,7 +9,7 @@
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
 | [`assert_dq_passed`](../../reference/step-06d-controlled-outputs/assert_dq_passed.md) | function | Raise when any error-severity DQ rule failed after results are logged. | — |
-| [`run_dq_rules`](../../reference/step-06c-pipeline-controls/run_dq_rules.md) | function | Run notebook-facing DQ rules and return a Spark DataFrame result. | [`_to_quality_rule`](../../reference/internal/quality/_to_quality_rule.md) (internal) |
+| [`run_dq_rules`](../../reference/step-06c-pipeline-controls/run_dq_rules.md) | function | Run notebook-facing DQ rules and return a Spark DataFrame result. | [`_to_quality_rule`](../../reference/internal/dq/_to_quality_rule.md) (internal) |
 | [`split_valid_and_quarantine`](../../reference/step-06c-pipeline-controls/split_valid_and_quarantine.md) | function | Split a Spark DataFrame into pass/quarantine outputs for row-level DQ rules. | — |
 | [`suggest_dq_rules_prompt`](../../reference/step-08-ai-assisted-dq-suggestions/suggest_dq_rules_prompt.md) | function | Build a prompt for candidate DQ rule suggestions. | — |
 | [`validate_dq_rules`](../../reference/step-06c-pipeline-controls/validate_dq_rules.md) | function | Validate notebook-facing DQ rules. | — |
