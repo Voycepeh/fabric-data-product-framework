@@ -36,6 +36,16 @@ def notebook_source_text(path: str) -> str:
     return "\n".join("".join(cell.get("source", [])) for cell in notebook["cells"] if cell.get("cell_type") == "code")
 
 
+def markdown_section(content: str, heading: str) -> str:
+    start_token = f"## {heading}\n"
+    start = content.find(start_token)
+    if start < 0:
+        return ""
+    rest = content[start + len(start_token) :]
+    next_idx = rest.find("\n## ")
+    return rest if next_idx < 0 else rest[:next_idx]
+
+
 def test_reference_generator_runs_without_fabric_runtime() -> None:
     generate_reference()
     assert REFERENCE_FILE.exists()
@@ -44,8 +54,10 @@ def test_reference_generator_runs_without_fabric_runtime() -> None:
 def test_every_public_export_is_listed_exactly_once_in_all_functions_table() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
+    all_functions = markdown_section(content, "All public functions")
+    assert all_functions
     for name in public_exports():
-        assert content.count(f"`{name}`") == 1
+        assert all_functions.count(f"`{name}`") == 1
 
 
 def test_reference_contains_template_first_starter_sections_and_segments() -> None:
@@ -70,7 +82,7 @@ def test_template_used_functions_appear_in_expected_starter_segments() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     assert "#### Segment 2: Profile source and capture evidence" in content and "`generate_metadata_profile`" in content
-    assert "#### Segment 3: AI-assisted drafting (advisory only)" in content and "`build_manual_dq_rule_prompt_package`" in content
+    assert "#### Segment 3: AI-assisted drafting (advisory only)" in content and "`suggest_dq_rules_prompt`" in content
     assert "#### Segment 4: Run DQ, split outputs, and publish" in content and "`run_dq_rules`" in content
 
 

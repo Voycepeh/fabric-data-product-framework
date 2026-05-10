@@ -44,21 +44,11 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
         "segment_intro": "Shared environment bootstrap and validation before exploration or pipeline notebooks run.",
         "segments": [
             {
-                "title": "Segment 1: Import configuration helpers",
+                "title": "Segment 2: Define environment targets and notebook policy",
                 "symbols": [
                     "Housepath",
                     "create_path_config",
                     "create_notebook_runtime_config",
-                    "create_ai_prompt_config",
-                    "create_governance_config",
-                    "create_quality_config",
-                    "create_lineage_config",
-                    "create_framework_config",
-                ],
-            },
-            {
-                "title": "Segment 2: Define environment targets and notebook policy",
-                "symbols": [
                     "validate_framework_config",
                     "load_fabric_config",
                     "get_path",
