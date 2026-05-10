@@ -19,7 +19,7 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`check_fabric_ai_functions_available`](../../reference/step-02a-shared-runtime-config/check_fabric_ai_functions_available.md) | function | Check whether Fabric AI Functions can be imported in the current runtime. | — |
+| [`check_fabric_ai_functions_available`](../../reference/step-02a-shared-runtime-config/check_fabric_ai_functions_available.md) | function | Check whether Fabric AI Functions are available in the current runtime. | — |
 | [`configure_fabric_ai_functions`](../../reference/step-01-governance-context/configure_fabric_ai_functions.md) | function | Apply optional default Fabric AI Function configuration. | — |
 | [`create_ai_prompt_config`](../../reference/step-02a-shared-runtime-config/create_ai_prompt_config.md) | function | Create the AI prompt-template configuration used by FabricOps. | — |
 | [`create_governance_config`](../../reference/step-02a-shared-runtime-config/create_governance_config.md) | function | Create governance policy defaults for FabricOps runtime checks. | — |

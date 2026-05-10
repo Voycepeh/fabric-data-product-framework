@@ -17,6 +17,134 @@ class PublicSymbolDocMetadata(TypedDict):
     summary_override: str | None
 
 
+
+
+class TemplateFlowSegmentMetadata(TypedDict):
+    """Segment metadata for starter template guidance on the reference landing page."""
+
+    title: str
+    symbols: list[str]
+
+
+class TemplateFlowDocMetadata(TypedDict):
+    """Starter template metadata used to render the template-first function reference."""
+
+    notebook_key: str
+    notebook_label: str
+    template_path: str
+    segment_intro: str
+    segments: list[TemplateFlowSegmentMetadata]
+
+
+TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
+    {
+        "notebook_key": "00_env_config",
+        "notebook_label": "`00_env_config`",
+        "template_path": "templates/notebooks/00_env_config.ipynb",
+        "segment_intro": "Shared environment bootstrap and validation before exploration or pipeline notebooks run.",
+        "segments": [
+            {
+                "title": "Configure shared framework defaults",
+                "symbols": [
+                    "create_framework_config",
+                    "load_fabric_config",
+                    "get_path",
+                ],
+            },
+            {
+                "title": "Run readiness and smoke checks",
+                "symbols": [
+                    "run_config_smoke_tests",
+                    "bootstrap_fabric_env",
+                    "check_fabric_ai_functions_available",
+                ],
+            },
+        ],
+    },
+    {
+        "notebook_key": "02_ex",
+        "notebook_label": "`02_ex_<agreement>_<topic>`",
+        "template_path": "templates/notebooks/02_ex_agreement_topic.ipynb",
+        "segment_intro": "Exploration notebook flow used to profile source data and draft advisory AI outputs for human review.",
+        "segments": [
+            {
+                "title": "Segment 1: Load shared config and runtime",
+                "symbols": ["load_fabric_config", "build_runtime_context"],
+            },
+            {
+                "title": "Segment 2: Profile source and capture evidence",
+                "symbols": [
+                    "lakehouse_table_read",
+                    "generate_metadata_profile",
+                    "profile_metadata_to_records",
+                    "write_metadata_records",
+                ],
+            },
+            {
+                "title": "Segment 3: AI-assisted drafting (advisory only)",
+                "symbols": [
+                    "build_ai_quality_context",
+                    "build_manual_dq_rule_prompt_package",
+                    "build_manual_governance_prompt_package",
+                    "suggest_dq_rules_prompt",
+                    "classify_columns",
+                ],
+            },
+            {
+                "title": "Segment 4: Human approval and contract write",
+                "symbols": [
+                    "build_contract_summary",
+                    "write_contract_to_lakehouse",
+                ],
+            },
+        ],
+    },
+    {
+        "notebook_key": "03_pc",
+        "notebook_label": "`03_pc_<agreement>_<pipeline>`",
+        "template_path": "templates/notebooks/03_pc_agreement_source_to_target.ipynb",
+        "segment_intro": "Pipeline-contract notebook flow for deterministic enforcement and controlled publishing.",
+        "segments": [
+            {
+                "title": "Segment 1: Load shared config and runtime context",
+                "symbols": ["load_fabric_config", "build_runtime_context"],
+            },
+            {
+                "title": "Segment 2: Load approved contract and source data",
+                "symbols": [
+                    "load_latest_approved_contract",
+                    "lakehouse_table_read",
+                ],
+            },
+            {
+                "title": "Segment 3: Validate columns, transform, and compile rules",
+                "symbols": [
+                    "extract_required_columns",
+                    "get_executable_quality_rules",
+                    "validate_dq_rules",
+                ],
+            },
+            {
+                "title": "Segment 4: Run DQ, split outputs, and publish",
+                "symbols": [
+                    "run_dq_rules",
+                    "split_valid_and_quarantine",
+                    "assert_dq_passed",
+                    "lakehouse_table_write",
+                ],
+            },
+            {
+                "title": "Optional metadata / lineage / handover evidence",
+                "symbols": [
+                    "write_metadata_records",
+                    "build_lineage_from_notebook_code",
+                    "build_run_summary",
+                    "render_run_summary_markdown",
+                ],
+            },
+        ],
+    },
+]
 WORKFLOW_STEP_DOCS: list[dict[str, int | str]] = [
     {"number": 1, "slug": "step-01-governance-context", "title": "Governance context", "subtext": "This step captures the governance context: approved usage, owner, and data agreement. The agreement may live outside Fabric, such as in SharePoint documents. Functions in this step mainly link notebooks back to that agreement so the technical work stays tied to the approved business context."},
     {"number": "2A", "slug": "step-02a-shared-runtime-config", "title": "Create shared runtime config", "subtext": "This step creates the shared config that other notebooks depend on, including environment paths, workspace targets, AI availability, and standard naming rules. The goal is to define the project setup once so exploration and pipeline notebooks do not repeat hidden manual configuration."},
