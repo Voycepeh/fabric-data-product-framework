@@ -1,4 +1,4 @@
-# Data Quality Rules System
+# AI-Assisted Data Quality
 
 ## Purpose
 
