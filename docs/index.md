@@ -35,6 +35,8 @@ _FabricOps connects contracts, profiling, AI-assisted suggestions, human approva
 | Find reusable templates and functions | [Functions](reference/) |
 | Install the wheel in Fabric | [Setup](setup/) |
 
-- **New user:** [Quick Start](quick-start/) → [Notebook Structure](notebook-structure/) → [Lifecycle Operating Model](lifecycle-operating-model/)
-- **Engineer:** [Setup](setup/) → [Functions](reference/) → [Metadata and Contracts](metadata-and-contracts/)
-- **Governance / steward:** [Lifecycle Operating Model](lifecycle-operating-model/) → [Metadata and Contracts](metadata-and-contracts/) → [Data Quality Rules System](data-quality-rules-system/)
+### Suggested paths
+
+- **Run the framework:** [Quick Start](quick-start/) → [Notebook Structure](notebook-structure/) → [Functions](reference/)
+- **Build a governed data product:** [Metadata and Contracts](metadata-and-contracts/) → [Data Quality Rules System](data-quality-rules-system/) → [Functions](reference/)
+- **Understand the operating model:** [Lifecycle Operating Model](lifecycle-operating-model/) → [Notebook Structure](notebook-structure/) → [Metadata and Contracts](metadata-and-contracts/)
