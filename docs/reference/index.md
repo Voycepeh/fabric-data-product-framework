@@ -231,12 +231,12 @@ Search the callable catalogue by function name, module, starter path, or purpose
       <td data-label="Importance">Optional</td>
       <td data-label="Purpose">Build copy/paste prompt package for manual handover summary generation.</td>
     </tr>
-    <tr data-callable-row="true" data-callable-name="build_quality_result_records" data-callable-module="data_product_metadata" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Execute the `build_quality_result_records` workflow step in FabricOps.">
+    <tr data-callable-row="true" data-callable-name="build_quality_result_records" data-callable-module="data_product_metadata" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Convert quality-rule execution output into metadata evidence records.">
       <td data-label="Function / class"><a href="./step-07-output-profile-product-contract/build_quality_result_records/"><code>build_quality_result_records</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a></td>
       <td data-label="Starter path">03_pc</td>
       <td data-label="Importance">Essential</td>
-      <td data-label="Purpose">Execute the `build_quality_result_records` workflow step in FabricOps.</td>
+      <td data-label="Purpose">Convert quality-rule execution output into metadata evidence records.</td>
     </tr>
     <tr data-callable-row="true" data-callable-name="build_run_summary" data-callable-module="handover_documentation" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build a handover-friendly summary for one data product run.">
       <td data-label="Function / class"><a href="./step-10-lineage-handover-documentation/build_run_summary/"><code>build_run_summary</code></a></td>
@@ -266,12 +266,12 @@ Search the callable catalogue by function name, module, starter path, or purpose
       <td data-label="Importance">Essential</td>
       <td data-label="Purpose">Convert a schema snapshot into row-wise metadata records.</td>
     </tr>
-    <tr data-callable-row="true" data-callable-name="check_fabric_ai_functions_available" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Check whether Fabric AI Functions can be imported in the current runtime.">
+    <tr data-callable-row="true" data-callable-name="check_fabric_ai_functions_available" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Check whether Fabric AI Functions are available in the current runtime.">
       <td data-label="Function / class"><a href="./step-02a-shared-runtime-config/check_fabric_ai_functions_available/"><code>check_fabric_ai_functions_available</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
       <td data-label="Starter path">00_env_config</td>
       <td data-label="Importance">Essential</td>
-      <td data-label="Purpose">Check whether Fabric AI Functions can be imported in the current runtime.</td>
+      <td data-label="Purpose">Check whether Fabric AI Functions are available in the current runtime.</td>
     </tr>
     <tr data-callable-row="true" data-callable-name="check_partition_drift" data-callable-module="data_drift" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Check partition-level drift using keys, partitions, and optional watermark baselines.">
       <td data-label="Function / class"><a href="./step-04-ingest-profile-store/check_partition_drift/"><code>check_partition_drift</code></a></td>

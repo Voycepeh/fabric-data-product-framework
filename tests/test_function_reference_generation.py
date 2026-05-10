@@ -254,6 +254,8 @@ def test_generated_notebook_detail_pages_exist_with_expected_content() -> None:
             "## Segment 4: Assemble and validate framework config",
             "## Segment 5: Run startup checks and show resolved paths",
             "<code>load_fabric_config</code>",
+            "../../reference/",
+            "../../api/modules/",
         ],
         "docs/notebook-structure/02-exploration.md": [
             "# `02_ex_<agreement>_<topic>`",
@@ -262,6 +264,8 @@ def test_generated_notebook_detail_pages_exist_with_expected_content() -> None:
             "## Segment 2: Profile source and capture evidence",
             "## Segment 3: AI-assisted drafting (advisory only)",
             "<code>suggest_dq_rules_prompt</code>",
+            "../../reference/",
+            "../../api/modules/",
         ],
         "docs/notebook-structure/03-pipeline-contract.md": [
             "# `03_pc_<agreement>_<pipeline>`",
@@ -270,12 +274,16 @@ def test_generated_notebook_detail_pages_exist_with_expected_content() -> None:
             "## Segment 4: Run DQ, split outputs, and publish",
             "## Optional metadata / lineage / handover evidence",
             "<code>run_dq_rules</code>",
+            "../../reference/",
+            "../../api/modules/",
         ],
     }
     for path, checks in expected.items():
         content = (ROOT / path).read_text(encoding="utf-8")
         for marker in checks:
             assert marker in content
+        assert 'href="../reference/' not in content
+        assert 'href="../api/modules/' not in content
 
 
 def test_notebook_structure_overview_links_to_notebook_detail_pages() -> None:

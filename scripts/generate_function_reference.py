@@ -227,6 +227,11 @@ def callable_docs_link(
     return f"../modules/{module}/#{symbol_name}"
 
 
+def resolve_preferred_actual_module(preferred_module: str) -> str:
+    """Return the likely source module that owns callable implementations."""
+    return next((actual for actual, public_name in PUBLIC_MODULE_PREFERRED_NAMES.items() if public_name == preferred_module), preferred_module)
+
+
 def main() -> None:
     public = parse_public_exports()
     module_data = {p.stem: parse_module(p) for p in PKG_DIR.glob("*.py") if p.name != "__init__.py"}
@@ -247,7 +252,8 @@ def main() -> None:
     symbol_map: dict[str, Symbol] = {}
     for name in public:
         preferred_module = docs_metadata[name]["module"]
-        modules_to_check = [preferred_module] + [m for m in module_data if m != preferred_module]
+        preferred_actual_module = resolve_preferred_actual_module(preferred_module)
+        modules_to_check = [preferred_actual_module] + [m for m in module_data if m != preferred_actual_module]
         for module in modules_to_check:
             info = module_data[module]
             if name in info["functions"]:
@@ -423,9 +429,9 @@ def main() -> None:
         content = f"<code>{_esc(text)}</code>" if code else _esc(text)
         return f'<a href="{_esc(href)}">{content}</a>'
 
-    def _module_link(module: str) -> str:
+    def _module_link(module: str, *, base_prefix: str = "../") -> str:
         return (
-            f'<a class="reference-module-link" href="../api/modules/{_esc(module)}/" '
+            f'<a class="reference-module-link" href="{_esc(base_prefix)}api/modules/{_esc(module)}/" '
             f'title="Open {module} module page" aria-label="Open {module} module page">{_esc(module)}</a>'
         )
 
@@ -474,13 +480,13 @@ def main() -> None:
                 info = module_data[s.actual_module]
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
                 step_slug = step_slugs.get(str(docs_metadata[s.name]["workflow_step"]))
-                symbol_link = f"../reference/{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.public_module}/#{s.name}"
+                symbol_link = f"../../reference/{step_slug}/{s.name}/" if step_slug else f"../../api/modules/{s.public_module}/#{s.name}"
                 related_links = ", ".join(
-                    f"{_anchor(f'../reference/internal/{s.actual_module}/{r}.md', r, code=True)} (internal)" for r in related
+                    f"{_anchor(f'../../reference/internal/{s.actual_module}/{r}.md', r, code=True)} (internal)" for r in related
                 ) or "—"
                 segment_rows.append([
                     _anchor(symbol_link, s.name, code=True),
-                    _module_link(s.public_module),
+                    _module_link(s.public_module, base_prefix="../../"),
                     s.importance,
                     s.purpose or "—",
                     related_links,
