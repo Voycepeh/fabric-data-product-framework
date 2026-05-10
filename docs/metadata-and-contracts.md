@@ -6,13 +6,14 @@ A data contract is the agreed expectation for a dataset: what it is, how it may 
 
 ![FabricOps data contract assembly](assets/data-contract.png)
 
-A FabricOps data contract is assembled from:
-
-- environment configuration,
-- approved usage,
+In FabricOps, those expectations are assembled from:
 - source/profile metadata,
+- approved usage,
+- schema and required-field expectations,
 - approved DQ rules,
 - approved sensitivity/classification metadata,
+- approval metadata,
+- environment configuration,
 - transformation logic,
 - runtime evidence.
 
