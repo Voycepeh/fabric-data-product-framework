@@ -841,3 +841,45 @@ def check_naming_convention(notebook_name=None, allowed_prefixes=None, fail_on_e
         "allowed_prefixes": prefixes,
         "message": status,
     }
+
+
+def seed_minimal_sample_source_table(
+    source_lakehouse,
+    table_name: str = "minimal_source",
+    mode: str = "overwrite",
+    spark_session=None,
+):
+    """Create and persist a minimal demo source table for end-to-end samples.
+
+    Parameters
+    ----------
+    source_lakehouse : Housepath
+        Lakehouse destination returned by ``get_path`` for the source layer.
+    table_name : str, default="minimal_source"
+        Destination source-table name to seed for sample notebook runs.
+    mode : str, default="overwrite"
+        Write mode passed to :func:`lakehouse_table_write`.
+    spark_session : object, optional
+        Spark session to use. If omitted, the helper uses notebook global ``spark``.
+
+    Returns
+    -------
+    pyspark.sql.DataFrame
+        Seeded Spark DataFrame that was written to the source table.
+
+    Notes
+    -----
+    Runtime assumptions:
+    - Fabric notebook runtime with Spark session available, or ``spark_session`` provided.
+    - Writes a tiny deterministic dataset for demo/tutorial workflows only.
+    """
+    rows = [
+        {"customer_id": 1001, "event_ts": "2026-01-01T09:00:00Z", "status": "active", "amount": 120.5, "email": "user1001@example.com", "country_code": "SG"},
+        {"customer_id": 1002, "event_ts": "2026-01-02T10:15:00Z", "status": "inactive", "amount": 89.0, "email": "user1002@example.com", "country_code": "US"},
+        {"customer_id": 1003, "event_ts": "2026-01-03T12:30:00Z", "status": "active", "amount": 0.0, "email": "user1003@example.com", "country_code": "GB"},
+        {"customer_id": 1004, "event_ts": "2026-01-04T14:45:00Z", "status": "pending", "amount": 410.2, "email": "user1004@example.com", "country_code": "SG"},
+    ]
+    spark_obj = _get_spark(spark_session)
+    df = spark_obj.createDataFrame(rows)
+    lakehouse_table_write(df, source_lakehouse, table_name, mode=mode)
+    return df
