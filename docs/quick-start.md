@@ -16,15 +16,24 @@ Use this page to get FabricOps Starter Kit running quickly in Microsoft Fabric. 
 
 ## Start from these notebooks
 
-Create or copy the reusable notebook set described in [Notebook Structure](notebook-structure.md):
+Open and copy these real starter templates first:
+
+| Template notebook | Purpose |
+| --- | --- |
+| [`00_env_config.ipynb`](../templates/notebooks/00_env_config.ipynb) | reusable environment config notebook |
+| [`02_ex_agreement_topic.ipynb`](../templates/notebooks/02_ex_agreement_topic.ipynb) | exploration, profiling, AI-assisted suggestions, contract drafting |
+| [`03_pc_agreement_source_to_target.ipynb`](../templates/notebooks/03_pc_agreement_source_to_target.ipynb) | approved pipeline execution, DQ enforcement, quarantine/output/metadata/lineage |
+
+These are copy-ready starter notebooks. Rename and adapt them for your own agreement and pipeline.
+
+For the minimal end-to-end sample sequence, see [`templates/notebooks/README.md`](../templates/notebooks/README.md).
+
+After copying, use this canonical naming model for your working notebooks:
 
 - `00_env_config`
-  - Environment configuration notebook for shared runtime/settings used by downstream notebooks.
 - `01_data_sharing_agreement_<agreement>`
-  - Agreement notebook to capture governance context for a specific data-sharing agreement.
-- Pipeline notebooks for each agreement:
-  - `02_ex_<agreement>_<topic>` for exploration/profiling and AI-assisted suggestions.
-  - `03_pc_<agreement>_<pipeline>` for approved enforcement and production-style execution.
+- `02_ex_<agreement>_<topic>`
+- `03_pc_<agreement>_<pipeline>`
 
 ## Run them in this order
 
