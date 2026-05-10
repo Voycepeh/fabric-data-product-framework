@@ -271,7 +271,6 @@ AI suggestion does not mutate production data automatically.
 
 ## What this page is not
 
-- Not the full DQ architecture: see [Data quality architecture](architecture/data-quality-architecture.md).
 - Not the notebook role source of truth: see [Notebook Structure](notebook-structure.md).
 - Not a replacement for steward approval.
 - Not a complete function index: see [Function Reference](reference/index.md) and module docs under `docs/api/modules/quality.md`.
