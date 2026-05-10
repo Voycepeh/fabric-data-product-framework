@@ -6,7 +6,7 @@ Use this page as a guided front door into the docs.
 
 <div class="center-cta">
   <a class="md-button md-button--primary" href="quick-start/">Start with Quick Start</a>
-  <a class="md-button md-button--primary" href="reference/">Browse the functions</a>
+  <a class="md-button" href="reference/">Browse the functions</a>
 </div>
 
 ## Start here
