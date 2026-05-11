@@ -12,6 +12,9 @@ from typing import Any
 
 from pyspark.sql import functions as F
 from pyspark.sql.window import Window
+from pyspark.sql import SparkSession
+from .data_profiling import profile_dataframe_to_metadata
+from .fabric_input_output import lakehouse_table_write
 
 AI_SUGGESTABLE_DQ_RULE_TYPES = {"not_null", "unique_key", "accepted_values", "value_range", "regex_format"}
 
@@ -397,7 +400,7 @@ def _prepare_dq_profile_input(*, profile_df=None, df=None, table_name: str, busi
     if (profile_df is None) == (df is None):
         raise ValueError("Provide exactly one of profile_df or df.")
     if profile_df is None:
-        return profile_for_dq(df, table_name=table_name, business_context=business_context)
+        profile_df = profile_dataframe_to_metadata(df, table_name=table_name)
     cols = set(profile_df.columns)
     if {"column_name", "data_type", "row_count", "null_count", "distinct_count"}.issubset(cols):
         return profile_df
@@ -425,13 +428,14 @@ def draft_dq_rules(*, profile_df=None, df=None, table_name: str, business_contex
     return extract_dq_rules(responses, table_name=table_name, response_col=output_col)
 
 
-def write_dq_rules(approved_rules, *, table_name: str, metadata_path, action_by: str = "notebook_user", rule_source: str = "ai_widget_approval", action_reason: str = "Approved after human review.", mode: str = "append"):
+def write_dq_rules(approved_rules, *, table_name: str, metadata_path, metadata_table: str = "METADATA_DQ_RULES", action_by: str = "notebook_user", rule_source: str = "ai_widget_approval", action_reason: str = "Approved after human review.", mode: str = "append"):
     """Validate, build, and persist approved DQ rules."""
     validate_dq_rules(approved_rules)
-    spark = metadata_path.sparkSession if hasattr(metadata_path, "sparkSession") else metadata_path
+    spark = SparkSession.getActiveSession()
+    if spark is None:
+        raise ValueError("write_dq_rules requires an active SparkSession.")
     history_df = build_dq_rule_history(spark, table_name=table_name, approved_rules=approved_rules, action_by=action_by, rule_source=rule_source, action_reason=action_reason)
-    if hasattr(metadata_path, "write"):
-        metadata_path.write.mode(mode).saveAsTable(table_name)
+    lakehouse_table_write(history_df, metadata_path, metadata_table, mode=mode)
     return history_df
 
 
