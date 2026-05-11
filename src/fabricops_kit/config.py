@@ -77,8 +77,6 @@ class AIPromptConfig:
 
     Parameters
     ----------
-    dq_rule_candidate_template : str
-        Template for generating candidate data-quality rule suggestions.
     governance_candidate_template : str
         Template for generating candidate governance label suggestions.
     handover_summary_template : str
@@ -90,18 +88,16 @@ class AIPromptConfig:
 
     Examples
     --------
-    >>> cfg = AIPromptConfig("DQ {profile}", "GOV {profile}", "HO {context}")
+    >>> cfg = AIPromptConfig("GOV {profile}", "HO {context}")
     >>> cfg.handover_summary_template.startswith("HO")
     True
     """
 
-    dq_rule_candidate_template: str
     governance_candidate_template: str
     handover_summary_template: str
 
     def __post_init__(self) -> None:
         for label, value in {
-            "dq_rule_candidate_template": self.dq_rule_candidate_template,
             "governance_candidate_template": self.governance_candidate_template,
             "handover_summary_template": self.handover_summary_template,
         }.items():
@@ -204,7 +200,7 @@ class FrameworkConfig:
     >>> cfg = FrameworkConfig(
     ...     path_config=PathConfig(paths={"dev": {"source": object()}}),
     ...     notebook_runtime_config=NotebookRuntimeConfig(("00_",)),
-    ...     ai_prompt_config=AIPromptConfig("dq", "gov", "handover"),
+    ...     ai_prompt_config=AIPromptConfig("gov", "handover"),
     ...     quality_config=QualityConfig(),
     ...     governance_config=GovernanceConfig(),
     ...     lineage_config=LineageConfig(),
