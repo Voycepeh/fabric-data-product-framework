@@ -11,19 +11,34 @@ FabricOps uses an AI-in-the-loop workflow for data quality (DQ):
 
 ![AI-assisted data quality rule flow](assets/DQ-with-ai.png)
 
+## Run the example end to end
+
+Want to try the workflow immediately? Import the example one-notebook demo into Fabric, install the matching `fabricops_kit` wheel, and run the full flow from profiling to approved-rule enforcement and quarantine handling.
+
+- [Example one-notebook DQ demo](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/examples/notebooks/FabricOps_AI_DQ_Source_of_Truth_Widget_Metadata_Flow.ipynb)
+- Matching wheel release: Coming with the tested release asset.
+
 ## 7-step workflow (exploration to governed enforcement)
 
 | Step | Where | What happens | Output |
 |---|---|---|---|
-| 1. Profile source data | Exploration notebook (`02_ex`) | `profile_for_dq` computes profile evidence used for rule ideation. | Structured profiling rows |
-| 2. Ask AI for candidates | Exploration notebook (`02_ex`) | `suggest_dq_rules` runs the canonical framework prompt to propose advisory rule candidates. | AI response text/JSON |
-| 3. Parse AI candidates | Exploration notebook (`02_ex`) | `extract_dq_rules` turns responses into candidate rule records scoped to a table key. | Candidate rule rows |
-| 4. Human review and selection | Human + widget in `02_ex` | `review_dq_rules` presents candidates; humans approve the subset worth enforcing. | Approved rule list |
-| 5. Persist governed history | Exploration notebook (`02_ex`) | `build_dq_rule_history` appends approval decisions to metadata history. | Metadata rule history |
-| 6. Load and enforce active rules | Pipeline notebook (`03_pc`) | `load_active_dq_rules` loads approved active rules; `run_dq_rules` evaluates them deterministically. | DQ evaluation result |
-| 7. Produce evidence and gate pipeline | Pipeline notebook (`03_pc`) | `split_dq_rows` writes valid/quarantine/evidence splits; `assert_dq_passed` enforces fail-or-continue policy. | Quarantine + evidence + pass/fail gate |
+| 1. Source data | Input | Start from the raw dataframe or source table. | Source dataframe / table |
+| 2. Profile data | Exploration notebook (`02_ex`) | Create profile metadata such as nulls, distinct values, ranges, and observed patterns. | Profile evidence |
+| 3. AI suggests DQ rules | Exploration notebook (`02_ex`) | Use AI to suggest candidate value-level DQ rules from the profile. | Candidate rule suggestions |
+| 4. Human review and approval | Human + exploration notebook (`02_ex`) | Review, edit, approve, or reject the suggested rules. | Approved rules |
+| 5. Store approved rules | Config or metadata | Persist approved rules so they become the governed source used by pipelines. | Approved rule metadata |
+| 6. Pipeline applies approved rules | Pipeline notebook (`03_pc`) | Load only approved active rules and enforce them deterministically on the incoming dataframe. | DQ evaluation result |
+| 7. Split results | Pipeline notebook (`03_pc`) | Passing rows continue; failed rows are quarantined with failure reasons. | Accepted rows + quarantined rows |
+
+Run evidence such as DQ results, quarantine counts, and rule history is persisted as metadata during enforcement, but it is not a separate step in the core rule workflow.
 
 Use one shared metadata key across notebooks (for example `DQ_TABLE_NAME = TARGET_TABLE`) so exploration writes and pipeline enforcement reads the same governed rule set.
+
+## Why start small?
+
+FabricOps starts with a compact set of high-value value-level rules so the first workflow stays understandable and usable. The architecture is intentionally extensible: approved rules are stored as governed metadata and enforced through a shared rule engine, so additional rule types can be added later without changing the core suggest → approve → store → enforce workflow.
+
+The approval history is useful beyond governance. Because the suggestions, decisions, and final approved rules are stored as metadata inside Fabric, they become reusable feedback data that can later improve prompts, evaluation, and future rule suggestions.
 
 ## Canonical config and real framework prompt
 
@@ -131,7 +146,7 @@ Issues intentionally included:
 - invalid email format (`bad-email`)
 - negative `event_count`
 
-## End-to-end example aligned to all 7 steps
+## Implementation example behind the 7-step workflow
 
 ```python
 # 0) Shared key and canonical prompt config
