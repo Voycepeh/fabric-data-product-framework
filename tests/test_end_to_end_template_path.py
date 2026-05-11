@@ -18,9 +18,15 @@ def test_00_env_config_import_and_default_prompt_override_guard():
     assert "from fabricops_kit.config import (" in import_block
     assert "create_ai_prompt_config" not in import_block
     assert "AI_PROMPT_CONFIG = AIPromptConfig(" in prompt_block
-    assert "DQ_RULE_CANDIDATE_PROMPT_TEMPLATE = (" in prompt_block
-    assert "GOVERNANCE_CANDIDATE_PROMPT_TEMPLATE = (" in prompt_block
-    assert "HANDOVER_SUMMARY_PROMPT_TEMPLATE = (" in prompt_block
+    assert "DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE" in import_block
+    assert "DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE" in import_block
+    assert "DEFAULT_HANDOVER_SUMMARY_TEMPLATE" in import_block
+    assert "DQ_RULE_CANDIDATE_PROMPT_TEMPLATE = DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE" in prompt_block
+    assert "GOVERNANCE_CANDIDATE_PROMPT_TEMPLATE = DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE" in prompt_block
+    assert "HANDOVER_SUMMARY_PROMPT_TEMPLATE = DEFAULT_HANDOVER_SUMMARY_TEMPLATE" in prompt_block
+    assert "Suggest candidate DQ rules as JSON. Profile: {profile}" not in prompt_block
+    assert "Suggest governance labels as JSON. Profile: {profile}" not in prompt_block
+    assert "Summarize run handover details as markdown. Context: {context}" not in prompt_block
 
 
 def test_02_ex_contract_and_runtime_handoff_is_runnable():
