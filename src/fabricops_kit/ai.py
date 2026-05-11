@@ -8,31 +8,13 @@ from __future__ import annotations
 
 import json
 
-from .config import FrameworkConfig
+from .config import (
+    FrameworkConfig,
+    DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE,
+    DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE,
+    DEFAULT_HANDOVER_SUMMARY_TEMPLATE,
+)
 
-
-DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE = (
-    "Generate candidate data quality rules from row-level profile metadata. "
-    "Return JSON only with: rule_id, table_name, column_name, rule_type, severity, reason, evidence, needs_human_review. "
-    "Suggestions are for human review and are not deterministic enforcement. "
-    "Dataset name: {dataset_name}. Business context: {business_context}. "
-    "Row profile fields: column_name={column_name}, data_type={data_type}, null_count={null_count}, distinct_count={distinct_count}, row_count={row_count}."
-)
-DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE = (
-    "Generate governance label suggestions from profile metadata. "
-    "Return JSON only with: table_name, column_name, candidate_label, reason, evidence, needs_human_review. "
-    "Allowed candidate_label: public, internal, confidential_candidate, restricted_candidate, unknown. "
-    "Suggestions are for human review and are not deterministic enforcement. "
-    "Dataset name: {dataset_name}. Business context: {business_context}. "
-    "Row profile fields: table_name={table_name}, column_name={column_name}, data_type={data_type}, profile_summary={profile_summary}."
-)
-DEFAULT_HANDOVER_SUMMARY_TEMPLATE = (
-    "Generate handover summary suggestions. "
-    "Return JSON only with: pipeline_summary, important_transformations, business_reason, handover_notes, risks_or_open_questions. "
-    "Suggestions are for human review and are not deterministic enforcement. "
-    "Business context: {business_context}. "
-    "Row summary field: summary={summary}."
-)
 
 
 def _resolve_prompt_template(config: FrameworkConfig | None, template_name: str, fallback_template: str) -> str:

@@ -88,17 +88,21 @@ from .ai import (
     parse_manual_ai_json_response,
 )
 from .quality import load_data_contract, run_data_product, run_quality_rules
+
 from .dq import (
-    DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE,
-    get_default_dq_rule_templates,
+    AI_SUGGESTABLE_DQ_RULE_TYPES,
+    profile_for_dq,
+    suggest_dq_rules,
+    extract_dq_rules,
+    validate_dq_rules,
+    build_dq_rule_history,
+    build_dq_rule_deactivations,
+    load_active_dq_rules,
+    split_dq_rows,
     run_dq_rules,
     assert_dq_passed,
-    split_valid_and_quarantine,
-    suggest_accepted_value_mapping_prompt,
-    suggest_closest_accepted_value,
-    suggest_dq_rules_prompt,
-    validate_dq_rules,
 )
+from .dq_review import review_dq_rules, review_dq_rule_deactivations
 from .run_summary import build_run_summary, render_run_summary_markdown
 from .runtime import assert_notebook_name_valid, build_runtime_context, generate_run_id, validate_notebook_name
 from .technical_columns import add_audit_columns, add_datetime_features, add_hash_columns, default_technical_columns
@@ -106,6 +110,16 @@ from .technical_columns import add_audit_columns, add_datetime_features, add_has
 __version__ = "0.1.0"
 
 __all__ = [
+    "review_dq_rule_deactivations",
+    "review_dq_rules",
+    "load_active_dq_rules",
+    "build_dq_rule_deactivations",
+    "build_dq_rule_history",
+    "split_dq_rows",
+    "extract_dq_rules",
+    "suggest_dq_rules",
+    "profile_for_dq",
+    "AI_SUGGESTABLE_DQ_RULE_TYPES",
     "Housepath",
     "validate_framework_config",
     "bootstrap_fabric_env",
@@ -131,15 +145,9 @@ __all__ = [
     "generate_metadata_profile",
     "build_ai_quality_context",
     "run_quality_rules",
-    "DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE",
-    "suggest_dq_rules_prompt",
     "run_dq_rules",
     "assert_dq_passed",
-    "split_valid_and_quarantine",
-    "suggest_accepted_value_mapping_prompt",
-    "suggest_closest_accepted_value",
     "validate_dq_rules",
-    "get_default_dq_rule_templates",
     "parse_manual_ai_json_response",
     "build_manual_handover_prompt_package",
     "build_manual_governance_prompt_package",
