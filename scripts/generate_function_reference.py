@@ -15,45 +15,45 @@ NOTEBOOK_STRUCTURE_DIR = ROOT / "docs" / "notebook-structure"
 MODULE_DIR = ROOT / "docs" / "api" / "modules"
 
 PUBLIC_MODULE_PREFERRED_NAMES = {
-    "config": "environment_config",
-    "runtime": "runtime_context",
-    "fabric_io": "fabric_input_output",
-    "profiling": "data_profiling",
-    "contracts": "data_contracts",
+    "config": "config",
+    "runtime": "runtime",
+    "fabric_io": "fabric_io",
+    "profiling": "profiling",
+    "contracts": "contracts",
     "dq": "data_quality",
-    "drift": "data_drift",
-    "governance": "data_governance",
-    "metadata": "data_product_metadata",
-    "lineage": "data_lineage",
-    "run_summary": "handover_documentation",
-    "technical_columns": "technical_audit_columns",
+    "drift": "drift",
+    "governance": "governance",
+    "metadata": "metadata",
+    "lineage": "lineage",
+    "run_summary": "run_summary",
+    "technical_columns": "technical_columns",
 }
 VISIBLE_PUBLIC_MODULES = [
-    "environment_config",
-    "fabric_input_output",
-    "data_profiling",
-    "data_contracts",
+    "config",
+    "fabric_io",
+    "profiling",
+    "contracts",
     "data_quality",
-    "data_governance",
-    "data_lineage",
+    "governance",
+    "lineage",
 ]
 HIDDEN_SUPPORTING_MODULES = [
-    "runtime_context",
-    "data_drift",
-    "data_product_metadata",
-    "handover_documentation",
-    "technical_audit_columns",
+    "runtime",
+    "drift",
+    "metadata",
+    "run_summary",
+    "technical_columns",
 ]
 RECOMMENDED_ENTRYPOINTS = {
-    "environment_config": {
+    "config": {
         "validate_framework_config",
         "load_fabric_config",
         "get_path",
         "bootstrap_fabric_env",
     },
-    "fabric_input_output": {"Housepath", "lakehouse_table_read", "lakehouse_table_write", "warehouse_read", "warehouse_write"},
-    "data_profiling": {"generate_metadata_profile", "profile_dataframe_to_metadata", "build_ai_quality_context"},
-    "data_contracts": {
+    "fabric_io": {"Housepath", "lakehouse_table_read", "lakehouse_table_write", "warehouse_read", "warehouse_write"},
+    "profiling": {"generate_metadata_profile", "profile_dataframe_to_metadata", "build_ai_quality_context"},
+    "contracts": {
         "load_latest_approved_contract",
         "normalize_contract_dict",
         "validate_contract_dict",
@@ -62,8 +62,8 @@ RECOMMENDED_ENTRYPOINTS = {
         "build_contract_summary",
     },
     "data_quality": {"validate_dq_rules", "run_dq_rules", "assert_dq_passed", "split_valid_and_quarantine", "suggest_dq_rules_prompt"},
-    "data_governance": {"classify_columns", "summarize_governance_classifications", "build_governance_classification_records"},
-    "data_lineage": {"build_lineage_from_notebook_code"},
+    "governance": {"classify_columns", "summarize_governance_classifications", "build_governance_classification_records"},
+    "lineage": {"build_lineage_from_notebook_code"},
 }
 
 STEP_FALLBACK_NOTES = {

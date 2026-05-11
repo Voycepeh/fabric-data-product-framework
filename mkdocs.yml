@@ -22,13 +22,13 @@ nav:
   - Functions:
       - Function Reference: reference/index.md
       - Modules:
-          - environment_config: api/modules/environment_config.md
-          - fabric_input_output: api/modules/fabric_input_output.md
-          - data_profiling: api/modules/data_profiling.md
-          - data_contracts: api/modules/data_contracts.md
+          - config: api/modules/config.md
+          - fabric_io: api/modules/fabric_io.md
+          - profiling: api/modules/profiling.md
+          - contracts: api/modules/contracts.md
           - data_quality: api/modules/data_quality.md
-          - data_governance: api/modules/data_governance.md
-          - data_lineage: api/modules/data_lineage.md
+          - governance: api/modules/governance.md
+          - lineage: api/modules/lineage.md
   - Lifecycle Operating Model: lifecycle-operating-model.md
   - AI-Assisted Data Quality: data-quality-rules-system.md
   - Notebook Structure:
