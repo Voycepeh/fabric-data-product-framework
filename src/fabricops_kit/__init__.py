@@ -89,26 +89,22 @@ from .ai import (
 )
 from .quality import load_data_contract, run_data_product, run_quality_rules
 
-from .dq_rules import (
+from .dq import (
     AI_SUGGESTABLE_DQ_RULE_TYPES,
     DQ_RULE_SUGGESTION_PROMPT_TEMPLATE,
     profile_dataframe_for_dq,
     suggest_dq_rules_with_fabric_ai,
-    parse_dq_rules_dict_from_text,
     extract_candidate_rules_from_responses,
     validate_dq_rules,
-    run_dq_rules,
-    assert_dq_passed,
-)
-from .dq_rule_metadata import (
     build_dq_rules_metadata_df,
     build_dq_rule_deactivation_metadata_df,
     get_latest_dq_rule_versions_from_metadata,
     load_latest_active_dq_rules_from_metadata,
     load_latest_active_dq_rule_metadata,
+    split_valid_quarantine_and_failures,
+    run_dq_rules,
+    assert_dq_passed,
 )
-from .quarantine import split_valid_quarantine_and_failures
-from .contract_guardrails import CONTRACT_GUARDRAIL_RULE_TYPES, validate_contract_guardrails, run_contract_guardrails
 from .dq_review import launch_sequential_rule_approval_widget, launch_sequential_rule_deactivation_widget
 from .run_summary import build_run_summary, render_run_summary_markdown
 from .runtime import assert_notebook_name_valid, build_runtime_context, generate_run_id, validate_notebook_name
@@ -119,9 +115,6 @@ __version__ = "0.1.0"
 __all__ = [
     "launch_sequential_rule_deactivation_widget",
     "launch_sequential_rule_approval_widget",
-    "run_contract_guardrails",
-    "validate_contract_guardrails",
-    "CONTRACT_GUARDRAIL_RULE_TYPES",
     "load_latest_active_dq_rule_metadata",
     "load_latest_active_dq_rules_from_metadata",
     "get_latest_dq_rule_versions_from_metadata",
@@ -129,7 +122,6 @@ __all__ = [
     "build_dq_rules_metadata_df",
     "split_valid_quarantine_and_failures",
     "extract_candidate_rules_from_responses",
-    "parse_dq_rules_dict_from_text",
     "suggest_dq_rules_with_fabric_ai",
     "profile_dataframe_for_dq",
     "DQ_RULE_SUGGESTION_PROMPT_TEMPLATE",
@@ -159,15 +151,9 @@ __all__ = [
     "generate_metadata_profile",
     "build_ai_quality_context",
     "run_quality_rules",
-    "DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE",
-    "suggest_dq_rules_prompt",
     "run_dq_rules",
     "assert_dq_passed",
-    "split_valid_and_quarantine",
-    "suggest_accepted_value_mapping_prompt",
-    "suggest_closest_accepted_value",
     "validate_dq_rules",
-    "get_default_dq_rule_templates",
     "parse_manual_ai_json_response",
     "build_manual_handover_prompt_package",
     "build_manual_governance_prompt_package",
