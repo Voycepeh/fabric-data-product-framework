@@ -115,7 +115,7 @@ def test_non_starter_callable_still_appears_in_complete_catalogue() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     all_functions = markdown_section(content, "All public functions")
-    assert "<code>run_data_product</code>" in all_functions
+    assert "<code>run_dq_rules</code>" in all_functions
 
 
 def test_reference_tables_include_mobile_friendly_classes_and_data_labels() -> None:

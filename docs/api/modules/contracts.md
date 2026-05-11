@@ -30,7 +30,6 @@
 | [`extract_quality_rules`](../../reference/step-03-source-contract-ingestion-pattern/extract_quality_rules.md) | function | Extract raw quality-rule definitions from a normalized contract. | — |
 | [`extract_required_columns`](../../reference/step-03-source-contract-ingestion-pattern/extract_required_columns.md) | function | Extract required column names from a normalized contract. | — |
 | [`load_contract_from_lakehouse`](../../reference/step-03-source-contract-ingestion-pattern/load_contract_from_lakehouse.md) | function | Load one contract by ID/version from Fabric metadata storage. | [`_select_latest`](../../reference/internal/contracts/_select_latest.md) (internal), [`_to_records`](../../reference/internal/contracts/_to_records.md) (internal) |
-| [`load_data_contract`](../../reference/step-03-source-contract-ingestion-pattern/load_data_contract.md) | function | Load and normalize a data product contract from file path or dictionary. | — |
 
 ## Internal helpers
 

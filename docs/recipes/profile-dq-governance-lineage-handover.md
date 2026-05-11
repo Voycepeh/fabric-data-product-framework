@@ -15,7 +15,7 @@ handover-ready artifacts.
 ## Example
 
 ```python
-from fabricops_kit.quality import run_dq_workflow
+from fabricops_kit.dq import run_dq_rules
 from fabricops_kit.drift import (
     check_profile_drift,
     summarize_drift_results,

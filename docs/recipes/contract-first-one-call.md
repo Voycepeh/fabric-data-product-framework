@@ -14,19 +14,18 @@ Run a full contract-first workflow with one orchestrated execution call.
 ```python
 from fabricops_kit import (
     assert_data_product_passed,
-    load_data_contract,
-    run_data_product,
+    load_latest_approved_contract,
     validate_data_contract_shape,
 )
 
 contract_path = "contracts/examples/normalized_data_product_contract.yml"
-contract = load_data_contract(contract_path)
+contract = load_latest_approved_contract(spark, metadata_target, dataset_name="orders", object_name="orders")
 
 shape_errors = validate_data_contract_shape(contract)
 if shape_errors:
     raise ValueError(f"Contract shape errors: {shape_errors}")
 
-result = run_data_product(spark, contract)
+result = run_dq_rules(df, contract.get("quality_rules", []))
 assert_data_product_passed(result)
 
 print(result["status"])

@@ -27,8 +27,6 @@
 | [`generate_dq_rule_candidates_with_fabric_ai`](../../reference/step-08-ai-assisted-dq-suggestions/generate_dq_rule_candidates_with_fabric_ai.md) | function | Append AI-suggested DQ rule candidates to a profiling DataFrame. | — |
 | [`load_active_dq_rules`](../../reference/step-08-ai-assisted-dq-suggestions/load_active_dq_rules.md) | function | Load latest active approved rules from append-only metadata history. | [`_latest_dq_rule_versions`](../../reference/internal/dq/_latest_dq_rule_versions.md) (internal) |
 | [`review_dq_rule_deactivations`](../../reference/step-08-ai-assisted-dq-suggestions/review_dq_rule_deactivations.md) | function | Review active DQ rules one at a time for governed deactivation actions. | — |
-| [`run_data_product`](../../reference/step-06a-transformation-logic/run_data_product.md) | function | Run the starter kit workflow end-to-end for a data product outcome. | — |
-| [`run_quality_rules`](../../reference/step-06c-pipeline-controls/run_quality_rules.md) | function | Execute quality rules against a dataframe and return structured results. | — |
 | [`split_dq_rows`](../../reference/step-08-ai-assisted-dq-suggestions/split_dq_rows.md) | function | Split source rows into valid rows, quarantine rows, and one-row-per-failure evidence. | — |
 
 ## Internal helpers

@@ -273,4 +273,4 @@ AI suggestion does not mutate production data automatically.
 
 - Not the notebook role source of truth: see [Notebook Structure](notebook-structure.md).
 - Not a replacement for steward approval.
-- Not a complete function index: see [Function Reference](reference/index.md) and module docs under `docs/api/modules/quality.md`.
+- Not a complete function index: see [Function Reference](reference/index.md) and module docs under `docs/api/modules/dq.md`.

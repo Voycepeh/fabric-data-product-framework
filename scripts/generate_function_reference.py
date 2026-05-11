@@ -286,7 +286,7 @@ def main() -> None:
         if symbol.importance not in {"Essential", "Optional"}:
             raise RuntimeError(f"Invalid importance {symbol.importance!r} for {symbol.name}; expected Essential or Optional")
     MODULE_DIR.mkdir(parents=True, exist_ok=True)
-    module_index_lines = ["# Module API Catalogue", "", "Function Reference/workflow pages are the primary entrypoint. Module pages below are secondary technical references.", "", "Short-form modules remain import-compatible aliases but are intentionally hidden from this user-facing catalogue.", ""]
+    module_index_lines = ["# Module API Catalogue", "", "Function Reference/workflow pages are the primary entrypoint. Module pages below are secondary technical references.", "", "Canonical maintained modules are listed below.", ""]
     all_doc_modules = sorted(set(VISIBLE_PUBLIC_MODULES + HIDDEN_SUPPORTING_MODULES))
     for module in all_doc_modules:
         actual_module = next((k for k,v in PUBLIC_MODULE_PREFERRED_NAMES.items() if v==module), module)

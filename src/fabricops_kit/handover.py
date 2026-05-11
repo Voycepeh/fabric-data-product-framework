@@ -11,12 +11,12 @@ from typing import Any
 MVP_STEP_REGISTRY: list[dict[str, Any]] = [
     {"step_number": 1, "step_name": "Define purpose, approved usage & governance ownership", "owner_type": "Governance", "canonical_modules": ["runtime.py"], "expected_artifacts": ["governance_context"]},
     {"step_number": 2, "step_name": "Configure runtime, environment & path rules", "owner_type": "Starter kit", "canonical_modules": ["config.py", "fabric_io.py"], "expected_artifacts": ["runtime_context", "fabric_config", "path_context"]},
-    {"step_number": 3, "step_name": "Declare source contract & ingest source data", "owner_type": "Starter kit", "canonical_modules": ["quality.py", "fabric_io.py"], "expected_artifacts": ["source_contract", "source_dataframe"]},
+    {"step_number": 3, "step_name": "Declare source contract & ingest source data", "owner_type": "Starter kit", "canonical_modules": ["contracts.py", "fabric_io.py"], "expected_artifacts": ["source_contract", "source_dataframe"]},
     {"step_number": 4, "step_name": "Validate source against contract & capture metadata", "owner_type": "Starter kit", "canonical_modules": ["profiling.py", "drift.py", "metadata.py"], "expected_artifacts": ["source_profile", "drift_results"]},
-    {"step_number": 5, "step_name": "Explore data & capture transformation / DQ rationale", "owner_type": "Analyst / Data scientist notebook", "canonical_modules": ["quality.py"], "expected_artifacts": ["exploration_notes", "transformation_rationale"]},
-    {"step_number": 6, "step_name": "Build production transformation & write target output", "owner_type": "Data engineer notebook", "canonical_modules": ["quality.py", "technical_columns.py"], "expected_artifacts": ["transformed_dataframe", "target_write_result"]},
+    {"step_number": 5, "step_name": "Explore data & capture transformation / DQ rationale", "owner_type": "Analyst / Data scientist notebook", "canonical_modules": ["dq.py"], "expected_artifacts": ["exploration_notes", "transformation_rationale"]},
+    {"step_number": 6, "step_name": "Build production transformation & write target output", "owner_type": "Data engineer notebook", "canonical_modules": ["dq.py", "technical_columns.py"], "expected_artifacts": ["transformed_dataframe", "target_write_result"]},
     {"step_number": 7, "step_name": "Validate output & persist target metadata", "owner_type": "Starter kit", "canonical_modules": ["fabric_io.py", "metadata.py"], "expected_artifacts": ["output_profile", "target_metadata"]},
-    {"step_number": 8, "step_name": "Generate, review & configure DQ rules", "owner_type": "AI-assisted + human review", "canonical_modules": ["ai.py", "quality.py"], "expected_artifacts": ["draft_dq_rules", "approved_dq_rules", "dq_results"]},
+    {"step_number": 8, "step_name": "Generate, review & configure DQ rules", "owner_type": "AI-assisted + human review", "canonical_modules": ["ai.py", "dq.py", "dq_review.py"], "expected_artifacts": ["draft_dq_rules", "approved_dq_rules", "dq_results"]},
     {"step_number": 9, "step_name": "Generate & review classification / sensitivity suggestions", "owner_type": "AI-assisted + human review", "canonical_modules": ["ai.py", "governance.py"], "expected_artifacts": ["classification_suggestions", "governance_labels"]},
     {"step_number": 10, "step_name": "Generate data lineage and handover documentation", "owner_type": "AI-assisted handover document generation", "canonical_modules": ["lineage.py", "ai.py", "run_summary.py"], "expected_artifacts": ["lineage_records", "handover_package"]},
 ]
@@ -374,7 +374,7 @@ from pyspark.sql import functions as F
 
 # %%
 CONTRACT_PATH = "{contract_path}"
-contract = fw.load_data_contract(CONTRACT_PATH)
+contract = fw.load_contract_from_lakehouse(CONTRACT_PATH)
 if hasattr(fw, "data_product_contract_to_dict"):
     display(fw.data_product_contract_to_dict(contract))
 
@@ -403,7 +403,8 @@ def transform(df, ctx):
 # # 6. Build production transformation & write target output
 
 # %%
-result = fw.run_data_product(
+# Legacy run_data_product removed; use explicit dq + contract workflow
+result = {"status": "deprecated_example_removed"}  # 
     spark=spark,
     contract=contract,
     transform=transform,

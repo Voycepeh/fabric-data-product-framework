@@ -87,21 +87,6 @@ from .ai import (
     generate_handover_summary_with_fabric_ai,
     parse_manual_ai_json_response,
 )
-from .quality import load_data_contract, run_data_product, run_quality_rules
-
-from .dq import (
-    AI_SUGGESTABLE_DQ_RULE_TYPES,
-    profile_for_dq,
-    suggest_dq_rules,
-    extract_dq_rules,
-    validate_dq_rules,
-    build_dq_rule_history,
-    build_dq_rule_deactivations,
-    load_active_dq_rules,
-    split_dq_rows,
-    run_dq_rules,
-    assert_dq_passed,
-)
 from .dq_review import review_dq_rules, review_dq_rule_deactivations
 from .run_summary import build_run_summary, render_run_summary_markdown
 from .runtime import assert_notebook_name_valid, build_runtime_context, generate_run_id, validate_notebook_name
@@ -144,7 +129,6 @@ __all__ = [
     "profile_metadata_to_records",
     "generate_metadata_profile",
     "build_ai_quality_context",
-    "run_quality_rules",
     "run_dq_rules",
     "assert_dq_passed",
     "validate_dq_rules",
@@ -186,8 +170,6 @@ __all__ = [
     "build_quality_result_records",
     "write_metadata_records",
     "write_multiple_metadata_outputs",
-    "load_data_contract",
-    "run_data_product",
     "default_technical_columns",
     "add_datetime_features",
     "add_audit_columns",

@@ -2,7 +2,7 @@
 
 Function Reference/workflow pages are the primary entrypoint. Module pages below are secondary technical references.
 
-Short-form modules remain import-compatible aliases but are intentionally hidden from this user-facing catalogue.
+Canonical maintained modules are listed below.
 
 - [`config`](config.md)
 - [`contracts`](contracts.md)

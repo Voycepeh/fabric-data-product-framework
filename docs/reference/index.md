@@ -513,13 +513,6 @@ Use the finder below to look up public callables.
       <td data-label="Importance">Essential</td>
       <td data-label="Purpose">Load one contract by ID/version from Fabric metadata storage.</td>
     </tr>
-    <tr data-callable-row="true" data-callable-name="load_data_contract" data-callable-module="contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Load and normalize a data product contract from file path or dictionary.">
-      <td data-label="Function / class"><a href="./step-03-source-contract-ingestion-pattern/load_data_contract/"><code>load_data_contract</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a></td>
-      <td data-label="Starter path">—</td>
-      <td data-label="Importance">Essential</td>
-      <td data-label="Purpose">Load and normalize a data product contract from file path or dictionary.</td>
-    </tr>
     <tr data-callable-row="true" data-callable-name="load_fabric_config" data-callable-module="config" data-callable-starter-path="00_env_config, 02_ex, 03_pc" data-callable-importance="Essential" data-callable-purpose="Validate and return a user-supplied framework configuration.">
       <td data-label="Function / class"><a href="./step-02a-shared-runtime-config/load_fabric_config/"><code>load_fabric_config</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a></td>
@@ -611,26 +604,12 @@ Use the finder below to look up public callables.
       <td data-label="Importance">Essential</td>
       <td data-label="Purpose">Run 00_env_config smoke checks for Spark, runtime context, configured paths, notebook naming, and optional AI/IO imports.</td>
     </tr>
-    <tr data-callable-row="true" data-callable-name="run_data_product" data-callable-module="dq" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Run the starter kit workflow end-to-end for a data product outcome.">
-      <td data-label="Function / class"><a href="./step-06a-transformation-logic/run_data_product/"><code>run_data_product</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a></td>
-      <td data-label="Starter path">—</td>
-      <td data-label="Importance">Essential</td>
-      <td data-label="Purpose">Run the starter kit workflow end-to-end for a data product outcome.</td>
-    </tr>
     <tr data-callable-row="true" data-callable-name="run_dq_rules" data-callable-module="dq" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Run notebook-facing DQ rules and return a Spark DataFrame result.">
       <td data-label="Function / class"><a href="./step-06c-pipeline-controls/run_dq_rules/"><code>run_dq_rules</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a></td>
       <td data-label="Starter path">03_pc</td>
       <td data-label="Importance">Essential</td>
       <td data-label="Purpose">Run notebook-facing DQ rules and return a Spark DataFrame result.</td>
-    </tr>
-    <tr data-callable-row="true" data-callable-name="run_quality_rules" data-callable-module="dq" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Execute quality rules against a dataframe and return structured results.">
-      <td data-label="Function / class"><a href="./step-06c-pipeline-controls/run_quality_rules/"><code>run_quality_rules</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a></td>
-      <td data-label="Starter path">—</td>
-      <td data-label="Importance">Essential</td>
-      <td data-label="Purpose">Execute quality rules against a dataframe and return structured results.</td>
     </tr>
     <tr data-callable-row="true" data-callable-name="scan_notebook_cells" data-callable-module="lineage" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Scan multiple notebook cells and append cell references to lineage steps.">
       <td data-label="Function / class"><a href="./step-10-lineage-handover-documentation/scan_notebook_cells/"><code>scan_notebook_cells</code></a></td>
