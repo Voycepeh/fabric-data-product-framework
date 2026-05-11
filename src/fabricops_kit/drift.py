@@ -247,7 +247,7 @@ def assert_no_blocking_schema_drift(result: dict) -> None:
 from datetime import datetime, timezone
 import json
 
-from fabricops_kit.data_profiling import to_jsonable
+from fabricops_kit._utils import _to_jsonable
 
 
 def _utc_now_iso() -> str:
@@ -268,7 +268,7 @@ def _is_missing_table_error(exc: Exception) -> bool:
 
 
 def _json_dumps(value) -> str:
-    return json.dumps(to_jsonable(value), sort_keys=True)
+    return json.dumps(_to_jsonable(value), sort_keys=True)
 
 
 def _write_metadata_rows(spark, metadata_table: str, records: list[dict], mode: str = "append") -> bool:
@@ -720,7 +720,7 @@ from datetime import date, datetime, timedelta, timezone
 import hashlib
 from typing import Any
 
-from fabricops_kit.data_profiling import to_jsonable
+from fabricops_kit._utils import _to_jsonable
 
 
 class IncrementalSafetyError(Exception):
@@ -809,8 +809,8 @@ def _build_pandas_partition_snapshot(df, *, dataset_name: str, table_name: str, 
 
         max_watermark = min_watermark = None
         if watermark_column:
-            max_watermark = to_jsonable(group[watermark_column].max())
-            min_watermark = to_jsonable(group[watermark_column].min())
+            max_watermark = _to_jsonable(group[watermark_column].max())
+            min_watermark = _to_jsonable(group[watermark_column].min())
 
         partition_hash = _build_partition_hash(partition_value, row_count, business_key_count, max_watermark, min_watermark, business_key_hash)
         rows.append(
@@ -821,7 +821,7 @@ def _build_pandas_partition_snapshot(df, *, dataset_name: str, table_name: str, 
                 "engine": "pandas",
                 "generated_at": generated_at,
                 "partition_column": str(partition_column),
-                "partition_value": to_jsonable(partition_value),
+                "partition_value": _to_jsonable(partition_value),
                 "row_count": row_count,
                 "business_key_count": business_key_count,
                 "max_watermark": max_watermark,
@@ -855,8 +855,8 @@ def _build_spark_partition_snapshot(df, *, dataset_name: str, table_name: str, p
     rows = []
     for row in collected:
         part_val = row[partition_column]
-        max_w = to_jsonable(row["max_watermark"])
-        min_w = to_jsonable(row["min_watermark"])
+        max_w = _to_jsonable(row["max_watermark"])
+        min_w = _to_jsonable(row["min_watermark"])
         bkh = str(row["business_key_hash"])
         rows.append(
             {
@@ -866,7 +866,7 @@ def _build_spark_partition_snapshot(df, *, dataset_name: str, table_name: str, p
                 "engine": "spark",
                 "generated_at": generated_at,
                 "partition_column": str(partition_column),
-                "partition_value": to_jsonable(part_val),
+                "partition_value": _to_jsonable(part_val),
                 "row_count": int(row["row_count"]),
                 "business_key_count": int(row["business_key_count"]),
                 "max_watermark": max_w,
@@ -1002,7 +1002,7 @@ def compare_partition_snapshots(baseline_snapshots: list[dict], current_snapshot
         if drift_type == "partition_added":
             severity, action = "info", "allow"
 
-        changes.append({"drift_type": drift_type, "partition_value": partition_value, "previous_value": to_jsonable(previous_value), "current_value": to_jsonable(current_value), "severity": severity, "action": action, "message": default_message})
+        changes.append({"drift_type": drift_type, "partition_value": partition_value, "previous_value": _to_jsonable(previous_value), "current_value": _to_jsonable(current_value), "severity": severity, "action": action, "message": default_message})
 
     for part in sorted(set(current) - set(baseline)):
         add_change("partition_added", part, None, current[part], f"Partition '{part}' is new in the current snapshot.")
@@ -1103,7 +1103,7 @@ def build_incremental_safety_records(result: dict, *, run_id: str, dataset_name:
     rows = []
     for change in changes:
         rows.append(
-            to_jsonable(
+            _to_jsonable(
                 {
                     "run_id": run_id,
                     "dataset_name": dataset_name,

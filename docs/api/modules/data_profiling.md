@@ -8,7 +8,7 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`profile_dataframe`](../../reference/step-04-ingest-profile-store/profile_dataframe.md) | function | Build canonical DQ-ready profiling rows from a Spark DataFrame. | [`_profile_dataframe_to_metadata`](../../reference/internal/data_profiling/_profile_dataframe_to_metadata.md) (internal) |
+| [`profile_dataframe`](../../reference/step-04-ingest-profile-store/profile_dataframe.md) | function | Build canonical DQ-ready profiling rows from a Spark DataFrame. | [`_get_profiled_columns`](../../reference/internal/data_profiling/_get_profiled_columns.md) (internal), [`_is_min_max_supported_type`](../../reference/internal/data_profiling/_is_min_max_supported_type.md) (internal) |
 
 ## Optional callables
 
@@ -20,6 +20,6 @@
 
 | Helper | Related public callables |
 |---|---|
-| [`_generate_metadata_profile`](../../reference/internal/data_profiling/_generate_metadata_profile.md) | — |
-| [`_profile_dataframe_to_metadata`](../../reference/internal/data_profiling/_profile_dataframe_to_metadata.md) | [`profile_dataframe`](../../reference/step-04-ingest-profile-store/profile_dataframe.md) |
+| [`_get_profiled_columns`](../../reference/internal/data_profiling/_get_profiled_columns.md) | [`profile_dataframe`](../../reference/step-04-ingest-profile-store/profile_dataframe.md) |
+| [`_is_min_max_supported_type`](../../reference/internal/data_profiling/_is_min_max_supported_type.md) | [`profile_dataframe`](../../reference/step-04-ingest-profile-store/profile_dataframe.md) |
 | [`_profile_metadata_to_records`](../../reference/internal/data_profiling/_profile_metadata_to_records.md) | [`build_ai_quality_context`](../../reference/step-04-ingest-profile-store/build_ai_quality_context.md) |

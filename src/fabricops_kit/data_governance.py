@@ -10,7 +10,7 @@ import re
 from collections import Counter
 from typing import Any
 
-from fabricops_kit.data_profiling import to_jsonable
+from fabricops_kit._utils import _to_jsonable
 
 DEFAULT_CLASSIFICATION_TERMS: dict[str, list[str]] = {
     "identifier": ["staff_id", "student_id", "employee_id", "user_id", "person_id", "nric", "national_id", "passport", "matric", "account_id"],
@@ -186,7 +186,7 @@ def classify_column(
             "matched_terms": sorted(set(matched_terms)),
             "matched_rule_ids": [rid for rid in matched_rule_ids if rid],
             "data_type": data_type,
-            "profile_signals": to_jsonable(profile_signals),
+            "profile_signals": _to_jsonable(profile_signals),
             "business_context_signals": sorted(set(business_signals)),
         },
         "suggested_action": best["action"],
@@ -267,7 +267,7 @@ def build_governance_classification_records(classifications: list[dict], dataset
     """
     rows = []
     for item in classifications:
-        safe_item = to_jsonable(item)
+        safe_item = _to_jsonable(item)
         rows.append(
             {
                 "run_id": run_id,
@@ -283,7 +283,7 @@ def build_governance_classification_records(classifications: list[dict], dataset
                 "generated_by": generated_by,
                 "approved_by": item.get("approved_by"),
                 "approved_at": item.get("approved_at"),
-                "evidence_json": json.dumps(to_jsonable(item.get("evidence") or {}), sort_keys=True),
+                "evidence_json": json.dumps(_to_jsonable(item.get("evidence") or {}), sort_keys=True),
                 "classification_json": json.dumps(safe_item, sort_keys=True),
             }
         )
@@ -293,7 +293,7 @@ def build_governance_classification_records(classifications: list[dict], dataset
 def _spark_create_governance_metadata_dataframe(spark, rows: list[dict]):
     if not rows:
         return None
-    normalized = [to_jsonable(dict(r)) for r in rows]
+    normalized = [_to_jsonable(dict(r)) for r in rows]
     json_rows = [json.dumps(r, sort_keys=True) for r in normalized]
     return spark.read.json(spark.sparkContext.parallelize(json_rows))
 
