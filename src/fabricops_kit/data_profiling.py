@@ -116,6 +116,5 @@ def profile_dataframe(
     for next_row in rows[1:]:
         out = out.unionByName(next_row)
     return out
-    return out
 
 
