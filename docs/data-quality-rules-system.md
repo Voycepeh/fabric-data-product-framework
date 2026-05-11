@@ -38,7 +38,7 @@ Use one shared metadata key across notebooks (for example `DQ_TABLE_NAME = TARGE
 
 FabricOps starts with a compact set of high-value value-level rules so the first workflow stays understandable and usable. The architecture is intentionally extensible: approved rules are stored as governed metadata and enforced through a shared rule engine, so additional rule types can be added later without changing the core suggest → approve → store → enforce workflow.
 
-The approval history is useful beyond governance. Each AI suggestion, human decision, and final approved rule becomes reusable feedback data that can later improve prompts, evaluation, and future rule suggestions.
+The approval history is useful beyond governance. Because the suggestions, decisions, and final approved rules are stored as metadata inside Fabric, they become reusable feedback data that can later improve prompts, evaluation, and future rule suggestions.
 
 ## Canonical config and real framework prompt
 
