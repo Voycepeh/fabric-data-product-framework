@@ -1,15 +1,16 @@
 import json
 try:
     import ipywidgets as widgets
+    from IPython.display import display as ipy_display
 except ImportError:  # pragma: no cover
     widgets = None
-from IPython.display import display as ipy_display
+    ipy_display = None
 
 
 
 def _require_ipywidgets() -> None:
-    if widgets is None:
-        raise ImportError("ipywidgets is required for DQ review widgets. Install the dq-review extra.")
+    if widgets is None or ipy_display is None:
+        raise ImportError("ipywidgets and IPython are required for DQ review widgets. Install the dq-review extra.")
 APPROVED_RULES_FROM_WIDGET = []
 REJECTED_RULES_FROM_WIDGET = []
 
