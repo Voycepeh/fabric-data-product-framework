@@ -178,7 +178,7 @@
       "sidebar_include": false,
       "callable_name": "build_governance_candidate_prompt",
       "callable_visibility": "public",
-      "callable_role": "essential",
+      "callable_role": "optional",
       "workflow_step": 9
     },
     {
@@ -200,7 +200,7 @@
       "sidebar_include": false,
       "callable_name": "build_handover_summary_prompt",
       "callable_visibility": "public",
-      "callable_role": "essential",
+      "callable_role": "optional",
       "workflow_step": 10
     },
     {
@@ -244,7 +244,7 @@
       "sidebar_include": false,
       "callable_name": "build_manual_governance_prompt_package",
       "callable_visibility": "public",
-      "callable_role": "essential",
+      "callable_role": "optional",
       "workflow_step": 9
     },
     {
@@ -255,7 +255,7 @@
       "sidebar_include": false,
       "callable_name": "build_manual_handover_prompt_package",
       "callable_visibility": "public",
-      "callable_role": "essential",
+      "callable_role": "optional",
       "workflow_step": 10
     },
     {
@@ -464,7 +464,7 @@
       "sidebar_include": false,
       "callable_name": "generate_governance_candidates_with_fabric_ai",
       "callable_visibility": "public",
-      "callable_role": "essential",
+      "callable_role": "optional",
       "workflow_step": 9
     },
     {
@@ -475,7 +475,7 @@
       "sidebar_include": false,
       "callable_name": "generate_handover_summary_with_fabric_ai",
       "callable_visibility": "public",
-      "callable_role": "essential",
+      "callable_role": "optional",
       "workflow_step": 10
     },
     {
@@ -629,7 +629,7 @@
       "sidebar_include": false,
       "callable_name": "parse_manual_ai_json_response",
       "callable_visibility": "public",
-      "callable_role": "essential",
+      "callable_role": "optional",
       "workflow_step": 10
     },
     {

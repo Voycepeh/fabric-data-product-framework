@@ -150,7 +150,15 @@ def parse_docs_metadata() -> dict[str, dict[str, Any]]:
         )
         if (is_assign or is_annassign) and node.value is not None:
             rows = ast.literal_eval(node.value)
-            return {row["symbol_name"]: row for row in rows}
+            seen = set()
+            out = {}
+            for row in rows:
+                name = row["symbol_name"]
+                if name in seen:
+                    raise RuntimeError(f"Duplicate PUBLIC_SYMBOL_DOCS symbol_name detected: {name}")
+                seen.add(name)
+                out[name] = row
+            return out
     raise RuntimeError("Could not parse PUBLIC_SYMBOL_DOCS from docs_metadata.py")
 
 

@@ -12,7 +12,7 @@ class PublicSymbolDocMetadata(TypedDict):
     module: str
     kind: str
     workflow_step: int | str | None
-    role: NotRequired[str]
+    role: str
     purpose: NotRequired[str]
     summary_override: str | None
 
@@ -220,8 +220,6 @@ WORKFLOW_STEP_DOCS: list[dict[str, int | str]] = [
 ]
 
 PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [
-    {"symbol_name": "review_dq_rules", "module": "data_quality", "kind": "function", "workflow_step": "6C", "role": "essential", "summary_override": None},
-    {"symbol_name": "review_dq_rule_deactivations", "module": "notebook_review", "kind": "function", "workflow_step": "6C", "role": "essential", "summary_override": None},
     {"symbol_name": "Housepath", "module": "fabric_input_output", "kind": "class", "workflow_step": "2A", "role": "essential", "summary_override": None},
             {"symbol_name": "load_fabric_config", "module": "config", "kind": "function", "workflow_step": "2A", "role": "essential", "summary_override": None},
     {"symbol_name": "setup_fabricops_notebook", "module": "config", "kind": "function", "workflow_step": "2B", "role": "essential", "summary_override": None},
@@ -248,13 +246,13 @@ PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [
     {"symbol_name": "enforce_dq_rules", "module": "data_quality", "kind": "function", "workflow_step": "6C", "role": "essential", "summary_override": "Run notebook-facing DQ rules and return a Spark DataFrame result."},
     {"symbol_name": "review_dq_rules", "module": "data_quality", "kind": "function", "workflow_step": 8, "role": "essential", "summary_override": None},
     {"symbol_name": "review_dq_rule_deactivations", "module": "notebook_review", "kind": "function", "workflow_step": 8, "role": "optional", "summary_override": None},
-        {"symbol_name": "build_governance_candidate_prompt", "module": "ai", "kind": "function", "workflow_step": 9, "role": "essential", "summary_override": None},
-    {"symbol_name": "build_handover_summary_prompt", "module": "ai", "kind": "function", "workflow_step": 10, "role": "essential", "summary_override": None},
-    {"symbol_name": "build_manual_governance_prompt_package", "module": "ai", "kind": "function", "workflow_step": 9, "role": "essential", "summary_override": None},
-    {"symbol_name": "build_manual_handover_prompt_package", "module": "ai", "kind": "function", "workflow_step": 10, "role": "essential", "summary_override": None},
-    {"symbol_name": "parse_manual_ai_json_response", "module": "ai", "kind": "function", "workflow_step": 10, "role": "essential", "summary_override": None},
-    {"symbol_name": "generate_governance_candidates_with_fabric_ai", "module": "ai", "kind": "function", "workflow_step": 9, "role": "essential", "summary_override": None},
-    {"symbol_name": "generate_handover_summary_with_fabric_ai", "module": "ai", "kind": "function", "workflow_step": 10, "role": "essential", "summary_override": None},
+        {"symbol_name": "build_governance_candidate_prompt", "module": "ai", "kind": "function", "workflow_step": 9, "role": "optional", "summary_override": None},
+    {"symbol_name": "build_handover_summary_prompt", "module": "ai", "kind": "function", "workflow_step": 10, "role": "optional", "summary_override": None},
+    {"symbol_name": "build_manual_governance_prompt_package", "module": "ai", "kind": "function", "workflow_step": 9, "role": "optional", "summary_override": None},
+    {"symbol_name": "build_manual_handover_prompt_package", "module": "ai", "kind": "function", "workflow_step": 10, "role": "optional", "summary_override": None},
+    {"symbol_name": "parse_manual_ai_json_response", "module": "ai", "kind": "function", "workflow_step": 10, "role": "optional", "summary_override": None},
+    {"symbol_name": "generate_governance_candidates_with_fabric_ai", "module": "ai", "kind": "function", "workflow_step": 9, "role": "optional", "summary_override": None},
+    {"symbol_name": "generate_handover_summary_with_fabric_ai", "module": "ai", "kind": "function", "workflow_step": 10, "role": "optional", "summary_override": None},
     {"symbol_name": "check_schema_drift", "module": "drift", "kind": "function", "workflow_step": 4, "role": "essential", "summary_override": None},
     {"symbol_name": "check_partition_drift", "module": "drift", "kind": "function", "workflow_step": 4, "role": "essential", "summary_override": None},
     {"symbol_name": "check_profile_drift", "module": "drift", "kind": "function", "workflow_step": 4, "role": "essential", "summary_override": None},
