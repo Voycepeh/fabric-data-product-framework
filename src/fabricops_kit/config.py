@@ -29,12 +29,22 @@ class PathConfig:
 
     paths: dict[str, dict[str, Any]]
 
+    def __post_init__(self) -> None:
+        if not isinstance(self.paths, dict) or not self.paths:
+            raise ValueError("paths must be a non-empty mapping of environments to targets.")
+
 
 @dataclass(frozen=True)
 class NotebookRuntimeConfig:
     """Runtime options used by notebook-oriented helpers."""
 
     allowed_notebook_prefixes: tuple[str, ...] = ("00_", "01_", "02_", "03_")
+
+    def __post_init__(self) -> None:
+        prefixes = tuple(prefix.strip() for prefix in self.allowed_notebook_prefixes if str(prefix).strip())
+        if not prefixes:
+            raise ValueError("allowed_notebook_prefixes must contain at least one non-empty prefix.")
+        object.__setattr__(self, "allowed_notebook_prefixes", prefixes)
 
 
 @dataclass(frozen=True)
@@ -44,6 +54,15 @@ class AIPromptConfig:
     dq_rule_candidate_template: str
     governance_candidate_template: str
     handover_summary_template: str
+
+    def __post_init__(self) -> None:
+        for label, value in {
+            "dq_rule_candidate_template": self.dq_rule_candidate_template,
+            "governance_candidate_template": self.governance_candidate_template,
+            "handover_summary_template": self.handover_summary_template,
+        }.items():
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError(f"{label} must be a non-empty string.")
 
 
 @dataclass(frozen=True)
@@ -66,6 +85,14 @@ class QualityConfig:
     fail_on_critical: bool = True
     quarantine_on_failure: bool = False
 
+    def __post_init__(self) -> None:
+        severity = str(self.default_severity).strip().lower()
+        if severity not in {"info", "warning", "critical"}:
+            raise ValueError("default_severity must be one of: info, warning, critical.")
+        object.__setattr__(self, "default_severity", severity)
+        object.__setattr__(self, "fail_on_critical", bool(self.fail_on_critical))
+        object.__setattr__(self, "quarantine_on_failure", bool(self.quarantine_on_failure))
+
 
 @dataclass(frozen=True)
 class GovernanceConfig:
@@ -83,6 +110,10 @@ class GovernanceConfig:
     required_classification: bool = True
     sensitivity_rules: dict[str, str] = field(default_factory=dict)
 
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "required_classification", bool(self.required_classification))
+        object.__setattr__(self, "sensitivity_rules", dict(self.sensitivity_rules or {}))
+
 
 @dataclass(frozen=True)
 class LineageConfig:
@@ -99,6 +130,10 @@ class LineageConfig:
 
     capture_ai_summaries: bool = True
     capture_transformation_steps: bool = True
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "capture_ai_summaries", bool(self.capture_ai_summaries))
+        object.__setattr__(self, "capture_transformation_steps", bool(self.capture_transformation_steps))
 
 
 @dataclass(frozen=True)
@@ -132,302 +167,6 @@ class ConfigBootstrapResult:
     ai_availability: dict[str, Any]
     smoke_test_results: list[ConfigSmokeCheckResult]
     readiness_status: str
-
-
-def create_path_config(paths: dict[str, dict[str, Any]]) -> PathConfig:
-    """Create environment-to-target routing used by Fabric IO helpers.
-
-    Use this in the ``00_env_config`` bootstrap stage to define which
-    workspace/lakehouse/warehouse targets are valid for each environment
-    (for example, ``dev`` and ``prod``).
-
-    Parameters
-    ----------
-    paths : dict[str, dict[str, Any]]
-        Mapping of environment names to target mappings. Each target value is
-        typically a ``Housepath``-compatible object used later by
-        :func:`get_path` and read/write helpers.
-
-    Returns
-    -------
-    PathConfig
-        Immutable path configuration wrapper.
-
-    Raises
-    ------
-    ValueError
-        Raised when ``paths`` is empty or not a mapping.
-
-    Examples
-    --------
-    >>> create_path_config({"dev": {"raw": object()}}).paths["dev"] is not None
-    True
-    """
-    if not isinstance(paths, dict) or not paths:
-        raise ValueError("paths must be a non-empty mapping of environments to targets.")
-    return PathConfig(paths=paths)
-
-
-def create_notebook_runtime_config(allowed_notebook_prefixes: list[str] | tuple[str, ...]) -> NotebookRuntimeConfig:
-    """Create notebook naming-policy configuration for runtime guards.
-
-    This is typically configured during ``00_env_config`` so notebook
-    validation helpers can enforce a consistent execution contract.
-
-    Parameters
-    ----------
-    allowed_notebook_prefixes : list[str] | tuple[str, ...]
-        Prefixes accepted by notebook-name validation helpers.
-
-    Returns
-    -------
-    NotebookRuntimeConfig
-        Immutable runtime policy containing normalized prefixes.
-
-    Raises
-    ------
-    ValueError
-        Raised when no non-empty prefix remains after normalization.
-    """
-    prefixes = tuple(prefix.strip() for prefix in allowed_notebook_prefixes if str(prefix).strip())
-    if not prefixes:
-        raise ValueError("allowed_notebook_prefixes must contain at least one non-empty prefix.")
-    return NotebookRuntimeConfig(allowed_notebook_prefixes=prefixes)
-
-
-def create_ai_prompt_config(
-    dq_rule_candidate_template: str,
-    governance_candidate_template: str,
-    handover_summary_template: str,
-) -> AIPromptConfig:
-    """Create the AI prompt-template configuration used by FabricOps.
-
-    Use this in ``00_env_config`` to register the prompt templates that power
-    AI-assisted DQ rule generation, governance suggestion generation, and
-    handover summary drafting before downstream notebooks execute.
-
-    Parameters
-    ----------
-    dq_rule_candidate_template : str
-        Template used to ask Fabric AI for candidate DQ rules.
-    governance_candidate_template : str
-        Template used to ask Fabric AI for governance and classification suggestions.
-    handover_summary_template : str
-        Template used to ask Fabric AI for pipeline handover summaries.
-
-    Returns
-    -------
-    AIPromptConfig
-        Frozen configuration object containing the validated prompt templates.
-
-    Raises
-    ------
-    ValueError
-        Raised when any prompt template is empty or not a string.
-
-    Examples
-    --------
-    >>> ai_prompts = create_ai_prompt_config(
-    ...     dq_rule_candidate_template="Generate DQ checks for {table_name}",
-    ...     governance_candidate_template="Suggest governance metadata for {dataset_name}",
-    ...     handover_summary_template="Summarize lineage and handover notes for {pipeline_name}",
-    ... )
-    >>> ai_prompts.dq_rule_candidate_template
-    'Generate DQ checks for {table_name}'
-    """
-    for label, value in {
-        "dq_rule_candidate_template": dq_rule_candidate_template,
-        "governance_candidate_template": governance_candidate_template,
-        "handover_summary_template": handover_summary_template,
-    }.items():
-        if not isinstance(value, str) or not value.strip():
-            raise ValueError(f"{label} must be a non-empty string.")
-
-    return AIPromptConfig(
-        dq_rule_candidate_template=dq_rule_candidate_template,
-        governance_candidate_template=governance_candidate_template,
-        handover_summary_template=handover_summary_template,
-    )
-
-
-def create_quality_config(
-    default_severity: str = "warning",
-    fail_on_critical: bool = True,
-    quarantine_on_failure: bool = False,
-) -> QualityConfig:
-    """Create the default quality policy used during FabricOps checks.
-
-    This helper is typically called in ``00_env_config`` to define baseline
-    severity and failure-routing behavior consumed later by quality notebooks.
-    The returned object only stores policy defaults and performs no IO.
-
-    Parameters
-    ----------
-    default_severity : str, default="warning"
-        Baseline severity for checks that do not set an explicit level.
-        Supported values are ``"info"``, ``"warning"``, and ``"critical"``.
-    fail_on_critical : bool, default=True
-        Whether critical findings should fail readiness/quality outcomes.
-    quarantine_on_failure : bool, default=False
-        Whether downstream workflows should quarantine failed data when
-        quarantine handling is available.
-
-    Returns
-    -------
-    QualityConfig
-        Immutable quality-policy configuration for framework composition.
-
-    Raises
-    ------
-    ValueError
-        Raised when ``default_severity`` is not one of the supported values.
-
-    Notes
-    -----
-    This function validates and normalizes config values only. It does not
-    create Fabric resources, move data, or write to storage.
-
-    Examples
-    --------
-    >>> quality = create_quality_config(default_severity="critical", fail_on_critical=True)
-    >>> quality.default_severity
-    'critical'
-    """
-    severity = str(default_severity).strip().lower()
-    if severity not in {"info", "warning", "critical"}:
-        raise ValueError("default_severity must be one of: info, warning, critical.")
-    return QualityConfig(
-        default_severity=severity,
-        fail_on_critical=bool(fail_on_critical),
-        quarantine_on_failure=bool(quarantine_on_failure),
-    )
-
-
-def create_governance_config(
-    required_classification: bool = True,
-    sensitivity_rules: dict[str, str] | None = None,
-) -> GovernanceConfig:
-    """Create governance policy defaults for FabricOps runtime checks.
-
-    Parameters
-    ----------
-    required_classification : bool, default=True
-        Whether dataset classification is required by default in governance
-        validation and handover checks.
-    sensitivity_rules : dict[str, str] | None, optional
-        Optional sensitivity mapping such as column-pattern to expected label.
-        ``None`` produces an empty mapping.
-
-    Returns
-    -------
-    GovernanceConfig
-        Immutable governance-policy configuration.
-
-    Notes
-    -----
-    This helper only defines policy defaults and does not query metadata
-    services, create Fabric assets, or perform IO.
-
-    Examples
-    --------
-    >>> gov = create_governance_config(
-    ...     required_classification=True,
-    ...     sensitivity_rules={"customer_email": "Confidential"},
-    ... )
-    >>> gov.required_classification
-    True
-    """
-    return GovernanceConfig(
-        required_classification=bool(required_classification),
-        sensitivity_rules=dict(sensitivity_rules or {}),
-    )
-
-
-def create_lineage_config(
-    capture_ai_summaries: bool = True,
-    capture_transformation_steps: bool = True,
-) -> LineageConfig:
-    """Create lineage capture defaults for FabricOps handover traceability.
-
-    Parameters
-    ----------
-    capture_ai_summaries : bool, default=True
-        Whether AI-generated summaries should be retained in lineage context.
-    capture_transformation_steps : bool, default=True
-        Whether transformation-level operations should be included in lineage
-        reporting payloads.
-
-    Returns
-    -------
-    LineageConfig
-        Immutable lineage policy used by runtime orchestration and reporting.
-
-    Notes
-    -----
-    This helper sets routing/capture defaults only. It does not collect or
-    persist lineage records by itself.
-
-    Examples
-    --------
-    >>> lineage = create_lineage_config(capture_ai_summaries=False)
-    >>> lineage.capture_ai_summaries
-    False
-    """
-    return LineageConfig(
-        capture_ai_summaries=bool(capture_ai_summaries),
-        capture_transformation_steps=bool(capture_transformation_steps),
-    )
-
-
-def create_framework_config(
-    path_config: PathConfig,
-    notebook_runtime_config: NotebookRuntimeConfig,
-    ai_prompt_config: AIPromptConfig,
-    quality_config: QualityConfig,
-    governance_config: GovernanceConfig,
-    lineage_config: LineageConfig,
-) -> FrameworkConfig:
-    """Create the top-level FabricOps framework configuration contract.
-
-    Parameters
-    ----------
-    path_config : PathConfig
-        Environment-to-target routing policy used by IO helpers.
-    notebook_runtime_config : NotebookRuntimeConfig
-        Notebook naming/runtime guard policy.
-    ai_prompt_config : AIPromptConfig
-        Prompt templates used by AI-assisted helper workflows.
-    quality_config : QualityConfig
-        Default quality policy settings.
-    governance_config : GovernanceConfig
-        Default governance policy settings.
-    lineage_config : LineageConfig
-        Default lineage capture settings.
-
-    Returns
-    -------
-    FrameworkConfig
-        Frozen composition object used by bootstrap and validation helpers.
-
-    Notes
-    -----
-    This constructor composes config objects only and has no Fabric-side
-    side effects.
-
-    Examples
-    --------
-    >>> framework = create_framework_config(path_cfg, runtime_cfg, ai_cfg, quality_cfg, gov_cfg, lineage_cfg)
-    >>> isinstance(framework, FrameworkConfig)
-    True
-    """
-    return FrameworkConfig(
-        path_config=path_config,
-        notebook_runtime_config=notebook_runtime_config,
-        ai_prompt_config=ai_prompt_config,
-        quality_config=quality_config,
-        governance_config=governance_config,
-        lineage_config=lineage_config,
-    )
 
 
 def validate_framework_config(config: FrameworkConfig | dict[str, Any]) -> FrameworkConfig:

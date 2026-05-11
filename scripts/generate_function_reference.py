@@ -46,8 +46,8 @@ HIDDEN_SUPPORTING_MODULES = [
 ]
 RECOMMENDED_ENTRYPOINTS = {
     "environment_config": {
-        "create_path_config",
-        "create_framework_config",
+        "PathConfig",
+        "FrameworkConfig",
         "validate_framework_config",
         "load_fabric_config",
         "get_path",

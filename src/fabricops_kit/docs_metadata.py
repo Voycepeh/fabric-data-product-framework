@@ -53,8 +53,8 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
                 "title": "Segment 2: Define environment targets and notebook policy",
                 "symbols": [
                     "Housepath",
-                    "create_path_config",
-                    "create_notebook_runtime_config",
+                    "PathConfig",
+                    "NotebookRuntimeConfig",
                     "validate_framework_config",
                     "load_fabric_config",
                     "get_path",
@@ -63,16 +63,16 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
             {
                 "title": "Segment 3: Set AI, quality, governance, and lineage defaults",
                 "symbols": [
-                    "create_ai_prompt_config",
-                    "create_governance_config",
-                    "create_quality_config",
-                    "create_lineage_config",
+                    "AIPromptConfig",
+                    "GovernanceConfig",
+                    "QualityConfig",
+                    "LineageConfig",
                 ],
             },
             {
                 "title": "Segment 4: Assemble and validate framework config",
                 "symbols": [
-                    "create_framework_config",
+                    "FrameworkConfig",
                     "validate_framework_config",
                     "load_fabric_config",
                 ],
@@ -208,13 +208,13 @@ WORKFLOW_STEP_DOCS: list[dict[str, int | str]] = [
 
 PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [
     {"symbol_name": "Housepath", "module": "fabric_input_output", "kind": "class", "workflow_step": "2A", "summary_override": None},
-    {"symbol_name": "create_path_config", "module": "environment_config", "kind": "function", "workflow_step": "2A", "summary_override": None},
-    {"symbol_name": "create_notebook_runtime_config", "module": "environment_config", "kind": "function", "workflow_step": "2A", "summary_override": None},
-    {"symbol_name": "create_ai_prompt_config", "module": "environment_config", "kind": "function", "workflow_step": "2A", "summary_override": None},
-    {"symbol_name": "create_quality_config", "module": "environment_config", "kind": "function", "workflow_step": "2A", "summary_override": None},
-    {"symbol_name": "create_governance_config", "module": "environment_config", "kind": "function", "workflow_step": "2A", "summary_override": None},
-    {"symbol_name": "create_lineage_config", "module": "environment_config", "kind": "function", "workflow_step": "2A", "summary_override": None},
-    {"symbol_name": "create_framework_config", "module": "environment_config", "kind": "function", "workflow_step": "2A", "summary_override": None},
+    {"symbol_name": "PathConfig", "module": "environment_config", "kind": "class", "workflow_step": "2A", "summary_override": None},
+    {"symbol_name": "NotebookRuntimeConfig", "module": "environment_config", "kind": "class", "workflow_step": "2A", "summary_override": None},
+    {"symbol_name": "AIPromptConfig", "module": "environment_config", "kind": "class", "workflow_step": "2A", "summary_override": None},
+    {"symbol_name": "QualityConfig", "module": "environment_config", "kind": "class", "workflow_step": "2A", "summary_override": None},
+    {"symbol_name": "GovernanceConfig", "module": "environment_config", "kind": "class", "workflow_step": "2A", "summary_override": None},
+    {"symbol_name": "LineageConfig", "module": "environment_config", "kind": "class", "workflow_step": "2A", "summary_override": None},
+    {"symbol_name": "FrameworkConfig", "module": "environment_config", "kind": "class", "workflow_step": "2A", "summary_override": None},
     {"symbol_name": "validate_framework_config", "module": "environment_config", "kind": "function", "workflow_step": "2A", "summary_override": None},
     {
         "symbol_name": "run_config_smoke_tests",

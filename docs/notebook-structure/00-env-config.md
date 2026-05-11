@@ -27,14 +27,14 @@ Describe what this shared config notebook sets up and what downstream exploratio
       <td data-label="Purpose">Fabric lakehouse or warehouse connection details.</td>
     </tr>
     <tr>
-      <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/create_path_config/"><code>create_path_config</code></a></td>
+      <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/PathConfig/"><code>PathConfig</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Purpose">Create environment-to-target routing used by Fabric IO helpers.</td>
+      <td data-label="Purpose">Environment-to-target mapping used for lakehouse/warehouse routing.</td>
     </tr>
     <tr>
-      <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/create_notebook_runtime_config/"><code>create_notebook_runtime_config</code></a></td>
+      <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/NotebookRuntimeConfig/"><code>NotebookRuntimeConfig</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Purpose">Create notebook naming-policy configuration for runtime guards.</td>
+      <td data-label="Purpose">Runtime options used by notebook-oriented helpers.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/validate_framework_config/"><code>validate_framework_config</code></a></td>
@@ -66,24 +66,24 @@ Describe what this shared config notebook sets up and what downstream exploratio
   </thead>
   <tbody>
     <tr>
-      <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/create_ai_prompt_config/"><code>create_ai_prompt_config</code></a></td>
+      <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/AIPromptConfig/"><code>AIPromptConfig</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Purpose">Create the AI prompt-template configuration used by FabricOps.</td>
+      <td data-label="Purpose">Prompt templates used by AI-assisted framework workflows.</td>
     </tr>
     <tr>
-      <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/create_governance_config/"><code>create_governance_config</code></a></td>
+      <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/GovernanceConfig/"><code>GovernanceConfig</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Purpose">Create governance policy defaults for FabricOps runtime checks.</td>
+      <td data-label="Purpose">Default governance-policy options for metadata/classification checks.</td>
     </tr>
     <tr>
-      <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/create_quality_config/"><code>create_quality_config</code></a></td>
+      <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/QualityConfig/"><code>QualityConfig</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Purpose">Create the default quality policy used during FabricOps checks.</td>
+      <td data-label="Purpose">Default quality-policy options for FabricOps validation stages.</td>
     </tr>
     <tr>
-      <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/create_lineage_config/"><code>create_lineage_config</code></a></td>
+      <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/LineageConfig/"><code>LineageConfig</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Purpose">Create lineage capture defaults for FabricOps handover traceability.</td>
+      <td data-label="Purpose">Default lineage-capture behavior for pipeline traceability.</td>
     </tr>
   </tbody>
 </table>
@@ -100,9 +100,9 @@ Describe what this shared config notebook sets up and what downstream exploratio
   </thead>
   <tbody>
     <tr>
-      <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/create_framework_config/"><code>create_framework_config</code></a></td>
+      <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/FrameworkConfig/"><code>FrameworkConfig</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Purpose">Create the top-level FabricOps framework configuration contract.</td>
+      <td data-label="Purpose">Top-level framework configuration object.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/validate_framework_config/"><code>validate_framework_config</code></a></td>

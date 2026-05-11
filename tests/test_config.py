@@ -140,13 +140,13 @@ import types
 from fabricops_kit.config import (
     ConfigSmokeCheckResult,
     bootstrap_fabric_env,
-    create_ai_prompt_config,
-    create_framework_config,
-    create_governance_config,
-    create_lineage_config,
-    create_notebook_runtime_config,
-    create_path_config,
-    create_quality_config,
+    AIPromptConfig,
+    FrameworkConfig,
+    GovernanceConfig,
+    LineageConfig,
+    NotebookRuntimeConfig,
+    PathConfig,
+    QualityConfig,
     get_path,
     run_config_smoke_tests,
 )
@@ -154,7 +154,7 @@ from fabricops_kit.fabric_io import Housepath, load_fabric_config
 
 
 def _sample_framework_config():
-    path_config = create_path_config(
+    path_config = PathConfig(
         {
             "Sandbox": {
                 "Source": Housepath("w1", "h1", "SRC", "abfss://src"),
@@ -162,13 +162,13 @@ def _sample_framework_config():
             }
         }
     )
-    return create_framework_config(
+    return FrameworkConfig(
         path_config=path_config,
-        notebook_runtime_config=create_notebook_runtime_config(["00_", "03_"]),
-        ai_prompt_config=create_ai_prompt_config("quality {profile}", "lineage {steps}", "handover {context}"),
-        quality_config=create_quality_config(),
-        governance_config=create_governance_config(),
-        lineage_config=create_lineage_config(),
+        notebook_runtime_config=NotebookRuntimeConfig(["00_", "03_"]),
+        ai_prompt_config=AIPromptConfig("quality {profile}", "lineage {steps}", "handover {context}"),
+        quality_config=QualityConfig(),
+        governance_config=GovernanceConfig(),
+        lineage_config=LineageConfig(),
     )
 
 
@@ -201,3 +201,25 @@ def test_bootstrap_env_and_smoke_behavior(monkeypatch):
 def test_bootstrap_invalid_env_raises_useful_error():
     with pytest.raises(ValueError, match="Environment 'Prod'"):
         bootstrap_fabric_env(env="Prod", config=_sample_framework_config(), smoke_test=False, check_ai=False)
+
+
+def test_config_dataclass_validation_guards() -> None:
+    with pytest.raises(ValueError, match="paths must be a non-empty mapping"):
+        PathConfig(paths={})
+    with pytest.raises(ValueError, match="allowed_notebook_prefixes"):
+        NotebookRuntimeConfig(allowed_notebook_prefixes=("   ",))
+    with pytest.raises(ValueError, match="dq_rule_candidate_template"):
+        AIPromptConfig(" ", "x", "y")
+    with pytest.raises(ValueError, match="default_severity"):
+        QualityConfig(default_severity="urgent")
+
+
+def test_config_dataclasses_normalize_values() -> None:
+    runtime = NotebookRuntimeConfig(allowed_notebook_prefixes=(" 00_ ", "", "03_ "))
+    assert runtime.allowed_notebook_prefixes == ("00_", "03_")
+    quality = QualityConfig(default_severity=" WARNING ")
+    assert quality.default_severity == "warning"
+    governance = GovernanceConfig(required_classification=1, sensitivity_rules=None)
+    assert governance.required_classification is True and governance.sensitivity_rules == {}
+    lineage = LineageConfig(capture_ai_summaries=0, capture_transformation_steps=1)
+    assert lineage.capture_ai_summaries is False and lineage.capture_transformation_steps is True
