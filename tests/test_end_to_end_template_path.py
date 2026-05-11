@@ -38,9 +38,12 @@ def test_02_ex_contract_and_runtime_handoff_is_runnable():
 
 def test_02_ex_uses_widget_approved_rules_and_persists_metadata_table():
     ex = _all_code("templates/notebooks/02_ex_agreement_topic.ipynb")
-    assert "from fabricops_kit.dq_review import APPROVED_RULES_FROM_WIDGET" in ex
-    assert "HUMAN_APPROVED_RULES = list(APPROVED_RULES_FROM_WIDGET)" in ex
+    assert "import fabricops_kit.dq_review as dq_review" in ex
+    assert "HUMAN_APPROVED_RULES = list(dq_review.APPROVED_RULES_FROM_WIDGET)" in ex
     assert "r.get('approval_status', 'approved') == 'approved'" not in ex
+    assert "title='AI suggests (advisory), human reviews'" not in ex
+    assert "if not HUMAN_APPROVED_RULES:" in ex
+    assert 'raise ValueError("No approved DQ rules selected in widget.' in ex
     assert "approved_rules_metadata_df.write.mode('append').saveAsTable('METADATA_DQ_RULES')" in ex
 
 
@@ -65,6 +68,7 @@ def test_docs_match_signature_and_key_convention():
     text = Path("docs/data-quality-rules-system.md").read_text(encoding="utf-8")
     assert "fail_on_error=False" not in text
     assert "DQ_TABLE_NAME = TARGET_TABLE" in text
+    assert "APPROVED_RULES_FROM_WIDGET" in text
 
 
 def test_sample_csv_fixture_removed():

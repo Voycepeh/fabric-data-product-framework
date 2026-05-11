@@ -30,13 +30,13 @@ responses = suggest_dq_rules(
     output_col="ai_response",
 )
 candidate_rules = extract_dq_rules(responses, table_name=DQ_TABLE_NAME)
-review_dq_rules(candidate_rules, table_name=DQ_TABLE_NAME)
+import fabricops_kit.dq_review as dq_review
 
-# Pending by default: only explicit approval is persisted.
-approved = [
-    r for r in candidate_rules
-    if str(r.get("approval_status", "pending_review")).lower() == "approved"
-]
+review_dq_rules(candidate_rules, table_name=DQ_TABLE_NAME)
+approved = list(dq_review.APPROVED_RULES_FROM_WIDGET)
+if not approved:
+    raise ValueError("No approved DQ rules selected in widget.")
+
 approved_history = build_dq_rule_history(
     spark=spark,
     table_name=DQ_TABLE_NAME,
