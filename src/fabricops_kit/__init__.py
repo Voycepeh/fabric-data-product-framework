@@ -98,7 +98,6 @@ from .dq import (
     build_dq_rule_history,
     build_dq_rule_deactivations,
     load_active_dq_rules,
-    _load_active_dq_rule_metadata,
     split_dq_rows,
     run_dq_rules,
     assert_dq_passed,

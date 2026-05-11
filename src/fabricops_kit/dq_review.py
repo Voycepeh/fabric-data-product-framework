@@ -15,14 +15,24 @@ REJECTED_RULES_FROM_WIDGET = []
 
 
 def review_dq_rules(candidate_rules, table_name: str):
-    """
-    Review one AI-suggested DQ rule at a time.
+    """Review AI-suggested DQ rules sequentially with explicit approve/reject decisions.
 
-    Decision states:
-    - Approve
-    - Reject
+    Parameters
+    ----------
+    candidate_rules : list[dict]
+        Candidate rule dictionaries extracted from AI responses.
+    table_name : str
+        Logical table name displayed in the widget header.
 
-    No skip state is allowed because every AI suggestion should be explicitly reviewed.
+    Returns
+    -------
+    None
+        Displays an interactive widget and updates module-level review result lists.
+
+    Raises
+    ------
+    ImportError
+        If ``ipywidgets`` is unavailable in the current runtime.
     """
     _require_ipywidgets()
     global APPROVED_RULES_FROM_WIDGET, REJECTED_RULES_FROM_WIDGET
@@ -251,6 +261,106 @@ def review_dq_rules(candidate_rules, table_name: str):
     )
 
     load_current_rule()
+    ipy_display(ui)
+
+
+
+DEACTIVATED_RULES_FROM_WIDGET = []
+KEPT_ACTIVE_RULES_FROM_WIDGET = []
+
+def review_dq_rule_deactivations(active_rules, table_name: str):
+    """Review active DQ rules one at a time for governed deactivation actions.
+
+    Parameters
+    ----------
+    active_rules : list[dict]
+        Active rule dictionaries loaded from rule metadata.
+    table_name : str
+        Logical table name displayed in the widget header.
+
+    Returns
+    -------
+    None
+        Displays an interactive widget and updates module-level review result lists.
+
+    Raises
+    ------
+    ImportError
+        If ``ipywidgets`` is unavailable in the current runtime.
+
+    Notes
+    -----
+    Decisions are explicit per rule: keep active or deactivate. Deactivation requires a reason.
+    """
+    _require_ipywidgets()
+    global DEACTIVATED_RULES_FROM_WIDGET, KEPT_ACTIVE_RULES_FROM_WIDGET
+    DEACTIVATED_RULES_FROM_WIDGET = []
+    KEPT_ACTIVE_RULES_FROM_WIDGET = []
+
+    state = {"index": 0}
+    title = widgets.HTML(value=f"<h4 style='margin:0;'>DQ rule deactivation review: {table_name}</h4>")
+    progress = widgets.HTML()
+    summary = widgets.HTML()
+    reason_box = widgets.Textarea(description="Reason", placeholder="Required when deactivating", layout=widgets.Layout(width="780px", height="90px"))
+    keep_button = widgets.Button(description="Keep Active", button_style="success", layout=widgets.Layout(width="220px"))
+    deactivate_button = widgets.Button(description="Deactivate", button_style="danger", layout=widgets.Layout(width="220px"))
+    undo_button = widgets.Button(description="Undo Last", button_style="warning", layout=widgets.Layout(width="220px"))
+    status = widgets.HTML()
+
+    form_box = widgets.VBox([reason_box, widgets.HBox([keep_button, deactivate_button, undo_button])])
+
+    def current_rule():
+        if state["index"] >= len(active_rules):
+            return None
+        return active_rules[state["index"]]
+
+    def refresh():
+        rule = current_rule()
+        progress.value = f"<b>Progress:</b> {state['index']} / {len(active_rules)} &nbsp;|&nbsp; <b>Kept:</b> {len(KEPT_ACTIVE_RULES_FROM_WIDGET)} &nbsp;|&nbsp; <b>Deactivated:</b> {len(DEACTIVATED_RULES_FROM_WIDGET)}"
+        if rule is None:
+            form_box.layout.display = "none"
+            summary.value = f"<div style='border:1px solid #d1e7dd;background:#f0fff4;padding:14px;border-radius:8px;margin-top:8px;'><div style='font-size:18px;font-weight:700;color:#166534;margin-bottom:6px;'>✅ Deactivation review complete</div><div><b>Table:</b> {table_name}</div><div><b>Reviewed:</b> {len(KEPT_ACTIVE_RULES_FROM_WIDGET)+len(DEACTIVATED_RULES_FROM_WIDGET)} / {len(active_rules)}</div><div><b>Kept active:</b> {len(KEPT_ACTIVE_RULES_FROM_WIDGET)}</div><div><b>Deactivated:</b> {len(DEACTIVATED_RULES_FROM_WIDGET)}</div></div>"
+            status.value = "<span style='color:#166534; font-weight:600;'>Deactivation review decisions are ready for metadata append.</span>"
+            return
+        summary.value = f"<div style='border:1px solid #e5e7eb;background:#fafafa;padding:12px;border-radius:8px;margin-top:8px;'><div style='font-weight:700;margin-bottom:8px;'>Rule {state['index']+1} of {len(active_rules)}</div><div><b>Rule ID:</b> <code>{rule.get('rule_id','')}</code></div><div><b>Rule type:</b> <code>{rule.get('rule_type','')}</code></div><div><b>Columns:</b> <code>{rule.get('columns',[])}</code></div></div>"
+        reason_box.value = ""
+        form_box.layout.display = ""
+        status.value = ""
+
+    def keep_clicked(_):
+        rule=current_rule()
+        if rule is None: return
+        KEPT_ACTIVE_RULES_FROM_WIDGET.append(rule)
+        state['index'] += 1
+        refresh()
+
+    def deactivate_clicked(_):
+        rule=current_rule()
+        if rule is None: return
+        reason=str(reason_box.value).strip()
+        if not reason:
+            status.value = "<span style='color:red'><b>Deactivation reason is required.</b></span>"
+            return
+        DEACTIVATED_RULES_FROM_WIDGET.append({"rule": rule, "action_reason": reason})
+        state['index'] += 1
+        refresh()
+
+    def undo_clicked(_):
+        if state['index']==0:
+            status.value = "<span style='color:orange'>Nothing to undo.</span>"
+            return
+        state['index'] -= 1
+        rid = active_rules[state['index']].get('rule_id')
+        KEPT_ACTIVE_RULES_FROM_WIDGET[:] = [r for r in KEPT_ACTIVE_RULES_FROM_WIDGET if r.get('rule_id') != rid]
+        DEACTIVATED_RULES_FROM_WIDGET[:] = [r for r in DEACTIVATED_RULES_FROM_WIDGET if r.get('rule',{}).get('rule_id') != rid]
+        refresh()
+
+    keep_button.on_click(keep_clicked)
+    deactivate_button.on_click(deactivate_clicked)
+    undo_button.on_click(undo_clicked)
+
+    ui = widgets.VBox([title, progress, summary, form_box, status], layout=widgets.Layout(border="1px solid #ddd", padding="12px", width="850px"))
+    refresh()
     ipy_display(ui)
 
 # Backward-compatible aliases (not exported)
