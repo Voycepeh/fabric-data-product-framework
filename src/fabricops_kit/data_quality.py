@@ -46,7 +46,7 @@ class DQEnforcementResult:
     failure_rows: Any
 
 
-def profile_for_dq(df, table_name: str, business_context: str = "", sample_value_limit: int = 20):
+def _profile_for_dq(df, table_name: str, business_context: str = "", sample_value_limit: int = 20):
     """Profile a Spark DataFrame into one row per source column for DQ rule suggestion.
 
     Parameters
@@ -80,13 +80,13 @@ def profile_for_dq(df, table_name: str, business_context: str = "", sample_value
     return df.sparkSession.createDataFrame(rows)
 
 
-def suggest_dq_rules(profile_df, prompt_template: str | None = None, output_col: str = "response"):
+def _suggest_dq_rules(profile_df, prompt_template: str | None = None, output_col: str = "response"):
     """Generate row-wise AI DQ suggestions using Fabric AI Functions.
 
     Parameters
     ----------
     profile_df : pyspark.sql.DataFrame
-        Output of :func:`profile_for_dq`.
+        Output of :func:`_profile_for_dq`.
     prompt_template : str | None, optional
         Prompt template from ``config.ai_prompt_config.dq_rule_candidate_template``.
     output_col : str, default="response"
@@ -114,7 +114,7 @@ def _parse_dq_rules_dict_from_text(text: str) -> dict[str, list[dict[str, Any]]]
     return parsed if isinstance(parsed, dict) else {}
 
 
-def extract_dq_rules(response_df, table_name: str, response_col: str = "response") -> list[dict[str, Any]]:
+def _extract_dq_rules(response_df, table_name: str, response_col: str = "response") -> list[dict[str, Any]]:
     """Extract notebook-shaped AI responses and deduplicate candidate DQ rules by ``rule_id``."""
     candidates: list[dict[str, Any]] = []
     for row in response_df.select(response_col).collect():
@@ -167,7 +167,7 @@ def validate_dq_rules(rules: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return rules
 
 
-def build_dq_rule_history(spark, table_name: str, approved_rules: list[dict], action_by: str | None = None, rule_source: str = "ai_widget_approval", action_reason: str = "Approved after human review."):
+def _build_dq_rule_history(spark, table_name: str, approved_rules: list[dict], action_by: str | None = None, rule_source: str = "ai_widget_approval", action_reason: str = "Approved after human review."):
     """Build append-only active metadata rows for approved DQ rules.
 
     Parameters
@@ -200,7 +200,7 @@ def build_dq_rule_history(spark, table_name: str, approved_rules: list[dict], ac
     return spark.createDataFrame(rows)
 
 
-def build_dq_rule_deactivations(spark, table_name: str, deactivations: list[dict], action_by: str | None = None, rule_source: str = "rule_deactivation_widget"):
+def _build_dq_rule_deactivations(spark, table_name: str, deactivations: list[dict], action_by: str | None = None, rule_source: str = "rule_deactivation_widget"):
     """Build append-only inactive metadata rows for governed DQ rule deactivation.
 
     Parameters
@@ -245,7 +245,7 @@ def _latest_dq_rule_versions(metadata_df, table_name: str):
     return metadata_df.filter(F.col("table_name") == table_name).withColumn("_rn", F.row_number().over(w)).filter(F.col("_rn") == 1).drop("_rn")
 
 
-def load_active_dq_rules(metadata_df, table_name: str) -> list[dict[str, Any]]:
+def _load_active_dq_rules(metadata_df, table_name: str) -> list[dict[str, Any]]:
     """Load latest active approved rules from append-only metadata history.
 
     Parameters
@@ -287,7 +287,7 @@ def _load_active_dq_rule_metadata(metadata_df, table_name: str):
     return _latest_dq_rule_versions(metadata_df, table_name).filter(F.col("is_active") == True)
 
 
-def split_dq_rows(df, rules: list[dict[str, Any]], dq_run_id: str | None = None, row_id_columns: list[str] | None = None):
+def _split_dq_rows(df, rules: list[dict[str, Any]], dq_run_id: str | None = None, row_id_columns: list[str] | None = None):
     """Split source rows into valid rows, quarantine rows, and one-row-per-failure evidence.
 
     Parameters
@@ -358,7 +358,7 @@ def split_dq_rows(df, rules: list[dict[str, Any]], dq_run_id: str | None = None,
     return valid, quarantine_rows, failures
 
 
-def run_dq_rules(df, table_name: str, rules: list[dict[str, Any]]):
+def _run_dq_rules(df, table_name: str, rules: list[dict[str, Any]]):
     """Run canonical DQ rules and return Spark rule-level PASS/FAIL evidence for all rules.
 
     Parameters
@@ -381,7 +381,7 @@ def run_dq_rules(df, table_name: str, rules: list[dict[str, Any]]):
         If rules fail canonical DQ validation.
     """
     validate_dq_rules(rules)
-    _, _, failures = split_dq_rows(df, rules)
+    _, _, failures = _split_dq_rows(df, rules)
     total = df.count()
     failure_counts = {r["rule_id"]: int(r["failed_count"]) for r in failures.groupBy("rule_id").agg(F.count(F.lit(1)).alias("failed_count")).collect()}
     rows = []
@@ -409,13 +409,6 @@ def assert_dq_passed(dq_result_df) -> None:
 
 
 # Backward-compatible aliases (not exported)
-profile_dataframe_for_dq = profile_for_dq
-suggest_dq_rules_with_fabric_ai = suggest_dq_rules
-extract_candidate_rules_from_responses = extract_dq_rules
-build_dq_rules_metadata_df = build_dq_rule_history
-build_dq_rule_deactivation_metadata_df = build_dq_rule_deactivations
-load_latest_active_dq_rules_from_metadata = load_active_dq_rules
-split_valid_quarantine_and_failures = split_dq_rows
 
 
 def _prepare_dq_profile_input(*, profile_df=None, df=None, table_name: str, business_context: str = ""):
@@ -446,8 +439,8 @@ def _prepare_dq_profile_input(*, profile_df=None, df=None, table_name: str, busi
 def draft_dq_rules(*, profile_df=None, df=None, table_name: str, business_context: str = "", prompt_template: str | None = None, output_col: str = "response") -> list[dict[str, Any]]:
     """Draft candidate DQ rules from metadata profiles or raw DataFrame fallback."""
     prepared = _prepare_dq_profile_input(profile_df=profile_df, df=df, table_name=table_name, business_context=business_context)
-    responses = suggest_dq_rules(prepared, prompt_template=prompt_template, output_col=output_col)
-    return extract_dq_rules(responses, table_name=table_name, response_col=output_col)
+    responses = _suggest_dq_rules(prepared, prompt_template=prompt_template, output_col=output_col)
+    return _extract_dq_rules(responses, table_name=table_name, response_col=output_col)
 
 
 def write_dq_rules(approved_rules, *, table_name: str, metadata_path, metadata_table: str = "METADATA_DQ_RULES", action_by: str | None = None, rule_source: str = "ai_widget_approval", action_reason: str = "Approved after human review.", mode: str = "append"):
@@ -456,7 +449,7 @@ def write_dq_rules(approved_rules, *, table_name: str, metadata_path, metadata_t
     spark = SparkSession.getActiveSession()
     if spark is None:
         raise ValueError("write_dq_rules requires an active SparkSession.")
-    history_df = build_dq_rule_history(spark, table_name=table_name, approved_rules=approved_rules, action_by=action_by, rule_source=rule_source, action_reason=action_reason)
+    history_df = _build_dq_rule_history(spark, table_name=table_name, approved_rules=approved_rules, action_by=action_by, rule_source=rule_source, action_reason=action_reason)
     lakehouse_table_write(history_df, metadata_path, metadata_table, mode=mode)
     return history_df
 
@@ -465,8 +458,8 @@ def enforce_dq_rules(df, *, table_name: str, rules=None, metadata_df=None, row_i
     """Enforce approved DQ rules and return structured deterministic outputs."""
     if rules is None and metadata_df is None:
         raise ValueError("Provide rules or metadata_df.")
-    active_rules = rules or load_active_dq_rules(metadata_df, table_name=table_name)
+    active_rules = rules or _load_active_dq_rules(metadata_df, table_name=table_name)
     validate_dq_rules(active_rules)
-    rule_results = run_dq_rules(df, table_name=table_name, rules=active_rules)
-    valid_rows, quarantine_rows, failure_rows = split_dq_rows(df, active_rules, dq_run_id=dq_run_id, row_id_columns=row_id_columns)
+    rule_results = _run_dq_rules(df, table_name=table_name, rules=active_rules)
+    valid_rows, quarantine_rows, failure_rows = _split_dq_rows(df, active_rules, dq_run_id=dq_run_id, row_id_columns=row_id_columns)
     return DQEnforcementResult(active_rules, rule_results, valid_rows, quarantine_rows, failure_rows)

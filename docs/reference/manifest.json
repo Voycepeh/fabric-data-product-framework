@@ -85,7 +85,7 @@
       "sidebar_include": false
     },
     {
-      "module_name": "dq_review",
+      "module_name": "notebook_review",
       "visibility": "internal",
       "module_summary": "Human-in-the-loop DQ review helpers.",
       "sidebar_group": "Advanced",
@@ -143,28 +143,6 @@
       "callable_visibility": "public",
       "callable_role": "recommended_entrypoint",
       "workflow_step": "6D"
-    },
-    {
-      "module_name": "runtime_context",
-      "visibility": "internal",
-      "module_summary": "Notebook runtime naming and context utilities.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "assert_notebook_name_valid",
-      "callable_visibility": "public",
-      "callable_role": "internal_helper",
-      "workflow_step": 1
-    },
-    {
-      "module_name": "environment_config",
-      "visibility": "public",
-      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "bootstrap_fabric_env",
-      "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
-      "workflow_step": "2B"
     },
     {
       "module_name": "data_profiling",
@@ -365,17 +343,6 @@
       "workflow_step": 10
     },
     {
-      "module_name": "runtime_context",
-      "visibility": "internal",
-      "module_summary": "Notebook runtime naming and context utilities.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "build_runtime_context",
-      "callable_visibility": "public",
-      "callable_role": "internal_helper",
-      "workflow_step": 1
-    },
-    {
       "module_name": "data_product_metadata",
       "visibility": "internal",
       "module_summary": "Metadata record builders for operational outputs.",
@@ -396,17 +363,6 @@
       "callable_visibility": "public",
       "callable_role": "internal_helper",
       "workflow_step": 4
-    },
-    {
-      "module_name": "environment_config",
-      "visibility": "public",
-      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "check_fabric_ai_functions_available",
-      "callable_visibility": "public",
-      "callable_role": "advanced_helper",
-      "workflow_step": "2A"
     },
     {
       "module_name": "data_drift",
@@ -495,6 +451,17 @@
       "callable_visibility": "public",
       "callable_role": "internal_helper",
       "workflow_step": "6B"
+    },
+    {
+      "module_name": "data_quality",
+      "visibility": "public",
+      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "DQEnforcementResult",
+      "callable_visibility": "public",
+      "callable_role": "advanced_helper",
+      "workflow_step": "6C"
     },
     {
       "module_name": "data_quality",
@@ -627,17 +594,6 @@
       "callable_visibility": "public",
       "callable_role": "recommended_entrypoint",
       "workflow_step": 4
-    },
-    {
-      "module_name": "runtime_context",
-      "visibility": "internal",
-      "module_summary": "Notebook runtime naming and context utilities.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "generate_run_id",
-      "callable_visibility": "public",
-      "callable_role": "internal_helper",
-      "workflow_step": 1
     },
     {
       "module_name": "data_contracts",
@@ -838,7 +794,7 @@
       "workflow_step": 10
     },
     {
-      "module_name": "dq_review",
+      "module_name": "notebook_review",
       "visibility": "internal",
       "module_summary": "Human-in-the-loop DQ review helpers.",
       "sidebar_group": "Advanced",
@@ -849,7 +805,7 @@
       "workflow_step": 8
     },
     {
-      "module_name": "dq_review",
+      "module_name": "notebook_review",
       "visibility": "internal",
       "module_summary": "Human-in-the-loop DQ review helpers.",
       "sidebar_group": "Advanced",
@@ -858,17 +814,6 @@
       "callable_visibility": "public",
       "callable_role": "internal_helper",
       "workflow_step": 8
-    },
-    {
-      "module_name": "environment_config",
-      "visibility": "public",
-      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "run_config_smoke_tests",
-      "callable_visibility": "public",
-      "callable_role": "advanced_helper",
-      "workflow_step": "2B"
     },
     {
       "module_name": "data_lineage",
@@ -902,6 +847,17 @@
       "callable_visibility": "public",
       "callable_role": "advanced_helper",
       "workflow_step": 4
+    },
+    {
+      "module_name": "environment_config",
+      "visibility": "public",
+      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "setup_fabricops_notebook",
+      "callable_visibility": "public",
+      "callable_role": "advanced_helper",
+      "workflow_step": "2B"
     },
     {
       "module_name": "data_drift",
@@ -948,17 +904,6 @@
       "workflow_step": "6C"
     },
     {
-      "module_name": "environment_config",
-      "visibility": "public",
-      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "validate_framework_config",
-      "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
-      "workflow_step": "2A"
-    },
-    {
       "module_name": "data_lineage",
       "visibility": "public",
       "module_summary": "Lineage extraction and handover documentation helpers.",
@@ -968,17 +913,6 @@
       "callable_visibility": "public",
       "callable_role": "advanced_helper",
       "workflow_step": 10
-    },
-    {
-      "module_name": "runtime_context",
-      "visibility": "internal",
-      "module_summary": "Notebook runtime naming and context utilities.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "validate_notebook_name",
-      "callable_visibility": "public",
-      "callable_role": "internal_helper",
-      "workflow_step": 1
     },
     {
       "module_name": "fabric_input_output",

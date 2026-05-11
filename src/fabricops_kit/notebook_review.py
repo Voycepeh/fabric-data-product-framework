@@ -1,16 +1,23 @@
+"""Notebook human-in-the-loop review widgets for governed FabricOps workflows.
+
+This module hosts interactive review flows used in Microsoft Fabric notebooks
+where AI suggestions are reviewed by humans, approved metadata is captured,
+and downstream pipelines enforce outcomes deterministically.
+
+Current scope includes DQ rule approval and DQ rule deactivation review.
+Future scope includes column classification review, business context capture,
+data agreement metadata, data steward/owner review, and governance sign-off
+workflows.
+"""
+
+import importlib
 import json
-try:
-    import ipywidgets as widgets
-    from IPython.display import display as ipy_display
-except ImportError:  # pragma: no cover
-    widgets = None
-    ipy_display = None
 
 
-
-def _require_ipywidgets() -> None:
-    if widgets is None or ipy_display is None:
-        raise ImportError("ipywidgets and IPython are required for DQ review widgets. Install the dq-review extra.")
+def _require_ipywidgets() -> tuple[object, object]:
+    widgets = importlib.import_module("ipywidgets")
+    ipy_display = importlib.import_module("IPython.display").display
+    return widgets, ipy_display
 APPROVED_RULES_FROM_WIDGET = []
 REJECTED_RULES_FROM_WIDGET = []
 
@@ -34,8 +41,13 @@ def review_dq_rules(candidate_rules, table_name: str):
     ------
     ImportError
         If ``ipywidgets`` is unavailable in the current runtime.
+
+    Notes
+    -----
+    Approved and rejected outputs are stored in
+    ``APPROVED_RULES_FROM_WIDGET`` and ``REJECTED_RULES_FROM_WIDGET``.
     """
-    _require_ipywidgets()
+    widgets, ipy_display = _require_ipywidgets()
     global APPROVED_RULES_FROM_WIDGET, REJECTED_RULES_FROM_WIDGET
 
     APPROVED_RULES_FROM_WIDGET = []
@@ -292,8 +304,10 @@ def review_dq_rule_deactivations(active_rules, table_name: str):
     Notes
     -----
     Decisions are explicit per rule: keep active or deactivate. Deactivation requires a reason.
+    Deactivation outputs are stored in ``DEACTIVATED_RULES_FROM_WIDGET`` and
+    kept outputs are stored in ``KEPT_ACTIVE_RULES_FROM_WIDGET``.
     """
-    _require_ipywidgets()
+    widgets, ipy_display = _require_ipywidgets()
     global DEACTIVATED_RULES_FROM_WIDGET, KEPT_ACTIVE_RULES_FROM_WIDGET
     DEACTIVATED_RULES_FROM_WIDGET = []
     KEPT_ACTIVE_RULES_FROM_WIDGET = []
@@ -365,5 +379,3 @@ def review_dq_rule_deactivations(active_rules, table_name: str):
     ipy_display(ui)
 
 # Backward-compatible aliases (not exported)
-launch_sequential_rule_approval_widget = review_dq_rules
-launch_sequential_rule_deactivation_widget = review_dq_rule_deactivations

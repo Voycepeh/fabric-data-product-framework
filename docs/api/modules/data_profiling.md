@@ -16,7 +16,7 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`profile_dataframe`](../../reference/step-04-ingest-profile-store/profile_dataframe.md) | function | Build a lightweight profile for pandas or Spark-like DataFrames. | — |
+| [`profile_dataframe`](../../reference/step-04-ingest-profile-store/profile_dataframe.md) | function | Build a lightweight profile from a PySpark DataFrame. | — |
 | [`profile_metadata_to_records`](../../reference/step-04-ingest-profile-store/profile_metadata_to_records.md) | function | Convert Spark metadata profile rows into JSON-friendly dictionaries. | — |
 
 ## Internal helpers
