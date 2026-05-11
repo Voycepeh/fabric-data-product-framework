@@ -74,3 +74,47 @@ def test_seed_helper_rows_and_columns_defined():
     io_text = Path("src/fabricops_kit/fabric_io.py").read_text(encoding="utf-8")
     for expected in ["customer_id", "event_ts", "status", "amount", "email", "country_code", "user1001@example.com", "user1004@example.com"]:
         assert expected in io_text
+
+
+def test_02_ex_runtime_and_contract_symbols_present():
+    ex = Path("templates/notebooks/02_ex_agreement_topic.ipynb").read_text(encoding="utf-8")
+    for required in [
+        "validate_notebook_name",
+        "assert_notebook_name_valid",
+        "build_runtime_context",
+        "seed_minimal_sample_source_table",
+        "lakehouse_table_read",
+        "warehouse_read",
+        "validate_contract_dict",
+        "write_contract_to_lakehouse",
+        "TARGET_TABLE =",
+        "SOURCE_INPUT_CONTRACT_APPROVED",
+    ]:
+        assert required in ex
+
+
+def test_02_ex_dq_candidates_not_auto_approved_by_default():
+    ex = Path("templates/notebooks/02_ex_agreement_topic.ipynb").read_text(encoding="utf-8")
+    assert "r.get('approval_status', 'approved') == 'approved'" not in ex
+    assert "r.get('approval_status', 'pending_review')" in ex
+
+
+def test_03_pc_runtime_symbols_and_run_dq_signature_usage():
+    pc = Path("templates/notebooks/03_pc_agreement_source_to_target.ipynb").read_text(encoding="utf-8")
+    for required in [
+        "validate_notebook_name",
+        "assert_notebook_name_valid",
+        "generate_run_id",
+        "build_runtime_context",
+        "load_latest_approved_contract",
+        "extract_required_columns",
+        "lakehouse_table_read",
+        "warehouse_read",
+    ]:
+        assert required in pc
+    assert "fail_on_error=False" not in pc
+
+
+def test_00_env_config_imports_prompt_builder():
+    env_nb = Path("templates/notebooks/00_env_config.ipynb").read_text(encoding="utf-8")
+    assert "create_ai_prompt_config" in env_nb
