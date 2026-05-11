@@ -57,13 +57,6 @@
       "sidebar_include": false
     },
     {
-      "module_name": "data_product_metadata",
-      "visibility": "internal",
-      "module_summary": "Metadata record builders for operational outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false
-    },
-    {
       "module_name": "handover_documentation",
       "visibility": "internal",
       "module_summary": "Run summary and handover markdown helpers.",
@@ -160,17 +153,6 @@
       "workflow_step": 7
     },
     {
-      "module_name": "data_product_metadata",
-      "visibility": "internal",
-      "module_summary": "Metadata record builders for operational outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "build_dataset_run_record",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": 7
-    },
-    {
       "module_name": "ai",
       "visibility": "internal",
       "module_summary": "AI-assisted helper utilities and prompt builders.",
@@ -259,17 +241,6 @@
       "workflow_step": 10
     },
     {
-      "module_name": "data_product_metadata",
-      "visibility": "internal",
-      "module_summary": "Metadata record builders for operational outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "build_quality_result_records",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": 7
-    },
-    {
       "module_name": "handover_documentation",
       "visibility": "internal",
       "module_summary": "Run summary and handover markdown helpers.",
@@ -279,28 +250,6 @@
       "callable_visibility": "public",
       "callable_role": "essential",
       "workflow_step": 10
-    },
-    {
-      "module_name": "data_product_metadata",
-      "visibility": "internal",
-      "module_summary": "Metadata record builders for operational outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "build_schema_drift_records",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": 4
-    },
-    {
-      "module_name": "data_product_metadata",
-      "visibility": "internal",
-      "module_summary": "Metadata record builders for operational outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "build_schema_snapshot_records",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": 4
     },
     {
       "module_name": "data_drift",
@@ -862,28 +811,6 @@
       "callable_visibility": "public",
       "callable_role": "essential",
       "workflow_step": 9
-    },
-    {
-      "module_name": "data_product_metadata",
-      "visibility": "internal",
-      "module_summary": "Metadata record builders for operational outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "write_metadata_records",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": 7
-    },
-    {
-      "module_name": "data_product_metadata",
-      "visibility": "internal",
-      "module_summary": "Metadata record builders for operational outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "write_multiple_metadata_outputs",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": 7
     }
   ]
 }

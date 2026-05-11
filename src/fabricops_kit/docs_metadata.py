@@ -40,8 +40,7 @@ MODULE_DOCS_METADATA: list[ModuleDocMetadata] = [
     {"module_name": "data_governance", "visibility": "public", "module_summary": "Governance classification helpers and metadata builders.", "sidebar_group": "Modules", "sidebar_include": True},
     {"module_name": "data_lineage", "visibility": "public", "module_summary": "Lineage extraction and handover documentation helpers.", "sidebar_group": "Modules", "sidebar_include": True},
         {"module_name": "data_drift", "visibility": "internal", "module_summary": "Schema/profile/partition drift checks supporting notebook validation.", "sidebar_group": "Advanced", "sidebar_include": False},
-    {"module_name": "data_product_metadata", "visibility": "internal", "module_summary": "Metadata record builders for operational outputs.", "sidebar_group": "Advanced", "sidebar_include": False},
-    {"module_name": "handover_documentation", "visibility": "internal", "module_summary": "Run summary and handover markdown helpers.", "sidebar_group": "Advanced", "sidebar_include": False},
+        {"module_name": "handover_documentation", "visibility": "internal", "module_summary": "Run summary and handover markdown helpers.", "sidebar_group": "Advanced", "sidebar_include": False},
     {"module_name": "technical_audit_columns", "visibility": "internal", "module_summary": "Technical/audit enrichment helpers for pipeline outputs.", "sidebar_group": "Advanced", "sidebar_include": False},
     {"module_name": "notebook_review", "visibility": "internal", "module_summary": "Human-in-the-loop DQ review helpers.", "sidebar_group": "Advanced", "sidebar_include": False},
     {"module_name": "ai", "visibility": "internal", "module_summary": "AI-assisted helper utilities and prompt builders.", "sidebar_group": "Advanced", "sidebar_include": False},
@@ -193,8 +192,8 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
             {
                 "title": "Optional metadata / lineage / handover evidence",
                 "symbols": [
-                    "build_dataset_run_record",
-                    "build_quality_result_records",
+                    
+                    
                     
                     "build_lineage_records",
                 ],
@@ -271,12 +270,6 @@ PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [
     {"symbol_name": "plot_lineage_steps", "module": "data_lineage", "kind": "function", "workflow_step": 10, "role": "optional", "summary_override": None},
     {"symbol_name": "build_run_summary", "module": "run_summary", "kind": "function", "workflow_step": 10, "role": "essential", "summary_override": None},
     {"symbol_name": "render_run_summary_markdown", "module": "run_summary", "kind": "function", "workflow_step": 10, "role": "essential", "summary_override": None},
-    {"symbol_name": "build_dataset_run_record", "module": "metadata", "kind": "function", "workflow_step": 7, "role": "essential", "summary_override": None},
-    {"symbol_name": "build_schema_snapshot_records", "module": "metadata", "kind": "function", "workflow_step": 4, "role": "essential", "summary_override": None},
-    {"symbol_name": "build_schema_drift_records", "module": "metadata", "kind": "function", "workflow_step": 4, "role": "essential", "summary_override": None},
-    {"symbol_name": "build_quality_result_records", "module": "metadata", "kind": "function", "workflow_step": 7, "role": "essential", "summary_override": None},
-    {"symbol_name": "write_metadata_records", "module": "metadata", "kind": "function", "workflow_step": 7, "role": "essential", "summary_override": None},
-    {"symbol_name": "write_multiple_metadata_outputs", "module": "metadata", "kind": "function", "workflow_step": 7, "role": "essential", "summary_override": None},
     {"symbol_name": "default_technical_columns", "module": "technical_columns", "kind": "function", "workflow_step": "6B", "role": "essential", "summary_override": None},
     {"symbol_name": "add_datetime_features", "module": "technical_columns", "kind": "function", "workflow_step": "6B", "role": "essential", "summary_override": None},
     {"symbol_name": "add_audit_columns", "module": "technical_columns", "kind": "function", "workflow_step": "6B", "role": "essential", "summary_override": None},

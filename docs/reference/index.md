@@ -93,11 +93,6 @@ Use the finder below to look up public callables.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Build a concise contract summary for reviews and handover.</p>
 </article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_dataset_run_record" data-callable-module="data_product_metadata" data-callable-starter-path="03_pc" data-role="essential" data-callable-purpose="Build a dataset-run metadata record for operational tracking.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/build_dataset_run_record/"><code>build_dataset_run_record</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-  <p class="reference-catalogue-item-purpose">Build a dataset-run metadata record for operational tracking.</p>
-</article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_governance_candidate_prompt" data-callable-module="ai" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Build the governance-candidate prompt for AI-assisted classification drafts.">
   <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/build_governance_candidate_prompt/"><code>build_governance_candidate_prompt</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
@@ -138,25 +133,10 @@ Use the finder below to look up public callables.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Build copy/paste prompt package for manual handover summary generation.</p>
 </article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_quality_result_records" data-callable-module="data_product_metadata" data-callable-starter-path="03_pc" data-role="essential" data-callable-purpose="Convert quality-rule execution output into metadata evidence records.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/build_quality_result_records/"><code>build_quality_result_records</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-  <p class="reference-catalogue-item-purpose">Convert quality-rule execution output into metadata evidence records.</p>
-</article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_run_summary" data-callable-module="handover_documentation" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Build a handover-friendly summary for one data product run.">
   <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/build_run_summary/"><code>build_run_summary</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/handover_documentation/" title="Open handover_documentation module page" aria-label="Open handover_documentation module page">handover_documentation</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Build a handover-friendly summary for one data product run.</p>
-</article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_schema_drift_records" data-callable-module="data_product_metadata" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Convert schema drift results into metadata records for audit trails.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/build_schema_drift_records/"><code>build_schema_drift_records</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Convert schema drift results into metadata records for audit trails.</p>
-</article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_schema_snapshot_records" data-callable-module="data_product_metadata" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Convert a schema snapshot into row-wise metadata records.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/build_schema_snapshot_records/"><code>build_schema_snapshot_records</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Convert a schema snapshot into row-wise metadata records.</p>
 </article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="check_partition_drift" data-callable-module="data_drift" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Check partition-level drift using keys, partitions, and optional watermark baselines.">
   <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/check_partition_drift/"><code>check_partition_drift</code></a></h3>
@@ -412,16 +392,6 @@ Use the finder below to look up public callables.
   <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/write_governance_classifications/"><code>write_governance_classifications</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Persist governance classifications to a metadata destination.</p>
-</article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_metadata_records" data-callable-module="data_product_metadata" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Write metadata records to a configured metadata sink.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/write_metadata_records/"><code>write_metadata_records</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Write metadata records to a configured metadata sink.</p>
-</article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_multiple_metadata_outputs" data-callable-module="data_product_metadata" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Write multiple metadata payloads to their configured destinations.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/write_multiple_metadata_outputs/"><code>write_multiple_metadata_outputs</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Write multiple metadata payloads to their configured destinations.</p>
 </article>
 </div>
 

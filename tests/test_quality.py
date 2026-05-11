@@ -8,7 +8,6 @@ import pytest
 from fabricops_kit.data_quality import (
     DataQualityError,
     assert_quality_gate,
-    build_quality_result_records,
     run_quality_rules,
 )
 
@@ -72,7 +71,7 @@ def test_records_json_safe_and_unsupported_and_missing_column():
     )
     assert result["results"][0]["status"] == "skipped"
     assert result["results"][1]["status"] == "failed"
-    rows = build_quality_result_records(result, run_id="run-1")
+    rows = (result, run_id="run-1")
     json.dumps(rows)
 
 

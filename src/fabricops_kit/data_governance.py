@@ -10,7 +10,6 @@ import re
 from collections import Counter
 from typing import Any
 
-from fabricops_kit.metadata import write_metadata_records
 from fabricops_kit.data_profiling import to_jsonable
 
 DEFAULT_CLASSIFICATION_TERMS: dict[str, list[str]] = {
@@ -339,7 +338,7 @@ def write_governance_classifications(spark, classifications: list[dict], table_n
         df.write.mode(mode).saveAsTable(table_identifier)
         return df
 
-    write_metadata_records(records=records, table_identifier=table_name, writer=_spark_writer, mode=mode)
+    _spark_writer(records, table_name, mode=mode)
     return records
 
 

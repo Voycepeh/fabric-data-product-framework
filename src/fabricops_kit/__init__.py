@@ -48,14 +48,6 @@ from .data_contracts import (
     write_contract_to_lakehouse,
 )
 
-from .metadata import (
-    build_dataset_run_record,
-    build_quality_result_records,
-    build_schema_drift_records,
-    build_schema_snapshot_records,
-    write_metadata_records,
-    write_multiple_metadata_outputs,
-)
 from .data_profiling import (
     build_ai_quality_context,
     profile_dataframe,
@@ -137,12 +129,6 @@ __all__ = [
     "plot_lineage_steps",
     "build_run_summary",
     "render_run_summary_markdown",
-    "build_dataset_run_record",
-    "build_schema_snapshot_records",
-    "build_schema_drift_records",
-    "build_quality_result_records",
-    "write_metadata_records",
-    "write_multiple_metadata_outputs",
     "default_technical_columns",
     "add_datetime_features",
     "add_audit_columns",

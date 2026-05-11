@@ -139,16 +139,6 @@ Pipeline-contract notebook flow for deterministic enforcement and controlled pub
   </thead>
   <tbody>
     <tr>
-      <td data-label="Function / class"><a href="../../reference/step-07-output-profile-product-contract/build_dataset_run_record/"><code>build_dataset_run_record</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a></td>
-      <td data-label="Purpose">Build a dataset-run metadata record for operational tracking.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-07-output-profile-product-contract/build_quality_result_records/"><code>build_quality_result_records</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a></td>
-      <td data-label="Purpose">Convert quality-rule execution output into metadata evidence records.</td>
-    </tr>
-    <tr>
       <td data-label="Function / class"><a href="../../reference/step-10-lineage-handover-documentation/build_lineage_records/"><code>build_lineage_records</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a></td>
       <td data-label="Purpose">Build compact lineage records for downstream metadata sinks.</td>

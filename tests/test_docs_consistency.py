@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 import inspect
 
-from fabricops_kit import drift, incremental, metadata, profiling, technical_columns
+from fabricops_kit import drift, incremental, profiling, technical_columns
 
 
 IMPORTANT_PUBLIC_FUNCTIONS = [
@@ -16,8 +16,6 @@ IMPORTANT_PUBLIC_FUNCTIONS = [
     drift.compare_schema_snapshots,
     incremental.build_partition_snapshot,
     incremental.compare_partition_snapshots,
-    metadata.build_dataset_run_record,
-    metadata.write_multiple_metadata_outputs,
 ]
 
 
