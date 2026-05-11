@@ -15,7 +15,7 @@ FabricOps uses an AI-in-the-loop workflow for data quality (DQ):
 
 Want to try the workflow immediately? Import the example one-notebook demo into Fabric, install the matching `fabricops_kit` wheel, and run the full flow from profiling to approved-rule enforcement and quarantine handling.
 
-- Example one-notebook DQ demo: TODO (link will be added when the notebook is present in the repository).
+- [Example one-notebook DQ demo](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/examples/notebooks/FabricOps_AI_DQ_Source_of_Truth_Widget_Metadata_Flow.ipynb)
 - Matching wheel release: Coming with the tested release asset.
 
 ## 7-step workflow (exploration to governed enforcement)
@@ -33,6 +33,12 @@ Want to try the workflow immediately? Import the example one-notebook demo into 
 Run evidence such as DQ results, quarantine counts, and rule history is persisted as metadata during enforcement, but it is not a separate step in the core rule workflow.
 
 Use one shared metadata key across notebooks (for example `DQ_TABLE_NAME = TARGET_TABLE`) so exploration writes and pipeline enforcement reads the same governed rule set.
+
+## Why start small?
+
+FabricOps starts with a compact set of high-value value-level rules so the first workflow stays understandable and usable. The architecture is intentionally extensible: approved rules are stored as governed metadata and enforced through a shared rule engine, so additional rule types can be added later without changing the core suggest → approve → store → enforce workflow.
+
+The approval history is useful beyond governance. Each AI suggestion, human decision, and final approved rule becomes reusable feedback data that can later improve prompts, evaluation, and future rule suggestions.
 
 ## Canonical config and real framework prompt
 
