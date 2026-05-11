@@ -381,7 +381,7 @@ class NotebookSetupContext:
     readiness_status: str
 
 
-def __validate_framework_config(config: FrameworkConfig | dict[str, Any]) -> FrameworkConfig:
+def _validate_framework_config(config: FrameworkConfig | dict[str, Any]) -> FrameworkConfig:
     """Validate and normalize framework configuration input.
 
     Parameters
@@ -527,7 +527,7 @@ def get_path(env: str, target: str, config: FrameworkConfig | PathConfig | None)
     return paths[env][target]
 
 
-def __run_config_smoke_tests(
+def _run_config_smoke_tests(
     config: FrameworkConfig,
     env: str = "Sandbox",
     required_targets: list[str] | None = None,
@@ -631,7 +631,7 @@ def __run_config_smoke_tests(
     return results
 
 
-def __bootstrap_fabric_env(
+def _bootstrap_fabric_env(
     env: str = "Sandbox",
     required_targets: list[str] | None = None,
     check_ai: bool = True,
@@ -790,7 +790,7 @@ def setup_fabricops_notebook(
         readiness_status=readiness_status,
     )
 
-def __check_fabric_ai_functions_available() -> dict[str, Any]:
+def _check_fabric_ai_functions_available() -> dict[str, Any]:
     """Check whether Fabric AI Functions are available in the current runtime.
 
     Returns

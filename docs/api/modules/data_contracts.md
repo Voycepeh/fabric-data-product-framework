@@ -19,7 +19,7 @@
 | [`load_latest_approved_contract`](../../reference/step-03-source-contract-ingestion-pattern/load_latest_approved_contract.md) | function | Load the latest approved contract for a dataset/object pair. | [`_select_latest`](../../reference/internal/data_contracts/_select_latest.md) (internal), [`_to_records`](../../reference/internal/data_contracts/_to_records.md) (internal) |
 | [`normalize_contract_dict`](../../reference/step-03-source-contract-ingestion-pattern/normalize_contract_dict.md) | function | Normalize a notebook-authored contract dictionary to a stable shape. | — |
 | [`validate_contract_dict`](../../reference/step-03-source-contract-ingestion-pattern/validate_contract_dict.md) | function | Validate a contract dictionary and return error strings without raising. | — |
-| [`write_contract_to_lakehouse`](../../reference/step-07-output-profile-product-contract/write_contract_to_lakehouse.md) | function | Validate and persist contract records into Fabric metadata tables. | — |
+| [`write_contract_to_lakehouse`](../../reference/step-07-output-profile-product-contract/write_contract_to_lakehouse.md) | function | Validate and persist contract records into Fabric metadata tables. | [`_build_contract_records`](../../reference/internal/data_contracts/_build_contract_records.md) (internal), [`_contract_records_to_spark`](../../reference/internal/data_contracts/_contract_records_to_spark.md) (internal) |
 
 ## Optional callables
 
@@ -29,6 +29,11 @@ No advanced helpers listed for this module.
 
 | Helper | Related public callables |
 |---|---|
+| [`_build_contract_column_records`](../../reference/internal/data_contracts/_build_contract_column_records.md) | — |
+| [`_build_contract_header_record`](../../reference/internal/data_contracts/_build_contract_header_record.md) | — |
+| [`_build_contract_records`](../../reference/internal/data_contracts/_build_contract_records.md) | [`write_contract_to_lakehouse`](../../reference/step-07-output-profile-product-contract/write_contract_to_lakehouse.md) |
+| [`_build_contract_rule_records`](../../reference/internal/data_contracts/_build_contract_rule_records.md) | — |
+| [`_contract_records_to_spark`](../../reference/internal/data_contracts/_contract_records_to_spark.md) | [`write_contract_to_lakehouse`](../../reference/step-07-output-profile-product-contract/write_contract_to_lakehouse.md) |
 | [`_now_utc_iso`](../../reference/internal/data_contracts/_now_utc_iso.md) | — |
 | [`_select_latest`](../../reference/internal/data_contracts/_select_latest.md) | [`load_contract_from_lakehouse`](../../reference/step-03-source-contract-ingestion-pattern/load_contract_from_lakehouse.md), [`load_latest_approved_contract`](../../reference/step-03-source-contract-ingestion-pattern/load_latest_approved_contract.md) |
 | [`_to_records`](../../reference/internal/data_contracts/_to_records.md) | [`load_contract_from_lakehouse`](../../reference/step-03-source-contract-ingestion-pattern/load_contract_from_lakehouse.md), [`load_latest_approved_contract`](../../reference/step-03-source-contract-ingestion-pattern/load_latest_approved_contract.md) |

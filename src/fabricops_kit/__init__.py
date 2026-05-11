@@ -20,10 +20,7 @@ from .fabric_input_output import (
 from .data_lineage import (
     build_lineage_from_notebook_code,
     build_lineage_handover_markdown,
-    build_lineage_record_from_steps,
     build_lineage_records,
-    enrich_lineage_steps_with_ai,
-    fallback_copilot_lineage_prompt,
     plot_lineage_steps,
     scan_notebook_cells,
     scan_notebook_lineage,
@@ -37,12 +34,7 @@ from .data_governance import (
     write_governance_classifications,
 )
 from .data_contracts import (
-    build_contract_column_records,
-    build_contract_header_record,
-    build_contract_records,
-    build_contract_rule_records,
     build_contract_summary,
-    contract_records_to_spark,
     extract_business_keys,
     extract_classifications,
     extract_optional_columns,

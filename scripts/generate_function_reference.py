@@ -309,6 +309,10 @@ def main() -> None:
         symbol.role = str(symbol_role).lower()
         if symbol.role not in {"essential", "optional", "internal"}:
             raise RuntimeError(f"Invalid role {symbol.role!r} for {symbol.name}; expected essential/optional/internal")
+        if symbol.role == "internal" and not symbol.name.startswith("_"):
+            raise RuntimeError(f"Non-underscore callable cannot be internal: {symbol.name}")
+        if symbol.role in {"essential", "optional"} and symbol.name.startswith("_"):
+            raise RuntimeError(f"Underscore callable cannot be public role: {symbol.name}")
     MODULE_DIR.mkdir(parents=True, exist_ok=True)
     module_manifest = {row["module_name"]: row for row in module_docs_metadata}
     module_index_lines = ["# Module API Catalogue", "", "Function Reference/workflow pages are the primary entrypoint. Module pages below are secondary technical references.", "", "Short-form modules remain import-compatible aliases but are intentionally hidden from this user-facing catalogue.", ""]

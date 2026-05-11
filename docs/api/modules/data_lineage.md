@@ -8,7 +8,7 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`build_lineage_from_notebook_code`](../../reference/step-10-lineage-handover-documentation/build_lineage_from_notebook_code.md) | function | Scan, optionally enrich, and validate lineage from notebook source code. | — |
+| [`build_lineage_from_notebook_code`](../../reference/step-10-lineage-handover-documentation/build_lineage_from_notebook_code.md) | function | Scan, optionally enrich, and validate lineage from notebook source code. | [`_enrich_lineage_steps_with_ai`](../../reference/internal/data_lineage/_enrich_lineage_steps_with_ai.md) (internal) |
 | [`build_lineage_handover_markdown`](../../reference/step-10-lineage-handover-documentation/build_lineage_handover_markdown.md) | function | Create a concise markdown handover summary from lineage execution results. | — |
 | [`build_lineage_records`](../../reference/step-10-lineage-handover-documentation/build_lineage_records.md) | function | Build compact lineage records for downstream metadata sinks. | — |
 | [`plot_lineage_steps`](../../reference/step-10-lineage-handover-documentation/plot_lineage_steps.md) | function | Render lineage steps as a directed graph figure. | — |
@@ -24,7 +24,10 @@ No advanced helpers listed for this module.
 
 | Helper | Related public callables |
 |---|---|
+| [`_build_lineage_record_from_steps`](../../reference/internal/data_lineage/_build_lineage_record_from_steps.md) | — |
 | [`_call_name`](../../reference/internal/data_lineage/_call_name.md) | [`scan_notebook_lineage`](../../reference/step-10-lineage-handover-documentation/scan_notebook_lineage.md) |
+| [`_enrich_lineage_steps_with_ai`](../../reference/internal/data_lineage/_enrich_lineage_steps_with_ai.md) | [`build_lineage_from_notebook_code`](../../reference/step-10-lineage-handover-documentation/build_lineage_from_notebook_code.md) |
+| [`_fallback_copilot_lineage_prompt`](../../reference/internal/data_lineage/_fallback_copilot_lineage_prompt.md) | — |
 | [`_flatten_chain`](../../reference/internal/data_lineage/_flatten_chain.md) | [`scan_notebook_lineage`](../../reference/step-10-lineage-handover-documentation/scan_notebook_lineage.md) |
 | [`_literal`](../../reference/internal/data_lineage/_literal.md) | — |
 | [`_name`](../../reference/internal/data_lineage/_name.md) | [`scan_notebook_lineage`](../../reference/step-10-lineage-handover-documentation/scan_notebook_lineage.md) |
