@@ -25,7 +25,19 @@ class DatasetContractValidationError(Exception):
 
 @dataclass(frozen=True)
 class PathConfig:
-    """Environment-to-target mapping used for lakehouse/warehouse routing."""
+    """Environment-to-target mapping used for lakehouse/warehouse routing.
+
+    Parameters
+    ----------
+    paths : dict[str, dict[str, Any]]
+        Mapping from environment name (for example ``"dev"``) to one or more
+        target names and their configured Housepath-like objects.
+
+    Examples
+    --------
+    >>> PathConfig(paths={"dev": {"source": object()}}).paths["dev"] is not None
+    True
+    """
 
     paths: dict[str, dict[str, Any]]
 
@@ -36,7 +48,19 @@ class PathConfig:
 
 @dataclass(frozen=True)
 class NotebookRuntimeConfig:
-    """Runtime options used by notebook-oriented helpers."""
+    """Runtime options used by notebook-oriented helpers.
+
+    Parameters
+    ----------
+    allowed_notebook_prefixes : tuple[str, ...], default=("00_", "01_", "02_", "03_")
+        Prefixes allowed by notebook-name validation helpers. Values are
+        normalized by trimming whitespace and removing empty entries.
+
+    Examples
+    --------
+    >>> NotebookRuntimeConfig((" 00_ ", "03_ ")).allowed_notebook_prefixes
+    ('00_', '03_')
+    """
 
     allowed_notebook_prefixes: tuple[str, ...] = ("00_", "01_", "02_", "03_")
 
@@ -49,7 +73,27 @@ class NotebookRuntimeConfig:
 
 @dataclass(frozen=True)
 class AIPromptConfig:
-    """Prompt templates used by AI-assisted framework workflows."""
+    """Prompt templates used by AI-assisted framework workflows.
+
+    Parameters
+    ----------
+    dq_rule_candidate_template : str
+        Template for generating candidate data-quality rule suggestions.
+    governance_candidate_template : str
+        Template for generating candidate governance label suggestions.
+    handover_summary_template : str
+        Template for generating run-handover summary text.
+
+    Notes
+    -----
+    All template fields must be non-empty strings.
+
+    Examples
+    --------
+    >>> cfg = AIPromptConfig("DQ {profile}", "GOV {profile}", "HO {context}")
+    >>> cfg.handover_summary_template.startswith("HO")
+    True
+    """
 
     dq_rule_candidate_template: str
     governance_candidate_template: str
@@ -138,7 +182,36 @@ class LineageConfig:
 
 @dataclass(frozen=True)
 class FrameworkConfig:
-    """Top-level framework configuration object."""
+    """Top-level framework configuration object.
+
+    Parameters
+    ----------
+    path_config : PathConfig
+        Environment and target routing definitions.
+    notebook_runtime_config : NotebookRuntimeConfig
+        Notebook naming policy and runtime validation options.
+    ai_prompt_config : AIPromptConfig
+        AI prompt templates used across framework workflows.
+    quality_config : QualityConfig
+        Default quality-policy settings.
+    governance_config : GovernanceConfig
+        Default governance-policy settings.
+    lineage_config : LineageConfig
+        Default lineage capture behavior.
+
+    Examples
+    --------
+    >>> cfg = FrameworkConfig(
+    ...     path_config=PathConfig(paths={"dev": {"source": object()}}),
+    ...     notebook_runtime_config=NotebookRuntimeConfig(("00_",)),
+    ...     ai_prompt_config=AIPromptConfig("dq", "gov", "handover"),
+    ...     quality_config=QualityConfig(),
+    ...     governance_config=GovernanceConfig(),
+    ...     lineage_config=LineageConfig(),
+    ... )
+    >>> isinstance(cfg, FrameworkConfig)
+    True
+    """
 
     path_config: PathConfig
     notebook_runtime_config: NotebookRuntimeConfig
