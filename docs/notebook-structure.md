@@ -20,7 +20,7 @@ Workspace
 |---|---|---|---|
 | `00_env_config` | Platform / engineering | Reused by other notebooks | Shared environment config, paths, runtime settings, smoke checks, reusable config objects. |
 | `01_data_sharing_agreement_<agreement>` | Data owner + governance steward | Human-reviewed, updated when agreement changes | Approved usage intent, policy boundaries, and agreement context. |
-| `02_ex_<agreement>_<topic>` | Analyst / engineer | Human-led exploration, not scheduled | Profiling, discovery, exploratory transforms, AI-assisted suggestions for DQ/classification/contract candidates. |
+| `02_ex_<agreement>_<topic>` | Analyst / engineer | Human-led exploration, not scheduled | Profiling, discovery, exploratory transforms, AI-assisted suggestions for DQ/classification candidates and metadata evidence. |
 | `03_pc_<agreement>_<pipeline>` | Data engineer | Run-all-safe, schedulable pipeline execution | Enforces only approved metadata and rules, performs deterministic transforms, writes outputs and runtime evidence. |
 
 ## AI boundary (must stay explicit)
@@ -49,7 +49,7 @@ Workspace
 
 ## Related pages
 
-- [Metadata and Contracts](metadata-and-contracts.md)
-- [Contract model](metadata-and-contracts/contract-model.md)
+- [Metadata and Data Contract Assembly](metadata-and-contracts.md)
+- [Assembled contract model](metadata-and-contracts/contract-model.md)
 - [Data Quality Rules System](data-quality-rules-system.md)
 - [Lifecycle Operating Model](lifecycle-operating-model.md)

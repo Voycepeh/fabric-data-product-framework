@@ -1,110 +1,57 @@
 # Metadata tables
 
-This page describes what contract evidence is stored and how those records support enforcement, review, and audit.
+This page describes the approved metadata evidence FabricOps stores and how those records are assembled into a data contract view for handover.
 
-FabricOps stores approved contract definitions and run evidence in Fabric metadata tables (for example, in a dedicated Lakehouse or Warehouse), so runtime pipelines can enforce approved expectations and produce auditable evidence.
+Metadata tables are the source of truth. The contract is the assembled output, not a duplicated standalone source.
 
-## Core metadata records
+## Conceptual source-of-truth tables
 
-### 1. Contract header
+Use these as conceptual names if exact physical table names are not finalized:
 
-- contract id
-- version
-- status
-- dataset name
-- source object
-- target object
-- data agreement id
-- approved usage
-- owner/steward
-- approval fields
-- full contract JSON
+1. `FABRICOPS_PROFILE_RESULTS`
+2. `FABRICOPS_DQ_RULES`
+3. `FABRICOPS_DQ_RESULTS`
+4. `FABRICOPS_GOVERNANCE_CLASSIFICATIONS`
+5. `FABRICOPS_DRIFT_GUARDRAILS`
+6. `FABRICOPS_DRIFT_RESULTS`
+7. `FABRICOPS_LINEAGE_RECORDS`
+8. `FABRICOPS_RUN_SUMMARY`
 
-### 2. Contract columns
+## What each table family contributes
 
-- column name
-- data type
-- required flag
-- business key flag
-- nullable flag
-- description
-- classification
-- source mapping
-- output visibility
-- steward notes
-
-### 3. Contract rules
-
-- rule id
-- rule type
-- target column
-- severity
-- threshold
-- rule status
-- rule JSON
-- approval fields
-
-### 4. Dataset run evidence
-
-- run id
-- contract id/version
-- source object
-- target object
-- row counts
-- run status
-- runtime info
-- error summary
-
-### 5. Quality results
-
-- run id
-- rule id
-- target column
-- pass/fail counts
-- result status
-- severity
-- sample failures where available
-- execution timestamp
-
-### 6. Schema/profile snapshots
-
-- table name
-- column name
-- data type
-- row count
-- null count/percent
-- distinct count/percent
-- min/max values
-- run timestamp
-
-### 7. Optional generated lineage and handover evidence
-
-- lineage summary links or generated views
-- transformation rationale summaries
-- handover-oriented run context for operations and governance
-
-## Column identity and joins
-
-Rules should not float separately from profile records. DQ rules, classification records, and runtime evidence should join back to profiled column records.
-
-Use a stable column identity based on workspace/data-store identity, schema (where relevant), table name, and column name. This can be stored as a composite key and/or hash key.
-
-| Key | Purpose |
-| --- | --- |
-| `column_contract_key` | Stable key for joining column profile, DQ rules, and classification records |
-| `run_id` | Identifies one pipeline execution |
-| `profile_timestamp` | Identifies when a profile snapshot was captured |
-| `contract_version` | Identifies which approved contract state was enforced |
-
-## DQ and classification follow the same operating pattern
-
-| Pattern | Data quality | Classification |
+| Table family | Typical fields | Ownership |
 | --- | --- | --- |
-| Target | Column or table | Column or table |
-| Draft source | Profiling, AI suggestion, human review | Profiling, AI suggestion, steward review |
-| Stored metadata | Rule type, threshold, severity, status | Sensitivity label, exposure rule, approval status |
-| Approval | Engineer or steward | Steward or governance reviewer |
-| Enforcement | Fail, warn, quarantine, or log | Mask, exclude, flag, or require approval |
-| Evidence | Quality result records | Classification audit or review records |
+| Profile results | dataset/table/column, data_type, row_count, null_count, distinct_count, min/max, profile_timestamp | Profiling workflow |
+| DQ rules | dataset/table/column scope, rule_id, rule_type, severity, threshold/params, approval status, version | DQ workflow |
+| DQ results | run_id, rule_id, pass/fail counts, status, sample failures, executed_at | DQ workflow |
+| Governance classifications | dataset/table/column scope, classification label, sensitivity tier, usage constraints, approval status | Governance workflow |
+| Drift guardrails | dataset/table/column scope, allowed schema/profile/partition bounds, status, version | Drift workflow |
+| Drift results | run_id, drift type, observed value, expected bound, pass/fail, executed_at | Drift workflow |
+| Lineage records | run_id, input objects, output objects, transformation metadata | Lineage workflow |
+| Run summary | run_id, workspace/env, notebook/pipeline id, start/end time, status, owner | Runtime workflow |
 
-AI can suggest DQ rules and classifications, but approved metadata remains the source of truth that humans review and `03_pc` enforces.
+## Assembly joins and identity keys
+
+Contract assembly should join records by stable identity keys such as:
+
+- dataset/domain identity
+- table identity
+- column identity (when column-level evidence applies)
+- run_id
+- version/effective window
+- approval status
+
+A stable composite key and/or hash key can prevent DQ, governance, drift, and profile evidence from becoming disconnected across workflow boundaries.
+
+## Handover contract assembly
+
+At handover, approved records are joined into a single contract view that captures:
+
+- approved usage intent,
+- schema and profiling evidence,
+- approved DQ rules and run-time DQ evidence,
+- approved governance classifications,
+- drift guardrails and drift outcomes,
+- lineage and runtime execution evidence.
+
+That assembled view is the operational data contract for review, audit, and export.
