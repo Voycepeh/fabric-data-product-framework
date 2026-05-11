@@ -88,8 +88,9 @@
   display: inline;
   font-size: 0.86rem;
   line-height: 1.35;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .notebook-structure-function-table {
@@ -152,36 +153,61 @@
   line-height: 1.35;
 }
 
-.reference-catalogue-table tr[hidden] {
+.reference-catalogue-list {
+  display: grid;
+  gap: 0.72rem;
+}
+
+.reference-catalogue-item {
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.7rem;
+  padding: 0.82rem 0.95rem;
+  background: color-mix(in srgb, var(--md-default-bg-color) 95%, rgb(99, 102, 241) 5%);
+}
+
+.reference-catalogue-item-name {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.reference-catalogue-item-meta {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--md-default-fg-color--light);
+}
+
+.reference-catalogue-separator {
+  padding: 0 0.35rem;
+}
+
+.reference-catalogue-item-purpose {
+  margin: 0.34rem 0 0;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.reference-catalogue-item[hidden] {
   display: none !important;
 }
 
 @media screen and (max-width: 760px) {
   .reference-template-table thead,
   .reference-function-table thead,
-  .reference-catalogue-table thead {
-    display: none;
-  }
-
   .reference-template-table,
   .reference-function-table,
-  .reference-catalogue-table,
   .reference-template-table tbody,
   .reference-function-table tbody,
-  .reference-catalogue-table tbody,
   .reference-template-table tr,
   .reference-function-table tr,
-  .reference-catalogue-table tr,
   .reference-template-table td,
-  .reference-function-table td,
-  .reference-catalogue-table td {
+  .reference-function-table td {
     display: block;
     width: 100%;
   }
 
   .reference-template-table tr,
-  .reference-function-table tr,
-  .reference-catalogue-table tr {
+  .reference-function-table tr {
     border: 1px solid var(--md-default-fg-color--lightest);
     border-radius: 0.65rem;
     padding: 0.75rem 0.85rem;
@@ -190,15 +216,13 @@
   }
 
   .reference-template-table td,
-  .reference-function-table td,
-  .reference-catalogue-table td {
+  .reference-function-table td {
     border: 0;
     padding: 0.2rem 0;
   }
 
   .reference-template-table td::before,
-  .reference-function-table td::before,
-  .reference-catalogue-table td::before {
+  .reference-function-table td::before {
     content: attr(data-label);
     display: block;
     font-size: 0.74rem;
@@ -213,9 +237,24 @@
     display: none;
   }
 
-  .reference-catalogue-table td[data-label="Starter path"],
-  .reference-catalogue-table td[data-label="Importance"] {
+  .reference-catalogue-item {
+    padding: 0.62rem 0.72rem;
+    border-radius: 0.6rem;
+  }
+
+  .reference-catalogue-item-meta {
     display: none;
+  }
+
+  .reference-catalogue-item-name {
+    margin-bottom: 0.18rem;
+    font-size: 0.96rem;
+  }
+
+  .reference-catalogue-item-purpose {
+    margin-top: 0;
+    font-size: 0.86rem;
+    line-height: 1.38;
   }
 }
 

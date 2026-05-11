@@ -8,7 +8,7 @@
     const input = document.getElementById("callable-finder-input");
     const status = document.getElementById("callable-finder-status");
     const empty = document.querySelector("[data-callable-finder-empty]");
-    const rows = Array.from(document.querySelectorAll(".reference-catalogue-table tbody tr[data-callable-row='true']"));
+    const rows = Array.from(document.querySelectorAll("[data-callable-row='true']"));
 
     if (!container || !input || !status || !empty || rows.length === 0) {
       return;

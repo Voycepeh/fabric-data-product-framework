@@ -556,41 +556,39 @@ def main() -> None:
             '  <p class="callable-finder-empty" data-callable-finder-empty hidden>No callables match your search.</p>',
             "</div>",
             "",
-            "## All public functions",
+            "## Function catalogue",
             "",
         ]
     )
-    all_rows: list[list[str]] = []
-    all_row_attrs: list[dict[str, str]] = []
+    all_items: list[str] = []
     for s in sorted(symbol_map.values(), key=lambda x: x.name.lower()):
         step_slug = step_slugs.get(str(docs_metadata[s.name]["workflow_step"]))
         symbol_link = f"./{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.public_module}/#{s.name}"
         starter_path = ", ".join(sorted(starter_symbol_to_notebooks.get(s.name, set()))) or "—"
-        all_rows.append([
-            _anchor(symbol_link, s.name, code=True),
-            _module_link(s.public_module),
-            starter_path,
-            s.importance,
-            s.purpose or s.summary or "—",
-        ])
-        all_row_attrs.append(
-            {
-                "data-callable-row": "true",
-                "data-callable-name": s.name,
-                "data-callable-module": s.public_module,
-                "data-callable-starter-path": starter_path,
-                "data-callable-importance": s.importance,
-                "data-callable-purpose": s.purpose or s.summary or "—",
-            }
+        purpose = s.purpose or s.summary or "—"
+        all_items.extend(
+            [
+                (
+                    '<article class="reference-catalogue-item" '
+                    f'data-callable-row="true" data-callable-name="{_esc(s.name)}" '
+                    f'data-callable-module="{_esc(s.public_module)}" '
+                    f'data-callable-starter-path="{_esc(starter_path)}" '
+                    f'data-callable-importance="{_esc(s.importance)}" '
+                    f'data-callable-purpose="{_esc(purpose)}">'
+                ),
+                f'  <h3 class="reference-catalogue-item-name">{_anchor(symbol_link, s.name, code=True)}</h3>',
+                (
+                    '  <p class="reference-catalogue-item-meta">'
+                    f'{_module_link(s.public_module)}'
+                    f' <span class="reference-catalogue-separator">·</span> <span>{_esc(s.importance)}</span>'
+                    f' <span class="reference-catalogue-separator">·</span> <span>{_esc(starter_path)}</span>'
+                    "</p>"
+                ),
+                f'  <p class="reference-catalogue-item-purpose">{_esc(purpose)}</p>',
+                "</article>",
+            ]
         )
-    ref.extend(
-        _html_table(
-            "reference-catalogue-table",
-            ["Function / class", "Module", "Starter path", "Importance", "Purpose"],
-            all_rows,
-            row_attrs=all_row_attrs,
-        )
-    )
+    ref.extend(['<div class="reference-catalogue-list">', *all_items, "</div>"])
 
     ref.append("")
     REFERENCE_PATH.parent.mkdir(parents=True, exist_ok=True)

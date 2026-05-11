@@ -51,10 +51,10 @@ def test_reference_generator_runs_without_fabric_runtime() -> None:
     assert REFERENCE_FILE.exists()
 
 
-def test_every_public_export_is_listed_exactly_once_in_all_functions_table() -> None:
+def test_every_public_export_is_listed_exactly_once_in_function_catalogue() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
-    all_functions = markdown_section(content, "All public functions")
+    all_functions = markdown_section(content, "Function catalogue")
     assert all_functions
     for name in public_exports():
         assert all_functions.count(f"<code>{name}</code>") == 1
@@ -66,7 +66,7 @@ def test_reference_contains_required_sections_and_no_notebook_segments() -> None
     assert "## Start from the templates" in content
     assert "## What runs where" in content
     assert "## Find a callable" in content
-    assert "## All public functions" in content
+    assert "## Function catalogue" in content
     assert "## Starter path functions" not in content
     assert "## Additional public functions" not in content
 
@@ -80,12 +80,13 @@ def test_reference_no_longer_contains_old_step_headings() -> None:
     assert "## Step 2A:" not in content
 
 
-def test_all_public_functions_table_contains_starter_path_column() -> None:
+def test_function_catalogue_contains_compact_items_and_search_metadata() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
-    assert "## All public functions" in content
-    assert '<table class="reference-catalogue-table">' in content
-    assert 'data-label="Starter path"' in content
+    assert "## Function catalogue" in content
+    assert '<div class="reference-catalogue-list">' in content
+    assert '<table class="reference-catalogue-table">' not in content
+    assert 'class="reference-catalogue-item"' in content
     assert '<a href="./step-02a-shared-runtime-config/load_fabric_config/"><code>load_fabric_config</code></a>' in content
     assert "data-callable-row" in content
     assert "data-callable-name=" in content
@@ -99,7 +100,7 @@ def test_reference_includes_callable_finder_block() -> None:
     assert 'data-callable-finder' in content
     assert 'id="callable-finder-input"' in content
     assert 'data-callable-finder-empty' in content
-    assert content.index("## Find a callable") < content.index("## All public functions")
+    assert content.index("## Find a callable") < content.index("## Function catalogue")
     assert content.index("## Find a callable") > content.index("## What runs where")
 
 
@@ -107,14 +108,14 @@ def test_function_reference_tables_use_compact_module_links() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     assert 'class="reference-module-link"' in content
-    assert '<table class="reference-catalogue-table">' in content
+    assert '<div class="reference-catalogue-list">' in content
     assert 'api-chip api-chip-module api-chip-link' not in content
 
 
 def test_non_starter_callable_still_appears_in_complete_catalogue() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
-    all_functions = markdown_section(content, "All public functions")
+    all_functions = markdown_section(content, "Function catalogue")
     assert "<code>run_data_product</code>" in all_functions
 
 
