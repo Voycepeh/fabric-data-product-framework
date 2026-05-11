@@ -18,7 +18,6 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`AI_SUGGESTABLE_DQ_RULE_TYPES`](../../reference/step-06c-pipeline-controls/AI_SUGGESTABLE_DQ_RULE_TYPES.md) | constant | — | — |
 | [`build_dq_rule_deactivations`](../../reference/step-08-ai-assisted-dq-suggestions/build_dq_rule_deactivations.md) | function | Build append-only inactive metadata rows for governed DQ rule deactivation. | — |
 | [`build_dq_rule_history`](../../reference/step-08-ai-assisted-dq-suggestions/build_dq_rule_history.md) | function | Build append-only active metadata rows for approved DQ rules. | — |
 | [`extract_dq_rules`](../../reference/step-08-ai-assisted-dq-suggestions/extract_dq_rules.md) | function | Extract notebook-shaped AI responses and deduplicate candidate DQ rules by ``rule_id``. | [`_parse_dq_rules_dict_from_text`](../../reference/internal/data_quality/_parse_dq_rules_dict_from_text.md) (internal) |

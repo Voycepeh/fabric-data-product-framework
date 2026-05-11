@@ -99,6 +99,11 @@ def extract_dq_rules(response_df, table_name: str, response_col: str = "response
 def validate_dq_rules(rules: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Validate canonical DQ rules before enforcement.
 
+    Notes
+    -----
+    Supported canonical ``rule_type`` values are ``not_null``, ``unique_key``,
+    ``accepted_values``, ``value_range``, and ``regex_format``.
+
     Raises
     ------
     ValueError
