@@ -88,17 +88,28 @@ from .ai import (
     parse_manual_ai_json_response,
 )
 from .quality import load_data_contract, run_data_product, run_quality_rules
-from .dq import (
-    DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE,
-    get_default_dq_rule_templates,
+
+from .dq_rules import (
+    AI_SUGGESTABLE_DQ_RULE_TYPES,
+    DQ_RULE_SUGGESTION_PROMPT_TEMPLATE,
+    profile_dataframe_for_dq,
+    suggest_dq_rules_with_fabric_ai,
+    parse_dq_rules_dict_from_text,
+    extract_candidate_rules_from_responses,
+    validate_dq_rules,
     run_dq_rules,
     assert_dq_passed,
-    split_valid_and_quarantine,
-    suggest_accepted_value_mapping_prompt,
-    suggest_closest_accepted_value,
-    suggest_dq_rules_prompt,
-    validate_dq_rules,
 )
+from .dq_rule_metadata import (
+    build_dq_rules_metadata_df,
+    build_dq_rule_deactivation_metadata_df,
+    get_latest_dq_rule_versions_from_metadata,
+    load_latest_active_dq_rules_from_metadata,
+    load_latest_active_dq_rule_metadata,
+)
+from .quarantine import split_valid_quarantine_and_failures
+from .contract_guardrails import CONTRACT_GUARDRAIL_RULE_TYPES, validate_contract_guardrails, run_contract_guardrails
+from .dq_review import launch_sequential_rule_approval_widget, launch_sequential_rule_deactivation_widget
 from .run_summary import build_run_summary, render_run_summary_markdown
 from .runtime import assert_notebook_name_valid, build_runtime_context, generate_run_id, validate_notebook_name
 from .technical_columns import add_audit_columns, add_datetime_features, add_hash_columns, default_technical_columns
@@ -106,6 +117,23 @@ from .technical_columns import add_audit_columns, add_datetime_features, add_has
 __version__ = "0.1.0"
 
 __all__ = [
+    "launch_sequential_rule_deactivation_widget",
+    "launch_sequential_rule_approval_widget",
+    "run_contract_guardrails",
+    "validate_contract_guardrails",
+    "CONTRACT_GUARDRAIL_RULE_TYPES",
+    "load_latest_active_dq_rule_metadata",
+    "load_latest_active_dq_rules_from_metadata",
+    "get_latest_dq_rule_versions_from_metadata",
+    "build_dq_rule_deactivation_metadata_df",
+    "build_dq_rules_metadata_df",
+    "split_valid_quarantine_and_failures",
+    "extract_candidate_rules_from_responses",
+    "parse_dq_rules_dict_from_text",
+    "suggest_dq_rules_with_fabric_ai",
+    "profile_dataframe_for_dq",
+    "DQ_RULE_SUGGESTION_PROMPT_TEMPLATE",
+    "AI_SUGGESTABLE_DQ_RULE_TYPES",
     "Housepath",
     "validate_framework_config",
     "bootstrap_fabric_env",
