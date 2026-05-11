@@ -49,7 +49,6 @@ from .data_contracts import (
 )
 
 from .data_profiling import (
-    build_ai_quality_context,
     profile_dataframe,
 )
 from .ai import (
@@ -95,7 +94,6 @@ __all__ = [
     "warehouse_write",
     "seed_minimal_sample_source_table",
     "profile_dataframe",
-    "build_ai_quality_context",
     "assert_dq_passed",
     "validate_dq_rules",
     "parse_manual_ai_json_response",

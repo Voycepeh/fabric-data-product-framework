@@ -65,118 +65,12 @@ def _is_min_max_supported_type(data_type: str) -> bool:
     return any(token in value for token in supported)
 
 
-def _profile_metadata_to_records(profile_df) -> list[dict[str, Any]]:
-    """Convert Spark metadata profile rows into JSON-friendly dictionaries."""
-    records = []
-    for row in profile_df.collect():
-        item = row.asDict() if hasattr(row, "asDict") else dict(row)
-        normalized = {k: (v.isoformat() if hasattr(v, "isoformat") else v) for k, v in item.items()}
-        records.append(normalized)
-    return records
-
-
-def build_ai_quality_context(
-    profile_df,
-    *,
-    dataset_name: str,
-    table_name: str,
-    business_context: str | None = None,
-    high_null_threshold: float = 30.0,
-    unique_threshold: float = 99.0,
-    low_cardinality_threshold: float = 5.0,
-) -> dict[str, Any]:
-    """Build deterministic AI-ready context from standard metadata profile rows.
-
-    The output is evidence-only context intended for AI/Copilot suggestion flows;
-    final DQ rule definition, approval, and execution are owned elsewhere.
-
-    Examples
-    --------
-    >>> ai_context = build_ai_quality_context(
-    ...     profile_df,
-    ...     dataset_name="orders",
-    ...     table_name="orders_clean",
-    ...     business_context="Customer orders used for sales reporting",
-    ... )
-    """
-    records = _profile_metadata_to_records(profile_df)
-    row_count = int(records[0].get("ROW_COUNT", 0)) if records else 0
-    columns = [r.get("COLUMN_NAME") for r in records]
-
-    def _num(value, default=0.0):
-        try:
-            return float(value)
-        except (TypeError, ValueError):
-            return default
-
-    columns_with_nulls = [r["COLUMN_NAME"] for r in records if _num(r.get("NULL_COUNT"), 0) > 0]
-    high_null_columns = [r["COLUMN_NAME"] for r in records if _num(r.get("NULL_PERCENT"), 0) >= high_null_threshold]
-    high_cardinality_columns = [r["COLUMN_NAME"] for r in records if _num(r.get("DISTINCT_PERCENT"), 0) >= unique_threshold]
-    low_cardinality_columns = [r["COLUMN_NAME"] for r in records if _num(r.get("DISTINCT_PERCENT"), 0) <= low_cardinality_threshold]
-
-    likely_identifier_columns = [
-        r["COLUMN_NAME"]
-        for r in records
-        if "id" in str(r.get("COLUMN_NAME", "")).lower() or _num(r.get("DISTINCT_PERCENT"), 0) >= unique_threshold
-    ]
-    likely_date_columns = [
-        r["COLUMN_NAME"]
-        for r in records
-        if any(token in str(r.get("DATA_TYPE", "")).lower() for token in ("date", "timestamp"))
-    ]
-
-    candidate_rule_hints = []
-    column_profiles = []
-    for r in records:
-        col = r.get("COLUMN_NAME")
-        dtype = str(r.get("DATA_TYPE", "")).lower()
-        null_pct = _num(r.get("NULL_PERCENT"), 0)
-        distinct_pct = _num(r.get("DISTINCT_PERCENT"), 0)
-        distinct_count = int(_num(r.get("DISTINCT_COUNT"), 0))
-        has_range = r.get("MIN_VALUE") is not None and r.get("MAX_VALUE") is not None
-
-        column_profiles.append({k: r.get(k) for k in ("COLUMN_NAME", "DATA_TYPE", "ROW_COUNT", "NULL_COUNT", "NULL_PERCENT", "DISTINCT_COUNT", "DISTINCT_PERCENT", "MIN_VALUE", "MAX_VALUE")})
-
-        if row_count > 0 and null_pct <= 0.1:
-            candidate_rule_hints.append({"column": col, "hint": "NOT_NULL_CANDIDATE"})
-        if row_count > 0 and distinct_pct >= unique_threshold:
-            candidate_rule_hints.append({"column": col, "hint": "UNIQUE_CANDIDATE"})
-        if ("date" in dtype or "timestamp" in dtype) and has_range:
-            candidate_rule_hints.append({"column": col, "hint": "DATE_RANGE_CANDIDATE"})
-        if row_count > 0 and distinct_count > 0 and distinct_pct <= low_cardinality_threshold:
-            candidate_rule_hints.append({"column": col, "hint": "ACCEPTED_VALUES_CANDIDATE"})
-        if any(token in dtype for token in ("int", "bigint", "float", "double", "decimal")) and has_range:
-            candidate_rule_hints.append({"column": col, "hint": "NUMERIC_RANGE_CANDIDATE"})
-        if any(token in str(col).lower() for token in ("event", "load", "update", "create")) and "timestamp" in dtype:
-            candidate_rule_hints.append({"column": col, "hint": "FRESHNESS_CANDIDATE"})
-
-    return {
-        "dataset_name": dataset_name,
-        "table_name": table_name,
-        "business_context": business_context,
-        "row_count": row_count,
-        "column_count": len(columns),
-        "columns": columns,
-        "column_profiles": column_profiles,
-        "columns_with_nulls": columns_with_nulls,
-        "high_null_columns": high_null_columns,
-        "high_cardinality_columns": high_cardinality_columns,
-        "low_cardinality_columns": low_cardinality_columns,
-        "likely_identifier_columns": sorted(set(likely_identifier_columns)),
-        "likely_date_columns": likely_date_columns,
-        "candidate_rule_hints": candidate_rule_hints,
-    }
-
-
 def profile_dataframe(
     df,
     table_name: str,
     *,
     exclude_columns=None,
     run_timestamp_timezone="Asia/Singapore",
-    include_ai_context: bool = False,
-    dataset_name: str | None = None,
-    business_context: str | None = None,
 ):
     """Build canonical DQ-ready profiling rows from a Spark DataFrame."""
     from pyspark.sql import functions as F
@@ -222,14 +116,6 @@ def profile_dataframe(
     for next_row in rows[1:]:
         out = out.unionByName(next_row)
     return out
-    if include_ai_context:
-        ai_context = build_ai_quality_context(
-            out,
-            dataset_name=dataset_name or table_name,
-            table_name=table_name,
-            business_context=business_context,
-        )
-        return out, ai_context
     return out
 
 

@@ -12,9 +12,7 @@
 
 ## Optional callables
 
-| Callable | Type | Summary | Related helpers |
-|---|---|---|---|
-| [`build_ai_quality_context`](../../reference/step-04-ingest-profile-store/build_ai_quality_context.md) | function | Build deterministic AI-ready context from standard metadata profile rows. | [`_profile_metadata_to_records`](../../reference/internal/data_profiling/_profile_metadata_to_records.md) (internal) |
+No advanced helpers listed for this module.
 
 ## Related internal helpers
 
@@ -22,4 +20,3 @@
 |---|---|
 | [`_get_profiled_columns`](../../reference/internal/data_profiling/_get_profiled_columns.md) | [`profile_dataframe`](../../reference/step-04-ingest-profile-store/profile_dataframe.md) |
 | [`_is_min_max_supported_type`](../../reference/internal/data_profiling/_is_min_max_supported_type.md) | [`profile_dataframe`](../../reference/step-04-ingest-profile-store/profile_dataframe.md) |
-| [`_profile_metadata_to_records`](../../reference/internal/data_profiling/_profile_metadata_to_records.md) | [`build_ai_quality_context`](../../reference/step-04-ingest-profile-store/build_ai_quality_context.md) |

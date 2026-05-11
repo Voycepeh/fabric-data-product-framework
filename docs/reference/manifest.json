@@ -98,17 +98,6 @@
       "workflow_step": "6D"
     },
     {
-      "module_name": "data_profiling",
-      "visibility": "public",
-      "module_summary": "Source/output profiling and metadata conversion helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_ai_quality_context",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "workflow_step": 4
-    },
-    {
       "module_name": "data_contracts",
       "visibility": "public",
       "module_summary": "Data contract normalization, validation, and persistence helpers.",
