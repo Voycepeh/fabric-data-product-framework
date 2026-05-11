@@ -14,37 +14,7 @@ from pyspark.sql.window import Window
 
 AI_SUGGESTABLE_DQ_RULE_TYPES = {"not_null", "unique_key", "accepted_values", "value_range", "regex_format"}
 
-DQ_RULE_SUGGESTION_PROMPT_TEMPLATE = """
-You are helping draft candidate FabricOps data quality rules for a pipeline contract notebook.
-
-These suggestions are advisory only.
-A human engineer, data steward, or governance reviewer must approve them before enforcement.
-
-Use only these FabricOps rule_type values:
-- not_null
-- unique_key
-- accepted_values
-- value_range
-- regex_format
-
-Return only a Python dictionary named DQ_RULES using this shape:
-DQ_RULES = {"{table_name}": [ ... ]}
-
-Column profile row:
-Column name: {column_name}
-Data type: {data_type}
-Row count: {row_count}
-Null count: {null_count}
-Null percent: {null_percent}
-Distinct count: {distinct_count}
-Distinct percent: {distinct_percent}
-Minimum value: {min_value}
-Maximum value: {max_value}
-Observed values sample: {observed_values_sample}
-
-Business context:
-{business_context}
-"""
+from .ai import DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE as DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
 
 
 def profile_dataframe_for_dq(df, table_name: str, business_context: str = "", sample_value_limit: int = 20):
@@ -81,15 +51,15 @@ def profile_dataframe_for_dq(df, table_name: str, business_context: str = "", sa
     return df.sparkSession.createDataFrame(rows)
 
 
-def suggest_dq_rules_with_fabric_ai(profile_df, prompt_template: str = DQ_RULE_SUGGESTION_PROMPT_TEMPLATE, output_col: str = "response"):
+def suggest_dq_rules_with_fabric_ai(profile_df, prompt_template: str | None = None, output_col: str = "response"):
     """Generate row-wise AI DQ suggestions using Fabric AI Functions.
 
     Parameters
     ----------
     profile_df : pyspark.sql.DataFrame
         Output of :func:`profile_dataframe_for_dq`.
-    prompt_template : str, default=DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
-        Prompt template with column placeholders.
+    prompt_template : str | None, optional
+        Prompt template. When ``None``, uses ``config.ai_prompt_config.dq_rule_candidate_template`` if ``config`` is provided, otherwise the canonical default template from ``ai.DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE``.
     output_col : str, default="response"
         Output column for AI text responses.
 
@@ -98,7 +68,8 @@ def suggest_dq_rules_with_fabric_ai(profile_df, prompt_template: str = DQ_RULE_S
     pyspark.sql.DataFrame
         Spark DataFrame including AI response text.
     """
-    return profile_df.ai.generate_response(prompt=prompt_template, output_col=output_col)
+    active_prompt = prompt_template or DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
+    return profile_df.ai.generate_response(prompt=active_prompt, output_col=output_col)
 
 
 def _parse_dq_rules_dict_from_text(text: str) -> dict[str, list[dict[str, Any]]]:

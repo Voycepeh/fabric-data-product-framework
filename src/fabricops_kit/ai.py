@@ -11,13 +11,86 @@ import json
 from .config import FrameworkConfig
 
 
-DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE = (
-    "Generate candidate data quality rules from row-level profile metadata. "
-    "Return JSON only with: rule_id, table_name, column_name, rule_type, severity, reason, evidence, needs_human_review. "
-    "Suggestions are for human review and are not deterministic enforcement. "
-    "Dataset name: {dataset_name}. Business context: {business_context}. "
-    "Row profile fields: column_name={column_name}, data_type={data_type}, null_count={null_count}, distinct_count={distinct_count}, row_count={row_count}."
-)
+DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE = """
+You are helping draft candidate FabricOps data quality rules for a pipeline contract notebook.
+
+These suggestions are advisory only.
+A human engineer, data steward, or governance reviewer must approve them before enforcement.
+
+Use only these FabricOps rule_type values:
+
+1. not_null
+   Use when a column must be populated.
+   Required fields:
+   rule_id, rule_type, columns, severity, description
+
+2. unique_key
+   Use when one or more columns define the business grain and must be unique.
+   Required fields:
+   rule_id, rule_type, columns, severity, description
+
+3. accepted_values
+   Use when a column should only contain known business values.
+   Required fields:
+   rule_id, rule_type, columns, allowed_values, severity, description
+
+4. value_range
+   Use when a numeric, date, or timestamp column should stay within a sensible range.
+   Required fields:
+   rule_id, rule_type, columns, min_value or max_value, severity, description
+
+5. regex_format
+   Use when a string column should match a known format such as email, code, phone, postal code, or ID.
+   Required fields:
+   rule_id, rule_type, columns, regex_pattern, severity, description
+
+Heuristics:
+- Suggest not_null when null_count is 0 or when the column name looks mandatory, such as id, key, date, code, status, amount, or name.
+- Suggest unique_key only when distinct_count is close to row_count and the column name looks like an identifier or business key.
+- Suggest accepted_values when distinct_count is small and the observed values look like business categories.
+- Suggest value_range only when min_value and max_value are available and the range is business meaningful.
+- Suggest regex_format only for clear format columns such as email, phone, postal_code, programme_code, course_code, invoice_number, or staff_id.
+- Use severity="error" only for rules that should block the pipeline.
+- Use severity="warning" for rules that should be reviewed but should not block the pipeline.
+- Do not suggest unsupported rule types.
+- Do not return Great Expectations, Deequ, DQX, SQL, or pseudocode syntax.
+
+Return only a Python dictionary named DQ_RULES using this shape:
+
+DQ_RULES = {
+    "{table_name}": [
+        {
+            "rule_id": "lower_snake_case_rule_id",
+            "rule_type": "one_supported_rule_type",
+            "columns": ["column_name"],
+            "severity": "error_or_warning",
+            "description": "Plain business explanation."
+        }
+    ]
+}
+
+For accepted_values, include allowed_values.
+For value_range, include min_value and/or max_value.
+For regex_format, include regex_pattern.
+
+Table name:
+{table_name}
+
+Column profile row:
+Column name: {column_name}
+Data type: {data_type}
+Row count: {row_count}
+Null count: {null_count}
+Null percent: {null_percent}
+Distinct count: {distinct_count}
+Distinct percent: {distinct_percent}
+Minimum value: {min_value}
+Maximum value: {max_value}
+Observed values sample: {observed_values_sample}
+
+Business context:
+{business_context}
+"""
 DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE = (
     "Generate governance label suggestions from profile metadata. "
     "Return JSON only with: table_name, column_name, candidate_label, reason, evidence, needs_human_review. "
