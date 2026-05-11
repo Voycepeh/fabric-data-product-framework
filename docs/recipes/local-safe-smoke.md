@@ -22,7 +22,7 @@ from fabricops_kit.lineage import (
     plot_lineage_steps,
 )
 from fabricops_kit.profiling import profile_dataframe
-from fabricops_kit.quality import run_quality_rules
+from fabricops_kit.dq import run_quality_rules
 
 dataset_name = "orders_local"
 table_name = "orders"

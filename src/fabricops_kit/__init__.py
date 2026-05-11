@@ -87,8 +87,6 @@ from .ai import (
     generate_handover_summary_with_fabric_ai,
     parse_manual_ai_json_response,
 )
-from .quality import load_data_contract, run_data_product, run_quality_rules
-
 from .dq import (
     AI_SUGGESTABLE_DQ_RULE_TYPES,
     profile_for_dq,
@@ -144,7 +142,6 @@ __all__ = [
     "profile_metadata_to_records",
     "generate_metadata_profile",
     "build_ai_quality_context",
-    "run_quality_rules",
     "run_dq_rules",
     "assert_dq_passed",
     "validate_dq_rules",
@@ -186,8 +183,6 @@ __all__ = [
     "build_quality_result_records",
     "write_metadata_records",
     "write_multiple_metadata_outputs",
-    "load_data_contract",
-    "run_data_product",
     "default_technical_columns",
     "add_datetime_features",
     "add_audit_columns",

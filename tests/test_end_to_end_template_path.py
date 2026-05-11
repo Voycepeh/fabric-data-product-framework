@@ -15,7 +15,7 @@ def test_00_env_config_import_and_default_prompt_override_guard():
     cells = _code_cells("templates/notebooks/00_env_config.ipynb")
     import_block = cells[0]
     prompt_block = "\n".join(cells)
-    assert "from fabricops_kit.environment_config import (" in import_block
+    assert "from fabricops_kit.config import (" in import_block
     assert "create_ai_prompt_config" in import_block
     assert "AI_PROMPT_CONFIG = create_ai_prompt_config()" in prompt_block
     assert "if DQ_RULE_CANDIDATE_PROMPT_TEMPLATE_OVERRIDE is not None:" in prompt_block

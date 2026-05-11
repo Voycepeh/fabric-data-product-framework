@@ -55,480 +55,485 @@ Use the finder below to look up public callables.
 ## Function catalogue
 
 <div class="reference-catalogue-list">
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="add_audit_columns" data-callable-module="technical_audit_columns" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Add run tracking and audit columns for ingestion workflows.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-06b-runtime-standards/add_audit_columns/"><code>add_audit_columns</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/technical_audit_columns/" title="Open technical_audit_columns module page" aria-label="Open technical_audit_columns module page">technical_audit_columns</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Add run tracking and audit columns for ingestion workflows.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="add_datetime_features" data-callable-module="technical_audit_columns" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Add localized datetime feature columns derived from a UTC datetime column.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-06b-runtime-standards/add_datetime_features/"><code>add_datetime_features</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/technical_audit_columns/" title="Open technical_audit_columns module page" aria-label="Open technical_audit_columns module page">technical_audit_columns</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Add localized datetime feature columns derived from a UTC datetime column.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="add_hash_columns" data-callable-module="technical_audit_columns" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Add business key and row-level SHA256 hash columns.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-06b-runtime-standards/add_hash_columns/"><code>add_hash_columns</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/technical_audit_columns/" title="Open technical_audit_columns module page" aria-label="Open technical_audit_columns module page">technical_audit_columns</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Add business key and row-level SHA256 hash columns.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="assert_dq_passed" data-callable-module="data_quality" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Raise when any error-severity DQ rule failed after results are logged.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-06d-controlled-outputs/assert_dq_passed/"><code>assert_dq_passed</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Raise when any error-severity DQ rule failed after results are logged.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="assert_notebook_name_valid" data-callable-module="runtime_context" data-callable-starter-path="02_ex, 03_pc" data-callable-importance="Essential" data-callable-purpose="Raise :class:`NotebookNamingError` when a notebook name is invalid.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-01-governance-context/assert_notebook_name_valid/"><code>assert_notebook_name_valid</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/runtime_context/" title="Open runtime_context module page" aria-label="Open runtime_context module page">runtime_context</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex, 03_pc</span></p>
-    <p class="reference-catalogue-item-purpose">Raise :class:`NotebookNamingError` when a notebook name is invalid.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="bootstrap_fabric_env" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Bootstrap 00_env_config environment readiness by resolving required targets and collecting runtime/AI check results.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-02b-notebook-startup-checks/bootstrap_fabric_env/"><code>bootstrap_fabric_env</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config</span></p>
-    <p class="reference-catalogue-item-purpose">Bootstrap 00_env_config environment readiness by resolving required targets and collecting runtime/AI check results.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_ai_quality_context" data-callable-module="data_profiling" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Build deterministic AI-ready context from standard metadata profile rows.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/build_ai_quality_context/"><code>build_ai_quality_context</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_profiling/" title="Open data_profiling module page" aria-label="Open data_profiling module page">data_profiling</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Build deterministic AI-ready context from standard metadata profile rows.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_contract_column_records" data-callable-module="data_contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Build normalized contract-column metadata records for persistence.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/build_contract_column_records/"><code>build_contract_column_records</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Build normalized contract-column metadata records for persistence.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_contract_header_record" data-callable-module="data_contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Build one header row for FABRICOPS_CONTRACTS.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/build_contract_header_record/"><code>build_contract_header_record</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Build one header row for FABRICOPS_CONTRACTS.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_contract_records" data-callable-module="data_contracts" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Build grouped contract header, column, and rule metadata payloads.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/build_contract_records/"><code>build_contract_records</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-    <p class="reference-catalogue-item-purpose">Build grouped contract header, column, and rule metadata payloads.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_contract_rule_records" data-callable-module="data_contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Build quality-rule metadata records from a validated contract.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/build_contract_rule_records/"><code>build_contract_rule_records</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Build quality-rule metadata records from a validated contract.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_contract_summary" data-callable-module="data_contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Build a concise contract summary for reviews and handover.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/build_contract_summary/"><code>build_contract_summary</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Build a concise contract summary for reviews and handover.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_dataset_run_record" data-callable-module="data_product_metadata" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Build a dataset-run metadata record for operational tracking.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/build_dataset_run_record/"><code>build_dataset_run_record</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-    <p class="reference-catalogue-item-purpose">Build a dataset-run metadata record for operational tracking.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_dq_rule_candidate_prompt" data-callable-module="data_quality" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build the DQ-candidate prompt used in AI-assisted quality drafting.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/build_dq_rule_candidate_prompt/"><code>build_dq_rule_candidate_prompt</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Build the DQ-candidate prompt used in AI-assisted quality drafting.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_governance_candidate_prompt" data-callable-module="data_governance" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build the governance-candidate prompt for AI-assisted classification drafts.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/build_governance_candidate_prompt/"><code>build_governance_candidate_prompt</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Build the governance-candidate prompt for AI-assisted classification drafts.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_governance_classification_records" data-callable-module="data_governance" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build metadata-ready governance classification records from column suggestions.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/build_governance_classification_records/"><code>build_governance_classification_records</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Build metadata-ready governance classification records from column suggestions.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_handover_summary_prompt" data-callable-module="handover_documentation" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build the handover-summary prompt for AI-assisted run handoff drafting.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/build_handover_summary_prompt/"><code>build_handover_summary_prompt</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/handover_documentation/" title="Open handover_documentation module page" aria-label="Open handover_documentation module page">handover_documentation</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Build the handover-summary prompt for AI-assisted run handoff drafting.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_lineage_from_notebook_code" data-callable-module="data_lineage" data-callable-starter-path="02_ex" data-callable-importance="Optional" data-callable-purpose="Scan, optionally enrich, and validate lineage from notebook source code.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/build_lineage_from_notebook_code/"><code>build_lineage_from_notebook_code</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
-    <p class="reference-catalogue-item-purpose">Scan, optionally enrich, and validate lineage from notebook source code.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_lineage_handover_markdown" data-callable-module="data_lineage" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Create a concise markdown handover summary from lineage execution results.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/build_lineage_handover_markdown/"><code>build_lineage_handover_markdown</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Create a concise markdown handover summary from lineage execution results.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_lineage_record_from_steps" data-callable-module="data_lineage" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Create metadata-ready lineage records from validated lineage steps.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/build_lineage_record_from_steps/"><code>build_lineage_record_from_steps</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Create metadata-ready lineage records from validated lineage steps.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_lineage_records" data-callable-module="data_lineage" data-callable-starter-path="03_pc" data-callable-importance="Optional" data-callable-purpose="Build compact lineage records for downstream metadata sinks.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/build_lineage_records/"><code>build_lineage_records</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-    <p class="reference-catalogue-item-purpose">Build compact lineage records for downstream metadata sinks.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_manual_dq_rule_prompt_package" data-callable-module="data_quality" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build copy/paste prompt package for manual DQ candidate generation.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/build_manual_dq_rule_prompt_package/"><code>build_manual_dq_rule_prompt_package</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Build copy/paste prompt package for manual DQ candidate generation.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_manual_governance_prompt_package" data-callable-module="data_governance" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build copy/paste prompt package for manual governance suggestion generation.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/build_manual_governance_prompt_package/"><code>build_manual_governance_prompt_package</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Build copy/paste prompt package for manual governance suggestion generation.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_manual_handover_prompt_package" data-callable-module="handover_documentation" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build copy/paste prompt package for manual handover summary generation.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/build_manual_handover_prompt_package/"><code>build_manual_handover_prompt_package</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/handover_documentation/" title="Open handover_documentation module page" aria-label="Open handover_documentation module page">handover_documentation</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Build copy/paste prompt package for manual handover summary generation.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_quality_result_records" data-callable-module="data_product_metadata" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Convert quality-rule execution output into metadata evidence records.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/build_quality_result_records/"><code>build_quality_result_records</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-    <p class="reference-catalogue-item-purpose">Convert quality-rule execution output into metadata evidence records.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_run_summary" data-callable-module="handover_documentation" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build a handover-friendly summary for one data product run.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/build_run_summary/"><code>build_run_summary</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/handover_documentation/" title="Open handover_documentation module page" aria-label="Open handover_documentation module page">handover_documentation</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Build a handover-friendly summary for one data product run.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_runtime_context" data-callable-module="runtime_context" data-callable-starter-path="02_ex, 03_pc" data-callable-importance="Essential" data-callable-purpose="Build a standard runtime context dictionary for Fabric notebooks.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-01-governance-context/build_runtime_context/"><code>build_runtime_context</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/runtime_context/" title="Open runtime_context module page" aria-label="Open runtime_context module page">runtime_context</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex, 03_pc</span></p>
-    <p class="reference-catalogue-item-purpose">Build a standard runtime context dictionary for Fabric notebooks.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_schema_drift_records" data-callable-module="data_product_metadata" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Convert schema drift results into metadata records for audit trails.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/build_schema_drift_records/"><code>build_schema_drift_records</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Convert schema drift results into metadata records for audit trails.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_schema_snapshot_records" data-callable-module="data_product_metadata" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Convert a schema snapshot into row-wise metadata records.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/build_schema_snapshot_records/"><code>build_schema_snapshot_records</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Convert a schema snapshot into row-wise metadata records.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="check_fabric_ai_functions_available" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Check whether Fabric AI Functions are available in the current runtime.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-02a-shared-runtime-config/check_fabric_ai_functions_available/"><code>check_fabric_ai_functions_available</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config</span></p>
-    <p class="reference-catalogue-item-purpose">Check whether Fabric AI Functions are available in the current runtime.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="check_partition_drift" data-callable-module="data_drift" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Check partition-level drift using keys, partitions, and optional watermark baselines.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/check_partition_drift/"><code>check_partition_drift</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_drift/" title="Open data_drift module page" aria-label="Open data_drift module page">data_drift</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Check partition-level drift using keys, partitions, and optional watermark baselines.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="check_profile_drift" data-callable-module="data_drift" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Compare profile metrics against a baseline profile and drift thresholds.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/check_profile_drift/"><code>check_profile_drift</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_drift/" title="Open data_drift module page" aria-label="Open data_drift module page">data_drift</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Compare profile metrics against a baseline profile and drift thresholds.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="check_schema_drift" data-callable-module="data_drift" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Compare a current dataframe schema against a baseline schema snapshot.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/check_schema_drift/"><code>check_schema_drift</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_drift/" title="Open data_drift module page" aria-label="Open data_drift module page">data_drift</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Compare a current dataframe schema against a baseline schema snapshot.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="classify_column" data-callable-module="data_governance" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Classify one column using term matching, metadata cues, and business context.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/classify_column/"><code>classify_column</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Classify one column using term matching, metadata cues, and business context.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="classify_columns" data-callable-module="data_governance" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Classify multiple columns and return normalized governance suggestions.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/classify_columns/"><code>classify_columns</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Classify multiple columns and return normalized governance suggestions.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="configure_fabric_ai_functions" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Apply optional default Fabric AI Function configuration.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-01-governance-context/configure_fabric_ai_functions/"><code>configure_fabric_ai_functions</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config</span></p>
-    <p class="reference-catalogue-item-purpose">Apply optional default Fabric AI Function configuration.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="contract_records_to_spark" data-callable-module="data_contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Convert record dictionaries into a Spark DataFrame when Spark is available.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/contract_records_to_spark/"><code>contract_records_to_spark</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Convert record dictionaries into a Spark DataFrame when Spark is available.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE" data-callable-module="data_quality" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Default prompt template used to draft candidate DQ rules.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE/"><code>DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Default prompt template used to draft candidate DQ rules.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="default_technical_columns" data-callable-module="technical_audit_columns" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Return framework-generated and legacy technical column names to ignore.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-06b-runtime-standards/default_technical_columns/"><code>default_technical_columns</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/technical_audit_columns/" title="Open technical_audit_columns module page" aria-label="Open technical_audit_columns module page">technical_audit_columns</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Return framework-generated and legacy technical column names to ignore.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="enrich_lineage_steps_with_ai" data-callable-module="data_lineage" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Optionally enrich deterministic lineage steps using an AI helper callable.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/enrich_lineage_steps_with_ai/"><code>enrich_lineage_steps_with_ai</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Optionally enrich deterministic lineage steps using an AI helper callable.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="extract_business_keys" data-callable-module="data_contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Extract business-key column names from a normalized contract.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/extract_business_keys/"><code>extract_business_keys</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Extract business-key column names from a normalized contract.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="extract_classifications" data-callable-module="data_contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Extract column classification mappings from a normalized contract.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/extract_classifications/"><code>extract_classifications</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Extract column classification mappings from a normalized contract.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="extract_optional_columns" data-callable-module="data_contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Extract optional column names from a normalized contract.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/extract_optional_columns/"><code>extract_optional_columns</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Extract optional column names from a normalized contract.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="extract_quality_rules" data-callable-module="data_contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Extract raw quality-rule definitions from a normalized contract.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/extract_quality_rules/"><code>extract_quality_rules</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Extract raw quality-rule definitions from a normalized contract.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="extract_required_columns" data-callable-module="data_contracts" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Extract required column names from a normalized contract.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/extract_required_columns/"><code>extract_required_columns</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-    <p class="reference-catalogue-item-purpose">Extract required column names from a normalized contract.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="fallback_copilot_lineage_prompt" data-callable-module="data_lineage" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build a fallback Copilot prompt for manual lineage enrichment.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/fallback_copilot_lineage_prompt/"><code>fallback_copilot_lineage_prompt</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Build a fallback Copilot prompt for manual lineage enrichment.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="generate_dq_rule_candidates_with_fabric_ai" data-callable-module="data_quality" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Append AI-suggested DQ rule candidates to a profiling DataFrame.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/generate_dq_rule_candidates_with_fabric_ai/"><code>generate_dq_rule_candidates_with_fabric_ai</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Append AI-suggested DQ rule candidates to a profiling DataFrame.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="generate_governance_candidates_with_fabric_ai" data-callable-module="data_governance" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Execute Fabric AI Functions to append governance suggestions to a DataFrame.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/generate_governance_candidates_with_fabric_ai/"><code>generate_governance_candidates_with_fabric_ai</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Execute Fabric AI Functions to append governance suggestions to a DataFrame.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="generate_handover_summary_with_fabric_ai" data-callable-module="handover_documentation" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Execute Fabric AI Functions to append handover summary suggestions.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/generate_handover_summary_with_fabric_ai/"><code>generate_handover_summary_with_fabric_ai</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/handover_documentation/" title="Open handover_documentation module page" aria-label="Open handover_documentation module page">handover_documentation</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Execute Fabric AI Functions to append handover summary suggestions.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="generate_metadata_profile" data-callable-module="data_profiling" data-callable-starter-path="02_ex" data-callable-importance="Essential" data-callable-purpose="Generate standard metadata profile rows for a Spark/Fabric DataFrame.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/generate_metadata_profile/"><code>generate_metadata_profile</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_profiling/" title="Open data_profiling module page" aria-label="Open data_profiling module page">data_profiling</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
-    <p class="reference-catalogue-item-purpose">Generate standard metadata profile rows for a Spark/Fabric DataFrame.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="generate_run_id" data-callable-module="runtime_context" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Generate a notebook-safe run identifier.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-01-governance-context/generate_run_id/"><code>generate_run_id</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/runtime_context/" title="Open runtime_context module page" aria-label="Open runtime_context module page">runtime_context</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-    <p class="reference-catalogue-item-purpose">Generate a notebook-safe run identifier.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="get_default_dq_rule_templates" data-callable-module="data_quality" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Return editable example data quality rules.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/get_default_dq_rule_templates/"><code>get_default_dq_rule_templates</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Return editable example data quality rules.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="get_executable_quality_rules" data-callable-module="data_contracts" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Return normalized quality rules ready for pipeline enforcement.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-06c-pipeline-controls/get_executable_quality_rules/"><code>get_executable_quality_rules</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-    <p class="reference-catalogue-item-purpose">Return normalized quality rules ready for pipeline enforcement.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="get_path" data-callable-module="environment_config" data-callable-starter-path="00_env_config, 02_ex, 03_pc" data-callable-importance="Essential" data-callable-purpose="Resolve a configured Fabric path for an environment and target.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-02a-shared-runtime-config/get_path/"><code>get_path</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config, 02_ex, 03_pc</span></p>
-    <p class="reference-catalogue-item-purpose">Resolve a configured Fabric path for an environment and target.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="Housepath" data-callable-module="fabric_input_output" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Fabric lakehouse or warehouse connection details.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-02a-shared-runtime-config/Housepath/"><code>Housepath</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config</span></p>
-    <p class="reference-catalogue-item-purpose">Fabric lakehouse or warehouse connection details.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="lakehouse_csv_read" data-callable-module="fabric_input_output" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Read a CSV file from a Fabric lakehouse Files path.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/lakehouse_csv_read/"><code>lakehouse_csv_read</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Read a CSV file from a Fabric lakehouse Files path.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="lakehouse_excel_read_as_spark" data-callable-module="fabric_input_output" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Read an Excel file from a Fabric lakehouse Files path.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/lakehouse_excel_read_as_spark/"><code>lakehouse_excel_read_as_spark</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Read an Excel file from a Fabric lakehouse Files path.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="lakehouse_parquet_read_as_spark" data-callable-module="fabric_input_output" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Read a Parquet file from a Fabric lakehouse Files path.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/lakehouse_parquet_read_as_spark/"><code>lakehouse_parquet_read_as_spark</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Read a Parquet file from a Fabric lakehouse Files path.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="lakehouse_table_read" data-callable-module="fabric_input_output" data-callable-starter-path="02_ex, 03_pc" data-callable-importance="Essential" data-callable-purpose="Read a Delta table from a Fabric lakehouse.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/lakehouse_table_read/"><code>lakehouse_table_read</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex, 03_pc</span></p>
-    <p class="reference-catalogue-item-purpose">Read a Delta table from a Fabric lakehouse.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="lakehouse_table_write" data-callable-module="fabric_input_output" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Write a Spark DataFrame to a Fabric lakehouse Delta table.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-06d-controlled-outputs/lakehouse_table_write/"><code>lakehouse_table_write</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-    <p class="reference-catalogue-item-purpose">Write a Spark DataFrame to a Fabric lakehouse Delta table.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="load_contract_from_lakehouse" data-callable-module="data_contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Load one contract by ID/version from Fabric metadata storage.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/load_contract_from_lakehouse/"><code>load_contract_from_lakehouse</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Load one contract by ID/version from Fabric metadata storage.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="load_data_contract" data-callable-module="data_contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Load and normalize a data product contract from file path or dictionary.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/load_data_contract/"><code>load_data_contract</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Load and normalize a data product contract from file path or dictionary.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="load_fabric_config" data-callable-module="environment_config" data-callable-starter-path="00_env_config, 02_ex, 03_pc" data-callable-importance="Essential" data-callable-purpose="Validate and return a user-supplied framework configuration.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-02a-shared-runtime-config/load_fabric_config/"><code>load_fabric_config</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config, 02_ex, 03_pc</span></p>
-    <p class="reference-catalogue-item-purpose">Validate and return a user-supplied framework configuration.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="load_latest_approved_contract" data-callable-module="data_contracts" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Load the latest approved contract for a dataset/object pair.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/load_latest_approved_contract/"><code>load_latest_approved_contract</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-    <p class="reference-catalogue-item-purpose">Load the latest approved contract for a dataset/object pair.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="normalize_contract_dict" data-callable-module="data_contracts" data-callable-starter-path="02_ex" data-callable-importance="Essential" data-callable-purpose="Normalize a notebook-authored contract dictionary to a stable shape.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/normalize_contract_dict/"><code>normalize_contract_dict</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
-    <p class="reference-catalogue-item-purpose">Normalize a notebook-authored contract dictionary to a stable shape.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="parse_manual_ai_json_response" data-callable-module="handover_documentation" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Parse manual AI JSON output into Python objects.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/parse_manual_ai_json_response/"><code>parse_manual_ai_json_response</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/handover_documentation/" title="Open handover_documentation module page" aria-label="Open handover_documentation module page">handover_documentation</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Parse manual AI JSON output into Python objects.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="plot_lineage_steps" data-callable-module="data_lineage" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Render lineage steps as a directed graph figure.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/plot_lineage_steps/"><code>plot_lineage_steps</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Render lineage steps as a directed graph figure.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="profile_dataframe" data-callable-module="data_profiling" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Build a lightweight profile for pandas or Spark-like DataFrames.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/profile_dataframe/"><code>profile_dataframe</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_profiling/" title="Open data_profiling module page" aria-label="Open data_profiling module page">data_profiling</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Build a lightweight profile for pandas or Spark-like DataFrames.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="profile_dataframe_to_metadata" data-callable-module="data_profiling" data-callable-starter-path="02_ex" data-callable-importance="Essential" data-callable-purpose="Profile a Spark/Fabric DataFrame into metadata-compatible metadata rows.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/profile_dataframe_to_metadata/"><code>profile_dataframe_to_metadata</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_profiling/" title="Open data_profiling module page" aria-label="Open data_profiling module page">data_profiling</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
-    <p class="reference-catalogue-item-purpose">Profile a Spark/Fabric DataFrame into metadata-compatible metadata rows.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="profile_metadata_to_records" data-callable-module="data_profiling" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Convert Spark metadata profile rows into JSON-friendly dictionaries.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/profile_metadata_to_records/"><code>profile_metadata_to_records</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_profiling/" title="Open data_profiling module page" aria-label="Open data_profiling module page">data_profiling</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Convert Spark metadata profile rows into JSON-friendly dictionaries.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="render_run_summary_markdown" data-callable-module="handover_documentation" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Render a run summary dictionary into Markdown for handover notes.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/render_run_summary_markdown/"><code>render_run_summary_markdown</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/handover_documentation/" title="Open handover_documentation module page" aria-label="Open handover_documentation module page">handover_documentation</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Render a run summary dictionary into Markdown for handover notes.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="run_config_smoke_tests" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Run 00_env_config smoke checks for Spark, runtime context, configured paths, notebook naming, and optional AI/IO imports.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-02b-notebook-startup-checks/run_config_smoke_tests/"><code>run_config_smoke_tests</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config</span></p>
-    <p class="reference-catalogue-item-purpose">Run 00_env_config smoke checks for Spark, runtime context, configured paths, notebook naming, and optional AI/IO imports.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="run_data_product" data-callable-module="data_quality" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Run the starter kit workflow end-to-end for a data product outcome.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-06a-transformation-logic/run_data_product/"><code>run_data_product</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Run the starter kit workflow end-to-end for a data product outcome.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="run_dq_rules" data-callable-module="data_quality" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Run notebook-facing DQ rules and return a Spark DataFrame result.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-06c-pipeline-controls/run_dq_rules/"><code>run_dq_rules</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-    <p class="reference-catalogue-item-purpose">Run notebook-facing DQ rules and return a Spark DataFrame result.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="run_quality_rules" data-callable-module="data_quality" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Execute quality rules against a dataframe and return structured results.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-06c-pipeline-controls/run_quality_rules/"><code>run_quality_rules</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Execute quality rules against a dataframe and return structured results.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="scan_notebook_cells" data-callable-module="data_lineage" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Scan multiple notebook cells and append cell references to lineage steps.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/scan_notebook_cells/"><code>scan_notebook_cells</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Scan multiple notebook cells and append cell references to lineage steps.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="scan_notebook_lineage" data-callable-module="data_lineage" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Extract deterministic lineage steps from notebook code using AST parsing.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/scan_notebook_lineage/"><code>scan_notebook_lineage</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Extract deterministic lineage steps from notebook code using AST parsing.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="seed_minimal_sample_source_table" data-callable-module="fabric_input_output" data-callable-starter-path="02_ex" data-callable-importance="Optional" data-callable-purpose="Create and persist deterministic demo rows into a sample source table.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/seed_minimal_sample_source_table/"><code>seed_minimal_sample_source_table</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
-    <p class="reference-catalogue-item-purpose">Create and persist deterministic demo rows into a sample source table.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="split_valid_and_quarantine" data-callable-module="data_quality" data-callable-starter-path="03_pc" data-callable-importance="Optional" data-callable-purpose="Split a Spark DataFrame into pass/quarantine outputs for row-level DQ rules.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-06c-pipeline-controls/split_valid_and_quarantine/"><code>split_valid_and_quarantine</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-    <p class="reference-catalogue-item-purpose">Split a Spark DataFrame into pass/quarantine outputs for row-level DQ rules.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="suggest_accepted_value_mapping_prompt" data-callable-module="data_quality" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build a constrained prompt for accepted-value mapping suggestions.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/suggest_accepted_value_mapping_prompt/"><code>suggest_accepted_value_mapping_prompt</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Build a constrained prompt for accepted-value mapping suggestions.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="suggest_closest_accepted_value" data-callable-module="data_quality" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Suggest a deterministic closest accepted value using ``difflib``.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/suggest_closest_accepted_value/"><code>suggest_closest_accepted_value</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Suggest a deterministic closest accepted value using ``difflib``.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="suggest_dq_rules_prompt" data-callable-module="data_quality" data-callable-starter-path="02_ex" data-callable-importance="Optional" data-callable-purpose="Build a prompt for candidate DQ rule suggestions.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/suggest_dq_rules_prompt/"><code>suggest_dq_rules_prompt</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
-    <p class="reference-catalogue-item-purpose">Build a prompt for candidate DQ rule suggestions.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="summarize_drift_results" data-callable-module="data_drift" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Summarize schema, partition, and profile drift outcomes into one decision.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/summarize_drift_results/"><code>summarize_drift_results</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_drift/" title="Open data_drift module page" aria-label="Open data_drift module page">data_drift</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Summarize schema, partition, and profile drift outcomes into one decision.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="summarize_governance_classifications" data-callable-module="data_governance" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Summarize governance classification outputs into review-friendly counts.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/summarize_governance_classifications/"><code>summarize_governance_classifications</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Summarize governance classification outputs into review-friendly counts.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="validate_contract_dict" data-callable-module="data_contracts" data-callable-starter-path="02_ex" data-callable-importance="Essential" data-callable-purpose="Validate a contract dictionary and return error strings without raising.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/validate_contract_dict/"><code>validate_contract_dict</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
-    <p class="reference-catalogue-item-purpose">Validate a contract dictionary and return error strings without raising.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="validate_dq_rules" data-callable-module="data_quality" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Validate notebook-facing DQ rules.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-06c-pipeline-controls/validate_dq_rules/"><code>validate_dq_rules</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-    <p class="reference-catalogue-item-purpose">Validate notebook-facing DQ rules.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="validate_framework_config" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Validate and normalize framework configuration input.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-02a-shared-runtime-config/validate_framework_config/"><code>validate_framework_config</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config</span></p>
-    <p class="reference-catalogue-item-purpose">Validate and normalize framework configuration input.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="validate_lineage_steps" data-callable-module="data_lineage" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Validate lineage step structure and flag records requiring human review.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/validate_lineage_steps/"><code>validate_lineage_steps</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Validate lineage step structure and flag records requiring human review.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="validate_notebook_name" data-callable-module="runtime_context" data-callable-starter-path="02_ex, 03_pc" data-callable-importance="Essential" data-callable-purpose="Validate notebook names against the framework workspace notebook model.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-01-governance-context/validate_notebook_name/"><code>validate_notebook_name</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/runtime_context/" title="Open runtime_context module page" aria-label="Open runtime_context module page">runtime_context</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex, 03_pc</span></p>
-    <p class="reference-catalogue-item-purpose">Validate notebook names against the framework workspace notebook model.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="warehouse_read" data-callable-module="fabric_input_output" data-callable-starter-path="02_ex, 03_pc" data-callable-importance="Essential" data-callable-purpose="Read a table from a Microsoft Fabric warehouse.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/warehouse_read/"><code>warehouse_read</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex, 03_pc</span></p>
-    <p class="reference-catalogue-item-purpose">Read a table from a Microsoft Fabric warehouse.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="warehouse_write" data-callable-module="fabric_input_output" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Write a Spark DataFrame to a Microsoft Fabric warehouse table.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-06d-controlled-outputs/warehouse_write/"><code>warehouse_write</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-    <p class="reference-catalogue-item-purpose">Write a Spark DataFrame to a Microsoft Fabric warehouse table.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_contract_to_lakehouse" data-callable-module="data_contracts" data-callable-starter-path="02_ex" data-callable-importance="Essential" data-callable-purpose="Validate and persist contract records into Fabric metadata tables.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/write_contract_to_lakehouse/"><code>write_contract_to_lakehouse</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
-    <p class="reference-catalogue-item-purpose">Validate and persist contract records into Fabric metadata tables.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_governance_classifications" data-callable-module="data_governance" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Persist governance classifications to a metadata destination.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/write_governance_classifications/"><code>write_governance_classifications</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Persist governance classifications to a metadata destination.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_metadata_records" data-callable-module="data_product_metadata" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Write metadata records to a configured metadata sink.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/write_metadata_records/"><code>write_metadata_records</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Write metadata records to a configured metadata sink.</p>
-  </article>
-  <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_multiple_metadata_outputs" data-callable-module="data_product_metadata" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Write multiple metadata payloads to their configured destinations.">
-    <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/write_multiple_metadata_outputs/"><code>write_multiple_metadata_outputs</code></a></h3>
-    <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-    <p class="reference-catalogue-item-purpose">Write multiple metadata payloads to their configured destinations.</p>
-  </article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="add_audit_columns" data-callable-module="technical_columns" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Add run tracking and audit columns for ingestion workflows.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-06b-runtime-standards/add_audit_columns/"><code>add_audit_columns</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/technical_columns/" title="Open technical_columns module page" aria-label="Open technical_columns module page">technical_columns</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Add run tracking and audit columns for ingestion workflows.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="add_datetime_features" data-callable-module="technical_columns" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Add localized datetime feature columns derived from a UTC datetime column.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-06b-runtime-standards/add_datetime_features/"><code>add_datetime_features</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/technical_columns/" title="Open technical_columns module page" aria-label="Open technical_columns module page">technical_columns</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Add localized datetime feature columns derived from a UTC datetime column.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="add_hash_columns" data-callable-module="technical_columns" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Add business key and row-level SHA256 hash columns.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-06b-runtime-standards/add_hash_columns/"><code>add_hash_columns</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/technical_columns/" title="Open technical_columns module page" aria-label="Open technical_columns module page">technical_columns</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Add business key and row-level SHA256 hash columns.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="AI_SUGGESTABLE_DQ_RULE_TYPES" data-callable-module="dq" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="—">
+  <h3 class="reference-catalogue-item-name"><a href="./step-06c-pipeline-controls/AI_SUGGESTABLE_DQ_RULE_TYPES/"><code>AI_SUGGESTABLE_DQ_RULE_TYPES</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">—</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="assert_dq_passed" data-callable-module="dq" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Raise only after evidence materialization when error-severity rules fail.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-06d-controlled-outputs/assert_dq_passed/"><code>assert_dq_passed</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Raise only after evidence materialization when error-severity rules fail.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="assert_notebook_name_valid" data-callable-module="runtime" data-callable-starter-path="02_ex, 03_pc" data-callable-importance="Essential" data-callable-purpose="Raise :class:`NotebookNamingError` when a notebook name is invalid.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-01-governance-context/assert_notebook_name_valid/"><code>assert_notebook_name_valid</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/runtime/" title="Open runtime module page" aria-label="Open runtime module page">runtime</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex, 03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Raise :class:`NotebookNamingError` when a notebook name is invalid.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="bootstrap_fabric_env" data-callable-module="config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Bootstrap 00_env_config environment readiness by resolving required targets and collecting runtime/AI check results.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-02b-notebook-startup-checks/bootstrap_fabric_env/"><code>bootstrap_fabric_env</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config</span></p>
+  <p class="reference-catalogue-item-purpose">Bootstrap 00_env_config environment readiness by resolving required targets and collecting runtime/AI check results.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_ai_quality_context" data-callable-module="profiling" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Build deterministic AI-ready context from standard metadata profile rows.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/build_ai_quality_context/"><code>build_ai_quality_context</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/profiling/" title="Open profiling module page" aria-label="Open profiling module page">profiling</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Build deterministic AI-ready context from standard metadata profile rows.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_contract_column_records" data-callable-module="contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Build normalized contract-column metadata records for persistence.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/build_contract_column_records/"><code>build_contract_column_records</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Build normalized contract-column metadata records for persistence.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_contract_header_record" data-callable-module="contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Build one header row for FABRICOPS_CONTRACTS.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/build_contract_header_record/"><code>build_contract_header_record</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Build one header row for FABRICOPS_CONTRACTS.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_contract_records" data-callable-module="contracts" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Build grouped contract header, column, and rule metadata payloads.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/build_contract_records/"><code>build_contract_records</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Build grouped contract header, column, and rule metadata payloads.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_contract_rule_records" data-callable-module="contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Build quality-rule metadata records from a validated contract.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/build_contract_rule_records/"><code>build_contract_rule_records</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Build quality-rule metadata records from a validated contract.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_contract_summary" data-callable-module="contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Build a concise contract summary for reviews and handover.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/build_contract_summary/"><code>build_contract_summary</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Build a concise contract summary for reviews and handover.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_dataset_run_record" data-callable-module="metadata" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Build a dataset-run metadata record for operational tracking.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/build_dataset_run_record/"><code>build_dataset_run_record</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/metadata/" title="Open metadata module page" aria-label="Open metadata module page">metadata</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Build a dataset-run metadata record for operational tracking.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_dq_rule_candidate_prompt" data-callable-module="ai" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build the DQ-candidate prompt used in AI-assisted quality drafting.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/build_dq_rule_candidate_prompt/"><code>build_dq_rule_candidate_prompt</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Build the DQ-candidate prompt used in AI-assisted quality drafting.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_dq_rule_deactivations" data-callable-module="dq" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build append-only inactive metadata rows for governed DQ rule deactivation.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/build_dq_rule_deactivations/"><code>build_dq_rule_deactivations</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Build append-only inactive metadata rows for governed DQ rule deactivation.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_dq_rule_history" data-callable-module="dq" data-callable-starter-path="02_ex" data-callable-importance="Optional" data-callable-purpose="Build append-only active metadata rows for approved DQ rules.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/build_dq_rule_history/"><code>build_dq_rule_history</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
+  <p class="reference-catalogue-item-purpose">Build append-only active metadata rows for approved DQ rules.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_governance_candidate_prompt" data-callable-module="ai" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build the governance-candidate prompt for AI-assisted classification drafts.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/build_governance_candidate_prompt/"><code>build_governance_candidate_prompt</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Build the governance-candidate prompt for AI-assisted classification drafts.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_governance_classification_records" data-callable-module="governance" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build metadata-ready governance classification records from column suggestions.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/build_governance_classification_records/"><code>build_governance_classification_records</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/governance/" title="Open governance module page" aria-label="Open governance module page">governance</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Build metadata-ready governance classification records from column suggestions.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_handover_summary_prompt" data-callable-module="ai" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build the handover-summary prompt for AI-assisted run handoff drafting.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/build_handover_summary_prompt/"><code>build_handover_summary_prompt</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Build the handover-summary prompt for AI-assisted run handoff drafting.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_lineage_from_notebook_code" data-callable-module="lineage" data-callable-starter-path="02_ex" data-callable-importance="Optional" data-callable-purpose="Scan, optionally enrich, and validate lineage from notebook source code.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/build_lineage_from_notebook_code/"><code>build_lineage_from_notebook_code</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/lineage/" title="Open lineage module page" aria-label="Open lineage module page">lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
+  <p class="reference-catalogue-item-purpose">Scan, optionally enrich, and validate lineage from notebook source code.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_lineage_handover_markdown" data-callable-module="lineage" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Create a concise markdown handover summary from lineage execution results.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/build_lineage_handover_markdown/"><code>build_lineage_handover_markdown</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/lineage/" title="Open lineage module page" aria-label="Open lineage module page">lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Create a concise markdown handover summary from lineage execution results.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_lineage_record_from_steps" data-callable-module="lineage" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Create metadata-ready lineage records from validated lineage steps.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/build_lineage_record_from_steps/"><code>build_lineage_record_from_steps</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/lineage/" title="Open lineage module page" aria-label="Open lineage module page">lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Create metadata-ready lineage records from validated lineage steps.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_lineage_records" data-callable-module="lineage" data-callable-starter-path="03_pc" data-callable-importance="Optional" data-callable-purpose="Build compact lineage records for downstream metadata sinks.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/build_lineage_records/"><code>build_lineage_records</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/lineage/" title="Open lineage module page" aria-label="Open lineage module page">lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Build compact lineage records for downstream metadata sinks.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_manual_dq_rule_prompt_package" data-callable-module="ai" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build copy/paste prompt package for manual DQ candidate generation.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/build_manual_dq_rule_prompt_package/"><code>build_manual_dq_rule_prompt_package</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Build copy/paste prompt package for manual DQ candidate generation.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_manual_governance_prompt_package" data-callable-module="ai" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build copy/paste prompt package for manual governance suggestion generation.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/build_manual_governance_prompt_package/"><code>build_manual_governance_prompt_package</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Build copy/paste prompt package for manual governance suggestion generation.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_manual_handover_prompt_package" data-callable-module="ai" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build copy/paste prompt package for manual handover summary generation.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/build_manual_handover_prompt_package/"><code>build_manual_handover_prompt_package</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Build copy/paste prompt package for manual handover summary generation.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_quality_result_records" data-callable-module="metadata" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Convert quality-rule execution output into metadata evidence records.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/build_quality_result_records/"><code>build_quality_result_records</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/metadata/" title="Open metadata module page" aria-label="Open metadata module page">metadata</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Convert quality-rule execution output into metadata evidence records.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_run_summary" data-callable-module="run_summary" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build a handover-friendly summary for one data product run.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/build_run_summary/"><code>build_run_summary</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/run_summary/" title="Open run_summary module page" aria-label="Open run_summary module page">run_summary</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Build a handover-friendly summary for one data product run.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_runtime_context" data-callable-module="runtime" data-callable-starter-path="02_ex, 03_pc" data-callable-importance="Essential" data-callable-purpose="Build a standard runtime context dictionary for Fabric notebooks.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-01-governance-context/build_runtime_context/"><code>build_runtime_context</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/runtime/" title="Open runtime module page" aria-label="Open runtime module page">runtime</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex, 03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Build a standard runtime context dictionary for Fabric notebooks.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_schema_drift_records" data-callable-module="metadata" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Convert schema drift results into metadata records for audit trails.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/build_schema_drift_records/"><code>build_schema_drift_records</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/metadata/" title="Open metadata module page" aria-label="Open metadata module page">metadata</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Convert schema drift results into metadata records for audit trails.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_schema_snapshot_records" data-callable-module="metadata" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Convert a schema snapshot into row-wise metadata records.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/build_schema_snapshot_records/"><code>build_schema_snapshot_records</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/metadata/" title="Open metadata module page" aria-label="Open metadata module page">metadata</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Convert a schema snapshot into row-wise metadata records.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="check_fabric_ai_functions_available" data-callable-module="config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Check whether Fabric AI Functions are available in the current runtime.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-02a-shared-runtime-config/check_fabric_ai_functions_available/"><code>check_fabric_ai_functions_available</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config</span></p>
+  <p class="reference-catalogue-item-purpose">Check whether Fabric AI Functions are available in the current runtime.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="check_partition_drift" data-callable-module="drift" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Check partition-level drift using keys, partitions, and optional watermark baselines.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/check_partition_drift/"><code>check_partition_drift</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/drift/" title="Open drift module page" aria-label="Open drift module page">drift</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Check partition-level drift using keys, partitions, and optional watermark baselines.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="check_profile_drift" data-callable-module="drift" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Compare profile metrics against a baseline profile and drift thresholds.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/check_profile_drift/"><code>check_profile_drift</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/drift/" title="Open drift module page" aria-label="Open drift module page">drift</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Compare profile metrics against a baseline profile and drift thresholds.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="check_schema_drift" data-callable-module="drift" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Compare a current dataframe schema against a baseline schema snapshot.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/check_schema_drift/"><code>check_schema_drift</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/drift/" title="Open drift module page" aria-label="Open drift module page">drift</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Compare a current dataframe schema against a baseline schema snapshot.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="classify_column" data-callable-module="governance" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Classify one column using term matching, metadata cues, and business context.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/classify_column/"><code>classify_column</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/governance/" title="Open governance module page" aria-label="Open governance module page">governance</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Classify one column using term matching, metadata cues, and business context.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="classify_columns" data-callable-module="governance" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Classify multiple columns and return normalized governance suggestions.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/classify_columns/"><code>classify_columns</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/governance/" title="Open governance module page" aria-label="Open governance module page">governance</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Classify multiple columns and return normalized governance suggestions.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="configure_fabric_ai_functions" data-callable-module="config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Apply optional default Fabric AI Function configuration.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-01-governance-context/configure_fabric_ai_functions/"><code>configure_fabric_ai_functions</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config</span></p>
+  <p class="reference-catalogue-item-purpose">Apply optional default Fabric AI Function configuration.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="contract_records_to_spark" data-callable-module="contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Convert record dictionaries into a Spark DataFrame when Spark is available.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/contract_records_to_spark/"><code>contract_records_to_spark</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Convert record dictionaries into a Spark DataFrame when Spark is available.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="default_technical_columns" data-callable-module="technical_columns" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Return framework-generated and legacy technical column names to ignore.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-06b-runtime-standards/default_technical_columns/"><code>default_technical_columns</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/technical_columns/" title="Open technical_columns module page" aria-label="Open technical_columns module page">technical_columns</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Return framework-generated and legacy technical column names to ignore.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="enrich_lineage_steps_with_ai" data-callable-module="lineage" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Optionally enrich deterministic lineage steps using an AI helper callable.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/enrich_lineage_steps_with_ai/"><code>enrich_lineage_steps_with_ai</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/lineage/" title="Open lineage module page" aria-label="Open lineage module page">lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Optionally enrich deterministic lineage steps using an AI helper callable.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="extract_business_keys" data-callable-module="contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Extract business-key column names from a normalized contract.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/extract_business_keys/"><code>extract_business_keys</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Extract business-key column names from a normalized contract.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="extract_classifications" data-callable-module="contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Extract column classification mappings from a normalized contract.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/extract_classifications/"><code>extract_classifications</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Extract column classification mappings from a normalized contract.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="extract_dq_rules" data-callable-module="dq" data-callable-starter-path="02_ex" data-callable-importance="Optional" data-callable-purpose="Extract notebook-shaped AI responses and deduplicate candidate DQ rules by ``rule_id``.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/extract_dq_rules/"><code>extract_dq_rules</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
+  <p class="reference-catalogue-item-purpose">Extract notebook-shaped AI responses and deduplicate candidate DQ rules by ``rule_id``.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="extract_optional_columns" data-callable-module="contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Extract optional column names from a normalized contract.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/extract_optional_columns/"><code>extract_optional_columns</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Extract optional column names from a normalized contract.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="extract_quality_rules" data-callable-module="contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Extract raw quality-rule definitions from a normalized contract.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/extract_quality_rules/"><code>extract_quality_rules</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Extract raw quality-rule definitions from a normalized contract.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="extract_required_columns" data-callable-module="contracts" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Extract required column names from a normalized contract.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/extract_required_columns/"><code>extract_required_columns</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Extract required column names from a normalized contract.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="fallback_copilot_lineage_prompt" data-callable-module="lineage" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build a fallback Copilot prompt for manual lineage enrichment.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/fallback_copilot_lineage_prompt/"><code>fallback_copilot_lineage_prompt</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/lineage/" title="Open lineage module page" aria-label="Open lineage module page">lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Build a fallback Copilot prompt for manual lineage enrichment.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="generate_dq_rule_candidates_with_fabric_ai" data-callable-module="ai" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Append AI-suggested DQ rule candidates to a profiling DataFrame.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/generate_dq_rule_candidates_with_fabric_ai/"><code>generate_dq_rule_candidates_with_fabric_ai</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Append AI-suggested DQ rule candidates to a profiling DataFrame.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="generate_governance_candidates_with_fabric_ai" data-callable-module="ai" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Execute Fabric AI Functions to append governance suggestions to a DataFrame.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/generate_governance_candidates_with_fabric_ai/"><code>generate_governance_candidates_with_fabric_ai</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Execute Fabric AI Functions to append governance suggestions to a DataFrame.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="generate_handover_summary_with_fabric_ai" data-callable-module="ai" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Execute Fabric AI Functions to append handover summary suggestions.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/generate_handover_summary_with_fabric_ai/"><code>generate_handover_summary_with_fabric_ai</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Execute Fabric AI Functions to append handover summary suggestions.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="generate_metadata_profile" data-callable-module="profiling" data-callable-starter-path="02_ex" data-callable-importance="Essential" data-callable-purpose="Generate standard metadata profile rows for a Spark/Fabric DataFrame.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/generate_metadata_profile/"><code>generate_metadata_profile</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/profiling/" title="Open profiling module page" aria-label="Open profiling module page">profiling</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
+  <p class="reference-catalogue-item-purpose">Generate standard metadata profile rows for a Spark/Fabric DataFrame.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="generate_run_id" data-callable-module="runtime" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Generate a notebook-safe run identifier.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-01-governance-context/generate_run_id/"><code>generate_run_id</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/runtime/" title="Open runtime module page" aria-label="Open runtime module page">runtime</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Generate a notebook-safe run identifier.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="get_executable_quality_rules" data-callable-module="contracts" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Return normalized quality rules ready for pipeline enforcement.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-06c-pipeline-controls/get_executable_quality_rules/"><code>get_executable_quality_rules</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Return normalized quality rules ready for pipeline enforcement.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="get_path" data-callable-module="config" data-callable-starter-path="00_env_config, 02_ex, 03_pc" data-callable-importance="Essential" data-callable-purpose="Resolve a configured Fabric path for an environment and target.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-02a-shared-runtime-config/get_path/"><code>get_path</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config, 02_ex, 03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Resolve a configured Fabric path for an environment and target.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="Housepath" data-callable-module="fabric_io" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Fabric lakehouse or warehouse connection details.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-02a-shared-runtime-config/Housepath/"><code>Housepath</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config</span></p>
+  <p class="reference-catalogue-item-purpose">Fabric lakehouse or warehouse connection details.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="lakehouse_csv_read" data-callable-module="fabric_io" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Read a CSV file from a Fabric lakehouse Files path.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/lakehouse_csv_read/"><code>lakehouse_csv_read</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Read a CSV file from a Fabric lakehouse Files path.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="lakehouse_excel_read_as_spark" data-callable-module="fabric_io" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Read an Excel file from a Fabric lakehouse Files path.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/lakehouse_excel_read_as_spark/"><code>lakehouse_excel_read_as_spark</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Read an Excel file from a Fabric lakehouse Files path.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="lakehouse_parquet_read_as_spark" data-callable-module="fabric_io" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Read a Parquet file from a Fabric lakehouse Files path.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/lakehouse_parquet_read_as_spark/"><code>lakehouse_parquet_read_as_spark</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Read a Parquet file from a Fabric lakehouse Files path.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="lakehouse_table_read" data-callable-module="fabric_io" data-callable-starter-path="02_ex, 03_pc" data-callable-importance="Essential" data-callable-purpose="Read a Delta table from a Fabric lakehouse.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/lakehouse_table_read/"><code>lakehouse_table_read</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex, 03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Read a Delta table from a Fabric lakehouse.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="lakehouse_table_write" data-callable-module="fabric_io" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Write a Spark DataFrame to a Fabric lakehouse Delta table.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-06d-controlled-outputs/lakehouse_table_write/"><code>lakehouse_table_write</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Write a Spark DataFrame to a Fabric lakehouse Delta table.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="load_active_dq_rules" data-callable-module="dq" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Load latest active approved rules from append-only metadata history.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-06c-pipeline-controls/load_active_dq_rules/"><code>load_active_dq_rules</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Load latest active approved rules from append-only metadata history.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="load_contract_from_lakehouse" data-callable-module="contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Load one contract by ID/version from Fabric metadata storage.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/load_contract_from_lakehouse/"><code>load_contract_from_lakehouse</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Load one contract by ID/version from Fabric metadata storage.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="load_fabric_config" data-callable-module="config" data-callable-starter-path="00_env_config, 02_ex, 03_pc" data-callable-importance="Essential" data-callable-purpose="Validate and return a user-supplied framework configuration.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-02a-shared-runtime-config/load_fabric_config/"><code>load_fabric_config</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config, 02_ex, 03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Validate and return a user-supplied framework configuration.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="load_latest_approved_contract" data-callable-module="contracts" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Load the latest approved contract for a dataset/object pair.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/load_latest_approved_contract/"><code>load_latest_approved_contract</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Load the latest approved contract for a dataset/object pair.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="normalize_contract_dict" data-callable-module="contracts" data-callable-starter-path="02_ex" data-callable-importance="Essential" data-callable-purpose="Normalize a notebook-authored contract dictionary to a stable shape.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/normalize_contract_dict/"><code>normalize_contract_dict</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
+  <p class="reference-catalogue-item-purpose">Normalize a notebook-authored contract dictionary to a stable shape.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="parse_manual_ai_json_response" data-callable-module="ai" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Parse manual AI JSON output into Python objects.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/parse_manual_ai_json_response/"><code>parse_manual_ai_json_response</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Parse manual AI JSON output into Python objects.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="plot_lineage_steps" data-callable-module="lineage" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Render lineage steps as a directed graph figure.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/plot_lineage_steps/"><code>plot_lineage_steps</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/lineage/" title="Open lineage module page" aria-label="Open lineage module page">lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Render lineage steps as a directed graph figure.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="profile_dataframe" data-callable-module="profiling" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Build a lightweight profile for pandas or Spark-like DataFrames.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/profile_dataframe/"><code>profile_dataframe</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/profiling/" title="Open profiling module page" aria-label="Open profiling module page">profiling</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Build a lightweight profile for pandas or Spark-like DataFrames.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="profile_dataframe_to_metadata" data-callable-module="profiling" data-callable-starter-path="02_ex" data-callable-importance="Essential" data-callable-purpose="Profile a Spark/Fabric DataFrame into metadata-compatible metadata rows.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/profile_dataframe_to_metadata/"><code>profile_dataframe_to_metadata</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/profiling/" title="Open profiling module page" aria-label="Open profiling module page">profiling</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
+  <p class="reference-catalogue-item-purpose">Profile a Spark/Fabric DataFrame into metadata-compatible metadata rows.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="profile_for_dq" data-callable-module="dq" data-callable-starter-path="02_ex" data-callable-importance="Optional" data-callable-purpose="Profile a Spark DataFrame into one row per source column for DQ rule suggestion.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/profile_for_dq/"><code>profile_for_dq</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
+  <p class="reference-catalogue-item-purpose">Profile a Spark DataFrame into one row per source column for DQ rule suggestion.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="profile_metadata_to_records" data-callable-module="profiling" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Convert Spark metadata profile rows into JSON-friendly dictionaries.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/profile_metadata_to_records/"><code>profile_metadata_to_records</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/profiling/" title="Open profiling module page" aria-label="Open profiling module page">profiling</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Convert Spark metadata profile rows into JSON-friendly dictionaries.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="render_run_summary_markdown" data-callable-module="run_summary" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Render a run summary dictionary into Markdown for handover notes.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/render_run_summary_markdown/"><code>render_run_summary_markdown</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/run_summary/" title="Open run_summary module page" aria-label="Open run_summary module page">run_summary</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Render a run summary dictionary into Markdown for handover notes.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="review_dq_rule_deactivations" data-callable-module="dq_review" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Review active DQ rules one at a time for governed deactivation actions.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/review_dq_rule_deactivations/"><code>review_dq_rule_deactivations</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/dq_review/" title="Open dq_review module page" aria-label="Open dq_review module page">dq_review</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Review active DQ rules one at a time for governed deactivation actions.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="review_dq_rules" data-callable-module="dq_review" data-callable-starter-path="02_ex" data-callable-importance="Optional" data-callable-purpose="Review AI-suggested DQ rules sequentially with explicit approve/reject decisions.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/review_dq_rules/"><code>review_dq_rules</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/dq_review/" title="Open dq_review module page" aria-label="Open dq_review module page">dq_review</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
+  <p class="reference-catalogue-item-purpose">Review AI-suggested DQ rules sequentially with explicit approve/reject decisions.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="run_config_smoke_tests" data-callable-module="config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Run 00_env_config smoke checks for Spark, runtime context, configured paths, notebook naming, and optional AI/IO imports.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-02b-notebook-startup-checks/run_config_smoke_tests/"><code>run_config_smoke_tests</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config</span></p>
+  <p class="reference-catalogue-item-purpose">Run 00_env_config smoke checks for Spark, runtime context, configured paths, notebook naming, and optional AI/IO imports.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="run_dq_rules" data-callable-module="dq" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Run notebook-facing DQ rules and return a Spark DataFrame result.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-06c-pipeline-controls/run_dq_rules/"><code>run_dq_rules</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Run notebook-facing DQ rules and return a Spark DataFrame result.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="scan_notebook_cells" data-callable-module="lineage" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Scan multiple notebook cells and append cell references to lineage steps.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/scan_notebook_cells/"><code>scan_notebook_cells</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/lineage/" title="Open lineage module page" aria-label="Open lineage module page">lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Scan multiple notebook cells and append cell references to lineage steps.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="scan_notebook_lineage" data-callable-module="lineage" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Extract deterministic lineage steps from notebook code using AST parsing.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/scan_notebook_lineage/"><code>scan_notebook_lineage</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/lineage/" title="Open lineage module page" aria-label="Open lineage module page">lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Extract deterministic lineage steps from notebook code using AST parsing.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="seed_minimal_sample_source_table" data-callable-module="fabric_io" data-callable-starter-path="02_ex" data-callable-importance="Optional" data-callable-purpose="Create and persist deterministic demo rows into a sample source table.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/seed_minimal_sample_source_table/"><code>seed_minimal_sample_source_table</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
+  <p class="reference-catalogue-item-purpose">Create and persist deterministic demo rows into a sample source table.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="split_dq_rows" data-callable-module="dq" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Split source rows into valid rows, quarantine rows, and one-row-per-failure evidence.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-06c-pipeline-controls/split_dq_rows/"><code>split_dq_rows</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Split source rows into valid rows, quarantine rows, and one-row-per-failure evidence.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="suggest_dq_rules" data-callable-module="dq" data-callable-starter-path="02_ex" data-callable-importance="Optional" data-callable-purpose="Generate row-wise AI DQ suggestions using Fabric AI Functions.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/suggest_dq_rules/"><code>suggest_dq_rules</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
+  <p class="reference-catalogue-item-purpose">Generate row-wise AI DQ suggestions using Fabric AI Functions.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="summarize_drift_results" data-callable-module="drift" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Summarize schema, partition, and profile drift outcomes into one decision.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/summarize_drift_results/"><code>summarize_drift_results</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/drift/" title="Open drift module page" aria-label="Open drift module page">drift</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Summarize schema, partition, and profile drift outcomes into one decision.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="summarize_governance_classifications" data-callable-module="governance" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Summarize governance classification outputs into review-friendly counts.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/summarize_governance_classifications/"><code>summarize_governance_classifications</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/governance/" title="Open governance module page" aria-label="Open governance module page">governance</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Summarize governance classification outputs into review-friendly counts.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="validate_contract_dict" data-callable-module="contracts" data-callable-starter-path="02_ex" data-callable-importance="Essential" data-callable-purpose="Validate a contract dictionary and return error strings without raising.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/validate_contract_dict/"><code>validate_contract_dict</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
+  <p class="reference-catalogue-item-purpose">Validate a contract dictionary and return error strings without raising.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="validate_dq_rules" data-callable-module="dq" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Validate canonical DQ rules before enforcement.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-06c-pipeline-controls/validate_dq_rules/"><code>validate_dq_rules</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Validate canonical DQ rules before enforcement.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="validate_framework_config" data-callable-module="config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Validate and normalize framework configuration input.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-02a-shared-runtime-config/validate_framework_config/"><code>validate_framework_config</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config</span></p>
+  <p class="reference-catalogue-item-purpose">Validate and normalize framework configuration input.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="validate_lineage_steps" data-callable-module="lineage" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Validate lineage step structure and flag records requiring human review.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/validate_lineage_steps/"><code>validate_lineage_steps</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/lineage/" title="Open lineage module page" aria-label="Open lineage module page">lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Validate lineage step structure and flag records requiring human review.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="validate_notebook_name" data-callable-module="runtime" data-callable-starter-path="02_ex, 03_pc" data-callable-importance="Essential" data-callable-purpose="Validate notebook names against the framework workspace notebook model.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-01-governance-context/validate_notebook_name/"><code>validate_notebook_name</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/runtime/" title="Open runtime module page" aria-label="Open runtime module page">runtime</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex, 03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Validate notebook names against the framework workspace notebook model.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="warehouse_read" data-callable-module="fabric_io" data-callable-starter-path="02_ex, 03_pc" data-callable-importance="Essential" data-callable-purpose="Read a table from a Microsoft Fabric warehouse.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/warehouse_read/"><code>warehouse_read</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex, 03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Read a table from a Microsoft Fabric warehouse.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="warehouse_write" data-callable-module="fabric_io" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Write a Spark DataFrame to a Microsoft Fabric warehouse table.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-06d-controlled-outputs/warehouse_write/"><code>warehouse_write</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Write a Spark DataFrame to a Microsoft Fabric warehouse table.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_contract_to_lakehouse" data-callable-module="contracts" data-callable-starter-path="02_ex" data-callable-importance="Essential" data-callable-purpose="Validate and persist contract records into Fabric metadata tables.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/write_contract_to_lakehouse/"><code>write_contract_to_lakehouse</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
+  <p class="reference-catalogue-item-purpose">Validate and persist contract records into Fabric metadata tables.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_governance_classifications" data-callable-module="governance" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Persist governance classifications to a metadata destination.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/write_governance_classifications/"><code>write_governance_classifications</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/governance/" title="Open governance module page" aria-label="Open governance module page">governance</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Persist governance classifications to a metadata destination.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_metadata_records" data-callable-module="metadata" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Write metadata records to a configured metadata sink.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/write_metadata_records/"><code>write_metadata_records</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/metadata/" title="Open metadata module page" aria-label="Open metadata module page">metadata</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Write metadata records to a configured metadata sink.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_multiple_metadata_outputs" data-callable-module="metadata" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Write multiple metadata payloads to their configured destinations.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/write_multiple_metadata_outputs/"><code>write_multiple_metadata_outputs</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/metadata/" title="Open metadata module page" aria-label="Open metadata module page">metadata</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Write multiple metadata payloads to their configured destinations.</p>
+</article>
 </div>
 

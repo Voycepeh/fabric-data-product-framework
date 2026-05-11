@@ -73,10 +73,10 @@ def test_template_facing_content_does_not_use_short_form_modules() -> None:
 
 def test_templates_include_full_name_module_imports() -> None:
     combined = "\n".join(p.read_text(encoding="utf-8") for p in Path("templates/notebooks").glob("*.ipynb"))
-    assert "from fabricops_kit.data_quality import" in combined
-    assert "from fabricops_kit.environment_config import" in combined
-    assert "from fabricops_kit.runtime_context import" in combined
-    assert "from fabricops_kit.fabric_input_output import" in combined
+    assert "from fabricops_kit.dq import" in combined
+    assert "from fabricops_kit.config import" in combined
+    assert "from fabricops_kit.runtime import" in combined
+    assert "from fabricops_kit.fabric_io import" in combined
 
 
 def test_template_import_symbols_exist_in_declared_modules() -> None:
