@@ -35,7 +35,7 @@ Pipeline-contract notebook flow for deterministic enforcement and controlled pub
   </tbody>
 </table>
 
-## Segment 2: Load approved contract and source data
+## Segment 2: Load source data and approved metadata
 
 <table class="reference-function-table notebook-structure-function-table">
   <thead>
@@ -46,11 +46,6 @@ Pipeline-contract notebook flow for deterministic enforcement and controlled pub
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-03-source-contract-ingestion-pattern/load_latest_approved_contract/"><code>load_latest_approved_contract</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a></td>
-      <td data-label="Purpose">Load the latest approved contract for a dataset/object pair.</td>
-    </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-03-source-contract-ingestion-pattern/lakehouse_table_read/"><code>lakehouse_table_read</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a></td>
@@ -64,7 +59,7 @@ Pipeline-contract notebook flow for deterministic enforcement and controlled pub
   </tbody>
 </table>
 
-## Segment 3: Validate columns, transform, and compile rules
+## Segment 3: Validate schema, transform, and compile controls
 
 <table class="reference-function-table notebook-structure-function-table">
   <thead>
@@ -75,16 +70,6 @@ Pipeline-contract notebook flow for deterministic enforcement and controlled pub
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-03-source-contract-ingestion-pattern/extract_required_columns/"><code>extract_required_columns</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a></td>
-      <td data-label="Purpose">Extract required column names from a normalized contract.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-06c-pipeline-controls/get_executable_quality_rules/"><code>get_executable_quality_rules</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a></td>
-      <td data-label="Purpose">Return normalized quality rules ready for pipeline enforcement.</td>
-    </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-06c-pipeline-controls/validate_dq_rules/"><code>validate_dq_rules</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>

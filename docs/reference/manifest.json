@@ -22,13 +22,6 @@
       "sidebar_include": true
     },
     {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true
-    },
-    {
       "module_name": "data_quality",
       "visibility": "public",
       "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
@@ -96,17 +89,6 @@
       "callable_visibility": "public",
       "callable_role": "essential",
       "workflow_step": "6D"
-    },
-    {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_contract_summary",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": 7
     },
     {
       "module_name": "ai",
@@ -296,61 +278,6 @@
       "workflow_step": "6C"
     },
     {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "extract_business_keys",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": 3
-    },
-    {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "extract_classifications",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": 3
-    },
-    {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "extract_optional_columns",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": 3
-    },
-    {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "extract_quality_rules",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": 3
-    },
-    {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "extract_required_columns",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": 3
-    },
-    {
       "module_name": "ai",
       "visibility": "internal",
       "module_summary": "AI-assisted helper utilities and prompt builders.",
@@ -371,17 +298,6 @@
       "callable_visibility": "public",
       "callable_role": "optional",
       "workflow_step": 10
-    },
-    {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "get_executable_quality_rules",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": "6C"
     },
     {
       "module_name": "environment_config",
@@ -461,17 +377,6 @@
       "workflow_step": "6D"
     },
     {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "load_contract_from_lakehouse",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": 3
-    },
-    {
       "module_name": "environment_config",
       "visibility": "public",
       "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
@@ -481,28 +386,6 @@
       "callable_visibility": "public",
       "callable_role": "essential",
       "workflow_step": "2A"
-    },
-    {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "load_latest_approved_contract",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": 3
-    },
-    {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "normalize_contract_dict",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": 3
     },
     {
       "module_name": "ai",
@@ -648,17 +531,6 @@
       "workflow_step": 9
     },
     {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "validate_contract_dict",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": 3
-    },
-    {
       "module_name": "data_quality",
       "visibility": "public",
       "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
@@ -701,17 +573,6 @@
       "callable_visibility": "public",
       "callable_role": "essential",
       "workflow_step": "6D"
-    },
-    {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "write_contract_to_lakehouse",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": 7
     },
     {
       "module_name": "data_quality",

@@ -35,7 +35,6 @@ MODULE_DOCS_METADATA: list[ModuleDocMetadata] = [
     {"module_name": "environment_config", "visibility": "public", "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.", "sidebar_group": "Modules", "sidebar_include": True},
     {"module_name": "fabric_input_output", "visibility": "public", "module_summary": "Lakehouse and warehouse read/write helpers.", "sidebar_group": "Modules", "sidebar_include": True},
     {"module_name": "data_profiling", "visibility": "public", "module_summary": "Source/output profiling and metadata conversion helpers.", "sidebar_group": "Modules", "sidebar_include": True},
-    {"module_name": "data_contracts", "visibility": "public", "module_summary": "Data contract normalization, validation, and persistence helpers.", "sidebar_group": "Modules", "sidebar_include": True},
     {"module_name": "data_quality", "visibility": "public", "module_summary": "Deterministic DQ rule validation and enforcement helpers.", "sidebar_group": "Modules", "sidebar_include": True},
     {"module_name": "data_governance", "visibility": "public", "module_summary": "Governance classification helpers and metadata builders.", "sidebar_group": "Modules", "sidebar_include": True},
     {"module_name": "data_lineage", "visibility": "public", "module_summary": "Lineage extraction and handover documentation helpers.", "sidebar_group": "Modules", "sidebar_include": True},
@@ -137,11 +136,11 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
                 ],
             },
             {
-                "title": "Segment 4: Human approval and contract write",
+                "title": "Segment 4: Human approval and metadata persistence",
                 "symbols": [
-                    "normalize_contract_dict",
-                    "validate_contract_dict",
-                    "write_contract_to_lakehouse",
+                    
+                    
+                    
                 ],
             },
             {
@@ -165,18 +164,18 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
                 ],
             },
             {
-                "title": "Segment 2: Load approved contract and source data",
+                "title": "Segment 2: Load source data and approved metadata",
                 "symbols": [
-                    "load_latest_approved_contract",
+                    
                     "lakehouse_table_read",
                     "warehouse_read",
                 ],
             },
             {
-                "title": "Segment 3: Validate columns, transform, and compile rules",
+                "title": "Segment 3: Validate schema, transform, and compile controls",
                 "symbols": [
-                    "extract_required_columns",
-                    "get_executable_quality_rules",
+                    
+                    
                     "validate_dq_rules",
                 ],
             },
@@ -205,14 +204,14 @@ WORKFLOW_STEP_DOCS: list[dict[str, int | str]] = [
     {"number": 1, "slug": "step-01-governance-context", "title": "Governance context", "subtext": "This step captures the governance context: approved usage, owner, and data agreement. The agreement may live outside Fabric, such as in SharePoint documents. Functions in this step mainly link notebooks back to that agreement so the technical work stays tied to the approved business context."},
     {"number": "2A", "slug": "step-02a-shared-runtime-config", "title": "Create shared runtime config", "subtext": "This step creates the shared config that other notebooks depend on, including environment paths, workspace targets, AI availability, and standard naming rules. The goal is to define the project setup once so exploration and pipeline notebooks do not repeat hidden manual configuration."},
     {"number": "2B", "slug": "step-02b-notebook-startup-checks", "title": "Run notebook startup checks", "subtext": "This step runs the startup utility or smoke test at the beginning of every exploration and pipeline notebook. The goal is to confirm the notebook is running in the expected environment, follows naming rules, and has the required Fabric or AI capabilities before any data work begins."},
-    {"number": 3, "slug": "step-03-source-contract-ingestion-pattern", "title": "Define source contract & ingestion pattern", "subtext": "This step defines the contract between the upstream source and this notebook. It captures what data is expected, including schema, data types, update frequency, update method, watermark column, and whether the source is append only, overwritten, or slowly changing. Functions in this step help the pipeline decide how to ingest, validate, snapshot, or incrementally process the source data."},
+    {"number": 3, "slug": "step-03-source-contract-ingestion-pattern", "title": "Define source metadata & ingestion pattern", "subtext": "This step defines source metadata expectations between the upstream source and this notebook. It captures what data is expected, including schema, data types, update frequency, update method, watermark column, and whether the source is append only, overwritten, or slowly changing. Functions in this step help the pipeline decide how to ingest, validate, snapshot, or incrementally process source data using approved metadata tables."},
     {"number": 4, "slug": "step-04-ingest-profile-store", "title": "Ingest, profile & store source data", "subtext": "This step brings the source data into the framework, profiles it, and stores it for later use. Functions in this step focus on reading the data, capturing basic profiling results, and saving the raw or source-aligned version before business transformation begins."},
     {"number": 5, "slug": "step-05-explore-transform-logic", "title": "Explore data & explain transformation logic", "subtext": "This step is where the analyst studies the profiled source data and explains why transformation is needed. There may not be many helper functions here today, but future functions could support standard EDA, AI assisted analysis, and documentation of business assumptions before the logic becomes part of the repeatable pipeline."},
     {"number": "6A", "slug": "step-06a-transformation-logic", "title": "Write transformation logic", "subtext": "This step contains the main transformation logic that converts source-aligned data into the target output. Functions here support reusable pipeline code so the same logic can run consistently during development, testing, and scheduled refresh."},
     {"number": "6B", "slug": "step-06b-runtime-standards", "title": "Apply runtime standards", "subtext": "This step applies standard runtime requirements such as technical columns, run IDs, timestamps, partition keys, and other repeatable conventions. Functions here make outputs easier to audit, troubleshoot, join back to pipeline runs, and operate at scale."},
     {"number": "6C", "slug": "step-06c-pipeline-controls", "title": "Enforce pipeline controls", "subtext": "This step enforces the controls that decide whether the pipeline output should be trusted. Functions here support data quality rules, schema checks, classification checks, and other contract validations before data is released downstream."},
     {"number": "6D", "slug": "step-06d-controlled-outputs", "title": "Write controlled outputs", "subtext": "This step writes the transformed output to the correct lakehouse, warehouse, or product layer. Functions here make the write pattern explicit, repeatable, and aligned to the intended environment instead of relying on ad hoc exports."},
-    {"number": 7, "slug": "step-07-output-profile-product-contract", "title": "Profile output & publish product contract", "subtext": "This step profiles the created output, stores its metadata, and creates the data contract for the next notebook, pipeline, or consumer. Functions here help record what was produced, write the evidence to metadata tables or catalogues, and make the output understandable and reusable downstream."},
+    {"number": 7, "slug": "step-07-output-profile-product-contract", "title": "Profile output & publish handover metadata", "subtext": "This step profiles the created output and stores handover metadata for downstream users. Functions here record what was produced, write evidence to metadata tables or catalogues, and keep outputs understandable and reusable downstream."},
     {"number": 8, "slug": "step-08-ai-assisted-dq-suggestions", "title": "Suggest AI assisted data quality rules", "subtext": "This step uses AI in exploration notebooks to suggest possible data quality rules from profiling results, business context, and source knowledge. These AI functions are only advisory. The actual rule creation, approval, and enforcement must still be done by the human engineer in the pipeline notebook."},
     {"number": 9, "slug": "step-09-ai-assisted-classification", "title": "Suggest AI assisted column classification", "subtext": "This step uses AI in exploration notebooks to suggest column classifications such as PII, sensitivity level, and governance labels for the planned output. These AI functions are only advisory. The actual label assignment must be approved by governance or data stewards and enforced by the human engineer in the pipeline notebook."},
     {"number": 10, "slug": "step-10-lineage-handover-documentation", "title": "Generate lineage & handover documentation", "subtext": "This step creates the final documentation needed for review, handover, and future maintenance. Functions here support lineage, transformation summaries, and handover notes so another analyst or engineer can understand what was built, why it was built, and how to operate it."},
@@ -266,17 +265,5 @@ PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [
     {"symbol_name": "plot_lineage_steps", "module": "data_lineage", "kind": "function", "workflow_step": 10, "role": "optional", "summary_override": None},
     {"symbol_name": "build_run_summary", "module": "run_summary", "kind": "function", "workflow_step": 10, "role": "essential", "summary_override": None},
     {"symbol_name": "render_run_summary_markdown", "module": "run_summary", "kind": "function", "workflow_step": 10, "role": "essential", "summary_override": None},
-    {"symbol_name": "normalize_contract_dict", "module": "data_contracts", "kind": "function", "workflow_step": 3, "role": "essential", "summary_override": None},
-    {"symbol_name": "validate_contract_dict", "module": "data_contracts", "kind": "function", "workflow_step": 3, "role": "essential", "summary_override": None},
-    {"symbol_name": "write_contract_to_lakehouse", "module": "data_contracts", "kind": "function", "workflow_step": 7, "role": "essential", "summary_override": "Validate and persist contract records into Fabric metadata tables."},
-    {"symbol_name": "load_contract_from_lakehouse", "module": "data_contracts", "kind": "function", "workflow_step": 3, "role": "essential", "summary_override": "Load one contract by ID/version from Fabric metadata storage."},
-    {"symbol_name": "load_latest_approved_contract", "module": "data_contracts", "kind": "function", "workflow_step": 3, "role": "essential", "summary_override": "Load the latest approved contract for a dataset/object pair."},
-    {"symbol_name": "extract_required_columns", "module": "data_contracts", "kind": "function", "workflow_step": 3, "role": "essential", "summary_override": "Extract required column names from a normalized contract."},
-    {"symbol_name": "extract_optional_columns", "module": "data_contracts", "kind": "function", "workflow_step": 3, "role": "essential", "summary_override": "Extract optional column names from a normalized contract."},
-    {"symbol_name": "extract_business_keys", "module": "data_contracts", "kind": "function", "workflow_step": 3, "role": "essential", "summary_override": "Extract business-key column names from a normalized contract."},
-    {"symbol_name": "extract_classifications", "module": "data_contracts", "kind": "function", "workflow_step": 3, "role": "essential", "summary_override": "Extract column classification mappings from a normalized contract."},
-    {"symbol_name": "extract_quality_rules", "module": "data_contracts", "kind": "function", "workflow_step": 3, "role": "essential", "summary_override": "Extract raw quality-rule definitions from a normalized contract."},
-    {"symbol_name": "get_executable_quality_rules", "module": "data_contracts", "kind": "function", "workflow_step": "6C", "role": "essential", "summary_override": "Return normalized quality rules ready for pipeline enforcement."},
     {"symbol_name": "standardize_output_columns", "module": "technical_columns", "kind": "function", "workflow_step": "6B", "role": "essential", "summary_override": None},
-    {"symbol_name": "build_contract_summary", "module": "data_contracts", "kind": "function", "workflow_step": 7, "role": "essential", "summary_override": "Build a concise contract summary for reviews and handover."},
 ]

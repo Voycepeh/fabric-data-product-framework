@@ -33,20 +33,6 @@ from .data_governance import (
     summarize_governance_classifications,
     write_governance_classifications,
 )
-from .data_contracts import (
-    build_contract_summary,
-    extract_business_keys,
-    extract_classifications,
-    extract_optional_columns,
-    extract_quality_rules,
-    extract_required_columns,
-    get_executable_quality_rules,
-    load_contract_from_lakehouse,
-    load_latest_approved_contract,
-    normalize_contract_dict,
-    validate_contract_dict,
-    write_contract_to_lakehouse,
-)
 
 from .data_profiling import (
     profile_dataframe,
@@ -121,17 +107,5 @@ __all__ = [
     "plot_lineage_steps",
     "build_run_summary",
     "render_run_summary_markdown",
-    "normalize_contract_dict",
-    "validate_contract_dict",
-    "write_contract_to_lakehouse",
-    "load_contract_from_lakehouse",
-    "load_latest_approved_contract",
-    "extract_required_columns",
-    "extract_optional_columns",
-    "extract_business_keys",
-    "extract_classifications",
-    "extract_quality_rules",
-    "get_executable_quality_rules",
-    "build_contract_summary",
     "standardize_output_columns",
 ]

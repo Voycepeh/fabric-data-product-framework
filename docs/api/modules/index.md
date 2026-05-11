@@ -7,7 +7,6 @@ Short-form modules remain import-compatible aliases but are intentionally hidden
 - [`environment_config`](environment_config.md)
 - [`fabric_input_output`](fabric_input_output.md)
 - [`data_profiling`](data_profiling.md)
-- [`data_contracts`](data_contracts.md)
 - [`data_quality`](data_quality.md)
 - [`data_governance`](data_governance.md)
 - [`data_lineage`](data_lineage.md)

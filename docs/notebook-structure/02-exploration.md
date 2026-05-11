@@ -93,34 +93,7 @@ Exploration notebook flow used to profile source data and draft advisory AI outp
   </tbody>
 </table>
 
-## Segment 4: Human approval and contract write
-
-<table class="reference-function-table notebook-structure-function-table">
-  <thead>
-    <tr>
-      <th>Function / class</th>
-      <th>Module</th>
-      <th>Purpose</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-03-source-contract-ingestion-pattern/normalize_contract_dict/"><code>normalize_contract_dict</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a></td>
-      <td data-label="Purpose">Normalize a notebook-authored contract dictionary to a stable shape.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-03-source-contract-ingestion-pattern/validate_contract_dict/"><code>validate_contract_dict</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a></td>
-      <td data-label="Purpose">Validate a contract dictionary and return error strings without raising.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-07-output-profile-product-contract/write_contract_to_lakehouse/"><code>write_contract_to_lakehouse</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a></td>
-      <td data-label="Purpose">Validate and persist contract records into Fabric metadata tables.</td>
-    </tr>
-  </tbody>
-</table>
+## Segment 4: Human approval and metadata persistence
 
 ## Optional lineage notes
 

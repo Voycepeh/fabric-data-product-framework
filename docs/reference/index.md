@@ -68,11 +68,6 @@ Use the finder below to look up public callables.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
   <p class="reference-catalogue-item-purpose">Raise only after evidence materialization when error-severity rules fail.</p>
 </article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_contract_summary" data-callable-module="data_contracts" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Build a concise contract summary for reviews and handover.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/build_contract_summary/"><code>build_contract_summary</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Build a concise contract summary for reviews and handover.</p>
-</article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_governance_candidate_prompt" data-callable-module="ai" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Build the governance-candidate prompt for AI-assisted classification drafts.">
   <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/build_governance_candidate_prompt/"><code>build_governance_candidate_prompt</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
@@ -158,31 +153,6 @@ Use the finder below to look up public callables.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
   <p class="reference-catalogue-item-purpose">Run notebook-facing DQ rules and return a Spark DataFrame result.</p>
 </article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="extract_business_keys" data-callable-module="data_contracts" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Extract business-key column names from a normalized contract.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/extract_business_keys/"><code>extract_business_keys</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Extract business-key column names from a normalized contract.</p>
-</article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="extract_classifications" data-callable-module="data_contracts" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Extract column classification mappings from a normalized contract.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/extract_classifications/"><code>extract_classifications</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Extract column classification mappings from a normalized contract.</p>
-</article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="extract_optional_columns" data-callable-module="data_contracts" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Extract optional column names from a normalized contract.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/extract_optional_columns/"><code>extract_optional_columns</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Extract optional column names from a normalized contract.</p>
-</article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="extract_quality_rules" data-callable-module="data_contracts" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Extract raw quality-rule definitions from a normalized contract.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/extract_quality_rules/"><code>extract_quality_rules</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Extract raw quality-rule definitions from a normalized contract.</p>
-</article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="extract_required_columns" data-callable-module="data_contracts" data-callable-starter-path="03_pc" data-role="essential" data-callable-purpose="Extract required column names from a normalized contract.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/extract_required_columns/"><code>extract_required_columns</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-  <p class="reference-catalogue-item-purpose">Extract required column names from a normalized contract.</p>
-</article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="generate_governance_candidates_with_fabric_ai" data-callable-module="ai" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Execute Fabric AI Functions to append governance suggestions to a DataFrame.">
   <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/generate_governance_candidates_with_fabric_ai/"><code>generate_governance_candidates_with_fabric_ai</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
@@ -192,11 +162,6 @@ Use the finder below to look up public callables.
   <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/generate_handover_summary_with_fabric_ai/"><code>generate_handover_summary_with_fabric_ai</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Execute Fabric AI Functions to append handover summary suggestions.</p>
-</article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="get_executable_quality_rules" data-callable-module="data_contracts" data-callable-starter-path="03_pc" data-role="essential" data-callable-purpose="Return normalized quality rules ready for pipeline enforcement.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-06c-pipeline-controls/get_executable_quality_rules/"><code>get_executable_quality_rules</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-  <p class="reference-catalogue-item-purpose">Return normalized quality rules ready for pipeline enforcement.</p>
 </article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="get_path" data-callable-module="environment_config" data-callable-starter-path="00_env_config, 02_ex, 03_pc" data-role="essential" data-callable-purpose="Resolve a configured Fabric path for an environment and target.">
   <h3 class="reference-catalogue-item-name"><a href="./step-02a-shared-runtime-config/get_path/"><code>get_path</code></a></h3>
@@ -233,25 +198,10 @@ Use the finder below to look up public callables.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
   <p class="reference-catalogue-item-purpose">Write a Spark DataFrame to a Fabric lakehouse Delta table.</p>
 </article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="load_contract_from_lakehouse" data-callable-module="data_contracts" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Load one contract by ID/version from Fabric metadata storage.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/load_contract_from_lakehouse/"><code>load_contract_from_lakehouse</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Load one contract by ID/version from Fabric metadata storage.</p>
-</article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="load_fabric_config" data-callable-module="environment_config" data-callable-starter-path="00_env_config, 02_ex, 03_pc" data-role="essential" data-callable-purpose="Validate and return a user-supplied framework configuration.">
   <h3 class="reference-catalogue-item-name"><a href="./step-02a-shared-runtime-config/load_fabric_config/"><code>load_fabric_config</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config, 02_ex, 03_pc</span></p>
   <p class="reference-catalogue-item-purpose">Validate and return a user-supplied framework configuration.</p>
-</article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="load_latest_approved_contract" data-callable-module="data_contracts" data-callable-starter-path="03_pc" data-role="essential" data-callable-purpose="Load the latest approved contract for a dataset/object pair.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/load_latest_approved_contract/"><code>load_latest_approved_contract</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-  <p class="reference-catalogue-item-purpose">Load the latest approved contract for a dataset/object pair.</p>
-</article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="normalize_contract_dict" data-callable-module="data_contracts" data-callable-starter-path="02_ex" data-role="essential" data-callable-purpose="Normalize a notebook-authored contract dictionary to a stable shape.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/normalize_contract_dict/"><code>normalize_contract_dict</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
-  <p class="reference-catalogue-item-purpose">Normalize a notebook-authored contract dictionary to a stable shape.</p>
 </article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="parse_manual_ai_json_response" data-callable-module="ai" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Parse manual AI JSON output into Python objects.">
   <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/parse_manual_ai_json_response/"><code>parse_manual_ai_json_response</code></a></h3>
@@ -318,11 +268,6 @@ Use the finder below to look up public callables.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Summarize governance classification outputs into review-friendly counts.</p>
 </article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="validate_contract_dict" data-callable-module="data_contracts" data-callable-starter-path="02_ex" data-role="essential" data-callable-purpose="Validate a contract dictionary and return error strings without raising.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/validate_contract_dict/"><code>validate_contract_dict</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
-  <p class="reference-catalogue-item-purpose">Validate a contract dictionary and return error strings without raising.</p>
-</article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="validate_dq_rules" data-callable-module="data_quality" data-callable-starter-path="03_pc" data-role="optional" data-callable-purpose="Validate canonical DQ rules before enforcement.">
   <h3 class="reference-catalogue-item-name"><a href="./step-06c-pipeline-controls/validate_dq_rules/"><code>validate_dq_rules</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
@@ -342,11 +287,6 @@ Use the finder below to look up public callables.
   <h3 class="reference-catalogue-item-name"><a href="./step-06d-controlled-outputs/warehouse_write/"><code>warehouse_write</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
   <p class="reference-catalogue-item-purpose">Write a Spark DataFrame to a Microsoft Fabric warehouse table.</p>
-</article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_contract_to_lakehouse" data-callable-module="data_contracts" data-callable-starter-path="02_ex" data-role="essential" data-callable-purpose="Validate and persist contract records into Fabric metadata tables.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/write_contract_to_lakehouse/"><code>write_contract_to_lakehouse</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
-  <p class="reference-catalogue-item-purpose">Validate and persist contract records into Fabric metadata tables.</p>
 </article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_dq_rules" data-callable-module="data_quality" data-callable-starter-path="02_ex" data-role="essential" data-callable-purpose="Validate, build, and persist approved DQ rules.">
   <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/write_dq_rules/"><code>write_dq_rules</code></a></h3>

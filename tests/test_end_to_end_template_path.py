@@ -29,17 +29,15 @@ def test_00_env_config_import_and_default_prompt_override_guard():
     assert "Summarize run handover details as markdown. Context: {context}" not in prompt_block
 
 
-def test_02_ex_contract_and_runtime_handoff_is_runnable():
+def test_02_ex_metadata_handoff_is_runnable():
     ex = _all_code("templates/notebooks/02_ex_agreement_topic.ipynb")
     assert "target_table=TARGET_TABLE" in ex
     for required in [
-        '"contract_type": "source_input"',
         '"object_name": SOURCE_TABLE',
         '"version": "1.0.0"',
         '"status": "approved"',
-        "SOURCE_INPUT_CONTRACT_APPROVED = normalize_contract_dict",
-        "validate_contract_dict(SOURCE_INPUT_CONTRACT_APPROVED)",
-        "write_contract_to_lakehouse(SOURCE_INPUT_CONTRACT_APPROVED",
+        "SOURCE_INPUT_METADATA_APPROVED = dict(SOURCE_INPUT_CONTRACT_DRAFT)",
+        "TODO: persist approved profiling, DQ, governance, and drift metadata via dedicated helpers.",
     ]:
         assert required in ex
 
