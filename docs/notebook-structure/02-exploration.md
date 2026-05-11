@@ -96,19 +96,9 @@ Exploration notebook flow used to profile source data and draft advisory AI outp
   </thead>
   <tbody>
     <tr>
-      <td data-label="Function / class"><a href="../../reference/step-08-ai-assisted-dq-suggestions/profile_for_dq/"><code>profile_for_dq</code></a></td>
+      <td data-label="Function / class"><a href="../../reference/step-08-ai-assisted-dq-suggestions/draft_dq_rules/"><code>draft_dq_rules</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
-      <td data-label="Purpose">Profile a Spark DataFrame into one row per source column for DQ rule suggestion.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-08-ai-assisted-dq-suggestions/suggest_dq_rules/"><code>suggest_dq_rules</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
-      <td data-label="Purpose">Generate row-wise AI DQ suggestions using Fabric AI Functions.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-08-ai-assisted-dq-suggestions/extract_dq_rules/"><code>extract_dq_rules</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
-      <td data-label="Purpose">Extract notebook-shaped AI responses and deduplicate candidate DQ rules by ``rule_id``.</td>
+      <td data-label="Purpose">Draft candidate DQ rules from metadata profiles or raw DataFrame fallback.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-08-ai-assisted-dq-suggestions/review_dq_rules/"><code>review_dq_rules</code></a></td>
@@ -116,9 +106,9 @@ Exploration notebook flow used to profile source data and draft advisory AI outp
       <td data-label="Purpose">Review AI-suggested DQ rules sequentially with explicit approve/reject decisions.</td>
     </tr>
     <tr>
-      <td data-label="Function / class"><a href="../../reference/step-08-ai-assisted-dq-suggestions/build_dq_rule_history/"><code>build_dq_rule_history</code></a></td>
+      <td data-label="Function / class"><a href="../../reference/step-08-ai-assisted-dq-suggestions/write_dq_rules/"><code>write_dq_rules</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
-      <td data-label="Purpose">Build append-only active metadata rows for approved DQ rules.</td>
+      <td data-label="Purpose">Validate, build, and persist approved DQ rules.</td>
     </tr>
   </tbody>
 </table>

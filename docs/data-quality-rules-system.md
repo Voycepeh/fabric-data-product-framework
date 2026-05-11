@@ -153,45 +153,49 @@ Issues intentionally included:
 DQ_TABLE_NAME = TARGET_TABLE
 PROMPT_TEMPLATE = CONFIG.ai_prompt_config.dq_rule_candidate_template
 
-# 1) Profile source data (02_ex)
-profile_rows = profile_for_dq(df_source, table_name=DQ_TABLE_NAME)
+# 1) Create or load profile metadata (02_ex)
+profile_rows = profile_dataframe_to_metadata(df_source, table_name=DQ_TABLE_NAME)
+# or: profile_rows = spark.table("METADATA_PROFILE_TABLE")
 
-# 2) Ask AI for rule candidates (02_ex)
-responses = suggest_dq_rules(
-    profile_rows,
+# 2) Ask AI for candidate rules from profile metadata (02_ex)
+candidate_rules = draft_dq_rules(
+    profile_df=profile_rows,
+    table_name=DQ_TABLE_NAME,
+    business_context=BUSINESS_CONTEXT,
     prompt_template=PROMPT_TEMPLATE,
     output_col="ai_response",
 )
 
-# 3) Parse candidate rules (02_ex)
-candidate_rules = extract_dq_rules(responses, table_name=DQ_TABLE_NAME)
-
-# 4) Human review + explicit approval (02_ex)
+# 3) Human review + explicit approval (02_ex)
 import fabricops_kit.dq_review as dq_review
 review_dq_rules(candidate_rules, table_name=DQ_TABLE_NAME)
 approved = list(dq_review.APPROVED_RULES_FROM_WIDGET)
 if not approved:
     raise ValueError("No approved DQ rules selected in widget.")
 
-# 5) Persist governed approval history (02_ex)
-approved_history = build_dq_rule_history(
-    spark=spark,
+# 4) Persist governed approval history (02_ex)
+write_dq_rules(
+    approved,
     table_name=DQ_TABLE_NAME,
-    approved_rules=approved,
+    metadata_path=metadata_path,
     action_by="notebook_user",
 )
 
-# 6) Pipeline loads and enforces active approved rules (03_pc)
-rules = load_active_dq_rules(spark.table("METADATA_DQ_RULES"), table_name=DQ_TABLE_NAME)
-dq_result = run_dq_rules(df_standard, table_name=DQ_TABLE_NAME, rules=rules)
-
-# 7) Evidence + gate (03_pc)
-df_valid, df_quarantine, dq_failure_evidence = split_dq_rows(
+# 5) Pipeline enforces approved active rules deterministically (03_pc)
+dq = enforce_dq_rules(
     df_standard,
-    rules,
+    table_name=DQ_TABLE_NAME,
+    metadata_df=spark.table("METADATA_DQ_RULES"),
     dq_run_id=RUN_ID,
 )
-assert_dq_passed(dq_result)
+
+# 6) Optional evidence outputs
+_ = dq.valid_rows
+_ = dq.quarantine_rows
+_ = dq.failure_rows
+
+# 7) Final explicit gate
+assert_dq_passed(dq.rule_results)
 ```
 
 ## Screenshot slots

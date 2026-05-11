@@ -6,13 +6,28 @@ import ast
 import json
 import re
 import uuid
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
 
 from pyspark.sql import functions as F
 from pyspark.sql.window import Window
+from pyspark.sql import SparkSession
+from .data_profiling import profile_dataframe_to_metadata
+from .fabric_input_output import lakehouse_table_write
 
 AI_SUGGESTABLE_DQ_RULE_TYPES = {"not_null", "unique_key", "accepted_values", "value_range", "regex_format"}
+
+
+@dataclass
+class DQEnforcementResult:
+    """Structured DQ enforcement output for notebook-first usage."""
+
+    rules: list[dict[str, Any]]
+    rule_results: Any
+    valid_rows: Any
+    quarantine_rows: Any
+    failure_rows: Any
 
 
 def profile_for_dq(df, table_name: str, business_context: str = "", sample_value_limit: int = 20):
@@ -98,6 +113,11 @@ def extract_dq_rules(response_df, table_name: str, response_col: str = "response
 
 def validate_dq_rules(rules: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Validate canonical DQ rules before enforcement.
+
+    Notes
+    -----
+    Supported canonical ``rule_type`` values are ``not_null``, ``unique_key``,
+    ``accepted_values``, ``value_range``, and ``regex_format``.
 
     Raises
     ------
@@ -374,3 +394,57 @@ build_dq_rules_metadata_df = build_dq_rule_history
 build_dq_rule_deactivation_metadata_df = build_dq_rule_deactivations
 load_latest_active_dq_rules_from_metadata = load_active_dq_rules
 split_valid_quarantine_and_failures = split_dq_rows
+
+
+def _prepare_dq_profile_input(*, profile_df=None, df=None, table_name: str, business_context: str = ""):
+    if (profile_df is None) == (df is None):
+        raise ValueError("Provide exactly one of profile_df or df.")
+    if profile_df is None:
+        profile_df = profile_dataframe_to_metadata(df, table_name=table_name)
+    cols = set(profile_df.columns)
+    if {"column_name", "data_type", "row_count", "null_count", "distinct_count"}.issubset(cols):
+        return profile_df
+    return profile_df.select(
+        F.col("TABLE_NAME").alias("table_name"),
+        F.col("COLUMN_NAME").alias("column_name"),
+        F.col("DATA_TYPE").alias("data_type"),
+        F.col("ROW_COUNT").alias("row_count"),
+        F.col("NULL_COUNT").alias("null_count"),
+        F.col("NULL_PERCENT").alias("null_percent"),
+        F.col("DISTINCT_COUNT").alias("distinct_count"),
+        F.col("DISTINCT_PERCENT").alias("distinct_percent"),
+        F.col("MIN_VALUE").alias("min_value"),
+        F.col("MAX_VALUE").alias("max_value"),
+        F.lit("").alias("observed_values_sample"),
+        F.lit(business_context).alias("business_context"),
+        F.lit(datetime.now(timezone.utc).isoformat()).alias("profile_timestamp"),
+    )
+
+
+def draft_dq_rules(*, profile_df=None, df=None, table_name: str, business_context: str = "", prompt_template: str | None = None, output_col: str = "response") -> list[dict[str, Any]]:
+    """Draft candidate DQ rules from metadata profiles or raw DataFrame fallback."""
+    prepared = _prepare_dq_profile_input(profile_df=profile_df, df=df, table_name=table_name, business_context=business_context)
+    responses = suggest_dq_rules(prepared, prompt_template=prompt_template, output_col=output_col)
+    return extract_dq_rules(responses, table_name=table_name, response_col=output_col)
+
+
+def write_dq_rules(approved_rules, *, table_name: str, metadata_path, metadata_table: str = "METADATA_DQ_RULES", action_by: str = "notebook_user", rule_source: str = "ai_widget_approval", action_reason: str = "Approved after human review.", mode: str = "append"):
+    """Validate, build, and persist approved DQ rules."""
+    validate_dq_rules(approved_rules)
+    spark = SparkSession.getActiveSession()
+    if spark is None:
+        raise ValueError("write_dq_rules requires an active SparkSession.")
+    history_df = build_dq_rule_history(spark, table_name=table_name, approved_rules=approved_rules, action_by=action_by, rule_source=rule_source, action_reason=action_reason)
+    lakehouse_table_write(history_df, metadata_path, metadata_table, mode=mode)
+    return history_df
+
+
+def enforce_dq_rules(df, *, table_name: str, rules=None, metadata_df=None, row_id_columns: list[str] | None = None, dq_run_id: str | None = None) -> DQEnforcementResult:
+    """Enforce approved DQ rules and return structured deterministic outputs."""
+    if rules is None and metadata_df is None:
+        raise ValueError("Provide rules or metadata_df.")
+    active_rules = rules or load_active_dq_rules(metadata_df, table_name=table_name)
+    validate_dq_rules(active_rules)
+    rule_results = run_dq_rules(df, table_name=table_name, rules=active_rules)
+    valid_rows, quarantine_rows, failure_rows = split_dq_rows(df, active_rules, dq_run_id=dq_run_id, row_id_columns=row_id_columns)
+    return DQEnforcementResult(active_rules, rule_results, valid_rows, quarantine_rows, failure_rows)

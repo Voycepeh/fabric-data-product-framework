@@ -1,8 +1,7 @@
-"""AI-assistance helpers for governance, quality, and handover generation in FabricOps.
+"""AI-assistance helpers for shared Fabric AI runtime, governance, and handover flows.
 
-This module separates runtime availability checks, optional AI-function
-configuration, prompt construction, AI execution, and manual-response parsing
-so notebook pipelines can gracefully fall back when Fabric AI is unavailable.
+Data-quality AI drafting is exposed through :mod:`fabricops_kit.data_quality`
+so notebook users follow one canonical DQ workflow surface.
 """
 from __future__ import annotations
 
@@ -10,7 +9,6 @@ import json
 
 from .config import (
     FrameworkConfig,
-    DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE,
     DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE,
     DEFAULT_HANDOVER_SUMMARY_TEMPLATE,
 )
@@ -84,36 +82,6 @@ def configure_fabric_ai_functions(deployment_name: str | None = None, temperatur
     return {"available": True, "configured": True, "message": "Microsoft Fabric AI Functions default configuration applied."}
 
 
-def build_dq_rule_candidate_prompt(business_context="", dataset_name=None, config: FrameworkConfig | None = None) -> str:
-    """Build the DQ-candidate prompt used in AI-assisted quality drafting.
-
-    In the FabricOps workflow, this supports early quality planning after
-    profiling and before deterministic rule approval.
-
-
-    Parameters
-    ----------
-    business_context : str, optional
-        Static business context embedded directly into the prompt text.
-    dataset_name : str | None, optional
-        Static dataset name embedded directly into the prompt text.
-
-    Returns
-    -------
-    str
-        Prompt template string for use with Fabric ``DataFrame.ai.generate_response``.
-
-    Notes
-    -----
-    Hardcoded sections define expected JSON output schema and review posture.
-    Row placeholders injected from DataFrame rows are ``{column_name}``,
-    ``{data_type}``, ``{null_count}``, ``{distinct_count}``, and ``{row_count}``.
-    Output is suggestion-oriented and not deterministic enforcement.
-    """
-    template = _resolve_prompt_template(config, "dq_rule_candidate_template", DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE)
-    return template.replace("{dataset_name}", dataset_name or "unknown").replace("{business_context}", business_context or "")
-
-
 def build_governance_candidate_prompt(business_context="", dataset_name=None, config: FrameworkConfig | None = None) -> str:
     """Build the governance-candidate prompt for AI-assisted classification drafts.
 
@@ -178,47 +146,6 @@ def _require_fabric_ai_dataframe(df, helper_name: str):
     return ai
 
 
-def generate_dq_rule_candidates_with_fabric_ai(profile_df, business_context="", dataset_name=None, output_col="ai_dq_rule_candidate", error_col="ai_dq_rule_error", response_format="json_object", concurrency=20, config: FrameworkConfig | None = None):
-    """Append AI-suggested DQ rule candidates to a profiling DataFrame.
-
-    Use this after profiling and before rule approval to accelerate candidate
-    generation while keeping deterministic enforcement separate.
-
-
-    Parameters
-    ----------
-    profile_df : Any
-        Fabric PySpark DataFrame with an ``.ai.generate_response`` extension.
-        Expected row columns include ``column_name``, ``data_type``, ``null_count``,
-        ``distinct_count``, and ``row_count`` for prompt placeholders.
-    business_context : str, optional
-        Static context embedded in prompt text.
-    dataset_name : str | None, optional
-        Static dataset name embedded in prompt text.
-    output_col : str, default="ai_dq_rule_candidate"
-        Output column for generated JSON text.
-    error_col : str, default="ai_dq_rule_error"
-        Error column written by AI Functions.
-    response_format : str, default="json_object"
-        Fabric AI response format.
-    concurrency : int, default=20
-        Fabric AI row-level concurrency setting.
-
-    Returns
-    -------
-    Any
-        Enriched DataFrame containing AI suggestion output columns.
-
-    Notes
-    -----
-    This helper executes AI generation only and does not enforce deterministic
-    quality rules.
-    """
-    _require_fabric_ai_dataframe(profile_df, "generate_dq_rule_candidates_with_fabric_ai")
-    prompt = build_dq_rule_candidate_prompt(business_context=business_context, dataset_name=dataset_name, config=config)
-    return profile_df.ai.generate_response(prompt=prompt, is_prompt_template=True, output_col=output_col, error_col=error_col, response_format=response_format, concurrency=concurrency)
-
-
 def generate_governance_candidates_with_fabric_ai(profile_df, business_context="", dataset_name=None, output_col="ai_governance_candidate", error_col="ai_governance_error", response_format="json_object", concurrency=20, config: FrameworkConfig | None = None):
     """Execute Fabric AI Functions to append governance suggestions to a DataFrame.
 
@@ -275,37 +202,6 @@ def _compact_sample_rows(sample_rows=None) -> str:
         return json.dumps(sample_rows, ensure_ascii=False)[:3000]
     except Exception:
         return str(sample_rows)[:3000]
-
-
-def build_manual_dq_rule_prompt_package(sample_rows=None, business_context="", dataset_name=None, config: FrameworkConfig | None = None) -> dict:
-    """Build copy/paste prompt package for manual DQ candidate generation.
-
-    Parameters
-    ----------
-    sample_rows : Any, optional
-        Optional small sample context serialized compactly for prompt ferry usage.
-    business_context : str, optional
-        Static context embedded in prompt text.
-    dataset_name : str | None, optional
-        Static dataset name embedded in prompt text.
-
-    Returns
-    -------
-    dict
-        Manual package containing reusable prompt text, schema expectations, and
-        notes. Output is advisory and requires human review.
-    """
-    prompt = build_dq_rule_candidate_prompt(business_context=business_context, dataset_name=dataset_name, config=config)
-    compact = _compact_sample_rows(sample_rows)
-    return {
-        "mode": "manual_prompt_ferry",
-        "target_use": "dq_rule_candidates",
-        "prompt": prompt,
-        "full_prompt_text": f"{prompt}\n\nSample rows:\n{compact}" if compact else prompt,
-        "expected_output_schema": ["rule_id", "table_name", "column_name", "rule_type", "severity", "reason", "evidence", "needs_human_review"],
-        "notes": "Paste prompt into Copilot or another LLM, then review before storing approved deterministic rules.",
-        "sample_rows": compact,
-    }
 
 
 def build_manual_governance_prompt_package(sample_rows=None, business_context="", dataset_name=None, config: FrameworkConfig | None = None) -> dict:

@@ -70,11 +70,6 @@ Use the finder below to look up public callables.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/technical_columns/" title="Open technical_columns module page" aria-label="Open technical_columns module page">technical_columns</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Add business key and row-level SHA256 hash columns.</p>
 </article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="AI_SUGGESTABLE_DQ_RULE_TYPES" data-callable-module="data_quality" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="—">
-  <h3 class="reference-catalogue-item-name"><a href="./step-06c-pipeline-controls/AI_SUGGESTABLE_DQ_RULE_TYPES/"><code>AI_SUGGESTABLE_DQ_RULE_TYPES</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">—</p>
-</article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="assert_dq_passed" data-callable-module="data_quality" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Raise only after evidence materialization when error-severity rules fail.">
   <h3 class="reference-catalogue-item-name"><a href="./step-06d-controlled-outputs/assert_dq_passed/"><code>assert_dq_passed</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
@@ -125,21 +120,6 @@ Use the finder below to look up public callables.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/metadata/" title="Open metadata module page" aria-label="Open metadata module page">metadata</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
   <p class="reference-catalogue-item-purpose">Build a dataset-run metadata record for operational tracking.</p>
 </article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_dq_rule_candidate_prompt" data-callable-module="ai" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build the DQ-candidate prompt used in AI-assisted quality drafting.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/build_dq_rule_candidate_prompt/"><code>build_dq_rule_candidate_prompt</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Build the DQ-candidate prompt used in AI-assisted quality drafting.</p>
-</article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_dq_rule_deactivations" data-callable-module="data_quality" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build append-only inactive metadata rows for governed DQ rule deactivation.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/build_dq_rule_deactivations/"><code>build_dq_rule_deactivations</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Build append-only inactive metadata rows for governed DQ rule deactivation.</p>
-</article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_dq_rule_history" data-callable-module="data_quality" data-callable-starter-path="02_ex" data-callable-importance="Optional" data-callable-purpose="Build append-only active metadata rows for approved DQ rules.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/build_dq_rule_history/"><code>build_dq_rule_history</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
-  <p class="reference-catalogue-item-purpose">Build append-only active metadata rows for approved DQ rules.</p>
-</article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_governance_candidate_prompt" data-callable-module="ai" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build the governance-candidate prompt for AI-assisted classification drafts.">
   <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/build_governance_candidate_prompt/"><code>build_governance_candidate_prompt</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
@@ -174,11 +154,6 @@ Use the finder below to look up public callables.
   <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/build_lineage_records/"><code>build_lineage_records</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
   <p class="reference-catalogue-item-purpose">Build compact lineage records for downstream metadata sinks.</p>
-</article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_manual_dq_rule_prompt_package" data-callable-module="ai" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build copy/paste prompt package for manual DQ candidate generation.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/build_manual_dq_rule_prompt_package/"><code>build_manual_dq_rule_prompt_package</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Build copy/paste prompt package for manual DQ candidate generation.</p>
 </article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_manual_governance_prompt_package" data-callable-module="ai" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Build copy/paste prompt package for manual governance suggestion generation.">
   <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/build_manual_governance_prompt_package/"><code>build_manual_governance_prompt_package</code></a></h3>
@@ -260,6 +235,16 @@ Use the finder below to look up public callables.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/technical_columns/" title="Open technical_columns module page" aria-label="Open technical_columns module page">technical_columns</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Return framework-generated and legacy technical column names to ignore.</p>
 </article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="draft_dq_rules" data-callable-module="data_quality" data-callable-starter-path="02_ex" data-callable-importance="Optional" data-callable-purpose="Draft candidate DQ rules from metadata profiles or raw DataFrame fallback.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/draft_dq_rules/"><code>draft_dq_rules</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
+  <p class="reference-catalogue-item-purpose">Draft candidate DQ rules from metadata profiles or raw DataFrame fallback.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="enforce_dq_rules" data-callable-module="data_quality" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Enforce approved DQ rules and return structured deterministic outputs.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-06c-pipeline-controls/enforce_dq_rules/"><code>enforce_dq_rules</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Enforce approved DQ rules and return structured deterministic outputs.</p>
+</article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="enrich_lineage_steps_with_ai" data-callable-module="data_lineage" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Optionally enrich deterministic lineage steps using an AI helper callable.">
   <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/enrich_lineage_steps_with_ai/"><code>enrich_lineage_steps_with_ai</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
@@ -274,11 +259,6 @@ Use the finder below to look up public callables.
   <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/extract_classifications/"><code>extract_classifications</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Extract column classification mappings from a normalized contract.</p>
-</article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="extract_dq_rules" data-callable-module="data_quality" data-callable-starter-path="02_ex" data-callable-importance="Optional" data-callable-purpose="Extract notebook-shaped AI responses and deduplicate candidate DQ rules by ``rule_id``.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/extract_dq_rules/"><code>extract_dq_rules</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
-  <p class="reference-catalogue-item-purpose">Extract notebook-shaped AI responses and deduplicate candidate DQ rules by ``rule_id``.</p>
 </article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="extract_optional_columns" data-callable-module="data_contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Extract optional column names from a normalized contract.">
   <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/extract_optional_columns/"><code>extract_optional_columns</code></a></h3>
@@ -299,11 +279,6 @@ Use the finder below to look up public callables.
   <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/fallback_copilot_lineage_prompt/"><code>fallback_copilot_lineage_prompt</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Build a fallback Copilot prompt for manual lineage enrichment.</p>
-</article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="generate_dq_rule_candidates_with_fabric_ai" data-callable-module="ai" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Append AI-suggested DQ rule candidates to a profiling DataFrame.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/generate_dq_rule_candidates_with_fabric_ai/"><code>generate_dq_rule_candidates_with_fabric_ai</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Append AI-suggested DQ rule candidates to a profiling DataFrame.</p>
 </article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="generate_governance_candidates_with_fabric_ai" data-callable-module="ai" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Execute Fabric AI Functions to append governance suggestions to a DataFrame.">
   <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/generate_governance_candidates_with_fabric_ai/"><code>generate_governance_candidates_with_fabric_ai</code></a></h3>
@@ -365,11 +340,6 @@ Use the finder below to look up public callables.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
   <p class="reference-catalogue-item-purpose">Write a Spark DataFrame to a Fabric lakehouse Delta table.</p>
 </article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="load_active_dq_rules" data-callable-module="data_quality" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Load latest active approved rules from append-only metadata history.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-06c-pipeline-controls/load_active_dq_rules/"><code>load_active_dq_rules</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-  <p class="reference-catalogue-item-purpose">Load latest active approved rules from append-only metadata history.</p>
-</article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="load_contract_from_lakehouse" data-callable-module="data_contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Load one contract by ID/version from Fabric metadata storage.">
   <h3 class="reference-catalogue-item-name"><a href="./step-03-source-contract-ingestion-pattern/load_contract_from_lakehouse/"><code>load_contract_from_lakehouse</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
@@ -410,11 +380,6 @@ Use the finder below to look up public callables.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_profiling/" title="Open data_profiling module page" aria-label="Open data_profiling module page">data_profiling</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
   <p class="reference-catalogue-item-purpose">Profile a Spark/Fabric DataFrame into metadata-compatible metadata rows.</p>
 </article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="profile_for_dq" data-callable-module="data_quality" data-callable-starter-path="02_ex" data-callable-importance="Optional" data-callable-purpose="Profile a Spark DataFrame into one row per source column for DQ rule suggestion.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/profile_for_dq/"><code>profile_for_dq</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
-  <p class="reference-catalogue-item-purpose">Profile a Spark DataFrame into one row per source column for DQ rule suggestion.</p>
-</article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="profile_metadata_to_records" data-callable-module="data_profiling" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Convert Spark metadata profile rows into JSON-friendly dictionaries.">
   <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/profile_metadata_to_records/"><code>profile_metadata_to_records</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_profiling/" title="Open data_profiling module page" aria-label="Open data_profiling module page">data_profiling</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
@@ -440,11 +405,6 @@ Use the finder below to look up public callables.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config</span></p>
   <p class="reference-catalogue-item-purpose">Run 00_env_config smoke checks for Spark, runtime context, configured paths, notebook naming, and optional AI/IO imports.</p>
 </article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="run_dq_rules" data-callable-module="data_quality" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Run notebook-facing DQ rules and return a Spark DataFrame result.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-06c-pipeline-controls/run_dq_rules/"><code>run_dq_rules</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-  <p class="reference-catalogue-item-purpose">Run notebook-facing DQ rules and return a Spark DataFrame result.</p>
-</article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="scan_notebook_cells" data-callable-module="data_lineage" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Scan multiple notebook cells and append cell references to lineage steps.">
   <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/scan_notebook_cells/"><code>scan_notebook_cells</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
@@ -459,16 +419,6 @@ Use the finder below to look up public callables.
   <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/seed_minimal_sample_source_table/"><code>seed_minimal_sample_source_table</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
   <p class="reference-catalogue-item-purpose">Create and persist deterministic demo rows into a sample source table.</p>
-</article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="split_dq_rows" data-callable-module="data_quality" data-callable-starter-path="03_pc" data-callable-importance="Essential" data-callable-purpose="Split source rows into valid rows, quarantine rows, and one-row-per-failure evidence.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-06c-pipeline-controls/split_dq_rows/"><code>split_dq_rows</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-  <p class="reference-catalogue-item-purpose">Split source rows into valid rows, quarantine rows, and one-row-per-failure evidence.</p>
-</article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="suggest_dq_rules" data-callable-module="data_quality" data-callable-starter-path="02_ex" data-callable-importance="Optional" data-callable-purpose="Generate row-wise AI DQ suggestions using Fabric AI Functions.">
-  <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/suggest_dq_rules/"><code>suggest_dq_rules</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
-  <p class="reference-catalogue-item-purpose">Generate row-wise AI DQ suggestions using Fabric AI Functions.</p>
 </article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="summarize_drift_results" data-callable-module="drift" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Summarize schema, partition, and profile drift outcomes into one decision.">
   <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/summarize_drift_results/"><code>summarize_drift_results</code></a></h3>
@@ -519,6 +469,11 @@ Use the finder below to look up public callables.
   <h3 class="reference-catalogue-item-name"><a href="./step-07-output-profile-product-contract/write_contract_to_lakehouse/"><code>write_contract_to_lakehouse</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a> <span class="reference-catalogue-separator">·</span> <span>Essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
   <p class="reference-catalogue-item-purpose">Validate and persist contract records into Fabric metadata tables.</p>
+</article>
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_dq_rules" data-callable-module="data_quality" data-callable-starter-path="02_ex" data-callable-importance="Optional" data-callable-purpose="Validate, build, and persist approved DQ rules.">
+  <h3 class="reference-catalogue-item-name"><a href="./step-08-ai-assisted-dq-suggestions/write_dq_rules/"><code>write_dq_rules</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>Optional</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
+  <p class="reference-catalogue-item-purpose">Validate, build, and persist approved DQ rules.</p>
 </article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_governance_classifications" data-callable-module="data_governance" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Persist governance classifications to a metadata destination.">
   <h3 class="reference-catalogue-item-name"><a href="./step-09-ai-assisted-classification/write_governance_classifications/"><code>write_governance_classifications</code></a></h3>
