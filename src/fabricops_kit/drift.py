@@ -22,8 +22,6 @@ class SchemaDriftError(Exception):
     """
 
 
-VALID_ENGINES = {"spark"}
-
 
 def default_schema_drift_policy() -> dict:
     """Return default policy flags used by schema drift comparison.
@@ -106,7 +104,7 @@ def build_schema_snapshot(df, dataset_name: str = "unknown", table_name: str = "
     Parameters
     ----------
     df : Any
-        Source dataframe in pandas or Spark form.
+        Source PySpark DataFrame.
     dataset_name : str, default=\"unknown\"
         Logical dataset name stored in the snapshot.
     table_name : str, default=\"unknown\"

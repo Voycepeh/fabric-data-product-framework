@@ -3,6 +3,7 @@
 from .drift import check_partition_drift, check_profile_drift, check_schema_drift, summarize_drift_results
 from .config import (
     get_path,
+    load_fabric_config,
     setup_fabricops_notebook,
 )
 from .fabric_input_output import (
@@ -89,7 +90,6 @@ from .data_quality import (
 )
 from .dq_review import review_dq_rules, review_dq_rule_deactivations
 from .run_summary import build_run_summary, render_run_summary_markdown
-from .runtime import assert_notebook_name_valid, build_runtime_context, generate_run_id, validate_notebook_name
 from .technical_columns import add_audit_columns, add_datetime_features, add_hash_columns, default_technical_columns
 
 __version__ = "0.1.0"

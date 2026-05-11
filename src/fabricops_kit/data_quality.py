@@ -8,6 +8,22 @@ import re
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timezone
+
+
+def _resolve_action_by(action_by: str | None) -> str:
+    if action_by:
+        return str(action_by)
+    try:
+        import notebookutils.runtime as nb_runtime  # type: ignore
+        context = getattr(nb_runtime, "context", None)
+        if isinstance(context, dict):
+            return context.get("userName") or context.get("userId") or "unknown"
+        get_method = getattr(context, "get", None)
+        if callable(get_method):
+            return get_method("userName") or get_method("userId") or "unknown"
+    except Exception:
+        pass
+    return "unknown"
 from typing import Any
 
 from pyspark.sql import functions as F
@@ -151,7 +167,7 @@ def validate_dq_rules(rules: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return rules
 
 
-def build_dq_rule_history(spark, table_name: str, approved_rules: list[dict], action_by: str = "notebook_user", rule_source: str = "ai_widget_approval", action_reason: str = "Approved after human review."):
+def build_dq_rule_history(spark, table_name: str, approved_rules: list[dict], action_by: str | None = None, rule_source: str = "ai_widget_approval", action_reason: str = "Approved after human review."):
     """Build append-only active metadata rows for approved DQ rules.
 
     Parameters
@@ -181,7 +197,7 @@ def build_dq_rule_history(spark, table_name: str, approved_rules: list[dict], ac
     return spark.createDataFrame(rows)
 
 
-def build_dq_rule_deactivations(spark, table_name: str, deactivations: list[dict], action_by: str = "notebook_user", rule_source: str = "rule_deactivation_widget"):
+def build_dq_rule_deactivations(spark, table_name: str, deactivations: list[dict], action_by: str | None = None, rule_source: str = "rule_deactivation_widget"):
     """Build append-only inactive metadata rows for governed DQ rule deactivation.
 
     Parameters
@@ -428,7 +444,7 @@ def draft_dq_rules(*, profile_df=None, df=None, table_name: str, business_contex
     return extract_dq_rules(responses, table_name=table_name, response_col=output_col)
 
 
-def write_dq_rules(approved_rules, *, table_name: str, metadata_path, metadata_table: str = "METADATA_DQ_RULES", action_by: str = "notebook_user", rule_source: str = "ai_widget_approval", action_reason: str = "Approved after human review.", mode: str = "append"):
+def write_dq_rules(approved_rules, *, table_name: str, metadata_path, metadata_table: str = "METADATA_DQ_RULES", action_by: str | None = None, rule_source: str = "ai_widget_approval", action_reason: str = "Approved after human review.", mode: str = "append"):
     """Validate, build, and persist approved DQ rules."""
     validate_dq_rules(approved_rules)
     spark = SparkSession.getActiveSession()
