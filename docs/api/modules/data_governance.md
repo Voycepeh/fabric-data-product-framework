@@ -8,7 +8,7 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| — | — | No recommended entrypoints configured. | — |
+| [`write_governance_classifications`](../../reference/step-09-ai-assisted-classification/write_governance_classifications.md) | function | Persist governance classifications to a metadata destination. | [`_spark_create_governance_metadata_dataframe`](../../reference/internal/data_governance/_spark_create_governance_metadata_dataframe.md) (internal) |
 
 ## Optional callables
 
@@ -18,7 +18,6 @@
 | [`classify_column`](../../reference/step-09-ai-assisted-classification/classify_column.md) | function | Classify one column using term matching, metadata cues, and business context. | [`_match_terms`](../../reference/internal/data_governance/_match_terms.md) (internal), [`_phrase_in_text`](../../reference/internal/data_governance/_phrase_in_text.md) (internal) |
 | [`classify_columns`](../../reference/step-09-ai-assisted-classification/classify_columns.md) | function | Classify multiple columns and return normalized governance suggestions. | [`_column_name`](../../reference/internal/data_governance/_column_name.md) (internal), [`_normalize_columns`](../../reference/internal/data_governance/_normalize_columns.md) (internal) |
 | [`summarize_governance_classifications`](../../reference/step-09-ai-assisted-classification/summarize_governance_classifications.md) | function | Summarize governance classification outputs into review-friendly counts. | — |
-| [`write_governance_classifications`](../../reference/step-09-ai-assisted-classification/write_governance_classifications.md) | function | Persist governance classifications to a metadata destination. | [`_spark_create_governance_metadata_dataframe`](../../reference/internal/data_governance/_spark_create_governance_metadata_dataframe.md) (internal) |
 
 ## Related internal helpers
 

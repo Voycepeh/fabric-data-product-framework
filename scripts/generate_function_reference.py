@@ -393,7 +393,7 @@ def main() -> None:
             lines.append("No module-level internal helpers detected.")
 
         if public_in_module:
-            for s in sorted(public_in_module, key=lambda x: x.name.lower()):
+            for s in sorted([x for x in public_in_module if x.role in {"essential", "optional"}], key=lambda x: x.name.lower()):
                 expected_target = callable_docs_link(s.name, module, docs_metadata, step_slugs)
                 expected_link = f"[`{s.name}`]({expected_target})"
                 if not any(expected_link in line for line in lines):

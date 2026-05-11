@@ -8,12 +8,7 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`build_contract_column_records`](../../reference/step-07-output-profile-product-contract/build_contract_column_records.md) | function | Build normalized contract-column metadata records for persistence. | [`_now_utc_iso`](../../reference/internal/data_contracts/_now_utc_iso.md) (internal) |
-| [`build_contract_header_record`](../../reference/step-07-output-profile-product-contract/build_contract_header_record.md) | function | Build one header row for FABRICOPS_CONTRACTS. | [`_now_utc_iso`](../../reference/internal/data_contracts/_now_utc_iso.md) (internal) |
-| [`build_contract_records`](../../reference/step-07-output-profile-product-contract/build_contract_records.md) | function | Build grouped contract header, column, and rule metadata payloads. | — |
-| [`build_contract_rule_records`](../../reference/step-07-output-profile-product-contract/build_contract_rule_records.md) | function | Build quality-rule metadata records from a validated contract. | [`_now_utc_iso`](../../reference/internal/data_contracts/_now_utc_iso.md) (internal) |
 | [`build_contract_summary`](../../reference/step-07-output-profile-product-contract/build_contract_summary.md) | function | Build a concise contract summary for reviews and handover. | — |
-| [`contract_records_to_spark`](../../reference/step-07-output-profile-product-contract/contract_records_to_spark.md) | function | Convert record dictionaries into a Spark DataFrame when Spark is available. | — |
 | [`extract_business_keys`](../../reference/step-03-source-contract-ingestion-pattern/extract_business_keys.md) | function | Extract business-key column names from a normalized contract. | — |
 | [`extract_classifications`](../../reference/step-03-source-contract-ingestion-pattern/extract_classifications.md) | function | Extract column classification mappings from a normalized contract. | — |
 | [`extract_optional_columns`](../../reference/step-03-source-contract-ingestion-pattern/extract_optional_columns.md) | function | Extract optional column names from a normalized contract. | — |

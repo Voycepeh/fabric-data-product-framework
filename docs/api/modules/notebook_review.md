@@ -16,10 +16,9 @@
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
 | [`review_dq_rule_deactivations`](../../reference/step-08-ai-assisted-dq-suggestions/review_dq_rule_deactivations.md) | function | Review active DQ rules one at a time for governed deactivation actions. | [`_require_ipywidgets`](../../reference/internal/notebook_review/_require_ipywidgets.md) (internal) |
-| [`review_dq_rules`](../../reference/step-08-ai-assisted-dq-suggestions/review_dq_rules.md) | function | Review AI-suggested DQ rules sequentially with explicit approve/reject decisions. | [`_require_ipywidgets`](../../reference/internal/notebook_review/_require_ipywidgets.md) (internal) |
 
 ## Related internal helpers
 
 | Helper | Related public callables |
 |---|---|
-| [`_require_ipywidgets`](../../reference/internal/notebook_review/_require_ipywidgets.md) | [`review_dq_rule_deactivations`](../../reference/step-08-ai-assisted-dq-suggestions/review_dq_rule_deactivations.md), [`review_dq_rules`](../../reference/step-08-ai-assisted-dq-suggestions/review_dq_rules.md) |
+| [`_require_ipywidgets`](../../reference/internal/notebook_review/_require_ipywidgets.md) | [`review_dq_rule_deactivations`](../../reference/step-08-ai-assisted-dq-suggestions/review_dq_rule_deactivations.md) |

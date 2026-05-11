@@ -5,6 +5,10 @@ from .config import (
     get_path,
     load_fabric_config,
     setup_fabricops_notebook,
+    validate_framework_config,
+    bootstrap_fabric_env,
+    run_config_smoke_tests,
+    check_fabric_ai_functions_available,
 )
 from .fabric_input_output import (
     Housepath,
@@ -106,6 +110,10 @@ __all__ = [
     "load_fabric_config",
     "get_path",
     "setup_fabricops_notebook",
+    "check_fabric_ai_functions_available",
+    "run_config_smoke_tests",
+    "bootstrap_fabric_env",
+    "validate_framework_config",
     "lakehouse_table_read",
     "lakehouse_table_write",
     "lakehouse_csv_read",

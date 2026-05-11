@@ -92,7 +92,7 @@ Exploration notebook flow used to profile source data and draft advisory AI outp
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-08-ai-assisted-dq-suggestions/review_dq_rules/"><code>review_dq_rules</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/notebook_review/" title="Open notebook_review module page" aria-label="Open notebook_review module page">notebook_review</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
       <td data-label="Purpose">Review AI-suggested DQ rules sequentially with explicit approve/reject decisions.</td>
     </tr>
     <tr>

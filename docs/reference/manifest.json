@@ -145,6 +145,17 @@
       "workflow_step": "6D"
     },
     {
+      "module_name": "environment_config",
+      "visibility": "public",
+      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "bootstrap_fabric_env",
+      "callable_visibility": "public",
+      "callable_role": "essential",
+      "workflow_step": "2B"
+    },
+    {
       "module_name": "data_profiling",
       "visibility": "public",
       "module_summary": "Source/output profiling and metadata conversion helpers.",
@@ -163,7 +174,7 @@
       "sidebar_include": true,
       "callable_name": "build_contract_column_records",
       "callable_visibility": "public",
-      "callable_role": "essential",
+      "callable_role": "internal",
       "workflow_step": 7
     },
     {
@@ -174,7 +185,7 @@
       "sidebar_include": true,
       "callable_name": "build_contract_header_record",
       "callable_visibility": "public",
-      "callable_role": "essential",
+      "callable_role": "internal",
       "workflow_step": 7
     },
     {
@@ -185,7 +196,7 @@
       "sidebar_include": true,
       "callable_name": "build_contract_records",
       "callable_visibility": "public",
-      "callable_role": "essential",
+      "callable_role": "internal",
       "workflow_step": 7
     },
     {
@@ -196,7 +207,7 @@
       "sidebar_include": true,
       "callable_name": "build_contract_rule_records",
       "callable_visibility": "public",
-      "callable_role": "essential",
+      "callable_role": "internal",
       "workflow_step": 7
     },
     {
@@ -273,7 +284,7 @@
       "sidebar_include": true,
       "callable_name": "build_lineage_handover_markdown",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 10
     },
     {
@@ -284,7 +295,7 @@
       "sidebar_include": true,
       "callable_name": "build_lineage_record_from_steps",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "internal",
       "workflow_step": 10
     },
     {
@@ -295,7 +306,7 @@
       "sidebar_include": true,
       "callable_name": "build_lineage_records",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 10
     },
     {
@@ -363,6 +374,17 @@
       "callable_visibility": "public",
       "callable_role": "essential",
       "workflow_step": 4
+    },
+    {
+      "module_name": "environment_config",
+      "visibility": "public",
+      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "check_fabric_ai_functions_available",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "workflow_step": "2B"
     },
     {
       "module_name": "data_drift",
@@ -438,7 +460,7 @@
       "sidebar_include": true,
       "callable_name": "contract_records_to_spark",
       "callable_visibility": "public",
-      "callable_role": "essential",
+      "callable_role": "internal",
       "workflow_step": 7
     },
     {
@@ -471,7 +493,7 @@
       "sidebar_include": true,
       "callable_name": "draft_dq_rules",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 8
     },
     {
@@ -493,7 +515,7 @@
       "sidebar_include": true,
       "callable_name": "enrich_lineage_steps_with_ai",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "internal",
       "workflow_step": 10
     },
     {
@@ -559,7 +581,7 @@
       "sidebar_include": true,
       "callable_name": "fallback_copilot_lineage_prompt",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "internal",
       "workflow_step": 10
     },
     {
@@ -805,15 +827,26 @@
       "workflow_step": 8
     },
     {
-      "module_name": "notebook_review",
-      "visibility": "internal",
-      "module_summary": "Human-in-the-loop DQ review helpers.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
+      "module_name": "data_quality",
+      "visibility": "public",
+      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
       "callable_name": "review_dq_rules",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 8
+    },
+    {
+      "module_name": "environment_config",
+      "visibility": "public",
+      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "run_config_smoke_tests",
+      "callable_visibility": "public",
+      "callable_role": "essential",
+      "workflow_step": "2B"
     },
     {
       "module_name": "data_lineage",
@@ -900,8 +933,19 @@
       "sidebar_include": true,
       "callable_name": "validate_dq_rules",
       "callable_visibility": "public",
-      "callable_role": "essential",
+      "callable_role": "optional",
       "workflow_step": "6C"
+    },
+    {
+      "module_name": "environment_config",
+      "visibility": "public",
+      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "validate_framework_config",
+      "callable_visibility": "public",
+      "callable_role": "essential",
+      "workflow_step": "2A"
     },
     {
       "module_name": "data_lineage",
@@ -955,7 +999,7 @@
       "sidebar_include": true,
       "callable_name": "write_dq_rules",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 8
     },
     {
@@ -966,7 +1010,7 @@
       "sidebar_include": true,
       "callable_name": "write_governance_classifications",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 9
     },
     {
