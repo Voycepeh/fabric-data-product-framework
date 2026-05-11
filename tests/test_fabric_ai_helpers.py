@@ -3,13 +3,13 @@ import builtins
 import pytest
 
 from fabricops_kit.config import (
-    create_ai_prompt_config,
-    create_framework_config,
-    create_governance_config,
-    create_lineage_config,
-    create_notebook_runtime_config,
-    create_path_config,
-    create_quality_config,
+    AIPromptConfig,
+    FrameworkConfig,
+    GovernanceConfig,
+    LineageConfig,
+    NotebookRuntimeConfig,
+    PathConfig,
+    QualityConfig,
 )
 from fabricops_kit.ai import (
     build_dq_rule_candidate_prompt,
@@ -107,17 +107,17 @@ def test_parse_manual_ai_json_response_success_and_failure():
 
 
 def _build_config():
-    return create_framework_config(
-        path_config=create_path_config({"Sandbox": {"Source": type("H", (), {"workspace_id": "w", "house_id": "h", "house_name": "n", "root": "r"})()}}),
-        notebook_runtime_config=create_notebook_runtime_config(["00_"]),
-        ai_prompt_config=create_ai_prompt_config(
+    return FrameworkConfig(
+        path_config=PathConfig({"Sandbox": {"Source": type("H", (), {"workspace_id": "w", "house_id": "h", "house_name": "n", "root": "r"})()}}),
+        notebook_runtime_config=NotebookRuntimeConfig(["00_"]),
+        ai_prompt_config=AIPromptConfig(
             dq_rule_candidate_template="DQ {dataset_name} {business_context} {column_name}",
             governance_candidate_template="GOV {dataset_name} {business_context} {column_name}",
             handover_summary_template="HO {business_context} {summary}",
         ),
-        quality_config=create_quality_config(),
-        governance_config=create_governance_config(),
-        lineage_config=create_lineage_config(),
+        quality_config=QualityConfig(),
+        governance_config=GovernanceConfig(),
+        lineage_config=LineageConfig(),
     )
 
 

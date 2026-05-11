@@ -68,23 +68,23 @@ def test_build_runtime_context_generates_run_id_using_dataset_prefix():
 
 def test_validate_notebook_name_reads_prefixes_from_framework_config():
     from fabricops_kit.config import (
-        create_ai_prompt_config,
-        create_framework_config,
-        create_governance_config,
-        create_lineage_config,
-        create_notebook_runtime_config,
-        create_path_config,
-        create_quality_config,
+        AIPromptConfig,
+        FrameworkConfig,
+        GovernanceConfig,
+        LineageConfig,
+        NotebookRuntimeConfig,
+        PathConfig,
+        QualityConfig,
     )
     from fabricops_kit.fabric_io import Housepath
 
-    config = create_framework_config(
-        path_config=create_path_config({"Sandbox": {"Source": Housepath("w", "h", "n", "abfss://x")}}),
-        notebook_runtime_config=create_notebook_runtime_config(["custom_"]),
-        ai_prompt_config=create_ai_prompt_config(dq_rule_candidate_template="a", governance_candidate_template="b", handover_summary_template="c"),
-        quality_config=create_quality_config(),
-        governance_config=create_governance_config(),
-        lineage_config=create_lineage_config(),
+    config = FrameworkConfig(
+        path_config=PathConfig({"Sandbox": {"Source": Housepath("w", "h", "n", "abfss://x")}}),
+        notebook_runtime_config=NotebookRuntimeConfig(["custom_"]),
+        ai_prompt_config=AIPromptConfig(dq_rule_candidate_template="a", governance_candidate_template="b", handover_summary_template="c"),
+        quality_config=QualityConfig(),
+        governance_config=GovernanceConfig(),
+        lineage_config=LineageConfig(),
     )
 
     assert validate_notebook_name("custom_pipeline", config=config) == []

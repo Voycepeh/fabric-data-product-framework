@@ -324,55 +324,6 @@ Use the finder below to look up public callables.
       <td data-label="Importance">Essential</td>
       <td data-label="Purpose">Convert record dictionaries into a Spark DataFrame when Spark is available.</td>
     </tr>
-    <tr data-callable-row="true" data-callable-name="create_ai_prompt_config" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Create the AI prompt-template configuration used by FabricOps.">
-      <td data-label="Function / class"><a href="./step-02a-shared-runtime-config/create_ai_prompt_config/"><code>create_ai_prompt_config</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Starter path">00_env_config</td>
-      <td data-label="Importance">Essential</td>
-      <td data-label="Purpose">Create the AI prompt-template configuration used by FabricOps.</td>
-    </tr>
-    <tr data-callable-row="true" data-callable-name="create_framework_config" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Create the top-level FabricOps framework configuration contract.">
-      <td data-label="Function / class"><a href="./step-02a-shared-runtime-config/create_framework_config/"><code>create_framework_config</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Starter path">00_env_config</td>
-      <td data-label="Importance">Essential</td>
-      <td data-label="Purpose">Create the top-level FabricOps framework configuration contract.</td>
-    </tr>
-    <tr data-callable-row="true" data-callable-name="create_governance_config" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Create governance policy defaults for FabricOps runtime checks.">
-      <td data-label="Function / class"><a href="./step-02a-shared-runtime-config/create_governance_config/"><code>create_governance_config</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Starter path">00_env_config</td>
-      <td data-label="Importance">Essential</td>
-      <td data-label="Purpose">Create governance policy defaults for FabricOps runtime checks.</td>
-    </tr>
-    <tr data-callable-row="true" data-callable-name="create_lineage_config" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Create lineage capture defaults for FabricOps handover traceability.">
-      <td data-label="Function / class"><a href="./step-02a-shared-runtime-config/create_lineage_config/"><code>create_lineage_config</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Starter path">00_env_config</td>
-      <td data-label="Importance">Essential</td>
-      <td data-label="Purpose">Create lineage capture defaults for FabricOps handover traceability.</td>
-    </tr>
-    <tr data-callable-row="true" data-callable-name="create_notebook_runtime_config" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Create notebook naming-policy configuration for runtime guards.">
-      <td data-label="Function / class"><a href="./step-02a-shared-runtime-config/create_notebook_runtime_config/"><code>create_notebook_runtime_config</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Starter path">00_env_config</td>
-      <td data-label="Importance">Essential</td>
-      <td data-label="Purpose">Create notebook naming-policy configuration for runtime guards.</td>
-    </tr>
-    <tr data-callable-row="true" data-callable-name="create_path_config" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Create environment-to-target routing used by Fabric IO helpers.">
-      <td data-label="Function / class"><a href="./step-02a-shared-runtime-config/create_path_config/"><code>create_path_config</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Starter path">00_env_config</td>
-      <td data-label="Importance">Essential</td>
-      <td data-label="Purpose">Create environment-to-target routing used by Fabric IO helpers.</td>
-    </tr>
-    <tr data-callable-row="true" data-callable-name="create_quality_config" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Create the default quality policy used during FabricOps checks.">
-      <td data-label="Function / class"><a href="./step-02a-shared-runtime-config/create_quality_config/"><code>create_quality_config</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Starter path">00_env_config</td>
-      <td data-label="Importance">Essential</td>
-      <td data-label="Purpose">Create the default quality policy used during FabricOps checks.</td>
-    </tr>
     <tr data-callable-row="true" data-callable-name="DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE" data-callable-module="data_quality" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Default prompt template used to draft candidate DQ rules.">
       <td data-label="Function / class"><a href="./step-08-ai-assisted-dq-suggestions/DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE/"><code>DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
