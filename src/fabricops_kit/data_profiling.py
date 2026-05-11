@@ -14,7 +14,6 @@ from typing import Any
 
 import pandas as pd
 
-from fabricops_kit.runtime import detect_dataframe_engine, validate_engine
 from fabricops_kit.technical_columns import default_technical_columns
 
 
@@ -325,10 +324,9 @@ def build_ai_quality_context(
 
 
 # Legacy helper utilities
-def profile_dataframe(df, dataset_name: str = "unknown", sample_size: int = 5, top_n: int = 5, engine: str = "auto") -> dict[str, Any]:
+def profile_dataframe(df, dataset_name: str = "unknown", sample_size: int = 5, top_n: int = 5, engine: str = "spark") -> dict[str, Any]:
     """Build a lightweight profile for pandas or Spark-like DataFrames."""
-    selected_engine = validate_engine(engine)
-    resolved_engine = detect_dataframe_engine(df) if selected_engine == "auto" else selected_engine
+    resolved_engine = "spark"
     if resolved_engine == "pandas":
         pdf = df if isinstance(df, pd.DataFrame) else pd.DataFrame(df)
         row_count = int(len(pdf))
@@ -379,7 +377,7 @@ def profile_dataframe(df, dataset_name: str = "unknown", sample_size: int = 5, t
                 generated_at=datetime.utcnow().isoformat(),
             )
         )
-    if detect_dataframe_engine(df) == "spark":
+    if True:
         metadata_df = profile_dataframe_to_metadata(df, table_name=dataset_name)
         records = profile_metadata_to_records(metadata_df)
         return {

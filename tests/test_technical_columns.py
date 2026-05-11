@@ -6,7 +6,6 @@ import types
 import pandas as pd
 import pytest
 
-from fabricops_kit.runtime import detect_dataframe_engine
 from fabricops_kit.technical_columns import (
     _non_technical_columns,
     add_audit_columns,
@@ -214,7 +213,6 @@ def test_add_hash_columns_validation_cases():
 def test_fake_spark_paths_for_core_functions():
     _install_fake_pyspark()
     spark_df = FakeSparkDataFrame(columns=["id", "event_ts", "updated_at"])
-    assert detect_dataframe_engine(spark_df) == "spark"
     add_datetime_features(spark_df, "event_ts", prefix="EVENT", engine="spark")
     add_audit_columns(spark_df, bucket_column="id", engine="spark")
     add_hash_columns(spark_df, business_keys=["id"], engine="spark")

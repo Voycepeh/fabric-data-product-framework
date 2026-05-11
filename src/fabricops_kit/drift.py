@@ -22,18 +22,7 @@ class SchemaDriftError(Exception):
     """
 
 
-class UnsupportedDataFrameEngineError(Exception):
-    """Unsupporteddataframeengineerror.
-
-    Public class used by the framework API for `UnsupportedDataFrameEngineError`.
-
-    Examples
-    --------
-    >>> UnsupportedDataFrameEngineError(... )
-    """
-
-
-VALID_ENGINES = {"auto", "pandas", "spark"}
+VALID_ENGINES = {"spark"}
 
 
 def default_schema_drift_policy() -> dict:
@@ -53,37 +42,6 @@ def default_schema_drift_policy() -> dict:
         "warn_on_nullable_change": True,
         "warn_on_ordinal_change": False,
     }
-
-
-def detect_dataframe_engine(df) -> str:
-    """Detect whether the dataframe-like input is pandas or Spark.
-
-    Parameters
-    ----------
-    df : Any
-        Dataframe-like object to inspect.
-
-    Returns
-    -------
-    str
-        ``\"pandas\"`` for pandas-style inputs, or ``\"spark\"`` for PySpark-style inputs.
-
-    Raises
-    ------
-    UnsupportedDataFrameEngineError
-        If the input does not match supported dataframe interfaces.
-    """
-    module_name = type(df).__module__
-    if module_name.startswith("pandas") and hasattr(df, "dtypes") and hasattr(df, "columns"):
-        return "pandas"
-
-    has_spark_shape = hasattr(df, "schema") and hasattr(df, "columns") and hasattr(getattr(df, "schema"), "fields")
-    if module_name.startswith("pyspark.sql") or has_spark_shape:
-        return "spark"
-
-    raise UnsupportedDataFrameEngineError(
-        f"Unsupported dataframe engine for type '{type(df).__name__}' from module '{module_name}'."
-    )
 
 
 def _column_hash(column_name: str, ordinal_position: int, data_type: str, nullable: bool) -> str:
@@ -142,7 +100,7 @@ def _build_spark_schema_snapshot(df, dataset_name: str, table_name: str) -> dict
     }
 
 
-def build_schema_snapshot(df, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "auto") -> dict:
+def build_schema_snapshot(df, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "spark") -> dict:
     """Build a schema snapshot with column-level attributes and hashes.
 
     Parameters
@@ -168,17 +126,7 @@ def build_schema_snapshot(df, dataset_name: str = "unknown", table_name: str = "
     UnsupportedDataFrameEngineError
         If engine auto-detection cannot resolve a supported dataframe type.
     """
-    if engine not in VALID_ENGINES:
-        raise ValueError(f"Unsupported engine '{engine}'. Expected one of: {sorted(VALID_ENGINES)}")
-
-    resolved_engine = detect_dataframe_engine(df) if engine == "auto" else engine
-
-    if resolved_engine == "pandas":
-        return _build_pandas_schema_snapshot(df, dataset_name=dataset_name, table_name=table_name)
-    if resolved_engine == "spark":
-        return _build_spark_schema_snapshot(df, dataset_name=dataset_name, table_name=table_name)
-
-    raise UnsupportedDataFrameEngineError(f"Unable to build snapshot for engine '{resolved_engine}'.")
+    return _build_spark_schema_snapshot(df, dataset_name=dataset_name, table_name=table_name)
 
 
 def _resolve_change_behavior(is_warning: bool, is_blocking: bool) -> tuple[str, str]:
@@ -774,7 +722,6 @@ from datetime import date, datetime, timedelta, timezone
 import hashlib
 from typing import Any
 
-from fabricops_kit.runtime import detect_dataframe_engine, validate_engine
 from fabricops_kit.data_profiling import to_jsonable
 
 
@@ -965,9 +912,7 @@ def build_partition_snapshot(df, *, dataset_name: str = "unknown", table_name: s
         --------
         >>> build_partition_snapshot(...)
         """
-    selected_engine = validate_engine(engine)
-    if selected_engine == "auto":
-        selected_engine = detect_dataframe_engine(df)
+    selected_engine = "spark"
 
     columns = set(getattr(df, "columns", []))
     if partition_column not in columns:

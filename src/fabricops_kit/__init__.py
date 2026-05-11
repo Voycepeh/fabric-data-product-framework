@@ -2,11 +2,8 @@
 
 from .drift import check_partition_drift, check_profile_drift, check_schema_drift, summarize_drift_results
 from .config import (
-    bootstrap_fabric_env,
-    check_fabric_ai_functions_available,
     get_path,
-    run_config_smoke_tests,
-    validate_framework_config,
+    setup_fabricops_notebook,
 )
 from .fabric_input_output import (
     Housepath,
@@ -15,7 +12,6 @@ from .fabric_input_output import (
     lakehouse_parquet_read_as_spark,
     lakehouse_table_read,
     lakehouse_table_write,
-    load_fabric_config,
     warehouse_read,
     warehouse_write,
     seed_minimal_sample_source_table,
@@ -105,12 +101,9 @@ __all__ = [
     "write_dq_rules",
     "enforce_dq_rules",
     "Housepath",
-    "validate_framework_config",
-    "bootstrap_fabric_env",
-    "run_config_smoke_tests",
-    "check_fabric_ai_functions_available",
     "load_fabric_config",
     "get_path",
+    "setup_fabricops_notebook",
     "lakehouse_table_read",
     "lakehouse_table_write",
     "lakehouse_csv_read",
@@ -119,10 +112,6 @@ __all__ = [
     "warehouse_read",
     "warehouse_write",
     "seed_minimal_sample_source_table",
-    "generate_run_id",
-    "build_runtime_context",
-    "validate_notebook_name",
-    "assert_notebook_name_valid",
     "profile_dataframe",
     "profile_dataframe_to_metadata",
     "profile_metadata_to_records",

@@ -341,6 +341,46 @@ class ConfigBootstrapResult:
     readiness_status: str
 
 
+@dataclass(frozen=True)
+class NotebookSetupContext:
+    """Consolidated startup context returned by :func:`setup_fabricops_notebook`.
+
+    Parameters
+    ----------
+    run_id : str
+        Unique run identifier generated for this notebook startup.
+    notebook_name : str | None
+        Notebook name resolved from runtime context or caller input.
+    workspace_name : str | None
+        Fabric workspace name when runtime context is available.
+    user_name : str | None
+        Active Fabric user name when runtime context is available.
+    environment : str
+        Selected environment key used for path resolution.
+    paths : dict[str, Any]
+        Resolved environment target mappings keyed by target name.
+    ai_status : dict[str, Any]
+        AI availability/configuration status payload.
+    validation_results : list[ConfigSmokeCheckResult]
+        Startup validation checks executed during setup.
+    runtime_metadata : dict[str, Any]
+        Raw runtime metadata for troubleshooting and logging.
+    readiness_status : str
+        Overall readiness status derived from validation checks.
+    """
+
+    run_id: str
+    notebook_name: str | None
+    workspace_name: str | None
+    user_name: str | None
+    environment: str
+    paths: dict[str, Any]
+    ai_status: dict[str, Any]
+    validation_results: list[ConfigSmokeCheckResult]
+    runtime_metadata: dict[str, Any]
+    readiness_status: str
+
+
 def validate_framework_config(config: FrameworkConfig | dict[str, Any]) -> FrameworkConfig:
     """Validate and normalize framework configuration input.
 
@@ -672,6 +712,85 @@ def bootstrap_fabric_env(
     )
 
 
+
+
+def setup_fabricops_notebook(
+    config: FrameworkConfig | dict[str, Any],
+    env: str = "Sandbox",
+    required_targets: list[str] | None = None,
+    notebook_name: str | None = None,
+    run_id_prefix: str = "run",
+    check_ai: bool = True,
+    configure_ai: bool = False,
+    local_fallback_name: str | None = None,
+) -> NotebookSetupContext:
+    """Run consolidated FabricOps startup for exploration and pipeline notebooks.
+
+    Parameters
+    ----------
+    config : FrameworkConfig | dict[str, Any]
+        Framework configuration created in ``00_env_config``.
+    env : str, default="Sandbox"
+        Environment key used to resolve configured targets.
+    required_targets : list[str] | None, optional
+        Required target names for the selected environment.
+    notebook_name : str | None, optional
+        Notebook name override for naming validation and runtime metadata.
+    run_id_prefix : str, default="run"
+        Prefix used when generating a new run id.
+    check_ai : bool, default=True
+        Whether to check optional Fabric AI availability.
+    configure_ai : bool, default=False
+        Whether to configure Fabric AI helpers when available.
+    local_fallback_name : str | None, optional
+        Local fallback notebook name used outside Fabric runtime.
+
+    Returns
+    -------
+    NotebookSetupContext
+        Startup context with resolved config, runtime metadata, run id, and checks.
+    """
+    from .ai import configure_fabric_ai_functions
+    from .runtime import generate_run_id, validate_notebook_name
+
+    normalized = load_fabric_config(config)
+    required_targets = required_targets or ["Source", "Unified"]
+    resolved_paths = {target: get_path(env=env, target=target, config=normalized) for target in required_targets}
+
+    runtime_meta = _get_fabric_runtime_metadata(notebook_name=notebook_name)
+    resolved_notebook_name = notebook_name or runtime_meta.get("notebook_name") or local_fallback_name
+
+    name_errors = validate_notebook_name(name=resolved_notebook_name, config=normalized, local_fallback_name=local_fallback_name)
+    name_check = ConfigSmokeCheckResult("notebook_naming", "pass" if not name_errors else "fail", "; ".join(name_errors) or "Notebook name is valid.")
+
+    ai_status = check_fabric_ai_functions_available() if check_ai else {"available": None, "message": "AI check disabled."}
+    if configure_ai and check_ai and ai_status.get("available"):
+        ai_status = {**ai_status, **configure_fabric_ai_functions()}
+
+    checks = run_config_smoke_tests(
+        config=normalized,
+        env=env,
+        required_targets=required_targets,
+        check_ai=check_ai,
+        notebook_name=resolved_notebook_name,
+        ai_result=ai_status,
+    )
+    checks = [c for c in checks if c.name != "notebook_naming"] + [name_check]
+
+    readiness_status = "ready" if all(r.status in {"pass", "warn", "skipped"} for r in checks) else "not_ready"
+
+    return NotebookSetupContext(
+        run_id=generate_run_id(run_id_prefix),
+        notebook_name=resolved_notebook_name,
+        workspace_name=runtime_meta.get("workspace_name"),
+        user_name=runtime_meta.get("user_name"),
+        environment=env,
+        paths=resolved_paths,
+        ai_status=ai_status,
+        validation_results=checks,
+        runtime_metadata=runtime_meta,
+        readiness_status=readiness_status,
+    )
 def check_fabric_ai_functions_available() -> dict[str, Any]:
     """Check whether Fabric AI Functions are available in the current runtime.
 

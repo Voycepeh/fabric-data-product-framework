@@ -13,7 +13,6 @@ import uuid
 
 import pandas as pd
 
-from fabricops_kit.runtime import detect_dataframe_engine, validate_engine
 
 
 def default_technical_columns() -> list[str]:
@@ -64,8 +63,7 @@ def default_technical_columns() -> list[str]:
 
 
 def _resolve_engine(df: Any, engine: str) -> str:
-    selected_engine = validate_engine(engine)
-    return detect_dataframe_engine(df) if selected_engine == "auto" else selected_engine
+    return "spark"
 
 
 def _assert_columns_exist(df: Any, columns: list[str]) -> None:
@@ -122,7 +120,7 @@ def add_datetime_features(
     Parameters
     ----------
     df : Any
-        Input pandas or Spark DataFrame.
+        Input PySpark DataFrame.
     datetime_column : str
         Source UTC datetime column.
     prefix : str | None, optional
@@ -140,7 +138,7 @@ def add_datetime_features(
     include_30_min_block : bool, default=True
         Whether to add ``{PREFIX}_TIME_BLOCK_30_MIN``.
     engine : str, default="auto"
-        Execution engine (``auto``, ``pandas``, or ``spark``).
+        Execution mode placeholder retained for compatibility; PySpark DataFrame is expected.
 
     Returns
     -------
@@ -223,7 +221,7 @@ def add_audit_columns(
     Parameters
     ----------
     df : Any
-        Input pandas or Spark DataFrame.
+        Input PySpark DataFrame.
     run_id : str | None, optional
         Pipeline run identifier. If omitted, a UUID is generated.
     pipeline_name : str | None, optional
@@ -249,7 +247,7 @@ def add_audit_columns(
     include_row_ingest_id : bool, default=True
         Whether to add ``_row_ingest_id``.
     engine : str, default="auto"
-        Execution engine (``auto``, ``pandas``, or ``spark``).
+        Execution mode placeholder retained for compatibility; PySpark DataFrame is expected.
 
     Returns
     -------
@@ -361,7 +359,7 @@ def add_hash_columns(
     Parameters
     ----------
     df : Any
-        Input pandas or Spark DataFrame.
+        Input PySpark DataFrame.
     business_keys : list[str] | None, optional
         Business key columns used to build ``_business_key_hash``.
     row_hash_columns : list[str] | None, optional
@@ -371,7 +369,7 @@ def add_hash_columns(
     include_row_hash : bool, default=True
         Whether to add ``_row_hash``.
     engine : str, default="auto"
-        Execution engine (``auto``, ``pandas``, or ``spark``).
+        Execution mode placeholder retained for compatibility; PySpark DataFrame is expected.
 
     Returns
     -------
