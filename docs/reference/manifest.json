@@ -50,13 +50,6 @@
       "sidebar_include": true
     },
     {
-      "module_name": "runtime_context",
-      "visibility": "internal",
-      "module_summary": "Notebook runtime naming and context utilities.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false
-    },
-    {
       "module_name": "data_drift",
       "visibility": "internal",
       "module_summary": "Schema/profile/partition drift checks supporting notebook validation.",

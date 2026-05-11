@@ -27,5 +27,7 @@ No advanced helpers listed for this module.
 | [`_format_error_path`](../../reference/internal/config/_format_error_path.md) | — |
 | [`_get_fabric_runtime_metadata`](../../reference/internal/config/_get_fabric_runtime_metadata.md) | — |
 | [`_load_schema`](../../reference/internal/config/_load_schema.md) | — |
+| [`_normalize_name`](../../reference/internal/config/_normalize_name.md) | — |
 | [`_run_config_smoke_tests`](../../reference/internal/config/_run_config_smoke_tests.md) | [`setup_fabricops_notebook`](../../reference/step-02b-notebook-startup-checks/setup_fabricops_notebook.md) |
 | [`_validate_framework_config`](../../reference/internal/config/_validate_framework_config.md) | [`load_fabric_config`](../../reference/step-02a-shared-runtime-config/load_fabric_config.md) |
+| [`_validate_notebook_name`](../../reference/internal/config/_validate_notebook_name.md) | — |

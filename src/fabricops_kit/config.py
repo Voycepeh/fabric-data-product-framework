@@ -527,6 +527,24 @@ def get_path(env: str, target: str, config: FrameworkConfig | PathConfig | None)
     return paths[env][target]
 
 
+
+def _normalize_name(value: str) -> str:
+    return "_".join(str(value or "").strip().lower().split())
+
+
+def _validate_notebook_name(notebook_name: str, config: FrameworkConfig | None = None) -> list[str]:
+    name = _normalize_name(notebook_name)
+    patterns = [
+        r"^00_env_config$",
+        r"^01_data_sharing_agreement_[a-z0-9_]+$",
+        r"^02_ex_[a-z0-9_]+_[a-z0-9_]+$",
+        r"^03_pc_[a-z0-9_]+_[a-z0-9_]+$",
+    ]
+    if any(__import__("re").match(p, name) for p in patterns):
+        return []
+    return ["Notebook name does not match accepted FabricOps naming patterns."]
+
+
 def _run_config_smoke_tests(
     config: FrameworkConfig,
     env: str = "Sandbox",
@@ -584,8 +602,6 @@ def _run_config_smoke_tests(
     >>> any(c.status == "fail" for c in checks)
     False
     """
-    from .runtime import validate_notebook_name
-
     results: list[ConfigSmokeCheckResult] = []
     required_targets = required_targets or ["Source", "Unified"]
     spark_ready, spark_message = _check_spark_session()
@@ -609,7 +625,7 @@ def _run_config_smoke_tests(
         results.append(ConfigSmokeCheckResult("path_resolution", "fail", str(exc)))
 
     if notebook_name:
-        errors = validate_notebook_name(notebook_name, config=config)
+        errors = _validate_notebook_name(notebook_name, config=config)
         results.append(ConfigSmokeCheckResult("notebook_naming", "pass" if not errors else "fail", "; ".join(errors) or "Notebook name is valid."))
     else:
         results.append(ConfigSmokeCheckResult("notebook_naming", "skipped", "Notebook name check skipped."))
