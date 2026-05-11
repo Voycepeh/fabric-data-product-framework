@@ -180,3 +180,9 @@ PY
 - Preferred wording: **governed, quality-checked, AI-ready notebooks in Microsoft Fabric**.
 - Avoid reintroducing **FabricOps Starter Kit** as the public-facing brand.
 - Do not position the project as a full data product platform.
+
+## Canonical defaults in templates
+
+- Notebook templates must not duplicate maintained package defaults when a canonical default already exists in `src/fabricops_kit/`.
+- When defaults are intentionally customizable, templates should import the canonical default and optionally override it, instead of retyping default values inline.
+- Apply this rule especially to AI prompt templates, config defaults, and generated docs metadata defaults.
