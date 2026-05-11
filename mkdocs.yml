@@ -22,6 +22,7 @@ nav:
   - Functions:
       - Function Reference: reference/index.md
       - Modules:
+      # AUTO-GENERATED-MODULES-START
           - environment_config: api/modules/environment_config.md
           - fabric_input_output: api/modules/fabric_input_output.md
           - data_profiling: api/modules/data_profiling.md
@@ -29,6 +30,7 @@ nav:
           - data_quality: api/modules/data_quality.md
           - data_governance: api/modules/data_governance.md
           - data_lineage: api/modules/data_lineage.md
+            # AUTO-GENERATED-MODULES-END
   - Lifecycle Operating Model: lifecycle-operating-model.md
   - AI-Assisted Data Quality: data-quality-rules-system.md
   - Notebook Structure:

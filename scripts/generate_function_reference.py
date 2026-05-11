@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ast
 from dataclasses import dataclass
+import json
 from pathlib import Path
 from typing import Any
 
@@ -13,6 +14,8 @@ DOCS_METADATA_PATH = PKG_DIR / "docs_metadata.py"
 REFERENCE_PATH = ROOT / "docs" / "reference" / "index.md"
 NOTEBOOK_STRUCTURE_DIR = ROOT / "docs" / "notebook-structure"
 MODULE_DIR = ROOT / "docs" / "api" / "modules"
+MKDOCS_PATH = ROOT / "mkdocs.yml"
+MANIFEST_PATH = ROOT / "docs" / "reference" / "manifest.json"
 
 PUBLIC_MODULE_PREFERRED_NAMES = {
     "config": "environment_config",
@@ -197,6 +200,18 @@ def parse_template_flow_docs() -> list[dict[str, Any]]:
     raise RuntimeError("Could not parse TEMPLATE_FLOW_DOCS from docs_metadata.py")
 
 
+def parse_module_docs_metadata() -> list[dict[str, Any]]:
+    tree = ast.parse(DOCS_METADATA_PATH.read_text(encoding="utf-8"))
+    for node in tree.body:
+        is_assign = isinstance(node, ast.Assign) and any(
+            isinstance(t, ast.Name) and t.id == "MODULE_DOCS_METADATA" for t in node.targets
+        )
+        is_annassign = isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and node.target.id == "MODULE_DOCS_METADATA"
+        if (is_assign or is_annassign) and node.value is not None:
+            return ast.literal_eval(node.value)
+    raise RuntimeError("Could not parse MODULE_DOCS_METADATA from docs_metadata.py")
+
+
 def internal_helper_link(actual_module: str, helper: str) -> str:
     """Return docs-relative link target for an internal helper page."""
     return f"../../reference/internal/{actual_module}/{helper}.md"
@@ -238,6 +253,7 @@ def main() -> None:
     step_docs = parse_workflow_step_docs()
     step_slugs = {str(step["number"]): step["slug"] for step in step_docs}
     template_flow_docs = parse_template_flow_docs()
+    module_docs_metadata = parse_module_docs_metadata()
 
     missing_metadata = sorted(name for name in public if name not in docs_metadata)
     if missing_metadata:
@@ -286,6 +302,7 @@ def main() -> None:
         if symbol.importance not in {"Essential", "Optional"}:
             raise RuntimeError(f"Invalid importance {symbol.importance!r} for {symbol.name}; expected Essential or Optional")
     MODULE_DIR.mkdir(parents=True, exist_ok=True)
+    module_manifest = {row["module_name"]: row for row in module_docs_metadata}
     module_index_lines = ["# Module API Catalogue", "", "Function Reference/workflow pages are the primary entrypoint. Module pages below are secondary technical references.", "", "Short-form modules remain import-compatible aliases but are intentionally hidden from this user-facing catalogue.", ""]
     all_doc_modules = sorted(set(VISIBLE_PUBLIC_MODULES + HIDDEN_SUPPORTING_MODULES))
     for module in all_doc_modules:
@@ -378,10 +395,43 @@ def main() -> None:
         if any(line.strip().startswith("::: fabricops_kit.") for line in lines):
             raise RuntimeError(f"Mkdocstrings directives should not be rendered on module page for {module}")
         module_md.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
-        if module in VISIBLE_PUBLIC_MODULES:
+        if module_manifest.get(module, {}).get("sidebar_include") and module_manifest.get(module, {}).get("visibility") == "public":
             module_index_lines.append(f"- [`{module}`]({module}.md)")
 
     (MODULE_DIR / "index.md").write_text("\n".join(module_index_lines) + "\n", encoding="utf-8", newline="\n")
+    sidebar_modules = [m["module_name"] for m in module_docs_metadata if m["visibility"] == "public" and m["sidebar_include"]]
+    mkdocs_text = MKDOCS_PATH.read_text(encoding="utf-8")
+    start_marker = "      # AUTO-GENERATED-MODULES-START"
+    end_marker = "      # AUTO-GENERATED-MODULES-END"
+    if start_marker in mkdocs_text and end_marker in mkdocs_text:
+        generated = "\n".join([f"          - {m}: api/modules/{m}.md" for m in sidebar_modules])
+        before, rest = mkdocs_text.split(start_marker, 1)
+        middle, after = rest.split(end_marker, 1)
+        mkdocs_text = before + start_marker + "\n" + generated + "\n" + "      " + end_marker + after
+        MKDOCS_PATH.write_text(mkdocs_text, encoding="utf-8", newline="\n")
+
+    manifest_rows = []
+    for s in sorted(symbol_map.values(), key=lambda x: x.name.lower()):
+        module_meta = module_manifest.get(s.public_module, {"visibility": "internal", "sidebar_include": False, "module_summary": "", "sidebar_group": "Advanced"})
+        callable_role = "internal_helper"
+        if s.name in RECOMMENDED_ENTRYPOINTS.get(s.public_module, set()):
+            callable_role = "recommended_entrypoint"
+        elif module_meta["visibility"] == "public":
+            callable_role = "advanced_helper"
+        manifest_rows.append(
+            {
+                "module_name": s.public_module,
+                "visibility": module_meta["visibility"],
+                "module_summary": module_meta["module_summary"],
+                "sidebar_group": module_meta["sidebar_group"],
+                "sidebar_include": module_meta["sidebar_include"],
+                "callable_name": s.name,
+                "callable_visibility": "public",
+                "callable_role": callable_role,
+                "workflow_step": docs_metadata[s.name]["workflow_step"],
+            }
+        )
+    MANIFEST_PATH.write_text(json.dumps({"modules": module_docs_metadata, "callables": manifest_rows}, indent=2) + "\n", encoding="utf-8")
 
     starter_symbol_to_notebooks: dict[str, set[str]] = {}
     for flow in template_flow_docs:

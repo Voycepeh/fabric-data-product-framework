@@ -19,6 +19,34 @@ class PublicSymbolDocMetadata(TypedDict):
 
 
 
+
+
+class ModuleDocMetadata(TypedDict):
+    """Documentation metadata that drives module navigation and overview generation."""
+
+    module_name: str
+    visibility: str
+    module_summary: str
+    sidebar_group: str
+    sidebar_include: bool
+
+
+MODULE_DOCS_METADATA: list[ModuleDocMetadata] = [
+    {"module_name": "environment_config", "visibility": "public", "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.", "sidebar_group": "Modules", "sidebar_include": True},
+    {"module_name": "fabric_input_output", "visibility": "public", "module_summary": "Lakehouse and warehouse read/write helpers.", "sidebar_group": "Modules", "sidebar_include": True},
+    {"module_name": "data_profiling", "visibility": "public", "module_summary": "Source/output profiling and metadata conversion helpers.", "sidebar_group": "Modules", "sidebar_include": True},
+    {"module_name": "data_contracts", "visibility": "public", "module_summary": "Data contract normalization, validation, and persistence helpers.", "sidebar_group": "Modules", "sidebar_include": True},
+    {"module_name": "data_quality", "visibility": "public", "module_summary": "Deterministic DQ rule validation and enforcement helpers.", "sidebar_group": "Modules", "sidebar_include": True},
+    {"module_name": "data_governance", "visibility": "public", "module_summary": "Governance classification helpers and metadata builders.", "sidebar_group": "Modules", "sidebar_include": True},
+    {"module_name": "data_lineage", "visibility": "public", "module_summary": "Lineage extraction and handover documentation helpers.", "sidebar_group": "Modules", "sidebar_include": True},
+    {"module_name": "runtime_context", "visibility": "internal", "module_summary": "Notebook runtime naming and context utilities.", "sidebar_group": "Advanced", "sidebar_include": False},
+    {"module_name": "data_drift", "visibility": "internal", "module_summary": "Schema/profile/partition drift checks supporting notebook validation.", "sidebar_group": "Advanced", "sidebar_include": False},
+    {"module_name": "data_product_metadata", "visibility": "internal", "module_summary": "Metadata record builders for operational outputs.", "sidebar_group": "Advanced", "sidebar_include": False},
+    {"module_name": "handover_documentation", "visibility": "internal", "module_summary": "Run summary and handover markdown helpers.", "sidebar_group": "Advanced", "sidebar_include": False},
+    {"module_name": "technical_audit_columns", "visibility": "internal", "module_summary": "Technical/audit enrichment helpers for pipeline outputs.", "sidebar_group": "Advanced", "sidebar_include": False},
+    {"module_name": "dq_review", "visibility": "internal", "module_summary": "Human-in-the-loop DQ review helpers.", "sidebar_group": "Advanced", "sidebar_include": False},
+]
+
 class TemplateFlowSegmentMetadata(TypedDict):
     """Segment metadata for starter template guidance on the reference landing page."""
 
