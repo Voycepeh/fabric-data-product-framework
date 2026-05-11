@@ -319,22 +319,29 @@ def main() -> None:
         public_in_module = [s for s in symbol_map.values() if s.public_module == module]
         is_internal_only = not public_in_module
         title = f"# `{module}` module" if not is_internal_only else f"# `{module}` module (internal)"
-        if is_internal_only:
-            status_banner = (
-                '<div class="api-status-block">\n'
-                '  <span class="api-chip api-chip-internal">Internal-only module</span>\n'
-                '  <div class="api-chip-subtitle">Not intended as a primary user-facing API surface.</div>\n'
-                '</div>'
-            )
-        elif module in HIDDEN_SUPPORTING_MODULES:
+        module_visibility = module_manifest.get(module, {}).get("visibility", "internal")
+        if module_visibility == "public":
+            status_banner = '<div class="api-status-block">\n  <span class="api-chip api-chip-module">Module overview</span>\n</div>'
+        elif public_in_module:
             status_banner = (
                 '<div class="api-status-block">\n'
                 '  <span class="api-chip api-chip-internal">Advanced supporting module</span>\n'
                 '  <div class="api-chip-subtitle">Used by workflow references but not promoted as a primary notebook module.</div>\n'
                 '</div>'
             )
+        elif is_internal_only:
+            status_banner = (
+                '<div class="api-status-block">\n'
+                '  <span class="api-chip api-chip-internal">Internal-only module</span>\n'
+                '  <div class="api-chip-subtitle">Not intended as a primary user-facing API surface.</div>\n'
+                '</div>'
+            )
         else:
-            status_banner = '<div class="api-status-block">\n  <span class="api-chip api-chip-module">Module overview</span>\n</div>'
+            status_banner = (
+                '<div class="api-status-block">\n'
+                '  <span class="api-chip api-chip-internal">Internal-only module</span>\n'
+                '</div>'
+            )
         lines = [title, "", status_banner, ""]
         if public_in_module:
             recommended_names = RECOMMENDED_ENTRYPOINTS.get(module, set())
@@ -495,7 +502,7 @@ def main() -> None:
 
     def _module_link(module: str, *, base_prefix: str = "../") -> str:
         return (
-            f'<a class="reference-module-link" href="{_esc(base_prefix)}api/modules/{_esc(module)}.md" '
+            f'<a class="reference-module-link" href="{_esc(base_prefix)}api/modules/{_esc(module)}/" '
             f'title="Open {module} module page" aria-label="Open {module} module page">{_esc(module)}</a>'
         )
 

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 from pathlib import Path
 
@@ -70,3 +71,24 @@ def test_public_sidebar_pages_are_not_internal_and_have_callable_sections() -> N
         if module in callable_modules:
             assert "## Recommended notebook entrypoints" in page
             assert "## Advanced helpers" in page
+
+
+def test_module_banner_respects_visibility_metadata() -> None:
+    _run_generator()
+    manifest = json.loads((ROOT / "docs" / "reference" / "manifest.json").read_text(encoding="utf-8"))
+    for module in manifest["modules"]:
+        module_name = module["module_name"]
+        page = (ROOT / "docs" / "api" / "modules" / f"{module_name}.md").read_text(encoding="utf-8")
+        if module["visibility"] == "internal":
+            assert '<span class="api-chip api-chip-module">Module overview</span>' not in page
+        if module["visibility"] == "public" and module["sidebar_include"]:
+            assert '<span class="api-chip api-chip-module">Module overview</span>' in page
+
+
+def test_notebook_structure_module_links_use_site_routes_not_md_files() -> None:
+    _run_generator()
+    for path in (ROOT / "docs" / "notebook-structure").glob("*.md"):
+        text = path.read_text(encoding="utf-8")
+        assert "href=\"../../api/modules/" in text
+        assert re.search(r'href=\"\.\./\.\./api/modules/[^\"/]+/\"', text)
+        assert not re.search(r'href=\"\.\./\.\./api/modules/[^\"/]+\.md\"', text)
