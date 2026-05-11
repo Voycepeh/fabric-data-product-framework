@@ -5,13 +5,7 @@
   <div class="api-chip-subtitle">Used by workflow references but not promoted as a primary notebook module.</div>
 </div>
 
-## Recommended notebook entrypoints
-
-| Callable | Type | Summary | Related helpers |
-|---|---|---|---|
-| — | — | No recommended entrypoints configured. | — |
-
-## Advanced helpers
+## Essential callables
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
@@ -22,6 +16,10 @@
 | [`write_metadata_records`](../../reference/step-07-output-profile-product-contract/write_metadata_records.md) | function | Write metadata records to a configured metadata sink. | — |
 | [`write_multiple_metadata_outputs`](../../reference/step-07-output-profile-product-contract/write_multiple_metadata_outputs.md) | function | Write multiple metadata payloads to their configured destinations. | — |
 
-## Internal helpers
+## Optional callables
+
+No advanced helpers listed for this module.
+
+## Related internal helpers
 
 No module-level internal helpers detected.

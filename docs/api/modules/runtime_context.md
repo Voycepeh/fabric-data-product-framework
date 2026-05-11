@@ -5,15 +5,15 @@
   <div class="api-chip-subtitle">Not intended as a primary user-facing API surface.</div>
 </div>
 
-## Recommended notebook entrypoints
+## Essential callables
 
 No public exports in this module.
 
-## Advanced helpers
+## Optional callables
 
 No advanced helpers listed for this module.
 
-## Internal helpers
+## Related internal helpers
 
 | Helper | Related public callables |
 |---|---|

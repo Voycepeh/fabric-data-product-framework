@@ -408,8 +408,6 @@ def assert_dq_passed(dq_result_df) -> None:
         raise ValueError("Data quality failed for error-severity rules.")
 
 
-# Backward-compatible aliases (not exported)
-
 
 def _prepare_dq_profile_input(*, profile_df=None, df=None, table_name: str, business_context: str = ""):
     if (profile_df is None) == (df is None):

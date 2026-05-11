@@ -5,13 +5,7 @@
   <div class="api-chip-subtitle">Used by workflow references but not promoted as a primary notebook module.</div>
 </div>
 
-## Recommended notebook entrypoints
-
-| Callable | Type | Summary | Related helpers |
-|---|---|---|---|
-| — | — | No recommended entrypoints configured. | — |
-
-## Advanced helpers
+## Essential callables
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
@@ -20,7 +14,11 @@
 | [`add_hash_columns`](../../reference/step-06b-runtime-standards/add_hash_columns.md) | function | Add business key and row-level SHA256 hash columns. | [`_assert_columns_exist`](../../reference/internal/technical_columns/_assert_columns_exist.md) (internal), [`_hash_row`](../../reference/internal/technical_columns/_hash_row.md) (internal), [`_non_technical_columns`](../../reference/internal/technical_columns/_non_technical_columns.md) (internal) |
 | [`default_technical_columns`](../../reference/step-06b-runtime-standards/default_technical_columns.md) | function | Return framework-generated and legacy technical column names to ignore. | — |
 
-## Internal helpers
+## Optional callables
+
+No advanced helpers listed for this module.
+
+## Related internal helpers
 
 | Helper | Related public callables |
 |---|---|

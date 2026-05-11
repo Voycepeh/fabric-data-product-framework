@@ -378,4 +378,3 @@ def review_dq_rule_deactivations(active_rules, table_name: str):
     refresh()
     ipy_display(ui)
 
-# Backward-compatible aliases (not exported)

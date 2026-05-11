@@ -5,20 +5,20 @@
   <div class="api-chip-subtitle">Used by workflow references but not promoted as a primary notebook module.</div>
 </div>
 
-## Recommended notebook entrypoints
+## Essential callables
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
 | — | — | No recommended entrypoints configured. | — |
 
-## Advanced helpers
+## Optional callables
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
 | [`review_dq_rule_deactivations`](../../reference/step-08-ai-assisted-dq-suggestions/review_dq_rule_deactivations.md) | function | Review active DQ rules one at a time for governed deactivation actions. | [`_require_ipywidgets`](../../reference/internal/notebook_review/_require_ipywidgets.md) (internal) |
 | [`review_dq_rules`](../../reference/step-08-ai-assisted-dq-suggestions/review_dq_rules.md) | function | Review AI-suggested DQ rules sequentially with explicit approve/reject decisions. | [`_require_ipywidgets`](../../reference/internal/notebook_review/_require_ipywidgets.md) (internal) |
 
-## Internal helpers
+## Related internal helpers
 
 | Helper | Related public callables |
 |---|---|

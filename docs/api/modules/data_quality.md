@@ -4,7 +4,7 @@
   <span class="api-chip api-chip-module">Module overview</span>
 </div>
 
-## Recommended notebook entrypoints
+## Essential callables
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
@@ -14,7 +14,7 @@
 
 Split a Spark DataFrame into pass/quarantine outputs for row-level DQ rules.
 
-## Advanced helpers
+## Optional callables
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
@@ -22,7 +22,7 @@ Split a Spark DataFrame into pass/quarantine outputs for row-level DQ rules.
 | [`draft_dq_rules`](../../reference/step-08-ai-assisted-dq-suggestions/draft_dq_rules.md) | function | Draft candidate DQ rules from metadata profiles or raw DataFrame fallback. | [`_extract_dq_rules`](../../reference/internal/data_quality/_extract_dq_rules.md) (internal), [`_prepare_dq_profile_input`](../../reference/internal/data_quality/_prepare_dq_profile_input.md) (internal), [`_suggest_dq_rules`](../../reference/internal/data_quality/_suggest_dq_rules.md) (internal) |
 | [`write_dq_rules`](../../reference/step-08-ai-assisted-dq-suggestions/write_dq_rules.md) | function | Validate, build, and persist approved DQ rules. | [`_build_dq_rule_history`](../../reference/internal/data_quality/_build_dq_rule_history.md) (internal) |
 
-## Internal helpers
+## Related internal helpers
 
 | Helper | Related public callables |
 |---|---|

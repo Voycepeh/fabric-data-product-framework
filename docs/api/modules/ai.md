@@ -5,13 +5,13 @@
   <div class="api-chip-subtitle">Used by workflow references but not promoted as a primary notebook module.</div>
 </div>
 
-## Recommended notebook entrypoints
+## Essential callables
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
 | — | — | No recommended entrypoints configured. | — |
 
-## Advanced helpers
+## Optional callables
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
@@ -23,7 +23,7 @@
 | [`generate_handover_summary_with_fabric_ai`](../../reference/step-10-lineage-handover-documentation/generate_handover_summary_with_fabric_ai.md) | function | Execute Fabric AI Functions to append handover summary suggestions. | [`_require_fabric_ai_dataframe`](../../reference/internal/ai/_require_fabric_ai_dataframe.md) (internal) |
 | [`parse_manual_ai_json_response`](../../reference/step-10-lineage-handover-documentation/parse_manual_ai_json_response.md) | function | Parse manual AI JSON output into Python objects. | — |
 
-## Internal helpers
+## Related internal helpers
 
 | Helper | Related public callables |
 |---|---|

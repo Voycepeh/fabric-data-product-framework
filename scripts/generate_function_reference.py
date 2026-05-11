@@ -47,7 +47,7 @@ HIDDEN_SUPPORTING_MODULES = [
     "handover_documentation",
     "technical_audit_columns",
 ]
-RECOMMENDED_ENTRYPOINTS = {
+LEGACY_ENTRYPOINTS_REMOVED = {
     "environment_config": {
         "validate_framework_config",
         "load_fabric_config",
@@ -80,7 +80,7 @@ class Symbol:
     public_module: str
     obj_type: str
     summary: str
-    importance: str = "Optional"
+    role: str = "optional"
     purpose: str = ""
 
 
@@ -303,9 +303,9 @@ def main() -> None:
         if enforce_placeholder_guard and symbol.purpose and symbol.purpose != "—":
             _assert_non_placeholder_summary(symbol.name, "purpose", symbol.purpose)
         step_rank = int(str(step).split("A")[0].split("B")[0].split("C")[0].split("D")[0]) if step is not None else 99
-        symbol.importance = meta.get("importance") or ("Essential" if step is not None and step_rank <= 7 else "Optional")
-        if symbol.importance not in {"Essential", "Optional"}:
-            raise RuntimeError(f"Invalid importance {symbol.importance!r} for {symbol.name}; expected Essential or Optional")
+        symbol.role = (meta.get("role") or meta.get("importance") or ("essential" if step is not None and step_rank <= 7 else "optional")).lower()
+        if symbol.role not in {"essential", "optional", "internal"}:
+            raise RuntimeError(f"Invalid role {symbol.role!r} for {symbol.name}; expected essential/optional/internal")
     MODULE_DIR.mkdir(parents=True, exist_ok=True)
     module_manifest = {row["module_name"]: row for row in module_docs_metadata}
     module_index_lines = ["# Module API Catalogue", "", "Function Reference/workflow pages are the primary entrypoint. Module pages below are secondary technical references.", "", "Short-form modules remain import-compatible aliases but are intentionally hidden from this user-facing catalogue.", ""]
@@ -344,10 +344,9 @@ def main() -> None:
             )
         lines = [title, "", status_banner, ""]
         if public_in_module:
-            recommended_names = RECOMMENDED_ENTRYPOINTS.get(module, set())
-            recommended = sorted([s for s in public_in_module if s.name in recommended_names], key=lambda x: x.name.lower())
-            advanced = sorted([s for s in public_in_module if s.name not in recommended_names], key=lambda x: x.name.lower())
-            lines.extend(["## Recommended notebook entrypoints", ""])
+            recommended = sorted([s for s in public_in_module if s.role == "essential"], key=lambda x: x.name.lower())
+            advanced = sorted([s for s in public_in_module if s.role == "optional"], key=lambda x: x.name.lower())
+            lines.extend(["## Essential callables", ""])
             lines.extend(["| Callable | Type | Summary | Related helpers |", "|---|---|---|---|"])
             for s in recommended:
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
@@ -366,7 +365,7 @@ def main() -> None:
                     ]
                 )
 
-            lines.extend(["", "## Advanced helpers", ""])
+            lines.extend(["", "## Optional callables", ""])
             if advanced:
                 lines.extend(["| Callable | Type | Summary | Related helpers |", "|---|---|---|---|"])
                 for s in advanced:
@@ -379,8 +378,8 @@ def main() -> None:
             else:
                 lines.append("No advanced helpers listed for this module.")
         else:
-            lines.extend(["## Recommended notebook entrypoints", "", "No public exports in this module.", "", "## Advanced helpers", "", "No advanced helpers listed for this module."])
-        lines.extend(["", "## Internal helpers", ""])
+            lines.extend(["## Essential callables", "", "No public exports in this module.", "", "## Optional callables", "", "No advanced helpers listed for this module."])
+        lines.extend(["", "## Related internal helpers", ""])
         internal_fns = sorted([f for f in info["functions"] if f.startswith("_")])
         if internal_fns:
             lines.extend(["| Helper | Related public callables |", "|---|---|"])
@@ -436,11 +435,7 @@ def main() -> None:
         if canonical_module not in known_modules:
             raise RuntimeError(f"Callable {s.name} resolved to unknown module_name {canonical_module!r}; add it to MODULE_DOCS_METADATA.")
         module_meta = module_manifest.get(canonical_module, {"visibility": "internal", "sidebar_include": False, "module_summary": "", "sidebar_group": "Advanced"})
-        callable_role = "internal_helper"
-        if s.name in RECOMMENDED_ENTRYPOINTS.get(s.public_module, set()):
-            callable_role = "recommended_entrypoint"
-        elif module_meta["visibility"] == "public":
-            callable_role = "advanced_helper"
+        callable_role = s.role
         manifest_rows.append(
             {
                 "module_name": canonical_module,
@@ -626,6 +621,12 @@ def main() -> None:
             '  <p id="callable-finder-help" class="callable-finder-help">Search by function name, module, or what the function does.</p>',
             '  <p id="callable-finder-examples" class="callable-finder-examples">Try: <span class="callable-finder-chip">csv</span> <span class="callable-finder-chip">data_quality</span> <span class="callable-finder-chip">quarantine</span></p>',
             '  <p id="callable-finder-status" class="callable-finder-status" aria-live="polite">Showing all callables.</p>',
+            '  <fieldset class="callable-role-filters">',
+            '    <legend>Role filters</legend>',
+            '    <label><input type="checkbox" data-role-filter="essential" checked> Essential</label>',
+            '    <label><input type="checkbox" data-role-filter="optional" checked> Optional</label>',
+            '    <label><input type="checkbox" data-role-filter="internal"> Internal</label>',
+            '  </fieldset>',
             '  <p class="callable-finder-empty" data-callable-finder-empty hidden>No callables match your search.</p>',
             "</div>",
             "",
@@ -648,14 +649,14 @@ def main() -> None:
                     f'data-callable-row="true" data-callable-name="{_esc(s.name)}" '
                     f'data-callable-module="{_esc(s.public_module)}" '
                     f'data-callable-starter-path="{_esc(starter_path)}" '
-                    f'data-callable-importance="{_esc(s.importance)}" '
+                    f'data-role="{_esc(s.role)}" '
                     f'data-callable-purpose="{_esc(purpose)}">'
                 ),
                 f'  <h3 class="reference-catalogue-item-name">{_anchor(symbol_link, s.name, code=True)}</h3>',
                 (
                     '  <p class="reference-catalogue-item-meta">'
                     f'{_module_link(s.public_module)}'
-                    f' <span class="reference-catalogue-separator">·</span> <span>{_esc(s.importance)}</span>'
+                    f' <span class="reference-catalogue-separator">·</span> <span>{_esc(s.role)}</span>'
                     f' <span class="reference-catalogue-separator">·</span> <span>{_esc(starter_path)}</span>'
                     "</p>"
                 ),

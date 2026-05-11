@@ -4,21 +4,20 @@
   <span class="api-chip api-chip-module">Module overview</span>
 </div>
 
-## Recommended notebook entrypoints
-
-| Callable | Type | Summary | Related helpers |
-|---|---|---|---|
-| [`get_path`](../../reference/step-02a-shared-runtime-config/get_path.md) | function | Resolve a configured Fabric path for an environment and target. | — |
-| [`load_fabric_config`](../../reference/step-02a-shared-runtime-config/load_fabric_config.md) | function | Validate and return a user-supplied framework configuration. | — |
-
-## Advanced helpers
+## Essential callables
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
 | [`configure_fabric_ai_functions`](../../reference/step-01-governance-context/configure_fabric_ai_functions.md) | function | Apply optional default Fabric AI Function configuration. | — |
+| [`get_path`](../../reference/step-02a-shared-runtime-config/get_path.md) | function | Resolve a configured Fabric path for an environment and target. | — |
+| [`load_fabric_config`](../../reference/step-02a-shared-runtime-config/load_fabric_config.md) | function | Validate and return a user-supplied framework configuration. | — |
 | [`setup_fabricops_notebook`](../../reference/step-02b-notebook-startup-checks/setup_fabricops_notebook.md) | function | Run consolidated FabricOps startup for exploration and pipeline notebooks. | — |
 
-## Internal helpers
+## Optional callables
+
+No advanced helpers listed for this module.
+
+## Related internal helpers
 
 | Helper | Related public callables |
 |---|---|

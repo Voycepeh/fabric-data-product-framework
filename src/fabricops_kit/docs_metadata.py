@@ -12,7 +12,7 @@ class PublicSymbolDocMetadata(TypedDict):
     module: str
     kind: str
     workflow_step: int | str | None
-    importance: NotRequired[str]
+    role: NotRequired[str]
     purpose: NotRequired[str]
     summary_override: str | None
 
