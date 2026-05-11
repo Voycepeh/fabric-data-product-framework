@@ -86,13 +86,6 @@ Use the finder below to look up public callables.
       <td data-label="Importance">Essential</td>
       <td data-label="Purpose">Add business key and row-level SHA256 hash columns.</td>
     </tr>
-    <tr data-callable-row="true" data-callable-name="AIPromptConfig" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Prompt templates used by AI-assisted framework workflows.">
-      <td data-label="Function / class"><a href="./step-02a-shared-runtime-config/AIPromptConfig/"><code>AIPromptConfig</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Starter path">00_env_config</td>
-      <td data-label="Importance">Essential</td>
-      <td data-label="Purpose">Prompt templates used by AI-assisted framework workflows.</td>
-    </tr>
     <tr data-callable-row="true" data-callable-name="assert_dq_passed" data-callable-module="data_quality" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Raise when any error-severity DQ rule failed after results are logged.">
       <td data-label="Function / class"><a href="./step-06d-controlled-outputs/assert_dq_passed/"><code>assert_dq_passed</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
@@ -394,13 +387,6 @@ Use the finder below to look up public callables.
       <td data-label="Importance">Optional</td>
       <td data-label="Purpose">Build a fallback Copilot prompt for manual lineage enrichment.</td>
     </tr>
-    <tr data-callable-row="true" data-callable-name="FrameworkConfig" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Top-level framework configuration object.">
-      <td data-label="Function / class"><a href="./step-02a-shared-runtime-config/FrameworkConfig/"><code>FrameworkConfig</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Starter path">00_env_config</td>
-      <td data-label="Importance">Essential</td>
-      <td data-label="Purpose">Top-level framework configuration object.</td>
-    </tr>
     <tr data-callable-row="true" data-callable-name="generate_dq_rule_candidates_with_fabric_ai" data-callable-module="data_quality" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Append AI-suggested DQ rule candidates to a profiling DataFrame.">
       <td data-label="Function / class"><a href="./step-08-ai-assisted-dq-suggestions/generate_dq_rule_candidates_with_fabric_ai/"><code>generate_dq_rule_candidates_with_fabric_ai</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
@@ -457,13 +443,6 @@ Use the finder below to look up public callables.
       <td data-label="Importance">Essential</td>
       <td data-label="Purpose">Resolve a configured Fabric path for an environment and target.</td>
     </tr>
-    <tr data-callable-row="true" data-callable-name="GovernanceConfig" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Default governance-policy options for metadata/classification checks.">
-      <td data-label="Function / class"><a href="./step-02a-shared-runtime-config/GovernanceConfig/"><code>GovernanceConfig</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Starter path">00_env_config</td>
-      <td data-label="Importance">Essential</td>
-      <td data-label="Purpose">Default governance-policy options for metadata/classification checks.</td>
-    </tr>
     <tr data-callable-row="true" data-callable-name="Housepath" data-callable-module="fabric_input_output" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Fabric lakehouse or warehouse connection details.">
       <td data-label="Function / class"><a href="./step-02a-shared-runtime-config/Housepath/"><code>Housepath</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a></td>
@@ -506,13 +485,6 @@ Use the finder below to look up public callables.
       <td data-label="Importance">Essential</td>
       <td data-label="Purpose">Write a Spark DataFrame to a Fabric lakehouse Delta table.</td>
     </tr>
-    <tr data-callable-row="true" data-callable-name="LineageConfig" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Default lineage-capture behavior for pipeline traceability.">
-      <td data-label="Function / class"><a href="./step-02a-shared-runtime-config/LineageConfig/"><code>LineageConfig</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Starter path">00_env_config</td>
-      <td data-label="Importance">Essential</td>
-      <td data-label="Purpose">Default lineage-capture behavior for pipeline traceability.</td>
-    </tr>
     <tr data-callable-row="true" data-callable-name="load_contract_from_lakehouse" data-callable-module="data_contracts" data-callable-starter-path="—" data-callable-importance="Essential" data-callable-purpose="Load one contract by ID/version from Fabric metadata storage.">
       <td data-label="Function / class"><a href="./step-03-source-contract-ingestion-pattern/load_contract_from_lakehouse/"><code>load_contract_from_lakehouse</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a></td>
@@ -548,26 +520,12 @@ Use the finder below to look up public callables.
       <td data-label="Importance">Essential</td>
       <td data-label="Purpose">Normalize a notebook-authored contract dictionary to a stable shape.</td>
     </tr>
-    <tr data-callable-row="true" data-callable-name="NotebookRuntimeConfig" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Runtime options used by notebook-oriented helpers.">
-      <td data-label="Function / class"><a href="./step-02a-shared-runtime-config/NotebookRuntimeConfig/"><code>NotebookRuntimeConfig</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Starter path">00_env_config</td>
-      <td data-label="Importance">Essential</td>
-      <td data-label="Purpose">Runtime options used by notebook-oriented helpers.</td>
-    </tr>
     <tr data-callable-row="true" data-callable-name="parse_manual_ai_json_response" data-callable-module="handover_documentation" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Parse manual AI JSON output into Python objects.">
       <td data-label="Function / class"><a href="./step-10-lineage-handover-documentation/parse_manual_ai_json_response/"><code>parse_manual_ai_json_response</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../api/modules/handover_documentation/" title="Open handover_documentation module page" aria-label="Open handover_documentation module page">handover_documentation</a></td>
       <td data-label="Starter path">—</td>
       <td data-label="Importance">Optional</td>
       <td data-label="Purpose">Parse manual AI JSON output into Python objects.</td>
-    </tr>
-    <tr data-callable-row="true" data-callable-name="PathConfig" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Environment-to-target mapping used for lakehouse/warehouse routing.">
-      <td data-label="Function / class"><a href="./step-02a-shared-runtime-config/PathConfig/"><code>PathConfig</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Starter path">00_env_config</td>
-      <td data-label="Importance">Essential</td>
-      <td data-label="Purpose">Environment-to-target mapping used for lakehouse/warehouse routing.</td>
     </tr>
     <tr data-callable-row="true" data-callable-name="plot_lineage_steps" data-callable-module="data_lineage" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Render lineage steps as a directed graph figure.">
       <td data-label="Function / class"><a href="./step-10-lineage-handover-documentation/plot_lineage_steps/"><code>plot_lineage_steps</code></a></td>
@@ -596,13 +554,6 @@ Use the finder below to look up public callables.
       <td data-label="Starter path">—</td>
       <td data-label="Importance">Essential</td>
       <td data-label="Purpose">Convert Spark metadata profile rows into JSON-friendly dictionaries.</td>
-    </tr>
-    <tr data-callable-row="true" data-callable-name="QualityConfig" data-callable-module="environment_config" data-callable-starter-path="00_env_config" data-callable-importance="Essential" data-callable-purpose="Default quality-policy options for FabricOps validation stages.">
-      <td data-label="Function / class"><a href="./step-02a-shared-runtime-config/QualityConfig/"><code>QualityConfig</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Starter path">00_env_config</td>
-      <td data-label="Importance">Essential</td>
-      <td data-label="Purpose">Default quality-policy options for FabricOps validation stages.</td>
     </tr>
     <tr data-callable-row="true" data-callable-name="render_run_summary_markdown" data-callable-module="handover_documentation" data-callable-starter-path="—" data-callable-importance="Optional" data-callable-purpose="Render a run summary dictionary into Markdown for handover notes.">
       <td data-label="Function / class"><a href="./step-10-lineage-handover-documentation/render_run_summary_markdown/"><code>render_run_summary_markdown</code></a></td>

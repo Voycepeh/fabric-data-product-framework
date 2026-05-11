@@ -3,13 +3,6 @@
 from .drift import check_partition_drift, check_profile_drift, check_schema_drift, summarize_drift_results
 from .config import (
     bootstrap_fabric_env,
-    AIPromptConfig,
-    FrameworkConfig,
-    GovernanceConfig,
-    LineageConfig,
-    NotebookRuntimeConfig,
-    PathConfig,
-    QualityConfig,
     check_fabric_ai_functions_available,
     get_path,
     run_config_smoke_tests,
@@ -115,13 +108,6 @@ __version__ = "0.1.0"
 __all__ = [
     "Housepath",
     "validate_framework_config",
-    "PathConfig",
-    "NotebookRuntimeConfig",
-    "AIPromptConfig",
-    "QualityConfig",
-    "GovernanceConfig",
-    "LineageConfig",
-    "FrameworkConfig",
     "bootstrap_fabric_env",
     "run_config_smoke_tests",
     "check_fabric_ai_functions_available",
