@@ -1,7 +1,15 @@
 import json
-import ipywidgets as widgets
+try:
+    import ipywidgets as widgets
+except ImportError:  # pragma: no cover
+    widgets = None
 from IPython.display import display as ipy_display
 
+
+
+def _require_ipywidgets() -> None:
+    if widgets is None:
+        raise ImportError("ipywidgets is required for DQ review widgets. Install the dq-review extra.")
 APPROVED_RULES_FROM_WIDGET = []
 REJECTED_RULES_FROM_WIDGET = []
 
@@ -16,6 +24,7 @@ def review_dq_rules(candidate_rules, table_name: str):
 
     No skip state is allowed because every AI suggestion should be explicitly reviewed.
     """
+    _require_ipywidgets()
     global APPROVED_RULES_FROM_WIDGET, REJECTED_RULES_FROM_WIDGET
 
     APPROVED_RULES_FROM_WIDGET = []
