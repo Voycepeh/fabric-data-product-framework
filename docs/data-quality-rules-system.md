@@ -154,17 +154,16 @@ DQ_TABLE_NAME = TARGET_TABLE
 PROMPT_TEMPLATE = CONFIG.ai_prompt_config.dq_rule_candidate_template
 
 # 1) Profile source data (02_ex)
-profile_rows = profile_for_dq(df_source, table_name=DQ_TABLE_NAME)
+profile_rows = profile_dataframe_to_metadata(df_source, table_name=DQ_TABLE_NAME)  # or load stored metadata table
 
 # 2) Ask AI for rule candidates (02_ex)
-responses = suggest_dq_rules(
+candidate_rules = draft_dq_rules(
     profile_rows,
     prompt_template=PROMPT_TEMPLATE,
     output_col="ai_response",
 )
 
 # 3) Parse candidate rules (02_ex)
-candidate_rules = extract_dq_rules(responses, table_name=DQ_TABLE_NAME)
 
 # 4) Human review + explicit approval (02_ex)
 import fabricops_kit.dq_review as dq_review
@@ -174,7 +173,7 @@ if not approved:
     raise ValueError("No approved DQ rules selected in widget.")
 
 # 5) Persist governed approval history (02_ex)
-approved_history = build_dq_rule_history(
+approved_history = write_dq_rules(
     spark=spark,
     table_name=DQ_TABLE_NAME,
     approved_rules=approved,
@@ -182,11 +181,11 @@ approved_history = build_dq_rule_history(
 )
 
 # 6) Pipeline loads and enforces active approved rules (03_pc)
-rules = load_active_dq_rules(spark.table("METADATA_DQ_RULES"), table_name=DQ_TABLE_NAME)
-dq_result = run_dq_rules(df_standard, table_name=DQ_TABLE_NAME, rules=rules)
+rules = enforce_dq_rules(spark.table("METADATA_DQ_RULES"), table_name=DQ_TABLE_NAME)
+dq_result = enforce_dq_rules(df_standard, table_name=DQ_TABLE_NAME, rules=rules)
 
 # 7) Evidence + gate (03_pc)
-df_valid, df_quarantine, dq_failure_evidence = split_dq_rows(
+df_valid, df_quarantine, dq_failure_evidence = enforce_dq_rules(
     df_standard,
     rules,
     dq_run_id=RUN_ID,
