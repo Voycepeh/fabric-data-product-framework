@@ -8,6 +8,7 @@ import re
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from typing import Any
 
 
 def _resolve_action_by(action_by: str | None) -> str:
@@ -24,7 +25,6 @@ def _resolve_action_by(action_by: str | None) -> str:
     except Exception:
         pass
     return "unknown"
-from typing import Any
 
 from pyspark.sql import functions as F
 from pyspark.sql.window import Window
@@ -178,8 +178,10 @@ def build_dq_rule_history(spark, table_name: str, approved_rules: list[dict], ac
         Logical table name for the governed rules.
     approved_rules : list[dict]
         Human-approved canonical DQ rules to append as active versions.
-    action_by : str, default="notebook_user"
-        Actor identity for audit tracking.
+    action_by : str | None, optional
+        Actor identity for audit tracking. When omitted, resolved from
+        ``notebookutils.runtime.context`` using ``userName``, then ``userId``,
+        then ``"unknown"``.
     rule_source : str, default="ai_widget_approval"
         Source label for audit tracking.
     action_reason : str, default="Approved after human review."
@@ -191,9 +193,10 @@ def build_dq_rule_history(spark, table_name: str, approved_rules: list[dict], ac
         Append-only metadata rows with ``is_active=True`` and ``action_type=approved``.
     """
     ts = datetime.now(timezone.utc).isoformat(); rows = []
+    resolved_action_by = _resolve_action_by(action_by)
     for rule in approved_rules:
         cols = rule.get("columns", [])
-        rows.append({"table_name": table_name, "rule_id": str(rule["rule_id"]), "rule_type": str(rule["rule_type"]), "columns": ",".join(cols), "rule_key": f"{table_name}|{rule['rule_id']}|{rule['rule_type']}|{','.join(cols)}", "is_active": True, "action_type": "approved", "action_by": action_by, "action_ts": ts, "action_reason": action_reason, "rule_source": rule_source, "rule_json": json.dumps(rule)})
+        rows.append({"table_name": table_name, "rule_id": str(rule["rule_id"]), "rule_type": str(rule["rule_type"]), "columns": ",".join(cols), "rule_key": f"{table_name}|{rule['rule_id']}|{rule['rule_type']}|{','.join(cols)}", "is_active": True, "action_type": "approved", "action_by": resolved_action_by, "action_ts": ts, "action_reason": action_reason, "rule_source": rule_source, "rule_json": json.dumps(rule)})
     return spark.createDataFrame(rows)
 
 
@@ -208,8 +211,10 @@ def build_dq_rule_deactivations(spark, table_name: str, deactivations: list[dict
         Logical table name for the governed rules.
     deactivations : list[dict]
         Items shaped as ``{"rule": <rule dict>, "action_reason": <str>}``.
-    action_by : str, default="notebook_user"
-        Actor identity for audit tracking.
+    action_by : str | None, optional
+        Actor identity for audit tracking. When omitted, resolved from
+        ``notebookutils.runtime.context`` using ``userName``, then ``userId``,
+        then ``"unknown"``.
     rule_source : str, default="rule_deactivation_widget"
         Source label for audit tracking.
 
@@ -224,12 +229,13 @@ def build_dq_rule_deactivations(spark, table_name: str, deactivations: list[dict
         If any deactivation record has an empty reason.
     """
     ts = datetime.now(timezone.utc).isoformat(); rows = []
+    resolved_action_by = _resolve_action_by(action_by)
     for item in deactivations:
         reason = str(item["action_reason"]).strip(); rule = item["rule"]
         if not reason:
             raise ValueError(f"Deactivation reason is required for rule '{rule['rule_id']}'.")
         cols = rule.get("columns", [])
-        rows.append({"table_name": table_name, "rule_id": str(rule["rule_id"]), "rule_type": str(rule["rule_type"]), "columns": ",".join(cols), "rule_key": f"{table_name}|{rule['rule_id']}|{rule['rule_type']}|{','.join(cols)}", "is_active": False, "action_type": "deactivated", "action_by": action_by, "action_ts": ts, "action_reason": reason, "rule_source": rule_source, "rule_json": json.dumps(rule)})
+        rows.append({"table_name": table_name, "rule_id": str(rule["rule_id"]), "rule_type": str(rule["rule_type"]), "columns": ",".join(cols), "rule_key": f"{table_name}|{rule['rule_id']}|{rule['rule_type']}|{','.join(cols)}", "is_active": False, "action_type": "deactivated", "action_by": resolved_action_by, "action_ts": ts, "action_reason": reason, "rule_source": rule_source, "rule_json": json.dumps(rule)})
     return spark.createDataFrame(rows)
 
 
