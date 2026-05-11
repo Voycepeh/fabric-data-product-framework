@@ -208,32 +208,6 @@ DEFAULT_HANDOVER_SUMMARY_TEMPLATE = (
     "Row summary field: summary={summary}."
 )
 
-def create_ai_prompt_config(
-    dq_rule_candidate_template: str = DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE,
-    governance_candidate_template: str = DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE,
-    handover_summary_template: str = DEFAULT_HANDOVER_SUMMARY_TEMPLATE,
-) -> AIPromptConfig:
-    """Create default AI prompt configuration for 00_env_config bootstrap.
-
-    Parameters
-    ----------
-    dq_rule_candidate_template : str, default=DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE
-        Canonical DQ suggestion prompt template.
-    governance_candidate_template : str, default=DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE
-        Governance suggestion prompt template.
-    handover_summary_template : str, default=DEFAULT_HANDOVER_SUMMARY_TEMPLATE
-        Handover summary prompt template.
-
-    Returns
-    -------
-    AIPromptConfig
-        Validated prompt configuration object.
-    """
-    return AIPromptConfig(
-        dq_rule_candidate_template=dq_rule_candidate_template,
-        governance_candidate_template=governance_candidate_template,
-        handover_summary_template=handover_summary_template,
-    )
 @dataclass(frozen=True)
 class QualityConfig:
     """Default quality-policy options for FabricOps validation stages.

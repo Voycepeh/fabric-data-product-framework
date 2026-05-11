@@ -16,9 +16,11 @@ def test_00_env_config_import_and_default_prompt_override_guard():
     import_block = cells[0]
     prompt_block = "\n".join(cells)
     assert "from fabricops_kit.config import (" in import_block
-    assert "create_ai_prompt_config" in import_block
-    assert "AI_PROMPT_CONFIG = create_ai_prompt_config()" in prompt_block
-    assert "if DQ_RULE_CANDIDATE_PROMPT_TEMPLATE_OVERRIDE is not None:" in prompt_block
+    assert "create_ai_prompt_config" not in import_block
+    assert "AI_PROMPT_CONFIG = AIPromptConfig(" in prompt_block
+    assert "DQ_RULE_CANDIDATE_PROMPT_TEMPLATE = (" in prompt_block
+    assert "GOVERNANCE_CANDIDATE_PROMPT_TEMPLATE = (" in prompt_block
+    assert "HANDOVER_SUMMARY_PROMPT_TEMPLATE = (" in prompt_block
 
 
 def test_02_ex_contract_and_runtime_handoff_is_runnable():

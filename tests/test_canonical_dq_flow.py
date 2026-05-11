@@ -1,6 +1,6 @@
 import pytest
 from pyspark.sql import SparkSession
-from fabricops_kit.config import create_ai_prompt_config
+from fabricops_kit.config import AIPromptConfig
 from fabricops_kit.data_quality import (
     validate_dq_rules,
     extract_dq_rules,
@@ -17,7 +17,11 @@ def spark():
     s=SparkSession.builder.master('local[1]').appName('dq').getOrCreate(); yield s; s.stop()
 
 def test_configured_prompt_contains_canonical_sections():
-    prompt=create_ai_prompt_config().dq_rule_candidate_template
+    prompt=AIPromptConfig(
+        dq_rule_candidate_template="Suggest candidate DQ rules as JSON. Profile: {profile}",
+        governance_candidate_template="g",
+        handover_summary_template="h",
+    ).dq_rule_candidate_template
     for snippet in [
         "1. not_null", "2. unique_key", "Heuristics:",
         "Do not return Great Expectations, Deequ, DQX, SQL, or pseudocode syntax.",
