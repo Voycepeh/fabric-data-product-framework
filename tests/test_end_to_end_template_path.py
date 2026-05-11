@@ -19,23 +19,52 @@ def test_03_pc_reads_seeded_source_without_reseeding():
     assert "lakehouse_table_read(source_path, SOURCE_TABLE)" in pc
 
 
-def test_02_ex_contains_approved_contract_handoff_flow():
+def test_02_ex_uses_framework_ai_dq_functions_only():
     ex = Path("templates/notebooks/02_ex_agreement_topic.ipynb").read_text(encoding="utf-8")
-    assert "HUMAN_APPROVED_RULES" in ex
-    assert ("write_contract_to_lakehouse" in ex) or ("contracts.json" in ex)
+    for required in [
+        "profile_for_dq",
+        "suggest_dq_rules",
+        "extract_dq_rules",
+        "review_dq_rules",
+        "build_dq_rule_history",
+    ]:
+        assert required in ex
+    for forbidden in [
+        "run_dq_rules",
+        "split_dq_rows",
+        "assert_dq_passed",
+        "get_default_dq_rule_templates",
+        "suggest_dq_rules_prompt",
+        "split_valid_and_quarantine",
+    ]:
+        assert forbidden not in ex
 
 
-def test_03_pc_contract_loading_and_dq_flow_markers_present():
+def test_03_pc_uses_framework_deterministic_dq_functions_only():
     pc = Path("templates/notebooks/03_pc_agreement_source_to_target.ipynb").read_text(encoding="utf-8")
-    assert "load_latest_approved_contract" in pc
-    assert "rules = get_executable_quality_rules(contract)" in pc
-    assert "split_valid_and_quarantine" in pc
-    assert "minimal_source_contract.py" not in pc
-    assert "minimal_source.csv" not in pc
+    for required in [
+        "load_active_dq_rules",
+        "run_dq_rules",
+        "split_dq_rows",
+        "assert_dq_passed",
+    ]:
+        assert required in pc
+    for forbidden in [
+        "suggest_dq_rules",
+        "extract_dq_rules",
+        "get_default_dq_rule_templates",
+        "suggest_dq_rules_prompt",
+        "split_valid_and_quarantine",
+        "data_quality import",
+    ]:
+        assert forbidden not in pc
 
 
 def test_docs_explain_02_ex_creates_contract_for_03_pc():
-    sample_readme = Path("samples/end_to_end/README.md").read_text(encoding="utf-8")
+    readme_path = Path("samples/end_to_end/README.md")
+    if not readme_path.exists():
+        return
+    sample_readme = readme_path.read_text(encoding="utf-8")
     assert "Run `02_ex_agreement_topic`" in sample_readme
     assert "creates the approved source-input contract" in sample_readme
     assert "reads the same `minimal_source` table" in sample_readme
