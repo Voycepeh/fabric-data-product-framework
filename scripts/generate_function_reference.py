@@ -119,25 +119,6 @@ def parse_public_exports() -> list[str]:
     raise RuntimeError("Could not parse __all__ from __init__.py")
 
 
-def parse_step_registry() -> list[dict[str, Any]]:
-    tree = ast.parse((PKG_DIR / "handover.py").read_text(encoding="utf-8"))
-    for node in tree.body:
-        is_assign = isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "MVP_STEP_REGISTRY" for t in node.targets)
-        is_annassign = isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and node.target.id == "MVP_STEP_REGISTRY"
-        if is_assign or is_annassign:
-            if node.value is None:
-                continue
-            reg = ast.literal_eval(node.value)
-            return [
-                {
-                    "step_number": item["step_number"],
-                    "step_name": item["step_name"],
-                    "canonical_modules": [m.replace(".py", "") for m in item.get("canonical_modules", [])],
-                }
-                for item in reg
-            ]
-    return []
-
 
 def parse_docs_metadata() -> dict[str, dict[str, Any]]:
     tree = ast.parse(DOCS_METADATA_PATH.read_text(encoding="utf-8"))

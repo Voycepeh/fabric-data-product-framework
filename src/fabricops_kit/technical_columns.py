@@ -15,7 +15,7 @@ import pandas as pd
 
 
 
-def default_technical_columns() -> list[str]:
+def __default_technical_columns() -> list[str]:
     """Return framework-generated and legacy technical column names to ignore.
 
     The returned list is intended for downstream profiling and hash generation logic
@@ -29,7 +29,7 @@ def default_technical_columns() -> list[str]:
 
     Examples
     --------
-    >>> cols = default_technical_columns()
+    >>> cols = _default_technical_columns()
     >>> "_pipeline_run_id" in cols
     True
     """
@@ -69,7 +69,7 @@ def _assert_columns_exist(df: Any, columns: list[str]) -> None:
 
 
 def _non_technical_columns(df: Any) -> list[str]:
-    technical = set(default_technical_columns())
+    technical = set(_default_technical_columns())
     return [c for c in df.columns if c not in technical]
 
 
@@ -98,7 +98,7 @@ def _bucket_values_pandas(series: pd.Series, bucket_size: int) -> tuple[pd.Serie
     return hashes % bucket_size, hashes % 1_000_000
 
 
-def add_datetime_features(
+def __add_datetime_features(
     df,
     datetime_column: str,
     *,
@@ -150,7 +150,7 @@ def add_datetime_features(
     --------
     >>> import pandas as pd
     >>> df = pd.DataFrame({"event_ts": ["2026-01-01T00:45:00Z"]})
-    >>> add_datetime_features(df, "event_ts", prefix="EVENT")["EVENT_TIME_UTC8"].iloc[0]
+    >>> _add_datetime_features(df, "event_ts", prefix="EVENT")["EVENT_TIME_UTC8"].iloc[0]
     '08:45:00'
     """
     _assert_columns_exist(df, [datetime_column])
@@ -178,7 +178,7 @@ def add_datetime_features(
     return out
 
 
-def add_audit_columns(
+def __add_audit_columns(
     df,
     *,
     run_id: str | None = None,
@@ -248,7 +248,7 @@ def add_audit_columns(
     --------
     >>> import pandas as pd
     >>> df = pd.DataFrame({"BUSINESS_KEY": ["A1"], "updated_at": ["2026-01-01T00:00:00Z"]})
-    >>> out = add_audit_columns(
+    >>> out = _add_audit_columns(
     ...     df,
     ...     pipeline_name="orders_pipeline",
     ...     environment="Sandbox",
@@ -324,7 +324,7 @@ def add_audit_columns(
     return out
 
 
-def add_hash_columns(
+def __add_hash_columns(
     df,
     *,
     business_keys: list[str] | None = None,
@@ -364,7 +364,7 @@ def add_hash_columns(
     --------
     >>> import pandas as pd
     >>> df = pd.DataFrame({"BUSINESS_KEY": ["A1"], "amount": [10.5]})
-    >>> out = add_hash_columns(df, business_keys=["BUSINESS_KEY"], engine="pandas")
+    >>> out = _add_hash_columns(df, business_keys=["BUSINESS_KEY"], engine="pandas")
     >>> "_row_hash" in out.columns
     True
     """
@@ -396,4 +396,16 @@ def add_hash_columns(
     if include_row_hash:
         row_exprs = [F.coalesce(F.col(c).cast("string"), F.lit("<NULL>")) for c in row_hash_columns]
         out = out.withColumn("_row_hash", F.sha2(F.concat_ws("||", *row_exprs), 256))
+    return out
+
+
+def standardize_output_columns(df, run_id=None, pipeline_name=None, environment=None, source_table=None, datetime_columns=None, business_keys=None, bucket_column=None, engine="spark"):
+    """Apply canonical technical/audit enrichment in one notebook-facing wrapper."""
+    out = df
+    if datetime_columns:
+        for col, prefix in datetime_columns.items():
+            out = _add_datetime_features(out, col, prefix=prefix, engine=engine)
+    out = _add_audit_columns(out, run_id=run_id, pipeline_name=pipeline_name, environment=environment, source_table=source_table, bucket_column=bucket_column, engine=engine)
+    if business_keys:
+        out = _add_hash_columns(out, business_keys=business_keys, engine=engine)
     return out

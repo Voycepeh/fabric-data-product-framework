@@ -51,9 +51,6 @@ from .data_contracts import (
 from .data_profiling import (
     build_ai_quality_context,
     profile_dataframe,
-    profile_dataframe_to_metadata,
-    profile_metadata_to_records,
-    generate_metadata_profile,
 )
 from .ai import (
     build_governance_candidate_prompt,
@@ -74,7 +71,7 @@ from .data_quality import (
 )
 from .notebook_review import review_dq_rules, review_dq_rule_deactivations
 from .run_summary import build_run_summary, render_run_summary_markdown
-from .technical_columns import add_audit_columns, add_datetime_features, add_hash_columns, default_technical_columns
+from .technical_columns import standardize_output_columns
 
 __version__ = "0.1.0"
 
@@ -98,9 +95,6 @@ __all__ = [
     "warehouse_write",
     "seed_minimal_sample_source_table",
     "profile_dataframe",
-    "profile_dataframe_to_metadata",
-    "profile_metadata_to_records",
-    "generate_metadata_profile",
     "build_ai_quality_context",
     "assert_dq_passed",
     "validate_dq_rules",
@@ -129,10 +123,6 @@ __all__ = [
     "plot_lineage_steps",
     "build_run_summary",
     "render_run_summary_markdown",
-    "default_technical_columns",
-    "add_datetime_features",
-    "add_audit_columns",
-    "add_hash_columns",
     "normalize_contract_dict",
     "validate_contract_dict",
     "write_contract_to_lakehouse",
@@ -145,4 +135,5 @@ __all__ = [
     "extract_quality_rules",
     "get_executable_quality_rules",
     "build_contract_summary",
+    "standardize_output_columns",
 ]

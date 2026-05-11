@@ -124,8 +124,8 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
                     "seed_minimal_sample_source_table",
                     "lakehouse_table_read",
                     "warehouse_read",
-                    "generate_metadata_profile",
-                    "profile_dataframe_to_metadata",
+                    
+                    
                 ],
             },
             {
@@ -234,9 +234,6 @@ PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [
     {"symbol_name": "seed_minimal_sample_source_table", "module": "fabric_input_output", "kind": "function", "workflow_step": 4, "role": "optional", "summary_override": "Create and persist deterministic demo rows into a sample source table."},
     
                     {"symbol_name": "profile_dataframe", "module": "data_profiling", "kind": "function", "workflow_step": 4, "role": "optional", "summary_override": None},
-    {"symbol_name": "profile_dataframe_to_metadata", "module": "data_profiling", "kind": "function", "workflow_step": 4, "role": "essential", "summary_override": None},
-    {"symbol_name": "profile_metadata_to_records", "module": "data_profiling", "kind": "function", "workflow_step": 4, "role": "optional", "summary_override": None},
-    {"symbol_name": "generate_metadata_profile", "module": "data_profiling", "kind": "function", "workflow_step": 4, "role": "essential", "summary_override": None},
     {"symbol_name": "build_ai_quality_context", "module": "data_profiling", "kind": "function", "workflow_step": 4, "role": "essential", "summary_override": None},
     {"symbol_name": "validate_dq_rules", "module": "data_quality", "kind": "function", "workflow_step": "6C", "role": "optional", "summary_override": None},
     {"symbol_name": "assert_dq_passed", "module": "data_quality", "kind": "function", "workflow_step": "6D", "role": "essential", "summary_override": None},
@@ -270,10 +267,6 @@ PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [
     {"symbol_name": "plot_lineage_steps", "module": "data_lineage", "kind": "function", "workflow_step": 10, "role": "optional", "summary_override": None},
     {"symbol_name": "build_run_summary", "module": "run_summary", "kind": "function", "workflow_step": 10, "role": "essential", "summary_override": None},
     {"symbol_name": "render_run_summary_markdown", "module": "run_summary", "kind": "function", "workflow_step": 10, "role": "essential", "summary_override": None},
-    {"symbol_name": "default_technical_columns", "module": "technical_columns", "kind": "function", "workflow_step": "6B", "role": "essential", "summary_override": None},
-    {"symbol_name": "add_datetime_features", "module": "technical_columns", "kind": "function", "workflow_step": "6B", "role": "essential", "summary_override": None},
-    {"symbol_name": "add_audit_columns", "module": "technical_columns", "kind": "function", "workflow_step": "6B", "role": "essential", "summary_override": None},
-    {"symbol_name": "add_hash_columns", "module": "technical_columns", "kind": "function", "workflow_step": "6B", "role": "essential", "summary_override": None},
     {"symbol_name": "normalize_contract_dict", "module": "data_contracts", "kind": "function", "workflow_step": 3, "role": "essential", "summary_override": None},
     {"symbol_name": "validate_contract_dict", "module": "data_contracts", "kind": "function", "workflow_step": 3, "role": "essential", "summary_override": None},
     {"symbol_name": "write_contract_to_lakehouse", "module": "data_contracts", "kind": "function", "workflow_step": 7, "role": "essential", "summary_override": "Validate and persist contract records into Fabric metadata tables."},
@@ -285,5 +278,6 @@ PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [
     {"symbol_name": "extract_classifications", "module": "data_contracts", "kind": "function", "workflow_step": 3, "role": "essential", "summary_override": "Extract column classification mappings from a normalized contract."},
     {"symbol_name": "extract_quality_rules", "module": "data_contracts", "kind": "function", "workflow_step": 3, "role": "essential", "summary_override": "Extract raw quality-rule definitions from a normalized contract."},
     {"symbol_name": "get_executable_quality_rules", "module": "data_contracts", "kind": "function", "workflow_step": "6C", "role": "essential", "summary_override": "Return normalized quality rules ready for pipeline enforcement."},
+    {"symbol_name": "standardize_output_columns", "module": "technical_columns", "kind": "function", "workflow_step": "6B", "role": "essential", "summary_override": None},
     {"symbol_name": "build_contract_summary", "module": "data_contracts", "kind": "function", "workflow_step": 7, "role": "essential", "summary_override": "Build a concise contract summary for reviews and handover."},
 ]

@@ -87,39 +87,6 @@
   ],
   "callables": [
     {
-      "module_name": "technical_audit_columns",
-      "visibility": "internal",
-      "module_summary": "Technical/audit enrichment helpers for pipeline outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "add_audit_columns",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": "6B"
-    },
-    {
-      "module_name": "technical_audit_columns",
-      "visibility": "internal",
-      "module_summary": "Technical/audit enrichment helpers for pipeline outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "add_datetime_features",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": "6B"
-    },
-    {
-      "module_name": "technical_audit_columns",
-      "visibility": "internal",
-      "module_summary": "Technical/audit enrichment helpers for pipeline outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "add_hash_columns",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": "6B"
-    },
-    {
       "module_name": "data_quality",
       "visibility": "public",
       "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
@@ -307,17 +274,6 @@
       "workflow_step": 9
     },
     {
-      "module_name": "technical_audit_columns",
-      "visibility": "internal",
-      "module_summary": "Technical/audit enrichment helpers for pipeline outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "default_technical_columns",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": "6B"
-    },
-    {
       "module_name": "data_quality",
       "visibility": "public",
       "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
@@ -426,17 +382,6 @@
       "callable_visibility": "public",
       "callable_role": "optional",
       "workflow_step": 10
-    },
-    {
-      "module_name": "data_profiling",
-      "visibility": "public",
-      "module_summary": "Source/output profiling and metadata conversion helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "generate_metadata_profile",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": 4
     },
     {
       "module_name": "data_contracts",
@@ -604,28 +549,6 @@
       "workflow_step": 4
     },
     {
-      "module_name": "data_profiling",
-      "visibility": "public",
-      "module_summary": "Source/output profiling and metadata conversion helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "profile_dataframe_to_metadata",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": 4
-    },
-    {
-      "module_name": "data_profiling",
-      "visibility": "public",
-      "module_summary": "Source/output profiling and metadata conversion helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "profile_metadata_to_records",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "workflow_step": 4
-    },
-    {
       "module_name": "handover_documentation",
       "visibility": "internal",
       "module_summary": "Run summary and handover markdown helpers.",
@@ -701,6 +624,17 @@
       "callable_visibility": "public",
       "callable_role": "essential",
       "workflow_step": "2B"
+    },
+    {
+      "module_name": "technical_audit_columns",
+      "visibility": "internal",
+      "module_summary": "Technical/audit enrichment helpers for pipeline outputs.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": false,
+      "callable_name": "standardize_output_columns",
+      "callable_visibility": "public",
+      "callable_role": "essential",
+      "workflow_step": "6B"
     },
     {
       "module_name": "data_drift",

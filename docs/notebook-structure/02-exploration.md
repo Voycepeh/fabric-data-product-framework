@@ -61,16 +61,6 @@ Exploration notebook flow used to profile source data and draft advisory AI outp
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a></td>
       <td data-label="Purpose">Read a table from a Microsoft Fabric warehouse.</td>
     </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-04-ingest-profile-store/generate_metadata_profile/"><code>generate_metadata_profile</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_profiling/" title="Open data_profiling module page" aria-label="Open data_profiling module page">data_profiling</a></td>
-      <td data-label="Purpose">Generate standard metadata profile rows for a Spark/Fabric DataFrame.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-04-ingest-profile-store/profile_dataframe_to_metadata/"><code>profile_dataframe_to_metadata</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_profiling/" title="Open data_profiling module page" aria-label="Open data_profiling module page">data_profiling</a></td>
-      <td data-label="Purpose">Profile a Spark/Fabric DataFrame into metadata-compatible metadata rows.</td>
-    </tr>
   </tbody>
 </table>
 

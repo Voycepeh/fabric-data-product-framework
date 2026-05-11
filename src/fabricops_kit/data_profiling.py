@@ -13,7 +13,7 @@ import re
 from typing import Any
 
 
-from fabricops_kit.technical_columns import default_technical_columns
+from fabricops_kit.technical_columns import _default_technical_columns
 
 
 EMAIL_RE = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
@@ -99,7 +99,7 @@ def get_profiled_columns(df, exclude_columns: list[str] | set[str] | None = None
     list[str]
         Eligible business columns to profile.
     """
-    excluded = set(default_technical_columns())
+    excluded = set(_default_technical_columns())
     if exclude_columns:
         excluded.update(exclude_columns)
     return [name for name, _dtype in df.dtypes if name not in excluded]
@@ -128,7 +128,7 @@ def is_min_max_supported_type(data_type: str) -> bool:
     return any(token in value for token in supported)
 
 
-def profile_dataframe_to_metadata(
+def __profile_dataframe_to_metadata(
     df,
     table_name: str,
     *,
@@ -145,7 +145,7 @@ def profile_dataframe_to_metadata(
 
     Examples
     --------
-    >>> profile_df = profile_dataframe_to_metadata(df, "orders_clean")
+    >>> profile_df = _profile_dataframe_to_metadata(df, "orders_clean")
     >>> # lakehouse_table_write(profile_df, lh_out, "METADATA_DEX_UNIFIED", mode="append")
     """
     from pyspark.sql import functions as F
@@ -192,7 +192,7 @@ def profile_dataframe_to_metadata(
     return out
 
 
-def generate_metadata_profile(df, table_name: str, exclude_columns=None, run_timestamp_timezone="Asia/Singapore"):
+def __generate_metadata_profile(df, table_name: str, exclude_columns=None, run_timestamp_timezone="Asia/Singapore"):
     """Generate standard metadata profile rows for a Spark/Fabric DataFrame.
 
     Parameters
@@ -211,7 +211,7 @@ def generate_metadata_profile(df, table_name: str, exclude_columns=None, run_tim
     Any
         Spark DataFrame with metadata profile records.
     """
-    return profile_dataframe_to_metadata(
+    return _profile_dataframe_to_metadata(
         df=df,
         table_name=table_name,
         exclude_columns=exclude_columns,
@@ -219,7 +219,7 @@ def generate_metadata_profile(df, table_name: str, exclude_columns=None, run_tim
     )
 
 
-def profile_metadata_to_records(profile_df) -> list[dict[str, Any]]:
+def __profile_metadata_to_records(profile_df) -> list[dict[str, Any]]:
     """Convert Spark metadata profile rows into JSON-friendly dictionaries."""
     records = []
     for row in profile_df.collect():
@@ -253,7 +253,7 @@ def build_ai_quality_context(
     ...     business_context="Customer orders used for sales reporting",
     ... )
     """
-    records = profile_metadata_to_records(profile_df)
+    records = _profile_metadata_to_records(profile_df)
     row_count = int(records[0].get("ROW_COUNT", 0)) if records else 0
     columns = [r.get("COLUMN_NAME") for r in records]
 
@@ -330,8 +330,8 @@ def profile_dataframe(df, dataset_name: str = "unknown", sample_size: int = 5, t
     -----
     The ``engine`` parameter is a deprecated compatibility placeholder.
     """
-    metadata_df = profile_dataframe_to_metadata(df, table_name=dataset_name)
-    records = profile_metadata_to_records(metadata_df)
+    metadata_df = _profile_dataframe_to_metadata(df, table_name=dataset_name)
+    records = _profile_metadata_to_records(metadata_df)
     return {
         "dataset_name": dataset_name,
         "engine": "spark",
