@@ -54,13 +54,13 @@ def test_02_ex_and_03_pc_share_same_dq_table_key_convention():
     pc = _all_code("templates/notebooks/03_pc_agreement_source_to_target.ipynb")
     assert 'DQ_TABLE_NAME = TARGET_TABLE' in ex
     assert 'DQ_TABLE_NAME = TARGET_TABLE' in pc
-    assert 'build_dq_rule_history(' in ex and 'table_name=DQ_TABLE_NAME' in ex
-    assert 'load_active_dq_rules(metadata_dq_rules, table_name=DQ_TABLE_NAME)' in pc
+    assert 'write_dq_rules(' in ex and 'table_name=DQ_TABLE_NAME' in ex
+    assert 'enforce_dq_rules(df_standard, table_name=DQ_TABLE_NAME, metadata_df=metadata_dq_rules, dq_run_id=RUN_ID)' in pc
 
 
 def test_03_pc_deterministic_only_and_valid_run_dq_signature():
     pc = _all_code("templates/notebooks/03_pc_agreement_source_to_target.ipynb")
-    assert "run_dq_rules(df_standard, table_name=DQ_TABLE_NAME, rules=rules)" in pc
+    assert "enforce_dq_rules(df_standard, table_name=DQ_TABLE_NAME, metadata_df=metadata_dq_rules, dq_run_id=RUN_ID)" in pc
     assert "fail_on_error=False" not in pc
     assert "suggest_dq_rules" not in pc
     assert "extract_dq_rules" not in pc

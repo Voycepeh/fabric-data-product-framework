@@ -85,15 +85,10 @@ from .ai import (
     parse_manual_ai_json_response,
 )
 from .data_quality import (
-    profile_for_dq,
-    suggest_dq_rules,
-    extract_dq_rules,
+    draft_dq_rules,
+    write_dq_rules,
+    enforce_dq_rules,
     validate_dq_rules,
-    build_dq_rule_history,
-    build_dq_rule_deactivations,
-    load_active_dq_rules,
-    split_dq_rows,
-    run_dq_rules,
     assert_dq_passed,
 )
 from .dq_review import review_dq_rules, review_dq_rule_deactivations
@@ -106,13 +101,9 @@ __version__ = "0.1.0"
 __all__ = [
     "review_dq_rule_deactivations",
     "review_dq_rules",
-    "load_active_dq_rules",
-    "build_dq_rule_deactivations",
-    "build_dq_rule_history",
-    "split_dq_rows",
-    "extract_dq_rules",
-    "suggest_dq_rules",
-    "profile_for_dq",
+    "draft_dq_rules",
+    "write_dq_rules",
+    "enforce_dq_rules",
     "Housepath",
     "validate_framework_config",
     "bootstrap_fabric_env",
@@ -137,7 +128,6 @@ __all__ = [
     "profile_metadata_to_records",
     "generate_metadata_profile",
     "build_ai_quality_context",
-    "run_dq_rules",
     "assert_dq_passed",
     "validate_dq_rules",
     "parse_manual_ai_json_response",

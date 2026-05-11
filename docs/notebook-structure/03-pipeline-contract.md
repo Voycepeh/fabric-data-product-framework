@@ -120,24 +120,9 @@ Pipeline-contract notebook flow for deterministic enforcement and controlled pub
   </thead>
   <tbody>
     <tr>
-      <td data-label="Function / class"><a href="../../reference/step-06c-pipeline-controls/run_dq_rules/"><code>run_dq_rules</code></a></td>
+      <td data-label="Function / class"><a href="../../reference/step-06c-pipeline-controls/enforce_dq_rules/"><code>enforce_dq_rules</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
-      <td data-label="Purpose">Run notebook-facing DQ rules and return a Spark DataFrame result.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-06c-pipeline-controls/load_active_dq_rules/"><code>load_active_dq_rules</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
-      <td data-label="Purpose">Load latest active approved rules from append-only metadata history.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-06c-pipeline-controls/run_dq_rules/"><code>run_dq_rules</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
-      <td data-label="Purpose">Run notebook-facing DQ rules and return a Spark DataFrame result.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-06c-pipeline-controls/split_dq_rows/"><code>split_dq_rows</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
-      <td data-label="Purpose">Split source rows into valid rows, quarantine rows, and one-row-per-failure evidence.</td>
+      <td data-label="Purpose">Enforce approved DQ rules and return structured deterministic outputs.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-06d-controlled-outputs/assert_dq_passed/"><code>assert_dq_passed</code></a></td>
