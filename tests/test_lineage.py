@@ -1,4 +1,4 @@
-from fabricops_kit.lineage import (
+from fabricops_kit.data_lineage import (
     build_lineage_from_notebook_code,
     build_lineage_record_from_steps,
     enrich_lineage_steps_with_ai,

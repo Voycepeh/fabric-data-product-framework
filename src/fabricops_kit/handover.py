@@ -126,7 +126,7 @@ def create_pipeline_notebook_template(
 import fabricops_kit as fw
 
 # %%
-from fabricops_kit.fabric_io import (
+from fabricops_kit.fabric_input_output import (
     load_fabric_config,
     get_path,
     check_naming_convention,

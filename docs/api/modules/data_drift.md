@@ -1,24 +1,17 @@
-# `data_drift` module
+# `data_drift` module (internal)
 
 <div class="api-status-block">
-  <span class="api-chip api-chip-internal">Advanced supporting module</span>
-  <div class="api-chip-subtitle">Used by workflow references but not promoted as a primary notebook module.</div>
+  <span class="api-chip api-chip-internal">Internal-only module</span>
+  <div class="api-chip-subtitle">Not intended as a primary user-facing API surface.</div>
 </div>
 
 ## Recommended notebook entrypoints
 
-| Callable | Type | Summary | Related helpers |
-|---|---|---|---|
-| — | — | No recommended entrypoints configured. | — |
+No public exports in this module.
 
 ## Advanced helpers
 
-| Callable | Type | Summary | Related helpers |
-|---|---|---|---|
-| [`check_partition_drift`](../../reference/step-04-ingest-profile-store/check_partition_drift.md) | function | Check partition-level drift using keys, partitions, and optional watermark baselines. | — |
-| [`check_profile_drift`](../../reference/step-04-ingest-profile-store/check_profile_drift.md) | function | Compare profile metrics against a baseline profile and drift thresholds. | — |
-| [`check_schema_drift`](../../reference/step-04-ingest-profile-store/check_schema_drift.md) | function | Compare a current dataframe schema against a baseline schema snapshot. | — |
-| [`summarize_drift_results`](../../reference/step-04-ingest-profile-store/summarize_drift_results.md) | function | Summarize schema, partition, and profile drift outcomes into one decision. | — |
+No advanced helpers listed for this module.
 
 ## Internal helpers
 

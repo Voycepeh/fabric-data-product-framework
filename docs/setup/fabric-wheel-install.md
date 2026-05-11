@@ -118,7 +118,7 @@ print("Package version:", getattr(fdpf, "__version__", "unknown"))
 ```
 
 ```python
-from fabricops_kit.profiling import profile_dataframe
+from fabricops_kit.data_profiling import profile_dataframe
 import pandas as pd
 
 sample_df = pd.DataFrame(

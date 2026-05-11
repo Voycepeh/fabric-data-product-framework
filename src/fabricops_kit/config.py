@@ -540,7 +540,7 @@ def run_config_smoke_tests(
     check_ai : bool, default=True
         Whether to run the Fabric AI availability check.
     check_io_import : bool, default=False
-        Whether to test importability of ``fabric_io`` helpers.
+        Whether to test importability of ``fabric_input_output`` helpers.
     notebook_name : str | None, optional
         Notebook name to validate against configured naming prefixes.
     ai_result : dict[str, Any] | None, optional
@@ -608,7 +608,7 @@ def run_config_smoke_tests(
 
     if check_io_import:
         try:
-            from .fabric_io import lakehouse_table_read  # noqa: F401
+            from .fabric_input_output import lakehouse_table_read  # noqa: F401
             results.append(ConfigSmokeCheckResult("fabric_io_import", "pass", "fabric_io helpers are importable."))
         except Exception as exc:
             results.append(ConfigSmokeCheckResult("fabric_io_import", "fail", str(exc)))

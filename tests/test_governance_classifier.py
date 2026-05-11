@@ -1,6 +1,6 @@
 import json
 
-from fabricops_kit.governance import (
+from fabricops_kit.data_governance import (
     build_governance_classification_records,
     classify_column,
     classify_columns,

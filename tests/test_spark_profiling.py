@@ -1,6 +1,6 @@
 import pytest
 
-from fabricops_kit.profiling import (
+from fabricops_kit.data_profiling import (
     generate_metadata_profile,
     profile_dataframe_to_metadata,
 )

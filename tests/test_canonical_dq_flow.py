@@ -1,7 +1,7 @@
 import pytest
 from pyspark.sql import SparkSession
 from fabricops_kit.config import create_ai_prompt_config
-from fabricops_kit.dq import (
+from fabricops_kit.data_quality import (
     validate_dq_rules,
     extract_dq_rules,
     build_dq_rule_history,

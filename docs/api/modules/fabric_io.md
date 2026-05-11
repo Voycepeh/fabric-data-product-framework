@@ -1,4 +1,4 @@
-# `fabric_io` module
+# `fabric_input_output` module
 
 <div class="api-status-block">
   <span class="api-chip api-chip-module">Module overview</span>

@@ -1,6 +1,6 @@
 import pandas as pd
 
-from fabricops_kit.profiling import (
+from fabricops_kit.data_profiling import (
     build_ai_quality_context,
     default_technical_columns,
     flatten_profile_for_metadata,

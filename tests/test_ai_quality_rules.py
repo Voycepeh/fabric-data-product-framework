@@ -1,13 +1,13 @@
 import pandas as pd
 
-from fabricops_kit.quality import (
+from fabricops_kit.data_quality import (
     build_layman_rule_records,
     build_quality_rule_generation_prompt,
     build_quality_rule_prompt_context,
     parse_ai_quality_rule_candidates,
 )
-from fabricops_kit.quality import add_dq_failure_columns, split_valid_and_quarantine
-from fabricops_kit.quality import compile_layman_rules_to_quality_rules
+from fabricops_kit.data_quality import add_dq_failure_columns, split_valid_and_quarantine
+from fabricops_kit.data_quality import compile_layman_rules_to_quality_rules
 
 
 def test_prompt_context_and_prompt_instructions():

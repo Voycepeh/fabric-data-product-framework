@@ -15,7 +15,7 @@ def test_00_env_config_import_and_default_prompt_override_guard():
     cells = _code_cells("templates/notebooks/00_env_config.ipynb")
     import_block = cells[0]
     prompt_block = "\n".join(cells)
-    assert "from fabricops_kit.environment_config import (" in import_block
+    assert "from fabricops_kit.config import (" in import_block
     assert "create_ai_prompt_config" in import_block
     assert "AI_PROMPT_CONFIG = create_ai_prompt_config()" in prompt_block
     assert "if DQ_RULE_CANDIDATE_PROMPT_TEMPLATE_OVERRIDE is not None:" in prompt_block
@@ -38,7 +38,7 @@ def test_02_ex_contract_and_runtime_handoff_is_runnable():
 
 def test_02_ex_uses_widget_approved_rules_and_persists_metadata_table():
     ex = _all_code("templates/notebooks/02_ex_agreement_topic.ipynb")
-    assert "import fabricops_kit.dq_review as dq_review" in ex
+    assert "import fabricops_kit.data_quality_review as dq_review" in ex
     assert "HUMAN_APPROVED_RULES = list(dq_review.APPROVED_RULES_FROM_WIDGET)" in ex
     assert "r.get('approval_status', 'approved') == 'approved'" not in ex
     assert "title='AI suggests (advisory), human reviews'" not in ex

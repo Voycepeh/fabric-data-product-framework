@@ -2,7 +2,7 @@
 
 This framework keeps **GitHub as the source of truth** and treats the **Fabric notebook as the execution environment**.
 
-The helpers in `fabricops_kit.runtime` and `fabricops_kit.fabric_io` provide a lightweight way to standardize runtime setup now, without waiting for full engine features.
+The helpers in `fabricops_kit.runtime` and `fabricops_kit.fabric_input_output` provide a lightweight way to standardize runtime setup now, without waiting for full engine features.
 
 ## Recommended notebook startup pattern
 
@@ -15,7 +15,7 @@ from fabricops_kit.runtime import (
     assert_notebook_name_valid,
     build_runtime_context,
 )
-from fabricops_kit.fabric_io import build_table_identifier, read_table, write_table
+from fabricops_kit.fabric_input_output import build_table_identifier, read_table, write_table
 
 ctx = build_runtime_context(
     dataset_name="synthetic_orders",

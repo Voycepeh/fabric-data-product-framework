@@ -76,7 +76,7 @@ def test_validate_notebook_name_reads_prefixes_from_framework_config():
         PathConfig,
         QualityConfig,
     )
-    from fabricops_kit.fabric_io import Housepath
+    from fabricops_kit.fabric_input_output import Housepath
 
     config = FrameworkConfig(
         path_config=PathConfig({"Sandbox": {"Source": Housepath("w", "h", "n", "abfss://x")}}),

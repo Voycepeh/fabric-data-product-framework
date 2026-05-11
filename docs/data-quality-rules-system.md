@@ -30,7 +30,7 @@ responses = suggest_dq_rules(
     output_col="ai_response",
 )
 candidate_rules = extract_dq_rules(responses, table_name=DQ_TABLE_NAME)
-import fabricops_kit.dq_review as dq_review
+import fabricops_kit.data_quality_review as dq_review
 
 review_dq_rules(candidate_rules, table_name=DQ_TABLE_NAME)
 approved = list(dq_review.APPROVED_RULES_FROM_WIDGET)

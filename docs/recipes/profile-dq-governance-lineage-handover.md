@@ -15,21 +15,21 @@ handover-ready artifacts.
 ## Example
 
 ```python
-from fabricops_kit.quality import run_dq_workflow
+from fabricops_kit.data_quality import run_dq_workflow
 from fabricops_kit.drift import (
     check_profile_drift,
     summarize_drift_results,
 )
-from fabricops_kit.governance import (
+from fabricops_kit.data_governance import (
     build_governance_classification_records,
     classify_columns,
 )
-from fabricops_kit.lineage import (
+from fabricops_kit.data_lineage import (
     build_lineage_records,
     build_lineage_handover_markdown,
     plot_lineage_steps,
 )
-from fabricops_kit.profiling import profile_dataframe
+from fabricops_kit.data_profiling import profile_dataframe
 
 dataset_name = "sales_orders"
 table_name = "silver_sales_orders"

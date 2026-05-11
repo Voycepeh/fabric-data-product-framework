@@ -1,4 +1,4 @@
-# `profiling` module
+# `data_profiling` module
 
 <div class="api-status-block">
   <span class="api-chip api-chip-module">Module overview</span>

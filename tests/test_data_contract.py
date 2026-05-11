@@ -3,7 +3,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from fabricops_kit.quality import (
+from fabricops_kit.data_quality import (
     assert_data_product_passed,
     build_runtime_context_from_contract,
     load_data_contract,
