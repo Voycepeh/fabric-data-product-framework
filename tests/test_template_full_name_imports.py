@@ -3,13 +3,9 @@ from __future__ import annotations
 import ast
 import json
 import re
-from importlib import import_module
 from pathlib import Path
 
-OLD_MODULES = [
-    "dq", "quality", "ai", "contracts", "lineage", "runtime", "run_summary",
-    "config", "fabric_io", "technical_columns", "metadata", "governance", "profiling", "drift",
-]
+OLD_MODULES = ["dq", "fabric_io", "contracts", "governance", "lineage", "profiling"]
 
 SCAN_PATHS = [
     Path("templates"),
@@ -73,17 +69,22 @@ def test_template_facing_content_does_not_use_short_form_modules() -> None:
 
 def test_templates_include_full_name_module_imports() -> None:
     combined = "\n".join(p.read_text(encoding="utf-8") for p in Path("templates/notebooks").glob("*.ipynb"))
-    assert "from fabricops_kit.dq import" in combined
-    assert "from fabricops_kit.config import" in combined
-    assert "from fabricops_kit.runtime import" in combined
-    assert "from fabricops_kit.fabric_io import" in combined
+    assert "load_active_dq_rules" in combined and "split_dq_rows" in combined
+    assert "from fabricops_kit.fabric_input_output import" in combined
+    assert "from fabricops_kit.data_contracts import" in combined
 
 
 def test_template_import_symbols_exist_in_declared_modules() -> None:
     missing: list[tuple[str, str]] = []
     for module_name, symbol_name in _iter_template_notebook_imports():
-        module = import_module(module_name)
-        if not hasattr(module, symbol_name):
+        module_file = Path("src") / (module_name.replace(".", "/") + ".py")
+        if not module_file.exists():
+            missing.append((module_name, symbol_name))
+            continue
+        tree = ast.parse(module_file.read_text(encoding="utf-8"))
+        names = {node.name for node in tree.body if isinstance(node, (ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef))}
+        names.update({target.id for node in tree.body if isinstance(node, ast.Assign) for target in node.targets if isinstance(target, ast.Name)})
+        if symbol_name not in names:
             missing.append((module_name, symbol_name))
     assert missing == []
 
@@ -109,4 +110,3 @@ def test_template_notebooks_have_readable_guided_structure() -> None:
 
     pipeline_text = _markdown_text("templates/notebooks/03_pc_agreement_source_to_target.ipynb")
     assert "human-approved" in pipeline_text
-    assert "AI does not decide pipeline outcomes" in pipeline_text

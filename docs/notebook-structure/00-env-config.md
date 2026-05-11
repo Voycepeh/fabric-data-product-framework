@@ -23,7 +23,7 @@ Describe what this shared config notebook sets up and what downstream exploratio
   <tbody>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/Housepath/"><code>Housepath</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a></td>
       <td data-label="Purpose">Fabric lakehouse or warehouse connection details.</td>
     </tr>
     <tr>

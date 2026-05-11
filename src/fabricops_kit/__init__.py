@@ -8,7 +8,7 @@ from .config import (
     run_config_smoke_tests,
     validate_framework_config,
 )
-from .fabric_io import (
+from .fabric_input_output import (
     Housepath,
     lakehouse_csv_read,
     lakehouse_excel_read_as_spark,
@@ -20,7 +20,7 @@ from .fabric_io import (
     warehouse_write,
     seed_minimal_sample_source_table,
 )
-from .lineage import (
+from .data_lineage import (
     build_lineage_from_notebook_code,
     build_lineage_handover_markdown,
     build_lineage_record_from_steps,
@@ -32,14 +32,14 @@ from .lineage import (
     scan_notebook_lineage,
     validate_lineage_steps,
 )
-from .governance import (
+from .data_governance import (
     build_governance_classification_records,
     classify_column,
     classify_columns,
     summarize_governance_classifications,
     write_governance_classifications,
 )
-from .contracts import (
+from .data_contracts import (
     build_contract_column_records,
     build_contract_header_record,
     build_contract_records,
@@ -67,7 +67,7 @@ from .metadata import (
     write_metadata_records,
     write_multiple_metadata_outputs,
 )
-from .profiling import (
+from .data_profiling import (
     build_ai_quality_context,
     profile_dataframe,
     profile_dataframe_to_metadata,
@@ -87,7 +87,7 @@ from .ai import (
     generate_handover_summary_with_fabric_ai,
     parse_manual_ai_json_response,
 )
-from .dq import (
+from .data_quality import (
     AI_SUGGESTABLE_DQ_RULE_TYPES,
     profile_for_dq,
     suggest_dq_rules,

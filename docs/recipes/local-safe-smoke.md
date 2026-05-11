@@ -16,13 +16,13 @@ and without Fabric lakehouse reads or writes.
 ```python
 import pandas as pd
 
-from fabricops_kit.lineage import (
+from fabricops_kit.data_lineage import (
     build_lineage_records,
     build_lineage_handover_markdown,
     plot_lineage_steps,
 )
-from fabricops_kit.profiling import profile_dataframe
-from fabricops_kit.dq import run_quality_rules
+from fabricops_kit.data_profiling import profile_dataframe
+from fabricops_kit.data_quality import run_quality_rules
 
 dataset_name = "orders_local"
 table_name = "orders"

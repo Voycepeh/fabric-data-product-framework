@@ -63,17 +63,17 @@ Pipeline-contract notebook flow for deterministic enforcement and controlled pub
   <tbody>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-03-source-contract-ingestion-pattern/load_latest_approved_contract/"><code>load_latest_approved_contract</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a></td>
       <td data-label="Purpose">Load the latest approved contract for a dataset/object pair.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-03-source-contract-ingestion-pattern/lakehouse_table_read/"><code>lakehouse_table_read</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a></td>
       <td data-label="Purpose">Read a Delta table from a Fabric lakehouse.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-03-source-contract-ingestion-pattern/warehouse_read/"><code>warehouse_read</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a></td>
       <td data-label="Purpose">Read a table from a Microsoft Fabric warehouse.</td>
     </tr>
   </tbody>
@@ -92,17 +92,17 @@ Pipeline-contract notebook flow for deterministic enforcement and controlled pub
   <tbody>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-03-source-contract-ingestion-pattern/extract_required_columns/"><code>extract_required_columns</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a></td>
       <td data-label="Purpose">Extract required column names from a normalized contract.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-06c-pipeline-controls/get_executable_quality_rules/"><code>get_executable_quality_rules</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a></td>
       <td data-label="Purpose">Return normalized quality rules ready for pipeline enforcement.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-06c-pipeline-controls/validate_dq_rules/"><code>validate_dq_rules</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
       <td data-label="Purpose">Validate canonical DQ rules before enforcement.</td>
     </tr>
   </tbody>
@@ -121,37 +121,37 @@ Pipeline-contract notebook flow for deterministic enforcement and controlled pub
   <tbody>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-06c-pipeline-controls/run_dq_rules/"><code>run_dq_rules</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
       <td data-label="Purpose">Run notebook-facing DQ rules and return a Spark DataFrame result.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-06c-pipeline-controls/load_active_dq_rules/"><code>load_active_dq_rules</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
       <td data-label="Purpose">Load latest active approved rules from append-only metadata history.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-06c-pipeline-controls/run_dq_rules/"><code>run_dq_rules</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
       <td data-label="Purpose">Run notebook-facing DQ rules and return a Spark DataFrame result.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-06c-pipeline-controls/split_dq_rows/"><code>split_dq_rows</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
       <td data-label="Purpose">Split source rows into valid rows, quarantine rows, and one-row-per-failure evidence.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-06d-controlled-outputs/assert_dq_passed/"><code>assert_dq_passed</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/dq/" title="Open dq module page" aria-label="Open dq module page">dq</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
       <td data-label="Purpose">Raise only after evidence materialization when error-severity rules fail.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-06d-controlled-outputs/lakehouse_table_write/"><code>lakehouse_table_write</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a></td>
       <td data-label="Purpose">Write a Spark DataFrame to a Fabric lakehouse Delta table.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-06d-controlled-outputs/warehouse_write/"><code>warehouse_write</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_io/" title="Open fabric_io module page" aria-label="Open fabric_io module page">fabric_io</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a></td>
       <td data-label="Purpose">Write a Spark DataFrame to a Microsoft Fabric warehouse table.</td>
     </tr>
   </tbody>
@@ -180,12 +180,12 @@ Pipeline-contract notebook flow for deterministic enforcement and controlled pub
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-07-output-profile-product-contract/build_contract_records/"><code>build_contract_records</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/contracts/" title="Open contracts module page" aria-label="Open contracts module page">contracts</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a></td>
       <td data-label="Purpose">Build grouped contract header, column, and rule metadata payloads.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-10-lineage-handover-documentation/build_lineage_records/"><code>build_lineage_records</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/lineage/" title="Open lineage module page" aria-label="Open lineage module page">lineage</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a></td>
       <td data-label="Purpose">Build compact lineage records for downstream metadata sinks.</td>
     </tr>
   </tbody>

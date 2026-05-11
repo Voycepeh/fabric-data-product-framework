@@ -14,13 +14,13 @@ committing to a full production write path.
 ## Example
 
 ```python
-from fabricops_kit.dq import run_dq_workflow
-from fabricops_kit.fabric_io import (
+from fabricops_kit.data_quality import run_dq_workflow
+from fabricops_kit.fabric_input_output import (
     get_path,
     lakehouse_table_read,
     load_fabric_config,
 )
-from fabricops_kit.profiling import profile_dataframe
+from fabricops_kit.data_profiling import profile_dataframe
 
 DRY_RUN = True
 

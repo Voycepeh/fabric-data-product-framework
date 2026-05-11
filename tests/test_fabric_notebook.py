@@ -1,7 +1,7 @@
 import pytest
 
 from fabricops_kit.config import PathConfig
-from fabricops_kit.fabric_io import (
+from fabricops_kit.fabric_input_output import (
     Housepath,
     check_naming_convention,
     get_path,
@@ -9,7 +9,7 @@ from fabricops_kit.fabric_io import (
     lakehouse_table_write,
 )
 
-from fabricops_kit.profiling import generate_metadata_profile
+from fabricops_kit.data_profiling import generate_metadata_profile
 from fabricops_kit.technical_columns import add_audit_columns, add_datetime_features
 
 class FakeWriter:

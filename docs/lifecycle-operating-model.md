@@ -68,7 +68,7 @@ The lifecycle is coordinated through approved metadata stored in Fabric metadata
 
 Core metadata includes:
 
-- `contracts`
+- `data_contracts`
 - `contract_columns`
 - `contract_rules`
 - `dataset_runs`

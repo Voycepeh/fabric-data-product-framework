@@ -150,7 +150,7 @@ from fabricops_kit.config import (
     get_path,
     run_config_smoke_tests,
 )
-from fabricops_kit.fabric_io import Housepath, load_fabric_config
+from fabricops_kit.fabric_input_output import Housepath, load_fabric_config
 
 
 def _sample_framework_config():

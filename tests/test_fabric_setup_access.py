@@ -1,6 +1,6 @@
 import pytest
 
-from fabricops_kit.fabric_io import (
+from fabricops_kit.fabric_input_output import (
     Housepath,
     build_table_identifier,
     get_path,

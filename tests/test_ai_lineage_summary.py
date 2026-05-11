@@ -1,4 +1,4 @@
-from fabricops_kit.lineage import (
+from fabricops_kit.data_lineage import (
     build_transformation_summary_generation_prompt,
     build_transformation_summary_prompt_context,
     build_transformation_summary_records,

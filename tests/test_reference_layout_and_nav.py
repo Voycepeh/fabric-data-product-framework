@@ -13,7 +13,7 @@ def test_reference_index_templates_first_sections_present() -> None:
     assert "https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb" in text
     assert "https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/02_ex_agreement_topic.ipynb" in text
     assert "https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb" in text
-    assert "../api/modules/dq/" not in text
+    assert "../api/modules/data_quality/" not in text
     assert "../api/modules/quality/" not in text
     template_section = text.split("## Find a callable", 1)[0]
     assert "../api/modules/runtime_context/" not in template_section

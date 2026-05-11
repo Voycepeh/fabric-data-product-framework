@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 import pandas as pd
 import pytest
 
-from fabricops_kit.dq import (
+from fabricops_kit.data_quality import (
     DataQualityError,
     assert_quality_gate,
     build_quality_result_records,

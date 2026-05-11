@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 import json
 from typing import Any
 
-from fabricops_kit.fabric_io import Housepath, lakehouse_table_read, lakehouse_table_write
+from fabricops_kit.fabric_input_output import Housepath, lakehouse_table_read, lakehouse_table_write
 
 CONTRACT_TYPES = {"source_input", "output_product"}
 CONTRACT_STATUSES = {"draft", "approved", "retired"}
