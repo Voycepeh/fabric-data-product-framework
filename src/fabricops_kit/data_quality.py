@@ -29,7 +29,7 @@ def _resolve_action_by(action_by: str | None) -> str:
 from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 from pyspark.sql import SparkSession
-from .data_profiling import profile_dataframe_to_metadata
+from .data_profiling import profile_dataframe
 from .fabric_input_output import lakehouse_table_write
 
 AI_SUGGESTABLE_DQ_RULE_TYPES = {"not_null", "unique_key", "accepted_values", "value_range", "regex_format"}
@@ -413,7 +413,7 @@ def _prepare_dq_profile_input(*, profile_df=None, df=None, table_name: str, busi
     if (profile_df is None) == (df is None):
         raise ValueError("Provide exactly one of profile_df or df.")
     if profile_df is None:
-        profile_df = profile_dataframe_to_metadata(df, table_name=table_name)
+        profile_df = profile_dataframe(df, table_name=table_name)
     cols = set(profile_df.columns)
     if {"column_name", "data_type", "row_count", "null_count", "distinct_count"}.issubset(cols):
         return profile_df

@@ -233,8 +233,8 @@ PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [
     {"symbol_name": "warehouse_write", "module": "fabric_input_output", "kind": "function", "workflow_step": "6D", "role": "essential", "summary_override": None},
     {"symbol_name": "seed_minimal_sample_source_table", "module": "fabric_input_output", "kind": "function", "workflow_step": 4, "role": "optional", "summary_override": "Create and persist deterministic demo rows into a sample source table."},
     
-                    {"symbol_name": "profile_dataframe", "module": "data_profiling", "kind": "function", "workflow_step": 4, "role": "optional", "summary_override": None},
-    {"symbol_name": "build_ai_quality_context", "module": "data_profiling", "kind": "function", "workflow_step": 4, "role": "essential", "summary_override": None},
+    {"symbol_name": "profile_dataframe", "module": "data_profiling", "kind": "function", "workflow_step": 4, "role": "essential", "summary_override": None},
+    {"symbol_name": "build_ai_quality_context", "module": "data_profiling", "kind": "function", "workflow_step": 4, "role": "optional", "summary_override": None},
     {"symbol_name": "validate_dq_rules", "module": "data_quality", "kind": "function", "workflow_step": "6C", "role": "optional", "summary_override": None},
     {"symbol_name": "assert_dq_passed", "module": "data_quality", "kind": "function", "workflow_step": "6D", "role": "essential", "summary_override": None},
     {"symbol_name": "draft_dq_rules", "module": "data_quality", "kind": "function", "workflow_step": 8, "role": "essential", "summary_override": None},

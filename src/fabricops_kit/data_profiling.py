@@ -128,7 +128,7 @@ def is_min_max_supported_type(data_type: str) -> bool:
     return any(token in value for token in supported)
 
 
-def __profile_dataframe_to_metadata(
+def _profile_dataframe_to_metadata(
     df,
     table_name: str,
     *,
@@ -192,7 +192,7 @@ def __profile_dataframe_to_metadata(
     return out
 
 
-def __generate_metadata_profile(df, table_name: str, exclude_columns=None, run_timestamp_timezone="Asia/Singapore"):
+def _generate_metadata_profile(df, table_name: str, exclude_columns=None, run_timestamp_timezone="Asia/Singapore"):
     """Generate standard metadata profile rows for a Spark/Fabric DataFrame.
 
     Parameters
@@ -219,7 +219,7 @@ def __generate_metadata_profile(df, table_name: str, exclude_columns=None, run_t
     )
 
 
-def __profile_metadata_to_records(profile_df) -> list[dict[str, Any]]:
+def _profile_metadata_to_records(profile_df) -> list[dict[str, Any]]:
     """Convert Spark metadata profile rows into JSON-friendly dictionaries."""
     records = []
     for row in profile_df.collect():
@@ -322,24 +322,32 @@ def build_ai_quality_context(
     }
 
 
-# Legacy helper utilities
-def profile_dataframe(df, dataset_name: str = "unknown", sample_size: int = 5, top_n: int = 5, engine: str = "spark") -> dict[str, Any]:
-    """Build a lightweight profile from a PySpark DataFrame.
-
-    Notes
-    -----
-    The ``engine`` parameter is a deprecated compatibility placeholder.
-    """
-    metadata_df = _profile_dataframe_to_metadata(df, table_name=dataset_name)
-    records = _profile_metadata_to_records(metadata_df)
-    return {
-        "dataset_name": dataset_name,
-        "engine": "spark",
-        "row_count": int(records[0].get("ROW_COUNT", 0)) if records else 0,
-        "column_count": len(records),
-        "columns": records,
-        "generated_at": datetime.utcnow().isoformat(),
-    }
+def profile_dataframe(
+    df,
+    table_name: str,
+    *,
+    exclude_columns=None,
+    run_timestamp_timezone="Asia/Singapore",
+    include_ai_context: bool = False,
+    dataset_name: str | None = None,
+    business_context: str | None = None,
+):
+    """Build canonical DQ-ready profiling rows from a Spark DataFrame."""
+    profile_df = _profile_dataframe_to_metadata(
+        df=df,
+        table_name=table_name,
+        exclude_columns=exclude_columns,
+        run_timestamp_timezone=run_timestamp_timezone,
+    )
+    if include_ai_context:
+        ai_context = build_ai_quality_context(
+            profile_df,
+            dataset_name=dataset_name or table_name,
+            table_name=table_name,
+            business_context=business_context,
+        )
+        return profile_df, ai_context
+    return profile_df
 
 
 def summarize_profile(profile: dict[str, Any]) -> dict[str, Any]:
@@ -352,7 +360,7 @@ def summarize_profile(profile: dict[str, Any]) -> dict[str, Any]:
         ``build_ai_quality_context`` instead.
     """
     raise NotImplementedError(
-        "summarize_profile is deprecated. Use profile_dataframe_to_metadata and build_ai_quality_context."
+        "summarize_profile is deprecated. Use profile_dataframe and build_ai_quality_context."
     )
 
 

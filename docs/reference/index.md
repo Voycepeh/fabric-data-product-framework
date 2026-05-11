@@ -68,9 +68,9 @@ Use the finder below to look up public callables.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
   <p class="reference-catalogue-item-purpose">Raise only after evidence materialization when error-severity rules fail.</p>
 </article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_ai_quality_context" data-callable-module="data_profiling" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Build deterministic AI-ready context from standard metadata profile rows.">
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_ai_quality_context" data-callable-module="data_profiling" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Build deterministic AI-ready context from standard metadata profile rows.">
   <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/build_ai_quality_context/"><code>build_ai_quality_context</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_profiling/" title="Open data_profiling module page" aria-label="Open data_profiling module page">data_profiling</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_profiling/" title="Open data_profiling module page" aria-label="Open data_profiling module page">data_profiling</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Build deterministic AI-ready context from standard metadata profile rows.</p>
 </article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_contract_summary" data-callable-module="data_contracts" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Build a concise contract summary for reviews and handover.">
@@ -268,10 +268,10 @@ Use the finder below to look up public callables.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Render lineage steps as a directed graph figure.</p>
 </article>
-<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="profile_dataframe" data-callable-module="data_profiling" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Build a lightweight profile from a PySpark DataFrame.">
+<article class="reference-catalogue-item" data-callable-row="true" data-callable-name="profile_dataframe" data-callable-module="data_profiling" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Build canonical DQ-ready profiling rows from a Spark DataFrame.">
   <h3 class="reference-catalogue-item-name"><a href="./step-04-ingest-profile-store/profile_dataframe/"><code>profile_dataframe</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_profiling/" title="Open data_profiling module page" aria-label="Open data_profiling module page">data_profiling</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Build a lightweight profile from a PySpark DataFrame.</p>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_profiling/" title="Open data_profiling module page" aria-label="Open data_profiling module page">data_profiling</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Build canonical DQ-ready profiling rows from a Spark DataFrame.</p>
 </article>
 <article class="reference-catalogue-item" data-callable-row="true" data-callable-name="render_run_summary_markdown" data-callable-module="handover_documentation" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Render a run summary dictionary into Markdown for handover notes.">
   <h3 class="reference-catalogue-item-name"><a href="./step-10-lineage-handover-documentation/render_run_summary_markdown/"><code>render_run_summary_markdown</code></a></h3>
