@@ -1,7 +1,7 @@
 import pandas as pd
 
 from fabricops_kit.data_profiling import (
-    build_ai_quality_context,
+    ,
     default_technical_columns,
     flatten_profile_for_metadata,
     get_profiled_columns,
@@ -61,13 +61,13 @@ def test_profile_metadata_to_records_collects_as_dict_rows():
     assert rows[1]["COLUMN_NAME"] == "status"
 
 
-def test_build_ai_quality_context_returns_expected_sections():
+def test__returns_expected_sections():
     profile_df = FakeProfileDF([
         FakeRow(COLUMN_NAME="order_id", DATA_TYPE="string", ROW_COUNT=100, NULL_COUNT=0, NULL_PERCENT=0.0, DISTINCT_COUNT=100, DISTINCT_PERCENT=100.0, MIN_VALUE="1", MAX_VALUE="100"),
         FakeRow(COLUMN_NAME="order_status", DATA_TYPE="string", ROW_COUNT=100, NULL_COUNT=2, NULL_PERCENT=2.0, DISTINCT_COUNT=3, DISTINCT_PERCENT=3.0, MIN_VALUE="OPEN", MAX_VALUE="CLOSED"),
         FakeRow(COLUMN_NAME="event_timestamp", DATA_TYPE="timestamp", ROW_COUNT=100, NULL_COUNT=0, NULL_PERCENT=0.0, DISTINCT_COUNT=95, DISTINCT_PERCENT=95.0, MIN_VALUE="2026-01-01", MAX_VALUE="2026-01-31"),
     ])
-    context = build_ai_quality_context(profile_df, dataset_name="orders", table_name="orders_clean")
+    context = (profile_df, dataset_name="orders", table_name="orders_clean")
     assert context["dataset_name"] == "orders"
     assert context["table_name"] == "orders_clean"
     assert context["row_count"] == 100
@@ -97,7 +97,7 @@ def test_legacy_profile_dataframe_supports_pandas():
     try:
         summarize_profile({})
     except NotImplementedError as exc:
-        assert "build_ai_quality_context" in str(exc)
+        assert "" in str(exc)
     else:
         raise AssertionError("Expected NotImplementedError")
 

@@ -4,21 +4,19 @@
   <span class="api-chip api-chip-module">Module overview</span>
 </div>
 
-## Recommended notebook entrypoints
+## Essential callables
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`build_ai_quality_context`](../../reference/step-04-ingest-profile-store/build_ai_quality_context.md) | function | Build deterministic AI-ready context from standard metadata profile rows. | — |
-| [`generate_metadata_profile`](../../reference/step-04-ingest-profile-store/generate_metadata_profile.md) | function | Generate standard metadata profile rows for a Spark/Fabric DataFrame. | — |
-| [`profile_dataframe_to_metadata`](../../reference/step-04-ingest-profile-store/profile_dataframe_to_metadata.md) | function | Profile a Spark/Fabric DataFrame into metadata-compatible metadata rows. | — |
+| [`profile_dataframe`](../../reference/step-04-ingest-profile-store/profile_dataframe.md) | function | Build canonical DQ-ready profiling rows from a Spark DataFrame. | [`_get_profiled_columns`](../../reference/internal/data_profiling/_get_profiled_columns.md) (internal), [`_is_min_max_supported_type`](../../reference/internal/data_profiling/_is_min_max_supported_type.md) (internal) |
 
-## Advanced helpers
+## Optional callables
 
-| Callable | Type | Summary | Related helpers |
-|---|---|---|---|
-| [`profile_dataframe`](../../reference/step-04-ingest-profile-store/profile_dataframe.md) | function | Build a lightweight profile for pandas or Spark-like DataFrames. | — |
-| [`profile_metadata_to_records`](../../reference/step-04-ingest-profile-store/profile_metadata_to_records.md) | function | Convert Spark metadata profile rows into JSON-friendly dictionaries. | — |
+No advanced helpers listed for this module.
 
-## Internal helpers
+## Related internal helpers
 
-No module-level internal helpers detected.
+| Helper | Related public callables |
+|---|---|
+| [`_get_profiled_columns`](../../reference/internal/data_profiling/_get_profiled_columns.md) | [`profile_dataframe`](../../reference/step-04-ingest-profile-store/profile_dataframe.md) |
+| [`_is_min_max_supported_type`](../../reference/internal/data_profiling/_is_min_max_supported_type.md) | [`profile_dataframe`](../../reference/step-04-ingest-profile-store/profile_dataframe.md) |

@@ -80,7 +80,7 @@ def validate_contract_dict(contract: dict) -> list[str]:
     return errors
 
 
-def build_contract_header_record(contract: dict) -> dict:
+def _build_contract_header_record(contract: dict) -> dict:
     """Build one header row for FABRICOPS_CONTRACTS."""
     c = normalize_contract_dict(contract)
     timestamp = _now_utc_iso()
@@ -104,7 +104,7 @@ def build_contract_header_record(contract: dict) -> dict:
     }
 
 
-def build_contract_column_records(contract: dict) -> list[dict]:
+def _build_contract_column_records(contract: dict) -> list[dict]:
     """Build normalized column-level contract records for lakehouse persistence."""
     c = normalize_contract_dict(contract)
     ts = _now_utc_iso()
@@ -124,7 +124,7 @@ def build_contract_column_records(contract: dict) -> list[dict]:
     return rows
 
 
-def build_contract_rule_records(contract: dict) -> list[dict]:
+def _build_contract_rule_records(contract: dict) -> list[dict]:
     """Build normalized quality-rule records for lakehouse persistence."""
     c = normalize_contract_dict(contract)
     ts = _now_utc_iso()
@@ -140,12 +140,12 @@ def build_contract_rule_records(contract: dict) -> list[dict]:
     return rows
 
 
-def build_contract_records(contract: dict) -> dict:
+def _build_contract_records(contract: dict) -> dict:
     """Build header, column, and rule record groups from a contract dictionary."""
-    return {"contracts": [build_contract_header_record(contract)], "columns": build_contract_column_records(contract), "rules": build_contract_rule_records(contract)}
+    return {"contracts": [_build_contract_header_record(contract)], "columns": _build_contract_column_records(contract), "rules": _build_contract_rule_records(contract)}
 
 
-def contract_records_to_spark(records: list[dict], schema_name: str | None = None):
+def _contract_records_to_spark(records: list[dict], schema_name: str | None = None):
     """Convert record dictionaries into a Spark DataFrame when Spark is available."""
     from pyspark.sql import SparkSession
 
@@ -158,13 +158,13 @@ def write_contract_to_lakehouse(contract, metadata_path: Housepath, mode: str = 
     errs = validate_contract_dict(contract)
     if errs:
         raise ValueError("Contract validation failed: " + " | ".join(errs))
-    records = build_contract_records(contract)
-    contracts_df = contract_records_to_spark(records["contracts"])
-    columns_df = contract_records_to_spark(records["columns"])
+    records = _build_contract_records(contract)
+    contracts_df = _contract_records_to_spark(records["contracts"])
+    columns_df = _contract_records_to_spark(records["columns"])
     lakehouse_table_write(contracts_df, metadata_path, "FABRICOPS_CONTRACTS", mode=mode)
     lakehouse_table_write(columns_df, metadata_path, "FABRICOPS_CONTRACT_COLUMNS", mode=mode)
     if records["rules"]:
-        rules_df = contract_records_to_spark(records["rules"])
+        rules_df = _contract_records_to_spark(records["rules"])
         lakehouse_table_write(rules_df, metadata_path, "FABRICOPS_CONTRACT_RULES", mode=mode)
     return records
 

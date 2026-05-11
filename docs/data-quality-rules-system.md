@@ -167,9 +167,9 @@ candidate_rules = draft_dq_rules(
 )
 
 # 3) Human review + explicit approval (02_ex)
-import fabricops_kit.dq_review as dq_review
+import fabricops_kit.notebook_review as notebook_review
 review_dq_rules(candidate_rules, table_name=DQ_TABLE_NAME)
-approved = list(dq_review.APPROVED_RULES_FROM_WIDGET)
+approved = list(notebook_review.APPROVED_RULES_FROM_WIDGET)
 if not approved:
     raise ValueError("No approved DQ rules selected in widget.")
 

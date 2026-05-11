@@ -20,10 +20,7 @@ from .fabric_input_output import (
 from .data_lineage import (
     build_lineage_from_notebook_code,
     build_lineage_handover_markdown,
-    build_lineage_record_from_steps,
     build_lineage_records,
-    enrich_lineage_steps_with_ai,
-    fallback_copilot_lineage_prompt,
     plot_lineage_steps,
     scan_notebook_cells,
     scan_notebook_lineage,
@@ -37,12 +34,7 @@ from .data_governance import (
     write_governance_classifications,
 )
 from .data_contracts import (
-    build_contract_column_records,
-    build_contract_header_record,
-    build_contract_records,
-    build_contract_rule_records,
     build_contract_summary,
-    contract_records_to_spark,
     extract_business_keys,
     extract_classifications,
     extract_optional_columns,
@@ -56,46 +48,35 @@ from .data_contracts import (
     write_contract_to_lakehouse,
 )
 
-from .metadata import (
-    build_dataset_run_record,
-    build_quality_result_records,
-    build_schema_drift_records,
-    build_schema_snapshot_records,
-    write_metadata_records,
-    write_multiple_metadata_outputs,
-)
 from .data_profiling import (
-    build_ai_quality_context,
     profile_dataframe,
-    profile_dataframe_to_metadata,
-    profile_metadata_to_records,
-    generate_metadata_profile,
 )
 from .ai import (
     build_governance_candidate_prompt,
     build_handover_summary_prompt,
     build_manual_governance_prompt_package,
     build_manual_handover_prompt_package,
-    configure_fabric_ai_functions,
     generate_governance_candidates_with_fabric_ai,
     generate_handover_summary_with_fabric_ai,
     parse_manual_ai_json_response,
 )
 from .data_quality import (
+    DQEnforcementResult,
     draft_dq_rules,
     write_dq_rules,
     enforce_dq_rules,
     validate_dq_rules,
     assert_dq_passed,
 )
-from .dq_review import review_dq_rules, review_dq_rule_deactivations
+from .notebook_review import review_dq_rules, review_dq_rule_deactivations
 from .run_summary import build_run_summary, render_run_summary_markdown
-from .technical_columns import add_audit_columns, add_datetime_features, add_hash_columns, default_technical_columns
+from .technical_columns import standardize_output_columns
 
 __version__ = "0.1.0"
 
 __all__ = [
     "review_dq_rule_deactivations",
+    "DQEnforcementResult",
     "review_dq_rules",
     "draft_dq_rules",
     "write_dq_rules",
@@ -113,10 +94,6 @@ __all__ = [
     "warehouse_write",
     "seed_minimal_sample_source_table",
     "profile_dataframe",
-    "profile_dataframe_to_metadata",
-    "profile_metadata_to_records",
-    "generate_metadata_profile",
-    "build_ai_quality_context",
     "assert_dq_passed",
     "validate_dq_rules",
     "parse_manual_ai_json_response",
@@ -124,7 +101,6 @@ __all__ = [
     "build_manual_governance_prompt_package",
     "build_handover_summary_prompt",
     "build_governance_candidate_prompt",
-    "configure_fabric_ai_functions",
     "generate_governance_candidates_with_fabric_ai",
     "generate_handover_summary_with_fabric_ai",
     "check_schema_drift",
@@ -139,32 +115,14 @@ __all__ = [
     "build_lineage_records",
     "scan_notebook_lineage",
     "scan_notebook_cells",
-    "enrich_lineage_steps_with_ai",
-    "fallback_copilot_lineage_prompt",
     "validate_lineage_steps",
-    "build_lineage_record_from_steps",
     "build_lineage_from_notebook_code",
     "build_lineage_handover_markdown",
     "plot_lineage_steps",
     "build_run_summary",
     "render_run_summary_markdown",
-    "build_dataset_run_record",
-    "build_schema_snapshot_records",
-    "build_schema_drift_records",
-    "build_quality_result_records",
-    "write_metadata_records",
-    "write_multiple_metadata_outputs",
-    "default_technical_columns",
-    "add_datetime_features",
-    "add_audit_columns",
-    "add_hash_columns",
     "normalize_contract_dict",
     "validate_contract_dict",
-    "build_contract_header_record",
-    "build_contract_column_records",
-    "build_contract_rule_records",
-    "build_contract_records",
-    "contract_records_to_spark",
     "write_contract_to_lakehouse",
     "load_contract_from_lakehouse",
     "load_latest_approved_contract",
@@ -175,4 +133,5 @@ __all__ = [
     "extract_quality_rules",
     "get_executable_quality_rules",
     "build_contract_summary",
+    "standardize_output_columns",
 ]

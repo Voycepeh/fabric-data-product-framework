@@ -18,29 +18,14 @@ Pipeline-contract notebook flow for deterministic enforcement and controlled pub
   </thead>
   <tbody>
     <tr>
+      <td data-label="Function / class"><a href="../../reference/step-02b-notebook-startup-checks/setup_fabricops_notebook/"><code>setup_fabricops_notebook</code></a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
+      <td data-label="Purpose">Run consolidated FabricOps startup for exploration and pipeline notebooks.</td>
+    </tr>
+    <tr>
       <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/load_fabric_config/"><code>load_fabric_config</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
       <td data-label="Purpose">Validate and return a user-supplied framework configuration.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-01-governance-context/validate_notebook_name/"><code>validate_notebook_name</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/runtime_context/" title="Open runtime_context module page" aria-label="Open runtime_context module page">runtime_context</a></td>
-      <td data-label="Purpose">Validate notebook names against the framework workspace notebook model.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-01-governance-context/assert_notebook_name_valid/"><code>assert_notebook_name_valid</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/runtime_context/" title="Open runtime_context module page" aria-label="Open runtime_context module page">runtime_context</a></td>
-      <td data-label="Purpose">Raise :class:`NotebookNamingError` when a notebook name is invalid.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-01-governance-context/generate_run_id/"><code>generate_run_id</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/runtime_context/" title="Open runtime_context module page" aria-label="Open runtime_context module page">runtime_context</a></td>
-      <td data-label="Purpose">Generate a notebook-safe run identifier.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-01-governance-context/build_runtime_context/"><code>build_runtime_context</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/runtime_context/" title="Open runtime_context module page" aria-label="Open runtime_context module page">runtime_context</a></td>
-      <td data-label="Purpose">Build a standard runtime context dictionary for Fabric notebooks.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/get_path/"><code>get_path</code></a></td>
@@ -153,21 +138,6 @@ Pipeline-contract notebook flow for deterministic enforcement and controlled pub
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-07-output-profile-product-contract/build_dataset_run_record/"><code>build_dataset_run_record</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a></td>
-      <td data-label="Purpose">Build a dataset-run metadata record for operational tracking.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-07-output-profile-product-contract/build_quality_result_records/"><code>build_quality_result_records</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a></td>
-      <td data-label="Purpose">Convert quality-rule execution output into metadata evidence records.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-07-output-profile-product-contract/build_contract_records/"><code>build_contract_records</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a></td>
-      <td data-label="Purpose">Build grouped contract header, column, and rule metadata payloads.</td>
-    </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-10-lineage-handover-documentation/build_lineage_records/"><code>build_lineage_records</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a></td>

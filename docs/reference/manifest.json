@@ -50,23 +50,9 @@
       "sidebar_include": true
     },
     {
-      "module_name": "runtime_context",
-      "visibility": "internal",
-      "module_summary": "Notebook runtime naming and context utilities.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false
-    },
-    {
       "module_name": "data_drift",
       "visibility": "internal",
       "module_summary": "Schema/profile/partition drift checks supporting notebook validation.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false
-    },
-    {
-      "module_name": "data_product_metadata",
-      "visibility": "internal",
-      "module_summary": "Metadata record builders for operational outputs.",
       "sidebar_group": "Advanced",
       "sidebar_include": false
     },
@@ -85,7 +71,7 @@
       "sidebar_include": false
     },
     {
-      "module_name": "dq_review",
+      "module_name": "notebook_review",
       "visibility": "internal",
       "module_summary": "Human-in-the-loop DQ review helpers.",
       "sidebar_group": "Advanced",
@@ -101,39 +87,6 @@
   ],
   "callables": [
     {
-      "module_name": "technical_audit_columns",
-      "visibility": "internal",
-      "module_summary": "Technical/audit enrichment helpers for pipeline outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "add_audit_columns",
-      "callable_visibility": "public",
-      "callable_role": "internal_helper",
-      "workflow_step": "6B"
-    },
-    {
-      "module_name": "technical_audit_columns",
-      "visibility": "internal",
-      "module_summary": "Technical/audit enrichment helpers for pipeline outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "add_datetime_features",
-      "callable_visibility": "public",
-      "callable_role": "internal_helper",
-      "workflow_step": "6B"
-    },
-    {
-      "module_name": "technical_audit_columns",
-      "visibility": "internal",
-      "module_summary": "Technical/audit enrichment helpers for pipeline outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "add_hash_columns",
-      "callable_visibility": "public",
-      "callable_role": "internal_helper",
-      "workflow_step": "6B"
-    },
-    {
       "module_name": "data_quality",
       "visibility": "public",
       "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
@@ -141,85 +94,8 @@
       "sidebar_include": true,
       "callable_name": "assert_dq_passed",
       "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
+      "callable_role": "essential",
       "workflow_step": "6D"
-    },
-    {
-      "module_name": "runtime_context",
-      "visibility": "internal",
-      "module_summary": "Notebook runtime naming and context utilities.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "assert_notebook_name_valid",
-      "callable_visibility": "public",
-      "callable_role": "internal_helper",
-      "workflow_step": 1
-    },
-    {
-      "module_name": "environment_config",
-      "visibility": "public",
-      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "bootstrap_fabric_env",
-      "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
-      "workflow_step": "2B"
-    },
-    {
-      "module_name": "data_profiling",
-      "visibility": "public",
-      "module_summary": "Source/output profiling and metadata conversion helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_ai_quality_context",
-      "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
-      "workflow_step": 4
-    },
-    {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_contract_column_records",
-      "callable_visibility": "public",
-      "callable_role": "advanced_helper",
-      "workflow_step": 7
-    },
-    {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_contract_header_record",
-      "callable_visibility": "public",
-      "callable_role": "advanced_helper",
-      "workflow_step": 7
-    },
-    {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_contract_records",
-      "callable_visibility": "public",
-      "callable_role": "advanced_helper",
-      "workflow_step": 7
-    },
-    {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_contract_rule_records",
-      "callable_visibility": "public",
-      "callable_role": "advanced_helper",
-      "workflow_step": 7
     },
     {
       "module_name": "data_contracts",
@@ -229,18 +105,7 @@
       "sidebar_include": true,
       "callable_name": "build_contract_summary",
       "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
-      "workflow_step": 7
-    },
-    {
-      "module_name": "data_product_metadata",
-      "visibility": "internal",
-      "module_summary": "Metadata record builders for operational outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "build_dataset_run_record",
-      "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "essential",
       "workflow_step": 7
     },
     {
@@ -251,7 +116,7 @@
       "sidebar_include": false,
       "callable_name": "build_governance_candidate_prompt",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "optional",
       "workflow_step": 9
     },
     {
@@ -262,7 +127,7 @@
       "sidebar_include": true,
       "callable_name": "build_governance_classification_records",
       "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
+      "callable_role": "essential",
       "workflow_step": 9
     },
     {
@@ -273,7 +138,7 @@
       "sidebar_include": false,
       "callable_name": "build_handover_summary_prompt",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "optional",
       "workflow_step": 10
     },
     {
@@ -284,7 +149,7 @@
       "sidebar_include": true,
       "callable_name": "build_lineage_from_notebook_code",
       "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
+      "callable_role": "essential",
       "workflow_step": 10
     },
     {
@@ -295,18 +160,7 @@
       "sidebar_include": true,
       "callable_name": "build_lineage_handover_markdown",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
-      "workflow_step": 10
-    },
-    {
-      "module_name": "data_lineage",
-      "visibility": "public",
-      "module_summary": "Lineage extraction and handover documentation helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_lineage_record_from_steps",
-      "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "essential",
       "workflow_step": 10
     },
     {
@@ -317,7 +171,7 @@
       "sidebar_include": true,
       "callable_name": "build_lineage_records",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "essential",
       "workflow_step": 10
     },
     {
@@ -328,7 +182,7 @@
       "sidebar_include": false,
       "callable_name": "build_manual_governance_prompt_package",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "optional",
       "workflow_step": 9
     },
     {
@@ -339,19 +193,8 @@
       "sidebar_include": false,
       "callable_name": "build_manual_handover_prompt_package",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "optional",
       "workflow_step": 10
-    },
-    {
-      "module_name": "data_product_metadata",
-      "visibility": "internal",
-      "module_summary": "Metadata record builders for operational outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "build_quality_result_records",
-      "callable_visibility": "public",
-      "callable_role": "internal_helper",
-      "workflow_step": 7
     },
     {
       "module_name": "handover_documentation",
@@ -361,52 +204,8 @@
       "sidebar_include": false,
       "callable_name": "build_run_summary",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "essential",
       "workflow_step": 10
-    },
-    {
-      "module_name": "runtime_context",
-      "visibility": "internal",
-      "module_summary": "Notebook runtime naming and context utilities.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "build_runtime_context",
-      "callable_visibility": "public",
-      "callable_role": "internal_helper",
-      "workflow_step": 1
-    },
-    {
-      "module_name": "data_product_metadata",
-      "visibility": "internal",
-      "module_summary": "Metadata record builders for operational outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "build_schema_drift_records",
-      "callable_visibility": "public",
-      "callable_role": "internal_helper",
-      "workflow_step": 4
-    },
-    {
-      "module_name": "data_product_metadata",
-      "visibility": "internal",
-      "module_summary": "Metadata record builders for operational outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "build_schema_snapshot_records",
-      "callable_visibility": "public",
-      "callable_role": "internal_helper",
-      "workflow_step": 4
-    },
-    {
-      "module_name": "environment_config",
-      "visibility": "public",
-      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "check_fabric_ai_functions_available",
-      "callable_visibility": "public",
-      "callable_role": "advanced_helper",
-      "workflow_step": "2A"
     },
     {
       "module_name": "data_drift",
@@ -416,7 +215,7 @@
       "sidebar_include": false,
       "callable_name": "check_partition_drift",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "essential",
       "workflow_step": 4
     },
     {
@@ -427,7 +226,7 @@
       "sidebar_include": false,
       "callable_name": "check_profile_drift",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "essential",
       "workflow_step": 4
     },
     {
@@ -438,7 +237,7 @@
       "sidebar_include": false,
       "callable_name": "check_schema_drift",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "essential",
       "workflow_step": 4
     },
     {
@@ -449,7 +248,7 @@
       "sidebar_include": true,
       "callable_name": "classify_column",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "optional",
       "workflow_step": 9
     },
     {
@@ -460,41 +259,19 @@
       "sidebar_include": true,
       "callable_name": "classify_columns",
       "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
+      "callable_role": "essential",
       "workflow_step": 9
     },
     {
-      "module_name": "environment_config",
+      "module_name": "data_quality",
       "visibility": "public",
-      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
+      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
       "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "configure_fabric_ai_functions",
+      "callable_name": "DQEnforcementResult",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
-      "workflow_step": 1
-    },
-    {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "contract_records_to_spark",
-      "callable_visibility": "public",
-      "callable_role": "advanced_helper",
-      "workflow_step": 7
-    },
-    {
-      "module_name": "technical_audit_columns",
-      "visibility": "internal",
-      "module_summary": "Technical/audit enrichment helpers for pipeline outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "default_technical_columns",
-      "callable_visibility": "public",
-      "callable_role": "internal_helper",
-      "workflow_step": "6B"
+      "callable_role": "optional",
+      "workflow_step": "6C"
     },
     {
       "module_name": "data_quality",
@@ -504,7 +281,7 @@
       "sidebar_include": true,
       "callable_name": "draft_dq_rules",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "essential",
       "workflow_step": 8
     },
     {
@@ -515,19 +292,8 @@
       "sidebar_include": true,
       "callable_name": "enforce_dq_rules",
       "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
+      "callable_role": "essential",
       "workflow_step": "6C"
-    },
-    {
-      "module_name": "data_lineage",
-      "visibility": "public",
-      "module_summary": "Lineage extraction and handover documentation helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "enrich_lineage_steps_with_ai",
-      "callable_visibility": "public",
-      "callable_role": "advanced_helper",
-      "workflow_step": 10
     },
     {
       "module_name": "data_contracts",
@@ -537,7 +303,7 @@
       "sidebar_include": true,
       "callable_name": "extract_business_keys",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "essential",
       "workflow_step": 3
     },
     {
@@ -548,7 +314,7 @@
       "sidebar_include": true,
       "callable_name": "extract_classifications",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "essential",
       "workflow_step": 3
     },
     {
@@ -559,7 +325,7 @@
       "sidebar_include": true,
       "callable_name": "extract_optional_columns",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "essential",
       "workflow_step": 3
     },
     {
@@ -570,7 +336,7 @@
       "sidebar_include": true,
       "callable_name": "extract_quality_rules",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "essential",
       "workflow_step": 3
     },
     {
@@ -581,19 +347,8 @@
       "sidebar_include": true,
       "callable_name": "extract_required_columns",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "essential",
       "workflow_step": 3
-    },
-    {
-      "module_name": "data_lineage",
-      "visibility": "public",
-      "module_summary": "Lineage extraction and handover documentation helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "fallback_copilot_lineage_prompt",
-      "callable_visibility": "public",
-      "callable_role": "advanced_helper",
-      "workflow_step": 10
     },
     {
       "module_name": "ai",
@@ -603,7 +358,7 @@
       "sidebar_include": false,
       "callable_name": "generate_governance_candidates_with_fabric_ai",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "optional",
       "workflow_step": 9
     },
     {
@@ -614,30 +369,8 @@
       "sidebar_include": false,
       "callable_name": "generate_handover_summary_with_fabric_ai",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "optional",
       "workflow_step": 10
-    },
-    {
-      "module_name": "data_profiling",
-      "visibility": "public",
-      "module_summary": "Source/output profiling and metadata conversion helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "generate_metadata_profile",
-      "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
-      "workflow_step": 4
-    },
-    {
-      "module_name": "runtime_context",
-      "visibility": "internal",
-      "module_summary": "Notebook runtime naming and context utilities.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "generate_run_id",
-      "callable_visibility": "public",
-      "callable_role": "internal_helper",
-      "workflow_step": 1
     },
     {
       "module_name": "data_contracts",
@@ -647,7 +380,7 @@
       "sidebar_include": true,
       "callable_name": "get_executable_quality_rules",
       "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
+      "callable_role": "essential",
       "workflow_step": "6C"
     },
     {
@@ -658,7 +391,7 @@
       "sidebar_include": true,
       "callable_name": "get_path",
       "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
+      "callable_role": "essential",
       "workflow_step": "2A"
     },
     {
@@ -669,7 +402,7 @@
       "sidebar_include": true,
       "callable_name": "Housepath",
       "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
+      "callable_role": "essential",
       "workflow_step": "2A"
     },
     {
@@ -680,7 +413,7 @@
       "sidebar_include": true,
       "callable_name": "lakehouse_csv_read",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "essential",
       "workflow_step": 3
     },
     {
@@ -691,7 +424,7 @@
       "sidebar_include": true,
       "callable_name": "lakehouse_excel_read_as_spark",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "essential",
       "workflow_step": 3
     },
     {
@@ -702,7 +435,7 @@
       "sidebar_include": true,
       "callable_name": "lakehouse_parquet_read_as_spark",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "essential",
       "workflow_step": 3
     },
     {
@@ -713,7 +446,7 @@
       "sidebar_include": true,
       "callable_name": "lakehouse_table_read",
       "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
+      "callable_role": "essential",
       "workflow_step": 3
     },
     {
@@ -724,7 +457,7 @@
       "sidebar_include": true,
       "callable_name": "lakehouse_table_write",
       "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
+      "callable_role": "essential",
       "workflow_step": "6D"
     },
     {
@@ -735,7 +468,7 @@
       "sidebar_include": true,
       "callable_name": "load_contract_from_lakehouse",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "essential",
       "workflow_step": 3
     },
     {
@@ -746,7 +479,7 @@
       "sidebar_include": true,
       "callable_name": "load_fabric_config",
       "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
+      "callable_role": "essential",
       "workflow_step": "2A"
     },
     {
@@ -757,7 +490,7 @@
       "sidebar_include": true,
       "callable_name": "load_latest_approved_contract",
       "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
+      "callable_role": "essential",
       "workflow_step": 3
     },
     {
@@ -768,7 +501,7 @@
       "sidebar_include": true,
       "callable_name": "normalize_contract_dict",
       "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
+      "callable_role": "essential",
       "workflow_step": 3
     },
     {
@@ -779,7 +512,7 @@
       "sidebar_include": false,
       "callable_name": "parse_manual_ai_json_response",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "optional",
       "workflow_step": 10
     },
     {
@@ -790,7 +523,7 @@
       "sidebar_include": true,
       "callable_name": "plot_lineage_steps",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "optional",
       "workflow_step": 10
     },
     {
@@ -801,29 +534,7 @@
       "sidebar_include": true,
       "callable_name": "profile_dataframe",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
-      "workflow_step": 4
-    },
-    {
-      "module_name": "data_profiling",
-      "visibility": "public",
-      "module_summary": "Source/output profiling and metadata conversion helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "profile_dataframe_to_metadata",
-      "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
-      "workflow_step": 4
-    },
-    {
-      "module_name": "data_profiling",
-      "visibility": "public",
-      "module_summary": "Source/output profiling and metadata conversion helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "profile_metadata_to_records",
-      "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "essential",
       "workflow_step": 4
     },
     {
@@ -834,41 +545,30 @@
       "sidebar_include": false,
       "callable_name": "render_run_summary_markdown",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "essential",
       "workflow_step": 10
     },
     {
-      "module_name": "dq_review",
+      "module_name": "notebook_review",
       "visibility": "internal",
       "module_summary": "Human-in-the-loop DQ review helpers.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "review_dq_rule_deactivations",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "optional",
       "workflow_step": 8
     },
     {
-      "module_name": "dq_review",
-      "visibility": "internal",
-      "module_summary": "Human-in-the-loop DQ review helpers.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "review_dq_rules",
-      "callable_visibility": "public",
-      "callable_role": "internal_helper",
-      "workflow_step": 8
-    },
-    {
-      "module_name": "environment_config",
+      "module_name": "data_quality",
       "visibility": "public",
-      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
+      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
       "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "run_config_smoke_tests",
+      "callable_name": "review_dq_rules",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
-      "workflow_step": "2B"
+      "callable_role": "essential",
+      "workflow_step": 8
     },
     {
       "module_name": "data_lineage",
@@ -878,7 +578,7 @@
       "sidebar_include": true,
       "callable_name": "scan_notebook_cells",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "optional",
       "workflow_step": 10
     },
     {
@@ -889,7 +589,7 @@
       "sidebar_include": true,
       "callable_name": "scan_notebook_lineage",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "optional",
       "workflow_step": 10
     },
     {
@@ -900,8 +600,30 @@
       "sidebar_include": true,
       "callable_name": "seed_minimal_sample_source_table",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "optional",
       "workflow_step": 4
+    },
+    {
+      "module_name": "environment_config",
+      "visibility": "public",
+      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "setup_fabricops_notebook",
+      "callable_visibility": "public",
+      "callable_role": "essential",
+      "workflow_step": "2B"
+    },
+    {
+      "module_name": "technical_audit_columns",
+      "visibility": "internal",
+      "module_summary": "Technical/audit enrichment helpers for pipeline outputs.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": false,
+      "callable_name": "standardize_output_columns",
+      "callable_visibility": "public",
+      "callable_role": "essential",
+      "workflow_step": "6B"
     },
     {
       "module_name": "data_drift",
@@ -911,7 +633,7 @@
       "sidebar_include": false,
       "callable_name": "summarize_drift_results",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "essential",
       "workflow_step": 4
     },
     {
@@ -922,7 +644,7 @@
       "sidebar_include": true,
       "callable_name": "summarize_governance_classifications",
       "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
+      "callable_role": "essential",
       "workflow_step": 9
     },
     {
@@ -933,7 +655,7 @@
       "sidebar_include": true,
       "callable_name": "validate_contract_dict",
       "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
+      "callable_role": "essential",
       "workflow_step": 3
     },
     {
@@ -944,19 +666,8 @@
       "sidebar_include": true,
       "callable_name": "validate_dq_rules",
       "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
+      "callable_role": "optional",
       "workflow_step": "6C"
-    },
-    {
-      "module_name": "environment_config",
-      "visibility": "public",
-      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "validate_framework_config",
-      "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
-      "workflow_step": "2A"
     },
     {
       "module_name": "data_lineage",
@@ -966,19 +677,8 @@
       "sidebar_include": true,
       "callable_name": "validate_lineage_steps",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "optional",
       "workflow_step": 10
-    },
-    {
-      "module_name": "runtime_context",
-      "visibility": "internal",
-      "module_summary": "Notebook runtime naming and context utilities.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "validate_notebook_name",
-      "callable_visibility": "public",
-      "callable_role": "internal_helper",
-      "workflow_step": 1
     },
     {
       "module_name": "fabric_input_output",
@@ -988,7 +688,7 @@
       "sidebar_include": true,
       "callable_name": "warehouse_read",
       "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
+      "callable_role": "essential",
       "workflow_step": 3
     },
     {
@@ -999,7 +699,7 @@
       "sidebar_include": true,
       "callable_name": "warehouse_write",
       "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
+      "callable_role": "essential",
       "workflow_step": "6D"
     },
     {
@@ -1010,7 +710,7 @@
       "sidebar_include": true,
       "callable_name": "write_contract_to_lakehouse",
       "callable_visibility": "public",
-      "callable_role": "recommended_entrypoint",
+      "callable_role": "essential",
       "workflow_step": 7
     },
     {
@@ -1021,7 +721,7 @@
       "sidebar_include": true,
       "callable_name": "write_dq_rules",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "essential",
       "workflow_step": 8
     },
     {
@@ -1032,30 +732,8 @@
       "sidebar_include": true,
       "callable_name": "write_governance_classifications",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "essential",
       "workflow_step": 9
-    },
-    {
-      "module_name": "data_product_metadata",
-      "visibility": "internal",
-      "module_summary": "Metadata record builders for operational outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "write_metadata_records",
-      "callable_visibility": "public",
-      "callable_role": "internal_helper",
-      "workflow_step": 7
-    },
-    {
-      "module_name": "data_product_metadata",
-      "visibility": "internal",
-      "module_summary": "Metadata record builders for operational outputs.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
-      "callable_name": "write_multiple_metadata_outputs",
-      "callable_visibility": "public",
-      "callable_role": "internal_helper",
-      "workflow_step": 7
     }
   ]
 }

@@ -47,28 +47,6 @@ HIDDEN_SUPPORTING_MODULES = [
     "handover_documentation",
     "technical_audit_columns",
 ]
-RECOMMENDED_ENTRYPOINTS = {
-    "environment_config": {
-        "validate_framework_config",
-        "load_fabric_config",
-        "get_path",
-        "bootstrap_fabric_env",
-    },
-    "fabric_input_output": {"Housepath", "lakehouse_table_read", "lakehouse_table_write", "warehouse_read", "warehouse_write"},
-    "data_profiling": {"generate_metadata_profile", "profile_dataframe_to_metadata", "build_ai_quality_context"},
-    "data_contracts": {
-        "load_latest_approved_contract",
-        "normalize_contract_dict",
-        "validate_contract_dict",
-        "get_executable_quality_rules",
-        "write_contract_to_lakehouse",
-        "build_contract_summary",
-    },
-    "data_quality": {"validate_dq_rules", "enforce_dq_rules", "assert_dq_passed"},
-    "data_governance": {"classify_columns", "summarize_governance_classifications", "build_governance_classification_records"},
-    "data_lineage": {"build_lineage_from_notebook_code"},
-}
-
 STEP_FALLBACK_NOTES = {
     "5": "No public callable is currently mapped to this step. Use exploration notebook prompts to capture transformation rationale before pipeline enforcement.",
 }
@@ -80,7 +58,7 @@ class Symbol:
     public_module: str
     obj_type: str
     summary: str
-    importance: str = "Optional"
+    role: str = "optional"
     purpose: str = ""
 
 
@@ -141,25 +119,6 @@ def parse_public_exports() -> list[str]:
     raise RuntimeError("Could not parse __all__ from __init__.py")
 
 
-def parse_step_registry() -> list[dict[str, Any]]:
-    tree = ast.parse((PKG_DIR / "handover.py").read_text(encoding="utf-8"))
-    for node in tree.body:
-        is_assign = isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "MVP_STEP_REGISTRY" for t in node.targets)
-        is_annassign = isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and node.target.id == "MVP_STEP_REGISTRY"
-        if is_assign or is_annassign:
-            if node.value is None:
-                continue
-            reg = ast.literal_eval(node.value)
-            return [
-                {
-                    "step_number": item["step_number"],
-                    "step_name": item["step_name"],
-                    "canonical_modules": [m.replace(".py", "") for m in item.get("canonical_modules", [])],
-                }
-                for item in reg
-            ]
-    return []
-
 
 def parse_docs_metadata() -> dict[str, dict[str, Any]]:
     tree = ast.parse(DOCS_METADATA_PATH.read_text(encoding="utf-8"))
@@ -172,7 +131,15 @@ def parse_docs_metadata() -> dict[str, dict[str, Any]]:
         )
         if (is_assign or is_annassign) and node.value is not None:
             rows = ast.literal_eval(node.value)
-            return {row["symbol_name"]: row for row in rows}
+            seen = set()
+            out = {}
+            for row in rows:
+                name = row["symbol_name"]
+                if name in seen:
+                    raise RuntimeError(f"Duplicate PUBLIC_SYMBOL_DOCS symbol_name detected: {name}")
+                seen.add(name)
+                out[name] = row
+            return out
     raise RuntimeError("Could not parse PUBLIC_SYMBOL_DOCS from docs_metadata.py")
 
 
@@ -303,9 +270,16 @@ def main() -> None:
         if enforce_placeholder_guard and symbol.purpose and symbol.purpose != "—":
             _assert_non_placeholder_summary(symbol.name, "purpose", symbol.purpose)
         step_rank = int(str(step).split("A")[0].split("B")[0].split("C")[0].split("D")[0]) if step is not None else 99
-        symbol.importance = meta.get("importance") or ("Essential" if step is not None and step_rank <= 7 else "Optional")
-        if symbol.importance not in {"Essential", "Optional"}:
-            raise RuntimeError(f"Invalid importance {symbol.importance!r} for {symbol.name}; expected Essential or Optional")
+        symbol_role = meta.get("role")
+        if not symbol_role:
+            raise RuntimeError(f"Missing explicit role for {symbol.name} in PUBLIC_SYMBOL_DOCS")
+        symbol.role = str(symbol_role).lower()
+        if symbol.role not in {"essential", "optional", "internal"}:
+            raise RuntimeError(f"Invalid role {symbol.role!r} for {symbol.name}; expected essential/optional/internal")
+        if symbol.role == "internal" and not symbol.name.startswith("_"):
+            raise RuntimeError(f"Non-underscore callable cannot be internal: {symbol.name}")
+        if symbol.role in {"essential", "optional"} and symbol.name.startswith("_"):
+            raise RuntimeError(f"Underscore callable cannot be public role: {symbol.name}")
     MODULE_DIR.mkdir(parents=True, exist_ok=True)
     module_manifest = {row["module_name"]: row for row in module_docs_metadata}
     module_index_lines = ["# Module API Catalogue", "", "Function Reference/workflow pages are the primary entrypoint. Module pages below are secondary technical references.", "", "Short-form modules remain import-compatible aliases but are intentionally hidden from this user-facing catalogue.", ""]
@@ -344,10 +318,9 @@ def main() -> None:
             )
         lines = [title, "", status_banner, ""]
         if public_in_module:
-            recommended_names = RECOMMENDED_ENTRYPOINTS.get(module, set())
-            recommended = sorted([s for s in public_in_module if s.name in recommended_names], key=lambda x: x.name.lower())
-            advanced = sorted([s for s in public_in_module if s.name not in recommended_names], key=lambda x: x.name.lower())
-            lines.extend(["## Recommended notebook entrypoints", ""])
+            recommended = sorted([s for s in public_in_module if s.role == "essential"], key=lambda x: x.name.lower())
+            advanced = sorted([s for s in public_in_module if s.role == "optional"], key=lambda x: x.name.lower())
+            lines.extend(["## Essential callables", ""])
             lines.extend(["| Callable | Type | Summary | Related helpers |", "|---|---|---|---|"])
             for s in recommended:
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
@@ -366,7 +339,7 @@ def main() -> None:
                     ]
                 )
 
-            lines.extend(["", "## Advanced helpers", ""])
+            lines.extend(["", "## Optional callables", ""])
             if advanced:
                 lines.extend(["| Callable | Type | Summary | Related helpers |", "|---|---|---|---|"])
                 for s in advanced:
@@ -379,8 +352,8 @@ def main() -> None:
             else:
                 lines.append("No advanced helpers listed for this module.")
         else:
-            lines.extend(["## Recommended notebook entrypoints", "", "No public exports in this module.", "", "## Advanced helpers", "", "No advanced helpers listed for this module."])
-        lines.extend(["", "## Internal helpers", ""])
+            lines.extend(["## Essential callables", "", "No public exports in this module.", "", "## Optional callables", "", "No advanced helpers listed for this module."])
+        lines.extend(["", "## Related internal helpers", ""])
         internal_fns = sorted([f for f in info["functions"] if f.startswith("_")])
         if internal_fns:
             lines.extend(["| Helper | Related public callables |", "|---|---|"])
@@ -394,7 +367,7 @@ def main() -> None:
             lines.append("No module-level internal helpers detected.")
 
         if public_in_module:
-            for s in sorted(public_in_module, key=lambda x: x.name.lower()):
+            for s in sorted([x for x in public_in_module if x.role in {"essential", "optional"}], key=lambda x: x.name.lower()):
                 expected_target = callable_docs_link(s.name, module, docs_metadata, step_slugs)
                 expected_link = f"[`{s.name}`]({expected_target})"
                 if not any(expected_link in line for line in lines):
@@ -436,11 +409,7 @@ def main() -> None:
         if canonical_module not in known_modules:
             raise RuntimeError(f"Callable {s.name} resolved to unknown module_name {canonical_module!r}; add it to MODULE_DOCS_METADATA.")
         module_meta = module_manifest.get(canonical_module, {"visibility": "internal", "sidebar_include": False, "module_summary": "", "sidebar_group": "Advanced"})
-        callable_role = "internal_helper"
-        if s.name in RECOMMENDED_ENTRYPOINTS.get(s.public_module, set()):
-            callable_role = "recommended_entrypoint"
-        elif module_meta["visibility"] == "public":
-            callable_role = "advanced_helper"
+        callable_role = s.role
         manifest_rows.append(
             {
                 "module_name": canonical_module,
@@ -626,6 +595,12 @@ def main() -> None:
             '  <p id="callable-finder-help" class="callable-finder-help">Search by function name, module, or what the function does.</p>',
             '  <p id="callable-finder-examples" class="callable-finder-examples">Try: <span class="callable-finder-chip">csv</span> <span class="callable-finder-chip">data_quality</span> <span class="callable-finder-chip">quarantine</span></p>',
             '  <p id="callable-finder-status" class="callable-finder-status" aria-live="polite">Showing all callables.</p>',
+            '  <fieldset class="callable-role-filters">',
+            '    <legend>Role filters</legend>',
+            '    <label><input type="checkbox" data-role-filter="essential" checked> Essential</label>',
+            '    <label><input type="checkbox" data-role-filter="optional" checked> Optional</label>',
+            '    <label><input type="checkbox" data-role-filter="internal"> Internal</label>',
+            '  </fieldset>',
             '  <p class="callable-finder-empty" data-callable-finder-empty hidden>No callables match your search.</p>',
             "</div>",
             "",
@@ -648,14 +623,14 @@ def main() -> None:
                     f'data-callable-row="true" data-callable-name="{_esc(s.name)}" '
                     f'data-callable-module="{_esc(s.public_module)}" '
                     f'data-callable-starter-path="{_esc(starter_path)}" '
-                    f'data-callable-importance="{_esc(s.importance)}" '
+                    f'data-role="{_esc(s.role)}" '
                     f'data-callable-purpose="{_esc(purpose)}">'
                 ),
                 f'  <h3 class="reference-catalogue-item-name">{_anchor(symbol_link, s.name, code=True)}</h3>',
                 (
                     '  <p class="reference-catalogue-item-meta">'
                     f'{_module_link(s.public_module)}'
-                    f' <span class="reference-catalogue-separator">·</span> <span>{_esc(s.importance)}</span>'
+                    f' <span class="reference-catalogue-separator">·</span> <span>{_esc(s.role)}</span>'
                     f' <span class="reference-catalogue-separator">·</span> <span>{_esc(starter_path)}</span>'
                     "</p>"
                 ),

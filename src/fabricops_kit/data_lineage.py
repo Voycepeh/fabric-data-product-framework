@@ -110,7 +110,7 @@ def scan_notebook_cells(cells: list[str]) -> list[dict[str, Any]]:
     return out
 
 
-def fallback_copilot_lineage_prompt(lineage_steps: list[dict[str, Any]]) -> str:
+def _fallback_copilot_lineage_prompt(lineage_steps: list[dict[str, Any]]) -> str:
     """Build a fallback Copilot prompt for manual lineage enrichment.
 
     Parameters
@@ -126,7 +126,7 @@ def fallback_copilot_lineage_prompt(lineage_steps: list[dict[str, Any]]) -> str:
     return "Review these deterministic lineage steps and improve reasons/notes only; do not change structure. steps=" + str(lineage_steps)
 
 
-def enrich_lineage_steps_with_ai(lineage_steps: list[dict[str, Any]], ai_helper: Any | None = None) -> dict[str, Any]:
+def _enrich_lineage_steps_with_ai(lineage_steps: list[dict[str, Any]], ai_helper: Any | None = None) -> dict[str, Any]:
     """Optionally enrich deterministic lineage steps using an AI helper callable.
 
     Parameters
@@ -142,7 +142,7 @@ def enrich_lineage_steps_with_ai(lineage_steps: list[dict[str, Any]], ai_helper:
         Enrichment payload containing steps, AI usage flag, fallback prompt, and notes.
     """
     if ai_helper is None:
-        return {"steps": lineage_steps, "ai_used": False, "fallback_prompt": fallback_copilot_lineage_prompt(lineage_steps), "notes": "AI helper unavailable; Copilot fallback prompt generated."}
+        return {"steps": lineage_steps, "ai_used": False, "fallback_prompt": _fallback_copilot_lineage_prompt(lineage_steps), "notes": "AI helper unavailable; Copilot fallback prompt generated."}
     return {"steps": ai_helper(lineage_steps) or lineage_steps, "ai_used": True, "fallback_prompt": "", "notes": "AI enrichment applied."}
 
 
@@ -182,7 +182,7 @@ def validate_lineage_steps(lineage_steps: Any) -> dict[str, Any]:
     return {"is_valid": not errors, "errors": errors, "warnings": warnings, "review_required": review_required}
 
 
-def build_lineage_record_from_steps(dataset_name: str, lineage_steps: list[dict], run_id: str | None = None, notebook_name: str | None = None, workspace_name: str | None = None, created_by: str | None = None) -> list[dict]:
+def _build_lineage_record_from_steps(dataset_name: str, lineage_steps: list[dict], run_id: str | None = None, notebook_name: str | None = None, workspace_name: str | None = None, created_by: str | None = None) -> list[dict]:
     """Create metadata-ready lineage records from validated lineage steps.
 
     Parameters
@@ -259,7 +259,7 @@ def build_lineage_from_notebook_code(code: str, use_ai: bool = True, ai_helper: 
         End-to-end lineage result with steps, validation, review status, and notes.
     """
     steps = scan_notebook_lineage(code)
-    enrichment = enrich_lineage_steps_with_ai(steps, ai_helper=ai_helper) if use_ai else {"steps": steps, "ai_used": False, "fallback_prompt": "", "notes": "AI disabled."}
+    enrichment = _enrich_lineage_steps_with_ai(steps, ai_helper=ai_helper) if use_ai else {"steps": steps, "ai_used": False, "fallback_prompt": "", "notes": "AI disabled."}
     validation = validate_lineage_steps(enrichment["steps"]) if enrichment["steps"] else {"is_valid": False, "errors": ["No lineage detected."], "warnings": [], "review_required": True}
     return {"steps": enrichment["steps"], "validation": validation, "review_required": True if not validation["is_valid"] else (validation["review_required"] or not enrichment.get("ai_used", False)), "fallback_prompt": enrichment.get("fallback_prompt", ""), "ai_used": enrichment.get("ai_used", False), "notes": enrichment.get("notes", "")}
 
