@@ -42,6 +42,7 @@ Guide agent/Codex contributions for this repository so changes stay reusable, pu
 - Internal-only modules should not appear as public modules in the module API catalogue unless clearly labeled as internal-only.
 - Deprecated callables must not be promoted as the recommended path when a replacement callable exists.
 - If `__all__`, module names, public callable mappings, or docstrings change, regenerate the reference and module catalogue docs in the same PR.
+- When public/internal modules, exported functions, or generated reference docs change, do not manually patch sidebar/module navigation; update the generator and source metadata, then regenerate docs.
 
 ## Docs and API reference generation
 

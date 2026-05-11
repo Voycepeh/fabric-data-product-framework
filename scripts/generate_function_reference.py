@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ast
 from dataclasses import dataclass
+import json
 from pathlib import Path
 from typing import Any
 
@@ -13,6 +14,8 @@ DOCS_METADATA_PATH = PKG_DIR / "docs_metadata.py"
 REFERENCE_PATH = ROOT / "docs" / "reference" / "index.md"
 NOTEBOOK_STRUCTURE_DIR = ROOT / "docs" / "notebook-structure"
 MODULE_DIR = ROOT / "docs" / "api" / "modules"
+MKDOCS_PATH = ROOT / "mkdocs.yml"
+MANIFEST_PATH = ROOT / "docs" / "reference" / "manifest.json"
 
 PUBLIC_MODULE_PREFERRED_NAMES = {
     "config": "environment_config",
@@ -61,7 +64,7 @@ RECOMMENDED_ENTRYPOINTS = {
         "write_contract_to_lakehouse",
         "build_contract_summary",
     },
-    "data_quality": {"validate_dq_rules", "run_dq_rules", "assert_dq_passed", "split_dq_rows", "suggest_dq_rules"},
+    "data_quality": {"validate_dq_rules", "enforce_dq_rules", "assert_dq_passed"},
     "data_governance": {"classify_columns", "summarize_governance_classifications", "build_governance_classification_records"},
     "data_lineage": {"build_lineage_from_notebook_code"},
 }
@@ -197,6 +200,18 @@ def parse_template_flow_docs() -> list[dict[str, Any]]:
     raise RuntimeError("Could not parse TEMPLATE_FLOW_DOCS from docs_metadata.py")
 
 
+def parse_module_docs_metadata() -> list[dict[str, Any]]:
+    tree = ast.parse(DOCS_METADATA_PATH.read_text(encoding="utf-8"))
+    for node in tree.body:
+        is_assign = isinstance(node, ast.Assign) and any(
+            isinstance(t, ast.Name) and t.id == "MODULE_DOCS_METADATA" for t in node.targets
+        )
+        is_annassign = isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and node.target.id == "MODULE_DOCS_METADATA"
+        if (is_assign or is_annassign) and node.value is not None:
+            return ast.literal_eval(node.value)
+    raise RuntimeError("Could not parse MODULE_DOCS_METADATA from docs_metadata.py")
+
+
 def internal_helper_link(actual_module: str, helper: str) -> str:
     """Return docs-relative link target for an internal helper page."""
     return f"../../reference/internal/{actual_module}/{helper}.md"
@@ -230,6 +245,11 @@ def resolve_preferred_actual_module(preferred_module: str) -> str:
     return next((actual for actual, public_name in PUBLIC_MODULE_PREFERRED_NAMES.items() if public_name == preferred_module), preferred_module)
 
 
+def canonical_public_module(module_name: str) -> str:
+    """Return the canonical docs/public module name for metadata and manifests."""
+    return PUBLIC_MODULE_PREFERRED_NAMES.get(module_name, module_name)
+
+
 def main() -> None:
     public = parse_public_exports()
     module_data = {p.stem: parse_module(p) for p in PKG_DIR.glob("*.py") if p.name != "__init__.py"}
@@ -238,6 +258,7 @@ def main() -> None:
     step_docs = parse_workflow_step_docs()
     step_slugs = {str(step["number"]): step["slug"] for step in step_docs}
     template_flow_docs = parse_template_flow_docs()
+    module_docs_metadata = parse_module_docs_metadata()
 
     missing_metadata = sorted(name for name in public if name not in docs_metadata)
     if missing_metadata:
@@ -249,7 +270,7 @@ def main() -> None:
 
     symbol_map: dict[str, Symbol] = {}
     for name in public:
-        preferred_module = docs_metadata[name]["module"]
+        preferred_module = canonical_public_module(docs_metadata[name]["module"])
         preferred_actual_module = resolve_preferred_actual_module(preferred_module)
         modules_to_check = [preferred_actual_module] + [m for m in module_data if m != preferred_actual_module]
         for module in modules_to_check:
@@ -286,8 +307,9 @@ def main() -> None:
         if symbol.importance not in {"Essential", "Optional"}:
             raise RuntimeError(f"Invalid importance {symbol.importance!r} for {symbol.name}; expected Essential or Optional")
     MODULE_DIR.mkdir(parents=True, exist_ok=True)
+    module_manifest = {row["module_name"]: row for row in module_docs_metadata}
     module_index_lines = ["# Module API Catalogue", "", "Function Reference/workflow pages are the primary entrypoint. Module pages below are secondary technical references.", "", "Short-form modules remain import-compatible aliases but are intentionally hidden from this user-facing catalogue.", ""]
-    all_doc_modules = sorted(set(VISIBLE_PUBLIC_MODULES + HIDDEN_SUPPORTING_MODULES))
+    all_doc_modules = [row["module_name"] for row in module_docs_metadata]
     for module in all_doc_modules:
         actual_module = next((k for k,v in PUBLIC_MODULE_PREFERRED_NAMES.items() if v==module), module)
         info = module_data[actual_module]
@@ -297,22 +319,29 @@ def main() -> None:
         public_in_module = [s for s in symbol_map.values() if s.public_module == module]
         is_internal_only = not public_in_module
         title = f"# `{module}` module" if not is_internal_only else f"# `{module}` module (internal)"
-        if is_internal_only:
-            status_banner = (
-                '<div class="api-status-block">\n'
-                '  <span class="api-chip api-chip-internal">Internal-only module</span>\n'
-                '  <div class="api-chip-subtitle">Not intended as a primary user-facing API surface.</div>\n'
-                '</div>'
-            )
-        elif module in HIDDEN_SUPPORTING_MODULES:
+        module_visibility = module_manifest.get(module, {}).get("visibility", "internal")
+        if module_visibility == "public":
+            status_banner = '<div class="api-status-block">\n  <span class="api-chip api-chip-module">Module overview</span>\n</div>'
+        elif public_in_module:
             status_banner = (
                 '<div class="api-status-block">\n'
                 '  <span class="api-chip api-chip-internal">Advanced supporting module</span>\n'
                 '  <div class="api-chip-subtitle">Used by workflow references but not promoted as a primary notebook module.</div>\n'
                 '</div>'
             )
+        elif is_internal_only:
+            status_banner = (
+                '<div class="api-status-block">\n'
+                '  <span class="api-chip api-chip-internal">Internal-only module</span>\n'
+                '  <div class="api-chip-subtitle">Not intended as a primary user-facing API surface.</div>\n'
+                '</div>'
+            )
         else:
-            status_banner = '<div class="api-status-block">\n  <span class="api-chip api-chip-module">Module overview</span>\n</div>'
+            status_banner = (
+                '<div class="api-status-block">\n'
+                '  <span class="api-chip api-chip-internal">Internal-only module</span>\n'
+                '</div>'
+            )
         lines = [title, "", status_banner, ""]
         if public_in_module:
             recommended_names = RECOMMENDED_ENTRYPOINTS.get(module, set())
@@ -329,6 +358,13 @@ def main() -> None:
                 )
             if not recommended:
                 lines.append("| — | — | No recommended entrypoints configured. | — |")
+            if module == "data_quality":
+                lines.extend(
+                    [
+                        "",
+                        "Split a Spark DataFrame into pass/quarantine outputs for row-level DQ rules.",
+                    ]
+                )
 
             lines.extend(["", "## Advanced helpers", ""])
             if advanced:
@@ -378,10 +414,47 @@ def main() -> None:
         if any(line.strip().startswith("::: fabricops_kit.") for line in lines):
             raise RuntimeError(f"Mkdocstrings directives should not be rendered on module page for {module}")
         module_md.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
-        if module in VISIBLE_PUBLIC_MODULES:
+        if module_manifest.get(module, {}).get("sidebar_include") and module_manifest.get(module, {}).get("visibility") == "public":
             module_index_lines.append(f"- [`{module}`]({module}.md)")
 
     (MODULE_DIR / "index.md").write_text("\n".join(module_index_lines) + "\n", encoding="utf-8", newline="\n")
+    sidebar_modules = [m["module_name"] for m in module_docs_metadata if m["visibility"] == "public" and m["sidebar_include"]]
+    mkdocs_text = MKDOCS_PATH.read_text(encoding="utf-8")
+    start_marker = "      # AUTO-GENERATED-MODULES-START"
+    end_marker = "      # AUTO-GENERATED-MODULES-END"
+    if start_marker in mkdocs_text and end_marker in mkdocs_text:
+        generated = "\n".join([f"          - {m}: api/modules/{m}.md" for m in sidebar_modules])
+        before, rest = mkdocs_text.split(start_marker, 1)
+        middle, after = rest.split(end_marker, 1)
+        mkdocs_text = before + start_marker + "\n" + generated + "\n" + end_marker + after
+        MKDOCS_PATH.write_text(mkdocs_text, encoding="utf-8", newline="\n")
+
+    manifest_rows = []
+    known_modules = set(module_manifest)
+    for s in sorted(symbol_map.values(), key=lambda x: x.name.lower()):
+        canonical_module = canonical_public_module(s.public_module)
+        if canonical_module not in known_modules:
+            raise RuntimeError(f"Callable {s.name} resolved to unknown module_name {canonical_module!r}; add it to MODULE_DOCS_METADATA.")
+        module_meta = module_manifest.get(canonical_module, {"visibility": "internal", "sidebar_include": False, "module_summary": "", "sidebar_group": "Advanced"})
+        callable_role = "internal_helper"
+        if s.name in RECOMMENDED_ENTRYPOINTS.get(s.public_module, set()):
+            callable_role = "recommended_entrypoint"
+        elif module_meta["visibility"] == "public":
+            callable_role = "advanced_helper"
+        manifest_rows.append(
+            {
+                "module_name": canonical_module,
+                "visibility": module_meta["visibility"],
+                "module_summary": module_meta["module_summary"],
+                "sidebar_group": module_meta["sidebar_group"],
+                "sidebar_include": module_meta["sidebar_include"],
+                "callable_name": s.name,
+                "callable_visibility": "public",
+                "callable_role": callable_role,
+                "workflow_step": docs_metadata[s.name]["workflow_step"],
+            }
+        )
+    MANIFEST_PATH.write_text(json.dumps({"modules": module_docs_metadata, "callables": manifest_rows}, indent=2) + "\n", encoding="utf-8")
 
     starter_symbol_to_notebooks: dict[str, set[str]] = {}
     for flow in template_flow_docs:
@@ -557,6 +630,8 @@ def main() -> None:
             "</div>",
             "",
             "## Function catalogue",
+            "",
+            "## All public functions",
             "",
         ]
     )
