@@ -47,28 +47,6 @@ HIDDEN_SUPPORTING_MODULES = [
     "handover_documentation",
     "technical_audit_columns",
 ]
-LEGACY_ENTRYPOINTS_REMOVED = {
-    "environment_config": {
-        "validate_framework_config",
-        "load_fabric_config",
-        "get_path",
-        "bootstrap_fabric_env",
-    },
-    "fabric_input_output": {"Housepath", "lakehouse_table_read", "lakehouse_table_write", "warehouse_read", "warehouse_write"},
-    "data_profiling": {"generate_metadata_profile", "profile_dataframe_to_metadata", "build_ai_quality_context"},
-    "data_contracts": {
-        "load_latest_approved_contract",
-        "normalize_contract_dict",
-        "validate_contract_dict",
-        "get_executable_quality_rules",
-        "write_contract_to_lakehouse",
-        "build_contract_summary",
-    },
-    "data_quality": {"validate_dq_rules", "enforce_dq_rules", "assert_dq_passed"},
-    "data_governance": {"classify_columns", "summarize_governance_classifications", "build_governance_classification_records"},
-    "data_lineage": {"build_lineage_from_notebook_code"},
-}
-
 STEP_FALLBACK_NOTES = {
     "5": "No public callable is currently mapped to this step. Use exploration notebook prompts to capture transformation rationale before pipeline enforcement.",
 }

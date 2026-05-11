@@ -350,7 +350,7 @@
       "sidebar_include": true,
       "callable_name": "classify_column",
       "callable_visibility": "public",
-      "callable_role": "essential",
+      "callable_role": "optional",
       "workflow_step": 9
     },
     {
@@ -363,17 +363,6 @@
       "callable_visibility": "public",
       "callable_role": "essential",
       "workflow_step": 9
-    },
-    {
-      "module_name": "environment_config",
-      "visibility": "public",
-      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "configure_fabric_ai_functions",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": 1
     },
     {
       "module_name": "technical_audit_columns",
@@ -658,7 +647,7 @@
       "sidebar_include": true,
       "callable_name": "plot_lineage_steps",
       "callable_visibility": "public",
-      "callable_role": "essential",
+      "callable_role": "optional",
       "workflow_step": 10
     },
     {
@@ -669,7 +658,7 @@
       "sidebar_include": true,
       "callable_name": "profile_dataframe",
       "callable_visibility": "public",
-      "callable_role": "essential",
+      "callable_role": "optional",
       "workflow_step": 4
     },
     {
@@ -691,7 +680,7 @@
       "sidebar_include": true,
       "callable_name": "profile_metadata_to_records",
       "callable_visibility": "public",
-      "callable_role": "essential",
+      "callable_role": "optional",
       "workflow_step": 4
     },
     {
@@ -735,7 +724,7 @@
       "sidebar_include": true,
       "callable_name": "scan_notebook_cells",
       "callable_visibility": "public",
-      "callable_role": "essential",
+      "callable_role": "optional",
       "workflow_step": 10
     },
     {
@@ -746,7 +735,7 @@
       "sidebar_include": true,
       "callable_name": "scan_notebook_lineage",
       "callable_visibility": "public",
-      "callable_role": "essential",
+      "callable_role": "optional",
       "workflow_step": 10
     },
     {
@@ -823,7 +812,7 @@
       "sidebar_include": true,
       "callable_name": "validate_lineage_steps",
       "callable_visibility": "public",
-      "callable_role": "essential",
+      "callable_role": "optional",
       "workflow_step": 10
     },
     {
