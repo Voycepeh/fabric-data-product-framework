@@ -45,6 +45,7 @@ MODULE_DOCS_METADATA: list[ModuleDocMetadata] = [
     {"module_name": "handover_documentation", "visibility": "internal", "module_summary": "Run summary and handover markdown helpers.", "sidebar_group": "Advanced", "sidebar_include": False},
     {"module_name": "technical_audit_columns", "visibility": "internal", "module_summary": "Technical/audit enrichment helpers for pipeline outputs.", "sidebar_group": "Advanced", "sidebar_include": False},
     {"module_name": "dq_review", "visibility": "internal", "module_summary": "Human-in-the-loop DQ review helpers.", "sidebar_group": "Advanced", "sidebar_include": False},
+    {"module_name": "ai", "visibility": "internal", "module_summary": "AI-assisted helper utilities and prompt builders.", "sidebar_group": "Advanced", "sidebar_include": False},
 ]
 
 class TemplateFlowSegmentMetadata(TypedDict):
@@ -276,7 +277,7 @@ PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [
     {"symbol_name": "assert_dq_passed", "module": "data_quality", "kind": "function", "workflow_step": "6D", "importance": "Essential", "summary_override": None},
     {"symbol_name": "draft_dq_rules", "module": "data_quality", "kind": "function", "workflow_step": 8, "importance": "Optional", "summary_override": None},
     {"symbol_name": "write_dq_rules", "module": "data_quality", "kind": "function", "workflow_step": 8, "importance": "Optional", "summary_override": None},
-    {"symbol_name": "enforce_dq_rules", "module": "data_quality", "kind": "function", "workflow_step": "6C", "importance": "Essential", "summary_override": None},
+    {"symbol_name": "enforce_dq_rules", "module": "data_quality", "kind": "function", "workflow_step": "6C", "importance": "Essential", "summary_override": "Run notebook-facing DQ rules and return a Spark DataFrame result."},
     {"symbol_name": "review_dq_rules", "module": "dq_review", "kind": "function", "workflow_step": 8, "importance": "Optional", "summary_override": None},
     {"symbol_name": "review_dq_rule_deactivations", "module": "dq_review", "kind": "function", "workflow_step": 8, "importance": "Optional", "summary_override": None},
     {"symbol_name": "check_fabric_ai_functions_available", "module": "config", "kind": "function", "workflow_step": "2A", "summary_override": None},

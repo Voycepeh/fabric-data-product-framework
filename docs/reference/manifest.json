@@ -90,13 +90,20 @@
       "module_summary": "Human-in-the-loop DQ review helpers.",
       "sidebar_group": "Advanced",
       "sidebar_include": false
+    },
+    {
+      "module_name": "ai",
+      "visibility": "internal",
+      "module_summary": "AI-assisted helper utilities and prompt builders.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": false
     }
   ],
   "callables": [
     {
-      "module_name": "technical_columns",
+      "module_name": "technical_audit_columns",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "Technical/audit enrichment helpers for pipeline outputs.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "add_audit_columns",
@@ -105,9 +112,9 @@
       "workflow_step": "6B"
     },
     {
-      "module_name": "technical_columns",
+      "module_name": "technical_audit_columns",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "Technical/audit enrichment helpers for pipeline outputs.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "add_datetime_features",
@@ -116,9 +123,9 @@
       "workflow_step": "6B"
     },
     {
-      "module_name": "technical_columns",
+      "module_name": "technical_audit_columns",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "Technical/audit enrichment helpers for pipeline outputs.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "add_hash_columns",
@@ -138,9 +145,9 @@
       "workflow_step": "6D"
     },
     {
-      "module_name": "runtime",
+      "module_name": "runtime_context",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "Notebook runtime naming and context utilities.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "assert_notebook_name_valid",
@@ -149,14 +156,14 @@
       "workflow_step": 1
     },
     {
-      "module_name": "config",
-      "visibility": "internal",
-      "module_summary": "",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
+      "module_name": "environment_config",
+      "visibility": "public",
+      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
       "callable_name": "bootstrap_fabric_env",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "recommended_entrypoint",
       "workflow_step": "2B"
     },
     {
@@ -226,9 +233,9 @@
       "workflow_step": 7
     },
     {
-      "module_name": "metadata",
+      "module_name": "data_product_metadata",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "Metadata record builders for operational outputs.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "build_dataset_run_record",
@@ -239,7 +246,7 @@
     {
       "module_name": "ai",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "AI-assisted helper utilities and prompt builders.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "build_governance_candidate_prompt",
@@ -261,7 +268,7 @@
     {
       "module_name": "ai",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "AI-assisted helper utilities and prompt builders.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "build_handover_summary_prompt",
@@ -316,7 +323,7 @@
     {
       "module_name": "ai",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "AI-assisted helper utilities and prompt builders.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "build_manual_governance_prompt_package",
@@ -327,7 +334,7 @@
     {
       "module_name": "ai",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "AI-assisted helper utilities and prompt builders.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "build_manual_handover_prompt_package",
@@ -336,9 +343,9 @@
       "workflow_step": 10
     },
     {
-      "module_name": "metadata",
+      "module_name": "data_product_metadata",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "Metadata record builders for operational outputs.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "build_quality_result_records",
@@ -347,9 +354,9 @@
       "workflow_step": 7
     },
     {
-      "module_name": "run_summary",
+      "module_name": "handover_documentation",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "Run summary and handover markdown helpers.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "build_run_summary",
@@ -358,9 +365,9 @@
       "workflow_step": 10
     },
     {
-      "module_name": "runtime",
+      "module_name": "runtime_context",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "Notebook runtime naming and context utilities.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "build_runtime_context",
@@ -369,9 +376,9 @@
       "workflow_step": 1
     },
     {
-      "module_name": "metadata",
+      "module_name": "data_product_metadata",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "Metadata record builders for operational outputs.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "build_schema_drift_records",
@@ -380,9 +387,9 @@
       "workflow_step": 4
     },
     {
-      "module_name": "metadata",
+      "module_name": "data_product_metadata",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "Metadata record builders for operational outputs.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "build_schema_snapshot_records",
@@ -391,20 +398,20 @@
       "workflow_step": 4
     },
     {
-      "module_name": "config",
-      "visibility": "internal",
-      "module_summary": "",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
+      "module_name": "environment_config",
+      "visibility": "public",
+      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
       "callable_name": "check_fabric_ai_functions_available",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "advanced_helper",
       "workflow_step": "2A"
     },
     {
-      "module_name": "drift",
+      "module_name": "data_drift",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "Schema/profile/partition drift checks supporting notebook validation.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "check_partition_drift",
@@ -413,9 +420,9 @@
       "workflow_step": 4
     },
     {
-      "module_name": "drift",
+      "module_name": "data_drift",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "Schema/profile/partition drift checks supporting notebook validation.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "check_profile_drift",
@@ -424,9 +431,9 @@
       "workflow_step": 4
     },
     {
-      "module_name": "drift",
+      "module_name": "data_drift",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "Schema/profile/partition drift checks supporting notebook validation.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "check_schema_drift",
@@ -457,14 +464,14 @@
       "workflow_step": 9
     },
     {
-      "module_name": "config",
-      "visibility": "internal",
-      "module_summary": "",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
+      "module_name": "environment_config",
+      "visibility": "public",
+      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
       "callable_name": "configure_fabric_ai_functions",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "advanced_helper",
       "workflow_step": 1
     },
     {
@@ -479,9 +486,9 @@
       "workflow_step": 7
     },
     {
-      "module_name": "technical_columns",
+      "module_name": "technical_audit_columns",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "Technical/audit enrichment helpers for pipeline outputs.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "default_technical_columns",
@@ -508,7 +515,7 @@
       "sidebar_include": true,
       "callable_name": "enforce_dq_rules",
       "callable_visibility": "public",
-      "callable_role": "advanced_helper",
+      "callable_role": "recommended_entrypoint",
       "workflow_step": "6C"
     },
     {
@@ -591,7 +598,7 @@
     {
       "module_name": "ai",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "AI-assisted helper utilities and prompt builders.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "generate_governance_candidates_with_fabric_ai",
@@ -602,7 +609,7 @@
     {
       "module_name": "ai",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "AI-assisted helper utilities and prompt builders.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "generate_handover_summary_with_fabric_ai",
@@ -622,9 +629,9 @@
       "workflow_step": 4
     },
     {
-      "module_name": "runtime",
+      "module_name": "runtime_context",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "Notebook runtime naming and context utilities.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "generate_run_id",
@@ -644,14 +651,14 @@
       "workflow_step": "6C"
     },
     {
-      "module_name": "config",
-      "visibility": "internal",
-      "module_summary": "",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
+      "module_name": "environment_config",
+      "visibility": "public",
+      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
       "callable_name": "get_path",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "recommended_entrypoint",
       "workflow_step": "2A"
     },
     {
@@ -732,14 +739,14 @@
       "workflow_step": 3
     },
     {
-      "module_name": "config",
-      "visibility": "internal",
-      "module_summary": "",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
+      "module_name": "environment_config",
+      "visibility": "public",
+      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
       "callable_name": "load_fabric_config",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "recommended_entrypoint",
       "workflow_step": "2A"
     },
     {
@@ -767,7 +774,7 @@
     {
       "module_name": "ai",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "AI-assisted helper utilities and prompt builders.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "parse_manual_ai_json_response",
@@ -820,9 +827,9 @@
       "workflow_step": 4
     },
     {
-      "module_name": "run_summary",
+      "module_name": "handover_documentation",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "Run summary and handover markdown helpers.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "render_run_summary_markdown",
@@ -853,14 +860,14 @@
       "workflow_step": 8
     },
     {
-      "module_name": "config",
-      "visibility": "internal",
-      "module_summary": "",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
+      "module_name": "environment_config",
+      "visibility": "public",
+      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
       "callable_name": "run_config_smoke_tests",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "advanced_helper",
       "workflow_step": "2B"
     },
     {
@@ -897,9 +904,9 @@
       "workflow_step": 4
     },
     {
-      "module_name": "drift",
+      "module_name": "data_drift",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "Schema/profile/partition drift checks supporting notebook validation.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "summarize_drift_results",
@@ -941,14 +948,14 @@
       "workflow_step": "6C"
     },
     {
-      "module_name": "config",
-      "visibility": "internal",
-      "module_summary": "",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
+      "module_name": "environment_config",
+      "visibility": "public",
+      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
       "callable_name": "validate_framework_config",
       "callable_visibility": "public",
-      "callable_role": "internal_helper",
+      "callable_role": "recommended_entrypoint",
       "workflow_step": "2A"
     },
     {
@@ -963,9 +970,9 @@
       "workflow_step": 10
     },
     {
-      "module_name": "runtime",
+      "module_name": "runtime_context",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "Notebook runtime naming and context utilities.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "validate_notebook_name",
@@ -1029,9 +1036,9 @@
       "workflow_step": 9
     },
     {
-      "module_name": "metadata",
+      "module_name": "data_product_metadata",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "Metadata record builders for operational outputs.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "write_metadata_records",
@@ -1040,9 +1047,9 @@
       "workflow_step": 7
     },
     {
-      "module_name": "metadata",
+      "module_name": "data_product_metadata",
       "visibility": "internal",
-      "module_summary": "",
+      "module_summary": "Metadata record builders for operational outputs.",
       "sidebar_group": "Advanced",
       "sidebar_include": false,
       "callable_name": "write_multiple_metadata_outputs",

@@ -64,7 +64,7 @@ RECOMMENDED_ENTRYPOINTS = {
         "write_contract_to_lakehouse",
         "build_contract_summary",
     },
-    "data_quality": {"validate_dq_rules", "run_dq_rules", "assert_dq_passed", "split_dq_rows", "suggest_dq_rules"},
+    "data_quality": {"validate_dq_rules", "enforce_dq_rules", "assert_dq_passed"},
     "data_governance": {"classify_columns", "summarize_governance_classifications", "build_governance_classification_records"},
     "data_lineage": {"build_lineage_from_notebook_code"},
 }
@@ -245,6 +245,11 @@ def resolve_preferred_actual_module(preferred_module: str) -> str:
     return next((actual for actual, public_name in PUBLIC_MODULE_PREFERRED_NAMES.items() if public_name == preferred_module), preferred_module)
 
 
+def canonical_public_module(module_name: str) -> str:
+    """Return the canonical docs/public module name for metadata and manifests."""
+    return PUBLIC_MODULE_PREFERRED_NAMES.get(module_name, module_name)
+
+
 def main() -> None:
     public = parse_public_exports()
     module_data = {p.stem: parse_module(p) for p in PKG_DIR.glob("*.py") if p.name != "__init__.py"}
@@ -265,7 +270,7 @@ def main() -> None:
 
     symbol_map: dict[str, Symbol] = {}
     for name in public:
-        preferred_module = docs_metadata[name]["module"]
+        preferred_module = canonical_public_module(docs_metadata[name]["module"])
         preferred_actual_module = resolve_preferred_actual_module(preferred_module)
         modules_to_check = [preferred_actual_module] + [m for m in module_data if m != preferred_actual_module]
         for module in modules_to_check:
@@ -304,7 +309,7 @@ def main() -> None:
     MODULE_DIR.mkdir(parents=True, exist_ok=True)
     module_manifest = {row["module_name"]: row for row in module_docs_metadata}
     module_index_lines = ["# Module API Catalogue", "", "Function Reference/workflow pages are the primary entrypoint. Module pages below are secondary technical references.", "", "Short-form modules remain import-compatible aliases but are intentionally hidden from this user-facing catalogue.", ""]
-    all_doc_modules = sorted(set(VISIBLE_PUBLIC_MODULES + HIDDEN_SUPPORTING_MODULES))
+    all_doc_modules = [row["module_name"] for row in module_docs_metadata]
     for module in all_doc_modules:
         actual_module = next((k for k,v in PUBLIC_MODULE_PREFERRED_NAMES.items() if v==module), module)
         info = module_data[actual_module]
@@ -346,6 +351,13 @@ def main() -> None:
                 )
             if not recommended:
                 lines.append("| — | — | No recommended entrypoints configured. | — |")
+            if module == "data_quality":
+                lines.extend(
+                    [
+                        "",
+                        "Split a Spark DataFrame into pass/quarantine outputs for row-level DQ rules.",
+                    ]
+                )
 
             lines.extend(["", "## Advanced helpers", ""])
             if advanced:
@@ -407,12 +419,16 @@ def main() -> None:
         generated = "\n".join([f"          - {m}: api/modules/{m}.md" for m in sidebar_modules])
         before, rest = mkdocs_text.split(start_marker, 1)
         middle, after = rest.split(end_marker, 1)
-        mkdocs_text = before + start_marker + "\n" + generated + "\n" + "      " + end_marker + after
+        mkdocs_text = before + start_marker + "\n" + generated + "\n" + end_marker + after
         MKDOCS_PATH.write_text(mkdocs_text, encoding="utf-8", newline="\n")
 
     manifest_rows = []
+    known_modules = set(module_manifest)
     for s in sorted(symbol_map.values(), key=lambda x: x.name.lower()):
-        module_meta = module_manifest.get(s.public_module, {"visibility": "internal", "sidebar_include": False, "module_summary": "", "sidebar_group": "Advanced"})
+        canonical_module = canonical_public_module(s.public_module)
+        if canonical_module not in known_modules:
+            raise RuntimeError(f"Callable {s.name} resolved to unknown module_name {canonical_module!r}; add it to MODULE_DOCS_METADATA.")
+        module_meta = module_manifest.get(canonical_module, {"visibility": "internal", "sidebar_include": False, "module_summary": "", "sidebar_group": "Advanced"})
         callable_role = "internal_helper"
         if s.name in RECOMMENDED_ENTRYPOINTS.get(s.public_module, set()):
             callable_role = "recommended_entrypoint"
@@ -420,7 +436,7 @@ def main() -> None:
             callable_role = "advanced_helper"
         manifest_rows.append(
             {
-                "module_name": s.public_module,
+                "module_name": canonical_module,
                 "visibility": module_meta["visibility"],
                 "module_summary": module_meta["module_summary"],
                 "sidebar_group": module_meta["sidebar_group"],
@@ -479,7 +495,7 @@ def main() -> None:
 
     def _module_link(module: str, *, base_prefix: str = "../") -> str:
         return (
-            f'<a class="reference-module-link" href="{_esc(base_prefix)}api/modules/{_esc(module)}/" '
+            f'<a class="reference-module-link" href="{_esc(base_prefix)}api/modules/{_esc(module)}.md" '
             f'title="Open {module} module page" aria-label="Open {module} module page">{_esc(module)}</a>'
         )
 
@@ -607,6 +623,8 @@ def main() -> None:
             "</div>",
             "",
             "## Function catalogue",
+            "",
+            "## All public functions",
             "",
         ]
     )
