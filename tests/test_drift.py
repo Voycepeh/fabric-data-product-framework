@@ -5,12 +5,10 @@ import pytest
 
 from fabricops_kit.drift import (
     SchemaDriftError,
-    UnsupportedDataFrameEngineError,
     assert_no_blocking_schema_drift,
     build_schema_snapshot,
     compare_schema_snapshots,
     default_schema_drift_policy,
-    detect_dataframe_engine,
 )
 
 
@@ -48,9 +46,6 @@ class FakeSparkDataFrame:
         self.scan_calls += 1
         raise AssertionError("collect must not be called")
 
-
-def test_detect_dataframe_engine_returns_pandas() -> None:
-    assert detect_dataframe_engine(pd.DataFrame({"a": [1]})) == "pandas"
 
 
 def test_build_schema_snapshot_auto_works_for_pandas() -> None:

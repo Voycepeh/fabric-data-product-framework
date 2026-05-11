@@ -1,4 +1,6 @@
 import pytest
+import sys
+import types
 from pyspark.sql import SparkSession
 from fabricops_kit.config import AIPromptConfig
 from fabricops_kit.data_quality import (
@@ -52,6 +54,26 @@ def test_metadata_approval_deactivation_latest(spark):
     a=build_dq_rule_history(spark,'T',[rule],action_by='u')
     d=build_dq_rule_deactivations(spark,'T',[{"rule":rule,"action_reason":"bad"}],action_by='u2')
     assert load_active_dq_rules(a.unionByName(d),'T')==[]
+
+def test_action_by_resolves_from_runtime_context_and_explicit_override(spark, monkeypatch):
+    rule={"rule_id":"r1","rule_type":"not_null","columns":["a"],"severity":"error","description":"d"}
+
+    runtime_mod = types.SimpleNamespace(context={"userName": "fabric_user", "userId": "id_1"})
+    monkeypatch.setitem(sys.modules, "notebookutils.runtime", runtime_mod)
+    rows = build_dq_rule_history(spark, "T", [rule]).collect()
+    assert rows[0]["action_by"] == "fabric_user"
+
+    runtime_mod = types.SimpleNamespace(context={"userId": "id_only"})
+    monkeypatch.setitem(sys.modules, "notebookutils.runtime", runtime_mod)
+    rows = build_dq_rule_history(spark, "T", [rule]).collect()
+    assert rows[0]["action_by"] == "id_only"
+
+    rows = build_dq_rule_history(spark, "T", [rule], action_by="explicit_user").collect()
+    assert rows[0]["action_by"] == "explicit_user"
+
+    deact = [{"rule": rule, "action_reason": "bad"}]
+    rows = build_dq_rule_deactivations(spark, "T", deact).collect()
+    assert rows[0]["action_by"] == "id_only"
 
 def test_quarantine_and_run_results_include_pass(spark):
     df=spark.createDataFrame([{"a":"","b":"x"},{"a":"ok","b":"x"},{"a":"ok","b":"y"}])
