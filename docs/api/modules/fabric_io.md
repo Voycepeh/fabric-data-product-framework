@@ -4,19 +4,24 @@
   <span class="api-chip api-chip-module">Module overview</span>
 </div>
 
-## Public callables from `__all__`
+## Recommended notebook entrypoints
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
 | [`Housepath`](../../reference/step-02a-shared-runtime-config/Housepath.md) | class | Fabric lakehouse or warehouse connection details. | — |
+| [`lakehouse_table_read`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_table_read.md) | function | Read a Delta table from a Fabric lakehouse. | [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) (internal) |
+| [`lakehouse_table_write`](../../reference/step-06d-controlled-outputs/lakehouse_table_write.md) | function | Write a Spark DataFrame to a Fabric lakehouse Delta table. | — |
+| [`warehouse_read`](../../reference/step-03-source-contract-ingestion-pattern/warehouse_read.md) | function | Read a table from a Microsoft Fabric warehouse. | [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) (internal) |
+| [`warehouse_write`](../../reference/step-06d-controlled-outputs/warehouse_write.md) | function | Write a Spark DataFrame to a Microsoft Fabric warehouse table. | — |
+
+## Advanced helpers
+
+| Callable | Type | Summary | Related helpers |
+|---|---|---|---|
 | [`lakehouse_csv_read`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_csv_read.md) | function | Read a CSV file from a Fabric lakehouse Files path. | [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) (internal) |
 | [`lakehouse_excel_read_as_spark`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_excel_read_as_spark.md) | function | Read an Excel file from a Fabric lakehouse Files path. | [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) (internal) |
 | [`lakehouse_parquet_read_as_spark`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_parquet_read_as_spark.md) | function | Read a Parquet file from a Fabric lakehouse Files path. | [`_convert_single_parquet_ns_to_us`](../../reference/internal/fabric_io/_convert_single_parquet_ns_to_us.md) (internal), [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) (internal) |
-| [`lakehouse_table_read`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_table_read.md) | function | Read a Delta table from a Fabric lakehouse. | [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) (internal) |
-| [`lakehouse_table_write`](../../reference/step-06d-controlled-outputs/lakehouse_table_write.md) | function | Write a Spark DataFrame to a Fabric lakehouse Delta table. | — |
-| [`load_fabric_config`](../../reference/step-02a-shared-runtime-config/load_fabric_config.md) | function | Validate and return a user-supplied framework configuration. | — |
-| [`warehouse_read`](../../reference/step-03-source-contract-ingestion-pattern/warehouse_read.md) | function | Read a table from a Microsoft Fabric warehouse. | [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) (internal) |
-| [`warehouse_write`](../../reference/step-06d-controlled-outputs/warehouse_write.md) | function | Write a Spark DataFrame to a Microsoft Fabric warehouse table. | — |
+| [`seed_minimal_sample_source_table`](../../reference/step-04-ingest-profile-store/seed_minimal_sample_source_table.md) | function | Create and persist deterministic demo rows into a sample source table. | [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) (internal) |
 
 ## Internal helpers
 
@@ -24,4 +29,4 @@
 |---|---|
 | [`_convert_single_parquet_ns_to_us`](../../reference/internal/fabric_io/_convert_single_parquet_ns_to_us.md) | [`lakehouse_parquet_read_as_spark`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_parquet_read_as_spark.md) |
 | [`_get_fabric_runtime_context`](../../reference/internal/fabric_io/_get_fabric_runtime_context.md) | — |
-| [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) | [`lakehouse_csv_read`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_csv_read.md), [`lakehouse_excel_read_as_spark`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_excel_read_as_spark.md), [`lakehouse_parquet_read_as_spark`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_parquet_read_as_spark.md), [`lakehouse_table_read`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_table_read.md), [`warehouse_read`](../../reference/step-03-source-contract-ingestion-pattern/warehouse_read.md) |
+| [`_get_spark`](../../reference/internal/fabric_io/_get_spark.md) | [`lakehouse_csv_read`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_csv_read.md), [`lakehouse_excel_read_as_spark`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_excel_read_as_spark.md), [`lakehouse_parquet_read_as_spark`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_parquet_read_as_spark.md), [`lakehouse_table_read`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_table_read.md), [`seed_minimal_sample_source_table`](../../reference/step-04-ingest-profile-store/seed_minimal_sample_source_table.md), [`warehouse_read`](../../reference/step-03-source-contract-ingestion-pattern/warehouse_read.md) |

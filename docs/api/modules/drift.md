@@ -1,10 +1,17 @@
 # `drift` module
 
 <div class="api-status-block">
-  <span class="api-chip api-chip-module">Module overview</span>
+  <span class="api-chip api-chip-internal">Advanced supporting module</span>
+  <div class="api-chip-subtitle">Used by workflow references but not promoted as a primary notebook module.</div>
 </div>
 
-## Public callables from `__all__`
+## Recommended notebook entrypoints
+
+| Callable | Type | Summary | Related helpers |
+|---|---|---|---|
+| — | — | No recommended entrypoints configured. | — |
+
+## Advanced helpers
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|

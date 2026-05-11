@@ -26,7 +26,7 @@ nav:
           - fabric_io: api/modules/fabric_io.md
           - profiling: api/modules/profiling.md
           - contracts: api/modules/contracts.md
-          - data_quality: api/modules/data_quality.md
+          - dq: api/modules/dq.md
           - governance: api/modules/governance.md
           - lineage: api/modules/lineage.md
   - Lifecycle Operating Model: lifecycle-operating-model.md
