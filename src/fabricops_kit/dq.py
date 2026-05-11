@@ -14,8 +14,6 @@ from pyspark.sql.window import Window
 
 AI_SUGGESTABLE_DQ_RULE_TYPES = {"not_null", "unique_key", "accepted_values", "value_range", "regex_format"}
 
-from .ai import DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE as DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
-
 
 def profile_dataframe_for_dq(df, table_name: str, business_context: str = "", sample_value_limit: int = 20):
     """Profile a Spark DataFrame into one row per source column for DQ rule suggestion.
@@ -59,7 +57,7 @@ def suggest_dq_rules_with_fabric_ai(profile_df, prompt_template: str | None = No
     profile_df : pyspark.sql.DataFrame
         Output of :func:`profile_dataframe_for_dq`.
     prompt_template : str | None, optional
-        Prompt template. When ``None``, uses ``config.ai_prompt_config.dq_rule_candidate_template`` if ``config`` is provided, otherwise the canonical default template from ``ai.DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE``.
+        Prompt template from ``config.ai_prompt_config.dq_rule_candidate_template``.
     output_col : str, default="response"
         Output column for AI text responses.
 
@@ -68,7 +66,9 @@ def suggest_dq_rules_with_fabric_ai(profile_df, prompt_template: str | None = No
     pyspark.sql.DataFrame
         Spark DataFrame including AI response text.
     """
-    active_prompt = prompt_template or DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
+    if not prompt_template:
+        raise ValueError("prompt_template must be provided from config.ai_prompt_config.dq_rule_candidate_template.")
+    active_prompt = prompt_template
     return profile_df.ai.generate_response(prompt=active_prompt, output_col=output_col)
 
 
@@ -132,7 +132,28 @@ def validate_dq_rules(rules: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def build_dq_rules_metadata_df(spark, table_name: str, approved_rules: list[dict], action_by: str = "notebook_user", rule_source: str = "ai_widget_approval", action_reason: str = "Approved after human review."):
-    """Build append-only active metadata rows for approved DQ rules."""
+    """Build append-only active metadata rows for approved DQ rules.
+
+    Parameters
+    ----------
+    spark : pyspark.sql.SparkSession
+        Active Spark session used to create metadata DataFrame.
+    table_name : str
+        Logical table name for the governed rules.
+    approved_rules : list[dict]
+        Human-approved canonical DQ rules to append as active versions.
+    action_by : str, default="notebook_user"
+        Actor identity for audit tracking.
+    rule_source : str, default="ai_widget_approval"
+        Source label for audit tracking.
+    action_reason : str, default="Approved after human review."
+        Human-readable reason for approval action.
+
+    Returns
+    -------
+    pyspark.sql.DataFrame
+        Append-only metadata rows with ``is_active=True`` and ``action_type=approved``.
+    """
     ts = datetime.now(timezone.utc).isoformat(); rows = []
     for rule in approved_rules:
         cols = rule.get("columns", [])
@@ -141,7 +162,31 @@ def build_dq_rules_metadata_df(spark, table_name: str, approved_rules: list[dict
 
 
 def build_dq_rule_deactivation_metadata_df(spark, table_name: str, deactivations: list[dict], action_by: str = "notebook_user", rule_source: str = "rule_deactivation_widget"):
-    """Build append-only inactive metadata rows for governed DQ rule deactivation."""
+    """Build append-only inactive metadata rows for governed DQ rule deactivation.
+
+    Parameters
+    ----------
+    spark : pyspark.sql.SparkSession
+        Active Spark session used to create metadata DataFrame.
+    table_name : str
+        Logical table name for the governed rules.
+    deactivations : list[dict]
+        Items shaped as ``{"rule": <rule dict>, "action_reason": <str>}``.
+    action_by : str, default="notebook_user"
+        Actor identity for audit tracking.
+    rule_source : str, default="rule_deactivation_widget"
+        Source label for audit tracking.
+
+    Returns
+    -------
+    pyspark.sql.DataFrame
+        Append-only metadata rows with ``is_active=False`` and ``action_type=deactivated``.
+
+    Raises
+    ------
+    ValueError
+        If any deactivation record has an empty reason.
+    """
     ts = datetime.now(timezone.utc).isoformat(); rows = []
     for item in deactivations:
         reason = str(item["action_reason"]).strip(); rule = item["rule"]
@@ -152,25 +197,81 @@ def build_dq_rule_deactivation_metadata_df(spark, table_name: str, deactivations
     return spark.createDataFrame(rows)
 
 
-def get_latest_dq_rule_versions_from_metadata(metadata_df, table_name: str):
+def _get_latest_dq_rule_versions_from_metadata(metadata_df, table_name: str):
     """Resolve latest metadata row per rule key."""
     w = Window.partitionBy("rule_key").orderBy(F.col("action_ts").desc())
     return metadata_df.filter(F.col("table_name") == table_name).withColumn("_rn", F.row_number().over(w)).filter(F.col("_rn") == 1).drop("_rn")
 
 
 def load_latest_active_dq_rules_from_metadata(metadata_df, table_name: str) -> list[dict[str, Any]]:
-    """Load latest active approved rules from append-only metadata history."""
-    rows = get_latest_dq_rule_versions_from_metadata(metadata_df, table_name).filter(F.col("is_active") == True).select("rule_json").collect()
+    """Load latest active approved rules from append-only metadata history.
+
+    Parameters
+    ----------
+    metadata_df : pyspark.sql.DataFrame
+        Append-only metadata table containing active and inactive versions.
+    table_name : str
+        Logical table name to resolve.
+
+    Returns
+    -------
+    list[dict[str, Any]]
+        Latest active rule payloads deserialized from ``rule_json``.
+
+    Notes
+    -----
+    Latest-version resolution is done per ``rule_key``; a newer inactive version suppresses older active versions.
+    """
+    rows = _get_latest_dq_rule_versions_from_metadata(metadata_df, table_name).filter(F.col("is_active") == True).select("rule_json").collect()
     return [json.loads(r["rule_json"]) for r in rows]
 
 
 def load_latest_active_dq_rule_metadata(metadata_df, table_name: str):
-    """Return latest active metadata rows for governance review screens."""
-    return get_latest_dq_rule_versions_from_metadata(metadata_df, table_name).filter(F.col("is_active") == True)
+    """Return latest active metadata rows for governance review screens.
+
+    Parameters
+    ----------
+    metadata_df : pyspark.sql.DataFrame
+        Append-only metadata table containing active and inactive versions.
+    table_name : str
+        Logical table name to resolve.
+
+    Returns
+    -------
+    pyspark.sql.DataFrame
+        Latest active metadata versions per ``rule_key``.
+    """
+    return _get_latest_dq_rule_versions_from_metadata(metadata_df, table_name).filter(F.col("is_active") == True)
 
 
 def split_valid_quarantine_and_failures(df, rules: list[dict[str, Any]], dq_run_id: str | None = None, row_id_columns: list[str] | None = None):
-    """Split source rows into valid rows, quarantine rows, and one-row-per-failure evidence."""
+    """Split source rows into valid rows, quarantine rows, and one-row-per-failure evidence.
+
+    Parameters
+    ----------
+    df : pyspark.sql.DataFrame
+        Source Spark DataFrame to evaluate.
+    rules : list[dict[str, Any]]
+        Canonical approved DQ rules to enforce.
+    dq_run_id : str | None, optional
+        Optional run identifier; auto-generated when omitted.
+    row_id_columns : list[str] | None, optional
+        Optional stable business-key columns used for deterministic row IDs.
+
+    Returns
+    -------
+    tuple[pyspark.sql.DataFrame, pyspark.sql.DataFrame, pyspark.sql.DataFrame]
+        ``(valid_rows, quarantine_rows, quarantine_failure_evidence)``.
+
+    Raises
+    ------
+    ValueError
+        If rules fail canonical DQ validation.
+
+    Notes
+    -----
+    A single source row may generate multiple failure-evidence rows when multiple rules fail.
+    """
     validate_dq_rules(rules)
     dq_run_id = dq_run_id or str(uuid.uuid4())
     run_ts = datetime.now(timezone.utc).isoformat()
@@ -215,7 +316,27 @@ def split_valid_quarantine_and_failures(df, rules: list[dict[str, Any]], dq_run_
 
 
 def run_dq_rules(df, table_name: str, rules: list[dict[str, Any]]):
-    """Run canonical DQ rules and return Spark rule-level PASS/FAIL evidence for all rules."""
+    """Run canonical DQ rules and return Spark rule-level PASS/FAIL evidence for all rules.
+
+    Parameters
+    ----------
+    df : pyspark.sql.DataFrame
+        Source Spark DataFrame to evaluate.
+    table_name : str
+        Logical table name included in output evidence rows.
+    rules : list[dict[str, Any]]
+        Canonical approved DQ rules to enforce.
+
+    Returns
+    -------
+    pyspark.sql.DataFrame
+        Rule-level evidence including PASS and FAIL rows for every approved rule.
+
+    Raises
+    ------
+    ValueError
+        If rules fail canonical DQ validation.
+    """
     validate_dq_rules(rules)
     _, _, failures = split_valid_quarantine_and_failures(df, rules)
     total = df.count()
@@ -228,6 +349,17 @@ def run_dq_rules(df, table_name: str, rules: list[dict[str, Any]]):
 
 
 def assert_dq_passed(dq_result_df) -> None:
-    """Raise only after evidence materialization when error-severity rules fail."""
+    """Raise only after evidence materialization when error-severity rules fail.
+
+    Parameters
+    ----------
+    dq_result_df : pyspark.sql.DataFrame
+        Materialized rule-level DQ results DataFrame.
+
+    Raises
+    ------
+    ValueError
+        If any row has ``severity=error`` and ``status=FAIL``.
+    """
     if dq_result_df.filter("lower(severity) = 'error' AND status = 'FAIL'").count() > 0:
         raise ValueError("Data quality failed for error-severity rules.")
