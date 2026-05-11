@@ -303,7 +303,10 @@ def main() -> None:
         if enforce_placeholder_guard and symbol.purpose and symbol.purpose != "—":
             _assert_non_placeholder_summary(symbol.name, "purpose", symbol.purpose)
         step_rank = int(str(step).split("A")[0].split("B")[0].split("C")[0].split("D")[0]) if step is not None else 99
-        symbol.role = (meta.get("role") or meta.get("importance") or ("essential" if step is not None and step_rank <= 7 else "optional")).lower()
+        symbol_role = meta.get("role")
+        if not symbol_role:
+            raise RuntimeError(f"Missing explicit role for {symbol.name} in PUBLIC_SYMBOL_DOCS")
+        symbol.role = str(symbol_role).lower()
         if symbol.role not in {"essential", "optional", "internal"}:
             raise RuntimeError(f"Invalid role {symbol.role!r} for {symbol.name}; expected essential/optional/internal")
     MODULE_DIR.mkdir(parents=True, exist_ok=True)

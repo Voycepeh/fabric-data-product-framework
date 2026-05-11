@@ -149,11 +149,6 @@ Pipeline-contract notebook flow for deterministic enforcement and controlled pub
       <td data-label="Purpose">Convert quality-rule execution output into metadata evidence records.</td>
     </tr>
     <tr>
-      <td data-label="Function / class"><a href="../../reference/step-07-output-profile-product-contract/build_contract_records/"><code>build_contract_records</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_contracts/" title="Open data_contracts module page" aria-label="Open data_contracts module page">data_contracts</a></td>
-      <td data-label="Purpose">Build grouped contract header, column, and rule metadata payloads.</td>
-    </tr>
-    <tr>
       <td data-label="Function / class"><a href="../../reference/step-10-lineage-handover-documentation/build_lineage_records/"><code>build_lineage_records</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a></td>
       <td data-label="Purpose">Build compact lineage records for downstream metadata sinks.</td>

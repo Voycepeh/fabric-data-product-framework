@@ -8,18 +8,17 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
+| [`build_lineage_from_notebook_code`](../../reference/step-10-lineage-handover-documentation/build_lineage_from_notebook_code.md) | function | Scan, optionally enrich, and validate lineage from notebook source code. | — |
 | [`build_lineage_handover_markdown`](../../reference/step-10-lineage-handover-documentation/build_lineage_handover_markdown.md) | function | Create a concise markdown handover summary from lineage execution results. | — |
 | [`build_lineage_records`](../../reference/step-10-lineage-handover-documentation/build_lineage_records.md) | function | Build compact lineage records for downstream metadata sinks. | — |
-
-## Optional callables
-
-| Callable | Type | Summary | Related helpers |
-|---|---|---|---|
-| [`build_lineage_from_notebook_code`](../../reference/step-10-lineage-handover-documentation/build_lineage_from_notebook_code.md) | function | Scan, optionally enrich, and validate lineage from notebook source code. | — |
 | [`plot_lineage_steps`](../../reference/step-10-lineage-handover-documentation/plot_lineage_steps.md) | function | Render lineage steps as a directed graph figure. | — |
 | [`scan_notebook_cells`](../../reference/step-10-lineage-handover-documentation/scan_notebook_cells.md) | function | Scan multiple notebook cells and append cell references to lineage steps. | — |
 | [`scan_notebook_lineage`](../../reference/step-10-lineage-handover-documentation/scan_notebook_lineage.md) | function | Extract deterministic lineage steps from notebook code using AST parsing. | [`_call_name`](../../reference/internal/data_lineage/_call_name.md) (internal), [`_flatten_chain`](../../reference/internal/data_lineage/_flatten_chain.md) (internal), [`_name`](../../reference/internal/data_lineage/_name.md) (internal), [`_resolve_write_target`](../../reference/internal/data_lineage/_resolve_write_target.md) (internal), [`_step`](../../reference/internal/data_lineage/_step.md) (internal) |
 | [`validate_lineage_steps`](../../reference/step-10-lineage-handover-documentation/validate_lineage_steps.md) | function | Validate lineage step structure and flag records requiring human review. | — |
+
+## Optional callables
+
+No advanced helpers listed for this module.
 
 ## Related internal helpers
 

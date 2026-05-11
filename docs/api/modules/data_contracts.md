@@ -29,6 +29,6 @@ No advanced helpers listed for this module.
 
 | Helper | Related public callables |
 |---|---|
-| [`_now_utc_iso`](../../reference/internal/data_contracts/_now_utc_iso.md) | [`build_contract_column_records`](../../reference/step-07-output-profile-product-contract/build_contract_column_records.md), [`build_contract_header_record`](../../reference/step-07-output-profile-product-contract/build_contract_header_record.md), [`build_contract_rule_records`](../../reference/step-07-output-profile-product-contract/build_contract_rule_records.md) |
+| [`_now_utc_iso`](../../reference/internal/data_contracts/_now_utc_iso.md) | — |
 | [`_select_latest`](../../reference/internal/data_contracts/_select_latest.md) | [`load_contract_from_lakehouse`](../../reference/step-03-source-contract-ingestion-pattern/load_contract_from_lakehouse.md), [`load_latest_approved_contract`](../../reference/step-03-source-contract-ingestion-pattern/load_latest_approved_contract.md) |
 | [`_to_records`](../../reference/internal/data_contracts/_to_records.md) | [`load_contract_from_lakehouse`](../../reference/step-03-source-contract-ingestion-pattern/load_contract_from_lakehouse.md), [`load_latest_approved_contract`](../../reference/step-03-source-contract-ingestion-pattern/load_latest_approved_contract.md) |

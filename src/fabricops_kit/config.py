@@ -381,7 +381,7 @@ class NotebookSetupContext:
     readiness_status: str
 
 
-def validate_framework_config(config: FrameworkConfig | dict[str, Any]) -> FrameworkConfig:
+def __validate_framework_config(config: FrameworkConfig | dict[str, Any]) -> FrameworkConfig:
     """Validate and normalize framework configuration input.
 
     Parameters
@@ -408,7 +408,7 @@ def validate_framework_config(config: FrameworkConfig | dict[str, Any]) -> Frame
 
     Examples
     --------
-    >>> normalized = validate_framework_config(framework_config)
+    >>> normalized = _validate_framework_config(framework_config)
     >>> isinstance(normalized, FrameworkConfig)
     True
     """
@@ -485,7 +485,7 @@ def load_fabric_config(config: FrameworkConfig | dict[str, Any]) -> FrameworkCon
     >>> isinstance(cfg, FrameworkConfig)
     True
     """
-    return validate_framework_config(config)
+    return _validate_framework_config(config)
 
 
 def get_path(env: str, target: str, config: FrameworkConfig | PathConfig | None) -> Any:
@@ -527,7 +527,7 @@ def get_path(env: str, target: str, config: FrameworkConfig | PathConfig | None)
     return paths[env][target]
 
 
-def run_config_smoke_tests(
+def __run_config_smoke_tests(
     config: FrameworkConfig,
     env: str = "Sandbox",
     required_targets: list[str] | None = None,
@@ -580,7 +580,7 @@ def run_config_smoke_tests(
 
     Examples
     --------
-    >>> checks = run_config_smoke_tests(config=my_config, env="Sandbox", notebook_name="00_env_config")
+    >>> checks = _run_config_smoke_tests(config=my_config, env="Sandbox", notebook_name="00_env_config")
     >>> any(c.status == "fail" for c in checks)
     False
     """
@@ -615,7 +615,7 @@ def run_config_smoke_tests(
         results.append(ConfigSmokeCheckResult("notebook_naming", "skipped", "Notebook name check skipped."))
 
     if check_ai:
-        ai_status = ai_result or check_fabric_ai_functions_available()
+        ai_status = ai_result or _check_fabric_ai_functions_available()
         results.append(ConfigSmokeCheckResult("fabric_ai", "pass" if ai_status.get("available") else "warn", ai_status.get("message", "")))
     else:
         results.append(ConfigSmokeCheckResult("fabric_ai", "skipped", "AI check disabled."))
@@ -631,7 +631,7 @@ def run_config_smoke_tests(
     return results
 
 
-def bootstrap_fabric_env(
+def __bootstrap_fabric_env(
     env: str = "Sandbox",
     required_targets: list[str] | None = None,
     check_ai: bool = True,
@@ -681,7 +681,7 @@ def bootstrap_fabric_env(
 
     Examples
     --------
-    >>> result = bootstrap_fabric_env(config=my_config, env="Sandbox", notebook_name="00_env_config")
+    >>> result = _bootstrap_fabric_env(config=my_config, env="Sandbox", notebook_name="00_env_config")
     >>> result.readiness_status in {"ready", "not_ready"}
     True
     """
@@ -690,9 +690,9 @@ def bootstrap_fabric_env(
         raise ValueError("config is required for bootstrap_fabric_env.")
     required_targets = required_targets or ["Source", "Unified"]
     resolved_paths = {target: get_path(env=env, target=target, config=normalized) for target in required_targets}
-    ai_result = check_fabric_ai_functions_available() if check_ai else {"available": None, "message": "AI check disabled."}
+    ai_result = _check_fabric_ai_functions_available() if check_ai else {"available": None, "message": "AI check disabled."}
     runtime_meta = _get_fabric_runtime_metadata(notebook_name=notebook_name)
-    smoke = run_config_smoke_tests(
+    smoke = _run_config_smoke_tests(
         normalized,
         env=env,
         required_targets=required_targets,
@@ -770,11 +770,11 @@ def setup_fabricops_notebook(
         "runtime_available": context is not None,
     }
 
-    ai_status = check_fabric_ai_functions_available() if check_ai else {"available": None, "message": "AI check disabled."}
+    ai_status = _check_fabric_ai_functions_available() if check_ai else {"available": None, "message": "AI check disabled."}
     if configure_ai and check_ai and ai_status.get("available"):
         ai_status = {**ai_status, **configure_fabric_ai_functions()}
 
-    checks = run_config_smoke_tests(config=normalized, env=env, required_targets=required_targets, check_ai=check_ai, notebook_name=resolved_notebook_name, ai_result=ai_status)
+    checks = _run_config_smoke_tests(config=normalized, env=env, required_targets=required_targets, check_ai=check_ai, notebook_name=resolved_notebook_name, ai_result=ai_status)
     readiness_status = "ready" if all(r.status in {"pass", "warn", "skipped"} for r in checks) else "not_ready"
 
     return NotebookSetupContext(
@@ -790,7 +790,7 @@ def setup_fabricops_notebook(
         readiness_status=readiness_status,
     )
 
-def check_fabric_ai_functions_available() -> dict[str, Any]:
+def __check_fabric_ai_functions_available() -> dict[str, Any]:
     """Check whether Fabric AI Functions are available in the current runtime.
 
     Returns

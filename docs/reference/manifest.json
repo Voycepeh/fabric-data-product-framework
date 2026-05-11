@@ -145,17 +145,6 @@
       "workflow_step": "6D"
     },
     {
-      "module_name": "environment_config",
-      "visibility": "public",
-      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "bootstrap_fabric_env",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": "2B"
-    },
-    {
       "module_name": "data_profiling",
       "visibility": "public",
       "module_summary": "Source/output profiling and metadata conversion helpers.",
@@ -165,50 +154,6 @@
       "callable_visibility": "public",
       "callable_role": "essential",
       "workflow_step": 4
-    },
-    {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_contract_column_records",
-      "callable_visibility": "public",
-      "callable_role": "internal",
-      "workflow_step": 7
-    },
-    {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_contract_header_record",
-      "callable_visibility": "public",
-      "callable_role": "internal",
-      "workflow_step": 7
-    },
-    {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_contract_records",
-      "callable_visibility": "public",
-      "callable_role": "internal",
-      "workflow_step": 7
-    },
-    {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_contract_rule_records",
-      "callable_visibility": "public",
-      "callable_role": "internal",
-      "workflow_step": 7
     },
     {
       "module_name": "data_contracts",
@@ -240,7 +185,7 @@
       "sidebar_include": false,
       "callable_name": "build_governance_candidate_prompt",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 9
     },
     {
@@ -251,7 +196,7 @@
       "sidebar_include": true,
       "callable_name": "build_governance_classification_records",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 9
     },
     {
@@ -262,7 +207,7 @@
       "sidebar_include": false,
       "callable_name": "build_handover_summary_prompt",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 10
     },
     {
@@ -273,7 +218,7 @@
       "sidebar_include": true,
       "callable_name": "build_lineage_from_notebook_code",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 10
     },
     {
@@ -285,17 +230,6 @@
       "callable_name": "build_lineage_handover_markdown",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 10
-    },
-    {
-      "module_name": "data_lineage",
-      "visibility": "public",
-      "module_summary": "Lineage extraction and handover documentation helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_lineage_record_from_steps",
-      "callable_visibility": "public",
-      "callable_role": "internal",
       "workflow_step": 10
     },
     {
@@ -317,7 +251,7 @@
       "sidebar_include": false,
       "callable_name": "build_manual_governance_prompt_package",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 9
     },
     {
@@ -328,7 +262,7 @@
       "sidebar_include": false,
       "callable_name": "build_manual_handover_prompt_package",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 10
     },
     {
@@ -350,7 +284,7 @@
       "sidebar_include": false,
       "callable_name": "build_run_summary",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 10
     },
     {
@@ -374,17 +308,6 @@
       "callable_visibility": "public",
       "callable_role": "essential",
       "workflow_step": 4
-    },
-    {
-      "module_name": "environment_config",
-      "visibility": "public",
-      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "check_fabric_ai_functions_available",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "workflow_step": "2B"
     },
     {
       "module_name": "data_drift",
@@ -427,7 +350,7 @@
       "sidebar_include": true,
       "callable_name": "classify_column",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 9
     },
     {
@@ -438,7 +361,7 @@
       "sidebar_include": true,
       "callable_name": "classify_columns",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 9
     },
     {
@@ -451,17 +374,6 @@
       "callable_visibility": "public",
       "callable_role": "essential",
       "workflow_step": 1
-    },
-    {
-      "module_name": "data_contracts",
-      "visibility": "public",
-      "module_summary": "Data contract normalization, validation, and persistence helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "contract_records_to_spark",
-      "callable_visibility": "public",
-      "callable_role": "internal",
-      "workflow_step": 7
     },
     {
       "module_name": "technical_audit_columns",
@@ -506,17 +418,6 @@
       "callable_visibility": "public",
       "callable_role": "essential",
       "workflow_step": "6C"
-    },
-    {
-      "module_name": "data_lineage",
-      "visibility": "public",
-      "module_summary": "Lineage extraction and handover documentation helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "enrich_lineage_steps_with_ai",
-      "callable_visibility": "public",
-      "callable_role": "internal",
-      "workflow_step": 10
     },
     {
       "module_name": "data_contracts",
@@ -574,17 +475,6 @@
       "workflow_step": 3
     },
     {
-      "module_name": "data_lineage",
-      "visibility": "public",
-      "module_summary": "Lineage extraction and handover documentation helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "fallback_copilot_lineage_prompt",
-      "callable_visibility": "public",
-      "callable_role": "internal",
-      "workflow_step": 10
-    },
-    {
       "module_name": "ai",
       "visibility": "internal",
       "module_summary": "AI-assisted helper utilities and prompt builders.",
@@ -592,7 +482,7 @@
       "sidebar_include": false,
       "callable_name": "generate_governance_candidates_with_fabric_ai",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 9
     },
     {
@@ -603,7 +493,7 @@
       "sidebar_include": false,
       "callable_name": "generate_handover_summary_with_fabric_ai",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 10
     },
     {
@@ -757,7 +647,7 @@
       "sidebar_include": false,
       "callable_name": "parse_manual_ai_json_response",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 10
     },
     {
@@ -768,7 +658,7 @@
       "sidebar_include": true,
       "callable_name": "plot_lineage_steps",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 10
     },
     {
@@ -812,7 +702,7 @@
       "sidebar_include": false,
       "callable_name": "render_run_summary_markdown",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 10
     },
     {
@@ -838,17 +728,6 @@
       "workflow_step": 8
     },
     {
-      "module_name": "environment_config",
-      "visibility": "public",
-      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "run_config_smoke_tests",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": "2B"
-    },
-    {
       "module_name": "data_lineage",
       "visibility": "public",
       "module_summary": "Lineage extraction and handover documentation helpers.",
@@ -856,7 +735,7 @@
       "sidebar_include": true,
       "callable_name": "scan_notebook_cells",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 10
     },
     {
@@ -867,7 +746,7 @@
       "sidebar_include": true,
       "callable_name": "scan_notebook_lineage",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 10
     },
     {
@@ -911,7 +790,7 @@
       "sidebar_include": true,
       "callable_name": "summarize_governance_classifications",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 9
     },
     {
@@ -937,17 +816,6 @@
       "workflow_step": "6C"
     },
     {
-      "module_name": "environment_config",
-      "visibility": "public",
-      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "validate_framework_config",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": "2A"
-    },
-    {
       "module_name": "data_lineage",
       "visibility": "public",
       "module_summary": "Lineage extraction and handover documentation helpers.",
@@ -955,7 +823,7 @@
       "sidebar_include": true,
       "callable_name": "validate_lineage_steps",
       "callable_visibility": "public",
-      "callable_role": "optional",
+      "callable_role": "essential",
       "workflow_step": 10
     },
     {

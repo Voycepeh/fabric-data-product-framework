@@ -9,14 +9,12 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| — | — | No recommended entrypoints configured. | — |
+| [`build_run_summary`](../../reference/step-10-lineage-handover-documentation/build_run_summary.md) | function | Build a handover-friendly summary for one data product run. | — |
+| [`render_run_summary_markdown`](../../reference/step-10-lineage-handover-documentation/render_run_summary_markdown.md) | function | Render a run summary dictionary into Markdown for handover notes. | [`_status_of`](../../reference/internal/run_summary/_status_of.md) (internal) |
 
 ## Optional callables
 
-| Callable | Type | Summary | Related helpers |
-|---|---|---|---|
-| [`build_run_summary`](../../reference/step-10-lineage-handover-documentation/build_run_summary.md) | function | Build a handover-friendly summary for one data product run. | — |
-| [`render_run_summary_markdown`](../../reference/step-10-lineage-handover-documentation/render_run_summary_markdown.md) | function | Render a run summary dictionary into Markdown for handover notes. | [`_status_of`](../../reference/internal/run_summary/_status_of.md) (internal) |
+No advanced helpers listed for this module.
 
 ## Related internal helpers
 
