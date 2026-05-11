@@ -15,7 +15,7 @@ from pyspark.sql.window import Window
 AI_SUGGESTABLE_DQ_RULE_TYPES = {"not_null", "unique_key", "accepted_values", "value_range", "regex_format"}
 
 
-def profile_dataframe_for_dq(df, table_name: str, business_context: str = "", sample_value_limit: int = 20):
+def profile_for_dq(df, table_name: str, business_context: str = "", sample_value_limit: int = 20):
     """Profile a Spark DataFrame into one row per source column for DQ rule suggestion.
 
     Parameters
@@ -49,13 +49,13 @@ def profile_dataframe_for_dq(df, table_name: str, business_context: str = "", sa
     return df.sparkSession.createDataFrame(rows)
 
 
-def suggest_dq_rules_with_fabric_ai(profile_df, prompt_template: str | None = None, output_col: str = "response"):
+def suggest_dq_rules(profile_df, prompt_template: str | None = None, output_col: str = "response"):
     """Generate row-wise AI DQ suggestions using Fabric AI Functions.
 
     Parameters
     ----------
     profile_df : pyspark.sql.DataFrame
-        Output of :func:`profile_dataframe_for_dq`.
+        Output of :func:`profile_for_dq`.
     prompt_template : str | None, optional
         Prompt template from ``config.ai_prompt_config.dq_rule_candidate_template``.
     output_col : str, default="response"
@@ -83,7 +83,7 @@ def _parse_dq_rules_dict_from_text(text: str) -> dict[str, list[dict[str, Any]]]
     return parsed if isinstance(parsed, dict) else {}
 
 
-def extract_candidate_rules_from_responses(response_df, table_name: str, response_col: str = "response") -> list[dict[str, Any]]:
+def extract_dq_rules(response_df, table_name: str, response_col: str = "response") -> list[dict[str, Any]]:
     """Extract notebook-shaped AI responses and deduplicate candidate DQ rules by ``rule_id``."""
     candidates: list[dict[str, Any]] = []
     for row in response_df.select(response_col).collect():
@@ -131,7 +131,7 @@ def validate_dq_rules(rules: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return rules
 
 
-def build_dq_rules_metadata_df(spark, table_name: str, approved_rules: list[dict], action_by: str = "notebook_user", rule_source: str = "ai_widget_approval", action_reason: str = "Approved after human review."):
+def build_dq_rule_history(spark, table_name: str, approved_rules: list[dict], action_by: str = "notebook_user", rule_source: str = "ai_widget_approval", action_reason: str = "Approved after human review."):
     """Build append-only active metadata rows for approved DQ rules.
 
     Parameters
@@ -161,7 +161,7 @@ def build_dq_rules_metadata_df(spark, table_name: str, approved_rules: list[dict
     return spark.createDataFrame(rows)
 
 
-def build_dq_rule_deactivation_metadata_df(spark, table_name: str, deactivations: list[dict], action_by: str = "notebook_user", rule_source: str = "rule_deactivation_widget"):
+def build_dq_rule_deactivations(spark, table_name: str, deactivations: list[dict], action_by: str = "notebook_user", rule_source: str = "rule_deactivation_widget"):
     """Build append-only inactive metadata rows for governed DQ rule deactivation.
 
     Parameters
@@ -197,13 +197,13 @@ def build_dq_rule_deactivation_metadata_df(spark, table_name: str, deactivations
     return spark.createDataFrame(rows)
 
 
-def _get_latest_dq_rule_versions_from_metadata(metadata_df, table_name: str):
+def _latest_dq_rule_versions(metadata_df, table_name: str):
     """Resolve latest metadata row per rule key."""
     w = Window.partitionBy("rule_key").orderBy(F.col("action_ts").desc())
     return metadata_df.filter(F.col("table_name") == table_name).withColumn("_rn", F.row_number().over(w)).filter(F.col("_rn") == 1).drop("_rn")
 
 
-def load_latest_active_dq_rules_from_metadata(metadata_df, table_name: str) -> list[dict[str, Any]]:
+def load_active_dq_rules(metadata_df, table_name: str) -> list[dict[str, Any]]:
     """Load latest active approved rules from append-only metadata history.
 
     Parameters
@@ -222,11 +222,12 @@ def load_latest_active_dq_rules_from_metadata(metadata_df, table_name: str) -> l
     -----
     Latest-version resolution is done per ``rule_key``; a newer inactive version suppresses older active versions.
     """
-    rows = _get_latest_dq_rule_versions_from_metadata(metadata_df, table_name).filter(F.col("is_active") == True).select("rule_json").collect()
+    rows = _latest_dq_rule_versions(metadata_df, table_name).filter(F.col("is_active") == True).select("rule_json").collect()
     return [json.loads(r["rule_json"]) for r in rows]
 
 
-def load_latest_active_dq_rule_metadata(metadata_df, table_name: str):
+# removed public metadata-row loader
+def _load_active_dq_rule_metadata(metadata_df, table_name: str):
     """Return latest active metadata rows for governance review screens.
 
     Parameters
@@ -241,10 +242,10 @@ def load_latest_active_dq_rule_metadata(metadata_df, table_name: str):
     pyspark.sql.DataFrame
         Latest active metadata versions per ``rule_key``.
     """
-    return _get_latest_dq_rule_versions_from_metadata(metadata_df, table_name).filter(F.col("is_active") == True)
+    return _latest_dq_rule_versions(metadata_df, table_name).filter(F.col("is_active") == True)
 
 
-def split_valid_quarantine_and_failures(df, rules: list[dict[str, Any]], dq_run_id: str | None = None, row_id_columns: list[str] | None = None):
+def split_dq_rows(df, rules: list[dict[str, Any]], dq_run_id: str | None = None, row_id_columns: list[str] | None = None):
     """Split source rows into valid rows, quarantine rows, and one-row-per-failure evidence.
 
     Parameters
@@ -338,7 +339,7 @@ def run_dq_rules(df, table_name: str, rules: list[dict[str, Any]]):
         If rules fail canonical DQ validation.
     """
     validate_dq_rules(rules)
-    _, _, failures = split_valid_quarantine_and_failures(df, rules)
+    _, _, failures = split_dq_rows(df, rules)
     total = df.count()
     failure_counts = {r["rule_id"]: int(r["failed_count"]) for r in failures.groupBy("rule_id").agg(F.count(F.lit(1)).alias("failed_count")).collect()}
     rows = []
@@ -363,3 +364,13 @@ def assert_dq_passed(dq_result_df) -> None:
     """
     if dq_result_df.filter("lower(severity) = 'error' AND status = 'FAIL'").count() > 0:
         raise ValueError("Data quality failed for error-severity rules.")
+
+
+# Backward-compatible aliases (not exported)
+profile_dataframe_for_dq = profile_for_dq
+suggest_dq_rules_with_fabric_ai = suggest_dq_rules
+extract_candidate_rules_from_responses = extract_dq_rules
+build_dq_rules_metadata_df = build_dq_rule_history
+build_dq_rule_deactivation_metadata_df = build_dq_rule_deactivations
+load_latest_active_dq_rules_from_metadata = load_active_dq_rules
+split_valid_quarantine_and_failures = split_dq_rows

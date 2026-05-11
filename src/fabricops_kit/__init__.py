@@ -91,19 +91,19 @@ from .quality import load_data_contract, run_data_product, run_quality_rules
 
 from .dq import (
     AI_SUGGESTABLE_DQ_RULE_TYPES,
-    profile_dataframe_for_dq,
-    suggest_dq_rules_with_fabric_ai,
-    extract_candidate_rules_from_responses,
+    profile_for_dq,
+    suggest_dq_rules,
+    extract_dq_rules,
     validate_dq_rules,
-    build_dq_rules_metadata_df,
-    build_dq_rule_deactivation_metadata_df,
-    load_latest_active_dq_rules_from_metadata,
-    load_latest_active_dq_rule_metadata,
-    split_valid_quarantine_and_failures,
+    build_dq_rule_history,
+    build_dq_rule_deactivations,
+    load_active_dq_rules,
+    _load_active_dq_rule_metadata,
+    split_dq_rows,
     run_dq_rules,
     assert_dq_passed,
 )
-from .dq_review import launch_sequential_rule_approval_widget, launch_sequential_rule_deactivation_widget
+from .dq_review import review_dq_rules, review_dq_rule_deactivations
 from .run_summary import build_run_summary, render_run_summary_markdown
 from .runtime import assert_notebook_name_valid, build_runtime_context, generate_run_id, validate_notebook_name
 from .technical_columns import add_audit_columns, add_datetime_features, add_hash_columns, default_technical_columns
@@ -111,16 +111,15 @@ from .technical_columns import add_audit_columns, add_datetime_features, add_has
 __version__ = "0.1.0"
 
 __all__ = [
-    "launch_sequential_rule_deactivation_widget",
-    "launch_sequential_rule_approval_widget",
-    "load_latest_active_dq_rule_metadata",
-    "load_latest_active_dq_rules_from_metadata",
-    "build_dq_rule_deactivation_metadata_df",
-    "build_dq_rules_metadata_df",
-    "split_valid_quarantine_and_failures",
-    "extract_candidate_rules_from_responses",
-    "suggest_dq_rules_with_fabric_ai",
-    "profile_dataframe_for_dq",
+    "review_dq_rule_deactivations",
+    "review_dq_rules",
+    "load_active_dq_rules",
+    "build_dq_rule_deactivations",
+    "build_dq_rule_history",
+    "split_dq_rows",
+    "extract_dq_rules",
+    "suggest_dq_rules",
+    "profile_for_dq",
     "AI_SUGGESTABLE_DQ_RULE_TYPES",
     "Housepath",
     "validate_framework_config",

@@ -6,7 +6,7 @@ APPROVED_RULES_FROM_WIDGET = []
 REJECTED_RULES_FROM_WIDGET = []
 
 
-def launch_sequential_rule_approval_widget(candidate_rules, table_name: str):
+def review_dq_rules(candidate_rules, table_name: str):
     """
     Review one AI-suggested DQ rule at a time.
 
@@ -243,3 +243,7 @@ def launch_sequential_rule_approval_widget(candidate_rules, table_name: str):
 
     load_current_rule()
     ipy_display(ui)
+
+# Backward-compatible aliases (not exported)
+launch_sequential_rule_approval_widget = review_dq_rules
+launch_sequential_rule_deactivation_widget = review_dq_rule_deactivations
