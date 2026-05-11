@@ -5,13 +5,13 @@
   <div class="api-chip-subtitle">Used by workflow references but not promoted as a primary notebook module.</div>
 </div>
 
-## Recommended notebook entrypoints
+## Essential callables
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
 | — | — | No recommended entrypoints configured. | — |
 
-## Advanced helpers
+## Optional callables
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
@@ -20,7 +20,7 @@
 | [`check_schema_drift`](../../reference/step-04-ingest-profile-store/check_schema_drift.md) | function | Compare a current dataframe schema against a baseline schema snapshot. | — |
 | [`summarize_drift_results`](../../reference/step-04-ingest-profile-store/summarize_drift_results.md) | function | Summarize schema, partition, and profile drift outcomes into one decision. | — |
 
-## Internal helpers
+## Related internal helpers
 
 | Helper | Related public callables |
 |---|---|

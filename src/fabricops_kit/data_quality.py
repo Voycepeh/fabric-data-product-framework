@@ -444,14 +444,46 @@ def _prepare_dq_profile_input(*, profile_df=None, df=None, table_name: str, busi
 
 
 def draft_dq_rules(*, profile_df=None, df=None, table_name: str, business_context: str = "", prompt_template: str | None = None, output_col: str = "response") -> list[dict[str, Any]]:
-    """Draft candidate DQ rules from metadata profiles or raw DataFrame fallback."""
+    """Draft AI-suggested DQ rules for later human review and approval.
+
+    Parameters
+    ----------
+    profile_df : pyspark.sql.DataFrame, optional
+        Precomputed profiling dataframe.
+    df : pyspark.sql.DataFrame, optional
+        Raw dataframe profiled when ``profile_df`` is not supplied.
+    table_name : str
+        Logical table name used in prompt and extraction.
+    business_context : str, default=""
+        Context text sent to AI as advisory guidance.
+    prompt_template : str | None, optional
+        AI prompt template.
+    output_col : str, default="response"
+        AI output column name.
+
+    Returns
+    -------
+    list[dict[str, Any]]
+        Candidate rules that AI suggests; humans must still approve before enforcement.
+    """
     prepared = _prepare_dq_profile_input(profile_df=profile_df, df=df, table_name=table_name, business_context=business_context)
     responses = suggest_dq_rules(prepared, prompt_template=prompt_template, output_col=output_col)
     return extract_dq_rules(responses, table_name=table_name, response_col=output_col)
 
 
 def write_dq_rules(approved_rules, *, table_name: str, metadata_path, metadata_table: str = "METADATA_DQ_RULES", action_by: str | None = None, rule_source: str = "ai_widget_approval", action_reason: str = "Approved after human review.", mode: str = "append"):
-    """Validate, build, and persist approved DQ rules."""
+    """Persist human-approved DQ rules into governed metadata.
+
+    Parameters
+    ----------
+    approved_rules : list[dict]
+        Rules already reviewed and approved by a human.
+
+    Returns
+    -------
+    pyspark.sql.DataFrame
+        Appended metadata rows used by deterministic pipeline enforcement.
+    """
     validate_dq_rules(approved_rules)
     spark = SparkSession.getActiveSession()
     if spark is None:
@@ -462,7 +494,18 @@ def write_dq_rules(approved_rules, *, table_name: str, metadata_path, metadata_t
 
 
 def enforce_dq_rules(df, *, table_name: str, rules=None, metadata_df=None, row_id_columns: list[str] | None = None, dq_run_id: str | None = None) -> DQEnforcementResult:
-    """Enforce approved DQ rules and return structured deterministic outputs."""
+    """Run deterministic DQ enforcement from approved rules.
+
+    Parameters
+    ----------
+    df : pyspark.sql.DataFrame
+        Dataframe to evaluate.
+
+    Returns
+    -------
+    DQEnforcementResult
+        Rule results plus valid/quarantine/failure outputs. AI may suggest rules earlier, but this step enforces approved rules deterministically.
+    """
     if rules is None and metadata_df is None:
         raise ValueError("Provide rules or metadata_df.")
     active_rules = rules or load_active_dq_rules(metadata_df, table_name=table_name)

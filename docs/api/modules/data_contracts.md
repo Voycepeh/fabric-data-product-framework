@@ -4,7 +4,7 @@
   <span class="api-chip api-chip-module">Module overview</span>
 </div>
 
-## Recommended notebook entrypoints
+## Essential callables
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
@@ -15,7 +15,7 @@
 | [`validate_contract_dict`](../../reference/step-03-source-contract-ingestion-pattern/validate_contract_dict.md) | function | Validate a contract dictionary and return error strings without raising. | — |
 | [`write_contract_to_lakehouse`](../../reference/step-07-output-profile-product-contract/write_contract_to_lakehouse.md) | function | Validate and persist contract records into Fabric metadata tables. | — |
 
-## Advanced helpers
+## Optional callables
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
@@ -31,7 +31,7 @@
 | [`extract_required_columns`](../../reference/step-03-source-contract-ingestion-pattern/extract_required_columns.md) | function | Extract required column names from a normalized contract. | — |
 | [`load_contract_from_lakehouse`](../../reference/step-03-source-contract-ingestion-pattern/load_contract_from_lakehouse.md) | function | Load one contract by ID/version from Fabric metadata storage. | [`_select_latest`](../../reference/internal/data_contracts/_select_latest.md) (internal), [`_to_records`](../../reference/internal/data_contracts/_to_records.md) (internal) |
 
-## Internal helpers
+## Related internal helpers
 
 | Helper | Related public callables |
 |---|---|

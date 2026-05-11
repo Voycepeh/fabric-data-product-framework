@@ -44,7 +44,7 @@ MODULE_DOCS_METADATA: list[ModuleDocMetadata] = [
     {"module_name": "data_product_metadata", "visibility": "internal", "module_summary": "Metadata record builders for operational outputs.", "sidebar_group": "Advanced", "sidebar_include": False},
     {"module_name": "handover_documentation", "visibility": "internal", "module_summary": "Run summary and handover markdown helpers.", "sidebar_group": "Advanced", "sidebar_include": False},
     {"module_name": "technical_audit_columns", "visibility": "internal", "module_summary": "Technical/audit enrichment helpers for pipeline outputs.", "sidebar_group": "Advanced", "sidebar_include": False},
-    {"module_name": "dq_review", "visibility": "internal", "module_summary": "Human-in-the-loop DQ review helpers.", "sidebar_group": "Advanced", "sidebar_include": False},
+    {"module_name": "notebook_review", "visibility": "internal", "module_summary": "Notebook human review UI workflows for governed approvals.", "sidebar_group": "Advanced", "sidebar_include": False},
     {"module_name": "ai", "visibility": "internal", "module_summary": "AI-assisted helper utilities and prompt builders.", "sidebar_group": "Advanced", "sidebar_include": False},
 ]
 
@@ -221,10 +221,11 @@ WORKFLOW_STEP_DOCS: list[dict[str, int | str]] = [
 ]
 
 PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [
-    {"symbol_name": "review_dq_rules", "module": "dq_review", "kind": "function", "workflow_step": "6C", "summary_override": None},
-    {"symbol_name": "review_dq_rule_deactivations", "module": "dq_review", "kind": "function", "workflow_step": "6C", "summary_override": None},
+    {"symbol_name": "review_dq_rules", "module": "data_quality", "kind": "function", "workflow_step": "6C", "summary_override": None},
+    {"symbol_name": "review_dq_rule_deactivations", "module": "data_quality", "kind": "function", "workflow_step": "6C", "summary_override": None},
     {"symbol_name": "Housepath", "module": "fabric_input_output", "kind": "class", "workflow_step": "2A", "summary_override": None},
-            {"symbol_name": "load_fabric_config", "module": "config", "kind": "function", "workflow_step": "2A", "summary_override": None},
+    {"symbol_name": "setup_fabricops_notebook", "module": "config", "kind": "function", "workflow_step": "2B", "summary_override": None},
+    {"symbol_name": "load_fabric_config", "module": "config", "kind": "function", "workflow_step": "2A", "summary_override": None},
     {"symbol_name": "get_path", "module": "config", "kind": "function", "workflow_step": "2A", "summary_override": None},
     {"symbol_name": "lakehouse_table_read", "module": "fabric_input_output", "kind": "function", "workflow_step": 3, "summary_override": None},
     {"symbol_name": "lakehouse_table_write", "module": "fabric_input_output", "kind": "function", "workflow_step": "6D", "summary_override": None},
@@ -245,8 +246,8 @@ PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [
     {"symbol_name": "draft_dq_rules", "module": "data_quality", "kind": "function", "workflow_step": 8, "importance": "Optional", "summary_override": None},
     {"symbol_name": "write_dq_rules", "module": "data_quality", "kind": "function", "workflow_step": 8, "importance": "Optional", "summary_override": None},
     {"symbol_name": "enforce_dq_rules", "module": "data_quality", "kind": "function", "workflow_step": "6C", "importance": "Essential", "summary_override": "Run notebook-facing DQ rules and return a Spark DataFrame result."},
-    {"symbol_name": "review_dq_rules", "module": "dq_review", "kind": "function", "workflow_step": 8, "importance": "Optional", "summary_override": None},
-    {"symbol_name": "review_dq_rule_deactivations", "module": "dq_review", "kind": "function", "workflow_step": 8, "importance": "Optional", "summary_override": None},
+    {"symbol_name": "review_dq_rules", "module": "data_quality", "kind": "function", "workflow_step": 8, "importance": "Optional", "summary_override": None},
+    {"symbol_name": "review_dq_rule_deactivations", "module": "data_quality", "kind": "function", "workflow_step": 8, "importance": "Optional", "summary_override": None},
         {"symbol_name": "build_governance_candidate_prompt", "module": "ai", "kind": "function", "workflow_step": 9, "summary_override": None},
     {"symbol_name": "build_handover_summary_prompt", "module": "ai", "kind": "function", "workflow_step": 10, "summary_override": None},
     {"symbol_name": "build_manual_governance_prompt_package", "module": "ai", "kind": "function", "workflow_step": 9, "summary_override": None},

@@ -4,7 +4,7 @@
   <span class="api-chip api-chip-module">Module overview</span>
 </div>
 
-## Recommended notebook entrypoints
+## Essential callables
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
@@ -14,7 +14,7 @@
 | [`warehouse_read`](../../reference/step-03-source-contract-ingestion-pattern/warehouse_read.md) | function | Read a table from a Microsoft Fabric warehouse. | [`_get_spark`](../../reference/internal/fabric_input_output/_get_spark.md) (internal) |
 | [`warehouse_write`](../../reference/step-06d-controlled-outputs/warehouse_write.md) | function | Write a Spark DataFrame to a Microsoft Fabric warehouse table. | — |
 
-## Advanced helpers
+## Optional callables
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
@@ -23,7 +23,7 @@
 | [`lakehouse_parquet_read_as_spark`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_parquet_read_as_spark.md) | function | Read a Parquet file from a Fabric lakehouse Files path. | [`_convert_single_parquet_ns_to_us`](../../reference/internal/fabric_input_output/_convert_single_parquet_ns_to_us.md) (internal), [`_get_spark`](../../reference/internal/fabric_input_output/_get_spark.md) (internal) |
 | [`seed_minimal_sample_source_table`](../../reference/step-04-ingest-profile-store/seed_minimal_sample_source_table.md) | function | Create and persist deterministic demo rows into a sample source table. | [`_get_spark`](../../reference/internal/fabric_input_output/_get_spark.md) (internal) |
 
-## Internal helpers
+## Related internal helpers
 
 | Helper | Related public callables |
 |---|---|

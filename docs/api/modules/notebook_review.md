@@ -1,4 +1,4 @@
-# `dq_review` module (internal)
+# `notebook_review` module (internal)
 
 <div class="api-status-block">
   <span class="api-chip api-chip-internal">Internal-only module</span>
@@ -17,4 +17,4 @@ No optional callables listed for this module.
 
 | Helper | Related public callables |
 |---|---|
-| [`_require_ipywidgets`](../../reference/internal/dq_review/_require_ipywidgets.md) | — |
+| [`_require_ipywidgets`](../../reference/internal/notebook_review/_require_ipywidgets.md) | — |

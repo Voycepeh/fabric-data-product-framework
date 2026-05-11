@@ -88,7 +88,7 @@ from .data_quality import (
     validate_dq_rules,
     assert_dq_passed,
 )
-from .dq_review import review_dq_rules, review_dq_rule_deactivations
+from .notebook_review import review_dq_rules, review_dq_rule_deactivations
 from .run_summary import build_run_summary, render_run_summary_markdown
 from .technical_columns import add_audit_columns, add_datetime_features, add_hash_columns, default_technical_columns
 

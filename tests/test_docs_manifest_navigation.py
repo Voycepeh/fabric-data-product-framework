@@ -33,17 +33,17 @@ def test_public_callables_align_with_manifest_module_visibility() -> None:
     manifest = json.loads((ROOT / "docs" / "reference" / "manifest.json").read_text(encoding="utf-8"))
     callables = manifest["callables"]
 
-    assert all(row["callable_visibility"] == "public" for row in callables)
+    assert all(row["callable_visibility"] in {"public", "internal"} for row in callables)
     assert all(
-        row["callable_role"] in {"recommended_entrypoint", "advanced_helper", "internal_helper"}
+        row["callable_role"] in {"essential", "optional", "internal"}
         for row in callables
     )
     # Keep DQ and review alignment explicit.
     dq = [r for r in callables if r["module_name"] == "data_quality"]
-    dq_review = [r for r in callables if r["module_name"] == "dq_review"]
     assert dq
-    assert dq_review
-    assert all(r["visibility"] == "internal" for r in dq_review)
+    assert any(r["callable_name"] == "review_dq_rules" for r in dq)
+    assert any(r["callable_name"] == "review_dq_rule_deactivations" for r in dq)
+    assert not any(r["module_name"] == "dq_review" for r in callables)
 
 
 def test_manifest_callable_modules_exist_in_module_metadata() -> None:
@@ -69,8 +69,8 @@ def test_public_sidebar_pages_are_not_internal_and_have_callable_sections() -> N
         assert "(internal)" not in first_line
         assert "No public exports in this module." not in page
         if module in callable_modules:
-            assert "## Recommended notebook entrypoints" in page
-            assert "## Advanced helpers" in page
+            assert "## Essential callables" in page
+            assert "## Optional callables" in page
 
 
 def test_module_banner_respects_visibility_metadata() -> None:

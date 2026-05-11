@@ -18,24 +18,14 @@ Exploration notebook flow used to profile source data and draft advisory AI outp
   </thead>
   <tbody>
     <tr>
+      <td data-label="Function / class"><a href="../../reference/step-02b-notebook-startup-checks/setup_fabricops_notebook/"><code>setup_fabricops_notebook</code></a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
+      <td data-label="Purpose">Run consolidated FabricOps startup for exploration and pipeline notebooks.</td>
+    </tr>
+    <tr>
       <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/load_fabric_config/"><code>load_fabric_config</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
       <td data-label="Purpose">Validate and return a user-supplied framework configuration.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-01-governance-context/validate_notebook_name/"><code>validate_notebook_name</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/runtime_context/" title="Open runtime_context module page" aria-label="Open runtime_context module page">runtime_context</a></td>
-      <td data-label="Purpose">Validate notebook names against the framework workspace notebook model.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-01-governance-context/assert_notebook_name_valid/"><code>assert_notebook_name_valid</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/runtime_context/" title="Open runtime_context module page" aria-label="Open runtime_context module page">runtime_context</a></td>
-      <td data-label="Purpose">Raise :class:`NotebookNamingError` when a notebook name is invalid.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../reference/step-01-governance-context/build_runtime_context/"><code>build_runtime_context</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/runtime_context/" title="Open runtime_context module page" aria-label="Open runtime_context module page">runtime_context</a></td>
-      <td data-label="Purpose">Build a standard runtime context dictionary for Fabric notebooks.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-02a-shared-runtime-config/get_path/"><code>get_path</code></a></td>
@@ -98,17 +88,17 @@ Exploration notebook flow used to profile source data and draft advisory AI outp
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-08-ai-assisted-dq-suggestions/draft_dq_rules/"><code>draft_dq_rules</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
-      <td data-label="Purpose">Draft candidate DQ rules from metadata profiles or raw DataFrame fallback.</td>
+      <td data-label="Purpose">Draft AI-suggested DQ rules for later human review and approval.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-08-ai-assisted-dq-suggestions/review_dq_rules/"><code>review_dq_rules</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/dq_review/" title="Open dq_review module page" aria-label="Open dq_review module page">dq_review</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
       <td data-label="Purpose">Review AI-suggested DQ rules sequentially with explicit approve/reject decisions.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-08-ai-assisted-dq-suggestions/write_dq_rules/"><code>write_dq_rules</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
-      <td data-label="Purpose">Validate, build, and persist approved DQ rules.</td>
+      <td data-label="Purpose">Persist human-approved DQ rules into governed metadata.</td>
     </tr>
   </tbody>
 </table>

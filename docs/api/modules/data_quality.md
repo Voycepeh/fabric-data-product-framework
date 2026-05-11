@@ -4,7 +4,7 @@
   <span class="api-chip api-chip-module">Module overview</span>
 </div>
 
-## Recommended notebook entrypoints
+## Essential callables
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
@@ -14,14 +14,16 @@
 
 Split a Spark DataFrame into pass/quarantine outputs for row-level DQ rules.
 
-## Advanced helpers
+## Optional callables
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`draft_dq_rules`](../../reference/step-08-ai-assisted-dq-suggestions/draft_dq_rules.md) | function | Draft candidate DQ rules from metadata profiles or raw DataFrame fallback. | [`_prepare_dq_profile_input`](../../reference/internal/data_quality/_prepare_dq_profile_input.md) (internal) |
-| [`write_dq_rules`](../../reference/step-08-ai-assisted-dq-suggestions/write_dq_rules.md) | function | Validate, build, and persist approved DQ rules. | — |
+| [`draft_dq_rules`](../../reference/step-08-ai-assisted-dq-suggestions/draft_dq_rules.md) | function | Draft AI-suggested DQ rules for later human review and approval. | [`_prepare_dq_profile_input`](../../reference/internal/data_quality/_prepare_dq_profile_input.md) (internal) |
+| [`review_dq_rule_deactivations`](../../reference/step-08-ai-assisted-dq-suggestions/review_dq_rule_deactivations.md) | function | Review active DQ rules one at a time for governed deactivation actions. | — |
+| [`review_dq_rules`](../../reference/step-08-ai-assisted-dq-suggestions/review_dq_rules.md) | function | Review AI-suggested DQ rules sequentially with explicit approve/reject decisions. | — |
+| [`write_dq_rules`](../../reference/step-08-ai-assisted-dq-suggestions/write_dq_rules.md) | function | Persist human-approved DQ rules into governed metadata. | — |
 
-## Internal helpers
+## Related internal helpers
 
 | Helper | Related public callables |
 |---|---|
@@ -29,3 +31,4 @@ Split a Spark DataFrame into pass/quarantine outputs for row-level DQ rules.
 | [`_load_active_dq_rule_metadata`](../../reference/internal/data_quality/_load_active_dq_rule_metadata.md) | — |
 | [`_parse_dq_rules_dict_from_text`](../../reference/internal/data_quality/_parse_dq_rules_dict_from_text.md) | — |
 | [`_prepare_dq_profile_input`](../../reference/internal/data_quality/_prepare_dq_profile_input.md) | [`draft_dq_rules`](../../reference/step-08-ai-assisted-dq-suggestions/draft_dq_rules.md) |
+| [`_resolve_action_by`](../../reference/internal/data_quality/_resolve_action_by.md) | — |

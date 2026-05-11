@@ -30,6 +30,7 @@ PUBLIC_MODULE_PREFERRED_NAMES = {
     "data_lineage": "data_lineage",
     "run_summary": "handover_documentation",
     "technical_columns": "technical_audit_columns",
+    "notebook_review": "notebook_review",
 }
 VISIBLE_PUBLIC_MODULES = [
     "environment_config",
@@ -47,7 +48,7 @@ HIDDEN_SUPPORTING_MODULES = [
     "handover_documentation",
     "technical_audit_columns",
 ]
-RECOMMENDED_ENTRYPOINTS = {
+ESSENTIAL_CALLABLES = {
     "environment_config": {
         "validate_framework_config",
         "load_fabric_config",
@@ -212,7 +213,7 @@ def parse_module_docs_metadata() -> list[dict[str, Any]]:
     raise RuntimeError("Could not parse MODULE_DOCS_METADATA from docs_metadata.py")
 
 
-def internal_helper_link(actual_module: str, helper: str) -> str:
+def internal_link(actual_module: str, helper: str) -> str:
     """Return docs-relative link target for an internal helper page."""
     return f"../../reference/internal/{actual_module}/{helper}.md"
 
@@ -344,19 +345,19 @@ def main() -> None:
             )
         lines = [title, "", status_banner, ""]
         if public_in_module:
-            recommended_names = RECOMMENDED_ENTRYPOINTS.get(module, set())
-            recommended = sorted([s for s in public_in_module if s.name in recommended_names], key=lambda x: x.name.lower())
-            advanced = sorted([s for s in public_in_module if s.name not in recommended_names], key=lambda x: x.name.lower())
-            lines.extend(["## Recommended notebook entrypoints", ""])
+            essential_names = ESSENTIAL_CALLABLES.get(module, set())
+            essential = sorted([s for s in public_in_module if s.name in essential_names], key=lambda x: x.name.lower())
+            optional = sorted([s for s in public_in_module if s.name not in essential_names], key=lambda x: x.name.lower())
+            lines.extend(["## Essential callables", ""])
             lines.extend(["| Callable | Type | Summary | Related helpers |", "|---|---|---|---|"])
-            for s in recommended:
+            for s in essential:
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
                 callable_link = callable_docs_link(s.name, module, docs_metadata, step_slugs)
                 lines.append(
                     f"| [`{s.name}`]({callable_link}) | {s.obj_type} | {s.summary or '—'} | "
-                    f"{', '.join(f'[`{r}`]({internal_helper_link(s.actual_module, r)}) (internal)' for r in related) or '—'} |"
+                    f"{', '.join(f'[`{r}`]({internal_link(s.actual_module, r)}) (internal)' for r in related) or '—'} |"
                 )
-            if not recommended:
+            if not essential:
                 lines.append("| — | — | No recommended entrypoints configured. | — |")
             if module == "data_quality":
                 lines.extend(
@@ -366,21 +367,21 @@ def main() -> None:
                     ]
                 )
 
-            lines.extend(["", "## Advanced helpers", ""])
-            if advanced:
+            lines.extend(["", "## Optional callables", ""])
+            if optional:
                 lines.extend(["| Callable | Type | Summary | Related helpers |", "|---|---|---|---|"])
-                for s in advanced:
+                for s in optional:
                     related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
                     callable_link = callable_docs_link(s.name, module, docs_metadata, step_slugs)
                     lines.append(
                         f"| [`{s.name}`]({callable_link}) | {s.obj_type} | {s.summary or '—'} | "
-                        f"{', '.join(f'[`{r}`]({internal_helper_link(s.actual_module, r)}) (internal)' for r in related) or '—'} |"
+                        f"{', '.join(f'[`{r}`]({internal_link(s.actual_module, r)}) (internal)' for r in related) or '—'} |"
                     )
             else:
-                lines.append("No advanced helpers listed for this module.")
+                lines.append("No optional callables listed for this module.")
         else:
-            lines.extend(["## Recommended notebook entrypoints", "", "No public exports in this module.", "", "## Advanced helpers", "", "No advanced helpers listed for this module."])
-        lines.extend(["", "## Internal helpers", ""])
+            lines.extend(["## Essential callables", "", "No public exports in this module.", "", "## Optional callables", "", "No optional callables listed for this module."])
+        lines.extend(["", "## Related internal helpers", ""])
         internal_fns = sorted([f for f in info["functions"] if f.startswith("_")])
         if internal_fns:
             lines.extend(["| Helper | Related public callables |", "|---|---|"])
@@ -389,7 +390,7 @@ def main() -> None:
                 users_links = ", ".join(
                     f"[`{u}`]({callable_docs_link(u, module, docs_metadata, step_slugs)})" for u in users
                 ) or "—"
-                lines.append(f"| [`{helper}`]({internal_helper_link(actual_module, helper)}) | {users_links} |")
+                lines.append(f"| [`{helper}`]({internal_link(actual_module, helper)}) | {users_links} |")
         else:
             lines.append("No module-level internal helpers detected.")
 
@@ -404,7 +405,7 @@ def main() -> None:
                         f"Found deprecated module-path public link for {module}.{s.name}; expected workflow-step slug path."
                     )
         for helper in internal_fns:
-            expected_helper_link = f"[`{helper}`]({internal_helper_link(actual_module, helper)})"
+            expected_helper_link = f"[`{helper}`]({internal_link(actual_module, helper)})"
             if not any(expected_helper_link in line for line in lines):
                 raise RuntimeError(f"Missing internal helper link for {module}.{helper}")
         if any("## Public callable details" in line for line in lines):
@@ -436,11 +437,11 @@ def main() -> None:
         if canonical_module not in known_modules:
             raise RuntimeError(f"Callable {s.name} resolved to unknown module_name {canonical_module!r}; add it to MODULE_DOCS_METADATA.")
         module_meta = module_manifest.get(canonical_module, {"visibility": "internal", "sidebar_include": False, "module_summary": "", "sidebar_group": "Advanced"})
-        callable_role = "internal_helper"
-        if s.name in RECOMMENDED_ENTRYPOINTS.get(s.public_module, set()):
-            callable_role = "recommended_entrypoint"
+        callable_role = "internal"
+        if s.name in ESSENTIAL_CALLABLES.get(s.public_module, set()):
+            callable_role = "essential"
         elif module_meta["visibility"] == "public":
-            callable_role = "advanced_helper"
+            callable_role = "optional"
         manifest_rows.append(
             {
                 "module_name": canonical_module,
@@ -454,6 +455,29 @@ def main() -> None:
                 "workflow_step": docs_metadata[s.name]["workflow_step"],
             }
         )
+    
+    exported_names = {s.name for s in symbol_map.values()}
+    for module_name, info in module_data.items():
+        canonical_module = canonical_public_module(module_name)
+        if canonical_module not in known_modules:
+            continue
+        module_meta = module_manifest.get(canonical_module, {"visibility": "internal", "sidebar_include": False, "module_summary": "", "sidebar_group": "Advanced"})
+        for fname in sorted(info["functions"]):
+            if fname.startswith("_") or fname in exported_names:
+                continue
+            role = "optional" if module_meta["visibility"] == "public" else "internal"
+            manifest_rows.append({
+                "module_name": canonical_module,
+                "visibility": module_meta["visibility"],
+                "module_summary": module_meta["module_summary"],
+                "sidebar_group": module_meta["sidebar_group"],
+                "sidebar_include": module_meta["sidebar_include"],
+                "callable_name": fname,
+                "callable_visibility": "internal" if role == "internal" else "public",
+                "callable_role": role,
+                "workflow_step": None,
+            })
+
     MANIFEST_PATH.write_text(json.dumps({"modules": module_docs_metadata, "callables": manifest_rows}, indent=2) + "\n", encoding="utf-8")
 
     starter_symbol_to_notebooks: dict[str, set[str]] = {}
@@ -618,7 +642,7 @@ def main() -> None:
         [
             "## Find a callable",
             "",
-            "Use the finder below to look up public callables.",
+            "Use the finder below to look up callables. Essential and Optional are shown by default; Internal is hidden.",
             "",
             '<div class="callable-finder" data-callable-finder>',
             '  <label class="callable-finder-label" for="callable-finder-input">Search callables</label>',
@@ -626,12 +650,17 @@ def main() -> None:
             '  <p id="callable-finder-help" class="callable-finder-help">Search by function name, module, or what the function does.</p>',
             '  <p id="callable-finder-examples" class="callable-finder-examples">Try: <span class="callable-finder-chip">csv</span> <span class="callable-finder-chip">data_quality</span> <span class="callable-finder-chip">quarantine</span></p>',
             '  <p id="callable-finder-status" class="callable-finder-status" aria-live="polite">Showing all callables.</p>',
+            '  <div class="callable-role-filters" data-callable-role-filters>',
+            '    <label><input type="checkbox" data-role-filter="essential" checked> Essential</label>',
+            '    <label><input type="checkbox" data-role-filter="optional" checked> Optional</label>',
+            '    <label><input type="checkbox" data-role-filter="internal"> Internal</label>',
+            "  </div>",
             '  <p class="callable-finder-empty" data-callable-finder-empty hidden>No callables match your search.</p>',
             "</div>",
             "",
             "## Function catalogue",
             "",
-            "## All public functions",
+            "## All functions",
             "",
         ]
     )

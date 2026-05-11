@@ -4,13 +4,13 @@
   <span class="api-chip api-chip-module">Module overview</span>
 </div>
 
-## Recommended notebook entrypoints
+## Essential callables
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
 | [`build_lineage_from_notebook_code`](../../reference/step-10-lineage-handover-documentation/build_lineage_from_notebook_code.md) | function | Scan, optionally enrich, and validate lineage from notebook source code. | — |
 
-## Advanced helpers
+## Optional callables
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
@@ -24,7 +24,7 @@
 | [`scan_notebook_lineage`](../../reference/step-10-lineage-handover-documentation/scan_notebook_lineage.md) | function | Extract deterministic lineage steps from notebook code using AST parsing. | [`_call_name`](../../reference/internal/data_lineage/_call_name.md) (internal), [`_flatten_chain`](../../reference/internal/data_lineage/_flatten_chain.md) (internal), [`_name`](../../reference/internal/data_lineage/_name.md) (internal), [`_resolve_write_target`](../../reference/internal/data_lineage/_resolve_write_target.md) (internal), [`_step`](../../reference/internal/data_lineage/_step.md) (internal) |
 | [`validate_lineage_steps`](../../reference/step-10-lineage-handover-documentation/validate_lineage_steps.md) | function | Validate lineage step structure and flag records requiring human review. | — |
 
-## Internal helpers
+## Related internal helpers
 
 | Helper | Related public callables |
 |---|---|
