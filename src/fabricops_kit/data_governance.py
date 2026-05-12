@@ -207,8 +207,10 @@ def review_column_governance_context(suggestions: list[dict], environment_name: 
         idx["i"] = max(0, idx["i"] - 1); load()
     b1.on_click(on_approve); b2.on_click(on_reject); b3.on_click(on_undo); load()
     ipy_display(widgets.VBox([summary, pid, conf, notes, widgets.HBox([b1,b2,b3])]))
-    COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET = approved
-    REJECTED_COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET = rejected
+    COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET.clear()
+    COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET.extend(approved)
+    REJECTED_COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET.clear()
+    REJECTED_COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET.extend(rejected)
     return None
 
 

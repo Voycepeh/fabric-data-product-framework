@@ -682,8 +682,8 @@ def review_dq_rules(candidate_rules, table_name: str):
     widgets, ipy_display = _require_ipywidgets()
     global APPROVED_RULES_FROM_WIDGET, REJECTED_RULES_FROM_WIDGET
 
-    APPROVED_RULES_FROM_WIDGET = []
-    REJECTED_RULES_FROM_WIDGET = []
+    APPROVED_RULES_FROM_WIDGET.clear()
+    REJECTED_RULES_FROM_WIDGET.clear()
 
     state = {"index": 0}
 

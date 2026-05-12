@@ -169,6 +169,8 @@ def capture_column_business_context(suggestions: list[dict], environment_name: s
     btn_undo.on_click(on_undo)
     load()
     ipy_display(widgets.VBox([title, summary, approved_box, notes_box, reviewer_box, widgets.HBox([btn_approve, btn_reject, btn_undo]), status]))
-    COLUMN_BUSINESS_CONTEXT_FROM_WIDGET = approved
-    REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET = rejected
+    COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.clear()
+    COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.extend(approved)
+    REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.clear()
+    REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.extend(rejected)
     return None
