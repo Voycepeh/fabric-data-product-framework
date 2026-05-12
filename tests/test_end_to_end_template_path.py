@@ -34,7 +34,7 @@ def test_02_ex_dq_only_handoff_is_runnable():
     ex = _all_code("templates/notebooks/02_ex_agreement_topic.ipynb")
     assert "DQ_TABLE_NAME = TARGET_TABLE" in ex
     for required in [
-        "HUMAN_APPROVED_RULES = list(notebook_review.APPROVED_RULES_FROM_WIDGET)",
+        "HUMAN_APPROVED_RULES = list(data_quality.APPROVED_RULES_FROM_WIDGET)",
         "write_dq_rules(",
         "table_name=DQ_TABLE_NAME",
         "Optional: use this section when this workflow is needed.",
@@ -45,8 +45,8 @@ def test_02_ex_dq_only_handoff_is_runnable():
 
 def test_02_ex_uses_widget_approved_rules_and_persists_metadata_table():
     ex = _all_code("templates/notebooks/02_ex_agreement_topic.ipynb")
-    assert "import fabricops_kit.notebook_review as notebook_review" in ex
-    assert "HUMAN_APPROVED_RULES = list(notebook_review.APPROVED_RULES_FROM_WIDGET)" in ex
+    assert "import fabricops_kit.data_quality as data_quality" in ex
+    assert "HUMAN_APPROVED_RULES = list(data_quality.APPROVED_RULES_FROM_WIDGET)" in ex
     assert "r.get('approval_status', 'approved') == 'approved'" not in ex
     assert "title='AI suggests (advisory), human reviews'" not in ex
     assert "if not HUMAN_APPROVED_RULES:" in ex

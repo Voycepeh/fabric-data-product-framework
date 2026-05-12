@@ -40,10 +40,7 @@ def test_public_callables_align_with_manifest_module_visibility() -> None:
     )
     # Keep DQ and review alignment explicit.
     dq = [r for r in callables if r["module_name"] == "data_quality"]
-    notebook_review = [r for r in callables if r["module_name"] == "notebook_review"]
     assert dq
-    assert notebook_review
-    assert all(r["visibility"] == "internal" for r in notebook_review)
 
 
 def test_manifest_callable_modules_exist_in_module_metadata() -> None:

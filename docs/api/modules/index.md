@@ -10,3 +10,7 @@ Short-form modules remain import-compatible aliases but are intentionally hidden
 - [`data_quality`](data_quality.md)
 - [`data_governance`](data_governance.md)
 - [`data_lineage`](data_lineage.md)
+- [`data_drift`](data_drift.md)
+- [`run_summary`](run_summary.md)
+- [`technical_columns`](technical_columns.md)
+- [`ai`](ai.md)
