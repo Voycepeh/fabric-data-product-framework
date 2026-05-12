@@ -461,3 +461,29 @@ def enforce_dq_rules(df, *, table_name: str, rules=None, metadata_df=None, row_i
     rule_results = _run_dq_rules(df, table_name=table_name, rules=active_rules)
     valid_rows, quarantine_rows, failure_rows = _split_dq_rows(df, active_rules, dq_run_id=dq_run_id, row_id_columns=row_id_columns)
     return DQEnforcementResult(active_rules, rule_results, valid_rows, quarantine_rows, failure_rows)
+
+
+def review_dq_rules(candidate_rules, table_name: str):
+    """Review AI-suggested DQ rules sequentially with explicit approve/reject decisions.
+
+    Notes
+    -----
+    This public wrapper keeps review callables under ``data_quality`` while
+    delegating notebook widget internals to ``notebook_review``.
+    """
+    from .notebook_review import review_dq_rules as _review_dq_rules
+
+    return _review_dq_rules(candidate_rules, table_name)
+
+
+def review_dq_rule_deactivations(active_rules, table_name: str):
+    """Review active DQ rules and capture governed deactivation decisions.
+
+    Notes
+    -----
+    This public wrapper keeps review callables under ``data_quality`` while
+    delegating notebook widget internals to ``notebook_review``.
+    """
+    from .notebook_review import review_dq_rule_deactivations as _review_dq_rule_deactivations
+
+    return _review_dq_rule_deactivations(active_rules, table_name)

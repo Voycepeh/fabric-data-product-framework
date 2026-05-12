@@ -241,7 +241,7 @@ PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [
     {"symbol_name": "write_dq_rules", "module": "data_quality", "kind": "function", "workflow_step": 8, "role": "essential", "summary_override": None},
     {"symbol_name": "enforce_dq_rules", "module": "data_quality", "kind": "function", "workflow_step": "6C", "role": "essential", "summary_override": "Run notebook-facing DQ rules and return a Spark DataFrame result."},
     {"symbol_name": "review_dq_rules", "module": "data_quality", "kind": "function", "workflow_step": 8, "role": "essential", "summary_override": None},
-    {"symbol_name": "review_dq_rule_deactivations", "module": "notebook_review", "kind": "function", "workflow_step": 8, "role": "optional", "summary_override": None},
+    {"symbol_name": "review_dq_rule_deactivations", "module": "data_quality", "kind": "function", "workflow_step": 8, "role": "optional", "summary_override": None},
         {"symbol_name": "build_governance_candidate_prompt", "module": "ai", "kind": "function", "workflow_step": 9, "role": "optional", "summary_override": None},
     {"symbol_name": "build_handover_summary_prompt", "module": "ai", "kind": "function", "workflow_step": 10, "role": "optional", "summary_override": None},
     {"symbol_name": "build_manual_governance_prompt_package", "module": "ai", "kind": "function", "workflow_step": 9, "role": "optional", "summary_override": None},

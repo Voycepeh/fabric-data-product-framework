@@ -53,8 +53,9 @@ from .data_quality import (
     enforce_dq_rules,
     validate_dq_rules,
     assert_dq_passed,
+    review_dq_rules,
+    review_dq_rule_deactivations,
 )
-from .notebook_review import review_dq_rules, review_dq_rule_deactivations
 from .run_summary import build_run_summary, render_run_summary_markdown
 from .technical_columns import standardize_output_columns
 

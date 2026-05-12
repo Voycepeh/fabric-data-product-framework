@@ -48,7 +48,7 @@ PUBLIC_SYMBOL_DOCS = _read_literal(DOCS_METADATA_PATH, "PUBLIC_SYMBOL_DOCS")
 WORKFLOW_STEPS = _read_literal(DOCS_METADATA_PATH, "WORKFLOW_STEP_DOCS")
 module_index = _symbol_module_index()
 
-workflow_step_by_symbol = {row["symbol_name"]: row["workflow_step"] for row in PUBLIC_SYMBOL_DOCS}
+workflow_step_by_symbol = {row["symbol_name"]: row["workflow_step"] for row in PUBLIC_SYMBOL_DOCS if row.get("kind") == "function"}
 symbols_by_step: dict[str, list[tuple[str, str]]] = {str(step["number"]): [] for step in WORKFLOW_STEPS}
 for symbol in PUBLIC_SYMBOLS:
     if workflow_step_by_symbol.get(symbol) is None:

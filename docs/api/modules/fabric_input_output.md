@@ -8,7 +8,6 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`Housepath`](../../reference/step-02a-shared-runtime-config/Housepath.md) | class | Fabric lakehouse or warehouse connection details. | — |
 | [`lakehouse_csv_read`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_csv_read.md) | function | Read a CSV file from a Fabric lakehouse Files path. | [`_get_spark`](../../reference/internal/fabric_input_output/_get_spark.md) (internal) |
 | [`lakehouse_excel_read_as_spark`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_excel_read_as_spark.md) | function | Read an Excel file from a Fabric lakehouse Files path. | [`_get_spark`](../../reference/internal/fabric_input_output/_get_spark.md) (internal) |
 | [`lakehouse_parquet_read_as_spark`](../../reference/step-03-source-contract-ingestion-pattern/lakehouse_parquet_read_as_spark.md) | function | Read a Parquet file from a Fabric lakehouse Files path. | [`_convert_single_parquet_ns_to_us`](../../reference/internal/fabric_input_output/_convert_single_parquet_ns_to_us.md) (internal), [`_get_spark`](../../reference/internal/fabric_input_output/_get_spark.md) (internal) |
