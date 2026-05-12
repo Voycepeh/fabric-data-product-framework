@@ -75,9 +75,17 @@ def test_03_pc_deterministic_only_and_valid_run_dq_signature():
     assert "table_name=DQ_TABLE_NAME" in pc
     assert "metadata_df=metadata_dq_rules" in pc
     assert "dq_run_id=RUN_ID" in pc
+    assert "df_valid = dq.valid_rows" in pc
+    assert "assert_dq_passed(dq.rule_results)" in pc
     assert "fail_on_error=False" not in pc
     assert "suggest_dq_rules" not in pc
     assert "extract_dq_rules" not in pc
+
+
+def test_03_pc_output_write_occurs_after_dq_assertion():
+    pc = _all_code("templates/notebooks/03_pc_agreement_source_to_target.ipynb")
+    assert pc.index("df_valid = dq.valid_rows") < pc.index("lakehouse_table_write(df_valid")
+    assert pc.index("assert_dq_passed(dq.rule_results)") < pc.index("lakehouse_table_write(df_valid")
 
 
 def test_docs_match_signature_and_key_convention():
