@@ -153,6 +153,16 @@
   line-height: 1.35;
 }
 
+.callable-role-note {
+  margin: 0.2rem 0 0.45rem 1.55rem;
+  font-size: 0.8rem;
+  color: var(--md-default-fg-color--light);
+}
+
+.callable-role-note strong {
+  color: var(--md-default-fg-color);
+}
+
 .reference-catalogue-list {
   display: grid;
   gap: 0.72rem;

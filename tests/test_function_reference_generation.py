@@ -104,6 +104,17 @@ def test_reference_includes_callable_finder_block() -> None:
     assert content.index("## Find a callable") > content.index("## What runs where")
 
 
+def test_reference_callable_finder_exposes_only_public_role_filters() -> None:
+    generate_reference()
+    content = REFERENCE_FILE.read_text(encoding="utf-8")
+    assert 'data-role-filter="essential"' in content
+    assert 'data-role-filter="optional"' in content
+    assert 'data-role-filter="internal"' not in content
+    assert "Search callable functions" in content
+    assert "<strong>Essential</strong>: Core functions used in the starter notebook flow." in content
+    assert "<strong>Optional</strong>: Extra helper functions for advanced or situational use." in content
+
+
 def test_function_reference_tables_use_compact_module_links() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")

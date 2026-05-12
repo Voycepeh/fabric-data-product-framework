@@ -41,19 +41,20 @@ AI functions are advisory. Approved contracts and pipeline notebooks are the enf
 
 ## Find a callable
 
-Use the finder below to look up public callables.
+Use the finder below to look up public callable functions.
 
 <div class="callable-finder" data-callable-finder>
-  <label class="callable-finder-label" for="callable-finder-input">Search callables</label>
-  <input id="callable-finder-input" class="callable-finder-input" type="search" placeholder="Search callables" aria-describedby="callable-finder-help callable-finder-status callable-finder-examples" autocomplete="off">
-  <p id="callable-finder-help" class="callable-finder-help">Search by function name, module, or what the function does.</p>
+  <label class="callable-finder-label" for="callable-finder-input">Search callable functions</label>
+  <input id="callable-finder-input" class="callable-finder-input" type="search" placeholder="Search callable functions" aria-describedby="callable-finder-help callable-finder-status callable-finder-examples" autocomplete="off">
+  <p id="callable-finder-help" class="callable-finder-help">Search by function name, module, role, starter path, or what the public function does.</p>
   <p id="callable-finder-examples" class="callable-finder-examples">Try: <span class="callable-finder-chip">csv</span> <span class="callable-finder-chip">data_quality</span> <span class="callable-finder-chip">quarantine</span></p>
-  <p id="callable-finder-status" class="callable-finder-status" aria-live="polite">Showing all callables.</p>
+  <p id="callable-finder-status" class="callable-finder-status" aria-live="polite">Showing all public callables.</p>
   <fieldset class="callable-role-filters">
     <legend>Role filters</legend>
     <label><input type="checkbox" data-role-filter="essential" checked> Essential</label>
+    <p class="callable-role-note"><strong>Essential</strong>: Core functions used in the starter notebook flow.</p>
     <label><input type="checkbox" data-role-filter="optional" checked> Optional</label>
-    <label><input type="checkbox" data-role-filter="internal"> Internal</label>
+    <p class="callable-role-note"><strong>Optional</strong>: Extra helper functions for advanced or situational use.</p>
   </fieldset>
   <p class="callable-finder-empty" data-callable-finder-empty hidden>No callables match your search.</p>
 </div>
