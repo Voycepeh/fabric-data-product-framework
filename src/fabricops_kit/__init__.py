@@ -63,6 +63,7 @@ from .data_quality import (
     build_dq_rule_deactivation_metadata_df,
     build_dq_review_rows,
     build_dq_rules_metadata_df,
+    extract_candidate_rules_from_responses,
     draft_dq_rules,
     write_dq_rules,
     enforce_dq_rules,
@@ -70,6 +71,7 @@ from .data_quality import (
     assert_dq_passed,
     review_dq_rules,
     review_dq_rule_deactivations,
+    suggest_dq_rules_with_fabric_ai,
 )
 from .business_context import (
     COLUMN_BUSINESS_CONTEXT_FROM_WIDGET,
@@ -96,6 +98,8 @@ __all__ = [
     "review_dq_rule_deactivations",
     "build_dq_rules_metadata_df",
     "build_dq_rule_deactivation_metadata_df",
+    "suggest_dq_rules_with_fabric_ai",
+    "extract_candidate_rules_from_responses",
     "attach_rule_metadata_keys",
     "DQEnforcementResult",
     "build_dq_review_rows",

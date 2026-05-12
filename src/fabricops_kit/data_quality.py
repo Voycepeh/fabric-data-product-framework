@@ -166,6 +166,56 @@ def _extract_dq_rules(response_df, table_name: str, response_col: str = "respons
     return list(deduped.values())
 
 
+def suggest_dq_rules_with_fabric_ai(prepared_profile_df, prompt_template: str, output_col: str = "ai_dq_response"):
+    """Run Fabric AI to draft DQ rules from prepared profile rows.
+
+    Parameters
+    ----------
+    prepared_profile_df : pyspark.sql.DataFrame
+        Prepared profile rows (including approved business context) for prompt execution.
+    prompt_template : str
+        Prompt template text, usually from ``CONFIG.ai_prompt_config.dq_rule_candidate_template``.
+    output_col : str, default=\"ai_dq_response\"
+        Response column for AI output text.
+
+    Returns
+    -------
+    pyspark.sql.DataFrame
+        Input DataFrame enriched with AI response output.
+    """
+    ai = getattr(prepared_profile_df, "ai", None)
+    if ai is None or not hasattr(ai, "generate_response"):
+        raise RuntimeError("suggest_dq_rules_with_fabric_ai requires Fabric DataFrame.ai.generate_response.")
+    return prepared_profile_df.ai.generate_response(prompt=prompt_template, is_prompt_template=True, output_col=output_col)
+
+
+def extract_candidate_rules_from_responses(response_rows, table_name: str, response_col: str = "ai_dq_response") -> list[dict[str, Any]]:
+    """Extract candidate DQ rules from Spark/list AI responses.
+
+    Parameters
+    ----------
+    response_rows : pyspark.sql.DataFrame | list[dict]
+        AI response rows containing a DQ rules dictionary payload.
+    table_name : str
+        Target table key used to select rules from ``DQ_RULES`` payload.
+    response_col : str, default=\"ai_dq_response\"
+        Response column name containing AI text.
+
+    Returns
+    -------
+    list[dict[str, Any]]
+        Deduplicated candidate DQ rules.
+    """
+    if hasattr(response_rows, "select"):
+        return _extract_dq_rules(response_rows, table_name=table_name, response_col=response_col)
+    candidates: list[dict[str, Any]] = []
+    for row in response_rows or []:
+        text = row.get(response_col) or row.get("response") or ""
+        candidates.extend(_parse_dq_rules_dict_from_text(text).get(table_name, []))
+    by_id = {r.get("rule_id"): r for r in candidates if r.get("rule_id")}
+    return list(by_id.values())
+
+
 def build_dq_review_rows(suggested_rules: list[dict[str, Any]], default_approval_status: str = "pending") -> list[dict[str, Any]]:
     """Build notebook-editable DQ review rows without changing rule taxonomy."""
     rows: list[dict[str, Any]] = []

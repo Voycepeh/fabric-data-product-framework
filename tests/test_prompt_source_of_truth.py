@@ -52,3 +52,7 @@ def test_02_ex_has_no_old_todo_draft_flow():
     ex = Path('templates/notebooks/02_ex_agreement_topic.ipynb').read_text(encoding='utf-8')
     assert 'TODO_replace_business_context' not in ex
     assert 'draft_dq_rules(' not in ex
+    assert '_extract_dq_rules' not in ex
+    assert 'suggest_column_business_contexts(prepared_profile_df=dq_profile_df' not in ex
+    assert 'suggest_dq_rules_with_fabric_ai' in ex
+    assert 'data_quality.APPROVED_RULES_FROM_WIDGET' in ex
