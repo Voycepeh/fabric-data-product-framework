@@ -137,11 +137,7 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
             },
             {
                 "title": "Segment 4: Human approval and metadata persistence",
-                "symbols": [
-                    
-                    
-                    
-                ],
+                "symbols": [],
             },
             {
                 "title": "Optional lineage notes",
@@ -153,7 +149,7 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
         "notebook_key": "03_pc",
         "notebook_label": "`03_pc_<agreement>_<pipeline>`",
         "template_path": "templates/notebooks/03_pc_agreement_source_to_target.ipynb",
-        "segment_intro": "Pipeline-contract notebook flow for deterministic enforcement and controlled publishing.",
+        "segment_intro": "Pipeline notebook flow for deterministic enforcement and controlled publishing.",
         "segments": [
             {
                 "title": "Segment 1: Load shared config and runtime context",
@@ -166,7 +162,6 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
             {
                 "title": "Segment 2: Load source data and approved metadata",
                 "symbols": [
-                    
                     "lakehouse_table_read",
                     "warehouse_read",
                 ],
@@ -174,8 +169,6 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
             {
                 "title": "Segment 3: Validate schema, transform, and compile controls",
                 "symbols": [
-                    
-                    
                     "validate_dq_rules",
                 ],
             },
@@ -191,9 +184,6 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
             {
                 "title": "Optional metadata / lineage / handover evidence",
                 "symbols": [
-                    
-                    
-                    
                     "build_lineage_records",
                 ],
             },
@@ -209,7 +199,7 @@ WORKFLOW_STEP_DOCS: list[dict[str, int | str]] = [
     {"number": 5, "slug": "step-05-explore-transform-logic", "title": "Explore data & explain transformation logic", "subtext": "This step is where the analyst studies the profiled source data and explains why transformation is needed. There may not be many helper functions here today, but future functions could support standard EDA, AI assisted analysis, and documentation of business assumptions before the logic becomes part of the repeatable pipeline."},
     {"number": "6A", "slug": "step-06a-transformation-logic", "title": "Write transformation logic", "subtext": "This step contains the main transformation logic that converts source-aligned data into the target output. Functions here support reusable pipeline code so the same logic can run consistently during development, testing, and scheduled refresh."},
     {"number": "6B", "slug": "step-06b-runtime-standards", "title": "Apply runtime standards", "subtext": "This step applies standard runtime requirements such as technical columns, run IDs, timestamps, partition keys, and other repeatable conventions. Functions here make outputs easier to audit, troubleshoot, join back to pipeline runs, and operate at scale."},
-    {"number": "6C", "slug": "step-06c-pipeline-controls", "title": "Enforce pipeline controls", "subtext": "This step enforces the controls that decide whether the pipeline output should be trusted. Functions here support data quality rules, schema checks, classification checks, and other contract validations before data is released downstream."},
+    {"number": "6C", "slug": "step-06c-pipeline-controls", "title": "Enforce pipeline controls", "subtext": "This step enforces the controls that decide whether the pipeline output should be trusted. Functions here support data quality rules, schema checks, classification checks, and other approved metadata validations before data is released downstream."},
     {"number": "6D", "slug": "step-06d-controlled-outputs", "title": "Write controlled outputs", "subtext": "This step writes the transformed output to the correct lakehouse, warehouse, or product layer. Functions here make the write pattern explicit, repeatable, and aligned to the intended environment instead of relying on ad hoc exports."},
     {"number": 7, "slug": "step-07-output-profile-product-contract", "title": "Profile output & publish handover metadata", "subtext": "This step profiles the created output and stores handover metadata for downstream users. Functions here record what was produced, write evidence to metadata tables or catalogues, and keep outputs understandable and reusable downstream."},
     {"number": 8, "slug": "step-08-ai-assisted-dq-suggestions", "title": "Suggest AI assisted data quality rules", "subtext": "This step uses AI in exploration notebooks to suggest possible data quality rules from profiling results, business context, and source knowledge. These AI functions are only advisory. The actual rule creation, approval, and enforcement must still be done by the human engineer in the pipeline notebook."},

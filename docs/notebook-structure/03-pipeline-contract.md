@@ -1,6 +1,6 @@
 # `03_pc_<agreement>_<pipeline>`
 
-Pipeline-contract notebook flow for deterministic enforcement and controlled publishing.
+Pipeline notebook flow for deterministic enforcement and controlled publishing.
 
 > <a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb">Open template notebook</a>
 
