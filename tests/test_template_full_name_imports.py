@@ -71,7 +71,7 @@ def test_templates_include_full_name_module_imports() -> None:
     combined = "\n".join(p.read_text(encoding="utf-8") for p in Path("templates/notebooks").glob("*.ipynb"))
     assert "enforce_dq_rules" in combined and "draft_dq_rules" in combined
     assert "from fabricops_kit.fabric_input_output import" in combined
-    assert "from fabricops_kit.data_contracts import" in combined
+    assert "from fabricops_kit.data_contracts import" not in combined
 
 
 def test_template_import_symbols_exist_in_declared_modules() -> None:

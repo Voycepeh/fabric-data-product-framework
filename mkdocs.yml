@@ -26,7 +26,6 @@ nav:
           - environment_config: api/modules/environment_config.md
           - fabric_input_output: api/modules/fabric_input_output.md
           - data_profiling: api/modules/data_profiling.md
-          - data_contracts: api/modules/data_contracts.md
           - data_quality: api/modules/data_quality.md
           - data_governance: api/modules/data_governance.md
           - data_lineage: api/modules/data_lineage.md
