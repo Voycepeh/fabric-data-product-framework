@@ -21,6 +21,7 @@ Split a Spark DataFrame into pass/quarantine outputs for row-level DQ rules.
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
 | [`DQEnforcementResult`](../../reference/step-06c-pipeline-controls/DQEnforcementResult.md) | class | Structured DQ enforcement output for notebook-first usage. | — |
+| [`review_dq_rule_deactivations`](../../reference/step-08-ai-assisted-dq-suggestions/review_dq_rule_deactivations.md) | function | Review active DQ rules and capture governed deactivation decisions. | — |
 | [`validate_dq_rules`](../../reference/step-06c-pipeline-controls/validate_dq_rules.md) | function | Validate canonical DQ rules before enforcement. | — |
 
 ## Related internal helpers
