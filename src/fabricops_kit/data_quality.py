@@ -402,8 +402,10 @@ def _split_dq_rows(df, rules: list[dict[str, Any]], dq_run_id: str | None = None
             failed = F.col(col_name).isNotNull() & ~F.col(col_name).isin(rule["allowed_values"])
         elif rtype == "value_range":
             cond = F.lit(False)
-            if rule.get("min_value") is not None: cond = cond | (F.col(col_name).cast("double") < F.lit(float(rule["min_value"])))
-            if rule.get("max_value") is not None: cond = cond | (F.col(col_name).cast("double") > F.lit(float(rule["max_value"])))
+            if rule.get("lower_bound") is not None:
+                cond = cond | (F.col(col_name).cast("double") < F.lit(float(rule["lower_bound"])))
+            if rule.get("upper_bound") is not None:
+                cond = cond | (F.col(col_name).cast("double") > F.lit(float(rule["upper_bound"])))
             failed = F.col(col_name).isNotNull() & cond
         elif rtype == "regex_format":
             failed = F.col(col_name).isNotNull() & ~F.col(col_name).rlike(rule["regex_pattern"])

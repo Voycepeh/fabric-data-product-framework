@@ -3,6 +3,7 @@ from __future__ import annotations
 import ast
 import json
 from datetime import datetime, timezone
+import importlib
 
 from .metadata import build_metadata_column_key, build_metadata_table_key
 
@@ -34,8 +35,11 @@ def prepare_business_context_profile_input(profile_rows: list[dict], table_name:
     return out
 
 
-def suggest_column_business_contexts(profile_input_rows: list[dict], prompt_template: str = BUSINESS_CONTEXT_PROMPT) -> list[dict]:
-    return [{**row, "prompt": prompt_template} for row in profile_input_rows]
+def suggest_column_business_contexts(prepared_profile_df, prompt_template: str = BUSINESS_CONTEXT_PROMPT, output_col: str = "ai_business_context_response"):
+    ai = getattr(prepared_profile_df, "ai", None)
+    if ai is None or not hasattr(ai, "generate_response"):
+        raise RuntimeError("suggest_column_business_contexts requires Fabric DataFrame.ai.generate_response.")
+    return prepared_profile_df.ai.generate_response(prompt=prompt_template, is_prompt_template=True, output_col=output_col)
 
 
 def _parse_ai_dict_response(text: str) -> dict:
@@ -63,27 +67,83 @@ def extract_column_business_context_suggestions(response_rows: list[dict]) -> li
     return out
 
 
+def _require_ipywidgets():
+    widgets = importlib.import_module("ipywidgets")
+    ipy_display = importlib.import_module("IPython.display").display
+    return widgets, ipy_display
+
+
 def capture_column_business_context(suggestions: list[dict], environment_name: str, dataset_name: str, table_name: str, default_approval_status: str = "pending") -> list[dict]:
     global COLUMN_BUSINESS_CONTEXT_FROM_WIDGET
-    results = []
-    for s in suggestions or []:
-        col = s.get("column_name")
-        results.append(
-            {
-                "environment_name": environment_name,
-                "dataset_name": dataset_name,
-                "table_name": table_name,
-                "column_name": col,
-                "metadata_table_key": build_metadata_table_key(environment_name, dataset_name, table_name),
-                "metadata_column_key": build_metadata_column_key(environment_name, dataset_name, table_name, col),
-                "ai_suggested_business_context": s.get("business_context", ""),
-                "approved_business_context": s.get("business_context", ""),
-                "business_context_notes": s.get("notes", ""),
-                "approval_status": default_approval_status,
-                "reviewer_notes": "",
-                "approved_by": None,
-                "approved_at": datetime.now(timezone.utc).isoformat() if default_approval_status == "approved" else None,
-            }
-        )
-    COLUMN_BUSINESS_CONTEXT_FROM_WIDGET = results
-    return results
+    widgets, ipy_display = _require_ipywidgets()
+    approved, rejected = [], []
+    state = {"i": 0}
+
+    title = widgets.HTML("<h4>Review column business context</h4>")
+    summary = widgets.HTML()
+    approved_box = widgets.Textarea(description="Approved context", layout=widgets.Layout(width="900px", height="80px"))
+    notes_box = widgets.Textarea(description="Notes", layout=widgets.Layout(width="900px", height="80px"))
+    reviewer_box = widgets.Text(description="Reviewer notes", layout=widgets.Layout(width="900px"))
+    status = widgets.HTML()
+    btn_approve = widgets.Button(description="Approve", button_style="success")
+    btn_reject = widgets.Button(description="Reject", button_style="danger")
+    btn_undo = widgets.Button(description="Undo", button_style="warning")
+
+    def curr():
+        return suggestions[state["i"]] if state["i"] < len(suggestions) else None
+
+    def load():
+        row = curr()
+        if row is None:
+            summary.value = f"<b>Done.</b> Approved={len(approved)}, Rejected={len(rejected)}"
+            approved_box.disabled = notes_box.disabled = reviewer_box.disabled = True
+            return
+        summary.value = f"<b>{state['i']+1}/{len(suggestions)}</b> column={row.get('column_name')}<br/>AI: {row.get('business_context','')}"
+        approved_box.value = row.get("business_context", "")
+        notes_box.value = row.get("notes", "")
+        reviewer_box.value = ""
+
+    def build_row(row, status_value):
+        return {
+            "environment_name": environment_name,
+            "dataset_name": dataset_name,
+            "table_name": table_name,
+            "column_name": row.get("column_name"),
+            "metadata_table_key": build_metadata_table_key(environment_name, dataset_name, table_name),
+            "metadata_column_key": build_metadata_column_key(environment_name, dataset_name, table_name, row.get("column_name")),
+            "ai_suggested_business_context": row.get("business_context", ""),
+            "approved_business_context": approved_box.value.strip(),
+            "business_context_notes": notes_box.value.strip(),
+            "approval_status": status_value,
+            "reviewer_notes": reviewer_box.value.strip(),
+            "approved_by": None,
+            "approved_at": datetime.now(timezone.utc).isoformat() if status_value == "approved" else None,
+        }
+
+    def on_approve(_):
+        row = curr()
+        approved.append(build_row(row, "approved"))
+        state["i"] += 1
+        load()
+
+    def on_reject(_):
+        row = curr()
+        rejected.append(build_row(row, "rejected"))
+        state["i"] += 1
+        load()
+
+    def on_undo(_):
+        if rejected:
+            rejected.pop()
+        elif approved:
+            approved.pop()
+        state["i"] = max(0, state["i"] - 1)
+        load()
+
+    btn_approve.on_click(on_approve)
+    btn_reject.on_click(on_reject)
+    btn_undo.on_click(on_undo)
+    load()
+    ipy_display(widgets.VBox([title, summary, approved_box, notes_box, reviewer_box, widgets.HBox([btn_approve, btn_reject, btn_undo]), status]))
+    COLUMN_BUSINESS_CONTEXT_FROM_WIDGET = approved
+    return approved

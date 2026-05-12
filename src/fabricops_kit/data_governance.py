@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import re
+import importlib
 from collections import Counter
 from typing import Any
 
@@ -120,8 +121,11 @@ def prepare_governance_profile_input(profile_rows: list[dict], table_name: str, 
     return out
 
 
-def suggest_personal_identifier_classifications(profile_rows: list[dict], prompt: str = PDPA_PERSONAL_IDENTIFIER_PROMPT) -> list[dict]:
-    return [{**r, "prompt": prompt} for r in profile_rows]
+def suggest_personal_identifier_classifications(prepared_profile_df, prompt: str = PDPA_PERSONAL_IDENTIFIER_PROMPT, output_col: str = "ai_governance_response"):
+    ai = getattr(prepared_profile_df, "ai", None)
+    if ai is None or not hasattr(ai, "generate_response"):
+        raise RuntimeError("suggest_personal_identifier_classifications requires Fabric DataFrame.ai.generate_response.")
+    return prepared_profile_df.ai.generate_response(prompt=prompt, is_prompt_template=True, output_col=output_col)
 
 
 def extract_personal_identifier_suggestions(response_rows: list[dict]) -> list[dict]:
@@ -143,28 +147,40 @@ def _get_governance_ai_suggestion(row: dict) -> dict:
 
 def review_column_governance_context(suggestions: list[dict], environment_name: str, dataset_name: str, table_name: str):
     global COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET
-    rows = []
-    for s in suggestions or []:
-        col = s.get("column_name")
-        rows.append(
-            {
-                "environment_name": environment_name,
-                "dataset_name": dataset_name,
-                "table_name": table_name,
-                "column_name": col,
-                "metadata_table_key": build_metadata_table_key(environment_name, dataset_name, table_name),
-                "metadata_column_key": build_metadata_column_key(environment_name, dataset_name, table_name, col),
-                "approved_business_context": s.get("approved_business_context", ""),
-                "ai_suggested_personal_identifier_classification": s.get("ai_suggested_personal_identifier_classification", "unknown"),
-                "approved_personal_identifier_classification": s.get("ai_suggested_personal_identifier_classification", "unknown"),
-                "confidentiality_label": s.get("confidentiality_label", "confidential"),
-                "reviewer_notes": "",
-                "approved_by": None,
-                "approved_at": None,
-            }
-        )
-    COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET = rows
-    return rows
+    widgets = importlib.import_module("ipywidgets")
+    ipy_display = importlib.import_module("IPython.display").display
+    approved = []
+    idx = {"i": 0}
+    summary = widgets.HTML()
+    pid = widgets.Dropdown(options=DEFAULT_GOVERNANCE_WIDGET_CONFIG["personal_identifier_options"], description="Identifier")
+    conf = widgets.Dropdown(options=DEFAULT_GOVERNANCE_WIDGET_CONFIG["confidentiality_labels"], description="Confidentiality")
+    notes = widgets.Textarea(description="Reviewer notes", layout=widgets.Layout(width="900px", height="80px"))
+    b1, b2, b3 = widgets.Button(description="Approve", button_style="success"), widgets.Button(description="Reject", button_style="danger"), widgets.Button(description="Undo", button_style="warning")
+
+    def cur():
+        return suggestions[idx["i"]] if idx["i"] < len(suggestions) else None
+    def load():
+        r = cur()
+        if r is None:
+            summary.value = f"<b>Done</b> approved={len(approved)}"
+            return
+        summary.value = f"{idx['i']+1}/{len(suggestions)} col={r.get('column_name')}<br/>Business context evidence: {r.get('approved_business_context','')}"
+        pid.value = r.get("ai_suggested_personal_identifier_classification", "unknown")
+        conf.value = r.get("confidentiality_label", "confidential")
+        notes.value = ""
+    def on_approve(_):
+        r = cur()
+        approved.append({"environment_name": environment_name,"dataset_name": dataset_name,"table_name": table_name,"column_name": r.get("column_name"),"metadata_table_key": build_metadata_table_key(environment_name,dataset_name,table_name),"metadata_column_key": build_metadata_column_key(environment_name,dataset_name,table_name,r.get("column_name")),"approved_business_context": r.get("approved_business_context",""),"ai_suggested_personal_identifier_classification": r.get("ai_suggested_personal_identifier_classification","unknown"),"approved_personal_identifier_classification": pid.value,"confidentiality_label": conf.value,"reviewer_notes": notes.value,"approved_by": None,"approved_at": _now_utc_iso()})
+        idx["i"] += 1; load()
+    def on_reject(_):
+        idx["i"] += 1; load()
+    def on_undo(_):
+        if approved: approved.pop()
+        idx["i"] = max(0, idx["i"] - 1); load()
+    b1.on_click(on_approve); b2.on_click(on_reject); b3.on_click(on_undo); load()
+    ipy_display(widgets.VBox([summary, pid, conf, notes, widgets.HBox([b1,b2,b3])]))
+    COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET = approved
+    return approved
 
 
 def _normalize_columns(profile: dict | list[dict]) -> list[dict]:
