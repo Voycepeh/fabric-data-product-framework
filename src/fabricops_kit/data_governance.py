@@ -11,6 +11,7 @@ from collections import Counter
 from typing import Any
 
 from fabricops_kit._utils import _to_jsonable
+from fabricops_kit.metadata import build_metadata_column_key, build_metadata_table_key, _now_utc_iso, _resolve_action_by
 
 DEFAULT_CLASSIFICATION_TERMS: dict[str, list[str]] = {
     "identifier": ["staff_id", "student_id", "employee_id", "user_id", "person_id", "nric", "national_id", "passport", "matric", "account_id"],
@@ -34,6 +35,12 @@ DEFAULT_ACTION_BY_CLASSIFICATION = {
     "sensitive_free_text": "mask_or_tokenize",
     "unknown": "review",
 }
+DEFAULT_GOVERNANCE_WIDGET_CONFIG = {
+    "confidentiality_labels": ["public", "confidential", "restricted"],
+    "personal_identifier_options": ["not_personal_data", "direct_identifier", "indirect_identifier", "unknown"],
+}
+COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET: list[dict] = []
+PDPA_PERSONAL_IDENTIFIER_PROMPT = "Classify personal identifier type using approved_business_context evidence."
 
 
 def build_governance_prompt_context(
@@ -99,6 +106,65 @@ def build_approved_governance_records(review_rows: list[dict[str, Any]], dataset
             }
         )
     return out
+
+
+def prepare_governance_profile_input(profile_rows: list[dict], table_name: str, column_contexts: list[dict]) -> list[dict]:
+    context_lookup = {r["column_name"]: r for r in column_contexts or [] if r.get("column_name")}
+    out = []
+    for row in profile_rows or []:
+        col = row.get("column_name") or row.get("COLUMN_NAME")
+        approved = (context_lookup.get(col) or {}).get("approved_business_context")
+        if not approved:
+            continue
+        out.append({**row, "table_name": table_name, "column_name": col, "approved_business_context": approved})
+    return out
+
+
+def suggest_personal_identifier_classifications(profile_rows: list[dict], prompt: str = PDPA_PERSONAL_IDENTIFIER_PROMPT) -> list[dict]:
+    return [{**r, "prompt": prompt} for r in profile_rows]
+
+
+def extract_personal_identifier_suggestions(response_rows: list[dict]) -> list[dict]:
+    out = []
+    for row in response_rows or []:
+        out.append(_get_governance_ai_suggestion(row))
+    return [r for r in out if r]
+
+
+def _get_governance_ai_suggestion(row: dict) -> dict:
+    if "suggestion" in row and isinstance(row["suggestion"], dict):
+        return row["suggestion"]
+    return {
+        "column_name": row.get("column_name"),
+        "ai_suggested_personal_identifier_classification": row.get("ai_suggested_personal_identifier_classification", "unknown"),
+        "confidentiality_label": row.get("confidentiality_label", "confidential"),
+    }
+
+
+def review_column_governance_context(suggestions: list[dict], environment_name: str, dataset_name: str, table_name: str):
+    global COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET
+    rows = []
+    for s in suggestions or []:
+        col = s.get("column_name")
+        rows.append(
+            {
+                "environment_name": environment_name,
+                "dataset_name": dataset_name,
+                "table_name": table_name,
+                "column_name": col,
+                "metadata_table_key": build_metadata_table_key(environment_name, dataset_name, table_name),
+                "metadata_column_key": build_metadata_column_key(environment_name, dataset_name, table_name, col),
+                "approved_business_context": s.get("approved_business_context", ""),
+                "ai_suggested_personal_identifier_classification": s.get("ai_suggested_personal_identifier_classification", "unknown"),
+                "approved_personal_identifier_classification": s.get("ai_suggested_personal_identifier_classification", "unknown"),
+                "confidentiality_label": s.get("confidentiality_label", "confidential"),
+                "reviewer_notes": "",
+                "approved_by": None,
+                "approved_at": None,
+            }
+        )
+    COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET = rows
+    return rows
 
 
 def _normalize_columns(profile: dict | list[dict]) -> list[dict]:

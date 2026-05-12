@@ -270,9 +270,13 @@ class ReviewWorkflowConfig:
 
     business_context: str = ""
     approved_usage: str = ""
-    governance_suggestions_table: str = "metadata.governance_suggestions"
-    governance_approved_table: str = "metadata.governance_approved"
+    profile_table: str = "metadata.profile_rows"
+    business_context_review_table: str = "metadata.business_context_review"
+    business_context_approved_table: str = "metadata.business_context_approved"
     dq_review_table: str = "metadata.dq_review"
+    dq_approved_table: str = "metadata.dq_approved"
+    governance_review_table: str = "metadata.governance_review"
+    governance_approved_table: str = "metadata.governance_approved"
     default_approval_status: str = "pending"
 
 
