@@ -250,17 +250,6 @@
       "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
       "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "DQEnforcementResult",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "workflow_step": "6C"
-    },
-    {
-      "module_name": "data_quality",
-      "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
       "callable_name": "draft_dq_rules",
       "callable_visibility": "public",
       "callable_role": "essential",
@@ -306,17 +295,6 @@
       "sidebar_group": "Modules",
       "sidebar_include": true,
       "callable_name": "get_path",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "workflow_step": "2A"
-    },
-    {
-      "module_name": "fabric_input_output",
-      "visibility": "public",
-      "module_summary": "Lakehouse and warehouse read/write helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "Housepath",
       "callable_visibility": "public",
       "callable_role": "essential",
       "workflow_step": "2A"
@@ -432,11 +410,11 @@
       "workflow_step": 10
     },
     {
-      "module_name": "notebook_review",
-      "visibility": "internal",
-      "module_summary": "Human-in-the-loop DQ review helpers.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false,
+      "module_name": "data_quality",
+      "visibility": "public",
+      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
       "callable_name": "review_dq_rule_deactivations",
       "callable_visibility": "public",
       "callable_role": "optional",

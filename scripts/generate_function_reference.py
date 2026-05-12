@@ -236,6 +236,7 @@ def main() -> None:
         raise RuntimeError("PUBLIC_SYMBOL_DOCS contains symbols not exported in __all__: " + ", ".join(unknown_metadata))
 
     symbol_map: dict[str, Symbol] = {}
+    function_symbol_map: dict[str, Symbol] = {}
     for name in public:
         preferred_module = canonical_public_module(docs_metadata[name]["module"])
         preferred_actual_module = resolve_preferred_actual_module(preferred_module)
@@ -280,6 +281,8 @@ def main() -> None:
             raise RuntimeError(f"Non-underscore callable cannot be internal: {symbol.name}")
         if symbol.role in {"essential", "optional"} and symbol.name.startswith("_"):
             raise RuntimeError(f"Underscore callable cannot be public role: {symbol.name}")
+
+    function_symbol_map = {name: symbol for name, symbol in symbol_map.items() if symbol.obj_type == "function"}
     MODULE_DIR.mkdir(parents=True, exist_ok=True)
     module_manifest = {row["module_name"]: row for row in module_docs_metadata}
     module_index_lines = ["# Module API Catalogue", "", "Function Reference/workflow pages are the primary entrypoint. Module pages below are secondary technical references.", "", "Short-form modules remain import-compatible aliases but are intentionally hidden from this user-facing catalogue.", ""]
@@ -290,7 +293,7 @@ def main() -> None:
         module_data[module] = info
         info = module_data[module]
         module_md = MODULE_DIR / f"{module}.md"
-        public_in_module = [s for s in symbol_map.values() if s.public_module == module]
+        public_in_module = [s for s in function_symbol_map.values() if s.public_module == module]
         is_internal_only = not public_in_module
         title = f"# `{module}` module" if not is_internal_only else f"# `{module}` module (internal)"
         module_visibility = module_manifest.get(module, {}).get("visibility", "internal")
@@ -404,7 +407,7 @@ def main() -> None:
 
     manifest_rows = []
     known_modules = set(module_manifest)
-    for s in sorted(symbol_map.values(), key=lambda x: x.name.lower()):
+    for s in sorted(function_symbol_map.values(), key=lambda x: x.name.lower()):
         canonical_module = canonical_public_module(s.public_module)
         if canonical_module not in known_modules:
             raise RuntimeError(f"Callable {s.name} resolved to unknown module_name {canonical_module!r}; add it to MODULE_DOCS_METADATA.")
@@ -587,7 +590,7 @@ def main() -> None:
         [
             "## Find a callable",
             "",
-            "Use the finder below to look up public callables.",
+            "Use the finder below to look up public functions.",
             "",
             '<div class="callable-finder" data-callable-finder>',
             '  <label class="callable-finder-label" for="callable-finder-input">Search callables</label>',
@@ -611,7 +614,7 @@ def main() -> None:
         ]
     )
     all_items: list[str] = []
-    for s in sorted(symbol_map.values(), key=lambda x: x.name.lower()):
+    for s in sorted(function_symbol_map.values(), key=lambda x: x.name.lower()):
         step_slug = step_slugs.get(str(docs_metadata[s.name]["workflow_step"]))
         symbol_link = f"./{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.public_module}/#{s.name}"
         starter_path = ", ".join(sorted(starter_symbol_to_notebooks.get(s.name, set()))) or "—"
