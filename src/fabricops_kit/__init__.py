@@ -30,7 +30,6 @@ from .data_governance import (
     COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET,
     REJECTED_COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET,
     DEFAULT_GOVERNANCE_WIDGET_CONFIG,
-    PDPA_PERSONAL_IDENTIFIER_PROMPT,
     build_approved_governance_records,
     build_governance_classification_records,
     build_governance_prompt_context,
@@ -58,7 +57,6 @@ from .ai import (
     parse_manual_ai_json_response,
 )
 from .data_quality import (
-    DQ_RULE_SUGGESTION_PROMPT_TEMPLATE,
     DQEnforcementResult,
     approved_dq_rules_from_review_rows,
     attach_rule_metadata_keys,
