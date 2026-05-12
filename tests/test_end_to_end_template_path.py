@@ -153,3 +153,28 @@ def test_essential_callable_coverage_in_current_starter_notebooks():
     }
     missing = essentials - present - allowed_missing
     assert missing == set(), f"Missing essential callables in templates: {sorted(missing)}"
+
+
+def test_01_data_agreement_template_exists_and_contains_required_context_fields():
+    text = Path("templates/notebooks/01_data_agreement_template.ipynb").read_text(encoding="utf-8")
+    for token in [
+        "AGREEMENT_ID",
+        "APPROVED_USAGE",
+        "BUSINESS_CONTEXT",
+        "ReviewWorkflowConfig",
+        "METADATA_DATA_AGREEMENT",
+    ]:
+        assert token in text
+
+
+def test_01_data_agreement_template_has_no_dq_enforcement_or_column_widget_execution():
+    text = Path("templates/notebooks/01_data_agreement_template.ipynb").read_text(encoding="utf-8")
+    forbidden = [
+        "enforce_dq_rules(",
+        "run_dq_rules(",
+        "capture_column_business_context(",
+        "review_dq_rules(",
+        "review_column_governance_context(",
+    ]
+    for token in forbidden:
+        assert token not in text
