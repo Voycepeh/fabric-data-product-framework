@@ -27,7 +27,10 @@ from .data_lineage import (
     validate_lineage_steps,
 )
 from .data_governance import (
+    build_approved_governance_records,
     build_governance_classification_records,
+    build_governance_prompt_context,
+    build_governance_review_rows,
     classify_column,
     classify_columns,
     summarize_governance_classifications,
@@ -64,6 +67,8 @@ __version__ = "0.1.0"
 __all__ = [
     "review_dq_rule_deactivations",
     "DQEnforcementResult",
+    "build_dq_review_rows",
+    "approved_dq_rules_from_review_rows",
     "review_dq_rules",
     "draft_dq_rules",
     "write_dq_rules",
@@ -96,6 +101,9 @@ __all__ = [
     "summarize_drift_results",
     "classify_column",
     "classify_columns",
+    "build_governance_prompt_context",
+    "build_governance_review_rows",
+    "build_approved_governance_records",
     "build_governance_classification_records",
     "write_governance_classifications",
     "summarize_governance_classifications",

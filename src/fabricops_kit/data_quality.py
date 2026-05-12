@@ -128,6 +128,37 @@ def _extract_dq_rules(response_df, table_name: str, response_col: str = "respons
     return list(deduped.values())
 
 
+def build_dq_review_rows(suggested_rules: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Build notebook-editable DQ review rows without changing rule taxonomy."""
+    rows: list[dict[str, Any]] = []
+    for rule in suggested_rules or []:
+        rows.append(
+            {
+                "suggestion_type": "dq_rule",
+                "target_column": (rule.get("columns") or [None])[0],
+                "rule_name": rule.get("rule_type"),
+                "proposed_rule_payload": json.dumps(rule, sort_keys=True),
+                "business_reason": rule.get("description", ""),
+                "evidence": "",
+                "confidence": None,
+                "approval_status": "pending",
+                "reviewer_notes": "",
+            }
+        )
+    return rows
+
+
+def approved_dq_rules_from_review_rows(review_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Return approved canonical DQ rules from notebook review rows."""
+    approved: list[dict[str, Any]] = []
+    for row in review_rows or []:
+        if str(row.get("approval_status", "")).lower() != "approved":
+            continue
+        payload = row.get("proposed_rule_payload") or "{}"
+        approved.append(json.loads(payload) if isinstance(payload, str) else dict(payload))
+    return approved
+
+
 def validate_dq_rules(rules: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Validate canonical DQ rules before enforcement.
 
@@ -827,5 +858,4 @@ def review_dq_rule_deactivations(active_rules, table_name: str):
     ui = widgets.VBox([title, progress, summary, form_box, status], layout=widgets.Layout(border="1px solid #ddd", padding="12px", width="850px"))
     refresh()
     ipy_display(ui)
-
 

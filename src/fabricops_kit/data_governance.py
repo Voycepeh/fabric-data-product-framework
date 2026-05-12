@@ -36,6 +36,71 @@ DEFAULT_ACTION_BY_CLASSIFICATION = {
 }
 
 
+def build_governance_prompt_context(
+    business_context: str,
+    approved_usage: str,
+    dataset_context: str,
+    profile_context: str = "",
+    glossary_context: str = "",
+    steward_notes: str = "",
+) -> dict[str, str]:
+    """Build first-class governance prompt context fields for notebook workflows."""
+    return {
+        "business_context": business_context or "",
+        "approved_usage": approved_usage or "",
+        "dataset_context": dataset_context or "",
+        "profile_context": profile_context or "",
+        "glossary_context": glossary_context or "",
+        "steward_notes": steward_notes or "",
+    }
+
+
+def build_governance_review_rows(classifications: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Convert governance suggestions into notebook-editable review rows."""
+    rows: list[dict[str, Any]] = []
+    for item in classifications or []:
+        rows.append(
+            {
+                "suggestion_type": "governance_classification",
+                "target_column": item.get("column_name"),
+                "rule_name": "classification",
+                "proposed_rule_payload": json.dumps(_to_jsonable(item), sort_keys=True),
+                "business_reason": item.get("reason", ""),
+                "evidence": json.dumps(_to_jsonable(item.get("evidence") or {}), sort_keys=True),
+                "confidence": item.get("confidence"),
+                "approval_status": "pending",
+                "reviewer_notes": "",
+                "approved_label": item.get("suggested_classification"),
+            }
+        )
+    return rows
+
+
+def build_approved_governance_records(review_rows: list[dict[str, Any]], dataset_name: str, table_name: str, run_id: str | None = None) -> list[dict[str, Any]]:
+    """Convert reviewed governance rows into approval-ready metadata records."""
+    out: list[dict[str, Any]] = []
+    for row in review_rows or []:
+        if str(row.get("approval_status", "")).lower() != "approved":
+            continue
+        payload = row.get("proposed_rule_payload") or "{}"
+        suggestion = json.loads(payload) if isinstance(payload, str) else dict(payload)
+        out.append(
+            {
+                "run_id": run_id,
+                "dataset_name": dataset_name,
+                "table_name": table_name,
+                "column_name": row.get("target_column"),
+                "approved_classification": row.get("approved_label") or suggestion.get("suggested_classification"),
+                "business_reason": row.get("business_reason"),
+                "reviewer_notes": row.get("reviewer_notes", ""),
+                "evidence_json": row.get("evidence", "{}"),
+                "source_suggestion_json": json.dumps(_to_jsonable(suggestion), sort_keys=True),
+                "status": "approved",
+            }
+        )
+    return out
+
+
 def _normalize_columns(profile: dict | list[dict]) -> list[dict]:
     if isinstance(profile, dict):
         columns = profile.get("columns")

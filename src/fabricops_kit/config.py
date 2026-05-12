@@ -98,12 +98,18 @@ class AIPromptConfig:
     dq_rule_candidate_template: str
     governance_candidate_template: str
     handover_summary_template: str
+    governance_review_template: str = (
+        "Use business_context={business_context}, approved_usage={approved_usage}, dataset_context={dataset_context}, "
+        "profile_context={profile_context}, glossary_context={glossary_context}, steward_notes={steward_notes}. "
+        "Return JSON rows with suggestion_type,target_column,proposed_label,business_reason,evidence,confidence."
+    )
 
     def __post_init__(self) -> None:
         for label, value in {
             "dq_rule_candidate_template": self.dq_rule_candidate_template,
             "governance_candidate_template": self.governance_candidate_template,
             "handover_summary_template": self.handover_summary_template,
+            "governance_review_template": self.governance_review_template,
         }.items():
             if not isinstance(value, str) or not value.strip():
                 raise ValueError(f"{label} must be a non-empty string.")
@@ -259,6 +265,18 @@ class GovernanceConfig:
 
 
 @dataclass(frozen=True)
+class ReviewWorkflowConfig:
+    """Notebook-table review settings for DQ and governance suggestion approval."""
+
+    business_context: str = ""
+    approved_usage: str = ""
+    governance_suggestions_table: str = "metadata.governance_suggestions"
+    governance_approved_table: str = "metadata.governance_approved"
+    dq_review_table: str = "metadata.dq_review"
+    default_approval_status: str = "pending"
+
+
+@dataclass(frozen=True)
 class LineageConfig:
     """Default lineage-capture behavior for pipeline traceability.
 
@@ -295,6 +313,8 @@ class FrameworkConfig:
         Default quality-policy settings.
     governance_config : GovernanceConfig
         Default governance-policy settings.
+    review_workflow_config : ReviewWorkflowConfig
+        Notebook-native review, approval, and metadata destination settings.
     lineage_config : LineageConfig
         Default lineage capture behavior.
 
@@ -317,6 +337,7 @@ class FrameworkConfig:
     ai_prompt_config: AIPromptConfig
     quality_config: QualityConfig
     governance_config: GovernanceConfig
+    review_workflow_config: ReviewWorkflowConfig
     lineage_config: LineageConfig
 
 
@@ -421,6 +442,7 @@ def _validate_framework_config(config: FrameworkConfig | dict[str, Any]) -> Fram
             "ai_prompt_config",
             "quality_config",
             "governance_config",
+            "review_workflow_config",
             "lineage_config",
         }
         missing_keys = sorted(required_keys.difference(config.keys()))
@@ -440,6 +462,8 @@ def _validate_framework_config(config: FrameworkConfig | dict[str, Any]) -> Fram
         raise ValueError("quality_config must be a QualityConfig object.")
     if not isinstance(normalized.governance_config, GovernanceConfig):
         raise ValueError("governance_config must be a GovernanceConfig object.")
+    if not isinstance(normalized.review_workflow_config, ReviewWorkflowConfig):
+        raise ValueError("review_workflow_config must be a ReviewWorkflowConfig object.")
     if not isinstance(normalized.lineage_config, LineageConfig):
         raise ValueError("lineage_config must be a LineageConfig object.")
 

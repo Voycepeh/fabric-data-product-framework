@@ -10,6 +10,7 @@ from fabricops_kit.config import (
     NotebookRuntimeConfig,
     PathConfig,
     QualityConfig,
+    ReviewWorkflowConfig,
 )
 from fabricops_kit.ai import (
     build_governance_candidate_prompt,
@@ -97,6 +98,7 @@ def _build_config():
         ),
         quality_config=QualityConfig(),
         governance_config=GovernanceConfig(),
+        review_workflow_config=ReviewWorkflowConfig(),
         lineage_config=LineageConfig(),
     )
 
