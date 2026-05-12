@@ -2,7 +2,7 @@
 
 Function Reference/workflow pages are the primary entrypoint. Module pages below are secondary technical references.
 
-Short-form modules remain import-compatible aliases but are intentionally hidden from this user-facing catalogue.
+All public notebook-facing modules are listed below. Function pages indicate whether each callable is essential, optional, or internal.
 
 - [`environment_config`](environment_config.md)
 - [`fabric_input_output`](fabric_input_output.md)
