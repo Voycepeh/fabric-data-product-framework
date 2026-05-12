@@ -38,11 +38,10 @@ MODULE_DOCS_METADATA: list[ModuleDocMetadata] = [
     {"module_name": "data_quality", "visibility": "public", "module_summary": "Deterministic DQ rule validation and enforcement helpers.", "sidebar_group": "Modules", "sidebar_include": True},
     {"module_name": "data_governance", "visibility": "public", "module_summary": "Governance classification helpers and metadata builders.", "sidebar_group": "Modules", "sidebar_include": True},
     {"module_name": "data_lineage", "visibility": "public", "module_summary": "Lineage extraction and handover documentation helpers.", "sidebar_group": "Modules", "sidebar_include": True},
-        {"module_name": "data_drift", "visibility": "internal", "module_summary": "Schema/profile/partition drift checks supporting notebook validation.", "sidebar_group": "Advanced", "sidebar_include": False},
-        {"module_name": "handover_documentation", "visibility": "internal", "module_summary": "Run summary and handover markdown helpers.", "sidebar_group": "Advanced", "sidebar_include": False},
-    {"module_name": "technical_audit_columns", "visibility": "internal", "module_summary": "Technical/audit enrichment helpers for pipeline outputs.", "sidebar_group": "Advanced", "sidebar_include": False},
-    {"module_name": "notebook_review", "visibility": "internal", "module_summary": "Human-in-the-loop DQ review helpers.", "sidebar_group": "Advanced", "sidebar_include": False},
-    {"module_name": "ai", "visibility": "internal", "module_summary": "AI-assisted helper utilities and prompt builders.", "sidebar_group": "Advanced", "sidebar_include": False},
+        {"module_name": "data_drift", "visibility": "public", "module_summary": "Schema/profile/partition drift checks supporting notebook validation.", "sidebar_group": "Modules", "sidebar_include": True},
+        {"module_name": "run_summary", "visibility": "public", "module_summary": "Run summary and handover markdown helpers.", "sidebar_group": "Modules", "sidebar_include": True},
+    {"module_name": "technical_columns", "visibility": "public", "module_summary": "Technical/audit enrichment helpers for pipeline outputs.", "sidebar_group": "Modules", "sidebar_include": True},
+    {"module_name": "ai", "visibility": "public", "module_summary": "AI-assisted helper utilities and prompt builders.", "sidebar_group": "Modules", "sidebar_include": True},
 ]
 
 class TemplateFlowSegmentMetadata(TypedDict):

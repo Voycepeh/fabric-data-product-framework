@@ -28,8 +28,8 @@ PUBLIC_MODULE_PREFERRED_NAMES = {
     "data_governance": "data_governance",
     "metadata": "data_product_metadata",
     "data_lineage": "data_lineage",
-    "run_summary": "handover_documentation",
-    "technical_columns": "technical_audit_columns",
+    "run_summary": "run_summary",
+    "technical_columns": "technical_columns",
 }
 VISIBLE_PUBLIC_MODULES = [
     "environment_config",
@@ -39,13 +39,14 @@ VISIBLE_PUBLIC_MODULES = [
     "data_quality",
     "data_governance",
     "data_lineage",
+    "data_drift",
+    "run_summary",
+    "technical_columns",
+    "ai",
 ]
 HIDDEN_SUPPORTING_MODULES = [
     "runtime_context",
-    "data_drift",
     "data_product_metadata",
-    "handover_documentation",
-    "technical_audit_columns",
 ]
 STEP_FALLBACK_NOTES = {
     "5": "No public callable is currently mapped to this step. Use exploration notebook prompts to capture transformation rationale before pipeline enforcement.",

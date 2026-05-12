@@ -72,7 +72,7 @@ Pipeline notebook flow for deterministic enforcement and controlled publishing.
   <tbody>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-06b-runtime-standards/standardize_output_columns/"><code>standardize_output_columns</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/technical_audit_columns/" title="Open technical_audit_columns module page" aria-label="Open technical_audit_columns module page">technical_audit_columns</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/technical_columns/" title="Open technical_columns module page" aria-label="Open technical_columns module page">technical_columns</a></td>
       <td data-label="Purpose">Apply canonical technical/audit enrichment in one notebook-facing wrapper.</td>
     </tr>
     <tr>
@@ -185,12 +185,12 @@ Pipeline notebook flow for deterministic enforcement and controlled publishing.
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-10-lineage-handover-documentation/build_run_summary/"><code>build_run_summary</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/handover_documentation/" title="Open handover_documentation module page" aria-label="Open handover_documentation module page">handover_documentation</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/run_summary/" title="Open run_summary module page" aria-label="Open run_summary module page">run_summary</a></td>
       <td data-label="Purpose">Build a handover-friendly summary for one data product run.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-10-lineage-handover-documentation/render_run_summary_markdown/"><code>render_run_summary_markdown</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/handover_documentation/" title="Open handover_documentation module page" aria-label="Open handover_documentation module page">handover_documentation</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/run_summary/" title="Open run_summary module page" aria-label="Open run_summary module page">run_summary</a></td>
       <td data-label="Purpose">Render a run summary dictionary into Markdown for handover notes.</td>
     </tr>
   </tbody>
