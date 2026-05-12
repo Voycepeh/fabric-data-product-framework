@@ -1,30 +1,53 @@
-# Contract model
+# Assembled Contract Model
 
-This page is the conceptual source of truth for what a FabricOps data contract contains.
+This page describes the assembled handover shape of a FabricOps data contract.
 
-## What a FabricOps data contract must answer
+FabricOps still produces a data contract. The contract is assembled from approved metadata evidence across profiling, DQ, governance, drift, lineage, and runtime workflows.
 
-| Contract question | Contract evidence |
+## What the assembled contract must answer
+
+| Contract question | Assembled evidence source |
 | --- | --- |
-| What dataset is used or produced? | Source and target object identifiers, agreed dataset purpose, and schema context. |
-| What is the approved usage? | Approved usage boundaries from the data sharing agreement and governance review. |
-| What columns must exist? | Expected schema and structural column definitions. |
-| What are required columns? | Mandatory fields that must be present and non-null for the contract to pass. |
-| What are business keys and grain? | Key columns and row-grain definition used for uniqueness and joins. |
-| What DQ rules must pass? | Approved rule set, severity, and threshold expectations. |
-| Which columns are sensitive? | Approved sensitivity/classification labels and handling requirements. |
-| Who approved it? | Named owners/stewards and approval checkpoints. |
-| What run evidence is captured? | DQ results, failed-row evidence, schema/runtime snapshots, and run summaries. |
+| What dataset is used or produced? | Dataset/table identity and approved usage metadata |
+| What is the approved usage? | Governance approval and usage constraints metadata |
+| What columns exist and how do they behave? | Profile and schema evidence |
+| What quality expectations are approved? | Approved DQ rule metadata |
+| What quality evidence was observed in this run? | DQ results and quarantine evidence |
+| What drift boundaries are approved and what drift occurred? | Drift guardrails and drift results |
+| How was the output produced? | Lineage and transformation evidence |
+| When and where did this run execute? | Runtime/run summary metadata |
 
-## Contract lifecycle (conceptual)
+## Conceptual assembled shape (handover view)
 
-1. Define approved usage and dataset intent.
-2. Profile source data and draft candidate metadata.
-3. Review and approve DQ and classification metadata.
-4. Persist approved contract metadata.
-5. Enforce approved contract metadata in `03_pc` pipeline runs.
-6. Persist runtime evidence for audit, monitoring, and handover.
+```yaml
+dataset:
+  name: ...
+  domain: ...
+  approved_usage: ...
+schema_profile:
+  columns: [...]
+  profile_summary: ...
+quality:
+  approved_rules: [...]
+  execution_results: [...]
+governance:
+  classifications: [...]
+  usage_constraints: [...]
+drift:
+  guardrails: [...]
+  run_results: [...]
+lineage:
+  inputs: [...]
+  transformations: [...]
+runtime:
+  run_id: ...
+  environment: ...
+  executed_at: ...
+  status: ...
+```
 
-## Relationship to notebook execution
+## Open Data Contract export target
 
-`03_pc` notebooks enforce approved contract metadata at runtime. Notebook ownership and role boundaries are defined in [Notebook Structure](../notebook-structure.md).
+The assembled handover view is the right place to generate an Open Data Contract compatible export (YAML/JSON) for external review and interoperability.
+
+If full compatibility is not yet implemented in a given deployment, treat this as the target export model rather than a claim of complete implementation.

@@ -38,9 +38,9 @@ nav:
       - 00_env_config: notebook-structure/00-env-config.md
       - 02_ex: notebook-structure/02-exploration.md
       - 03_pc: notebook-structure/03-pipeline-contract.md
-  - Metadata and Contracts:
+  - Metadata and Data Contract Assembly:
       - Overview: metadata-and-contracts.md
-      - Contract Model: metadata-and-contracts/contract-model.md
+      - Assembled Contract Model: metadata-and-contracts/contract-model.md
       - Metadata Tables: metadata-and-contracts/metadata-tables.md
   - Deployment and Promotion: deployment-and-promotion.md
   - Install in Fabric: setup/fabric-wheel-install.md

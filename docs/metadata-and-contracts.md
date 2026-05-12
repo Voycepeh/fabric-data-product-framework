@@ -1,31 +1,52 @@
-# Metadata and Contracts
+# Metadata and Data Contract Assembly
 
-This section is the landing page for how FabricOps assembles a governed data contract.
+## 1. What it is
 
-A data contract is the agreed expectation for a dataset: what it is, how it may be used, what quality must pass, and what evidence proves it ran safely.
+FabricOps still produces a data contract.
 
-![FabricOps data contract assembly](assets/data-contract.png)
+The difference is where that contract comes from: FabricOps assembles it from approved metadata evidence instead of maintaining one large standalone contract object as the primary source of truth.
 
-In FabricOps, those expectations are assembled from:
-- source/profile metadata,
-- approved usage,
-- schema and required-field expectations,
-- approved DQ rules,
-- approved sensitivity/classification metadata,
-- approval metadata,
-- environment configuration,
-- transformation logic,
-- runtime evidence.
+## 2. Why contract evidence is assembled in parts
 
-Use the pages below for details:
+Each workflow owns and approves the evidence it is responsible for:
 
-- [Contract model](metadata-and-contracts/contract-model.md)
+| Workflow | Evidence it owns |
+| --- | --- |
+| Profiling | Schema/profile evidence (row counts, nulls, distinct counts, min/max) |
+| Data quality | Approved DQ rules and DQ execution evidence |
+| Governance | Approved classifications, sensitivity, and usage constraints |
+| Drift | Approved guardrails and drift results |
+| Lineage | Transformation and source-to-output mapping evidence |
+| Runtime summary | Run context (run id, notebook/pipeline, timestamps, status, owner) |
+
+This keeps ownership clear and avoids duplicating one workflow's evidence inside another workflow's authoring layer.
+
+## 3. Metadata tables as source of truth
+
+Approved metadata tables are the source of truth. Conceptual table families include:
+
+- `FABRICOPS_PROFILE_RESULTS`
+- `FABRICOPS_DQ_RULES`
+- `FABRICOPS_DQ_RESULTS`
+- `FABRICOPS_GOVERNANCE_CLASSIFICATIONS`
+- `FABRICOPS_DRIFT_GUARDRAILS`
+- `FABRICOPS_DRIFT_RESULTS`
+- `FABRICOPS_LINEAGE_RECORDS`
+- `FABRICOPS_RUN_SUMMARY`
+
+(Use conceptual names where physical table names are not finalized.)
+
+## 4. Handover/export target
+
+At handover, FabricOps joins approved metadata records (for example by dataset, table, column, run, version, and approval status) into the final contract view.
+
+That assembled handover view is the operational data contract output.
+
+Open Data Contract compatible YAML/JSON remains the export target for this assembled contract view.
+
+## 5. Related pages
+
+- [Assembled contract model](metadata-and-contracts/contract-model.md)
 - [Metadata tables](metadata-and-contracts/metadata-tables.md)
 - [Notebook Structure](notebook-structure.md)
 - [Data Quality Rules System](data-quality-rules-system.md)
-
-## Storage and metadata scope
-
-- Source, Unified, and Product stores hold business data.
-- The metadata target holds framework evidence such as contracts, approved rules, profiling outputs, run evidence, and handover records.
-- Metadata is environment-local, so dev and prod metadata remain separate.
