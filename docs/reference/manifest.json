@@ -81,7 +81,8 @@
       "callable_name": "assert_dq_passed",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": "6D"
+      "template_notebook": "03_pc",
+      "template_segment": "Segment 4: Run DQ, split outputs, and publish"
     },
     {
       "module_name": "ai",
@@ -92,7 +93,8 @@
       "callable_name": "build_governance_candidate_prompt",
       "callable_visibility": "public",
       "callable_role": "optional",
-      "workflow_step": 9
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "data_governance",
@@ -103,7 +105,8 @@
       "callable_name": "build_governance_classification_records",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 9
+      "template_notebook": "03_pc",
+      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
     },
     {
       "module_name": "ai",
@@ -114,7 +117,8 @@
       "callable_name": "build_handover_summary_prompt",
       "callable_visibility": "public",
       "callable_role": "optional",
-      "workflow_step": 10
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "data_lineage",
@@ -125,7 +129,8 @@
       "callable_name": "build_lineage_from_notebook_code",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 10
+      "template_notebook": "02_ex",
+      "template_segment": "Optional lineage notes"
     },
     {
       "module_name": "data_lineage",
@@ -136,7 +141,8 @@
       "callable_name": "build_lineage_handover_markdown",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 10
+      "template_notebook": "03_pc",
+      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
     },
     {
       "module_name": "data_lineage",
@@ -147,7 +153,8 @@
       "callable_name": "build_lineage_records",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 10
+      "template_notebook": "03_pc",
+      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
     },
     {
       "module_name": "ai",
@@ -158,7 +165,8 @@
       "callable_name": "build_manual_governance_prompt_package",
       "callable_visibility": "public",
       "callable_role": "optional",
-      "workflow_step": 9
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "ai",
@@ -169,7 +177,8 @@
       "callable_name": "build_manual_handover_prompt_package",
       "callable_visibility": "public",
       "callable_role": "optional",
-      "workflow_step": 10
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "run_summary",
@@ -180,7 +189,8 @@
       "callable_name": "build_run_summary",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 10
+      "template_notebook": "03_pc",
+      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
     },
     {
       "module_name": "data_drift",
@@ -191,7 +201,8 @@
       "callable_name": "check_partition_drift",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 4
+      "template_notebook": "03_pc",
+      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
     },
     {
       "module_name": "data_drift",
@@ -202,7 +213,8 @@
       "callable_name": "check_profile_drift",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 4
+      "template_notebook": "03_pc",
+      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
     },
     {
       "module_name": "data_drift",
@@ -213,7 +225,8 @@
       "callable_name": "check_schema_drift",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 4
+      "template_notebook": "03_pc",
+      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
     },
     {
       "module_name": "data_governance",
@@ -224,7 +237,8 @@
       "callable_name": "classify_column",
       "callable_visibility": "public",
       "callable_role": "optional",
-      "workflow_step": 9
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "data_governance",
@@ -235,7 +249,8 @@
       "callable_name": "classify_columns",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 9
+      "template_notebook": "03_pc",
+      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
     },
     {
       "module_name": "data_quality",
@@ -246,7 +261,8 @@
       "callable_name": "draft_dq_rules",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 8
+      "template_notebook": "02_ex",
+      "template_segment": "Segment 3: AI-assisted drafting (advisory only)"
     },
     {
       "module_name": "data_quality",
@@ -257,7 +273,8 @@
       "callable_name": "enforce_dq_rules",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": "6C"
+      "template_notebook": "03_pc",
+      "template_segment": "Segment 4: Run DQ, split outputs, and publish"
     },
     {
       "module_name": "ai",
@@ -268,7 +285,8 @@
       "callable_name": "generate_governance_candidates_with_fabric_ai",
       "callable_visibility": "public",
       "callable_role": "optional",
-      "workflow_step": 9
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "ai",
@@ -279,7 +297,8 @@
       "callable_name": "generate_handover_summary_with_fabric_ai",
       "callable_visibility": "public",
       "callable_role": "optional",
-      "workflow_step": 10
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "environment_config",
@@ -290,7 +309,8 @@
       "callable_name": "get_path",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": "2A"
+      "template_notebook": "00_env_config",
+      "template_segment": "Segment 2: Define environment targets and notebook policy"
     },
     {
       "module_name": "fabric_input_output",
@@ -301,7 +321,8 @@
       "callable_name": "lakehouse_csv_read",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 3
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "fabric_input_output",
@@ -312,7 +333,8 @@
       "callable_name": "lakehouse_excel_read_as_spark",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 3
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "fabric_input_output",
@@ -323,7 +345,8 @@
       "callable_name": "lakehouse_parquet_read_as_spark",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 3
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "fabric_input_output",
@@ -334,7 +357,8 @@
       "callable_name": "lakehouse_table_read",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 3
+      "template_notebook": "02_ex",
+      "template_segment": "Segment 2: Profile source and capture evidence"
     },
     {
       "module_name": "fabric_input_output",
@@ -345,7 +369,8 @@
       "callable_name": "lakehouse_table_write",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": "6D"
+      "template_notebook": "03_pc",
+      "template_segment": "Segment 4: Run DQ, split outputs, and publish"
     },
     {
       "module_name": "environment_config",
@@ -356,7 +381,8 @@
       "callable_name": "load_fabric_config",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": "2A"
+      "template_notebook": "00_env_config",
+      "template_segment": "Segment 2: Define environment targets and notebook policy"
     },
     {
       "module_name": "ai",
@@ -367,7 +393,8 @@
       "callable_name": "parse_manual_ai_json_response",
       "callable_visibility": "public",
       "callable_role": "optional",
-      "workflow_step": 10
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "data_lineage",
@@ -378,7 +405,8 @@
       "callable_name": "plot_lineage_steps",
       "callable_visibility": "public",
       "callable_role": "optional",
-      "workflow_step": 10
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "data_profiling",
@@ -389,7 +417,8 @@
       "callable_name": "profile_dataframe",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 4
+      "template_notebook": "02_ex",
+      "template_segment": "Segment 2: Profile source and capture evidence"
     },
     {
       "module_name": "run_summary",
@@ -400,7 +429,8 @@
       "callable_name": "render_run_summary_markdown",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 10
+      "template_notebook": "03_pc",
+      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
     },
     {
       "module_name": "data_quality",
@@ -411,7 +441,8 @@
       "callable_name": "review_dq_rule_deactivations",
       "callable_visibility": "public",
       "callable_role": "optional",
-      "workflow_step": 8
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "data_quality",
@@ -422,7 +453,8 @@
       "callable_name": "review_dq_rules",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 8
+      "template_notebook": "02_ex",
+      "template_segment": "Segment 3: AI-assisted drafting (advisory only)"
     },
     {
       "module_name": "data_lineage",
@@ -433,7 +465,8 @@
       "callable_name": "scan_notebook_cells",
       "callable_visibility": "public",
       "callable_role": "optional",
-      "workflow_step": 10
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "data_lineage",
@@ -444,7 +477,8 @@
       "callable_name": "scan_notebook_lineage",
       "callable_visibility": "public",
       "callable_role": "optional",
-      "workflow_step": 10
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "fabric_input_output",
@@ -455,7 +489,8 @@
       "callable_name": "seed_minimal_sample_source_table",
       "callable_visibility": "public",
       "callable_role": "optional",
-      "workflow_step": 4
+      "template_notebook": "02_ex",
+      "template_segment": "Segment 2: Profile source and capture evidence"
     },
     {
       "module_name": "environment_config",
@@ -466,7 +501,8 @@
       "callable_name": "setup_fabricops_notebook",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": "2B"
+      "template_notebook": "00_env_config",
+      "template_segment": "Segment 5: Run startup checks and show resolved paths"
     },
     {
       "module_name": "technical_columns",
@@ -477,7 +513,8 @@
       "callable_name": "standardize_output_columns",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": "6B"
+      "template_notebook": "03_pc",
+      "template_segment": "Segment 3: Transform and apply runtime standards"
     },
     {
       "module_name": "data_drift",
@@ -488,7 +525,8 @@
       "callable_name": "summarize_drift_results",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 4
+      "template_notebook": "03_pc",
+      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
     },
     {
       "module_name": "data_governance",
@@ -499,7 +537,8 @@
       "callable_name": "summarize_governance_classifications",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 9
+      "template_notebook": "03_pc",
+      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
     },
     {
       "module_name": "data_quality",
@@ -510,7 +549,8 @@
       "callable_name": "validate_dq_rules",
       "callable_visibility": "public",
       "callable_role": "optional",
-      "workflow_step": "6C"
+      "template_notebook": "03_pc",
+      "template_segment": "Segment 3: Transform and apply runtime standards"
     },
     {
       "module_name": "data_lineage",
@@ -521,7 +561,8 @@
       "callable_name": "validate_lineage_steps",
       "callable_visibility": "public",
       "callable_role": "optional",
-      "workflow_step": 10
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "fabric_input_output",
@@ -532,7 +573,8 @@
       "callable_name": "warehouse_read",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 3
+      "template_notebook": "02_ex",
+      "template_segment": "Segment 2: Profile source and capture evidence"
     },
     {
       "module_name": "fabric_input_output",
@@ -543,7 +585,8 @@
       "callable_name": "warehouse_write",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": "6D"
+      "template_notebook": "03_pc",
+      "template_segment": "Segment 4: Run DQ, split outputs, and publish"
     },
     {
       "module_name": "data_quality",
@@ -554,7 +597,8 @@
       "callable_name": "write_dq_rules",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 8
+      "template_notebook": "02_ex",
+      "template_segment": "Segment 3: AI-assisted drafting (advisory only)"
     },
     {
       "module_name": "data_governance",
@@ -565,7 +609,8 @@
       "callable_name": "write_governance_classifications",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "workflow_step": 9
+      "template_notebook": "03_pc",
+      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
     }
   ]
 }

@@ -48,10 +48,6 @@ HIDDEN_SUPPORTING_MODULES = [
     "runtime_context",
     "data_product_metadata",
 ]
-STEP_FALLBACK_NOTES = {
-    "5": "No public callable is currently mapped to this step. Use exploration notebook prompts to capture transformation rationale before pipeline enforcement.",
-}
-
 @dataclass
 class Symbol:
     name: str
@@ -144,18 +140,6 @@ def parse_docs_metadata() -> dict[str, dict[str, Any]]:
     raise RuntimeError("Could not parse PUBLIC_SYMBOL_DOCS from docs_metadata.py")
 
 
-def parse_workflow_step_docs() -> list[dict[str, Any]]:
-    tree = ast.parse(DOCS_METADATA_PATH.read_text(encoding="utf-8"))
-    for node in tree.body:
-        is_assign = isinstance(node, ast.Assign) and any(
-            isinstance(t, ast.Name) and t.id == "WORKFLOW_STEP_DOCS" for t in node.targets
-        )
-        is_annassign = isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and node.target.id == "WORKFLOW_STEP_DOCS"
-        if (is_assign or is_annassign) and node.value is not None:
-            return ast.literal_eval(node.value)
-    raise RuntimeError("Could not parse WORKFLOW_STEP_DOCS from docs_metadata.py")
-
-
 def parse_template_flow_docs() -> list[dict[str, Any]]:
     tree = ast.parse(DOCS_METADATA_PATH.read_text(encoding="utf-8"))
     for node in tree.body:
@@ -185,26 +169,19 @@ def internal_helper_link(actual_module: str, helper: str) -> str:
     return f"../../reference/internal/{actual_module}/{helper}.md"
 
 
-def public_reference_link(symbol: str, docs_metadata: dict[str, dict[str, Any]], step_slugs: dict[str, str]) -> str:
+def public_reference_link(symbol: str, docs_metadata: dict[str, dict[str, Any]]) -> str:
     """Return docs-relative link target for a public callable reference page."""
     if symbol not in docs_metadata:
         raise RuntimeError(f"Missing PUBLIC_SYMBOL_DOCS entry for exported symbol: {symbol}")
-    step = docs_metadata[symbol].get("workflow_step")
-    if step is None:
-        raise RuntimeError(f"Missing workflow_step metadata for exported symbol: {symbol}")
-    step_slug = step_slugs.get(str(step))
-    if not step_slug:
-        raise RuntimeError(f"Missing WORKFLOW_STEP_DOCS slug mapping for workflow step {step} ({symbol})")
-    return f"../../reference/{step_slug}/{symbol}.md"
+    return f"../../reference/{symbol}.md"
 
 
 def callable_docs_link(
-    symbol_name: str, module: str, docs_metadata: dict[str, dict[str, Any]], step_slugs: dict[str, str]
+    symbol_name: str, module: str, docs_metadata: dict[str, dict[str, Any]]
 ) -> str:
     """Return a safe docs link for a public callable."""
-    workflow_step = docs_metadata[symbol_name].get("workflow_step")
-    if workflow_step is not None:
-        return public_reference_link(symbol_name, docs_metadata, step_slugs)
+    if symbol_name in docs_metadata:
+        return public_reference_link(symbol_name, docs_metadata)
     return f"../modules/{module}/#{symbol_name}"
 
 
@@ -223,8 +200,6 @@ def main() -> None:
     module_data = {p.stem: parse_module(p) for p in PKG_DIR.glob("*.py") if p.name != "__init__.py"}
 
     docs_metadata = parse_docs_metadata()
-    step_docs = parse_workflow_step_docs()
-    step_slugs = {str(step["number"]): step["slug"] for step in step_docs}
     template_flow_docs = parse_template_flow_docs()
     module_docs_metadata = parse_module_docs_metadata()
 
@@ -260,10 +235,6 @@ def main() -> None:
         meta = docs_metadata[symbol.name]
         if meta["kind"] != symbol.obj_type:
             raise RuntimeError(f"Metadata kind mismatch for {symbol.name}: expected {symbol.obj_type}, found {meta['kind']}")
-        step = meta.get("workflow_step")
-        step_key = str(step) if step is not None else None
-        if step_key is not None and step_key not in step_slugs:
-            raise RuntimeError(f"Invalid workflow_step {step} for {symbol.name}; expected one of {sorted(step_slugs)}")
         symbol.summary = meta.get("summary_override") or symbol.summary
         symbol.purpose = meta.get("purpose") or symbol.summary or "—"
         enforce_placeholder_guard = symbol.actual_module in {"config", "ai"}
@@ -271,7 +242,6 @@ def main() -> None:
             _assert_non_placeholder_summary(symbol.name, "summary", symbol.summary)
         if enforce_placeholder_guard and symbol.purpose and symbol.purpose != "—":
             _assert_non_placeholder_summary(symbol.name, "purpose", symbol.purpose)
-        step_rank = int(str(step).split("A")[0].split("B")[0].split("C")[0].split("D")[0]) if step is not None else 99
         symbol_role = meta.get("role")
         if not symbol_role:
             raise RuntimeError(f"Missing explicit role for {symbol.name} in PUBLIC_SYMBOL_DOCS")
@@ -328,7 +298,7 @@ def main() -> None:
             lines.extend(["| Callable | Type | Summary | Related helpers |", "|---|---|---|---|"])
             for s in recommended:
                 related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
-                callable_link = callable_docs_link(s.name, module, docs_metadata, step_slugs)
+                callable_link = callable_docs_link(s.name, module, docs_metadata)
                 lines.append(
                     f"| [`{s.name}`]({callable_link}) | {s.obj_type} | {s.summary or '—'} | "
                     f"{', '.join(f'[`{r}`]({internal_helper_link(s.actual_module, r)}) (internal)' for r in related) or '—'} |"
@@ -348,7 +318,7 @@ def main() -> None:
                 lines.extend(["| Callable | Type | Summary | Related helpers |", "|---|---|---|---|"])
                 for s in advanced:
                     related = sorted([c for c in info["calls"].get(s.name, set()) if c in info["functions"] and c.startswith("_")])
-                    callable_link = callable_docs_link(s.name, module, docs_metadata, step_slugs)
+                    callable_link = callable_docs_link(s.name, module, docs_metadata)
                     lines.append(
                         f"| [`{s.name}`]({callable_link}) | {s.obj_type} | {s.summary or '—'} | "
                         f"{', '.join(f'[`{r}`]({internal_helper_link(s.actual_module, r)}) (internal)' for r in related) or '—'} |"
@@ -364,7 +334,7 @@ def main() -> None:
             for helper in internal_fns:
                 users = sorted([u for u in info["used_by"].get(helper, set()) if u in {p.name for p in public_in_module}])
                 users_links = ", ".join(
-                    f"[`{u}`]({callable_docs_link(u, module, docs_metadata, step_slugs)})" for u in users
+                    f"[`{u}`]({callable_docs_link(u, module, docs_metadata)})" for u in users
                 ) or "—"
                 lines.append(f"| [`{helper}`]({internal_helper_link(actual_module, helper)}) | {users_links} |")
         else:
@@ -372,7 +342,7 @@ def main() -> None:
 
         if public_in_module:
             for s in sorted([x for x in public_in_module if x.role in {"essential", "optional"}], key=lambda x: x.name.lower()):
-                expected_target = callable_docs_link(s.name, module, docs_metadata, step_slugs)
+                expected_target = callable_docs_link(s.name, module, docs_metadata)
                 expected_link = f"[`{s.name}`]({expected_target})"
                 if not any(expected_link in line for line in lines):
                     raise RuntimeError(f"Missing callable table link for {module}.{s.name}")
@@ -424,10 +394,38 @@ def main() -> None:
                 "callable_name": s.name,
                 "callable_visibility": "public",
                 "callable_role": callable_role,
-                "workflow_step": docs_metadata[s.name]["workflow_step"],
+                "template_notebook": docs_metadata[s.name].get("template_notebook"),
+                "template_segment": docs_metadata[s.name].get("template_segment"),
             }
         )
     MANIFEST_PATH.write_text(json.dumps({"modules": module_docs_metadata, "callables": manifest_rows}, indent=2) + "\n", encoding="utf-8")
+
+    reference_dir = ROOT / "docs" / "reference"
+    reference_dir.mkdir(parents=True, exist_ok=True)
+    for s in sorted(function_symbol_map.values(), key=lambda item: item.name.lower()):
+        meta = docs_metadata[s.name]
+        page_lines = [
+            f"# `{s.name}`",
+            "",
+            s.summary or "—",
+            "",
+            "## Template context",
+            "",
+            f"- Used in notebook: `{meta.get('template_notebook', '—')}`",
+            f"- Segment: {meta.get('template_segment', '—')}",
+            f"- Role: {s.role}",
+            f"- Module: `{s.public_module}`",
+            "",
+            "## API reference",
+            "",
+            f"::: {PACKAGE_NAME}.{s.actual_module}.{s.name}",
+            "",
+            "## Module page",
+            "",
+            f"- [{s.public_module} module](../api/modules/{s.public_module}.md)",
+            "",
+        ]
+        (reference_dir / f"{s.name}.md").write_text("\n".join(page_lines), encoding="utf-8", newline="\n")
 
     starter_symbol_to_notebooks: dict[str, set[str]] = {}
     for flow in template_flow_docs:
@@ -526,8 +524,7 @@ def main() -> None:
             for symbol_name in segment["symbols"]:
                 s = symbol_map[symbol_name]
                 info = module_data[s.actual_module]
-                step_slug = step_slugs.get(str(docs_metadata[s.name]["workflow_step"]))
-                symbol_link = f"../../reference/{step_slug}/{s.name}/" if step_slug else f"../../api/modules/{s.public_module}/#{s.name}"
+                symbol_link = f"../../reference/{s.name}/"
                 segment_rows.append([
                     _anchor(symbol_link, s.name, code=True),
                     _module_link(s.public_module, base_prefix="../../"),
@@ -617,8 +614,7 @@ def main() -> None:
     )
     all_items: list[str] = []
     for s in sorted(function_symbol_map.values(), key=lambda x: x.name.lower()):
-        step_slug = step_slugs.get(str(docs_metadata[s.name]["workflow_step"]))
-        symbol_link = f"./{step_slug}/{s.name}/" if step_slug else f"../api/modules/{s.public_module}/#{s.name}"
+        symbol_link = f"./{s.name}/"
         starter_path = ", ".join(sorted(starter_symbol_to_notebooks.get(s.name, set()))) or "—"
         purpose = s.purpose or s.summary or "—"
         all_items.extend(

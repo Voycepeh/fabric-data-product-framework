@@ -8,7 +8,7 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`standardize_output_columns`](../../reference/step-06b-runtime-standards/standardize_output_columns.md) | function | Apply canonical technical/audit enrichment in one notebook-facing wrapper. | — |
+| [`standardize_output_columns`](../../reference/standardize_output_columns.md) | function | Apply canonical technical/audit enrichment in one notebook-facing wrapper. | — |
 
 ## Optional callables
 
