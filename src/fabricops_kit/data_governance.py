@@ -13,6 +13,7 @@ from typing import Any
 
 from fabricops_kit._utils import _to_jsonable
 from fabricops_kit.metadata import build_metadata_column_key, build_metadata_table_key, _now_utc_iso, _resolve_action_by
+from fabricops_kit.config import DEFAULT_GOVERNANCE_PERSONAL_IDENTIFIER_PROMPT_TEMPLATE
 
 DEFAULT_CLASSIFICATION_TERMS: dict[str, list[str]] = {
     "identifier": ["staff_id", "student_id", "employee_id", "user_id", "person_id", "nric", "national_id", "passport", "matric", "account_id"],
@@ -42,7 +43,7 @@ DEFAULT_GOVERNANCE_WIDGET_CONFIG = {
 }
 COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET: list[dict] = []
 REJECTED_COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET: list[dict] = []
-PDPA_PERSONAL_IDENTIFIER_PROMPT = "Classify personal identifier type using approved_business_context evidence."
+PDPA_PERSONAL_IDENTIFIER_PROMPT = DEFAULT_GOVERNANCE_PERSONAL_IDENTIFIER_PROMPT_TEMPLATE
 
 
 def build_governance_prompt_context(

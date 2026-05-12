@@ -6,16 +6,11 @@ from datetime import datetime, timezone
 import importlib
 
 from .metadata import build_metadata_column_key, build_metadata_table_key
+from .config import DEFAULT_BUSINESS_CONTEXT_PROMPT_TEMPLATE
 
 COLUMN_BUSINESS_CONTEXT_FROM_WIDGET: list[dict] = []
 REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET: list[dict] = []
-
-BUSINESS_CONTEXT_PROMPT = """
-Infer business meaning for a column. Do not classify personal data.
-Use: table_name={table_name}, table_context={table_context}, column_name={column_name}, data_type={data_type},
-null_count={null_count}, distinct_count={distinct_count}, observed_values_sample={observed_values_sample}.
-Return Python dict BUSINESS_CONTEXT={{"column_name": "...", "business_context": "...", "notes": "..."}}
-""".strip()
+BUSINESS_CONTEXT_PROMPT = DEFAULT_BUSINESS_CONTEXT_PROMPT_TEMPLATE
 
 
 def prepare_business_context_profile_input(profile_rows: list[dict], table_name: str, table_context: str = "") -> list[dict]:

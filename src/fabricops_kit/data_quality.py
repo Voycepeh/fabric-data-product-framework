@@ -33,9 +33,10 @@ from pyspark.sql import SparkSession
 from .data_profiling import profile_dataframe
 from .fabric_input_output import lakehouse_table_write
 from .metadata import build_dq_rule_key, build_metadata_column_key, build_metadata_table_key, _now_utc_iso, _resolve_action_by
+from .config import DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
 
 AI_SUGGESTABLE_DQ_RULE_TYPES = {"not_null", "unique_key", "accepted_values", "value_range", "regex_format"}
-DQ_RULE_SUGGESTION_PROMPT_TEMPLATE = """Use approved_business_context to suggest DQ rules for column {column_name}. Return DQ_RULES dict only."""
+DQ_RULE_SUGGESTION_PROMPT_TEMPLATE = DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
 
 
 @dataclass
