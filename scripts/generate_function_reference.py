@@ -293,7 +293,7 @@ def main() -> None:
         module_data[module] = info
         info = module_data[module]
         module_md = MODULE_DIR / f"{module}.md"
-        public_in_module = [s for s in symbol_map.values() if s.public_module == module]
+        public_in_module = [s for s in function_symbol_map.values() if s.public_module == module]
         is_internal_only = not public_in_module
         title = f"# `{module}` module" if not is_internal_only else f"# `{module}` module (internal)"
         module_visibility = module_manifest.get(module, {}).get("visibility", "internal")

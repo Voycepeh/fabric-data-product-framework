@@ -329,3 +329,14 @@ def test_dq_review_functions_share_data_quality_public_module_group() -> None:
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     assert 'data-callable-name="review_dq_rules" data-callable-module="data_quality"' in content
     assert 'data-callable-name="review_dq_rule_deactivations" data-callable-module="data_quality"' in content
+
+
+def test_module_callable_tables_exclude_supporting_data_structures() -> None:
+    generate_reference()
+    data_quality_page = (ROOT / "docs/api/modules/data_quality.md").read_text(encoding="utf-8")
+    fabric_io_page = (ROOT / "docs/api/modules/fabric_input_output.md").read_text(encoding="utf-8")
+
+    assert "| [`DQEnforcementResult`]" not in data_quality_page
+    assert "| [`Housepath`]" not in fabric_io_page
+    assert "| [`enforce_dq_rules`]" in data_quality_page
+    assert "| [`get_path`]" in (ROOT / "docs/api/modules/environment_config.md").read_text(encoding="utf-8")
