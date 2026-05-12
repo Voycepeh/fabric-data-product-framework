@@ -8,6 +8,7 @@ import importlib
 from .metadata import build_metadata_column_key, build_metadata_table_key
 
 COLUMN_BUSINESS_CONTEXT_FROM_WIDGET: list[dict] = []
+REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET: list[dict] = []
 
 BUSINESS_CONTEXT_PROMPT = """
 Infer business meaning for a column. Do not classify personal data.
@@ -58,10 +59,14 @@ def _parse_ai_dict_response(text: str) -> dict:
             return {}
 
 
-def extract_column_business_context_suggestions(response_rows: list[dict]) -> list[dict]:
+def extract_column_business_context_suggestions(response_rows, response_col: str = "ai_business_context_response") -> list[dict]:
     out = []
-    for row in response_rows or []:
-        parsed = _parse_ai_dict_response(row.get("response") or row.get("ai_response") or "")
+    if hasattr(response_rows, "collect"):
+        iterable = [r.asDict(recursive=True) if hasattr(r, "asDict") else dict(r) for r in response_rows.collect()]
+    else:
+        iterable = response_rows or []
+    for row in iterable:
+        parsed = _parse_ai_dict_response(row.get(response_col) or row.get("response") or row.get("ai_response") or "")
         if parsed:
             out.append(parsed)
     return out
@@ -74,7 +79,8 @@ def _require_ipywidgets():
 
 
 def capture_column_business_context(suggestions: list[dict], environment_name: str, dataset_name: str, table_name: str, default_approval_status: str = "pending") -> list[dict]:
-    global COLUMN_BUSINESS_CONTEXT_FROM_WIDGET
+    """Display interactive widget; results are written to module globals via callbacks."""
+    global COLUMN_BUSINESS_CONTEXT_FROM_WIDGET, REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET
     widgets, ipy_display = _require_ipywidgets()
     approved, rejected = [], []
     state = {"i": 0}
@@ -146,4 +152,5 @@ def capture_column_business_context(suggestions: list[dict], environment_name: s
     load()
     ipy_display(widgets.VBox([title, summary, approved_box, notes_box, reviewer_box, widgets.HBox([btn_approve, btn_reject, btn_undo]), status]))
     COLUMN_BUSINESS_CONTEXT_FROM_WIDGET = approved
-    return approved
+    REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET = rejected
+    return None

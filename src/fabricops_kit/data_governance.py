@@ -41,6 +41,7 @@ DEFAULT_GOVERNANCE_WIDGET_CONFIG = {
     "personal_identifier_options": ["not_personal_data", "direct_identifier", "indirect_identifier", "unknown"],
 }
 COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET: list[dict] = []
+REJECTED_COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET: list[dict] = []
 PDPA_PERSONAL_IDENTIFIER_PROMPT = "Classify personal identifier type using approved_business_context evidence."
 
 
@@ -128,9 +129,23 @@ def suggest_personal_identifier_classifications(prepared_profile_df, prompt: str
     return prepared_profile_df.ai.generate_response(prompt=prompt, is_prompt_template=True, output_col=output_col)
 
 
-def extract_personal_identifier_suggestions(response_rows: list[dict]) -> list[dict]:
+def extract_personal_identifier_suggestions(response_rows, response_col: str = "ai_governance_response") -> list[dict]:
     out = []
-    for row in response_rows or []:
+    if hasattr(response_rows, "collect"):
+        iterable = [r.asDict(recursive=True) if hasattr(r, "asDict") else dict(r) for r in response_rows.collect()]
+    else:
+        iterable = response_rows or []
+    for row in iterable:
+        if response_col in row:
+            parsed = row.get(response_col)
+            if isinstance(parsed, str):
+                try:
+                    parsed = json.loads(parsed)
+                except Exception:
+                    parsed = {}
+            if isinstance(parsed, dict):
+                out.append(parsed)
+                continue
         out.append(_get_governance_ai_suggestion(row))
     return [r for r in out if r]
 
@@ -146,10 +161,11 @@ def _get_governance_ai_suggestion(row: dict) -> dict:
 
 
 def review_column_governance_context(suggestions: list[dict], environment_name: str, dataset_name: str, table_name: str):
-    global COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET
+    """Display governance approval widget; callback actions populate module globals."""
+    global COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET, REJECTED_COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET
     widgets = importlib.import_module("ipywidgets")
     ipy_display = importlib.import_module("IPython.display").display
-    approved = []
+    approved, rejected = [], []
     idx = {"i": 0}
     summary = widgets.HTML()
     pid = widgets.Dropdown(options=DEFAULT_GOVERNANCE_WIDGET_CONFIG["personal_identifier_options"], description="Identifier")
@@ -173,6 +189,8 @@ def review_column_governance_context(suggestions: list[dict], environment_name: 
         approved.append({"environment_name": environment_name,"dataset_name": dataset_name,"table_name": table_name,"column_name": r.get("column_name"),"metadata_table_key": build_metadata_table_key(environment_name,dataset_name,table_name),"metadata_column_key": build_metadata_column_key(environment_name,dataset_name,table_name,r.get("column_name")),"approved_business_context": r.get("approved_business_context",""),"ai_suggested_personal_identifier_classification": r.get("ai_suggested_personal_identifier_classification","unknown"),"approved_personal_identifier_classification": pid.value,"confidentiality_label": conf.value,"reviewer_notes": notes.value,"approved_by": None,"approved_at": _now_utc_iso()})
         idx["i"] += 1; load()
     def on_reject(_):
+        r = cur()
+        rejected.append(r)
         idx["i"] += 1; load()
     def on_undo(_):
         if approved: approved.pop()
@@ -180,7 +198,8 @@ def review_column_governance_context(suggestions: list[dict], environment_name: 
     b1.on_click(on_approve); b2.on_click(on_reject); b3.on_click(on_undo); load()
     ipy_display(widgets.VBox([summary, pid, conf, notes, widgets.HBox([b1,b2,b3])]))
     COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET = approved
-    return approved
+    REJECTED_COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET = rejected
+    return None
 
 
 def _normalize_columns(profile: dict | list[dict]) -> list[dict]:

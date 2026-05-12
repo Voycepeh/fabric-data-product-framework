@@ -1,7 +1,7 @@
 import importlib
 
-from fabricops_kit.business_context import suggest_column_business_contexts, capture_column_business_context
-from fabricops_kit.data_governance import suggest_personal_identifier_classifications
+from fabricops_kit.business_context import suggest_column_business_contexts, capture_column_business_context, extract_column_business_context_suggestions
+from fabricops_kit.data_governance import suggest_personal_identifier_classifications, extract_personal_identifier_suggestions
 
 
 class _AI:
@@ -50,3 +50,15 @@ def test_capture_column_business_context_requires_ipywidgets(monkeypatch):
         assert False, "expected import error"
     except ImportError:
         pass
+
+
+def test_business_context_extraction_reads_ai_business_context_response():
+    rows = [{"ai_business_context_response": "{'column_name':'id','business_context':'identifier'}"}]
+    out = extract_column_business_context_suggestions(rows)
+    assert out[0]["column_name"] == "id"
+
+
+def test_governance_extraction_reads_ai_governance_response():
+    rows = [{"ai_governance_response": "{\"column_name\":\"email\",\"ai_suggested_personal_identifier_classification\":\"direct_identifier\"}"}]
+    out = extract_personal_identifier_suggestions(rows)
+    assert out[0]["column_name"] == "email"
