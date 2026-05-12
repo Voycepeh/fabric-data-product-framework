@@ -123,8 +123,7 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
                     "seed_minimal_sample_source_table",
                     "lakehouse_table_read",
                     "warehouse_read",
-                    
-                    
+                    "profile_dataframe",
                 ],
             },
             {
@@ -136,8 +135,8 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
                 ],
             },
             {
-                "title": "Segment 4: Human approval and metadata persistence",
-                "symbols": [],
+                "title": "Segment 4: Human review and write approved DQ rules",
+                "symbols": ["write_dq_rules"],
             },
             {
                 "title": "Optional lineage notes",
@@ -160,15 +159,16 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
                 ],
             },
             {
-                "title": "Segment 2: Load source data and approved metadata",
+                "title": "Segment 2: Load source data and validate required columns",
                 "symbols": [
                     "lakehouse_table_read",
                     "warehouse_read",
                 ],
             },
             {
-                "title": "Segment 3: Validate schema, transform, and compile controls",
+                "title": "Segment 3: Transform and apply runtime standards",
                 "symbols": [
+                    "standardize_output_columns",
                     "validate_dq_rules",
                 ],
             },
@@ -182,9 +182,21 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
                 ],
             },
             {
-                "title": "Optional metadata / lineage / handover evidence",
+                "title": "Optional profiling, drift, governance, lineage, and handover",
                 "symbols": [
+                    "profile_dataframe",
+                    "check_schema_drift",
+                    "check_partition_drift",
+                    "check_profile_drift",
+                    "summarize_drift_results",
+                    "classify_columns",
+                    "build_governance_classification_records",
+                    "write_governance_classifications",
+                    "summarize_governance_classifications",
                     "build_lineage_records",
+                    "build_lineage_handover_markdown",
+                    "build_run_summary",
+                    "render_run_summary_markdown",
                 ],
             },
         ],

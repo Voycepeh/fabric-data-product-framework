@@ -1,4 +1,5 @@
 import json
+import ast
 from pathlib import Path
 
 
@@ -36,8 +37,8 @@ def test_02_ex_dq_only_handoff_is_runnable():
         "HUMAN_APPROVED_RULES = list(notebook_review.APPROVED_RULES_FROM_WIDGET)",
         "write_dq_rules(",
         "table_name=DQ_TABLE_NAME",
-        "TODO: add governance/classification metadata persistence flow",
-        "TODO: add drift guardrail metadata persistence flow",
+        "Optional: use this section when this workflow is needed.",
+        "build_governance_classification_records",
     ]:
         assert required in ex
 
@@ -88,3 +89,49 @@ def test_docs_match_signature_and_key_convention():
 
 def test_sample_csv_fixture_removed():
     assert not Path("samples/end_to_end/minimal_source.csv").exists()
+
+
+def test_no_removed_metadata_replacement_tokens_or_contract_imports():
+    text = Path("templates/notebooks/02_ex_agreement_topic.ipynb").read_text(encoding="utf-8") + Path(
+        "templates/notebooks/03_pc_agreement_source_to_target.ipynb"
+    ).read_text(encoding="utf-8")
+    forbidden = [
+        "fabricops_kit.data_contracts",
+        "SOURCE_INPUT_METADATA_DRAFT",
+        "SOURCE_INPUT_METADATA_APPROVED",
+        "approved_source_metadata",
+        "source_metadata",
+        "metadata_handover_id",
+        "metadata_status",
+        "handover_metadata",
+    ]
+    for token in forbidden:
+        assert token not in text
+
+
+def test_essential_callable_coverage_in_current_starter_notebooks():
+    docs_metadata = Path("src/fabricops_kit/docs_metadata.py").read_text(encoding="utf-8")
+    tree = ast.parse(docs_metadata)
+    rows = []
+    for node in tree.body:
+        if isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name) and node.target.id == "PUBLIC_SYMBOL_DOCS":
+            rows = ast.literal_eval(node.value)
+            break
+    essentials = {row["symbol_name"] for row in rows if row["role"] == "essential"}
+
+    notebooks_text = (
+        Path("templates/notebooks/00_env_config.ipynb").read_text(encoding="utf-8")
+        + Path("templates/notebooks/02_ex_agreement_topic.ipynb").read_text(encoding="utf-8")
+        + Path("templates/notebooks/03_pc_agreement_source_to_target.ipynb").read_text(encoding="utf-8")
+    )
+    present = {name for name in essentials if name in notebooks_text}
+
+    # Allowed missing until governance-context notebook (01_data_agreement) exists.
+    allowed_missing = {
+        "Housepath",  # type-level helper not always shown explicitly in starter notebooks
+        "lakehouse_csv_read",  # ingestion variant; lakehouse table path is primary in current templates
+        "lakehouse_excel_read_as_spark",  # ingestion variant
+        "lakehouse_parquet_read_as_spark",  # ingestion variant
+    }
+    missing = essentials - present - allowed_missing
+    assert missing == set(), f"Missing essential callables in templates: {sorted(missing)}"

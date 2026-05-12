@@ -35,7 +35,7 @@ Pipeline notebook flow for deterministic enforcement and controlled publishing.
   </tbody>
 </table>
 
-## Segment 2: Load source data and approved metadata
+## Segment 2: Load source data and validate required columns
 
 <table class="reference-function-table notebook-structure-function-table">
   <thead>
@@ -59,7 +59,7 @@ Pipeline notebook flow for deterministic enforcement and controlled publishing.
   </tbody>
 </table>
 
-## Segment 3: Validate schema, transform, and compile controls
+## Segment 3: Transform and apply runtime standards
 
 <table class="reference-function-table notebook-structure-function-table">
   <thead>
@@ -70,6 +70,11 @@ Pipeline notebook flow for deterministic enforcement and controlled publishing.
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td data-label="Function / class"><a href="../../reference/step-06b-runtime-standards/standardize_output_columns/"><code>standardize_output_columns</code></a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/technical_audit_columns/" title="Open technical_audit_columns module page" aria-label="Open technical_audit_columns module page">technical_audit_columns</a></td>
+      <td data-label="Purpose">Apply canonical technical/audit enrichment in one notebook-facing wrapper.</td>
+    </tr>
     <tr>
       <td data-label="Function / class"><a href="../../reference/step-06c-pipeline-controls/validate_dq_rules/"><code>validate_dq_rules</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
@@ -112,7 +117,7 @@ Pipeline notebook flow for deterministic enforcement and controlled publishing.
   </tbody>
 </table>
 
-## Optional metadata / lineage / handover evidence
+## Optional profiling, drift, governance, lineage, and handover
 
 <table class="reference-function-table notebook-structure-function-table">
   <thead>
@@ -124,9 +129,69 @@ Pipeline notebook flow for deterministic enforcement and controlled publishing.
   </thead>
   <tbody>
     <tr>
+      <td data-label="Function / class"><a href="../../reference/step-04-ingest-profile-store/profile_dataframe/"><code>profile_dataframe</code></a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_profiling/" title="Open data_profiling module page" aria-label="Open data_profiling module page">data_profiling</a></td>
+      <td data-label="Purpose">Build canonical DQ-ready profiling rows from a Spark DataFrame.</td>
+    </tr>
+    <tr>
+      <td data-label="Function / class"><a href="../../reference/step-04-ingest-profile-store/check_schema_drift/"><code>check_schema_drift</code></a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_drift/" title="Open data_drift module page" aria-label="Open data_drift module page">data_drift</a></td>
+      <td data-label="Purpose">Compare a current dataframe schema against a baseline schema snapshot.</td>
+    </tr>
+    <tr>
+      <td data-label="Function / class"><a href="../../reference/step-04-ingest-profile-store/check_partition_drift/"><code>check_partition_drift</code></a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_drift/" title="Open data_drift module page" aria-label="Open data_drift module page">data_drift</a></td>
+      <td data-label="Purpose">Check partition-level drift using keys, partitions, and optional watermark baselines.</td>
+    </tr>
+    <tr>
+      <td data-label="Function / class"><a href="../../reference/step-04-ingest-profile-store/check_profile_drift/"><code>check_profile_drift</code></a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_drift/" title="Open data_drift module page" aria-label="Open data_drift module page">data_drift</a></td>
+      <td data-label="Purpose">Compare profile metrics against a baseline profile and drift thresholds.</td>
+    </tr>
+    <tr>
+      <td data-label="Function / class"><a href="../../reference/step-04-ingest-profile-store/summarize_drift_results/"><code>summarize_drift_results</code></a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_drift/" title="Open data_drift module page" aria-label="Open data_drift module page">data_drift</a></td>
+      <td data-label="Purpose">Summarize schema, partition, and profile drift outcomes into one decision.</td>
+    </tr>
+    <tr>
+      <td data-label="Function / class"><a href="../../reference/step-09-ai-assisted-classification/classify_columns/"><code>classify_columns</code></a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a></td>
+      <td data-label="Purpose">Classify multiple columns and return normalized governance suggestions.</td>
+    </tr>
+    <tr>
+      <td data-label="Function / class"><a href="../../reference/step-09-ai-assisted-classification/build_governance_classification_records/"><code>build_governance_classification_records</code></a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a></td>
+      <td data-label="Purpose">Build metadata-ready governance classification records from column suggestions.</td>
+    </tr>
+    <tr>
+      <td data-label="Function / class"><a href="../../reference/step-09-ai-assisted-classification/write_governance_classifications/"><code>write_governance_classifications</code></a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a></td>
+      <td data-label="Purpose">Persist governance classifications to a metadata destination.</td>
+    </tr>
+    <tr>
+      <td data-label="Function / class"><a href="../../reference/step-09-ai-assisted-classification/summarize_governance_classifications/"><code>summarize_governance_classifications</code></a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a></td>
+      <td data-label="Purpose">Summarize governance classification outputs into review-friendly counts.</td>
+    </tr>
+    <tr>
       <td data-label="Function / class"><a href="../../reference/step-10-lineage-handover-documentation/build_lineage_records/"><code>build_lineage_records</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a></td>
       <td data-label="Purpose">Build compact lineage records for downstream metadata sinks.</td>
+    </tr>
+    <tr>
+      <td data-label="Function / class"><a href="../../reference/step-10-lineage-handover-documentation/build_lineage_handover_markdown/"><code>build_lineage_handover_markdown</code></a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a></td>
+      <td data-label="Purpose">Create a concise markdown handover summary from lineage execution results.</td>
+    </tr>
+    <tr>
+      <td data-label="Function / class"><a href="../../reference/step-10-lineage-handover-documentation/build_run_summary/"><code>build_run_summary</code></a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/handover_documentation/" title="Open handover_documentation module page" aria-label="Open handover_documentation module page">handover_documentation</a></td>
+      <td data-label="Purpose">Build a handover-friendly summary for one data product run.</td>
+    </tr>
+    <tr>
+      <td data-label="Function / class"><a href="../../reference/step-10-lineage-handover-documentation/render_run_summary_markdown/"><code>render_run_summary_markdown</code></a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/handover_documentation/" title="Open handover_documentation module page" aria-label="Open handover_documentation module page">handover_documentation</a></td>
+      <td data-label="Purpose">Render a run summary dictionary into Markdown for handover notes.</td>
     </tr>
   </tbody>
 </table>
