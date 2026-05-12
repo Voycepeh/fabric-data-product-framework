@@ -1,11 +1,11 @@
 # Notebook templates
 
 Run the minimal end-to-end sample in the canonical framework lifecycle:
-1. Run `00_env_config`.
-2. Run `01_data_agreement_template` to capture approved usage and agreement-level business context.
-3. Seed/create the sample source table (`minimal_source`) from generated rows in notebook code.
-4. Run `02_ex_agreement_topic` with `USE_SAMPLE_DATA = True`.
-5. Run `03_pc_agreement_source_to_target` with `USE_SAMPLE_DATA = True`.
+1. `00_env_config` = runtime/environment paths and shared runtime configuration.
+2. `01_data_agreement_template` = approved usage + agreement context + stewardship notes.
+3. `02_ex_*` = profile + AI draft + human approval + metadata write.
+4. `03_pc_*` = deterministic enforcement from approved metadata.
+5. Seed/create the sample source table (`minimal_source`) from generated rows in notebook code, then run `02_ex_agreement_topic` and `03_pc_agreement_source_to_target` with `USE_SAMPLE_DATA = True`.
 
 This proves the core flow: generated sample DataFrame -> persisted source table -> approved contract created in `02_ex` -> approved contract loaded/enforced in `03_pc` -> valid/quarantine split -> output write.
 
