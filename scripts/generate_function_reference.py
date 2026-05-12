@@ -170,10 +170,10 @@ def internal_helper_link(actual_module: str, helper: str) -> str:
 
 
 def public_reference_link(symbol: str, docs_metadata: dict[str, dict[str, Any]]) -> str:
-    """Return docs-relative link target for a public callable reference page."""
+    """Return docs-relative link target for a public callable anchor on the index page."""
     if symbol not in docs_metadata:
         raise RuntimeError(f"Missing PUBLIC_SYMBOL_DOCS entry for exported symbol: {symbol}")
-    return f"../../reference/{symbol}.md"
+    return f"../../reference/#{symbol}"
 
 
 def callable_docs_link(
@@ -400,33 +400,6 @@ def main() -> None:
         )
     MANIFEST_PATH.write_text(json.dumps({"modules": module_docs_metadata, "callables": manifest_rows}, indent=2) + "\n", encoding="utf-8")
 
-    reference_dir = ROOT / "docs" / "reference"
-    reference_dir.mkdir(parents=True, exist_ok=True)
-    for s in sorted(function_symbol_map.values(), key=lambda item: item.name.lower()):
-        meta = docs_metadata[s.name]
-        page_lines = [
-            f"# `{s.name}`",
-            "",
-            s.summary or "—",
-            "",
-            "## Template context",
-            "",
-            f"- Used in notebook: `{meta.get('template_notebook', '—')}`",
-            f"- Segment: {meta.get('template_segment', '—')}",
-            f"- Role: {s.role}",
-            f"- Module: `{s.public_module}`",
-            "",
-            "## API reference",
-            "",
-            f"::: {PACKAGE_NAME}.{s.actual_module}.{s.name}",
-            "",
-            "## Module page",
-            "",
-            f"- [{s.public_module} module](../api/modules/{s.public_module}.md)",
-            "",
-        ]
-        (reference_dir / f"{s.name}.md").write_text("\n".join(page_lines), encoding="utf-8", newline="\n")
-
     starter_symbol_to_notebooks: dict[str, set[str]] = {}
     for flow in template_flow_docs:
         notebook_key = flow["notebook_key"]
@@ -524,7 +497,7 @@ def main() -> None:
             for symbol_name in segment["symbols"]:
                 s = symbol_map[symbol_name]
                 info = module_data[s.actual_module]
-                symbol_link = f"../../reference/{s.name}/"
+                symbol_link = f"../../reference/#{s.name}"
                 segment_rows.append([
                     _anchor(symbol_link, s.name, code=True),
                     _module_link(s.public_module, base_prefix="../../"),
@@ -614,13 +587,13 @@ def main() -> None:
     )
     all_items: list[str] = []
     for s in sorted(function_symbol_map.values(), key=lambda x: x.name.lower()):
-        symbol_link = f"./{s.name}/"
+        symbol_link = f"#{s.name}"
         starter_path = ", ".join(sorted(starter_symbol_to_notebooks.get(s.name, set()))) or "—"
         purpose = s.purpose or s.summary or "—"
         all_items.extend(
             [
                 (
-                    '<article class="reference-catalogue-item" '
+                    f'<article id="{_esc(s.name)}" class="reference-catalogue-item" '
                     f'data-callable-row="true" data-callable-name="{_esc(s.name)}" '
                     f'data-callable-module="{_esc(s.public_module)}" '
                     f'data-callable-starter-path="{_esc(starter_path)}" '

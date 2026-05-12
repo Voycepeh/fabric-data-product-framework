@@ -8,10 +8,10 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`check_partition_drift`](../../reference/check_partition_drift.md) | function | Check partition-level drift using keys, partitions, and optional watermark baselines. | — |
-| [`check_profile_drift`](../../reference/check_profile_drift.md) | function | Compare profile metrics against a baseline profile and drift thresholds. | — |
-| [`check_schema_drift`](../../reference/check_schema_drift.md) | function | Compare a current dataframe schema against a baseline schema snapshot. | — |
-| [`summarize_drift_results`](../../reference/summarize_drift_results.md) | function | Summarize schema, partition, and profile drift outcomes into one decision. | — |
+| [`check_partition_drift`](../../reference/#check_partition_drift) | function | Check partition-level drift using keys, partitions, and optional watermark baselines. | — |
+| [`check_profile_drift`](../../reference/#check_profile_drift) | function | Compare profile metrics against a baseline profile and drift thresholds. | — |
+| [`check_schema_drift`](../../reference/#check_schema_drift) | function | Compare a current dataframe schema against a baseline schema snapshot. | — |
+| [`summarize_drift_results`](../../reference/#summarize_drift_results) | function | Summarize schema, partition, and profile drift outcomes into one decision. | — |
 
 ## Optional callables
 
