@@ -29,28 +29,28 @@ def test_00_env_config_import_and_default_prompt_override_guard():
     assert "Summarize run handover details as markdown. Context: {context}" not in prompt_block
 
 
-def test_02_ex_metadata_handoff_is_runnable():
+def test_02_ex_dq_only_handoff_is_runnable():
     ex = _all_code("templates/notebooks/02_ex_agreement_topic.ipynb")
-    assert "target_table=TARGET_TABLE" in ex
+    assert "DQ_TABLE_NAME = TARGET_TABLE" in ex
     for required in [
-        '"object_name": SOURCE_TABLE',
-        '"version": "1.0.0"',
-        '"status": "approved"',
-        "SOURCE_INPUT_METADATA_APPROVED = dict(SOURCE_INPUT_CONTRACT_DRAFT)",
-        "TODO: persist approved profiling, DQ, governance, and drift metadata via dedicated helpers.",
+        "HUMAN_APPROVED_RULES = list(notebook_review.APPROVED_RULES_FROM_WIDGET)",
+        "write_dq_rules(",
+        "table_name=DQ_TABLE_NAME",
+        "TODO: add governance/classification metadata persistence flow",
+        "TODO: add drift guardrail metadata persistence flow",
     ]:
         assert required in ex
 
 
 def test_02_ex_uses_widget_approved_rules_and_persists_metadata_table():
     ex = _all_code("templates/notebooks/02_ex_agreement_topic.ipynb")
-    assert "import fabricops_kit.data_quality_review as notebook_review" in ex
+    assert "import fabricops_kit.notebook_review as notebook_review" in ex
     assert "HUMAN_APPROVED_RULES = list(notebook_review.APPROVED_RULES_FROM_WIDGET)" in ex
     assert "r.get('approval_status', 'approved') == 'approved'" not in ex
     assert "title='AI suggests (advisory), human reviews'" not in ex
     assert "if not HUMAN_APPROVED_RULES:" in ex
     assert 'raise ValueError("No approved DQ rules selected in widget.' in ex
-    assert "approved_rules_metadata_df.write.mode('append').saveAsTable('METADATA_DQ_RULES')" in ex
+    assert "approved_rules_metadata_df = write_dq_rules(" in ex
 
 
 def test_02_ex_and_03_pc_share_same_dq_table_key_convention():
@@ -59,12 +59,21 @@ def test_02_ex_and_03_pc_share_same_dq_table_key_convention():
     assert 'DQ_TABLE_NAME = TARGET_TABLE' in ex
     assert 'DQ_TABLE_NAME = TARGET_TABLE' in pc
     assert 'write_dq_rules(' in ex and 'table_name=DQ_TABLE_NAME' in ex
-    assert 'enforce_dq_rules(df_standard, table_name=DQ_TABLE_NAME, metadata_df=metadata_dq_rules, dq_run_id=RUN_ID)' in pc
+    assert "enforce_dq_rules(" in pc
+    assert "table_name=DQ_TABLE_NAME" in pc
+    assert "metadata_df=metadata_dq_rules" in pc
+    assert "dq_run_id=RUN_ID" in pc
 
 
 def test_03_pc_deterministic_only_and_valid_run_dq_signature():
     pc = _all_code("templates/notebooks/03_pc_agreement_source_to_target.ipynb")
-    assert "enforce_dq_rules(df_standard, table_name=DQ_TABLE_NAME, metadata_df=metadata_dq_rules, dq_run_id=RUN_ID)" in pc
+    assert 'REQUIRED_SOURCE_COLUMNS = ["customer_id", "event_ts", "status", "amount"]' in pc
+    assert 'missing = sorted(set(REQUIRED_SOURCE_COLUMNS) - set(df_source.columns))' in pc
+    assert 'metadata_dq_rules = spark.table("METADATA_DQ_RULES")' in pc
+    assert "enforce_dq_rules(" in pc
+    assert "table_name=DQ_TABLE_NAME" in pc
+    assert "metadata_df=metadata_dq_rules" in pc
+    assert "dq_run_id=RUN_ID" in pc
     assert "fail_on_error=False" not in pc
     assert "suggest_dq_rules" not in pc
     assert "extract_dq_rules" not in pc
