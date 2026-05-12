@@ -128,7 +128,7 @@ def _extract_dq_rules(response_df, table_name: str, response_col: str = "respons
     return list(deduped.values())
 
 
-def build_dq_review_rows(suggested_rules: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def build_dq_review_rows(suggested_rules: list[dict[str, Any]], default_approval_status: str = "pending") -> list[dict[str, Any]]:
     """Build notebook-editable DQ review rows without changing rule taxonomy."""
     rows: list[dict[str, Any]] = []
     for rule in suggested_rules or []:
@@ -141,7 +141,7 @@ def build_dq_review_rows(suggested_rules: list[dict[str, Any]]) -> list[dict[str
                 "business_reason": rule.get("description", ""),
                 "evidence": "",
                 "confidence": None,
-                "approval_status": "pending",
+                "approval_status": default_approval_status,
                 "reviewer_notes": "",
             }
         )
@@ -858,4 +858,3 @@ def review_dq_rule_deactivations(active_rules, table_name: str):
     ui = widgets.VBox([title, progress, summary, form_box, status], layout=widgets.Layout(border="1px solid #ddd", padding="12px", width="850px"))
     refresh()
     ipy_display(ui)
-

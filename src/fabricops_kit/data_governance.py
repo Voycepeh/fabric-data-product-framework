@@ -55,7 +55,7 @@ def build_governance_prompt_context(
     }
 
 
-def build_governance_review_rows(classifications: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def build_governance_review_rows(classifications: list[dict[str, Any]], default_approval_status: str = "pending") -> list[dict[str, Any]]:
     """Convert governance suggestions into notebook-editable review rows."""
     rows: list[dict[str, Any]] = []
     for item in classifications or []:
@@ -68,9 +68,9 @@ def build_governance_review_rows(classifications: list[dict[str, Any]]) -> list[
                 "business_reason": item.get("reason", ""),
                 "evidence": json.dumps(_to_jsonable(item.get("evidence") or {}), sort_keys=True),
                 "confidence": item.get("confidence"),
-                "approval_status": "pending",
+                "approval_status": default_approval_status,
                 "reviewer_notes": "",
-                "approved_label": item.get("suggested_classification"),
+                "approved_label": item.get("approved_label") or item.get("suggested_classification"),
             }
         )
     return rows

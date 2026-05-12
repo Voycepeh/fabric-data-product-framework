@@ -101,7 +101,7 @@ class AIPromptConfig:
     governance_review_template: str = (
         "Use business_context={business_context}, approved_usage={approved_usage}, dataset_context={dataset_context}, "
         "profile_context={profile_context}, glossary_context={glossary_context}, steward_notes={steward_notes}. "
-        "Return JSON rows with suggestion_type,target_column,proposed_label,business_reason,evidence,confidence."
+        "Return JSON rows with suggestion_type,target_column,approved_label,business_reason,evidence,confidence."
     )
 
     def __post_init__(self) -> None:

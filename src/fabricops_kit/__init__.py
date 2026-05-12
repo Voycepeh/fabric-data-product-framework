@@ -51,6 +51,8 @@ from .ai import (
 )
 from .data_quality import (
     DQEnforcementResult,
+    approved_dq_rules_from_review_rows,
+    build_dq_review_rows,
     draft_dq_rules,
     write_dq_rules,
     enforce_dq_rules,
