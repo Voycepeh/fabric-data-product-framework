@@ -27,14 +27,27 @@
     });
   }
 
-  function scoreEntry(query, entry) {
+  function tokenize(value) {
+    return normalize(value).split(/[\s_./-]+/).filter(Boolean);
+  }
+
+  function queryMatchesEntry(queryTokens, entryTokens) {
+    return queryTokens.every((queryToken) => {
+      if (entryTokens.includes(queryToken)) return true;
+      if (entryTokens.some((token) => token.includes(queryToken))) return true;
+      return fuzzyTokenMatch(queryToken, entryTokens);
+    });
+  }
+
+  function scoreEntry(query, queryTokens, entry) {
     if (!query) return 1;
     if (entry.name === query) return 100;
     if (entry.name.startsWith(query)) return 80;
     if (entry.name.includes(query)) return 60;
+    if (queryMatchesEntry(queryTokens, entry.nameTokens)) return 50;
     if (entry.module.includes(query) || entry.role.includes(query) || entry.starterPath.includes(query)) return 40;
-    if (entry.purpose.includes(query) || entry.text.includes(query)) return 30;
-    if (fuzzyTokenMatch(query, entry.tokens)) return 10;
+    if (queryMatchesEntry(queryTokens, entry.tokens)) return 30;
+    if (queryTokens.every((token) => fuzzyTokenMatch(token, entry.tokens))) return 10;
     return 0;
   }
 
@@ -48,6 +61,7 @@
     if (!container || !input || !status || !empty || rows.length === 0) return;
     if (container.dataset.callableFinderInitialized === "true") return;
     container.dataset.callableFinderInitialized = "true";
+    const publicRoles = new Set(["essential", "optional"]);
     const searchable = rows.map((row) => ({
       row,
       name: normalize(row.dataset.callableName),
@@ -62,17 +76,25 @@
         row.dataset.role,
         row.dataset.callablePurpose,
       ].join(" ")),
-    })).map((entry) => ({ ...entry, tokens: entry.text.split(/[^a-z0-9_]+/).filter(Boolean) }));
-    const total = searchable.length;
+    })).map((entry) => ({
+      ...entry,
+      tokens: tokenize(entry.text),
+      nameTokens: tokenize(entry.name),
+      isPublicRole: publicRoles.has(entry.role),
+    }));
     function enabledRoles() { return new Set(roleFilters.filter((cb) => cb.checked).map((cb) => normalize(cb.dataset.roleFilter))); }
     function update() {
       const query = normalize(input.value);
+      const queryTokens = tokenize(query);
       const roles = enabledRoles();
       let matched = 0;
+      let total = 0;
       const visibleEntries = [];
       searchable.forEach((entry) => {
-        const score = scoreEntry(query, entry);
-        const show = score > 0 && roles.has(entry.role);
+        const isInPublicScope = entry.isPublicRole;
+        if (isInPublicScope && roles.has(entry.role)) total += 1;
+        const score = scoreEntry(query, queryTokens, entry);
+        const show = isInPublicScope && score > 0 && roles.has(entry.role);
         entry.row.hidden = !show;
         if (show) {
           matched += 1;

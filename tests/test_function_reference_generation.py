@@ -115,6 +115,15 @@ def test_reference_callable_finder_exposes_only_public_role_filters() -> None:
     assert "<strong>Optional</strong>: Extra helper functions for advanced or situational use." in content
 
 
+def test_callable_finder_js_uses_public_role_total_and_tokenized_matching() -> None:
+    source = (ROOT / "docs/javascripts/callable-finder.js").read_text(encoding="utf-8")
+    assert 'const publicRoles = new Set(["essential", "optional"]);' in source
+    assert 'split(/[\\s_./-]+/)' in source
+    assert 'queryTokens.every((queryToken) =>' in source
+    assert 'if (isInPublicScope && roles.has(entry.role)) total += 1;' in source
+    assert 'const show = isInPublicScope && score > 0 && roles.has(entry.role);' in source
+
+
 def test_function_reference_tables_use_compact_module_links() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
