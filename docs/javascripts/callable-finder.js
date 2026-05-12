@@ -1,5 +1,56 @@
 (function () {
   function normalize(value) { return (value || "").toLowerCase().trim(); }
+  function levenshtein(a, b) {
+    if (a === b) return 0;
+    if (!a.length) return b.length;
+    if (!b.length) return a.length;
+    const prev = new Array(b.length + 1);
+    const curr = new Array(b.length + 1);
+    for (let j = 0; j <= b.length; j += 1) prev[j] = j;
+    for (let i = 1; i <= a.length; i += 1) {
+      curr[0] = i;
+      for (let j = 1; j <= b.length; j += 1) {
+        const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+        curr[j] = Math.min(prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost);
+      }
+      for (let j = 0; j <= b.length; j += 1) prev[j] = curr[j];
+    }
+    return prev[b.length];
+  }
+
+  function fuzzyTokenMatch(query, haystackTokens) {
+    if (!query || query.length < 4 || haystackTokens.length === 0) return false;
+    const maxDistance = query.length <= 5 ? 1 : 2;
+    return haystackTokens.some((token) => {
+      if (Math.abs(token.length - query.length) > maxDistance) return false;
+      return levenshtein(query, token) <= maxDistance;
+    });
+  }
+
+  function tokenize(value) {
+    return normalize(value).split(/[\s_./-]+/).filter(Boolean);
+  }
+
+  function queryMatchesEntry(queryTokens, entryTokens) {
+    return queryTokens.every((queryToken) => {
+      if (entryTokens.includes(queryToken)) return true;
+      if (entryTokens.some((token) => token.includes(queryToken))) return true;
+      return fuzzyTokenMatch(queryToken, entryTokens);
+    });
+  }
+
+  function scoreEntry(query, queryTokens, entry) {
+    if (!query) return 1;
+    if (entry.name === query) return 100;
+    if (entry.name.startsWith(query)) return 80;
+    if (entry.name.includes(query)) return 60;
+    if (queryMatchesEntry(queryTokens, entry.nameTokens)) return 50;
+    if (entry.module.includes(query) || entry.role.includes(query) || entry.starterPath.includes(query)) return 40;
+    if (queryMatchesEntry(queryTokens, entry.tokens)) return 30;
+    if (queryTokens.every((token) => fuzzyTokenMatch(token, entry.tokens))) return 10;
+    return 0;
+  }
+
   function initCallableFinder() {
     const container = document.querySelector("[data-callable-finder]");
     const input = document.getElementById("callable-finder-input");
@@ -10,9 +61,14 @@
     if (!container || !input || !status || !empty || rows.length === 0) return;
     if (container.dataset.callableFinderInitialized === "true") return;
     container.dataset.callableFinderInitialized = "true";
+    const publicRoles = new Set(["essential", "optional"]);
     const searchable = rows.map((row) => ({
       row,
+      name: normalize(row.dataset.callableName),
+      module: normalize(row.dataset.callableModule),
       role: normalize(row.dataset.role),
+      starterPath: normalize(row.dataset.callableStarterPath),
+      purpose: normalize(row.dataset.callablePurpose),
       text: normalize([
         row.dataset.callableName,
         row.dataset.callableModule,
@@ -20,18 +76,36 @@
         row.dataset.role,
         row.dataset.callablePurpose,
       ].join(" ")),
+    })).map((entry) => ({
+      ...entry,
+      tokens: tokenize(entry.text),
+      nameTokens: tokenize(entry.name),
+      isPublicRole: publicRoles.has(entry.role),
     }));
-    const total = searchable.length;
     function enabledRoles() { return new Set(roleFilters.filter((cb) => cb.checked).map((cb) => normalize(cb.dataset.roleFilter))); }
     function update() {
       const query = normalize(input.value);
+      const queryTokens = tokenize(query);
       const roles = enabledRoles();
       let matched = 0;
+      let total = 0;
+      const visibleEntries = [];
       searchable.forEach((entry) => {
-        const show = (query.length === 0 || entry.text.includes(query)) && roles.has(entry.role);
+        const isInPublicScope = entry.isPublicRole;
+        if (isInPublicScope && roles.has(entry.role)) total += 1;
+        const score = scoreEntry(query, queryTokens, entry);
+        const show = isInPublicScope && score > 0 && roles.has(entry.role);
         entry.row.hidden = !show;
-        if (show) matched += 1;
+        if (show) {
+          matched += 1;
+          visibleEntries.push({ entry, score });
+        }
       });
+      visibleEntries
+        .sort((a, b) => b.score - a.score || a.entry.name.localeCompare(b.entry.name))
+        .forEach(({ entry }) => {
+          entry.row.parentElement.appendChild(entry.row);
+        });
       empty.hidden = matched !== 0;
       status.textContent = `Showing ${matched} of ${total} callables.`;
     }

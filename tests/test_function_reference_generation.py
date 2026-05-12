@@ -114,6 +114,26 @@ def test_reference_includes_callable_finder_block() -> None:
     assert content.index("## Find a callable") > content.index("## What runs where")
 
 
+def test_reference_callable_finder_exposes_only_public_role_filters() -> None:
+    generate_reference()
+    content = REFERENCE_FILE.read_text(encoding="utf-8")
+    assert 'data-role-filter="essential"' in content
+    assert 'data-role-filter="optional"' in content
+    assert 'data-role-filter="internal"' not in content
+    assert "Search callable functions" in content
+    assert "<strong>Essential</strong>: Core functions used in the starter notebook flow." in content
+    assert "<strong>Optional</strong>: Extra helper functions for advanced or situational use." in content
+
+
+def test_callable_finder_js_uses_public_role_total_and_tokenized_matching() -> None:
+    source = (ROOT / "docs/javascripts/callable-finder.js").read_text(encoding="utf-8")
+    assert 'const publicRoles = new Set(["essential", "optional"]);' in source
+    assert 'split(/[\\s_./-]+/)' in source
+    assert 'queryTokens.every((queryToken) =>' in source
+    assert 'if (isInPublicScope && roles.has(entry.role)) total += 1;' in source
+    assert 'const show = isInPublicScope && score > 0 && roles.has(entry.role);' in source
+
+
 def test_function_reference_tables_use_compact_module_links() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
