@@ -37,6 +37,22 @@ def prepare_business_context_profile_input(profile_rows: list[dict], table_name:
 
 
 def suggest_column_business_contexts(prepared_profile_df, prompt_template: str = BUSINESS_CONTEXT_PROMPT, output_col: str = "ai_business_context_response"):
+    """Run Fabric AI to draft column business context suggestions.
+
+    Parameters
+    ----------
+    prepared_profile_df : pyspark.sql.DataFrame
+        Profile input DataFrame prepared for prompt-template execution.
+    prompt_template : str, default=BUSINESS_CONTEXT_PROMPT
+        Prompt template used by Fabric AI.
+    output_col : str, default=\"ai_business_context_response\"
+        Output column containing AI response text.
+
+    Returns
+    -------
+    pyspark.sql.DataFrame
+        Input DataFrame enriched with AI response output.
+    """
     ai = getattr(prepared_profile_df, "ai", None)
     if ai is None or not hasattr(ai, "generate_response"):
         raise RuntimeError("suggest_column_business_contexts requires Fabric DataFrame.ai.generate_response.")
@@ -60,6 +76,7 @@ def _parse_ai_dict_response(text: str) -> dict:
 
 
 def extract_column_business_context_suggestions(response_rows, response_col: str = "ai_business_context_response") -> list[dict]:
+    """Parse AI suggestion rows from Spark DataFrames or ``list[dict]`` payloads."""
     out = []
     if hasattr(response_rows, "collect"):
         iterable = [r.asDict(recursive=True) if hasattr(r, "asDict") else dict(r) for r in response_rows.collect()]
@@ -79,7 +96,13 @@ def _require_ipywidgets():
 
 
 def capture_column_business_context(suggestions: list[dict], environment_name: str, dataset_name: str, table_name: str, default_approval_status: str = "pending") -> list[dict]:
-    """Display interactive widget; results are written to module globals via callbacks."""
+    """Display interactive approval widget.
+
+    Notes
+    -----
+    Final approved/rejected rows are produced asynchronously via button callbacks
+    and stored in module globals.
+    """
     global COLUMN_BUSINESS_CONTEXT_FROM_WIDGET, REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET
     widgets, ipy_display = _require_ipywidgets()
     approved, rejected = [], []

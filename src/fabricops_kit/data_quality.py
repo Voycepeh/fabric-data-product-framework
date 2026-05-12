@@ -121,6 +121,7 @@ parse_dq_rules_dict_from_text = _parse_dq_rules_dict_from_text
 
 
 def prepare_dq_profile_input(profile_rows: list[dict], table_name: str, column_contexts: list[dict]) -> list[dict]:
+    """Join approved column business context into profile rows before DQ AI suggestion."""
     context_lookup = {r["column_name"]: r for r in column_contexts or [] if r.get("column_name")}
     out = []
     for row in profile_rows:
@@ -133,6 +134,7 @@ def prepare_dq_profile_input(profile_rows: list[dict], table_name: str, column_c
 
 
 def attach_rule_metadata_keys(candidate_rules: list[dict], environment_name: str, dataset_name: str, table_name: str) -> list[dict]:
+    """Attach deterministic metadata keys to candidate DQ rules."""
     out = []
     for rule in candidate_rules or []:
         cols = rule.get("columns", [])
@@ -533,6 +535,7 @@ def enforce_dq_rules(df, *, table_name: str, rules=None, metadata_df=None, row_i
 
 
 def build_dq_rules_metadata_df(spark, approved_rules: list[dict], action_by: str | None = None, action_reason: str = "Approved by reviewer", rule_source: str = "dq_review_widget"):
+    """Build approved DQ metadata rows as a Spark DataFrame."""
     rows = []
     now = _now_utc_iso()
     actor = _resolve_action_by(action_by)

@@ -111,6 +111,7 @@ def build_approved_governance_records(review_rows: list[dict[str, Any]], dataset
 
 
 def prepare_governance_profile_input(profile_rows: list[dict], table_name: str, column_contexts: list[dict]) -> list[dict]:
+    """Join approved business context evidence into profile rows for governance AI suggestion."""
     context_lookup = {r["column_name"]: r for r in column_contexts or [] if r.get("column_name")}
     out = []
     for row in profile_rows or []:
@@ -123,6 +124,7 @@ def prepare_governance_profile_input(profile_rows: list[dict], table_name: str, 
 
 
 def suggest_personal_identifier_classifications(prepared_profile_df, prompt: str = PDPA_PERSONAL_IDENTIFIER_PROMPT, output_col: str = "ai_governance_response"):
+    """Run Fabric AI personal-identifier suggestion prompt on prepared governance rows."""
     ai = getattr(prepared_profile_df, "ai", None)
     if ai is None or not hasattr(ai, "generate_response"):
         raise RuntimeError("suggest_personal_identifier_classifications requires Fabric DataFrame.ai.generate_response.")
@@ -130,6 +132,7 @@ def suggest_personal_identifier_classifications(prepared_profile_df, prompt: str
 
 
 def extract_personal_identifier_suggestions(response_rows, response_col: str = "ai_governance_response") -> list[dict]:
+    """Extract governance suggestions from Spark/list response payloads."""
     out = []
     if hasattr(response_rows, "collect"):
         iterable = [r.asDict(recursive=True) if hasattr(r, "asDict") else dict(r) for r in response_rows.collect()]
@@ -161,7 +164,13 @@ def _get_governance_ai_suggestion(row: dict) -> dict:
 
 
 def review_column_governance_context(suggestions: list[dict], environment_name: str, dataset_name: str, table_name: str):
-    """Display governance approval widget; callback actions populate module globals."""
+    """Display governance approval widget.
+
+    Notes
+    -----
+    Approved/rejected rows are populated asynchronously in module globals by
+    widget callbacks.
+    """
     global COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET, REJECTED_COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET
     widgets = importlib.import_module("ipywidgets")
     ipy_display = importlib.import_module("IPython.display").display

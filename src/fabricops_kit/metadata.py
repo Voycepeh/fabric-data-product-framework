@@ -79,6 +79,7 @@ def column_context_rows_for_spark(rows: list[dict]) -> list[dict]:
 
 
 def write_metadata_rows(spark, rows: list[dict], metadata_path, table_name: str, mode: str = "append"):
+    """Write metadata rows to a lakehouse metadata table."""
     df = spark.createDataFrame(column_context_rows_for_spark(rows))
     lakehouse_table_write(df, metadata_path, table_name, mode=mode)
     return df
