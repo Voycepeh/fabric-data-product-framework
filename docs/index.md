@@ -15,6 +15,15 @@ This diagram shows the lightweight operating shape assumed by the starter kit: s
 
 ![FabricOps platform orientation](assets/data-platform-architecture.png)
 
+## How FabricOps assembles a data contract
+
+A FabricOps data contract is a human-readable and AI/machine-readable handover document for a data product.
+
+It is assembled from approved metadata evidence across profiling, data quality, governance, drift, lineage, and runtime records.
+
+![Data contract assembly from approved metadata evidence](assets/data-contract.png)
+
+
 ## How FabricOps works
 
 ![FabricOps lifecycle operating model overview](assets/mvp-flow.png)
