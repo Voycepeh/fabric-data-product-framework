@@ -25,6 +25,9 @@ def test_00_env_config_import_and_default_prompt_override_guard():
     assert "DQ_RULE_CANDIDATE_PROMPT_TEMPLATE = DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE" in prompt_block
     assert "GOVERNANCE_CANDIDATE_PROMPT_TEMPLATE = DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE" in prompt_block
     assert "HANDOVER_SUMMARY_PROMPT_TEMPLATE = DEFAULT_HANDOVER_SUMMARY_TEMPLATE" in prompt_block
+    assert "ReviewWorkflowConfig" in import_block
+    assert "REVIEW_WORKFLOW_CONFIG = ReviewWorkflowConfig(" in prompt_block
+    assert "review_workflow_config=REVIEW_WORKFLOW_CONFIG" in prompt_block
     assert "Suggest candidate DQ rules as JSON. Profile: {profile}" not in prompt_block
     assert "Suggest governance labels as JSON. Profile: {profile}" not in prompt_block
     assert "Summarize run handover details as markdown. Context: {context}" not in prompt_block
@@ -150,3 +153,65 @@ def test_essential_callable_coverage_in_current_starter_notebooks():
     }
     missing = essentials - present - allowed_missing
     assert missing == set(), f"Missing essential callables in templates: {sorted(missing)}"
+
+
+def test_01_data_agreement_template_exists_and_contains_required_context_fields():
+    text = Path("templates/notebooks/01_data_agreement_template.ipynb").read_text(encoding="utf-8")
+    for token in [
+        "AGREEMENT_ID",
+        "APPROVED_USAGE",
+        "BUSINESS_CONTEXT",
+        "ReviewWorkflowConfig",
+        "METADATA_DATA_AGREEMENT",
+    ]:
+        assert token in text
+
+
+def test_01_data_agreement_template_has_no_dq_enforcement_or_column_widget_execution():
+    text = Path("templates/notebooks/01_data_agreement_template.ipynb").read_text(encoding="utf-8")
+    forbidden = [
+        "enforce_dq_rules(",
+        "run_dq_rules(",
+        "capture_column_business_context(",
+        "review_dq_rules(",
+        "review_column_governance_context(",
+    ]
+    for token in forbidden:
+        assert token not in text
+
+
+def test_00_env_config_keeps_review_workflow_defaults_generic():
+    text = Path("templates/notebooks/00_env_config.ipynb").read_text(encoding="utf-8")
+    assert '"business_context": ""' in text or 'business_context=' in text
+    assert '"approved_usage": ""' in text or 'approved_usage=' in text
+    assert "Customer analytics and governed reporting" not in text
+
+
+def test_02_ex_template_references_01_agreement_and_business_context_helpers():
+    text = Path("templates/notebooks/02_ex_agreement_topic.ipynb").read_text(encoding="utf-8")
+    for token in [
+        "%run 01_data_agreement_template",
+        "BUSINESS_CONTEXT",
+        "prepare_business_context_profile_input",
+        "suggest_column_business_contexts",
+        "extract_column_business_context_suggestions",
+        "capture_column_business_context",
+        "COLUMN_BUSINESS_CONTEXT_FROM_WIDGET",
+        "prepare_dq_profile_input",
+        "prepare_governance_profile_input",
+        "suggest_personal_identifier_classifications",
+        "review_column_governance_context",
+    ]:
+        assert token in text
+
+
+def test_03_pc_template_has_no_ai_suggestion_or_business_context_widget_calls():
+    text = Path("templates/notebooks/03_pc_agreement_source_to_target.ipynb").read_text(encoding="utf-8")
+    for token in ["suggest_column_business_contexts", "suggest_personal_identifier_classifications", "capture_column_business_context"]:
+        assert token not in text
+
+
+def test_templates_readme_documents_all_four_layers():
+    text = Path("templates/notebooks/README.md").read_text(encoding="utf-8")
+    for token in ["00_env_config", "01_data_agreement_template", "02_ex_*", "03_pc_*"]:
+        assert token in text

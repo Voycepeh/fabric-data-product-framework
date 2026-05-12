@@ -95,23 +95,50 @@ class AIPromptConfig:
     True
     """
 
-    dq_rule_candidate_template: str
-    governance_candidate_template: str
-    handover_summary_template: str
+    business_context_template: str = ""
+    dq_rule_candidate_template: str = ""
+    governance_personal_identifier_template: str = ""
+    governance_candidate_template: str = ""
+    handover_summary_template: str = ""
+    governance_review_template: str = (
+        "Use business_context={business_context}, approved_usage={approved_usage}, dataset_context={dataset_context}, "
+        "profile_context={profile_context}, glossary_context={glossary_context}, steward_notes={steward_notes}. "
+        "Return JSON rows with suggestion_type,target_column,approved_label,business_reason,evidence,confidence."
+    )
 
     def __post_init__(self) -> None:
+        if not self.business_context_template:
+            object.__setattr__(self, "business_context_template", DEFAULT_BUSINESS_CONTEXT_PROMPT_TEMPLATE)
+        if not self.dq_rule_candidate_template:
+            object.__setattr__(self, "dq_rule_candidate_template", DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE)
+        if not self.governance_personal_identifier_template:
+            object.__setattr__(self, "governance_personal_identifier_template", DEFAULT_GOVERNANCE_PERSONAL_IDENTIFIER_PROMPT_TEMPLATE)
+        if not self.governance_candidate_template:
+            object.__setattr__(self, "governance_candidate_template", DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE)
+        if not self.handover_summary_template:
+            object.__setattr__(self, "handover_summary_template", DEFAULT_HANDOVER_SUMMARY_TEMPLATE)
         for label, value in {
+            "business_context_template": self.business_context_template,
             "dq_rule_candidate_template": self.dq_rule_candidate_template,
+            "governance_personal_identifier_template": self.governance_personal_identifier_template,
             "governance_candidate_template": self.governance_candidate_template,
             "handover_summary_template": self.handover_summary_template,
+            "governance_review_template": self.governance_review_template,
         }.items():
             if not isinstance(value, str) or not value.strip():
                 raise ValueError(f"{label} must be a non-empty string.")
 
 
 
+DEFAULT_BUSINESS_CONTEXT_PROMPT_TEMPLATE = """
+Infer business meaning only for one column. Do not classify personal data.
+Use table_name={table_name}, table_context={table_context}, column_name={column_name}, data_type={data_type},
+row_count={row_count}, null_count={null_count}, distinct_count={distinct_count}, observed_values_sample={observed_values_sample}.
+Return only Python dict:
+BUSINESS_CONTEXT = {"column_name": "name", "business_context": "clear business meaning", "notes": "optional reviewer note"}
+""".strip()
 
-DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE = """
+DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE = """
 You are helping draft candidate FabricOps data quality rules for a pipeline contract notebook.
 
 These suggestions are advisory only.
@@ -188,9 +215,18 @@ Minimum value: {min_value}
 Maximum value: {max_value}
 Observed values sample: {observed_values_sample}
 
-Business context:
-{business_context}
+Approved business context:
+{approved_business_context}
 """
+DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE = DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
+
+DEFAULT_GOVERNANCE_PERSONAL_IDENTIFIER_PROMPT_TEMPLATE = """
+Use approved_business_context as evidence. Classify personal identifier status separately from business context.
+Allowed personal identifier values: not_personal_data, direct_identifier, indirect_identifier, unknown.
+Allowed confidentiality labels: public, confidential, restricted.
+Return only JSON dict with keys:
+column_name, ai_suggested_personal_identifier_classification, confidentiality_label, evidence, reasoning.
+""".strip()
 
 DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE = (
     "Generate governance label suggestions from profile metadata. "
@@ -259,6 +295,22 @@ class GovernanceConfig:
 
 
 @dataclass(frozen=True)
+class ReviewWorkflowConfig:
+    """Notebook-table review settings for DQ and governance suggestion approval."""
+
+    business_context: str = ""
+    approved_usage: str = ""
+    profile_table: str = "metadata.profile_rows"
+    business_context_review_table: str = "metadata.business_context_review"
+    business_context_approved_table: str = "metadata.business_context_approved"
+    dq_review_table: str = "metadata.dq_review"
+    dq_approved_table: str = "metadata.dq_approved"
+    governance_review_table: str = "metadata.governance_review"
+    governance_approved_table: str = "metadata.governance_approved"
+    default_approval_status: str = "pending"
+
+
+@dataclass(frozen=True)
 class LineageConfig:
     """Default lineage-capture behavior for pipeline traceability.
 
@@ -295,6 +347,8 @@ class FrameworkConfig:
         Default quality-policy settings.
     governance_config : GovernanceConfig
         Default governance-policy settings.
+    review_workflow_config : ReviewWorkflowConfig
+        Notebook-native review, approval, and metadata destination settings.
     lineage_config : LineageConfig
         Default lineage capture behavior.
 
@@ -317,6 +371,7 @@ class FrameworkConfig:
     ai_prompt_config: AIPromptConfig
     quality_config: QualityConfig
     governance_config: GovernanceConfig
+    review_workflow_config: ReviewWorkflowConfig
     lineage_config: LineageConfig
 
 
@@ -421,6 +476,7 @@ def _validate_framework_config(config: FrameworkConfig | dict[str, Any]) -> Fram
             "ai_prompt_config",
             "quality_config",
             "governance_config",
+            "review_workflow_config",
             "lineage_config",
         }
         missing_keys = sorted(required_keys.difference(config.keys()))
@@ -440,6 +496,8 @@ def _validate_framework_config(config: FrameworkConfig | dict[str, Any]) -> Fram
         raise ValueError("quality_config must be a QualityConfig object.")
     if not isinstance(normalized.governance_config, GovernanceConfig):
         raise ValueError("governance_config must be a GovernanceConfig object.")
+    if not isinstance(normalized.review_workflow_config, ReviewWorkflowConfig):
+        raise ValueError("review_workflow_config must be a ReviewWorkflowConfig object.")
     if not isinstance(normalized.lineage_config, LineageConfig):
         raise ValueError("lineage_config must be a LineageConfig object.")
 

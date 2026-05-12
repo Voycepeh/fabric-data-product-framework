@@ -147,6 +147,7 @@ from fabricops_kit.config import (
     NotebookRuntimeConfig,
     PathConfig,
     QualityConfig,
+    ReviewWorkflowConfig,
     get_path,
     run_config_smoke_tests,
 )
@@ -168,6 +169,7 @@ def _sample_framework_config():
         ai_prompt_config=AIPromptConfig("quality {profile}", "lineage {steps}", "handover {context}"),
         quality_config=QualityConfig(),
         governance_config=GovernanceConfig(),
+        review_workflow_config=ReviewWorkflowConfig(),
         lineage_config=LineageConfig(),
     )
 

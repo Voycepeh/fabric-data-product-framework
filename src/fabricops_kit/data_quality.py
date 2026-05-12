@@ -32,8 +32,11 @@ from pyspark.sql.window import Window
 from pyspark.sql import SparkSession
 from .data_profiling import profile_dataframe
 from .fabric_input_output import lakehouse_table_write
+from .metadata import build_dq_rule_key, build_metadata_column_key, build_metadata_table_key, _now_utc_iso, _resolve_action_by
+from .config import DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
 
 AI_SUGGESTABLE_DQ_RULE_TYPES = {"not_null", "unique_key", "accepted_values", "value_range", "regex_format"}
+DQ_RULE_SUGGESTION_PROMPT_TEMPLATE = DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
 
 
 @dataclass
@@ -115,6 +118,41 @@ def _parse_dq_rules_dict_from_text(text: str) -> dict[str, list[dict[str, Any]]]
     return parsed if isinstance(parsed, dict) else {}
 
 
+parse_dq_rules_dict_from_text = _parse_dq_rules_dict_from_text
+
+
+def prepare_dq_profile_input(profile_rows: list[dict], table_name: str, column_contexts: list[dict]) -> list[dict]:
+    """Join approved column business context into profile rows before DQ AI suggestion."""
+    context_lookup = {r["column_name"]: r for r in column_contexts or [] if r.get("column_name")}
+    out = []
+    for row in profile_rows:
+        c = row.get("column_name")
+        approved_ctx = (context_lookup.get(c) or {}).get("approved_business_context")
+        if not approved_ctx:
+            continue
+        out.append({**row, "table_name": table_name, "approved_business_context": approved_ctx})
+    return out
+
+
+def attach_rule_metadata_keys(candidate_rules: list[dict], environment_name: str, dataset_name: str, table_name: str) -> list[dict]:
+    """Attach deterministic metadata keys to candidate DQ rules."""
+    out = []
+    for rule in candidate_rules or []:
+        cols = rule.get("columns", [])
+        out.append(
+            {
+                **rule,
+                "environment_name": environment_name,
+                "dataset_name": dataset_name,
+                "table_name": table_name,
+                "metadata_table_key": build_metadata_table_key(environment_name, dataset_name, table_name),
+                "metadata_column_keys": [build_metadata_column_key(environment_name, dataset_name, table_name, c) for c in cols],
+                "rule_key": build_dq_rule_key(environment_name, dataset_name, table_name, rule.get("rule_id")),
+            }
+        )
+    return out
+
+
 def _extract_dq_rules(response_df, table_name: str, response_col: str = "response") -> list[dict[str, Any]]:
     """Extract notebook-shaped AI responses and deduplicate candidate DQ rules by ``rule_id``."""
     candidates: list[dict[str, Any]] = []
@@ -126,6 +164,87 @@ def _extract_dq_rules(response_df, table_name: str, response_col: str = "respons
         if rid:
             deduped[rid] = rule
     return list(deduped.values())
+
+
+def suggest_dq_rules_with_fabric_ai(prepared_profile_df, prompt_template: str, output_col: str = "ai_dq_response"):
+    """Run Fabric AI to draft DQ rules from prepared profile rows.
+
+    Parameters
+    ----------
+    prepared_profile_df : pyspark.sql.DataFrame
+        Prepared profile rows (including approved business context) for prompt execution.
+    prompt_template : str
+        Prompt template text, usually from ``CONFIG.ai_prompt_config.dq_rule_candidate_template``.
+    output_col : str, default=\"ai_dq_response\"
+        Response column for AI output text.
+
+    Returns
+    -------
+    pyspark.sql.DataFrame
+        Input DataFrame enriched with AI response output.
+    """
+    ai = getattr(prepared_profile_df, "ai", None)
+    if ai is None or not hasattr(ai, "generate_response"):
+        raise RuntimeError("suggest_dq_rules_with_fabric_ai requires Fabric DataFrame.ai.generate_response.")
+    return prepared_profile_df.ai.generate_response(prompt=prompt_template, is_prompt_template=True, output_col=output_col)
+
+
+def extract_candidate_rules_from_responses(response_rows, table_name: str, response_col: str = "ai_dq_response") -> list[dict[str, Any]]:
+    """Extract candidate DQ rules from Spark/list AI responses.
+
+    Parameters
+    ----------
+    response_rows : pyspark.sql.DataFrame | list[dict]
+        AI response rows containing a DQ rules dictionary payload.
+    table_name : str
+        Target table key used to select rules from ``DQ_RULES`` payload.
+    response_col : str, default=\"ai_dq_response\"
+        Response column name containing AI text.
+
+    Returns
+    -------
+    list[dict[str, Any]]
+        Deduplicated candidate DQ rules.
+    """
+    if hasattr(response_rows, "select"):
+        return _extract_dq_rules(response_rows, table_name=table_name, response_col=response_col)
+    candidates: list[dict[str, Any]] = []
+    for row in response_rows or []:
+        text = row.get(response_col) or row.get("response") or ""
+        candidates.extend(_parse_dq_rules_dict_from_text(text).get(table_name, []))
+    by_id = {r.get("rule_id"): r for r in candidates if r.get("rule_id")}
+    return list(by_id.values())
+
+
+def build_dq_review_rows(suggested_rules: list[dict[str, Any]], default_approval_status: str = "pending") -> list[dict[str, Any]]:
+    """Build notebook-editable DQ review rows without changing rule taxonomy."""
+    rows: list[dict[str, Any]] = []
+    for rule in suggested_rules or []:
+        rows.append(
+            {
+                "suggestion_type": "dq_rule",
+                "target_column": (rule.get("columns") or [None])[0],
+                "rule_name": rule.get("rule_type"),
+                "proposed_rule_payload": json.dumps(rule, sort_keys=True),
+                "business_reason": rule.get("description", ""),
+                "evidence": "",
+                "confidence": None,
+                "approval_status": default_approval_status,
+                "reviewer_notes": "",
+            }
+        )
+    return rows
+
+
+def approved_dq_rules_from_review_rows(review_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Return approved canonical DQ rules from notebook review rows."""
+    approved: list[dict[str, Any]] = []
+    for row in review_rows or []:
+        if str(row.get("approval_status", "")).lower() != "approved":
+            continue
+        payload = row.get("proposed_rule_payload") or "{}"
+        approved.append(json.loads(payload) if isinstance(payload, str) else dict(payload))
+    return approved
 
 
 def validate_dq_rules(rules: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -161,8 +280,8 @@ def validate_dq_rules(rules: list[dict[str, Any]]) -> list[dict[str, Any]]:
             raise ValueError(f"DQ rule '{rule['rule_id']}' requires exactly one column.")
         if rule["rule_type"] == "accepted_values" and "allowed_values" not in rule:
             raise ValueError(f"DQ rule '{rule['rule_id']}' requires allowed_values.")
-        if rule["rule_type"] == "value_range" and "min_value" not in rule and "max_value" not in rule:
-            raise ValueError(f"DQ rule '{rule['rule_id']}' requires min_value or max_value.")
+        if rule["rule_type"] == "value_range" and "lower_bound" not in rule and "upper_bound" not in rule:
+            raise ValueError(f"DQ rule '{rule['rule_id']}' requires lower_bound or upper_bound.")
         if rule["rule_type"] == "regex_format" and "regex_pattern" not in rule:
             raise ValueError(f"DQ rule '{rule['rule_id']}' requires regex_pattern.")
     return rules
@@ -336,8 +455,10 @@ def _split_dq_rows(df, rules: list[dict[str, Any]], dq_run_id: str | None = None
             failed = F.col(col_name).isNotNull() & ~F.col(col_name).isin(rule["allowed_values"])
         elif rtype == "value_range":
             cond = F.lit(False)
-            if rule.get("min_value") is not None: cond = cond | (F.col(col_name).cast("double") < F.lit(float(rule["min_value"])))
-            if rule.get("max_value") is not None: cond = cond | (F.col(col_name).cast("double") > F.lit(float(rule["max_value"])))
+            if rule.get("lower_bound") is not None:
+                cond = cond | (F.col(col_name).cast("double") < F.lit(float(rule["lower_bound"])))
+            if rule.get("upper_bound") is not None:
+                cond = cond | (F.col(col_name).cast("double") > F.lit(float(rule["upper_bound"])))
             failed = F.col(col_name).isNotNull() & cond
         elif rtype == "regex_format":
             failed = F.col(col_name).isNotNull() & ~F.col(col_name).rlike(rule["regex_pattern"])
@@ -464,6 +585,67 @@ def enforce_dq_rules(df, *, table_name: str, rules=None, metadata_df=None, row_i
     return DQEnforcementResult(active_rules, rule_results, valid_rows, quarantine_rows, failure_rows)
 
 
+def build_dq_rules_metadata_df(spark, approved_rules: list[dict], action_by: str | None = None, action_reason: str = "Approved by reviewer", rule_source: str = "dq_review_widget"):
+    """Build approved DQ metadata rows as a Spark DataFrame."""
+    rows = []
+    now = _now_utc_iso()
+    actor = _resolve_action_by(action_by)
+    for rule in approved_rules or []:
+        rows.append(
+            {
+                "environment_name": rule.get("environment_name"),
+                "dataset_name": rule.get("dataset_name"),
+                "table_name": rule.get("table_name"),
+                "metadata_table_key": rule.get("metadata_table_key"),
+                "metadata_column_keys": rule.get("metadata_column_keys"),
+                "rule_key": rule.get("rule_key"),
+                "rule_id": rule.get("rule_id"),
+                "rule_type": rule.get("rule_type"),
+                "columns": rule.get("columns"),
+                "severity": rule.get("severity"),
+                "description": rule.get("description"),
+                "rule_json": json.dumps(rule, sort_keys=True),
+                "is_active": True,
+                "action_type": "approved",
+                "action_by": actor,
+                "action_ts": now,
+                "action_reason": action_reason,
+                "rule_source": rule_source,
+            }
+        )
+    return spark.createDataFrame(rows)
+
+
+def build_dq_rule_deactivation_metadata_df(spark, rejected_rules: list[dict], action_by: str | None = None, action_reason: str = "Rejected by reviewer", rule_source: str = "dq_review_widget"):
+    rows = []
+    now = _now_utc_iso()
+    actor = _resolve_action_by(action_by)
+    for rule in rejected_rules or []:
+        rows.append(
+            {
+                "environment_name": rule.get("environment_name"),
+                "dataset_name": rule.get("dataset_name"),
+                "table_name": rule.get("table_name"),
+                "metadata_table_key": rule.get("metadata_table_key"),
+                "metadata_column_keys": rule.get("metadata_column_keys"),
+                "rule_key": rule.get("rule_key"),
+                "rule_id": rule.get("rule_id"),
+                "rule_type": rule.get("rule_type"),
+                "columns": rule.get("columns"),
+                "severity": rule.get("severity"),
+                "description": rule.get("description"),
+                "rule_json": json.dumps(rule, sort_keys=True),
+                "is_active": False,
+                "action_type": "rejected",
+                "action_by": actor,
+                "action_ts": now,
+                "action_reason": action_reason,
+                "rule_source": rule_source,
+            }
+        )
+    return spark.createDataFrame(rows)
+
+
 def _require_ipywidgets() -> tuple[object, object]:
     widgets = importlib.import_module("ipywidgets")
     ipy_display = importlib.import_module("IPython.display").display
@@ -500,8 +682,8 @@ def review_dq_rules(candidate_rules, table_name: str):
     widgets, ipy_display = _require_ipywidgets()
     global APPROVED_RULES_FROM_WIDGET, REJECTED_RULES_FROM_WIDGET
 
-    APPROVED_RULES_FROM_WIDGET = []
-    REJECTED_RULES_FROM_WIDGET = []
+    APPROVED_RULES_FROM_WIDGET.clear()
+    REJECTED_RULES_FROM_WIDGET.clear()
 
     state = {"index": 0}
 
@@ -827,5 +1009,3 @@ def review_dq_rule_deactivations(active_rules, table_name: str):
     ui = widgets.VBox([title, progress, summary, form_box, status], layout=widgets.Layout(border="1px solid #ddd", padding="12px", width="850px"))
     refresh()
     ipy_display(ui)
-
-

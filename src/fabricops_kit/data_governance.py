@@ -7,10 +7,13 @@ from __future__ import annotations
 
 import json
 import re
+import importlib
 from collections import Counter
 from typing import Any
 
 from fabricops_kit._utils import _to_jsonable
+from fabricops_kit.metadata import build_metadata_column_key, build_metadata_table_key, _now_utc_iso, _resolve_action_by
+from fabricops_kit.config import DEFAULT_GOVERNANCE_PERSONAL_IDENTIFIER_PROMPT_TEMPLATE
 
 DEFAULT_CLASSIFICATION_TERMS: dict[str, list[str]] = {
     "identifier": ["staff_id", "student_id", "employee_id", "user_id", "person_id", "nric", "national_id", "passport", "matric", "account_id"],
@@ -34,6 +37,181 @@ DEFAULT_ACTION_BY_CLASSIFICATION = {
     "sensitive_free_text": "mask_or_tokenize",
     "unknown": "review",
 }
+DEFAULT_GOVERNANCE_WIDGET_CONFIG = {
+    "confidentiality_labels": ["public", "confidential", "restricted"],
+    "personal_identifier_options": ["not_personal_data", "direct_identifier", "indirect_identifier", "unknown"],
+}
+COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET: list[dict] = []
+REJECTED_COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET: list[dict] = []
+PDPA_PERSONAL_IDENTIFIER_PROMPT = DEFAULT_GOVERNANCE_PERSONAL_IDENTIFIER_PROMPT_TEMPLATE
+
+
+def build_governance_prompt_context(
+    business_context: str,
+    approved_usage: str,
+    dataset_context: str,
+    profile_context: str = "",
+    glossary_context: str = "",
+    steward_notes: str = "",
+) -> dict[str, str]:
+    """Build first-class governance prompt context fields for notebook workflows."""
+    return {
+        "business_context": business_context or "",
+        "approved_usage": approved_usage or "",
+        "dataset_context": dataset_context or "",
+        "profile_context": profile_context or "",
+        "glossary_context": glossary_context or "",
+        "steward_notes": steward_notes or "",
+    }
+
+
+def build_governance_review_rows(classifications: list[dict[str, Any]], default_approval_status: str = "pending") -> list[dict[str, Any]]:
+    """Convert governance suggestions into notebook-editable review rows."""
+    rows: list[dict[str, Any]] = []
+    for item in classifications or []:
+        rows.append(
+            {
+                "suggestion_type": "governance_classification",
+                "target_column": item.get("column_name"),
+                "rule_name": "classification",
+                "proposed_rule_payload": json.dumps(_to_jsonable(item), sort_keys=True),
+                "business_reason": item.get("reason", ""),
+                "evidence": json.dumps(_to_jsonable(item.get("evidence") or {}), sort_keys=True),
+                "confidence": item.get("confidence"),
+                "approval_status": default_approval_status,
+                "reviewer_notes": "",
+                "approved_label": item.get("approved_label") or item.get("suggested_classification"),
+            }
+        )
+    return rows
+
+
+def build_approved_governance_records(review_rows: list[dict[str, Any]], dataset_name: str, table_name: str, run_id: str | None = None) -> list[dict[str, Any]]:
+    """Convert reviewed governance rows into approval-ready metadata records."""
+    out: list[dict[str, Any]] = []
+    for row in review_rows or []:
+        if str(row.get("approval_status", "")).lower() != "approved":
+            continue
+        payload = row.get("proposed_rule_payload") or "{}"
+        suggestion = json.loads(payload) if isinstance(payload, str) else dict(payload)
+        out.append(
+            {
+                "run_id": run_id,
+                "dataset_name": dataset_name,
+                "table_name": table_name,
+                "column_name": row.get("target_column"),
+                "approved_classification": row.get("approved_label") or suggestion.get("suggested_classification"),
+                "business_reason": row.get("business_reason"),
+                "reviewer_notes": row.get("reviewer_notes", ""),
+                "evidence_json": row.get("evidence", "{}"),
+                "source_suggestion_json": json.dumps(_to_jsonable(suggestion), sort_keys=True),
+                "status": "approved",
+            }
+        )
+    return out
+
+
+def prepare_governance_profile_input(profile_rows: list[dict], table_name: str, column_contexts: list[dict]) -> list[dict]:
+    """Join approved business context evidence into profile rows for governance AI suggestion."""
+    context_lookup = {r["column_name"]: r for r in column_contexts or [] if r.get("column_name")}
+    out = []
+    for row in profile_rows or []:
+        col = row.get("column_name") or row.get("COLUMN_NAME")
+        approved = (context_lookup.get(col) or {}).get("approved_business_context")
+        if not approved:
+            continue
+        out.append({**row, "table_name": table_name, "column_name": col, "approved_business_context": approved})
+    return out
+
+
+def suggest_personal_identifier_classifications(prepared_profile_df, prompt: str = PDPA_PERSONAL_IDENTIFIER_PROMPT, output_col: str = "ai_governance_response"):
+    """Run Fabric AI personal-identifier suggestion prompt on prepared governance rows."""
+    ai = getattr(prepared_profile_df, "ai", None)
+    if ai is None or not hasattr(ai, "generate_response"):
+        raise RuntimeError("suggest_personal_identifier_classifications requires Fabric DataFrame.ai.generate_response.")
+    return prepared_profile_df.ai.generate_response(prompt=prompt, is_prompt_template=True, output_col=output_col)
+
+
+def extract_personal_identifier_suggestions(response_rows, response_col: str = "ai_governance_response") -> list[dict]:
+    """Extract governance suggestions from Spark/list response payloads."""
+    out = []
+    if hasattr(response_rows, "collect"):
+        iterable = [r.asDict(recursive=True) if hasattr(r, "asDict") else dict(r) for r in response_rows.collect()]
+    else:
+        iterable = response_rows or []
+    for row in iterable:
+        if response_col in row:
+            parsed = row.get(response_col)
+            if isinstance(parsed, str):
+                try:
+                    parsed = json.loads(parsed)
+                except Exception:
+                    parsed = {}
+            if isinstance(parsed, dict):
+                out.append(parsed)
+                continue
+        out.append(_get_governance_ai_suggestion(row))
+    return [r for r in out if r]
+
+
+def _get_governance_ai_suggestion(row: dict) -> dict:
+    if "suggestion" in row and isinstance(row["suggestion"], dict):
+        return row["suggestion"]
+    return {
+        "column_name": row.get("column_name"),
+        "ai_suggested_personal_identifier_classification": row.get("ai_suggested_personal_identifier_classification", "unknown"),
+        "confidentiality_label": row.get("confidentiality_label", "confidential"),
+    }
+
+
+def review_column_governance_context(suggestions: list[dict], environment_name: str, dataset_name: str, table_name: str):
+    """Display governance approval widget.
+
+    Notes
+    -----
+    Approved/rejected rows are populated asynchronously in module globals by
+    widget callbacks.
+    """
+    global COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET, REJECTED_COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET
+    widgets = importlib.import_module("ipywidgets")
+    ipy_display = importlib.import_module("IPython.display").display
+    approved, rejected = [], []
+    idx = {"i": 0}
+    summary = widgets.HTML()
+    pid = widgets.Dropdown(options=DEFAULT_GOVERNANCE_WIDGET_CONFIG["personal_identifier_options"], description="Identifier")
+    conf = widgets.Dropdown(options=DEFAULT_GOVERNANCE_WIDGET_CONFIG["confidentiality_labels"], description="Confidentiality")
+    notes = widgets.Textarea(description="Reviewer notes", layout=widgets.Layout(width="900px", height="80px"))
+    b1, b2, b3 = widgets.Button(description="Approve", button_style="success"), widgets.Button(description="Reject", button_style="danger"), widgets.Button(description="Undo", button_style="warning")
+
+    def cur():
+        return suggestions[idx["i"]] if idx["i"] < len(suggestions) else None
+    def load():
+        r = cur()
+        if r is None:
+            summary.value = f"<b>Done</b> approved={len(approved)}"
+            return
+        summary.value = f"{idx['i']+1}/{len(suggestions)} col={r.get('column_name')}<br/>Business context evidence: {r.get('approved_business_context','')}"
+        pid.value = r.get("ai_suggested_personal_identifier_classification", "unknown")
+        conf.value = r.get("confidentiality_label", "confidential")
+        notes.value = ""
+    def on_approve(_):
+        r = cur()
+        approved.append({"environment_name": environment_name,"dataset_name": dataset_name,"table_name": table_name,"column_name": r.get("column_name"),"metadata_table_key": build_metadata_table_key(environment_name,dataset_name,table_name),"metadata_column_key": build_metadata_column_key(environment_name,dataset_name,table_name,r.get("column_name")),"approved_business_context": r.get("approved_business_context",""),"ai_suggested_personal_identifier_classification": r.get("ai_suggested_personal_identifier_classification","unknown"),"approved_personal_identifier_classification": pid.value,"confidentiality_label": conf.value,"reviewer_notes": notes.value,"approved_by": None,"approved_at": _now_utc_iso()})
+        idx["i"] += 1; load()
+    def on_reject(_):
+        r = cur()
+        rejected.append(r)
+        idx["i"] += 1; load()
+    def on_undo(_):
+        if approved: approved.pop()
+        idx["i"] = max(0, idx["i"] - 1); load()
+    b1.on_click(on_approve); b2.on_click(on_reject); b3.on_click(on_undo); load()
+    ipy_display(widgets.VBox([summary, pid, conf, notes, widgets.HBox([b1,b2,b3])]))
+    COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET.clear()
+    COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET.extend(approved)
+    REJECTED_COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET.clear()
+    REJECTED_COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET.extend(rejected)
+    return None
 
 
 def _normalize_columns(profile: dict | list[dict]) -> list[dict]:
