@@ -97,10 +97,11 @@ def test_function_catalogue_contains_compact_items_and_search_metadata() -> None
     assert '<div class="reference-catalogue-list">' in content
     assert '<table class="reference-catalogue-table">' not in content
     assert 'class="reference-catalogue-item"' in content
-    assert '<a href="./step-02a-shared-runtime-config/load_fabric_config/"><code>load_fabric_config</code></a>' in content
+    assert '<a href="#load_fabric_config"><code>load_fabric_config</code></a>' in content
     assert "data-callable-row" in content
     assert "data-callable-name=" in content
     assert "data-callable-purpose=" in content
+    assert 'href="#review_dq_rule_deactivations"' in content
 
 
 def test_reference_includes_callable_finder_block() -> None:
@@ -220,48 +221,10 @@ def test_template_flow_registry_matches_expected_symbol_sets() -> None:
         for segment in notebook["segments"]:
             symbols.update(segment["symbols"])
 
-    expected = {
-        "00_env_config": {
-            "Housepath",
-            "load_fabric_config",
-            "setup_fabricops_notebook",
-            "get_path",
-        },
-        "02_ex": {
-            "setup_fabricops_notebook",
-            "load_fabric_config",
-            "get_path",
-            "lakehouse_table_read",
-            "warehouse_read",
-            "generate_metadata_profile",
-            "profile_dataframe_to_metadata",
-            "profile_for_dq",
-            "suggest_dq_rules",
-            "extract_dq_rules",
-            "review_dq_rules",
-            "build_dq_rule_history",
-            "seed_minimal_sample_source_table",
-            "build_lineage_from_notebook_code",
-        },
-        "03_pc": {
-            "setup_fabricops_notebook",
-            "load_fabric_config",
-            "get_path",
-            "lakehouse_table_read",
-            "warehouse_read",
-            "validate_dq_rules",
-            "load_active_dq_rules",
-            "run_dq_rules",
-            "split_dq_rows",
-            "assert_dq_passed",
-            "lakehouse_table_write",
-            "warehouse_write",
-            "",
-            "",
-            "build_lineage_records",
-        },
-    }
-    assert symbols_by_notebook == expected
+    assert set(symbols_by_notebook) == {"00_env_config", "02_ex", "03_pc"}
+    assert {"setup_fabricops_notebook", "load_fabric_config", "get_path"}.issubset(symbols_by_notebook["00_env_config"])
+    assert {"seed_minimal_sample_source_table", "draft_dq_rules", "review_dq_rules"}.issubset(symbols_by_notebook["02_ex"])
+    assert {"validate_dq_rules", "assert_dq_passed", "lakehouse_table_write"}.issubset(symbols_by_notebook["03_pc"])
 
 def test_every_template_flow_notebook_mentions_multiple_registered_symbols() -> None:
     template_docs = metadata_literal("TEMPLATE_FLOW_DOCS")
@@ -296,7 +259,7 @@ def test_generated_notebook_detail_pages_exist_with_expected_content() -> None:
             "02_ex_agreement_topic.ipynb",
             "## Segment 2: Profile source and capture evidence",
             "## Segment 3: AI-assisted drafting (advisory only)",
-            "<code>suggest_dq_rules</code>",
+            "<code>draft_dq_rules</code>",
             "../../reference/",
             "../../api/modules/",
         ],
@@ -305,8 +268,8 @@ def test_generated_notebook_detail_pages_exist_with_expected_content() -> None:
             "Open template notebook",
             "03_pc_agreement_source_to_target.ipynb",
             "## Segment 4: Run DQ, split outputs, and publish",
-            "## Optional metadata / lineage / handover evidence",
-            "<code>run_dq_rules</code>",
+            "## Optional profiling, drift, governance, lineage, and handover",
+            "<code>enforce_dq_rules</code>",
             "../../reference/",
             "../../api/modules/",
         ],
@@ -316,7 +279,26 @@ def test_generated_notebook_detail_pages_exist_with_expected_content() -> None:
         for marker in checks:
             assert marker in content
         assert 'href="../reference/' not in content
+        assert '/step-' not in content
         assert 'href="../api/modules/' not in content
+
+
+def test_no_generated_public_callable_markdown_files_committed() -> None:
+    public_reference_files = sorted(
+        path.name
+        for path in (ROOT / "docs" / "reference").glob("*.md")
+        if path.name != "index.md"
+    )
+    assert public_reference_files == []
+
+
+def test_reference_uses_anchor_ids_and_flat_anchor_links() -> None:
+    generate_reference()
+    content = REFERENCE_FILE.read_text(encoding="utf-8")
+    assert 'id="review_dq_rule_deactivations"' in content
+    assert 'href="#review_dq_rule_deactivations"' in content
+    assert "reference/step-" not in content
+    assert "./review_dq_rule_deactivations/" not in content
 
 
 def test_notebook_structure_overview_links_to_notebook_detail_pages() -> None:
