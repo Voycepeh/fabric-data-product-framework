@@ -97,11 +97,11 @@ def test_function_catalogue_contains_compact_items_and_search_metadata() -> None
     assert '<div class="reference-catalogue-list">' in content
     assert '<table class="reference-catalogue-table">' not in content
     assert 'class="reference-catalogue-item"' in content
-    assert '<a href="#load_fabric_config"><code>load_fabric_config</code></a>' in content
+    assert '<a href="./load_fabric_config/"><code>load_fabric_config</code></a>' in content
     assert "data-callable-row" in content
     assert "data-callable-name=" in content
     assert "data-callable-purpose=" in content
-    assert 'href="#review_dq_rule_deactivations"' in content
+    assert 'href="./review_dq_rule_deactivations/"' in content
 
 
 def test_reference_includes_callable_finder_block() -> None:
@@ -292,13 +292,31 @@ def test_no_generated_public_callable_markdown_files_committed() -> None:
     assert public_reference_files == []
 
 
-def test_reference_uses_anchor_ids_and_flat_anchor_links() -> None:
+def test_reference_links_to_flat_public_callable_pages() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
-    assert 'id="review_dq_rule_deactivations"' in content
-    assert 'href="#review_dq_rule_deactivations"' in content
+    assert 'href="./review_dq_rule_deactivations/"' in content
+    assert 'href="./get_path/"' in content
     assert "reference/step-" not in content
-    assert "./review_dq_rule_deactivations/" not in content
+    assert "api/reference" not in content
+
+
+def test_mkdocs_reference_generator_writes_public_callable_pages_without_workflow_steps() -> None:
+    source = (ROOT / "docs" / "gen_ref_pages.py").read_text(encoding="utf-8")
+    assert "WORKFLOW_STEP_DOCS" not in source
+    assert "reference/step-" not in source
+    assert 'doc_path = f"reference/{symbol_name}.md"' in source
+    assert "PUBLIC_SYMBOL_DOCS" in source
+
+
+def test_generated_module_and_notebook_pages_link_to_public_callable_urls() -> None:
+    generate_reference()
+    environment_config = (ROOT / "docs/api/modules/environment_config.md").read_text(encoding="utf-8")
+    notebook_page = (ROOT / "docs/notebook-structure/00-env-config.md").read_text(encoding="utf-8")
+    assert "../../reference/get_path/" in environment_config
+    assert "../../reference/get_path/" in notebook_page
+    assert "reference/step-" not in environment_config
+    assert "reference/step-" not in notebook_page
 
 
 def test_notebook_structure_overview_links_to_notebook_detail_pages() -> None:
