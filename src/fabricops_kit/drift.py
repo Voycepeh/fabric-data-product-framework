@@ -712,6 +712,27 @@ def summarize_drift_results(schema_drift_result: dict | None = None, partition_d
     }
 
 
+def prepare_drift_baselines(
+    *,
+    current_profile: dict | None = None,
+    baseline_profile: dict | None = None,
+    baseline_schema_snapshot: dict | None = None,
+    baseline_partition_snapshot: list[dict] | dict | None = None,
+) -> dict:
+    """Prepare baseline payloads for drift checks in notebook workflows.
+
+    When baseline inputs are omitted, this helper safely falls back to
+    ``None`` for schema/partition baselines and to ``current_profile`` for
+    profile drift baselines. This keeps optional drift sections run-all safe
+    while still enabling strict comparisons once persisted baselines exist.
+    """
+    return {
+        "schema": baseline_schema_snapshot,
+        "partition": baseline_partition_snapshot,
+        "profile": baseline_profile if baseline_profile is not None else current_profile,
+    }
+
+
 # --- merged from incremental.py ---
 """Incremental partition safety snapshot and comparison helpers."""
 

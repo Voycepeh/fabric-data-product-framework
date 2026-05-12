@@ -68,6 +68,7 @@ def test_02_ex_and_03_pc_share_same_dq_table_key_convention():
 
 def test_03_pc_deterministic_only_and_valid_run_dq_signature():
     pc = _all_code("templates/notebooks/03_pc_agreement_source_to_target.ipynb")
+    assert "RUN_OPTIONAL_ADVANCED_EVIDENCE = False" in pc
     assert 'REQUIRED_SOURCE_COLUMNS = ["customer_id", "event_ts", "status", "amount"]' in pc
     assert 'missing = sorted(set(REQUIRED_SOURCE_COLUMNS) - set(df_source.columns))' in pc
     assert 'metadata_dq_rules = spark.table("METADATA_DQ_RULES")' in pc
@@ -86,6 +87,12 @@ def test_03_pc_output_write_occurs_after_dq_assertion():
     pc = _all_code("templates/notebooks/03_pc_agreement_source_to_target.ipynb")
     assert pc.index("df_valid = dq.valid_rows") < pc.index("lakehouse_table_write(df_valid")
     assert pc.index("assert_dq_passed(dq.rule_results)") < pc.index("lakehouse_table_write(df_valid")
+
+
+def test_03_pc_optional_advanced_evidence_is_guarded():
+    pc = _all_code("templates/notebooks/03_pc_agreement_source_to_target.ipynb")
+    assert "if RUN_OPTIONAL_ADVANCED_EVIDENCE:" in pc
+    assert "prepare_drift_baselines(" in pc
 
 
 def test_docs_match_signature_and_key_convention():
