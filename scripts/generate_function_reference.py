@@ -357,11 +357,10 @@ def main() -> None:
         if any(line.strip().startswith("::: fabricops_kit.") for line in lines):
             raise RuntimeError(f"Mkdocstrings directives should not be rendered on module page for {module}")
         module_md.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
-        if module_manifest.get(module, {}).get("sidebar_include") and module_manifest.get(module, {}).get("visibility") == "public":
-            module_index_lines.append(f"- [`{module}`]({module}.md)")
+        module_index_lines.append(f"- [`{module}`]({module}.md)")
 
     (MODULE_DIR / "index.md").write_text("\n".join(module_index_lines) + "\n", encoding="utf-8", newline="\n")
-    sidebar_modules = [m for m in discovered_doc_modules if module_manifest.get(m, {}).get("visibility", "public") == "public" and module_manifest.get(m, {}).get("sidebar_include", True)]
+    sidebar_modules = list(discovered_doc_modules)
     mkdocs_text = MKDOCS_PATH.read_text(encoding="utf-8")
     start_marker = "      # AUTO-GENERATED-MODULES-START"
     end_marker = "      # AUTO-GENERATED-MODULES-END"
@@ -386,7 +385,7 @@ def main() -> None:
                 "visibility": module_meta["visibility"],
                 "module_summary": module_meta["module_summary"],
                 "sidebar_group": module_meta["sidebar_group"],
-                "sidebar_include": module_meta["sidebar_include"],
+                "sidebar_include": True,
                 "callable_name": s.name,
                 "callable_visibility": "public",
                 "callable_role": callable_role,
@@ -399,10 +398,10 @@ def main() -> None:
         meta = module_manifest.get(module, {})
         manifest_modules.append({
             "module_name": module,
-            "visibility": meta.get("visibility", "public"),
+            "visibility": "public",
             "module_summary": meta.get("module_summary", ""),
             "sidebar_group": meta.get("sidebar_group", "Modules"),
-            "sidebar_include": meta.get("sidebar_include", True),
+            "sidebar_include": True,
         })
     MANIFEST_PATH.write_text(json.dumps({"modules": manifest_modules, "callables": manifest_rows}, indent=2) + "\n", encoding="utf-8")
 

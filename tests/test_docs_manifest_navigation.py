@@ -35,10 +35,9 @@ def test_discovered_modules_generate_docs_pages_and_nav() -> None:
 
 def test_business_context_and_metadata_appear_automatically() -> None:
     _run_generator()
-    manifest = json.loads((ROOT / "docs" / "reference" / "manifest.json").read_text(encoding="utf-8"))
-    modules = {m["module_name"] for m in manifest["modules"]}
-    assert "business_context" in modules
-    assert "data_product_metadata" in modules
+    mkdocs_text = (ROOT / "mkdocs.yml").read_text(encoding="utf-8")
+    assert "- business_context: api/modules/business_context.md" in mkdocs_text
+    assert "- data_product_metadata: api/modules/data_product_metadata.md" in mkdocs_text
 
 
 def test_public_callables_point_to_generated_module_pages() -> None:
@@ -58,6 +57,20 @@ def test_mkdocs_sync_markers_render_current_manifest_modules() -> None:
     block = mkdocs_text.split(start, 1)[1].split(end, 1)[0]
 
     manifest = json.loads((ROOT / "docs" / "reference" / "manifest.json").read_text(encoding="utf-8"))
-    sidebar_modules = [m["module_name"] for m in manifest["modules"] if m["visibility"] == "public" and m["sidebar_include"]]
+    sidebar_modules = [m["module_name"] for m in manifest["modules"]]
     for module in sidebar_modules:
         assert f"- {module}: api/modules/{module}.md" in block
+
+
+def test_sidebar_include_flag_cannot_hide_discovered_modules() -> None:
+    _run_generator()
+    manifest = json.loads((ROOT / "docs" / "reference" / "manifest.json").read_text(encoding="utf-8"))
+    mkdocs_text = (ROOT / "mkdocs.yml").read_text(encoding="utf-8")
+    for row in manifest["modules"]:
+        assert f"- {row['module_name']}: api/modules/{row['module_name']}.md" in mkdocs_text
+
+
+def test_only_explicit_blacklist_hides_modules() -> None:
+    _run_generator()
+    mkdocs_text = (ROOT / "mkdocs.yml").read_text(encoding="utf-8")
+    assert "- _utils: api/modules/_utils.md" not in mkdocs_text

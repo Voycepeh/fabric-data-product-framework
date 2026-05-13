@@ -24,6 +24,7 @@ nav:
       - Modules:
       # AUTO-GENERATED-MODULES-START
           - ai: api/modules/ai.md
+          - business_context: api/modules/business_context.md
           - environment_config: api/modules/environment_config.md
           - data_governance: api/modules/data_governance.md
           - data_lineage: api/modules/data_lineage.md
@@ -31,6 +32,7 @@ nav:
           - data_quality: api/modules/data_quality.md
           - data_drift: api/modules/data_drift.md
           - fabric_input_output: api/modules/fabric_input_output.md
+          - data_product_metadata: api/modules/data_product_metadata.md
           - run_summary: api/modules/run_summary.md
           - technical_columns: api/modules/technical_columns.md
       # AUTO-GENERATED-MODULES-END

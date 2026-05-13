@@ -5,6 +5,7 @@ Function Reference/workflow pages are the primary entrypoint. Module pages below
 Short-form modules remain import-compatible aliases but are intentionally hidden from this user-facing catalogue.
 
 - [`ai`](ai.md)
+- [`business_context`](business_context.md)
 - [`environment_config`](environment_config.md)
 - [`data_governance`](data_governance.md)
 - [`data_lineage`](data_lineage.md)
@@ -12,5 +13,6 @@ Short-form modules remain import-compatible aliases but are intentionally hidden
 - [`data_quality`](data_quality.md)
 - [`data_drift`](data_drift.md)
 - [`fabric_input_output`](fabric_input_output.md)
+- [`data_product_metadata`](data_product_metadata.md)
 - [`run_summary`](run_summary.md)
 - [`technical_columns`](technical_columns.md)
