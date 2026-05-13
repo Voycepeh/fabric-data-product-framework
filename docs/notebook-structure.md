@@ -2,7 +2,7 @@
 
 This page defines the governance-centered workspace model for FabricOps Starter Kit.
 
-![Governance-Centered Workspace Model](assets/governance-centered-workspace-model.png)
+![Governance-Centered Workspace Model](assets/notebook-structure.png)
 
 ## Governance-centered workspace layout
 

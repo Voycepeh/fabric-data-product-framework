@@ -1,6 +1,6 @@
 # Lifecycle Operating Model
 
-![Role-Based Lifecycle Workflow](assets/role-based-lifecycle-workflow.png)
+![Role-Based Lifecycle Workflow](assets/mvp-flow.png)
 
 FabricOps Starter Kit uses a governance-centered, role-based operating model where approved metadata is enforced through pipeline contracts and assembled into handover outputs.
 
@@ -44,15 +44,15 @@ The metadata-backed contract store is the operational source of truth:
 
 ## 6. Core operational loop: Step 5 → Step 2
 
-Pipeline evidence from engineering feeds back into governance metadata.
+Pipeline execution evidence feeds back into governance metadata.
 
-This Step 5 → Step 2 loop is the governance-engineering loop that continuously improves future agreements and enforcement quality.
+This Step 5 → Step 2 loop is the core operational loop between governance and engineering.
 
 ## AI touchpoints
 
-- Step 2 (analyst/data scientist): AI suggests; human approves.
-- Step 4 (data engineer enforcement context): AI applies/suggests rule candidates; human validates rule validity before approval.
-- Step 6 (handover): AI generates from approved metadata and evidence, with no human needed for generation.
+- Step 2 — Governance metadata: AI suggests, human approves.
+- Step 4 — DQ rules: AI applies/suggests candidates, human validates rule validity.
+- Step 6 — Handover: AI generates from approved metadata and evidence; no human needed for generation.
 
 ## Related documentation
 

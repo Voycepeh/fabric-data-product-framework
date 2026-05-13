@@ -11,9 +11,9 @@ Use this page as a concise front door into the operating model.
 
 ## Governance-centered operating model
 
-![Governance-Centered Workspace Model](assets/governance-centered-workspace-model.png)
+![Governance-Centered Workspace Model](assets/notebook-structure.png)
 
-![Role-Based Lifecycle Workflow](assets/role-based-lifecycle-workflow.png)
+![Role-Based Lifecycle Workflow](assets/mvp-flow.png)
 
 
 ## How FabricOps assembles a data contract
