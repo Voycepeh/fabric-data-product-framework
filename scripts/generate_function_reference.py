@@ -162,7 +162,7 @@ def public_reference_link(symbol: str, docs_metadata: dict[str, dict[str, Any]])
     """Return docs-relative link target for a public callable page."""
     if symbol not in docs_metadata:
         raise RuntimeError(f"Missing PUBLIC_SYMBOL_DOCS entry for exported symbol: {symbol}")
-    return f"../../reference/{symbol}/"
+    return f"../../api/reference/{symbol}/"
 
 
 def callable_docs_link(
@@ -342,7 +342,7 @@ def main() -> None:
                 expected_link = f"[`{s.name}`]({expected_target})"
                 if not any(expected_link in line for line in lines):
                     raise RuntimeError(f"Missing callable table link for {module}.{s.name}")
-                if f"../../reference/{module}/{s.name}.md" in "\n".join(lines):
+                if f"../../api/reference/{module}/{s.name}.md" in "\n".join(lines):
                     raise RuntimeError(
                         f"Found deprecated module-path public link for {module}.{s.name}; expected workflow-step slug path."
                     )
@@ -502,7 +502,7 @@ def main() -> None:
             for symbol_name in segment["symbols"]:
                 s = symbol_map[symbol_name]
                 info = module_data[s.actual_module]
-                symbol_link = f"../../reference/{s.name}/"
+                symbol_link = f"../../api/reference/{s.name}/"
                 segment_rows.append([
                     _anchor(symbol_link, s.name, code=True),
                     _module_link(s.public_module, base_prefix="../../"),
@@ -592,7 +592,7 @@ def main() -> None:
     )
     all_items: list[str] = []
     for s in sorted(function_symbol_map.values(), key=lambda x: x.name.lower()):
-        symbol_link = f"./{s.name}/"
+        symbol_link = f"../api/reference/{s.name}/"
         starter_path = ", ".join(sorted(starter_symbol_to_notebooks.get(s.name, set()))) or "—"
         purpose = s.purpose or s.summary or "—"
         all_items.extend(
