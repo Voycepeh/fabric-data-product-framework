@@ -307,6 +307,7 @@ def test_mkdocs_reference_generator_writes_public_callable_pages_without_workflo
     assert "reference/step-" not in source
     assert 'doc_path = f"reference/{symbol_name}.md"' in source
     assert "PUBLIC_SYMBOL_DOCS" in source
+    assert 'row.get("kind") not in {"function", "class"}' in source
 
 
 def test_generated_module_and_notebook_pages_link_to_public_callable_urls() -> None:
@@ -315,8 +316,17 @@ def test_generated_module_and_notebook_pages_link_to_public_callable_urls() -> N
     notebook_page = (ROOT / "docs/notebook-structure/00-env-config.md").read_text(encoding="utf-8")
     assert "../../reference/get_path/" in environment_config
     assert "../../reference/get_path/" in notebook_page
+    assert "../../reference/Housepath/" in notebook_page
     assert "reference/step-" not in environment_config
     assert "reference/step-" not in notebook_page
+
+
+def test_housepath_reference_page_is_generated_by_mkdocs_script() -> None:
+    source = (ROOT / "docs" / "gen_ref_pages.py").read_text(encoding="utf-8")
+    metadata_rows = metadata_literal("PUBLIC_SYMBOL_DOCS")
+    housepath = next(row for row in metadata_rows if row["symbol_name"] == "Housepath")
+    assert housepath["kind"] == "class"
+    assert 'if row.get("kind") not in {"function", "class"}:' in source
 
 
 def test_notebook_structure_overview_links_to_notebook_detail_pages() -> None:

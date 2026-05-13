@@ -99,6 +99,10 @@ def parse_module(path: Path) -> dict[str, Any]:
             for target in node.targets:
                 if isinstance(target, ast.Name) and target.id.isupper():
                     constants[target.id] = ""
+        elif isinstance(node, ast.AnnAssign):
+            target = node.target
+            if isinstance(target, ast.Name) and target.id.isupper():
+                constants[target.id] = ""
     names = set(functions) | set(classes)
     for caller, callees in calls.items():
         for callee in names:

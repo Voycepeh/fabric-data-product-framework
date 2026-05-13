@@ -41,7 +41,7 @@ public_symbol_docs = _read_literal(DOCS_METADATA_PATH, "PUBLIC_SYMBOL_DOCS")
 internal_helpers_by_module = _load_internal_helpers()
 
 for row in sorted(public_symbol_docs, key=lambda item: item["symbol_name"]):
-    if row.get("kind") != "function":
+    if row.get("kind") not in {"function", "class"}:
         continue
     symbol_name = row["symbol_name"]
     module_name = row["module"]
@@ -80,7 +80,7 @@ for module_name, helpers in internal_helpers_by_module.items():
 with mkdocs_gen_files.open("reference/SUMMARY.md", "w") as fd:
     fd.write("- [Reference Home](index.md)\n")
     for row in sorted(public_symbol_docs, key=lambda item: item["symbol_name"]):
-        if row.get("kind") == "function":
+        if row.get("kind") in {"function", "class"}:
             symbol_name = row["symbol_name"]
             fd.write(f"- [{symbol_name}]({symbol_name}.md)\n")
     if internal_helpers_by_module:
