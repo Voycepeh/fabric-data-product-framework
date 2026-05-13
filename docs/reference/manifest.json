@@ -136,7 +136,7 @@
     },
     {
       "module_name": "data_product_metadata",
-      "visibility": "internal",
+      "visibility": "public",
       "module_summary": "Metadata table key builders and metadata write helpers.",
       "sidebar_group": "Advanced",
       "sidebar_include": true,
@@ -256,7 +256,7 @@
     },
     {
       "module_name": "data_product_metadata",
-      "visibility": "internal",
+      "visibility": "public",
       "module_summary": "Metadata table key builders and metadata write helpers.",
       "sidebar_group": "Advanced",
       "sidebar_include": true,
@@ -268,7 +268,7 @@
     },
     {
       "module_name": "data_product_metadata",
-      "visibility": "internal",
+      "visibility": "public",
       "module_summary": "Metadata table key builders and metadata write helpers.",
       "sidebar_group": "Advanced",
       "sidebar_include": true,
@@ -292,7 +292,7 @@
     },
     {
       "module_name": "business_context",
-      "visibility": "internal",
+      "visibility": "public",
       "module_summary": "Business context suggestion and review helpers.",
       "sidebar_group": "Advanced",
       "sidebar_include": true,
@@ -400,7 +400,7 @@
     },
     {
       "module_name": "business_context",
-      "visibility": "internal",
+      "visibility": "public",
       "module_summary": "Business context suggestion and review helpers.",
       "sidebar_group": "Advanced",
       "sidebar_include": true,
@@ -556,7 +556,7 @@
     },
     {
       "module_name": "business_context",
-      "visibility": "internal",
+      "visibility": "public",
       "module_summary": "Business context suggestion and review helpers.",
       "sidebar_group": "Advanced",
       "sidebar_include": true,
@@ -700,7 +700,7 @@
     },
     {
       "module_name": "business_context",
-      "visibility": "internal",
+      "visibility": "public",
       "module_summary": "Business context suggestion and review helpers.",
       "sidebar_group": "Advanced",
       "sidebar_include": true,
@@ -808,7 +808,7 @@
     },
     {
       "module_name": "data_product_metadata",
-      "visibility": "internal",
+      "visibility": "public",
       "module_summary": "Metadata table key builders and metadata write helpers.",
       "sidebar_group": "Advanced",
       "sidebar_include": true,
@@ -820,7 +820,7 @@
     },
     {
       "module_name": "data_product_metadata",
-      "visibility": "internal",
+      "visibility": "public",
       "module_summary": "Metadata table key builders and metadata write helpers.",
       "sidebar_group": "Advanced",
       "sidebar_include": true,
@@ -856,7 +856,7 @@
     },
     {
       "module_name": "data_product_metadata",
-      "visibility": "internal",
+      "visibility": "public",
       "module_summary": "Metadata table key builders and metadata write helpers.",
       "sidebar_group": "Advanced",
       "sidebar_include": true,

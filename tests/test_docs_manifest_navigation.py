@@ -74,3 +74,13 @@ def test_only_explicit_blacklist_hides_modules() -> None:
     _run_generator()
     mkdocs_text = (ROOT / "mkdocs.yml").read_text(encoding="utf-8")
     assert "- _utils: api/modules/_utils.md" not in mkdocs_text
+
+
+def test_manifest_module_and_callable_visibility_are_consistent() -> None:
+    _run_generator()
+    manifest = json.loads((ROOT / "docs" / "reference" / "manifest.json").read_text(encoding="utf-8"))
+    module_rows = {row["module_name"]: row for row in manifest["modules"]}
+    for callable_row in manifest["callables"]:
+        module_row = module_rows[callable_row["module_name"]]
+        assert callable_row["visibility"] == module_row["visibility"]
+        assert callable_row["sidebar_include"] == module_row["sidebar_include"]

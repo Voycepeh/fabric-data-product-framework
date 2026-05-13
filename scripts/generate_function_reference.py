@@ -382,7 +382,7 @@ def main() -> None:
         manifest_rows.append(
             {
                 "module_name": canonical_module,
-                "visibility": module_meta["visibility"],
+                "visibility": "public",
                 "module_summary": module_meta["module_summary"],
                 "sidebar_group": module_meta["sidebar_group"],
                 "sidebar_include": True,
