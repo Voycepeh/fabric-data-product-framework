@@ -86,7 +86,7 @@ Use the finder below to look up public callable functions.
 </article>
 <article id="build_dq_rule_key" class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_dq_rule_key" data-callable-module="data_product_metadata" data-callable-starter-path="—" data-role="optional" data-callable-purpose="—">
   <h3 class="reference-catalogue-item-name"><a href="./build_dq_rule_key/"><code>build_dq_rule_key</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contract/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">—</p>
 </article>
 <article id="build_dq_rules_metadata_df" class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_dq_rules_metadata_df" data-callable-module="data_quality" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Build approved DQ metadata rows as a Spark DataFrame.">
@@ -136,12 +136,12 @@ Use the finder below to look up public callable functions.
 </article>
 <article id="build_metadata_column_key" class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_metadata_column_key" data-callable-module="data_product_metadata" data-callable-starter-path="—" data-role="optional" data-callable-purpose="—">
   <h3 class="reference-catalogue-item-name"><a href="./build_metadata_column_key/"><code>build_metadata_column_key</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contract/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">—</p>
 </article>
 <article id="build_metadata_table_key" class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_metadata_table_key" data-callable-module="data_product_metadata" data-callable-starter-path="—" data-role="optional" data-callable-purpose="—">
   <h3 class="reference-catalogue-item-name"><a href="./build_metadata_table_key/"><code>build_metadata_table_key</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contract/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">—</p>
 </article>
 <article id="build_run_summary" class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_run_summary" data-callable-module="run_summary" data-callable-starter-path="03_pc" data-role="essential" data-callable-purpose="Build a handover-friendly summary for one data product run.">
@@ -366,12 +366,12 @@ Use the finder below to look up public callable functions.
 </article>
 <article id="write_column_business_context" class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_column_business_context" data-callable-module="data_product_metadata" data-callable-starter-path="—" data-role="optional" data-callable-purpose="—">
   <h3 class="reference-catalogue-item-name"><a href="./write_column_business_context/"><code>write_column_business_context</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contract/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">—</p>
 </article>
 <article id="write_column_governance_context" class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_column_governance_context" data-callable-module="data_product_metadata" data-callable-starter-path="—" data-role="optional" data-callable-purpose="—">
   <h3 class="reference-catalogue-item-name"><a href="./write_column_governance_context/"><code>write_column_governance_context</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contract/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">—</p>
 </article>
 <article id="write_dq_rules" class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_dq_rules" data-callable-module="data_quality" data-callable-starter-path="02_ex" data-role="essential" data-callable-purpose="Validate, build, and persist approved DQ rules.">
@@ -386,7 +386,7 @@ Use the finder below to look up public callable functions.
 </article>
 <article id="write_metadata_rows" class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_metadata_rows" data-callable-module="data_product_metadata" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Write metadata rows to a lakehouse metadata table.">
   <h3 class="reference-catalogue-item-name"><a href="./write_metadata_rows/"><code>write_metadata_rows</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_product_metadata/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_contract/" title="Open data_product_metadata module page" aria-label="Open data_product_metadata module page">data_product_metadata</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Write metadata rows to a lakehouse metadata table.</p>
 </article>
 </div>

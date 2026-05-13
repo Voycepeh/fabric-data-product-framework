@@ -1,4 +1,4 @@
-# `data_product_metadata` module
+# `data_contract` module
 
 <div class="api-status-block">
   <span class="api-chip api-chip-internal">Advanced supporting module</span>
