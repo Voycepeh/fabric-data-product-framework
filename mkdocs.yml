@@ -37,7 +37,6 @@ nav:
           - technical_columns: api/modules/technical_columns.md
       # AUTO-GENERATED-MODULES-END
   - Lifecycle Operating Model: lifecycle-operating-model.md
-  - Governance Operating Model: governance-operating-model.md
   - Notebook Structure:
       - Overview: notebook-structure.md
       - 00_env_config: notebook-structure/00-env-config.md

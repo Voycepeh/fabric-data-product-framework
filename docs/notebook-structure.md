@@ -1,14 +1,14 @@
 # Notebook Structure
 
-This page defines the governance-centered workspace model for FabricOps Starter Kit.
+Notebook Structure is the canonical guide for notebook ownership, governance responsibilities, and execution behavior in FabricOps Starter Kit.
 
 ![Governance-Centered Workspace Model](assets/notebook-structure.png)
 
-## Governance-centered workspace layout
+## Workspace layout
 
-`01_data_sharing_agreement_<agreement>` belongs logically to the governance workspace and governance metadata lakehouse, where agreement-level controls are defined once.
+`01_data_sharing_agreement_<agreement>` lives with governance-owned metadata and is defined once as the agreement source of truth.
 
-Each execution environment (Sandbox, Dev/Test, Prod) reuses that agreement context and approved metadata.
+Each execution environment (Sandbox, Dev/Test, Prod) reuses approved agreement metadata.
 
 ```text
 Governance Workspace
@@ -21,21 +21,31 @@ Environment Workspace (Sandbox / Dev-Test / Prod)
 └── Local metadata/evidence lakehouse
 ```
 
-## Notebook naming, ownership, and scope
+## Notebook roles and responsibilities
 
 | Notebook | Primary ownership | Scope | What belongs here |
 |---|---|---|---|
-| `00_env_config` | Platform / engineering | Environment runtime config | Shared environment settings, startup checks, paths, and runtime configuration. |
-| `01_data_sharing_agreement_<agreement>` | Governance steward / data owner | Cross-environment governance control plane | Agreement definition, approved usage, business context, ownership, restrictions, classification, sensitivity/PII policy, and approved governance metadata. |
-| `02_ex_<agreement>_<topic>` | Analyst / data scientist | Environment exploration and proposal | Source profiling, interpretation, and proposals to update governance/DQ metadata. |
-| `03_pc_<agreement>_<pipeline>` | Data engineer | Environment pipeline enforcement | Deterministic pipeline contracts that load approved metadata, enforce controls, quarantine failures, and write execution evidence. |
+| `00_env_config` | Platform / engineering | Environment runtime configuration | Shared environment config, paths, runtime settings, startup checks, and reusable config objects. |
+| `01_data_sharing_agreement_<agreement>` | Governance steward / data owner | Cross-environment governance control plane | Agreement context, approved usage, business context, ownership, permissions, restrictions, classification, sensitivity/PII posture, and approved DQ metadata. |
+| `02_ex_<agreement>_<topic>` | Analyst / data scientist | Exploration and proposal | Profiling, discovery, exploratory transforms, AI-assisted DQ suggestions, AI-assisted classification suggestions, and metadata evidence that informs governance updates. |
+| `03_pc_<agreement>_<pipeline>` | Data engineer | Pipeline contract enforcement | Run-all-safe and schedulable execution that loads approved metadata/rules/classifications, performs deterministic transforms, writes outputs, and records runtime evidence. |
 
-## Operating behavior
+## Governance flow across notebooks
 
-- Every notebook keeps the data agreement context in view.
-- Exploration notebooks propose updates; they do not become source of truth by themselves.
-- Pipeline contract notebooks load approved metadata and enforce it deterministically.
-- Agreement definition is not cloned per environment; it is defined once and reused.
+- Governance is defined once in `01_data_sharing_agreement_<agreement>`.
+- Sandbox, Dev/Test, and Prod notebooks reuse approved governance metadata.
+- `02_ex` notebooks propose metadata updates based on profiling and AI-assisted evidence.
+- `03_pc` notebooks load approved metadata and enforce it during execution.
+- Pipeline execution writes operational evidence for quality, lineage, and controls.
+- That evidence can feed back into governance metadata updates.
+- Core operational loop: `03_pc` evidence → `01_data_sharing_agreement` governance update.
+
+## AI boundary and human approval
+
+- **Governance**: AI suggests classification, sensitivity, and PII candidates; humans approve governance controls.
+- **Data quality**: AI applies or suggests candidate rules; humans validate rule validity before enforcement.
+- **Handover**: AI can generate summaries from approved metadata and runtime evidence.
+- **Control authority**: AI does not approve governance controls.
 
 ## Notebook details
 
@@ -45,7 +55,6 @@ Environment Workspace (Sandbox / Dev-Test / Prod)
 
 ## Related pages
 
-- [Governance Operating Model](governance-operating-model.md)
 - [Lifecycle Operating Model](lifecycle-operating-model.md)
 - [Metadata and Data Contract Assembly](metadata-and-contracts.md)
 - [Data Quality Rules System](data-quality-rules-system.md)
