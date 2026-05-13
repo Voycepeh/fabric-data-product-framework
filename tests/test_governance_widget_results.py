@@ -1,4 +1,4 @@
-from fabricops_kit.data_governance import _coerce_row_dicts, load_governance_context
+from fabricops_kit.data_governance import _coerce_row_dicts, load_governance
 
 
 class RowLike:
@@ -27,7 +27,7 @@ def test_coerce_row_dicts_collect_like_rows():
     assert _coerce_row_dicts(rows) == [{"a": 1}, {"b": 2}]
 
 
-def test_load_governance_context_filters_and_latest_agreement():
+def test_load_governance_filters_and_latest_agreement():
     governance_rows = [
         {"agreement_id": "A1", "dataset_name": "D", "table_name": "T", "column_name": "c1", "status": "approved", "approved_at": "2025-01-01T00:00:00Z"},
         {"agreement_id": "A1", "dataset_name": "D", "table_name": "T", "column_name": "c2", "status": "rejected", "approved_at": "2025-01-02T00:00:00Z"},
@@ -39,7 +39,7 @@ def test_load_governance_context_filters_and_latest_agreement():
         {"agreement_id": "A1", "dataset_name": "D", "table_name": "T", "approved_usage": "latest", "approved_at": "2025-01-05T00:00:00Z"},
     ]
 
-    out = load_governance_context(
+    out = load_governance(
         governance_rows,
         agreement_rows=agreement_rows,
         agreement_id="A1",

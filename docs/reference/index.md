@@ -99,10 +99,10 @@ Use the finder below to look up public callable functions.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Build the governance-candidate prompt for AI-assisted classification drafts.</p>
 </article>
-<article id="build_governance_classification_records" class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_governance_classification_records" data-callable-module="data_governance" data-callable-starter-path="03_pc" data-role="essential" data-callable-purpose="Build metadata-ready governance classification records from column suggestions.">
-  <h3 class="reference-catalogue-item-name"><a href="../api/reference/build_governance_classification_records/"><code>build_governance_classification_records</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-  <p class="reference-catalogue-item-purpose">Build metadata-ready governance classification records from column suggestions.</p>
+<article id="build_governance_context" class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_governance_context" data-callable-module="data_governance" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Build governance prompt context fields for notebook workflows.">
+  <h3 class="reference-catalogue-item-name"><a href="../api/reference/build_governance_context/"><code>build_governance_context</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Build governance prompt context fields for notebook workflows.</p>
 </article>
 <article id="build_handover_summary_prompt" class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_handover_summary_prompt" data-callable-module="ai" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Build the handover-summary prompt for AI-assisted run handoff drafting.">
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/build_handover_summary_prompt/"><code>build_handover_summary_prompt</code></a></h3>
@@ -169,16 +169,6 @@ Use the finder below to look up public callable functions.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_drift/" title="Open data_drift module page" aria-label="Open data_drift module page">data_drift</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
   <p class="reference-catalogue-item-purpose">Compare a current dataframe schema against a baseline schema snapshot.</p>
 </article>
-<article id="classify_column" class="reference-catalogue-item" data-callable-row="true" data-callable-name="classify_column" data-callable-module="data_governance" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Classify one column using term matching, metadata cues, and business context.">
-  <h3 class="reference-catalogue-item-name"><a href="../api/reference/classify_column/"><code>classify_column</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Classify one column using term matching, metadata cues, and business context.</p>
-</article>
-<article id="classify_columns" class="reference-catalogue-item" data-callable-row="true" data-callable-name="classify_columns" data-callable-module="data_governance" data-callable-starter-path="03_pc" data-role="essential" data-callable-purpose="Classify multiple columns and return normalized governance suggestions.">
-  <h3 class="reference-catalogue-item-name"><a href="../api/reference/classify_columns/"><code>classify_columns</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-  <p class="reference-catalogue-item-purpose">Classify multiple columns and return normalized governance suggestions.</p>
-</article>
 <article id="draft_dq_rules" class="reference-catalogue-item" data-callable-row="true" data-callable-name="draft_dq_rules" data-callable-module="data_quality" data-callable-starter-path="02_ex" data-role="essential" data-callable-purpose="Draft candidate DQ rules from metadata profiles or raw DataFrame fallback.">
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/draft_dq_rules/"><code>draft_dq_rules</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
@@ -199,9 +189,9 @@ Use the finder below to look up public callable functions.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/business_context/" title="Open business_context module page" aria-label="Open business_context module page">business_context</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Parse AI suggestion rows from Spark DataFrames or ``list[dict]`` payloads.</p>
 </article>
-<article id="extract_personal_identifier_suggestions" class="reference-catalogue-item" data-callable-row="true" data-callable-name="extract_personal_identifier_suggestions" data-callable-module="data_governance" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Extract governance suggestions from Spark/list response payloads.">
-  <h3 class="reference-catalogue-item-name"><a href="../api/reference/extract_personal_identifier_suggestions/"><code>extract_personal_identifier_suggestions</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+<article id="extract_pii_suggestions" class="reference-catalogue-item" data-callable-row="true" data-callable-name="extract_pii_suggestions" data-callable-module="data_governance" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Extract governance suggestions from Spark/list response payloads.">
+  <h3 class="reference-catalogue-item-name"><a href="../api/reference/extract_pii_suggestions/"><code>extract_pii_suggestions</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Extract governance suggestions from Spark/list response payloads.</p>
 </article>
 <article id="generate_governance_candidates_with_fabric_ai" class="reference-catalogue-item" data-callable-row="true" data-callable-name="generate_governance_candidates_with_fabric_ai" data-callable-module="ai" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Execute Fabric AI Functions to append governance suggestions to a DataFrame.">
@@ -213,11 +203,6 @@ Use the finder below to look up public callable functions.
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/generate_handover_summary_with_fabric_ai/"><code>generate_handover_summary_with_fabric_ai</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Execute Fabric AI Functions to append handover summary suggestions.</p>
-</article>
-<article id="get_governance_widget_results" class="reference-catalogue-item" data-callable-row="true" data-callable-name="get_governance_widget_results" data-callable-module="data_governance" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Collect governance widget approvals/rejections with agreement metadata.">
-  <h3 class="reference-catalogue-item-name"><a href="../api/reference/get_governance_widget_results/"><code>get_governance_widget_results</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Collect governance widget approvals/rejections with agreement metadata.</p>
 </article>
 <article id="get_path" class="reference-catalogue-item" data-callable-row="true" data-callable-name="get_path" data-callable-module="environment_config" data-callable-starter-path="00_env_config, 02_ex, 03_pc" data-role="essential" data-callable-purpose="Resolve a configured Fabric path for an environment and target.">
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/get_path/"><code>get_path</code></a></h3>
@@ -254,10 +239,10 @@ Use the finder below to look up public callable functions.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config, 02_ex, 03_pc</span></p>
   <p class="reference-catalogue-item-purpose">Validate and return a user-supplied framework configuration.</p>
 </article>
-<article id="load_governance_context" class="reference-catalogue-item" data-callable-row="true" data-callable-name="load_governance_context" data-callable-module="data_governance" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Load approved governance metadata as read-only agreement context for downstream notebooks.">
-  <h3 class="reference-catalogue-item-name"><a href="../api/reference/load_governance_context/"><code>load_governance_context</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Load approved governance metadata as read-only agreement context for downstream notebooks.</p>
+<article id="load_governance" class="reference-catalogue-item" data-callable-row="true" data-callable-name="load_governance" data-callable-module="data_governance" data-callable-starter-path="03_pc" data-role="essential" data-callable-purpose="Load approved governance metadata as read-only context.">
+  <h3 class="reference-catalogue-item-name"><a href="../api/reference/load_governance/"><code>load_governance</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Load approved governance metadata as read-only context.</p>
 </article>
 <article id="parse_manual_ai_json_response" class="reference-catalogue-item" data-callable-row="true" data-callable-name="parse_manual_ai_json_response" data-callable-module="ai" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Parse manual AI JSON output into Python objects.">
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/parse_manual_ai_json_response/"><code>parse_manual_ai_json_response</code></a></h3>
@@ -274,10 +259,10 @@ Use the finder below to look up public callable functions.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/business_context/" title="Open business_context module page" aria-label="Open business_context module page">business_context</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">—</p>
 </article>
-<article id="prepare_governance_profile_input" class="reference-catalogue-item" data-callable-row="true" data-callable-name="prepare_governance_profile_input" data-callable-module="data_governance" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Join approved business context evidence into profile rows for governance AI suggestion.">
-  <h3 class="reference-catalogue-item-name"><a href="../api/reference/prepare_governance_profile_input/"><code>prepare_governance_profile_input</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Join approved business context evidence into profile rows for governance AI suggestion.</p>
+<article id="prepare_governance_input" class="reference-catalogue-item" data-callable-row="true" data-callable-name="prepare_governance_input" data-callable-module="data_governance" data-callable-starter-path="03_pc" data-role="essential" data-callable-purpose="Join approved business context into profile rows for governance AI suggestions.">
+  <h3 class="reference-catalogue-item-name"><a href="../api/reference/prepare_governance_input/"><code>prepare_governance_input</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Join approved business context into profile rows for governance AI suggestions.</p>
 </article>
 <article id="profile_dataframe" class="reference-catalogue-item" data-callable-row="true" data-callable-name="profile_dataframe" data-callable-module="data_profiling" data-callable-starter-path="02_ex, 03_pc" data-role="essential" data-callable-purpose="Build canonical DQ-ready profiling rows from a Spark DataFrame.">
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/profile_dataframe/"><code>profile_dataframe</code></a></h3>
@@ -289,11 +274,6 @@ Use the finder below to look up public callable functions.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/run_summary/" title="Open run_summary module page" aria-label="Open run_summary module page">run_summary</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
   <p class="reference-catalogue-item-purpose">Render a run summary dictionary into Markdown for handover notes.</p>
 </article>
-<article id="review_column_governance_context" class="reference-catalogue-item" data-callable-row="true" data-callable-name="review_column_governance_context" data-callable-module="data_governance" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Display governance approval widget.">
-  <h3 class="reference-catalogue-item-name"><a href="../api/reference/review_column_governance_context/"><code>review_column_governance_context</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Display governance approval widget.</p>
-</article>
 <article id="review_dq_rule_deactivations" class="reference-catalogue-item" data-callable-row="true" data-callable-name="review_dq_rule_deactivations" data-callable-module="data_quality" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Review active DQ rules one at a time for governed deactivation actions.">
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/review_dq_rule_deactivations/"><code>review_dq_rule_deactivations</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
@@ -304,15 +284,10 @@ Use the finder below to look up public callable functions.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
   <p class="reference-catalogue-item-purpose">Review AI-suggested DQ rules sequentially with explicit approve/reject decisions.</p>
 </article>
-<article id="run_governance_widget" class="reference-catalogue-item" data-callable-row="true" data-callable-name="run_governance_widget" data-callable-module="data_governance" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Run governance review with AI-advisory suggestions and optional metadata persistence.">
-  <h3 class="reference-catalogue-item-name"><a href="../api/reference/run_governance_widget/"><code>run_governance_widget</code></a></h3>
+<article id="review_governance" class="reference-catalogue-item" data-callable-row="true" data-callable-name="review_governance" data-callable-module="data_governance" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Display governance review widget and capture decisions.">
+  <h3 class="reference-catalogue-item-name"><a href="../api/reference/review_governance/"><code>review_governance</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Run governance review with AI-advisory suggestions and optional metadata persistence.</p>
-</article>
-<article id="save_governance_widget_results" class="reference-catalogue-item" data-callable-row="true" data-callable-name="save_governance_widget_results" data-callable-module="data_governance" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Persist approved governance widget results to metadata.">
-  <h3 class="reference-catalogue-item-name"><a href="../api/reference/save_governance_widget_results/"><code>save_governance_widget_results</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
-  <p class="reference-catalogue-item-purpose">Persist approved governance widget results to metadata.</p>
+  <p class="reference-catalogue-item-purpose">Display governance review widget and capture decisions.</p>
 </article>
 <article id="scan_notebook_cells" class="reference-catalogue-item" data-callable-row="true" data-callable-name="scan_notebook_cells" data-callable-module="data_lineage" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Scan multiple notebook cells and append cell references to lineage steps.">
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/scan_notebook_cells/"><code>scan_notebook_cells</code></a></h3>
@@ -349,20 +324,15 @@ Use the finder below to look up public callable functions.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Run Fabric AI to draft DQ rules from prepared profile rows.</p>
 </article>
-<article id="suggest_personal_identifier_classifications" class="reference-catalogue-item" data-callable-row="true" data-callable-name="suggest_personal_identifier_classifications" data-callable-module="data_governance" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Run Fabric AI personal-identifier suggestion prompt on prepared governance rows.">
-  <h3 class="reference-catalogue-item-name"><a href="../api/reference/suggest_personal_identifier_classifications/"><code>suggest_personal_identifier_classifications</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+<article id="suggest_pii_labels" class="reference-catalogue-item" data-callable-row="true" data-callable-name="suggest_pii_labels" data-callable-module="data_governance" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Run Fabric AI personal-identifier suggestion prompt on prepared governance rows.">
+  <h3 class="reference-catalogue-item-name"><a href="../api/reference/suggest_pii_labels/"><code>suggest_pii_labels</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Run Fabric AI personal-identifier suggestion prompt on prepared governance rows.</p>
 </article>
 <article id="summarize_drift_results" class="reference-catalogue-item" data-callable-row="true" data-callable-name="summarize_drift_results" data-callable-module="data_drift" data-callable-starter-path="03_pc" data-role="essential" data-callable-purpose="Summarize schema, partition, and profile drift outcomes into one decision.">
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/summarize_drift_results/"><code>summarize_drift_results</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_drift/" title="Open data_drift module page" aria-label="Open data_drift module page">data_drift</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
   <p class="reference-catalogue-item-purpose">Summarize schema, partition, and profile drift outcomes into one decision.</p>
-</article>
-<article id="summarize_governance_classifications" class="reference-catalogue-item" data-callable-row="true" data-callable-name="summarize_governance_classifications" data-callable-module="data_governance" data-callable-starter-path="03_pc" data-role="essential" data-callable-purpose="Summarize governance classification outputs into review-friendly counts.">
-  <h3 class="reference-catalogue-item-name"><a href="../api/reference/summarize_governance_classifications/"><code>summarize_governance_classifications</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-  <p class="reference-catalogue-item-purpose">Summarize governance classification outputs into review-friendly counts.</p>
 </article>
 <article id="validate_dq_rules" class="reference-catalogue-item" data-callable-row="true" data-callable-name="validate_dq_rules" data-callable-module="data_quality" data-callable-starter-path="03_pc" data-role="optional" data-callable-purpose="Validate canonical DQ rules before enforcement.">
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/validate_dq_rules/"><code>validate_dq_rules</code></a></h3>
@@ -399,10 +369,10 @@ Use the finder below to look up public callable functions.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
   <p class="reference-catalogue-item-purpose">Validate, build, and persist approved DQ rules.</p>
 </article>
-<article id="write_governance_classifications" class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_governance_classifications" data-callable-module="data_governance" data-callable-starter-path="03_pc" data-role="essential" data-callable-purpose="Persist governance classifications to a metadata destination.">
-  <h3 class="reference-catalogue-item-name"><a href="../api/reference/write_governance_classifications/"><code>write_governance_classifications</code></a></h3>
+<article id="write_governance" class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_governance" data-callable-module="data_governance" data-callable-starter-path="03_pc" data-role="essential" data-callable-purpose="Persist approved governance rows to metadata table.">
+  <h3 class="reference-catalogue-item-name"><a href="../api/reference/write_governance/"><code>write_governance</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-  <p class="reference-catalogue-item-purpose">Persist governance classifications to a metadata destination.</p>
+  <p class="reference-catalogue-item-purpose">Persist approved governance rows to metadata table.</p>
 </article>
 <article id="write_metadata_rows" class="reference-catalogue-item" data-callable-row="true" data-callable-name="write_metadata_rows" data-callable-module="data_product_metadata" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Write metadata rows to a lakehouse metadata table.">
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/write_metadata_rows/"><code>write_metadata_rows</code></a></h3>

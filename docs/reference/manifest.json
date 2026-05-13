@@ -176,11 +176,11 @@
       "module_summary": "Governance classification helpers and metadata builders.",
       "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "build_governance_classification_records",
+      "callable_name": "build_governance_context",
       "callable_visibility": "public",
-      "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
+      "callable_role": "optional",
+      "template_notebook": "01_data_agreement",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "ai",
@@ -339,30 +339,6 @@
       "template_segment": "Optional profiling, drift, governance, lineage, and handover"
     },
     {
-      "module_name": "data_governance",
-      "visibility": "public",
-      "module_summary": "Governance classification helpers and metadata builders.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "classify_column",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "data_governance",
-      "visibility": "public",
-      "module_summary": "Governance classification helpers and metadata builders.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "classify_columns",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
-    },
-    {
       "module_name": "data_quality",
       "visibility": "public",
       "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
@@ -416,10 +392,10 @@
       "module_summary": "Governance classification helpers and metadata builders.",
       "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "extract_personal_identifier_suggestions",
+      "callable_name": "extract_pii_suggestions",
       "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
+      "callable_role": "essential",
+      "template_notebook": "01_data_agreement",
       "template_segment": "Not mapped in template flow segment"
     },
     {
@@ -444,18 +420,6 @@
       "callable_visibility": "public",
       "callable_role": "optional",
       "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "data_governance",
-      "visibility": "public",
-      "module_summary": "Governance classification helpers and metadata builders.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "get_governance_widget_results",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "template_notebook": "01_data_agreement",
       "template_segment": "Not mapped in template flow segment"
     },
     {
@@ -548,11 +512,11 @@
       "module_summary": "Governance classification helpers and metadata builders.",
       "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "load_governance_context",
+      "callable_name": "load_governance",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Segment 1: Load shared config and runtime context"
+      "template_notebook": "01_data_agreement",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "ai",
@@ -596,10 +560,10 @@
       "module_summary": "Governance classification helpers and metadata builders.",
       "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "prepare_governance_profile_input",
+      "callable_name": "prepare_governance_input",
       "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
+      "callable_role": "essential",
+      "template_notebook": "01_data_agreement",
       "template_segment": "Not mapped in template flow segment"
     },
     {
@@ -625,18 +589,6 @@
       "callable_role": "essential",
       "template_notebook": "03_pc",
       "template_segment": "Optional profiling, drift, governance, lineage, and handover"
-    },
-    {
-      "module_name": "data_governance",
-      "visibility": "public",
-      "module_summary": "Governance classification helpers and metadata builders.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "review_column_governance_context",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "data_quality",
@@ -668,19 +620,7 @@
       "module_summary": "Governance classification helpers and metadata builders.",
       "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "run_governance_widget",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
-    },
-    {
-      "module_name": "data_governance",
-      "visibility": "public",
-      "module_summary": "Governance classification helpers and metadata builders.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "save_governance_widget_results",
+      "callable_name": "review_governance",
       "callable_visibility": "public",
       "callable_role": "essential",
       "template_notebook": "01_data_agreement",
@@ -776,10 +716,10 @@
       "module_summary": "Governance classification helpers and metadata builders.",
       "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "suggest_personal_identifier_classifications",
+      "callable_name": "suggest_pii_labels",
       "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
+      "callable_role": "essential",
+      "template_notebook": "01_data_agreement",
       "template_segment": "Not mapped in template flow segment"
     },
     {
@@ -789,18 +729,6 @@
       "sidebar_group": "Modules",
       "sidebar_include": true,
       "callable_name": "summarize_drift_results",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
-    },
-    {
-      "module_name": "data_governance",
-      "visibility": "public",
-      "module_summary": "Governance classification helpers and metadata builders.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "summarize_governance_classifications",
       "callable_visibility": "public",
       "callable_role": "essential",
       "template_notebook": "03_pc",
@@ -896,11 +824,11 @@
       "module_summary": "Governance classification helpers and metadata builders.",
       "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "write_governance_classifications",
+      "callable_name": "write_governance",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
+      "template_notebook": "01_data_agreement",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "data_product_metadata",
