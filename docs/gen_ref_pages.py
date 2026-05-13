@@ -61,6 +61,20 @@ for row in sorted(public_symbol_docs, key=lambda item: item["symbol_name"]):
         fd.write("      docstring_style: numpy\n")
         fd.write("      docstring_section_style: table\n")
 
+    legacy_doc_path = f"api/reference/{symbol_name}.md"
+    with mkdocs_gen_files.open(legacy_doc_path, "w") as fd:
+        target = f"../../reference/{symbol_name}/"
+        fd.write("<!doctype html>\n")
+        fd.write("<html><head>\n")
+        fd.write('  <meta charset="utf-8">\n')
+        fd.write(f'  <meta http-equiv="refresh" content="0; url={target}">\n')
+        fd.write(f'  <link rel="canonical" href="{target}">\n')
+        fd.write("  <title>Redirecting…</title>\n")
+        fd.write("</head><body>\n")
+        fd.write("  <p>This page moved. ")
+        fd.write(f'<a href="{target}">Continue to the canonical reference page</a>.</p>\n')
+        fd.write("</body></html>\n")
+
 for module_name, helpers in internal_helpers_by_module.items():
     for helper_name in helpers:
         doc_path = f"reference/internal/{module_name}/{helper_name}.md"

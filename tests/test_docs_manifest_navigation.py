@@ -84,3 +84,14 @@ def test_manifest_module_and_callable_visibility_are_consistent() -> None:
         module_row = module_rows[callable_row["module_name"]]
         assert callable_row["visibility"] == module_row["visibility"]
         assert callable_row["sidebar_include"] == module_row["sidebar_include"]
+
+
+def test_manifest_module_rows_match_all_callable_visibility_flags_by_module() -> None:
+    _run_generator()
+    manifest = json.loads((ROOT / "docs" / "reference" / "manifest.json").read_text(encoding="utf-8"))
+    module_rows = {row["module_name"]: row for row in manifest["modules"]}
+    for module_name, module_row in module_rows.items():
+        module_callables = [row for row in manifest["callables"] if row["module_name"] == module_name]
+        for callable_row in module_callables:
+            assert callable_row["visibility"] == module_row["visibility"]
+            assert callable_row["sidebar_include"] == module_row["sidebar_include"]
