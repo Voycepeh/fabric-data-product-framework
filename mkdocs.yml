@@ -49,6 +49,7 @@ nav:
           - run_summary: api/modules/run_summary.md
           - technical_columns: api/modules/technical_columns.md
       # AUTO-GENERATED-MODULES-END
+
 markdown_extensions:
   - admonition
   - attr_list
