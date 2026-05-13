@@ -49,13 +49,24 @@ The contract combines approved usage, schema and profile evidence, DQ rules and 
 <div class="center-cta">
   <a class="md-button" href="metadata-and-contracts/">View Metadata and Contracts</a>
 </div>
+  
+## 4. AI assisted data quality
 
-## 4. Choose where to go next
+FabricOps uses AI to help analysts and stewards move faster, but keeps approval and enforcement explicit.
 
-These pages provide supporting detail beyond the core workflow above.
+AI can suggest candidate data quality rules from business context, source profiles, and metadata evidence. Humans validate whether the rules are correct. Engineers then enforce approved rules in pipeline contracts and write the results back as metadata evidence.
 
-| Page | Use it when you want to |
-|---|---|
-| [Architecture overview](architecture/) | Understand the wider FabricOps platform shape and data flow. |
-| [Deployment and promotion](deployment-and-promotion/) | Understand how work moves from development to production. |
-| [Fabric wheel install](setup/fabric-wheel-install/) | Install the package into Fabric notebooks. |
+![AI assisted data quality workflow](assets/DQ-with-ai.png)
+
+<div class="center-cta">
+  <a class="md-button" href="ai-assisted-data-quality/">View AI Data Quality</a>
+</div>
+
+## 5. Run it in Fabric
+
+Install the package, run the notebooks, and promote governed outputs through the lifecycle.
+
+<div class="center-cta">
+  <a class="md-button md-button--primary" href="setup/fabric-wheel-install/">Install in Fabric</a>
+  <a class="md-button" href="deployment-and-promotion/">View Deployment</a>
+</div>
