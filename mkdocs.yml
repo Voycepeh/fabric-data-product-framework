@@ -37,12 +37,13 @@ nav:
           - technical_columns: api/modules/technical_columns.md
       # AUTO-GENERATED-MODULES-END
   - Lifecycle Operating Model: lifecycle-operating-model.md
-  - AI-Assisted Data Quality: data-quality-rules-system.md
+  - Governance Operating Model: governance-operating-model.md
   - Notebook Structure:
       - Overview: notebook-structure.md
       - 00_env_config: notebook-structure/00-env-config.md
       - 02_ex: notebook-structure/02-exploration.md
       - 03_pc: notebook-structure/03-pipeline-contract.md
+  - AI-Assisted Data Quality: data-quality-rules-system.md
   - Metadata and Data Contract Assembly:
       - Overview: metadata-and-contracts.md
       - Assembled Contract Model: metadata-and-contracts/contract-model.md
