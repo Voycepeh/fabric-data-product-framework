@@ -6,7 +6,7 @@ Use this page to get FabricOps Starter Kit running quickly in Microsoft Fabric. 
 
 - A Microsoft Fabric workspace with notebook, Lakehouse/Warehouse, and environment access.
 - Fabric notebook runtime (Fabric Runtime 1.3 / Python 3.11 recommended by this project).
-- A prepared Fabric environment with the project wheel installed (see [Fabric Wheel Install](setup/fabric-wheel-install.md)).
+- A prepared Fabric environment with the project wheel installed (see [Run in Fabric](setup/run-in-fabric.md)).
 - A clear data-sharing agreement context (purpose, ownership, approved usage).
 - If you plan to use AI-assisted functions, your organisation must first enable the relevant **Copilot and Azure OpenAI Service** tenant settings in Fabric:
   - **Users can use Copilot and other features powered by Azure OpenAI**
@@ -65,4 +65,4 @@ After copying, use this canonical naming model for your working notebooks:
 - [Lifecycle Operating Model](lifecycle-operating-model.md)
 - [Metadata and Contracts](metadata-and-contracts.md)
 - [Functions / Reference](reference/index.md)
-- [Fabric Wheel Install](setup/fabric-wheel-install.md)
+- [Run in Fabric](setup/run-in-fabric.md)

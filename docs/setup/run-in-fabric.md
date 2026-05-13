@@ -28,3 +28,23 @@ Example verification:
 import fabricops_kit
 from fabricops_kit import data_profiling, data_quality, data_governance
 ```
+
+
+## Run the notebook workflow
+
+After imports work, run the FabricOps notebooks in this order:
+
+1. `00_env_config`
+   Configure environment paths, workspace IDs, lakehouses, warehouses, and shared runtime settings.
+
+2. `01_data_sharing_agreement_<agreement>`
+   Capture approved usage, restrictions, business context, ownership, and governance metadata.
+
+3. `02_ex_<agreement>_<topic>`
+   Profile source data, validate business meaning, prepare AI-assisted DQ suggestions, and prepare AI-assisted classification suggestions.
+
+4. `03_pc_<agreement>_<pipeline>`
+   Enforce approved metadata, DQ rules, checks, lineage, and outputs in a run-all-safe pipeline notebook.
+
+- [Quick Start](../quick-start.md)
+- [Deployment](../deployment-and-promotion.md)
