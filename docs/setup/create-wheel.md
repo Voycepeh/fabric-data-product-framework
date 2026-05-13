@@ -3,8 +3,8 @@
 ## Purpose
 
 FabricOps Starter Kit is installed into Microsoft Fabric as a Python wheel.
-Use this page to prepare your local repository, validate locally, and build the
-wheel you will upload to a Fabric Environment.
+Use this page to prepare your local repository, validate locally, and build the wheel
+you will upload to a Fabric Environment.
 
 ## Prerequisites
 

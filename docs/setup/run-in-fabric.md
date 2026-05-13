@@ -3,8 +3,8 @@
 ## Purpose
 
 After building the wheel, upload it to a Microsoft Fabric Environment,
-publish that Environment, attach it to notebooks, and validate imports before
-running the FabricOps workflow.
+publish that Environment, attach it to notebooks, and validate imports
+before running the FabricOps workflow.
 
 ## Upload wheel to Fabric Environment
 
