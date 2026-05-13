@@ -1,30 +1,23 @@
 {
   "modules": [
     {
+      "module_name": "ai",
+      "visibility": "public",
+      "module_summary": "AI-assisted helper utilities and prompt builders.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true
+    },
+    {
+      "module_name": "business_context",
+      "visibility": "public",
+      "module_summary": "Business context suggestion and review helpers.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": true
+    },
+    {
       "module_name": "environment_config",
       "visibility": "public",
       "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true
-    },
-    {
-      "module_name": "fabric_input_output",
-      "visibility": "public",
-      "module_summary": "Lakehouse and warehouse read/write helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true
-    },
-    {
-      "module_name": "data_profiling",
-      "visibility": "public",
-      "module_summary": "Source/output profiling and metadata conversion helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true
-    },
-    {
-      "module_name": "data_quality",
-      "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
       "sidebar_group": "Modules",
       "sidebar_include": true
     },
@@ -43,10 +36,38 @@
       "sidebar_include": true
     },
     {
+      "module_name": "data_profiling",
+      "visibility": "public",
+      "module_summary": "Source/output profiling and metadata conversion helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true
+    },
+    {
+      "module_name": "data_quality",
+      "visibility": "public",
+      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true
+    },
+    {
       "module_name": "data_drift",
       "visibility": "public",
       "module_summary": "Schema/profile/partition drift checks supporting notebook validation.",
       "sidebar_group": "Modules",
+      "sidebar_include": true
+    },
+    {
+      "module_name": "fabric_input_output",
+      "visibility": "public",
+      "module_summary": "Lakehouse and warehouse read/write helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true
+    },
+    {
+      "module_name": "data_product_metadata",
+      "visibility": "public",
+      "module_summary": "Metadata table key builders and metadata write helpers.",
+      "sidebar_group": "Advanced",
       "sidebar_include": true
     },
     {
@@ -62,27 +83,6 @@
       "module_summary": "Technical/audit enrichment helpers for pipeline outputs.",
       "sidebar_group": "Modules",
       "sidebar_include": true
-    },
-    {
-      "module_name": "ai",
-      "visibility": "public",
-      "module_summary": "AI-assisted helper utilities and prompt builders.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true
-    },
-    {
-      "module_name": "data_product_metadata",
-      "visibility": "internal",
-      "module_summary": "Metadata table key builders and metadata write helpers.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false
-    },
-    {
-      "module_name": "business_context",
-      "visibility": "internal",
-      "module_summary": "Business context suggestion and review helpers.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false
     }
   ],
   "callables": [
@@ -136,10 +136,10 @@
     },
     {
       "module_name": "data_product_metadata",
-      "visibility": "internal",
+      "visibility": "public",
       "module_summary": "Metadata table key builders and metadata write helpers.",
       "sidebar_group": "Advanced",
-      "sidebar_include": false,
+      "sidebar_include": true,
       "callable_name": "build_dq_rule_key",
       "callable_visibility": "public",
       "callable_role": "optional",
@@ -256,10 +256,10 @@
     },
     {
       "module_name": "data_product_metadata",
-      "visibility": "internal",
+      "visibility": "public",
       "module_summary": "Metadata table key builders and metadata write helpers.",
       "sidebar_group": "Advanced",
-      "sidebar_include": false,
+      "sidebar_include": true,
       "callable_name": "build_metadata_column_key",
       "callable_visibility": "public",
       "callable_role": "optional",
@@ -268,10 +268,10 @@
     },
     {
       "module_name": "data_product_metadata",
-      "visibility": "internal",
+      "visibility": "public",
       "module_summary": "Metadata table key builders and metadata write helpers.",
       "sidebar_group": "Advanced",
-      "sidebar_include": false,
+      "sidebar_include": true,
       "callable_name": "build_metadata_table_key",
       "callable_visibility": "public",
       "callable_role": "optional",
@@ -292,10 +292,10 @@
     },
     {
       "module_name": "business_context",
-      "visibility": "internal",
+      "visibility": "public",
       "module_summary": "Business context suggestion and review helpers.",
       "sidebar_group": "Advanced",
-      "sidebar_include": false,
+      "sidebar_include": true,
       "callable_name": "capture_column_business_context",
       "callable_visibility": "public",
       "callable_role": "optional",
@@ -400,10 +400,10 @@
     },
     {
       "module_name": "business_context",
-      "visibility": "internal",
+      "visibility": "public",
       "module_summary": "Business context suggestion and review helpers.",
       "sidebar_group": "Advanced",
-      "sidebar_include": false,
+      "sidebar_include": true,
       "callable_name": "extract_column_business_context_suggestions",
       "callable_visibility": "public",
       "callable_role": "optional",
@@ -556,10 +556,10 @@
     },
     {
       "module_name": "business_context",
-      "visibility": "internal",
+      "visibility": "public",
       "module_summary": "Business context suggestion and review helpers.",
       "sidebar_group": "Advanced",
-      "sidebar_include": false,
+      "sidebar_include": true,
       "callable_name": "prepare_business_context_profile_input",
       "callable_visibility": "public",
       "callable_role": "optional",
@@ -700,10 +700,10 @@
     },
     {
       "module_name": "business_context",
-      "visibility": "internal",
+      "visibility": "public",
       "module_summary": "Business context suggestion and review helpers.",
       "sidebar_group": "Advanced",
-      "sidebar_include": false,
+      "sidebar_include": true,
       "callable_name": "suggest_column_business_contexts",
       "callable_visibility": "public",
       "callable_role": "optional",
@@ -808,10 +808,10 @@
     },
     {
       "module_name": "data_product_metadata",
-      "visibility": "internal",
+      "visibility": "public",
       "module_summary": "Metadata table key builders and metadata write helpers.",
       "sidebar_group": "Advanced",
-      "sidebar_include": false,
+      "sidebar_include": true,
       "callable_name": "write_column_business_context",
       "callable_visibility": "public",
       "callable_role": "optional",
@@ -820,10 +820,10 @@
     },
     {
       "module_name": "data_product_metadata",
-      "visibility": "internal",
+      "visibility": "public",
       "module_summary": "Metadata table key builders and metadata write helpers.",
       "sidebar_group": "Advanced",
-      "sidebar_include": false,
+      "sidebar_include": true,
       "callable_name": "write_column_governance_context",
       "callable_visibility": "public",
       "callable_role": "optional",
@@ -856,10 +856,10 @@
     },
     {
       "module_name": "data_product_metadata",
-      "visibility": "internal",
+      "visibility": "public",
       "module_summary": "Metadata table key builders and metadata write helpers.",
       "sidebar_group": "Advanced",
-      "sidebar_include": false,
+      "sidebar_include": true,
       "callable_name": "write_metadata_rows",
       "callable_visibility": "public",
       "callable_role": "optional",

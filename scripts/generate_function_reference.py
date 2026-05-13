@@ -31,23 +31,8 @@ PUBLIC_MODULE_PREFERRED_NAMES = {
     "run_summary": "run_summary",
     "technical_columns": "technical_columns",
 }
-VISIBLE_PUBLIC_MODULES = [
-    "environment_config",
-    "fabric_input_output",
-    "data_profiling",
-    "data_contracts",
-    "data_quality",
-    "data_governance",
-    "data_lineage",
-    "data_drift",
-    "run_summary",
-    "technical_columns",
-    "ai",
-]
-HIDDEN_SUPPORTING_MODULES = [
-    "runtime_context",
-    "data_product_metadata",
-]
+INTERNAL_MODULE_BLACKLIST = {"_utils"}
+INTERNAL_ALIAS_MODULES = {"metadata": "data_product_metadata", "config": "environment_config", "drift": "data_drift"}
 @dataclass
 class Symbol:
     name: str
@@ -203,6 +188,12 @@ def main() -> None:
     public = parse_public_exports()
     module_data = {p.stem: parse_module(p) for p in PKG_DIR.glob("*.py") if p.name != "__init__.py"}
 
+    discovered_modules = sorted(
+        p.stem
+        for p in PKG_DIR.glob("*.py")
+        if p.name not in {"__init__.py", "docs_metadata.py"} and p.stem not in INTERNAL_MODULE_BLACKLIST
+    )
+
     docs_metadata = parse_docs_metadata()
     template_flow_docs = parse_template_flow_docs()
     module_docs_metadata = parse_module_docs_metadata()
@@ -260,8 +251,9 @@ def main() -> None:
     function_symbol_map = {name: symbol for name, symbol in symbol_map.items() if symbol.obj_type == "function"}
     MODULE_DIR.mkdir(parents=True, exist_ok=True)
     module_manifest = {row["module_name"]: row for row in module_docs_metadata}
+    discovered_doc_modules = [INTERNAL_ALIAS_MODULES.get(module, module) for module in discovered_modules]
     module_index_lines = ["# Module API Catalogue", "", "Function Reference/workflow pages are the primary entrypoint. Module pages below are secondary technical references.", "", "Short-form modules remain import-compatible aliases but are intentionally hidden from this user-facing catalogue.", ""]
-    all_doc_modules = [row["module_name"] for row in module_docs_metadata]
+    all_doc_modules = discovered_doc_modules
     for module in all_doc_modules:
         actual_module = next((k for k,v in PUBLIC_MODULE_PREFERRED_NAMES.items() if v==module), module)
         info = module_data[actual_module]
@@ -271,7 +263,7 @@ def main() -> None:
         public_in_module = [s for s in function_symbol_map.values() if s.public_module == module]
         is_internal_only = not public_in_module
         title = f"# `{module}` module" if not is_internal_only else f"# `{module}` module (internal)"
-        module_visibility = module_manifest.get(module, {}).get("visibility", "internal")
+        module_visibility = module_manifest.get(module, {}).get("visibility", "public")
         if module_visibility == "public":
             status_banner = '<div class="api-status-block">\n  <span class="api-chip api-chip-module">Module overview</span>\n</div>'
         elif public_in_module:
@@ -365,11 +357,10 @@ def main() -> None:
         if any(line.strip().startswith("::: fabricops_kit.") for line in lines):
             raise RuntimeError(f"Mkdocstrings directives should not be rendered on module page for {module}")
         module_md.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
-        if module_manifest.get(module, {}).get("sidebar_include") and module_manifest.get(module, {}).get("visibility") == "public":
-            module_index_lines.append(f"- [`{module}`]({module}.md)")
+        module_index_lines.append(f"- [`{module}`]({module}.md)")
 
     (MODULE_DIR / "index.md").write_text("\n".join(module_index_lines) + "\n", encoding="utf-8", newline="\n")
-    sidebar_modules = [m["module_name"] for m in module_docs_metadata if m["visibility"] == "public" and m["sidebar_include"]]
+    sidebar_modules = list(discovered_doc_modules)
     mkdocs_text = MKDOCS_PATH.read_text(encoding="utf-8")
     start_marker = "      # AUTO-GENERATED-MODULES-START"
     end_marker = "      # AUTO-GENERATED-MODULES-END"
@@ -381,20 +372,20 @@ def main() -> None:
         MKDOCS_PATH.write_text(mkdocs_text, encoding="utf-8", newline="\n")
 
     manifest_rows = []
-    known_modules = set(module_manifest)
+    known_modules = set(discovered_doc_modules)
     for s in sorted(function_symbol_map.values(), key=lambda x: x.name.lower()):
         canonical_module = canonical_public_module(s.public_module)
         if canonical_module not in known_modules:
-            raise RuntimeError(f"Callable {s.name} resolved to unknown module_name {canonical_module!r}; add it to MODULE_DOCS_METADATA.")
-        module_meta = module_manifest.get(canonical_module, {"visibility": "internal", "sidebar_include": False, "module_summary": "", "sidebar_group": "Advanced"})
+            raise RuntimeError(f"Callable {s.name} resolved to module_name without generated page: {canonical_module!r}.")
+        module_meta = module_manifest.get(canonical_module, {"visibility": "public", "sidebar_include": True, "module_summary": "", "sidebar_group": "Modules"})
         callable_role = s.role
         manifest_rows.append(
             {
                 "module_name": canonical_module,
-                "visibility": module_meta["visibility"],
+                "visibility": "public",
                 "module_summary": module_meta["module_summary"],
                 "sidebar_group": module_meta["sidebar_group"],
-                "sidebar_include": module_meta["sidebar_include"],
+                "sidebar_include": True,
                 "callable_name": s.name,
                 "callable_visibility": "public",
                 "callable_role": callable_role,
@@ -402,7 +393,17 @@ def main() -> None:
                 "template_segment": docs_metadata[s.name].get("template_segment"),
             }
         )
-    MANIFEST_PATH.write_text(json.dumps({"modules": module_docs_metadata, "callables": manifest_rows}, indent=2) + "\n", encoding="utf-8")
+    manifest_modules = []
+    for module in discovered_doc_modules:
+        meta = module_manifest.get(module, {})
+        manifest_modules.append({
+            "module_name": module,
+            "visibility": "public",
+            "module_summary": meta.get("module_summary", ""),
+            "sidebar_group": meta.get("sidebar_group", "Modules"),
+            "sidebar_include": True,
+        })
+    MANIFEST_PATH.write_text(json.dumps({"modules": manifest_modules, "callables": manifest_rows}, indent=2) + "\n", encoding="utf-8")
 
     starter_symbol_to_notebooks: dict[str, set[str]] = {}
     for flow in template_flow_docs:
