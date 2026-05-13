@@ -23,6 +23,8 @@ Handover is generated from approved metadata, lineage, quality results, and runt
 
 ## Notebook model
 
+![Governance-Centered Workspace Model](assets/notebook-structure.png)
+
 The notebook model separates responsibilities while preserving a single metadata trail across the lifecycle:
 
 - **00_env_config** defines environment paths once per workspace.
