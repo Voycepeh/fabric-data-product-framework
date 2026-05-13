@@ -20,9 +20,9 @@ store audit, version, and rollback evidence
 
 > FabricOps treats Deployment Pipeline as the promotion mechanism, not the full source control system. Production `03_pc` notebooks are promoted from Dev to Production through Fabric Deployment Pipeline, configured through `00_env_config`, and recorded in a FabricOps release registry. Notebook Version History can support diff and restore, while FabricOps keeps frozen release snapshots and metadata in the lakehouse for audit and rollback.
 
-## Use two environments only
+## Recommended operating model: two environments
 
-Keep the operating model simple:
+Keep the operating model simple for restricted environments. Fabric supports more pipeline stages, but FabricOps recommends Dev and Production for this workflow.
 
 | Environment | Purpose |
 | --- | --- |
@@ -70,8 +70,9 @@ Instead, notebooks should load:
 Then resolve environment-specific paths through config, for example:
 
 ```python
-lh_in = get_path("DE", "Source")
-lh_out = get_path("DE", "Unified")
+ENV = "DE"
+lh_in = get_path(ENV, "Source")
+lh_out = get_path(ENV, "Unified")
 ```
 
 This keeps notebook logic stable while config controls whether runtime points to dev or production lakehouses.
@@ -88,7 +89,16 @@ Production `03_pc` notebook
 
 Deployment promotes the notebook item. It does not replace production config, release records, or rollback evidence.
 
+### Deployment Pipeline limitations
+
+Deployment Pipeline promotes supported Fabric items and dependencies, but it is not source control. It does not version lakehouse table/file data, and it does not replace release records, contract records, DQ versions, classification versions, or smoke-test evidence.
+
+
 ## Version production `03_pc` notebooks
+
+### Production notebook safety warning
+
+Fabric notebook frozen cell status is not preserved during deployment. Production `03_pc` notebooks must not depend on frozen cells for runtime safety. Remove, comment out, or guard exploration/diagnostic/one-time checks behind an explicit config flag before promotion.
 
 Strong versioning is required for production runtime notebooks, especially `03_pc_*` notebooks that run on schedule and create production data.
 
@@ -129,6 +139,13 @@ Files/
 ```
 
 This becomes the controlled manual repository for restricted environments.
+Release snapshots should include:
+
+- exported notebook `.ipynb`
+- `manifest.json` with `release_id`, `notebook_name`, `source_workspace`, `target_workspace`, `deployed_at`, `deployed_by`, `contract_version`, `dq_rule_version`, `classification_version`
+- `release_notes.md`
+- smoke-test result or `validation_status`
+
 
 ## Audit comes from three sources
 
