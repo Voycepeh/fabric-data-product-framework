@@ -531,6 +531,18 @@
       "template_segment": "Segment 2: Define environment targets and notebook policy"
     },
     {
+      "module_name": "data_governance",
+      "visibility": "public",
+      "module_summary": "Governance classification helpers and metadata builders.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "load_governance_context",
+      "callable_visibility": "public",
+      "callable_role": "essential",
+      "template_notebook": "03_pc",
+      "template_segment": "Segment 1: Load shared config and runtime context"
+    },
+    {
       "module_name": "ai",
       "visibility": "public",
       "module_summary": "AI-assisted helper utilities and prompt builders.",
@@ -637,6 +649,18 @@
       "callable_role": "essential",
       "template_notebook": "02_ex",
       "template_segment": "Segment 3: AI-assisted drafting (advisory only)"
+    },
+    {
+      "module_name": "data_governance",
+      "visibility": "public",
+      "module_summary": "Governance classification helpers and metadata builders.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "run_governance_widget",
+      "callable_visibility": "public",
+      "callable_role": "essential",
+      "template_notebook": "03_pc",
+      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
     },
     {
       "module_name": "data_lineage",

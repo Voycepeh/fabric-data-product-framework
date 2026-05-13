@@ -249,6 +249,11 @@ Use the finder below to look up public callable functions.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config, 02_ex, 03_pc</span></p>
   <p class="reference-catalogue-item-purpose">Validate and return a user-supplied framework configuration.</p>
 </article>
+<article id="load_governance_context" class="reference-catalogue-item" data-callable-row="true" data-callable-name="load_governance_context" data-callable-module="data_governance" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Load approved governance metadata as read-only agreement context for downstream notebooks.">
+  <h3 class="reference-catalogue-item-name"><a href="../api/reference/load_governance_context/"><code>load_governance_context</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Load approved governance metadata as read-only agreement context for downstream notebooks.</p>
+</article>
 <article id="parse_manual_ai_json_response" class="reference-catalogue-item" data-callable-row="true" data-callable-name="parse_manual_ai_json_response" data-callable-module="ai" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Parse manual AI JSON output into Python objects.">
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/parse_manual_ai_json_response/"><code>parse_manual_ai_json_response</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
@@ -293,6 +298,11 @@ Use the finder below to look up public callable functions.
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/review_dq_rules/"><code>review_dq_rules</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>02_ex</span></p>
   <p class="reference-catalogue-item-purpose">Review AI-suggested DQ rules sequentially with explicit approve/reject decisions.</p>
+</article>
+<article id="run_governance_widget" class="reference-catalogue-item" data-callable-row="true" data-callable-name="run_governance_widget" data-callable-module="data_governance" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Run governance review with AI-advisory suggestions and optional metadata persistence.">
+  <h3 class="reference-catalogue-item-name"><a href="../api/reference/run_governance_widget/"><code>run_governance_widget</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Run governance review with AI-advisory suggestions and optional metadata persistence.</p>
 </article>
 <article id="scan_notebook_cells" class="reference-catalogue-item" data-callable-row="true" data-callable-name="scan_notebook_cells" data-callable-module="data_lineage" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Scan multiple notebook cells and append cell references to lineage steps.">
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/scan_notebook_cells/"><code>scan_notebook_cells</code></a></h3>

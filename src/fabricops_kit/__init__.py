@@ -41,6 +41,8 @@ from .data_governance import (
     suggest_personal_identifier_classifications,
     extract_personal_identifier_suggestions,
     review_column_governance_context,
+    run_governance_widget,
+    load_governance_context,
     write_governance_classifications,
 )
 
@@ -139,6 +141,8 @@ __all__ = [
     "suggest_personal_identifier_classifications",
     "extract_personal_identifier_suggestions",
     "review_column_governance_context",
+    "run_governance_widget",
+    "load_governance_context",
     "COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET",
     "REJECTED_COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET",
     "COLUMN_BUSINESS_CONTEXT_FROM_WIDGET",
