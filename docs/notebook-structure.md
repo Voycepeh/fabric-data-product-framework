@@ -1,45 +1,41 @@
 # Notebook Structure
 
-This is the canonical page for notebook roles in FabricOps Starter Kit.
+This page defines the governance-centered workspace model for FabricOps Starter Kit.
 
-![Workspace notebook setup](assets/notebook-structure.png)
+![Governance-Centered Workspace Model](assets/governance-centered-workspace-model.png)
 
-## Recommended workspace layout
+## Governance-centered workspace layout
+
+`01_data_sharing_agreement_<agreement>` belongs logically to the governance workspace and governance metadata lakehouse, where agreement-level controls are defined once.
+
+Each execution environment (Sandbox, Dev/Test, Prod) reuses that agreement context and approved metadata.
 
 ```text
-Workspace
+Governance Workspace
+└── 01_data_sharing_agreement_<agreement>
+
+Environment Workspace (Sandbox / Dev-Test / Prod)
 ├── 00_env_config
-├── 01_data_sharing_agreement_<agreement>
-├── 02_ex_<agreement>_<topic>
-└── 03_pc_<agreement>_<pipeline>
+├── 02_ex_<agreement>_<topic>      (1-many)
+├── 03_pc_<agreement>_<pipeline>   (1-many)
+└── Local metadata/evidence lakehouse
 ```
 
-## Notebook naming, ownership, run mode, and scope
+## Notebook naming, ownership, and scope
 
-| Notebook | Primary ownership | Run mode | What belongs here |
+| Notebook | Primary ownership | Scope | What belongs here |
 |---|---|---|---|
-| `00_env_config` | Platform / engineering | Reused by other notebooks | Shared environment config, paths, runtime settings, smoke checks, reusable config objects. |
-| `01_data_sharing_agreement_<agreement>` | Data owner + governance steward | Human-reviewed, updated when agreement changes | Approved usage intent, policy boundaries, and agreement context. |
-| `02_ex_<agreement>_<topic>` | Analyst / engineer | Human-led exploration, not scheduled | Profiling, discovery, exploratory transforms, AI-assisted suggestions for DQ/classification candidates and metadata evidence. |
-| `03_pc_<agreement>_<pipeline>` | Data engineer | Run-all-safe, schedulable pipeline execution | Enforces only approved metadata and rules, performs deterministic transforms, writes outputs and runtime evidence. |
+| `00_env_config` | Platform / engineering | Environment runtime config | Shared environment settings, startup checks, paths, and runtime configuration. |
+| `01_data_sharing_agreement_<agreement>` | Governance steward / data owner | Cross-environment governance control plane | Agreement definition, approved usage, business context, ownership, restrictions, classification, sensitivity/PII policy, and approved governance metadata. |
+| `02_ex_<agreement>_<topic>` | Analyst / data scientist | Environment exploration and proposal | Source profiling, interpretation, and proposals to update governance/DQ metadata. |
+| `03_pc_<agreement>_<pipeline>` | Data engineer | Environment pipeline enforcement | Deterministic pipeline contracts that load approved metadata, enforce controls, quarantine failures, and write execution evidence. |
 
-## AI boundary (must stay explicit)
+## Operating behavior
 
-- AI suggestions happen in `02_ex`.
-- Human review and approval happen before promotion into approved metadata/config.
-- `03_pc` enforces only approved rules/classifications and must remain run-all-safe.
-
-## What goes where
-
-| Work item | `00_env_config` | `01_data_sharing_agreement` | `02_ex` | `03_pc` |
-|---|---:|---:|---:|---:|
-| Define environment paths/runtime config | Yes | No | Read-only | Read-only |
-| Record approved usage boundaries | No | Yes | Reference | Enforce usage-aligned logic |
-| Profile source data | No | No | Yes | Optional checks only |
-| Generate AI suggestions | No | No | Yes | No |
-| Approve/edit/reject candidate rules | No | Yes/Shared review | Draft + review workflow | No |
-| Enforce approved DQ rules/classifications | No | No | No | Yes |
-| Write curated outputs and run evidence | No | No | Optional draft artifacts | Yes |
+- Every notebook keeps the data agreement context in view.
+- Exploration notebooks propose updates; they do not become source of truth by themselves.
+- Pipeline contract notebooks load approved metadata and enforce it deterministically.
+- Agreement definition is not cloned per environment; it is defined once and reused.
 
 ## Notebook details
 
@@ -49,7 +45,7 @@ Workspace
 
 ## Related pages
 
-- [Metadata and Data Contract Assembly](metadata-and-contracts.md)
-- [Assembled contract model](metadata-and-contracts/contract-model.md)
-- [Data Quality Rules System](data-quality-rules-system.md)
+- [Governance Operating Model](governance-operating-model.md)
 - [Lifecycle Operating Model](lifecycle-operating-model.md)
+- [Metadata and Data Contract Assembly](metadata-and-contracts.md)
+- [Data Quality Rules System](data-quality-rules-system.md)

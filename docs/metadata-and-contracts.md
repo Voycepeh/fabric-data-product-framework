@@ -4,53 +4,47 @@
 
 ## 1. What it is
 
-A FabricOps data contract is a human-readable and AI/machine-readable handover document for a data product.
+FabricOps does not treat the data contract as one manually maintained document.
 
-It records what the data is, why it exists, how it can be used, what quality and governance rules apply, and who owns responsibility for it.
+The contract is assembled from approved metadata, pipeline evidence, quality results, lineage, and governance context.
 
-In FabricOps, the contract is assembled from approved metadata evidence instead of maintained as one large standalone contract file.
+## 2. Metadata-backed source of truth
 
-## 2. Why contract evidence is assembled in parts
+The metadata/contract store is the source of truth:
 
-Each workflow owns and approves the evidence it is responsible for:
+- `contracts`
+- `contract_columns`
+- `contract_rules`
+- `quality_results`
+- `lineage_records`
 
-| Workflow | Evidence it owns |
+## 3. Role ownership
+
+| Role | Ownership |
 | --- | --- |
-| Profiling | Schema/profile evidence, such as row counts, nulls, distinct counts, and min/max values |
-| Data quality | Approved DQ rules and DQ execution evidence |
-| Governance | Approved classifications, sensitivity, and usage constraints |
-| Drift | Approved guardrails and drift results |
-| Lineage | Transformation logic and source-to-output mapping evidence |
-| Runtime summary | Run context, such as run id, notebook/pipeline, timestamps, status, and owner |
+| Governance steward | Approved usage, business context, classification, sensitivity/PII |
+| Analyst / data scientist | Profiling interpretation and DQ rule validation |
+| Data engineer | Deterministic pipeline enforcement and evidence writing |
+| Handover / data contract | Generated from approved metadata-backed records |
 
-This keeps ownership clear and avoids duplicating one workflow's evidence inside another workflow's authoring layer.
+## 4. AI touchpoints
 
-## 3. Metadata tables as source of truth
+- Governance metadata: AI suggests, human approves.
+- DQ rules: AI applies/suggests candidates, human validates rule validity.
+- Handover: AI generates from approved metadata and evidence; no human needed for generation.
 
-Approved metadata tables are the source of truth. Conceptual table families include:
+## 5. Handover/export target
 
-- `FABRICOPS_PROFILE_RESULTS`
-- `FABRICOPS_DQ_RULES`
-- `FABRICOPS_DQ_RESULTS`
-- `FABRICOPS_GOVERNANCE_CLASSIFICATIONS`
-- `FABRICOPS_DRIFT_GUARDRAILS`
-- `FABRICOPS_DRIFT_RESULTS`
-- `FABRICOPS_LINEAGE_RECORDS`
-- `FABRICOPS_RUN_SUMMARY`
+The assembled contract output is exportable to Open Data Contract-compatible YAML/JSON.
 
-Use conceptual names where physical table names are not finalized.
+## 6. Core operational loop
 
-## 4. Handover/export target
+Step 5 → Step 2: pipeline execution produces evidence, and that evidence improves governance metadata and future agreement quality.
 
-At handover, FabricOps joins approved metadata records by dataset, table, column, run, version, and approval status into the final contract view.
+## 7. Related pages
 
-That assembled view is the operational data contract output.
-
-Open Data Contract compatible YAML/JSON remains the export target for the assembled contract view.
-
-## 5. Related pages
-
-- [Assembled contract model](contract-model.md)
-- [Metadata tables](metadata-tables.md)
-- [Notebook structure](../notebook-structure.md)
-- [Data Quality Rules System](../data-quality-rules-system.md)
+- [Governance Operating Model](governance-operating-model.md)
+- [Lifecycle Operating Model](lifecycle-operating-model.md)
+- [Notebook Structure](notebook-structure.md)
+- [Assembled Contract Model](metadata-and-contracts/contract-model.md)
+- [Metadata Tables](metadata-and-contracts/metadata-tables.md)

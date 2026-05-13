@@ -1,57 +1,36 @@
 # FabricOps Starter Kit
 
-FabricOps Starter Kit is a lightweight, Fabric-first notebook framework for building reusable, documented, quality-checked, drift-aware, governed, AI-ready data products.
+FabricOps Starter Kit helps teams turn governance intent, profiling evidence, DQ rules, and pipeline outputs into a metadata-backed data contract.
 
-Use this page as a guided front door into the docs.
+Use this page as a concise front door into the operating model.
 
 <div class="center-cta">
   <a class="md-button md-button--primary" href="quick-start/">Start with Quick Start</a>
   <a class="md-button" href="reference/">Browse the functions</a>
 </div>
 
-## How FabricOps fits into Fabric
+## Governance-centered operating model
 
-This diagram shows the lightweight operating shape assumed by the starter kit: source systems, dev/prod workspaces, layered stores, metadata evidence, and downstream consumption outputs.
+![Governance-Centered Workspace Model](assets/governance-centered-workspace-model.png)
 
-![FabricOps platform orientation](assets/data-platform-architecture.png)
-
-## How FabricOps assembles a data contract
-
-A FabricOps data contract is a human-readable and AI/machine-readable handover document for a data product.
-
-It is assembled from approved metadata evidence across profiling, data quality, governance, drift, lineage, and runtime records.
-
-![Data contract assembly from approved metadata evidence](assets/data-contract.png)
-
-
-## How FabricOps works
-
-![FabricOps lifecycle operating model overview](assets/mvp-flow.png)
-
-_FabricOps connects contracts, profiling, AI-assisted suggestions, human approval, pipeline enforcement, metadata, and handover across the lifecycle._
-
-- Configure the Fabric environment.
-- Capture agreement, ownership, and approved usage.
-- Profile source data and store metadata.
-- Use AI to suggest quality checks, sensitivity labels, lineage, and documentation.
-- Review and approve the suggestions.
-- Enforce the approved rules in pipeline notebooks.
-- Promote trusted outputs from source to unified to product layers.
+![Role-Based Lifecycle Workflow](assets/role-based-lifecycle-workflow.png)
 
 ## Choose where to go next
 
-| I want to... | Go to |
+| Topic | Go to |
 | --- | --- |
-| Understand the full operating model | [Lifecycle Operating Model](lifecycle-operating-model/) |
-| Run the framework end to end | [Quick Start](quick-start/) |
-| Set up the three notebook types | [Notebook Structure](notebook-structure/) |
-| Understand data contracts and metadata | [Metadata and Contracts](metadata-and-contracts/) |
-| Use AI to suggest data quality rules | [AI-Assisted Data Quality](data-quality-rules-system/) |
-| Find reusable templates and functions | [Functions](reference/) |
-| Install the wheel in Fabric | [Install in Fabric](setup/fabric-wheel-install/) |
+| Governance as a cross-environment control plane | [Governance Operating Model](governance-operating-model/) |
+| End-to-end role flow from stewardship to handover | [Lifecycle Operating Model](lifecycle-operating-model/) |
+| Notebook ownership, scope, and environment usage | [Notebook Structure](notebook-structure/) |
+| Public callable catalogue and API usage | [Function Reference](reference/) |
 
-### Suggested paths
+## Core story
 
-- **Run the framework:** [Quick Start](quick-start/) → [Notebook Structure](notebook-structure/) → [Functions](reference/)
-- **Build a governed data product:** [Metadata and Contracts](metadata-and-contracts/) → [AI-Assisted Data Quality](data-quality-rules-system/) → [Functions](reference/)
-- **Understand the operating model:** [Lifecycle Operating Model](lifecycle-operating-model/) → [Notebook Structure](notebook-structure/) → [Metadata and Contracts](metadata-and-contracts/)
+FabricOps is a metadata-led operating model, not only a notebook sequence.
+
+- Governance stewards define agreement context and approved usage once.
+- Analysts validate source meaning and DQ rule validity.
+- Engineers enforce approved metadata through deterministic pipeline contracts.
+- Handover is generated from approved metadata, lineage, quality results, and runtime evidence.
+
+For details, use the linked pages instead of duplicating long explanations here.
