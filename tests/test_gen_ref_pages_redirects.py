@@ -43,27 +43,33 @@ def _run_gen_ref_pages() -> dict[str, str]:
     return {path: buf.getvalue() for path, buf in recorder.files.items()}
 
 
-def test_gen_ref_pages_generates_legacy_redirect_pages_for_public_callables() -> None:
+def test_gen_ref_pages_generates_public_callable_pages_under_api_reference() -> None:
     outputs = _run_gen_ref_pages()
-    assert "reference/build_governance_classification_records.md" in outputs
     assert "api/reference/build_governance_classification_records.md" in outputs
+    assert "reference/build_governance_classification_records.md" not in outputs
 
 
-def test_legacy_redirect_points_to_canonical_callable_page() -> None:
-    outputs = _run_gen_ref_pages()
-    redirect = outputs["api/reference/build_governance_classification_records.md"]
-    assert "../../reference/build_governance_classification_records/" in redirect
-    assert "http-equiv=\"refresh\"" in redirect
-    assert "rel=\"canonical\"" in redirect
-
-
-def test_generated_primary_reference_links_do_not_use_api_reference_prefix() -> None:
+def test_generated_primary_reference_links_use_api_reference_prefix() -> None:
     content = (ROOT / "docs" / "reference" / "index.md").read_text(encoding="utf-8")
-    assert "/api/reference/" not in content
+    assert "../api/reference/" in content
+    assert "./build_governance_classification_records/" not in content
 
 
-def test_generated_module_pages_do_not_use_api_reference_prefix() -> None:
-    module_pages = sorted((ROOT / "docs" / "api" / "modules").glob("*.md"))
+def test_generated_module_pages_use_api_reference_prefix() -> None:
+    import json
+    manifest = json.loads((ROOT / "docs" / "reference" / "manifest.json").read_text(encoding="utf-8"))
+    module_pages = [ROOT / "docs" / "api" / "modules" / f"{row['module_name']}.md" for row in manifest["modules"]]
+    assert module_pages
     for path in module_pages:
         text = path.read_text(encoding="utf-8")
-        assert "/api/reference/" not in text
+        assert "../../api/reference/" in text
+        assert "../../reference/internal/" in text or "../../reference/" not in text
+
+
+def test_generated_notebook_structure_pages_use_api_reference_prefix() -> None:
+    notebook_pages = sorted((ROOT / "docs" / "notebook-structure").glob("*.md"))
+    assert notebook_pages
+    for path in notebook_pages:
+        text = path.read_text(encoding="utf-8")
+        assert "../../api/reference/" in text
+        assert "../../reference/internal/" in text or "../../reference/" not in text

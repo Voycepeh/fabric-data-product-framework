@@ -15,12 +15,12 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`build_dq_rule_key`](../../reference/build_dq_rule_key/) | function | — | [`_sha256_key`](../../reference/internal/metadata/_sha256_key.md) (internal) |
-| [`build_metadata_column_key`](../../reference/build_metadata_column_key/) | function | — | [`_sha256_key`](../../reference/internal/metadata/_sha256_key.md) (internal) |
-| [`build_metadata_table_key`](../../reference/build_metadata_table_key/) | function | — | [`_sha256_key`](../../reference/internal/metadata/_sha256_key.md) (internal) |
-| [`write_column_business_context`](../../reference/write_column_business_context/) | function | — | — |
-| [`write_column_governance_context`](../../reference/write_column_governance_context/) | function | — | — |
-| [`write_metadata_rows`](../../reference/write_metadata_rows/) | function | Write metadata rows to a lakehouse metadata table. | — |
+| [`build_dq_rule_key`](../../api/reference/build_dq_rule_key/) | function | — | [`_sha256_key`](../../reference/internal/metadata/_sha256_key.md) (internal) |
+| [`build_metadata_column_key`](../../api/reference/build_metadata_column_key/) | function | — | [`_sha256_key`](../../reference/internal/metadata/_sha256_key.md) (internal) |
+| [`build_metadata_table_key`](../../api/reference/build_metadata_table_key/) | function | — | [`_sha256_key`](../../reference/internal/metadata/_sha256_key.md) (internal) |
+| [`write_column_business_context`](../../api/reference/write_column_business_context/) | function | — | — |
+| [`write_column_governance_context`](../../api/reference/write_column_governance_context/) | function | — | — |
+| [`write_metadata_rows`](../../api/reference/write_metadata_rows/) | function | Write metadata rows to a lakehouse metadata table. | — |
 
 ## Related internal helpers
 
@@ -30,4 +30,4 @@
 | [`_key_part`](../../reference/internal/metadata/_key_part.md) | — |
 | [`_now_utc_iso`](../../reference/internal/metadata/_now_utc_iso.md) | — |
 | [`_resolve_action_by`](../../reference/internal/metadata/_resolve_action_by.md) | — |
-| [`_sha256_key`](../../reference/internal/metadata/_sha256_key.md) | [`build_dq_rule_key`](../../reference/build_dq_rule_key/), [`build_metadata_column_key`](../../reference/build_metadata_column_key/), [`build_metadata_table_key`](../../reference/build_metadata_table_key/) |
+| [`_sha256_key`](../../reference/internal/metadata/_sha256_key.md) | [`build_dq_rule_key`](../../api/reference/build_dq_rule_key/), [`build_metadata_column_key`](../../api/reference/build_metadata_column_key/), [`build_metadata_table_key`](../../api/reference/build_metadata_table_key/) |

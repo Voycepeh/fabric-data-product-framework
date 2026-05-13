@@ -15,14 +15,14 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`capture_column_business_context`](../../reference/capture_column_business_context/) | function | Display interactive approval widget. | [`_require_ipywidgets`](../../reference/internal/business_context/_require_ipywidgets.md) (internal) |
-| [`extract_column_business_context_suggestions`](../../reference/extract_column_business_context_suggestions/) | function | Parse AI suggestion rows from Spark DataFrames or ``list[dict]`` payloads. | [`_parse_ai_dict_response`](../../reference/internal/business_context/_parse_ai_dict_response.md) (internal) |
-| [`prepare_business_context_profile_input`](../../reference/prepare_business_context_profile_input/) | function | — | — |
-| [`suggest_column_business_contexts`](../../reference/suggest_column_business_contexts/) | function | Run Fabric AI to draft column business context suggestions. | — |
+| [`capture_column_business_context`](../../api/reference/capture_column_business_context/) | function | Display interactive approval widget. | [`_require_ipywidgets`](../../reference/internal/business_context/_require_ipywidgets.md) (internal) |
+| [`extract_column_business_context_suggestions`](../../api/reference/extract_column_business_context_suggestions/) | function | Parse AI suggestion rows from Spark DataFrames or ``list[dict]`` payloads. | [`_parse_ai_dict_response`](../../reference/internal/business_context/_parse_ai_dict_response.md) (internal) |
+| [`prepare_business_context_profile_input`](../../api/reference/prepare_business_context_profile_input/) | function | — | — |
+| [`suggest_column_business_contexts`](../../api/reference/suggest_column_business_contexts/) | function | Run Fabric AI to draft column business context suggestions. | — |
 
 ## Related internal helpers
 
 | Helper | Related public callables |
 |---|---|
-| [`_parse_ai_dict_response`](../../reference/internal/business_context/_parse_ai_dict_response.md) | [`extract_column_business_context_suggestions`](../../reference/extract_column_business_context_suggestions/) |
-| [`_require_ipywidgets`](../../reference/internal/business_context/_require_ipywidgets.md) | [`capture_column_business_context`](../../reference/capture_column_business_context/) |
+| [`_parse_ai_dict_response`](../../reference/internal/business_context/_parse_ai_dict_response.md) | [`extract_column_business_context_suggestions`](../../api/reference/extract_column_business_context_suggestions/) |
+| [`_require_ipywidgets`](../../reference/internal/business_context/_require_ipywidgets.md) | [`capture_column_business_context`](../../api/reference/capture_column_business_context/) |
