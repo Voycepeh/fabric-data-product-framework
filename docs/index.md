@@ -67,6 +67,7 @@ AI can suggest candidate data quality rules from business context, source profil
 Install the package, run the notebooks, and promote governed outputs through the lifecycle.
 
 <div class="center-cta">
-  <a class="md-button md-button--primary" href="setup/fabric-wheel-install/">Install in Fabric</a>
+  <a class="md-button md-button--primary" href="setup/create-wheel/">Create Wheel</a>
+  <a class="md-button" href="setup/run-in-fabric/">Run in Fabric</a>
   <a class="md-button" href="deployment-and-promotion/">View Deployment</a>
 </div>
