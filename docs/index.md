@@ -15,6 +15,15 @@ Use this page as a concise front door into the operating model.
 
 ![Role-Based Lifecycle Workflow](assets/role-based-lifecycle-workflow.png)
 
+
+## How FabricOps assembles a data contract
+
+A FabricOps data contract is a human-readable and AI/machine-readable handover document for a data product.
+
+It is assembled from approved metadata evidence across profiling, data quality, governance, drift, lineage, and runtime records.
+
+![Data contract assembly from approved metadata evidence](assets/data-contract.png)
+
 ## Choose where to go next
 
 | Topic | Go to |
