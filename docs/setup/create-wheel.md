@@ -1,6 +1,10 @@
 # Create Wheel
 
-FabricOps Starter Kit is installed into Microsoft Fabric as a Python wheel. Build the wheel locally, then upload the generated `.whl` file into a Fabric Environment.
+## Purpose
+
+FabricOps Starter Kit is installed into Microsoft Fabric as a Python wheel.
+Use this page to prepare your local repository, validate locally, and build the
+wheel you will upload to a Fabric Environment.
 
 ## Prerequisites
 
@@ -9,9 +13,9 @@ FabricOps Starter Kit is installed into Microsoft Fabric as a Python wheel. Buil
 - Python `>=3.11`
 - `uv`
 - Repository cloned locally
-- Microsoft Fabric workspace / Environment access for the upload step
+- Microsoft Fabric workspace / Environment access for upload
 
-## Local setup
+## Prepare local repo
 
 From the repository root:
 
@@ -21,26 +25,36 @@ git pull
 uv sync
 ```
 
-## Validation before build
+## Validate before build
 
-Run quick checks before packaging:
+Run local validation before packaging:
 
 ```bash
-uv run python -m pytest -q
 uv run python -m compileall src tests
+uv run python -m pytest -q
 ```
 
-## Build the wheel
+## Build wheel
 
 ```bash
 uv build
 ```
 
+## Find wheel artifact
+
+Build artifacts are written to `dist/`:
+
+- `dist/*.whl`
+- `dist/*.tar.gz`
+
+For Fabric custom libraries, upload the `.whl` artifact.
+
 ## Versioning before rebuild
 
 Before rebuilding and uploading a new wheel:
 
-- Align `pyproject.toml` `[project].version` and `src/fabricops_kit/__init__.py` `__version__`.
+- Keep `pyproject.toml` `[project].version` and
+  `src/fabricops_kit/__init__.py` `__version__` aligned.
 - Use a patch bump for fixes.
 - Use a minor bump for new capabilities.
 - Do not upload different wheel contents using the same version.

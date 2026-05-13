@@ -1,6 +1,10 @@
 # Run in Fabric
 
-After the wheel is built, upload it to a Microsoft Fabric Environment, publish the Environment, attach it to notebooks, and verify imports.
+## Purpose
+
+After building the wheel, upload it to a Microsoft Fabric Environment,
+publish that Environment, attach it to notebooks, and validate imports before
+running the FabricOps workflow.
 
 ## Upload wheel to Fabric Environment
 
@@ -8,19 +12,19 @@ After the wheel is built, upload it to a Microsoft Fabric Environment, publish t
 2. Go to **Environment**.
 3. Open **Custom libraries**.
 4. Upload the `.whl` file from `dist/`.
-5. Save and publish the Environment.
 
-## Attach Environment to notebooks
+## Publish and attach Environment
 
-1. Attach the published Environment to your notebook.
-2. Restart the notebook session after library updates.
+1. Save and publish the Environment.
+2. Attach the published Environment to your notebook.
+3. Restart the notebook session after library changes.
 
 ## Verify import
 
-Use imports that match the current package structure.
+Use current package paths.
 
-- Use `fabricops_kit.data_profiling` (current module path).
-- Do not use stale imports like `fabricops_kit.profiling`.
+- Use `fabricops_kit.data_profiling`.
+- Do not use stale `fabricops_kit.profiling`.
 
 Verification cells:
 
@@ -31,37 +35,44 @@ print(fabricops_kit.__file__)
 print(getattr(fabricops_kit, "__version__", "unknown"))
 ```
 
-## Use with notebook workflow
+## Run the FabricOps notebook workflow
 
-After imports work:
+Run notebooks in this order:
 
-1. Attach the published Environment to the notebook session.
-2. Run `00_env_config`.
-3. Run `01_data_sharing_agreement_<agreement>` where used.
-4. Run `02_ex_<agreement>_<topic>` to profile data and prepare AI-assisted DQ/classification suggestions.
-5. Get human approval for DQ/classification decisions before enforcement.
-6. Run `03_pc_<agreement>_<pipeline>` to enforce approved metadata, DQ rules, checks, lineage, and outputs.
-
-- [Quick Start](../quick-start.md)
-- [Deployment](../deployment-and-promotion.md)
+1. `00_env_config` configures paths and runtime settings.
+2. `01_data_sharing_agreement_<agreement>` captures approved usage,
+   restrictions, ownership, business context, and governance metadata.
+3. `02_ex_<agreement>_<topic>` profiles source data and prepares AI-assisted
+   DQ and classification suggestions.
+4. Human approval is required before DQ/classification enforcement.
+5. `03_pc_<agreement>_<pipeline>` enforces approved metadata, DQ rules,
+   checks, lineage, and outputs in a run-all-safe pipeline.
 
 ## Troubleshooting
 
-- Old wheel still active: publish Environment and restart session.
-- Import fails after upload: check the Environment is attached.
+- Old wheel still active: republish Environment and restart session.
+- Import fails after upload: confirm publish finished and Environment attached.
+- Wrong Environment attached: verify notebook is bound to the target Environment.
 - Wrong module path: use current `fabricops_kit` module names.
-- Missing dependencies: add dependency to package config and rebuild.
-- Fabric runtime conflict: pin or simplify dependency.
-- Version mismatch: bump wheel version and re-upload.
+- Missing dependencies: add dependency to package config, rebuild, and re-upload.
+- Fabric runtime dependency conflict: pin or simplify dependency versions.
+- Version mismatch: bump wheel version, rebuild, and re-upload.
+- Local tests pass but Fabric runtime fails: validate behavior in Fabric runtime.
 
 ## Release checklist
 
 1. Pull latest `main`.
-2. Run local checks.
+2. Run local validation.
 3. Bump version.
 4. Run `uv build`.
 5. Upload wheel.
 6. Publish Environment.
 7. Restart notebook session.
-8. Smoke test import and one notebook.
-9. Record tested version.
+8. Smoke test import.
+9. Smoke test one notebook.
+10. Record tested version.
+
+## Related pages
+
+- [Quick Start](../quick-start.md)
+- [Deployment](../deployment-and-promotion.md)
