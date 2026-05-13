@@ -23,16 +23,16 @@ nav:
       - Function Reference: reference/index.md
       - Modules:
       # AUTO-GENERATED-MODULES-START
+          - ai: api/modules/ai.md
           - environment_config: api/modules/environment_config.md
-          - fabric_input_output: api/modules/fabric_input_output.md
-          - data_profiling: api/modules/data_profiling.md
-          - data_quality: api/modules/data_quality.md
           - data_governance: api/modules/data_governance.md
           - data_lineage: api/modules/data_lineage.md
+          - data_profiling: api/modules/data_profiling.md
+          - data_quality: api/modules/data_quality.md
           - data_drift: api/modules/data_drift.md
+          - fabric_input_output: api/modules/fabric_input_output.md
           - run_summary: api/modules/run_summary.md
           - technical_columns: api/modules/technical_columns.md
-          - ai: api/modules/ai.md
       # AUTO-GENERATED-MODULES-END
   - Lifecycle Operating Model: lifecycle-operating-model.md
   - AI-Assisted Data Quality: data-quality-rules-system.md

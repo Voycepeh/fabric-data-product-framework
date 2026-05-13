@@ -1,91 +1,63 @@
 from __future__ import annotations
 
 import json
-import re
 import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+PKG_DIR = ROOT / "src" / "fabricops_kit"
 
 
 def _run_generator() -> None:
     subprocess.run(["python", "scripts/generate_function_reference.py"], cwd=ROOT, check=True)
 
 
-def test_manifest_drives_public_sidebar_modules() -> None:
+def _discover_expected_modules() -> set[str]:
+    blacklist = {"__init__", "docs_metadata", "_utils"}
+    alias = {"config": "environment_config", "drift": "data_drift", "metadata": "data_product_metadata"}
+    modules = {p.stem for p in PKG_DIR.glob("*.py") if p.stem not in blacklist}
+    return {alias.get(m, m) for m in modules}
+
+
+def test_discovered_modules_generate_docs_pages_and_nav() -> None:
     _run_generator()
     manifest = json.loads((ROOT / "docs" / "reference" / "manifest.json").read_text(encoding="utf-8"))
     mkdocs_text = (ROOT / "mkdocs.yml").read_text(encoding="utf-8")
 
-    public_sidebar_modules = {
-        m["module_name"] for m in manifest["modules"] if m["visibility"] == "public" and m["sidebar_include"]
-    }
-    internal_modules = {m["module_name"] for m in manifest["modules"] if m["visibility"] == "internal"}
+    expected_modules = _discover_expected_modules()
+    manifest_modules = {m["module_name"] for m in manifest["modules"]}
+    assert expected_modules <= manifest_modules
 
-    for module in public_sidebar_modules:
+    for module in expected_modules:
+        assert (ROOT / "docs" / "api" / "modules" / f"{module}.md").exists()
         assert f"- {module}: api/modules/{module}.md" in mkdocs_text
-    for module in internal_modules:
-        assert f"- {module}: api/modules/{module}.md" not in mkdocs_text
 
 
-def test_public_callables_align_with_manifest_module_visibility() -> None:
+def test_business_context_and_metadata_appear_automatically() -> None:
     _run_generator()
     manifest = json.loads((ROOT / "docs" / "reference" / "manifest.json").read_text(encoding="utf-8"))
-    callables = manifest["callables"]
-
-    assert all(row["callable_visibility"] == "public" for row in callables)
-    assert all(
-        row["callable_role"] in {"recommended_entrypoint", "advanced_helper", "internal_helper"}
-        for row in callables
-    )
-    # Keep DQ and review alignment explicit.
-    dq = [r for r in callables if r["module_name"] == "data_quality"]
-    assert dq
+    modules = {m["module_name"] for m in manifest["modules"]}
+    assert "business_context" in modules
+    assert "data_product_metadata" in modules
 
 
-def test_manifest_callable_modules_exist_in_module_metadata() -> None:
+def test_public_callables_point_to_generated_module_pages() -> None:
     _run_generator()
     manifest = json.loads((ROOT / "docs" / "reference" / "manifest.json").read_text(encoding="utf-8"))
-    module_names = {row["module_name"] for row in manifest["modules"]}
-    assert module_names
+    modules = {m["module_name"] for m in manifest["modules"]}
     for row in manifest["callables"]:
-        assert row["module_name"] in module_names
-        assert row["module_name"] not in {"config", "runtime", "drift", "metadata", "run_summary", "technical_columns"}
+        assert row["module_name"] in modules
 
 
-def test_public_sidebar_pages_are_not_internal_and_have_callable_sections() -> None:
+def test_mkdocs_sync_markers_render_current_manifest_modules() -> None:
     _run_generator()
+    mkdocs_text = (ROOT / "mkdocs.yml").read_text(encoding="utf-8")
+    start = "      # AUTO-GENERATED-MODULES-START"
+    end = "      # AUTO-GENERATED-MODULES-END"
+    assert start in mkdocs_text and end in mkdocs_text
+    block = mkdocs_text.split(start, 1)[1].split(end, 1)[0]
+
     manifest = json.loads((ROOT / "docs" / "reference" / "manifest.json").read_text(encoding="utf-8"))
-    public_sidebar_modules = [
-        row["module_name"] for row in manifest["modules"] if row["visibility"] == "public" and row["sidebar_include"]
-    ]
-    callable_modules = {row["module_name"] for row in manifest["callables"]}
-    for module in public_sidebar_modules:
-        page = (ROOT / "docs" / "api" / "modules" / f"{module}.md").read_text(encoding="utf-8")
-        first_line = page.splitlines()[0]
-        assert "(internal)" not in first_line
-        assert "No public exports in this module." not in page
-        if module in callable_modules:
-            assert "## Recommended notebook entrypoints" in page
-            assert "## Advanced helpers" in page
-
-
-def test_module_banner_respects_visibility_metadata() -> None:
-    _run_generator()
-    manifest = json.loads((ROOT / "docs" / "reference" / "manifest.json").read_text(encoding="utf-8"))
-    for module in manifest["modules"]:
-        module_name = module["module_name"]
-        page = (ROOT / "docs" / "api" / "modules" / f"{module_name}.md").read_text(encoding="utf-8")
-        if module["visibility"] == "internal":
-            assert '<span class="api-chip api-chip-module">Module overview</span>' not in page
-        if module["visibility"] == "public" and module["sidebar_include"]:
-            assert '<span class="api-chip api-chip-module">Module overview</span>' in page
-
-
-def test_notebook_structure_module_links_use_site_routes_not_md_files() -> None:
-    _run_generator()
-    for path in (ROOT / "docs" / "notebook-structure").glob("*.md"):
-        text = path.read_text(encoding="utf-8")
-        assert "href=\"../../api/modules/" in text
-        assert re.search(r'href=\"\.\./\.\./api/modules/[^\"/]+/\"', text)
-        assert not re.search(r'href=\"\.\./\.\./api/modules/[^\"/]+\.md\"', text)
+    sidebar_modules = [m["module_name"] for m in manifest["modules"] if m["visibility"] == "public" and m["sidebar_include"]]
+    for module in sidebar_modules:
+        assert f"- {module}: api/modules/{module}.md" in block

@@ -1,30 +1,23 @@
 {
   "modules": [
     {
+      "module_name": "ai",
+      "visibility": "public",
+      "module_summary": "AI-assisted helper utilities and prompt builders.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true
+    },
+    {
+      "module_name": "business_context",
+      "visibility": "internal",
+      "module_summary": "Business context suggestion and review helpers.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": false
+    },
+    {
       "module_name": "environment_config",
       "visibility": "public",
       "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true
-    },
-    {
-      "module_name": "fabric_input_output",
-      "visibility": "public",
-      "module_summary": "Lakehouse and warehouse read/write helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true
-    },
-    {
-      "module_name": "data_profiling",
-      "visibility": "public",
-      "module_summary": "Source/output profiling and metadata conversion helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true
-    },
-    {
-      "module_name": "data_quality",
-      "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
       "sidebar_group": "Modules",
       "sidebar_include": true
     },
@@ -43,11 +36,39 @@
       "sidebar_include": true
     },
     {
+      "module_name": "data_profiling",
+      "visibility": "public",
+      "module_summary": "Source/output profiling and metadata conversion helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true
+    },
+    {
+      "module_name": "data_quality",
+      "visibility": "public",
+      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true
+    },
+    {
       "module_name": "data_drift",
       "visibility": "public",
       "module_summary": "Schema/profile/partition drift checks supporting notebook validation.",
       "sidebar_group": "Modules",
       "sidebar_include": true
+    },
+    {
+      "module_name": "fabric_input_output",
+      "visibility": "public",
+      "module_summary": "Lakehouse and warehouse read/write helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true
+    },
+    {
+      "module_name": "data_product_metadata",
+      "visibility": "internal",
+      "module_summary": "Metadata table key builders and metadata write helpers.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": false
     },
     {
       "module_name": "run_summary",
@@ -62,27 +83,6 @@
       "module_summary": "Technical/audit enrichment helpers for pipeline outputs.",
       "sidebar_group": "Modules",
       "sidebar_include": true
-    },
-    {
-      "module_name": "ai",
-      "visibility": "public",
-      "module_summary": "AI-assisted helper utilities and prompt builders.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true
-    },
-    {
-      "module_name": "data_product_metadata",
-      "visibility": "internal",
-      "module_summary": "Metadata table key builders and metadata write helpers.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false
-    },
-    {
-      "module_name": "business_context",
-      "visibility": "internal",
-      "module_summary": "Business context suggestion and review helpers.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": false
     }
   ],
   "callables": [
