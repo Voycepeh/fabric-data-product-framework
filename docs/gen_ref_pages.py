@@ -64,7 +64,7 @@ for row in sorted(public_symbol_docs, key=lambda item: item["symbol_name"]):
 
 for module_name, helpers in internal_helpers_by_module.items():
     for helper_name in helpers:
-        doc_path = f"reference/internal/{module_name}/{helper_name}.md"
+        doc_path = f"api/reference/internal/{module_name}/{helper_name}.md"
         with mkdocs_gen_files.open(doc_path, "w") as fd:
             fd.write(f"# `{helper_name}`\n\n")
             fd.write('<div class="api-status-block">\n')
@@ -85,4 +85,4 @@ with mkdocs_gen_files.open("reference/SUMMARY.md", "w") as fd:
         for module_name, helpers in sorted(internal_helpers_by_module.items()):
             fd.write(f"  - {module_name}\n")
             for helper_name in helpers:
-                fd.write(f"    - [{helper_name}](internal/{module_name}/{helper_name}.md)\n")
+                fd.write(f"    - [{helper_name}](../api/reference/internal/{module_name}/{helper_name}.md)\n")
