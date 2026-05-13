@@ -2,24 +2,186 @@
 
 ## Enterprise-friendly promotion model
 
-FabricOps Starter Kit does not assume Git integration is always available in Microsoft Fabric enterprise environments.
+FabricOps Starter Kit supports both Git-integrated and deployment-pipeline-centered workflows in Microsoft Fabric.
 
-- If Git integration is available, teams can use it for source control, review, and release workflows.
-- If Git integration is blocked by policy or platform constraints, teams can still run a governed promotion model using Fabric deployment pipelines and controlled admin notebooks.
+For restricted Fabric environments, the recommended operating model is:
 
-This keeps day-to-day engineering and governance operations viable in both Git-enabled and Git-restricted setups.
+**Dev workspace**  
+build, test, experiment  
+↓  
+**Fabric Deployment Pipeline**  
+promote approved notebook item  
+↓  
+**Production workspace**  
+run approved `03_pc` notebooks  
+↓  
+**FabricOps release registry**  
+store audit, version, and rollback evidence
 
-## What gets promoted
+> FabricOps treats Deployment Pipeline as the promotion mechanism, not the full source control system. Production `03_pc` notebooks are promoted from Dev to Production through Fabric Deployment Pipeline, configured through `00_env_config`, and recorded in a FabricOps release registry. Notebook Version History can support diff and restore, while FabricOps keeps frozen release snapshots and metadata in the lakehouse for audit and rollback.
 
-Fabric deployment pipelines can promote supported Fabric item definitions, including notebooks and other supported data engineering items.
+## Recommended operating model: two environments
 
-In this model:
+Keep the operating model simple for restricted environments. Fabric supports more pipeline stages, but FabricOps recommends Dev and Production for this workflow.
 
-- Selected `03_pc` notebooks (and other supported items) are promoted from Dev to Test/Prod.
-- Notebook deployment rules can rebind or map the target default lakehouse in each stage where supported.
-- Lakehouse and Warehouse items may be deployed through pipelines or manually created per enterprise operating process.
+| Environment | Purpose |
+| --- | --- |
+| Dev | Build, test, profile, explore, and prepare notebooks |
+| Production | Run approved recurring notebooks |
 
-## What does not get solved automatically
+Dev does not require strict versioning.
+Production does.
+
+Core rule:
+
+- Dev is working space.
+- Production is controlled runtime space.
+
+## Keep names aligned across environments
+
+Use the same logical structure in both environments.
+
+**Dev workspace**
+
+- Source lakehouse
+- Unified lakehouse
+- Product lakehouse
+
+**Production workspace**
+
+- Source lakehouse
+- Unified lakehouse
+- Product lakehouse
+
+Use the same table names across environments where possible.
+
+This allows the same `03_pc` notebook logic to move from dev to production without rewriting business logic.
+
+## Use `00_env_config` as the environment switch
+
+Production notebooks should not hardcode dev or production paths.
+
+Instead, notebooks should load:
+
+```python
+%run 00_env_config
+```
+
+Then resolve environment-specific paths through config, for example:
+
+```python
+ENV = "DE"
+lh_in = get_path(ENV, "Source")
+lh_out = get_path(ENV, "Unified")
+```
+
+This keeps notebook logic stable while config controls whether runtime points to dev or production lakehouses.
+
+## Use Deployment Pipeline to promote notebook items
+
+Deployment Pipeline is the controlled promotion mechanism:
+
+Dev `03_pc` notebook  
+↓  
+Deploy  
+↓  
+Production `03_pc` notebook
+
+Deployment promotes the notebook item. It does not replace production config, release records, or rollback evidence.
+
+### Deployment Pipeline limitations
+
+Deployment Pipeline promotes supported Fabric items and dependencies, but it is not source control. It does not version lakehouse table/file data, and it does not replace release records, contract records, DQ versions, classification versions, or smoke-test evidence.
+
+
+## Version production `03_pc` notebooks
+
+### Production notebook safety warning
+
+Fabric notebook frozen cell status is not preserved during deployment. Production `03_pc` notebooks must not depend on frozen cells for runtime safety. Remove, comment out, or guard exploration/diagnostic/one-time checks behind an explicit config flag before promotion.
+
+Strong versioning is required for production runtime notebooks, especially `03_pc_*` notebooks that run on schedule and create production data.
+
+Each production promotion should create a release record that includes:
+
+- `release_id`
+- `notebook_name`
+- `notebook_version`
+- `deployed_by`
+- `deployed_at`
+- `source_workspace`
+- `target_workspace`
+- `contract_version`
+- `dq_rule_version`
+- `classification_version`
+- `validation_status`
+- `release_notes`
+
+## Store release snapshots in the lakehouse
+
+Even when Deployment Pipeline and Notebook Version History are available, FabricOps should keep its own release evidence.
+
+Recommended structure:
+
+```text
+Files/
+  fabricops_repository/
+    notebooks/
+      03_pc_student_events_to_curated/
+        v001/
+          notebook.ipynb
+          manifest.json
+          release_notes.md
+        v002/
+          notebook.ipynb
+          manifest.json
+          release_notes.md
+```
+
+This becomes the controlled manual repository for restricted environments.
+Release snapshots should include:
+
+- exported notebook `.ipynb`
+- `manifest.json` with `release_id`, `notebook_name`, `source_workspace`, `target_workspace`, `deployed_at`, `deployed_by`, `contract_version`, `dq_rule_version`, `classification_version`
+- `release_notes.md`
+- smoke-test result or `validation_status`
+
+
+## Audit comes from three sources
+
+| Source | What it gives you |
+| --- | --- |
+| Deployment Pipeline history | Who deployed, when, which stage, and success/failure status |
+| Notebook Version History | Notebook checkpoints, deployed versions, restore, and diff |
+| FabricOps release registry | Business release evidence, contract version, DQ version, and governance version |
+
+Fabric gives operational history. FabricOps stores governed release evidence.
+
+## Rollback flow
+
+Rollback should be simple and controlled:
+
+Find previous approved version  
+↓  
+Restore notebook from Notebook Version History, or import frozen lakehouse copy  
+↓  
+Update active release registry  
+↓  
+Run smoke test  
+↓  
+Resume production schedule
+
+Do not rely only on UI history. The lakehouse release copy is the controlled fallback.
+
+## What not to do
+
+- Do not run production from dev notebooks.
+- Do not let production notebooks read dev lakehouses.
+- Do not hardcode dev workspace IDs inside production notebooks.
+- Do not treat Deployment Pipeline as a full Git replacement.
+- Do not version every exploratory notebook.
+
+## Related controls
 
 Deployment does not remove the need to provision and validate target environments. Teams still need explicit setup and validation for:
 
@@ -33,58 +195,6 @@ Deployment does not remove the need to provision and validate target environment
 - schedules / orchestration
 - deployment rules
 
-Promotion reliability depends on these dependencies being governed and validated per environment.
+Contract records and related metadata are operational controls and should be promoted through governed processes. For contract model and metadata table guidance, see [Metadata and Contracts](metadata-and-contracts.md).
 
-## Environment-local `00_env_config`
-
-Normal lifecycle notebooks are designed to run as single-environment workloads.
-
-- Each workspace should maintain its own `00_env_config` notebook.
-- Dev `00_env_config` should point only to dev stores.
-- Prod `00_env_config` should point only to prod stores.
-- Avoid promoting `00_env_config` unchanged into prod unless the team has a controlled, audited config promotion process.
-
-This prevents accidental cross-environment reads/writes and keeps runtime behavior explicit.
-
-## Recommended promotion flow without Git
-
-### Dev workspace
-
-- Edit and test `02_ex` / `03_pc` notebooks.
-- Approve source input contract records in dev metadata.
-- Validate expected outputs.
-
-### Deployment pipeline
-
-- Promote selected `03_pc` notebooks and supported items to Test/Prod.
-- Apply deployment rules for default lakehouse mapping where needed.
-
-### Prod workspace
-
-- Keep prod `00_env_config` in place.
-- Run bootstrap smoke tests.
-- Promote approved contract metadata into the prod metadata store.
-- Run prod `03_pc` notebooks against prod config and prod metadata only.
-
-## Contract and metadata promotion
-
-Contract records are operational metadata, not just source code artifacts.
-
-- Store contract and related operational metadata in each environment's metadata lakehouse or warehouse.
-- Dev-approved contracts are not automatically prod-approved.
-- Promote contracts through a controlled admin notebook or equivalent governed process.
-- Prod pipelines must not read dev metadata at runtime.
-
-Notebook code promotion and contract/metadata promotion should be treated as related but separate controls. For contract model and metadata table guidance, see [Metadata and Contracts](metadata-and-contracts.md).
-
-## Admin notebooks for cross-environment operations
-
-Normal `03_pc` notebooks should remain single-environment.
-
-When cross-environment operations are required, use explicit admin notebooks, for example:
-
-- `90_admin_promote_contract_dev_to_prod`
-- `90_admin_compare_contract_dev_prod`
-- `90_admin_validate_prod_setup`
-
-These admin notebooks provide intentional, auditable paths for environment-to-environment actions.
+Normal `03_pc` notebooks should remain single-environment. When cross-environment operations are required, use explicit admin notebooks (for example `90_admin_promote_contract_dev_to_prod`, `90_admin_compare_contract_dev_prod`, and `90_admin_validate_prod_setup`) to keep changes intentional and auditable.
