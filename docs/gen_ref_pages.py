@@ -1,8 +1,4 @@
-"""Generate internal helper API pages for MkDocs build.
-
-Public callable reference content is generated into docs/reference/index.md by
-scripts/generate_function_reference.py and linked via in-page anchors.
-"""
+"""Generate callable reference pages for MkDocs build."""
 from __future__ import annotations
 
 import ast
@@ -41,9 +37,29 @@ def _load_internal_helpers() -> dict[str, list[str]]:
     return module_helpers
 
 
-# Keep this parsed to ensure generator remains aligned with template-first metadata.
-_ = _read_literal(DOCS_METADATA_PATH, "TEMPLATE_FLOW_DOCS")
+public_symbol_docs = _read_literal(DOCS_METADATA_PATH, "PUBLIC_SYMBOL_DOCS")
 internal_helpers_by_module = _load_internal_helpers()
+
+for row in sorted(public_symbol_docs, key=lambda item: item["symbol_name"]):
+    if row.get("kind") not in {"function", "class"}:
+        continue
+    symbol_name = row["symbol_name"]
+    module_name = row["module"]
+    doc_path = f"reference/{symbol_name}.md"
+    with mkdocs_gen_files.open(doc_path, "w") as fd:
+        fd.write(f"# `{symbol_name}`\n\n")
+        fd.write(
+            f"- **Template notebook:** `{row.get('template_notebook') or '—'}`\n"
+            f"- **Template segment:** {row.get('template_segment') or '—'}\n"
+            f"- **Role:** `{row.get('role') or 'optional'}`\n"
+            f"- **Module:** `{module_name}`\n\n"
+        )
+        fd.write(f"::: {PACKAGE}.{module_name}.{symbol_name}\n")
+        fd.write("    options:\n")
+        fd.write("      show_root_heading: false\n")
+        fd.write("      show_source: true\n")
+        fd.write("      docstring_style: numpy\n")
+        fd.write("      docstring_section_style: table\n")
 
 for module_name, helpers in internal_helpers_by_module.items():
     for helper_name in helpers:
@@ -63,6 +79,10 @@ for module_name, helpers in internal_helpers_by_module.items():
 
 with mkdocs_gen_files.open("reference/SUMMARY.md", "w") as fd:
     fd.write("- [Reference Home](index.md)\n")
+    for row in sorted(public_symbol_docs, key=lambda item: item["symbol_name"]):
+        if row.get("kind") in {"function", "class"}:
+            symbol_name = row["symbol_name"]
+            fd.write(f"- [{symbol_name}]({symbol_name}.md)\n")
     if internal_helpers_by_module:
         fd.write("- Internal Helpers\n")
         for module_name, helpers in sorted(internal_helpers_by_module.items()):

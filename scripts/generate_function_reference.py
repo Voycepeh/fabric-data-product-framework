@@ -99,6 +99,10 @@ def parse_module(path: Path) -> dict[str, Any]:
             for target in node.targets:
                 if isinstance(target, ast.Name) and target.id.isupper():
                     constants[target.id] = ""
+        elif isinstance(node, ast.AnnAssign):
+            target = node.target
+            if isinstance(target, ast.Name) and target.id.isupper():
+                constants[target.id] = ""
     names = set(functions) | set(classes)
     for caller, callees in calls.items():
         for callee in names:
@@ -170,10 +174,10 @@ def internal_helper_link(actual_module: str, helper: str) -> str:
 
 
 def public_reference_link(symbol: str, docs_metadata: dict[str, dict[str, Any]]) -> str:
-    """Return docs-relative link target for a public callable anchor on the index page."""
+    """Return docs-relative link target for a public callable page."""
     if symbol not in docs_metadata:
         raise RuntimeError(f"Missing PUBLIC_SYMBOL_DOCS entry for exported symbol: {symbol}")
-    return f"../../reference/#{symbol}"
+    return f"../../reference/{symbol}/"
 
 
 def callable_docs_link(
@@ -497,7 +501,7 @@ def main() -> None:
             for symbol_name in segment["symbols"]:
                 s = symbol_map[symbol_name]
                 info = module_data[s.actual_module]
-                symbol_link = f"../../reference/#{s.name}"
+                symbol_link = f"../../reference/{s.name}/"
                 segment_rows.append([
                     _anchor(symbol_link, s.name, code=True),
                     _module_link(s.public_module, base_prefix="../../"),
@@ -587,7 +591,7 @@ def main() -> None:
     )
     all_items: list[str] = []
     for s in sorted(function_symbol_map.values(), key=lambda x: x.name.lower()):
-        symbol_link = f"#{s.name}"
+        symbol_link = f"./{s.name}/"
         starter_path = ", ".join(sorted(starter_symbol_to_notebooks.get(s.name, set()))) or "—"
         purpose = s.purpose or s.summary or "—"
         all_items.extend(

@@ -69,6 +69,20 @@
       "module_summary": "AI-assisted helper utilities and prompt builders.",
       "sidebar_group": "Modules",
       "sidebar_include": true
+    },
+    {
+      "module_name": "data_product_metadata",
+      "visibility": "internal",
+      "module_summary": "Metadata table key builders and metadata write helpers.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": false
+    },
+    {
+      "module_name": "business_context",
+      "visibility": "internal",
+      "module_summary": "Business context suggestion and review helpers.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": false
     }
   ],
   "callables": [
@@ -83,6 +97,66 @@
       "callable_role": "essential",
       "template_notebook": "03_pc",
       "template_segment": "Segment 4: Run DQ, split outputs, and publish"
+    },
+    {
+      "module_name": "data_quality",
+      "visibility": "public",
+      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "attach_rule_metadata_keys",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "02_ex",
+      "template_segment": "Not mapped in template flow segment"
+    },
+    {
+      "module_name": "data_quality",
+      "visibility": "public",
+      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "build_dq_review_rows",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "02_ex",
+      "template_segment": "Not mapped in template flow segment"
+    },
+    {
+      "module_name": "data_quality",
+      "visibility": "public",
+      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "build_dq_rule_deactivation_metadata_df",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "02_ex",
+      "template_segment": "Not mapped in template flow segment"
+    },
+    {
+      "module_name": "data_product_metadata",
+      "visibility": "internal",
+      "module_summary": "Metadata table key builders and metadata write helpers.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": false,
+      "callable_name": "build_dq_rule_key",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
+    },
+    {
+      "module_name": "data_quality",
+      "visibility": "public",
+      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "build_dq_rules_metadata_df",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "02_ex",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "ai",
@@ -181,6 +255,30 @@
       "template_segment": "Not mapped in template flow segment"
     },
     {
+      "module_name": "data_product_metadata",
+      "visibility": "internal",
+      "module_summary": "Metadata table key builders and metadata write helpers.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": false,
+      "callable_name": "build_metadata_column_key",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
+    },
+    {
+      "module_name": "data_product_metadata",
+      "visibility": "internal",
+      "module_summary": "Metadata table key builders and metadata write helpers.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": false,
+      "callable_name": "build_metadata_table_key",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
+    },
+    {
       "module_name": "run_summary",
       "visibility": "public",
       "module_summary": "Run summary and handover markdown helpers.",
@@ -191,6 +289,18 @@
       "callable_role": "essential",
       "template_notebook": "03_pc",
       "template_segment": "Optional profiling, drift, governance, lineage, and handover"
+    },
+    {
+      "module_name": "business_context",
+      "visibility": "internal",
+      "module_summary": "Business context suggestion and review helpers.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": false,
+      "callable_name": "capture_column_business_context",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "data_drift",
@@ -275,6 +385,42 @@
       "callable_role": "essential",
       "template_notebook": "03_pc",
       "template_segment": "Segment 4: Run DQ, split outputs, and publish"
+    },
+    {
+      "module_name": "data_quality",
+      "visibility": "public",
+      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "extract_candidate_rules_from_responses",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "02_ex",
+      "template_segment": "Not mapped in template flow segment"
+    },
+    {
+      "module_name": "business_context",
+      "visibility": "internal",
+      "module_summary": "Business context suggestion and review helpers.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": false,
+      "callable_name": "extract_column_business_context_suggestions",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
+    },
+    {
+      "module_name": "data_governance",
+      "visibility": "public",
+      "module_summary": "Governance classification helpers and metadata builders.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "extract_personal_identifier_suggestions",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "ai",
@@ -409,6 +555,30 @@
       "template_segment": "Not mapped in template flow segment"
     },
     {
+      "module_name": "business_context",
+      "visibility": "internal",
+      "module_summary": "Business context suggestion and review helpers.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": false,
+      "callable_name": "prepare_business_context_profile_input",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
+    },
+    {
+      "module_name": "data_governance",
+      "visibility": "public",
+      "module_summary": "Governance classification helpers and metadata builders.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "prepare_governance_profile_input",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
+    },
+    {
       "module_name": "data_profiling",
       "visibility": "public",
       "module_summary": "Source/output profiling and metadata conversion helpers.",
@@ -431,6 +601,18 @@
       "callable_role": "essential",
       "template_notebook": "03_pc",
       "template_segment": "Optional profiling, drift, governance, lineage, and handover"
+    },
+    {
+      "module_name": "data_governance",
+      "visibility": "public",
+      "module_summary": "Governance classification helpers and metadata builders.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "review_column_governance_context",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "data_quality",
@@ -517,6 +699,42 @@
       "template_segment": "Segment 3: Transform and apply runtime standards"
     },
     {
+      "module_name": "business_context",
+      "visibility": "internal",
+      "module_summary": "Business context suggestion and review helpers.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": false,
+      "callable_name": "suggest_column_business_contexts",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
+    },
+    {
+      "module_name": "data_quality",
+      "visibility": "public",
+      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "suggest_dq_rules_with_fabric_ai",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "02_ex",
+      "template_segment": "Not mapped in template flow segment"
+    },
+    {
+      "module_name": "data_governance",
+      "visibility": "public",
+      "module_summary": "Governance classification helpers and metadata builders.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "suggest_personal_identifier_classifications",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
+    },
+    {
       "module_name": "data_drift",
       "visibility": "public",
       "module_summary": "Schema/profile/partition drift checks supporting notebook validation.",
@@ -589,6 +807,30 @@
       "template_segment": "Segment 4: Run DQ, split outputs, and publish"
     },
     {
+      "module_name": "data_product_metadata",
+      "visibility": "internal",
+      "module_summary": "Metadata table key builders and metadata write helpers.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": false,
+      "callable_name": "write_column_business_context",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
+    },
+    {
+      "module_name": "data_product_metadata",
+      "visibility": "internal",
+      "module_summary": "Metadata table key builders and metadata write helpers.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": false,
+      "callable_name": "write_column_governance_context",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
+    },
+    {
       "module_name": "data_quality",
       "visibility": "public",
       "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
@@ -611,6 +853,18 @@
       "callable_role": "essential",
       "template_notebook": "03_pc",
       "template_segment": "Optional profiling, drift, governance, lineage, and handover"
+    },
+    {
+      "module_name": "data_product_metadata",
+      "visibility": "internal",
+      "module_summary": "Metadata table key builders and metadata write helpers.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": false,
+      "callable_name": "write_metadata_rows",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "03_pc",
+      "template_segment": "Not mapped in template flow segment"
     }
   ]
 }
