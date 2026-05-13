@@ -9,28 +9,29 @@ Use this page as a concise front door into the operating model.
   <a class="md-button" href="reference/">Browse the functions</a>
 </div>
 
-## Governance-centered operating model
-
-![Governance-Centered Workspace Model](assets/notebook-structure.png)
+## Lifecycle workflow
 
 ![Role-Based Lifecycle Workflow](assets/mvp-flow.png)
 
+## Notebook model
 
-## How FabricOps assembles a data contract
+![Governance-Centered Workspace Model](assets/notebook-structure.png)
 
-A FabricOps data contract is a human-readable and AI/machine-readable handover document for a data product.
+For notebook ownership, governance flow, and environment reuse patterns, use [Notebook Structure](notebook-structure/).
 
-It is assembled from approved metadata evidence across profiling, data quality, governance, drift, lineage, and runtime records.
+## Data contract assembly
 
 ![Data contract assembly from approved metadata evidence](assets/data-contract.png)
+
+See [Metadata and Data Contract Assembly](metadata-and-contracts/) for the assembled contract model and metadata tables.
 
 ## Choose where to go next
 
 | Topic | Go to |
 | --- | --- |
-| Governance as a cross-environment control plane | [Governance Operating Model](governance-operating-model/) |
 | End-to-end role flow from stewardship to handover | [Lifecycle Operating Model](lifecycle-operating-model/) |
-| Notebook ownership, scope, and environment usage | [Notebook Structure](notebook-structure/) |
+| Notebook ownership, governance flow, and environment usage | [Notebook Structure](notebook-structure/) |
+| Metadata-backed contract assembly and export path | [Metadata and Data Contract Assembly](metadata-and-contracts/) |
 | Public callable catalogue and API usage | [Function Reference](reference/) |
 
 ## Core story
@@ -41,5 +42,3 @@ FabricOps is a metadata-led operating model, not only a notebook sequence.
 - Analysts validate source meaning and DQ rule validity.
 - Engineers enforce approved metadata through deterministic pipeline contracts.
 - Handover is generated from approved metadata, lineage, quality results, and runtime evidence.
-
-For details, use the linked pages instead of duplicating long explanations here.
