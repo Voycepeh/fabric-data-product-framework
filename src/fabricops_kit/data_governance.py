@@ -93,6 +93,7 @@ def review_governance(suggestions: list[dict], environment_name: str, dataset_na
     _WIDGET_REJECTED_ROWS.clear()
 
     idx = {"i": 0}
+    action_history: list[str] = []
     summary = widgets.HTML()
     pid = widgets.Dropdown(options=_DEFAULT_WIDGET_CONFIG["personal_identifier_options"], description="Identifier")
     conf = widgets.Dropdown(options=_DEFAULT_WIDGET_CONFIG["confidentiality_labels"], description="Confidentiality")
@@ -128,18 +129,25 @@ def review_governance(suggestions: list[dict], environment_name: str, dataset_na
             "reviewer_notes": notes.value,
             "approved_at": _now_utc_iso(),
         })
+        action_history.append("approve")
         idx["i"] += 1
         load()
 
     def on_reject(_):
         r = cur()
         _WIDGET_REJECTED_ROWS.append(dict(r))
+        action_history.append("reject")
         idx["i"] += 1
         load()
 
     def on_undo(_):
-        if _WIDGET_APPROVED_ROWS:
+        if not action_history:
+            return
+        last = action_history.pop()
+        if last == "approve" and _WIDGET_APPROVED_ROWS:
             _WIDGET_APPROVED_ROWS.pop()
+        elif last == "reject" and _WIDGET_REJECTED_ROWS:
+            _WIDGET_REJECTED_ROWS.pop()
         idx["i"] = max(0, idx["i"] - 1)
         load()
 

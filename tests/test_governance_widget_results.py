@@ -1,4 +1,5 @@
-from fabricops_kit.data_governance import _coerce_row_dicts, load_governance
+import fabricops_kit.data_governance as dg
+from fabricops_kit.data_governance import _approved_widget_rows, _coerce_row_dicts, load_governance
 
 
 class RowLike:
@@ -49,3 +50,15 @@ def test_load_governance_filters_and_latest_agreement():
 
     assert [r["column_name"] for r in out["columns"]] == ["c1", "c3"]
     assert out["agreement_context"]["approved_usage"] == "latest"
+
+
+def test_approved_widget_rows_merges_context_and_status():
+    dg._WIDGET_APPROVED_ROWS.clear()
+    dg._WIDGET_APPROVED_ROWS.extend([{"column_name": "email"}])
+
+    rows = _approved_widget_rows(agreement_context={"agreement_id": "A1"}, action_by="tester")
+
+    assert rows[0]["column_name"] == "email"
+    assert rows[0]["agreement_id"] == "A1"
+    assert rows[0]["status"] == "approved"
+    assert rows[0]["approved_by"] == "tester"
