@@ -56,7 +56,6 @@ This Step 5 → Step 2 loop is the core operational loop between governance and 
 
 ## Related documentation
 
-- [Governance Operating Model](governance-operating-model.md)
 - [Notebook Structure](notebook-structure.md)
 - [Metadata and Data Contract Assembly](metadata-and-contracts.md)
 - [Data Quality Rules System](data-quality-rules-system.md)
