@@ -214,6 +214,11 @@ Use the finder below to look up public callable functions.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/ai/" title="Open ai module page" aria-label="Open ai module page">ai</a> <span class="reference-catalogue-separator">·</span> <span>optional</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Execute Fabric AI Functions to append handover summary suggestions.</p>
 </article>
+<article id="get_governance_widget_results" class="reference-catalogue-item" data-callable-row="true" data-callable-name="get_governance_widget_results" data-callable-module="data_governance" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Collect governance widget approvals/rejections with agreement metadata.">
+  <h3 class="reference-catalogue-item-name"><a href="../api/reference/get_governance_widget_results/"><code>get_governance_widget_results</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Collect governance widget approvals/rejections with agreement metadata.</p>
+</article>
 <article id="get_path" class="reference-catalogue-item" data-callable-row="true" data-callable-name="get_path" data-callable-module="environment_config" data-callable-starter-path="00_env_config, 02_ex, 03_pc" data-role="essential" data-callable-purpose="Resolve a configured Fabric path for an environment and target.">
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/get_path/"><code>get_path</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config, 02_ex, 03_pc</span></p>
@@ -303,6 +308,11 @@ Use the finder below to look up public callable functions.
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/run_governance_widget/"><code>run_governance_widget</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Run governance review with AI-advisory suggestions and optional metadata persistence.</p>
+</article>
+<article id="save_governance_widget_results" class="reference-catalogue-item" data-callable-row="true" data-callable-name="save_governance_widget_results" data-callable-module="data_governance" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Persist approved governance widget results to metadata.">
+  <h3 class="reference-catalogue-item-name"><a href="../api/reference/save_governance_widget_results/"><code>save_governance_widget_results</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
+  <p class="reference-catalogue-item-purpose">Persist approved governance widget results to metadata.</p>
 </article>
 <article id="scan_notebook_cells" class="reference-catalogue-item" data-callable-row="true" data-callable-name="scan_notebook_cells" data-callable-module="data_lineage" data-callable-starter-path="—" data-role="optional" data-callable-purpose="Scan multiple notebook cells and append cell references to lineage steps.">
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/scan_notebook_cells/"><code>scan_notebook_cells</code></a></h3>

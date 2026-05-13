@@ -229,63 +229,60 @@ def run_governance_widget(
     environment_name: str,
     dataset_name: str,
     table_name: str,
-    *,
-    agreement_context: dict[str, Any] | None = None,
-    spark=None,
-    metadata_path=None,
-    metadata_table_name: str = "METADATA_COLUMN_GOVERNANCE",
-    save_mode: str = "append",
-    action_by: str | None = None,
-) -> list[dict[str, Any]]:
-    """Run the governance approval widget and optionally persist approved rows.
+) -> None:
+    """Display governance widget and collect review decisions asynchronously.
 
     Parameters
     ----------
     suggestions : list[dict[str, Any]]
-        Governance suggestion rows to review. Rows usually come from
-        :func:`extract_personal_identifier_suggestions` and may include AI
-        advisory fields such as suggested personal identifier and
-        confidentiality labels.
+        Governance suggestion rows to review.
     environment_name : str
         Environment label used for metadata key generation.
     dataset_name : str
         Dataset name used for metadata key generation.
     table_name : str
         Source table name under governance review.
+
+    Returns
+    -------
+    None
+        The widget is displayed and user decisions are captured in
+        ``COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET`` and
+        ``REJECTED_COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET`` as callbacks fire.
+
+    Notes
+    -----
+    This function is asynchronous from notebook execution perspective. Use
+    :func:`get_governance_widget_results` in a later cell after human review.
+    """
+    review_column_governance_context(suggestions, environment_name, dataset_name, table_name)
+    return None
+
+
+def get_governance_widget_results(
+    *,
+    agreement_context: dict[str, Any] | None = None,
+    action_by: str | None = None,
+) -> dict[str, list[dict[str, Any]]]:
+    """Return widget-approved/rejected governance rows with agreement metadata.
+
+    Parameters
+    ----------
     agreement_context : dict[str, Any] | None, optional
-        Agreement-level metadata merged into each approved row, such as
-        approved usage, business context, ownership, permissions,
-        restrictions, classification policy, sensitivity policy, PII policy,
-        and related notebook links.
-    spark : Any, optional
-        Spark session used for metadata writes.
-    metadata_path : Any, optional
-        Lakehouse target passed to :func:`fabricops_kit.metadata.write_column_governance_context`.
-        When provided, approved rows are written immediately after review.
-    metadata_table_name : str, default="METADATA_COLUMN_GOVERNANCE"
-        Metadata table used when ``metadata_path`` is provided.
-    save_mode : str, default="append"
-        Spark write mode used for metadata writes.
+        Agreement-level metadata merged into each approved/rejected row.
     action_by : str | None, optional
         Explicit approver identity. When omitted, runtime identity resolution
         is used.
 
     Returns
     -------
-    list[dict[str, Any]]
-        Approved governance rows captured from the widget. Suggestions remain
-        advisory until a human approves and these rows are written.
-
-    Notes
-    -----
-    This helper requires an interactive notebook environment with
-    ``ipywidgets``. Downstream notebooks should consume only records with
-    ``status='approved'``.
+    dict[str, list[dict[str, Any]]]
+        Dictionary containing ``approved_rows`` and ``rejected_rows``.
     """
-    review_column_governance_context(suggestions, environment_name, dataset_name, table_name)
-    approved_rows: list[dict[str, Any]] = []
     context = dict(agreement_context or {})
     approved_by_value = _resolve_action_by(action_by)
+
+    approved_rows = []
     for row in COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET:
         merged = dict(row)
         merged.update(context)
@@ -293,24 +290,61 @@ def run_governance_widget(
         merged["approved_by"] = approved_by_value
         approved_rows.append(merged)
 
-    if metadata_path is not None and approved_rows:
-        if spark is None:
-            raise ValueError("spark is required when metadata_path is provided.")
+    rejected_rows = []
+    for row in REJECTED_COLUMN_GOVERNANCE_CONTEXT_FROM_WIDGET:
+        merged = dict(row)
+        merged.update(context)
+        merged["status"] = "rejected"
+        merged["approved_by"] = approved_by_value
+        rejected_rows.append(merged)
+
+    return {"approved_rows": approved_rows, "rejected_rows": rejected_rows}
+
+
+def save_governance_widget_results(
+    spark,
+    *,
+    metadata_path,
+    agreement_context: dict[str, Any] | None = None,
+    action_by: str | None = None,
+    metadata_table_name: str = "METADATA_COLUMN_GOVERNANCE",
+    save_mode: str = "append",
+) -> list[dict[str, Any]]:
+    """Persist approved governance widget rows to metadata storage.
+
+    Parameters
+    ----------
+    spark : Any
+        Spark session used for metadata writes.
+    metadata_path : Any
+        Lakehouse metadata target path.
+    agreement_context : dict[str, Any] | None, optional
+        Agreement-level metadata merged into approved rows before saving.
+    action_by : str | None, optional
+        Explicit approver identity.
+    metadata_table_name : str, default="METADATA_COLUMN_GOVERNANCE"
+        Metadata table for governance rows.
+    save_mode : str, default="append"
+        Spark write mode.
+
+    Returns
+    -------
+    list[dict[str, Any]]
+        Approved governance rows written to metadata.
+    """
+    results = get_governance_widget_results(agreement_context=agreement_context, action_by=action_by)
+    approved_rows = results["approved_rows"]
+    if approved_rows:
         metadata_module = importlib.import_module("fabricops_kit.metadata")
         writer = getattr(metadata_module, "write_column_governance_context")
-        writer(
-            spark=spark,
-            rows=approved_rows,
-            metadata_path=metadata_path,
-            table_name=metadata_table_name,
-            mode=save_mode,
-        )
+        writer(spark=spark, rows=approved_rows, metadata_path=metadata_path, table_name=metadata_table_name, mode=save_mode)
     return approved_rows
 
 
 def load_governance_context(
     governance_rows,
     *,
+    agreement_rows=None,
     agreement_id: str | None = None,
     dataset_name: str | None = None,
     table_name: str | None = None,
@@ -320,7 +354,10 @@ def load_governance_context(
     Parameters
     ----------
     governance_rows : Any
-        Iterable rows or Spark DataFrame containing governance metadata.
+        Iterable rows or Spark DataFrame containing column governance metadata.
+    agreement_rows : Any, optional
+        Optional iterable/DataFrame containing agreement-level rows, such as
+        ``METADATA_DATA_AGREEMENT``.
     agreement_id : str | None, optional
         Optional agreement identifier filter.
     dataset_name : str | None, optional
@@ -332,7 +369,7 @@ def load_governance_context(
     -------
     dict[str, Any]
         Read-only context payload containing ``agreement_context`` and
-        ``columns`` keys. Only approved rows are included.
+        ``columns`` keys. Only approved governance rows are included.
     """
     rows = _coerce_row_dicts(governance_rows)
     filtered = []
@@ -347,28 +384,18 @@ def load_governance_context(
             continue
         filtered.append(row)
 
-    agreement_keys = [
-        "agreement_id", "agreement_context", "approved_usage", "business_context", "ownership",
-        "permissions", "restrictions", "classification", "sensitivity", "pii",
-        "related_notebook_links", "approved_by", "approved_at",
-    ]
+    agreement_keys = ["agreement_id", "agreement_context", "approved_usage", "business_context", "ownership", "permissions", "restrictions", "classification", "sensitivity", "pii", "related_notebook_links", "approved_by", "approved_at"]
+
     agreement_payload = {}
-    if filtered:
-        latest = sorted(filtered, key=lambda r: str(r.get("approved_at") or ""))[-1]
+    candidate_rows = _coerce_row_dicts(agreement_rows) if agreement_rows is not None else filtered
+    candidate_rows = [r for r in candidate_rows if (not agreement_id or str(r.get("agreement_id") or "") == agreement_id) and (not dataset_name or str(r.get("dataset_name") or "") == dataset_name) and (not table_name or str(r.get("table_name") or "") == table_name)]
+    if candidate_rows:
+        latest = sorted(candidate_rows, key=lambda r: str(r.get("approved_at") or r.get("updated_at") or ""))[-1]
         for k in agreement_keys:
             if k in latest and latest.get(k) is not None:
                 agreement_payload[k] = latest.get(k)
 
-    columns = []
-    for row in filtered:
-        columns.append({
-            "column_name": row.get("column_name"),
-            "approved_personal_identifier_classification": row.get("approved_personal_identifier_classification"),
-            "confidentiality_label": row.get("confidentiality_label"),
-            "approved_business_context": row.get("approved_business_context"),
-            "reviewer_notes": row.get("reviewer_notes", ""),
-            "metadata_column_key": row.get("metadata_column_key"),
-        })
+    columns = [{"column_name": row.get("column_name"), "approved_personal_identifier_classification": row.get("approved_personal_identifier_classification"), "confidentiality_label": row.get("confidentiality_label"), "approved_business_context": row.get("approved_business_context"), "reviewer_notes": row.get("reviewer_notes", ""), "metadata_column_key": row.get("metadata_column_key")} for row in filtered]
     return {"agreement_context": agreement_payload, "columns": columns}
 
 def _normalize_columns(profile: dict | list[dict]) -> list[dict]:

@@ -447,6 +447,18 @@
       "template_segment": "Not mapped in template flow segment"
     },
     {
+      "module_name": "data_governance",
+      "visibility": "public",
+      "module_summary": "Governance classification helpers and metadata builders.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "get_governance_widget_results",
+      "callable_visibility": "public",
+      "callable_role": "essential",
+      "template_notebook": "01_data_agreement",
+      "template_segment": "Not mapped in template flow segment"
+    },
+    {
       "module_name": "environment_config",
       "visibility": "public",
       "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
@@ -661,6 +673,18 @@
       "callable_role": "essential",
       "template_notebook": "03_pc",
       "template_segment": "Optional profiling, drift, governance, lineage, and handover"
+    },
+    {
+      "module_name": "data_governance",
+      "visibility": "public",
+      "module_summary": "Governance classification helpers and metadata builders.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "save_governance_widget_results",
+      "callable_visibility": "public",
+      "callable_role": "essential",
+      "template_notebook": "01_data_agreement",
+      "template_segment": "Not mapped in template flow segment"
     },
     {
       "module_name": "data_lineage",
