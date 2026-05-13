@@ -1,45 +1,51 @@
 # FabricOps Starter Kit
 
-FabricOps Starter Kit helps teams turn governance intent, profiling evidence, DQ rules, and pipeline outputs into a metadata-backed data contract.
-
-Use this page as a concise front door into the operating model.
+FabricOps Starter Kit is a lightweight, Fabric-first, metadata-led, AI-assisted notebook operating model for governed data products.
 
 <div class="center-cta">
-  <a class="md-button md-button--primary" href="quick-start/">Start with Quick Start</a>
-  <a class="md-button" href="reference/">Browse the functions</a>
+  <a class="md-button md-button--primary" href="quick-start.md">Start with Quick Start</a>
+  <a class="md-button" href="reference/index.md">Browse Functions</a>
 </div>
 
-## Governance-centered operating model
-
-![Governance-Centered Workspace Model](assets/notebook-structure.png)
+## Lifecycle workflow
 
 ![Role-Based Lifecycle Workflow](assets/mvp-flow.png)
 
+Governance stewards define agreement context and approved usage.
 
-## How FabricOps assembles a data contract
+Analysts profile source data and validate business meaning and DQ rule validity.
 
-A FabricOps data contract is a human-readable and AI/machine-readable handover document for a data product.
+Engineers enforce approved metadata through deterministic pipeline contracts.
 
-It is assembled from approved metadata evidence across profiling, data quality, governance, drift, lineage, and runtime records.
+Handover is generated from approved metadata, lineage, quality results, and runtime evidence.
+
+- [Lifecycle Operating Model](lifecycle-operating-model.md)
+
+## Notebook model
+
+The notebook model separates responsibilities while preserving a single metadata trail across the lifecycle:
+
+- **00_env_config** defines environment paths once per workspace.
+- **01_data_sharing_agreement** captures approved usage, restrictions, and governance context.
+- **02_ex** notebooks are analyst / data scientist exploration notebooks for profiling, business meaning, AI-assisted DQ suggestions, and AI-assisted classification suggestions.
+- **03_pc** notebooks are engineer-owned pipeline contracts that enforce approved metadata, DQ rules, checks, lineage, and outputs.
+
+- [Notebook Structure](notebook-structure.md)
+- [Quick Start](quick-start.md)
+
+## Data contract assembly
 
 ![Data contract assembly from approved metadata evidence](assets/data-contract.png)
+
+A FabricOps data contract is assembled from approved metadata evidence, not manually typed from scratch. It combines dataset purpose, schema/profile, DQ rules and results, governance classification, drift checks, lineage, runtime summary, ownership, and approvals.
+
+- [Metadata and Contracts](metadata-and-contracts.md)
 
 ## Choose where to go next
 
 | Topic | Go to |
 | --- | --- |
-| Governance as a cross-environment control plane | [Governance Operating Model](governance-operating-model/) |
-| End-to-end role flow from stewardship to handover | [Lifecycle Operating Model](lifecycle-operating-model/) |
-| Notebook ownership, scope, and environment usage | [Notebook Structure](notebook-structure/) |
-| Public callable catalogue and API usage | [Function Reference](reference/) |
-
-## Core story
-
-FabricOps is a metadata-led operating model, not only a notebook sequence.
-
-- Governance stewards define agreement context and approved usage once.
-- Analysts validate source meaning and DQ rule validity.
-- Engineers enforce approved metadata through deterministic pipeline contracts.
-- Handover is generated from approved metadata, lineage, quality results, and runtime evidence.
-
-For details, use the linked pages instead of duplicating long explanations here.
+| Platform and design foundations | [Architecture](architecture.md) |
+| Promote from validation to governed release | [Deployment and Promotion](deployment-and-promotion.md) |
+| Install the package in Fabric notebooks | [Fabric Wheel Install](setup/fabric-wheel-install.md) |
+| Explore public callable APIs | [Functions](reference/index.md) |
