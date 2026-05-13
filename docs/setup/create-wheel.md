@@ -4,12 +4,12 @@ FabricOps Starter Kit is installed into Microsoft Fabric as a Python wheel. Buil
 
 ## Prerequisites
 
-- VS Code
+- VS Code or another editor
 - Git
 - Python `>=3.11`
-- `uv` installed locally
-- This repository cloned locally
-- Access to a Microsoft Fabric workspace or Environment for the next step
+- `uv`
+- Repository cloned locally
+- Microsoft Fabric workspace / Environment access for the upload step
 
 ## Local setup
 
@@ -21,43 +21,29 @@ git pull
 uv sync
 ```
 
-## Validation checks
+## Validation before build
 
-Run quick local checks before building:
+Run quick checks before packaging:
 
 ```bash
 uv run python -m pytest -q
-uv run python -m compileall src
 uv run python -m compileall src tests
 ```
 
-## Build the package
+## Build the wheel
 
 ```bash
 uv build
 ```
 
-## Find the wheel
-
-Build artifacts are written to `dist/`:
-
-- `dist/*.whl`
-- `dist/*.tar.gz`
-
-For Fabric custom libraries, upload the `.whl` file (not the `.tar.gz` source distribution).
-
 ## Versioning before rebuild
 
-Keep versions aligned between:
+Before rebuilding and uploading a new wheel:
 
-- `pyproject.toml` under `[project].version`
-- `src/fabricops_kit/__init__.py` in `__version__`
-
-Use a patch bump for fixes and a minor bump for new capabilities. Avoid uploading different wheel files with the same version.
-
-## Rebuild after changes
-
-After code or dependency changes, rerun `uv build`, then upload the new wheel version to your Fabric Environment.
+- Align `pyproject.toml` `[project].version` and `src/fabricops_kit/__init__.py` `__version__`.
+- Use a patch bump for fixes.
+- Use a minor bump for new capabilities.
+- Do not upload different wheel contents using the same version.
 
 ## Next step
 

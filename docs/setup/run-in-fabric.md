@@ -13,7 +13,7 @@ After the wheel is built, upload it to a Microsoft Fabric Environment, publish t
 ## Attach Environment to notebooks
 
 1. Attach the published Environment to your notebook.
-2. Restart the notebook session if needed after library updates.
+2. Restart the notebook session after library updates.
 
 ## Verify import
 
@@ -25,11 +25,10 @@ Use imports that match the current package structure.
 Verification cells:
 
 ```python
-import fabricops_kit as fdpf
+import fabricops_kit
 
-print(fdpf.__name__)
-print(fdpf.__file__)
-print(getattr(fdpf, "__version__", "unknown"))
+print(fabricops_kit.__file__)
+print(getattr(fabricops_kit, "__version__", "unknown"))
 ```
 
 ## Use with notebook workflow
@@ -39,32 +38,30 @@ After imports work:
 1. Attach the published Environment to the notebook session.
 2. Run `00_env_config`.
 3. Run `01_data_sharing_agreement_<agreement>` where used.
-4. Run `02_ex_<agreement>_<topic>` for profiling and AI-assisted suggestions.
-5. Get human approval for DQ and classification decisions.
-6. Run `03_pc_<agreement>_<pipeline>` to enforce rules and write outputs or metadata.
+4. Run `02_ex_<agreement>_<topic>` to profile data and prepare AI-assisted DQ/classification suggestions.
+5. Get human approval for DQ/classification decisions before enforcement.
+6. Run `03_pc_<agreement>_<pipeline>` to enforce approved metadata, DQ rules, checks, lineage, and outputs.
 
 - [Quick Start](../quick-start.md)
 - [Deployment](../deployment-and-promotion.md)
 
 ## Troubleshooting
 
-- Old wheel still active: publish Environment and restart notebook session.
-- Import fails after upload: confirm publish completed, then restart.
-- Wrong Environment attached: verify notebook binding.
-- Import path mismatch: use `fabricops_kit.data_profiling`, not `fabricops_kit.profiling`.
-- Missing dependencies: review dependencies, rebuild, and re-upload wheel.
-- Fabric runtime dependency conflict: check other custom/public libraries in the Environment.
-- Version mismatch: align versions in `pyproject.toml` and `__init__.py`, then rebuild and re-upload.
-- Local tests pass but Fabric context fails: validate in Fabric runtime context.
+- Old wheel still active: publish Environment and restart session.
+- Import fails after upload: check the Environment is attached.
+- Wrong module path: use current `fabricops_kit` module names.
+- Missing dependencies: add dependency to package config and rebuild.
+- Fabric runtime conflict: pin or simplify dependency.
+- Version mismatch: bump wheel version and re-upload.
 
 ## Release checklist
 
 1. Pull latest `main`.
 2. Run local checks.
-3. Bump package version.
+3. Bump version.
 4. Run `uv build`.
-5. Upload wheel to Fabric Environment.
+5. Upload wheel.
 6. Publish Environment.
 7. Restart notebook session.
-8. Run a Fabric smoke test.
-9. Record the tested package version.
+8. Smoke test import and one notebook.
+9. Record tested version.
