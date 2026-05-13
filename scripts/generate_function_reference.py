@@ -154,23 +154,34 @@ def parse_module_docs_metadata() -> list[dict[str, Any]]:
 
 
 def internal_helper_link(actual_module: str, helper: str) -> str:
-    """Return docs-relative link target for an internal helper page."""
-    return f"../../reference/internal/{actual_module}/{helper}.md"
+    """Return module-page-relative link target for an internal helper page."""
+    return f"../../reference/internal/{actual_module}/{helper}/"
 
 
-def public_reference_link(symbol: str, docs_metadata: dict[str, dict[str, Any]]) -> str:
-    """Return docs-relative link target for a public callable page."""
+def public_reference_link(
+    symbol: str,
+    docs_metadata: dict[str, dict[str, Any]],
+    *,
+    context: str = "module",
+) -> str:
+    """Return context-relative link target for a public callable page."""
     if symbol not in docs_metadata:
         raise RuntimeError(f"Missing PUBLIC_SYMBOL_DOCS entry for exported symbol: {symbol}")
-    return f"../../api/reference/{symbol}/"
+    if context == "module":
+        return f"../../reference/{symbol}/"
+    if context == "reference":
+        return f"../api/reference/{symbol}/"
+    if context == "notebook":
+        return f"../../api/reference/{symbol}/"
+    raise RuntimeError(f"Unknown link context: {context}")
 
 
 def callable_docs_link(
-    symbol_name: str, module: str, docs_metadata: dict[str, dict[str, Any]]
+    symbol_name: str, module: str, docs_metadata: dict[str, dict[str, Any]], *, context: str = "module"
 ) -> str:
     """Return a safe docs link for a public callable."""
     if symbol_name in docs_metadata:
-        return public_reference_link(symbol_name, docs_metadata)
+        return public_reference_link(symbol_name, docs_metadata, context=context)
     return f"../modules/{module}/#{symbol_name}"
 
 
@@ -502,7 +513,7 @@ def main() -> None:
             for symbol_name in segment["symbols"]:
                 s = symbol_map[symbol_name]
                 info = module_data[s.actual_module]
-                symbol_link = f"../../api/reference/{s.name}/"
+                symbol_link = public_reference_link(s.name, docs_metadata, context="notebook")
                 segment_rows.append([
                     _anchor(symbol_link, s.name, code=True),
                     _module_link(s.public_module, base_prefix="../../"),
@@ -592,7 +603,7 @@ def main() -> None:
     )
     all_items: list[str] = []
     for s in sorted(function_symbol_map.values(), key=lambda x: x.name.lower()):
-        symbol_link = f"../api/reference/{s.name}/"
+        symbol_link = public_reference_link(s.name, docs_metadata, context="reference")
         starter_path = ", ".join(sorted(starter_symbol_to_notebooks.get(s.name, set()))) or "—"
         purpose = s.purpose or s.summary or "—"
         all_items.extend(

@@ -56,14 +56,17 @@ def test_generated_primary_reference_links_use_api_reference_prefix() -> None:
 
 
 def test_generated_module_pages_use_api_reference_prefix() -> None:
+    ai_module = ROOT / "docs" / "api" / "modules" / "ai.md"
+    text = ai_module.read_text(encoding="utf-8")
+    assert "../../reference/build_governance_candidate_prompt/" in text
+    assert "../../api/reference/build_governance_candidate_prompt/" not in text
+
     import json
     manifest = json.loads((ROOT / "docs" / "reference" / "manifest.json").read_text(encoding="utf-8"))
     module_pages = [ROOT / "docs" / "api" / "modules" / f"{row['module_name']}.md" for row in manifest["modules"]]
-    assert module_pages
     for path in module_pages:
         text = path.read_text(encoding="utf-8")
-        assert "../../api/reference/" in text
-        assert "../../reference/internal/" in text or "../../reference/" not in text
+        assert "../../api/reference/" not in text
 
 
 def test_generated_notebook_structure_pages_use_api_reference_prefix() -> None:
@@ -73,3 +76,9 @@ def test_generated_notebook_structure_pages_use_api_reference_prefix() -> None:
         text = path.read_text(encoding="utf-8")
         assert "../../api/reference/" in text
         assert "../../reference/internal/" in text or "../../reference/" not in text
+
+
+def test_no_legacy_top_level_reference_callable_page_exists() -> None:
+    outputs = _run_gen_ref_pages()
+    assert "api/reference/build_governance_classification_records.md" in outputs
+    assert "reference/build_governance_classification_records.md" not in outputs
