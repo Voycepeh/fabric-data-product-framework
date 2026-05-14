@@ -159,7 +159,8 @@ profile_rows = profile_dataframe_to_metadata(df_source, table_name=DQ_TABLE_NAME
 # or: profile_rows = spark.table("METADATA_PROFILE_TABLE")
 
 # 2) Optional: load existing approved active rules (02_ex)
-existing_dq_df = spark.table("METADATA_DQ_RULES")
+DQ_METADATA_TABLE = "METADATA_DQ_RULES"
+existing_dq_df = spark.table(DQ_METADATA_TABLE)
 approved_active_rules = load_approved_dq_rules(existing_dq_df, table_name=DQ_TABLE_NAME)
 
 # 3) Ask AI for candidate rules from profile metadata when needed (02_ex)
@@ -238,6 +239,4 @@ Fabric notebook screenshots for steps 1-7 will be added once uploaded to `docs/a
 - Quarantine is evidence-first: one source row can produce multiple failure-evidence rows when multiple rules fail.
 
 
-## TODO: Dedicated deactivation workflow
-
-Existing active rules should be reviewed and deactivated through a dedicated DQ deactivation widget. This should write append-only inactive metadata rows with `action_reason` required.
+Existing active rules can be reviewed for deactivation using the existing `review_dq_rule_deactivations` helper. Deactivations must include an explicit action reason and should be persisted as append-only inactive metadata rows.
