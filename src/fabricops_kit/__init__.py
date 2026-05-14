@@ -1,6 +1,6 @@
 """Public notebook-friendly entrypoints for the FabricOps Starter Kit."""
 
-from .drift import check_partition_drift, check_profile_drift, check_schema_drift, summarize_drift_results
+from .drift import build_drift_evidence_record, check_partition_drift, check_profile_drift, check_schema_drift, summarize_drift_results
 from .config import (
     get_path,
     load_fabric_config,
@@ -18,13 +18,7 @@ from .fabric_input_output import (
     seed_minimal_sample_source_table,
 )
 from .data_lineage import (
-    build_lineage_from_notebook_code,
-    build_lineage_handover_markdown,
-    build_lineage_records,
-    plot_lineage_steps,
-    scan_notebook_cells,
-    scan_notebook_lineage,
-    validate_lineage_steps,
+    build_notebook_lineage,
 )
 from .data_governance import (
     build_governance_context,
@@ -86,9 +80,17 @@ from .notebook_registry import (
     select_agreement,
 )
 from .metadata import (
+    EVIDENCE_BUSINESS_CONTEXT,
+    EVIDENCE_DRIFT_RESULT,
+    EVIDENCE_GOVERNANCE_CONTEXT,
+    EVIDENCE_LINEAGE,
+    EVIDENCE_OUTPUT_PROFILE,
+    EVIDENCE_SOURCE_PROFILE,
     build_dq_rule_key,
+    build_evidence_row,
     build_metadata_column_key,
     build_metadata_table_key,
+    default_evidence_types,
     write_metadata_rows,
     write_column_business_context,
     write_column_governance_context,
@@ -147,6 +149,7 @@ __all__ = [
     "check_partition_drift",
     "check_profile_drift",
     "summarize_drift_results",
+    "build_drift_evidence_record",
     "COLUMN_BUSINESS_CONTEXT_FROM_WIDGET",
     "REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET",
     "prepare_business_context_profile_input",
@@ -156,6 +159,14 @@ __all__ = [
     "build_metadata_table_key",
     "build_metadata_column_key",
     "build_dq_rule_key",
+    "EVIDENCE_SOURCE_PROFILE",
+    "EVIDENCE_OUTPUT_PROFILE",
+    "EVIDENCE_DRIFT_RESULT",
+    "EVIDENCE_LINEAGE",
+    "EVIDENCE_BUSINESS_CONTEXT",
+    "EVIDENCE_GOVERNANCE_CONTEXT",
+    "default_evidence_types",
+    "build_evidence_row",
     "write_metadata_rows",
     "write_column_business_context",
     "load_agreements",
@@ -164,13 +175,7 @@ __all__ = [
     "register_current_notebook",
     "load_notebook_registry",
     "write_column_governance_context",
-    "build_lineage_records",
-    "scan_notebook_lineage",
-    "scan_notebook_cells",
-    "validate_lineage_steps",
-    "build_lineage_from_notebook_code",
-    "build_lineage_handover_markdown",
-    "plot_lineage_steps",
+    "build_notebook_lineage",
     "build_run_summary",
     "render_run_summary_markdown",
     "standardize_output_columns",

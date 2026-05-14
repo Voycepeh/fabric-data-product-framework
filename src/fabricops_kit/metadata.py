@@ -5,6 +5,41 @@ import json
 from datetime import datetime, timezone
 from .fabric_input_output import lakehouse_table_write
 
+EVIDENCE_SOURCE_PROFILE = "source_profile"
+EVIDENCE_OUTPUT_PROFILE = "output_profile"
+EVIDENCE_DRIFT_RESULT = "drift_result"
+EVIDENCE_LINEAGE = "lineage"
+EVIDENCE_BUSINESS_CONTEXT = "business_context"
+EVIDENCE_GOVERNANCE_CONTEXT = "governance_context"
+
+
+def default_evidence_types() -> dict[str, str]:
+    """Return canonical evidence type names used across metadata records."""
+    return {
+        "source_profile": EVIDENCE_SOURCE_PROFILE,
+        "output_profile": EVIDENCE_OUTPUT_PROFILE,
+        "drift_result": EVIDENCE_DRIFT_RESULT,
+        "lineage": EVIDENCE_LINEAGE,
+        "business_context": EVIDENCE_BUSINESS_CONTEXT,
+        "governance_context": EVIDENCE_GOVERNANCE_CONTEXT,
+    }
+
+
+def build_evidence_row(*, dataset_name: str, table_name: str, run_id: str | None, evidence_type: str, payload_json: str, workspace_id: str | None = None, workspace_name: str | None = None, notebook_id: str | None = None, notebook_name: str | None = None, created_at: str | None = None) -> dict:
+    """Build a lightweight metadata-ready evidence row."""
+    return {
+        "dataset_name": dataset_name,
+        "table_name": table_name,
+        "run_id": run_id,
+        "workspace_id": workspace_id,
+        "workspace_name": workspace_name,
+        "notebook_id": notebook_id,
+        "notebook_name": notebook_name,
+        "evidence_type": evidence_type,
+        "payload_json": payload_json,
+        "created_at": created_at or _now_utc_iso(),
+    }
+
 
 def _now_utc_iso() -> str:
     return datetime.now(timezone.utc).isoformat()

@@ -23,6 +23,37 @@ class SchemaDriftError(Exception):
 
 
 
+
+class UnsupportedDataFrameEngineError(ValueError):
+    """Raised when dataframe engine detection cannot resolve pandas or Spark."""
+
+
+def detect_dataframe_engine(df) -> str:
+    """Detect whether a dataframe is pandas or Spark.
+
+    Parameters
+    ----------
+    df : Any
+        Dataframe-like object to inspect.
+
+    Returns
+    -------
+    str
+        Either ``"pandas"`` or ``"spark"``.
+
+    Raises
+    ------
+    UnsupportedDataFrameEngineError
+        If the object is not recognized as pandas or Spark dataframe.
+    """
+    mod = str(type(df).__module__)
+    if mod.startswith("pandas"):
+        return "pandas"
+    if mod.startswith("pyspark") or hasattr(df, "schema"):
+        return "spark"
+    raise UnsupportedDataFrameEngineError(f"Unsupported dataframe type: {type(df)!r}")
+
+
 def default_schema_drift_policy() -> dict:
     """Return default policy flags used by schema drift comparison.
 
@@ -98,18 +129,18 @@ def _build_spark_schema_snapshot(df, dataset_name: str, table_name: str) -> dict
     }
 
 
-def build_schema_snapshot(df, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "spark") -> dict:
+def build_schema_snapshot(df, dataset_name: str = "unknown", table_name: str = "unknown", engine: str = "auto") -> dict:
     """Build a schema snapshot with column-level attributes and hashes.
 
     Parameters
     ----------
     df : Any
-        Source PySpark DataFrame.
-    dataset_name : str, default=\"unknown\"
+        Source pandas or PySpark DataFrame.
+    dataset_name : str, default="unknown"
         Logical dataset name stored in the snapshot.
-    table_name : str, default=\"unknown\"
+    table_name : str, default="unknown"
         Logical table name stored in the snapshot.
-    engine : str, default=\"auto\"
+    engine : str, default="auto"
         Execution engine selector: ``auto``, ``pandas``, or ``spark``.
 
     Returns
@@ -124,7 +155,12 @@ def build_schema_snapshot(df, dataset_name: str = "unknown", table_name: str = "
     UnsupportedDataFrameEngineError
         If engine auto-detection cannot resolve a supported dataframe type.
     """
-    return _build_spark_schema_snapshot(df, dataset_name=dataset_name, table_name=table_name)
+    selected_engine = detect_dataframe_engine(df) if engine == "auto" else engine
+    if selected_engine == "pandas":
+        return _build_pandas_schema_snapshot(df, dataset_name=dataset_name, table_name=table_name)
+    if selected_engine == "spark":
+        return _build_spark_schema_snapshot(df, dataset_name=dataset_name, table_name=table_name)
+    raise ValueError(f"Unsupported engine '{selected_engine}'.")
 
 
 def _resolve_change_behavior(is_warning: bool, is_blocking: bool) -> tuple[str, str]:
@@ -244,7 +280,6 @@ def assert_no_blocking_schema_drift(result: dict) -> None:
 # --- merged from drift_checkers.py ---
 
 
-from datetime import datetime, timezone
 import json
 
 from fabricops_kit._utils import _to_jsonable
@@ -712,6 +747,25 @@ def summarize_drift_results(schema_drift_result: dict | None = None, partition_d
     }
 
 
+def build_drift_evidence_record(*, dataset_name: str, table_name: str, run_id: str | None, drift_type: str, result: dict, workspace_id: str | None = None, workspace_name: str | None = None, notebook_id: str | None = None, notebook_name: str | None = None) -> dict:
+    """Build a metadata-ready drift evidence record for schema/profile/partition checks."""
+    return {
+        "dataset_name": dataset_name,
+        "table_name": table_name,
+        "run_id": run_id,
+        "workspace_id": workspace_id,
+        "workspace_name": workspace_name,
+        "notebook_id": notebook_id,
+        "notebook_name": notebook_name,
+        "drift_type": drift_type,
+        "status": str(result.get("status", "unknown")),
+        "can_continue": bool(result.get("can_continue", True)),
+        "summary_json": _json_dumps(result.get("summary", {})),
+        "result_json": _json_dumps(result),
+        "created_at": _utc_now_iso(),
+    }
+
+
 def prepare_drift_baselines(
     *,
     current_profile: dict | None = None,
@@ -737,11 +791,8 @@ def prepare_drift_baselines(
 """Incremental partition safety snapshot and comparison helpers."""
 
 
-from datetime import date, datetime, timedelta, timezone
-import hashlib
+from datetime import date, timedelta
 from typing import Any
-
-from fabricops_kit._utils import _to_jsonable
 
 
 class IncrementalSafetyError(Exception):
@@ -931,7 +982,7 @@ def build_partition_snapshot(df, *, dataset_name: str = "unknown", table_name: s
         --------
         >>> build_partition_snapshot(...)
         """
-    selected_engine = "spark"
+    selected_engine = detect_dataframe_engine(df) if engine == "auto" else engine
 
     columns = set(getattr(df, "columns", []))
     if partition_column not in columns:
