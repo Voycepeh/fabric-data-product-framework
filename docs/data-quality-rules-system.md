@@ -159,8 +159,8 @@ profile_rows = profile_dataframe_to_metadata(df_source, table_name=DQ_TABLE_NAME
 # or: profile_rows = spark.table("METADATA_PROFILE_TABLE")
 
 # 2) Optional: load existing approved active rules (02_ex)
-DQ_METADATA_TABLE = "METADATA_DQ_RULES"
-existing_dq_df = spark.table(DQ_METADATA_TABLE)
+dq_metadata_table = FABRIC_CONFIG.review_workflow_config.dq_approved_table
+existing_dq_df = lakehouse_table_read(metadata_path, dq_metadata_table)
 approved_active_rules = load_approved_dq_rules(existing_dq_df, table_name=DQ_TABLE_NAME)
 
 # 3) Ask AI for candidate rules from profile metadata when needed (02_ex)
@@ -207,7 +207,7 @@ deactivation_df = build_dq_rule_deactivation_metadata_df(
 
 # 8) Pipeline loads active approved rules only (03_pc)
 approved_for_pipeline = load_approved_dq_rules(
-    lakehouse_table_read(metadata_path, "METADATA_DQ_RULES"),
+    lakehouse_table_read(metadata_path, dq_metadata_table),
     table_name=DQ_TABLE_NAME,
 )
 
