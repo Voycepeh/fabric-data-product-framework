@@ -329,11 +329,24 @@ def plot_lineage_steps(lineage_steps_or_record, title: str | None = None):
     for s in lineage_steps_or_record:
         g.add_edge(s.get("source", "unknown"), s.get("target", "unknown"), label=s.get("transformation", ""))
     fig, ax = plt.subplots(figsize=(10, 5))
-    pos = nx.spring_layout(g, seed=42)
+    pos = build_top_down_lineage_layout(lineage_steps_or_record)
     nx.draw(g, pos, with_labels=True, node_color="#f2f2f2", ax=ax)
     nx.draw_networkx_edge_labels(g, pos, edge_labels={(u, v): d.get("label", "") for u, v, d in g.edges(data=True)}, font_size=7, ax=ax)
     ax.set_title(title or "Notebook lineage")
     return fig
+
+
+def build_top_down_lineage_layout(lineage_steps_or_record) -> dict[str, tuple[float, float]]:
+    """Build a stable top-down layout for lineage graph plotting."""
+    nodes: list[str] = []
+    for step in lineage_steps_or_record:
+        src = step.get("source", "unknown")
+        tgt = step.get("target", "unknown")
+        if src not in nodes:
+            nodes.append(src)
+        if tgt not in nodes:
+            nodes.append(tgt)
+    return {node: (0.0, float(-idx)) for idx, node in enumerate(nodes)}
 
 
 def build_lineage_summary_markdown(result: dict[str, Any]) -> str:

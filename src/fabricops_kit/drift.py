@@ -747,6 +747,21 @@ def summarize_drift_results(schema_drift_result: dict | None = None, partition_d
     }
 
 
+def build_drift_evidence_record(*, dataset_name: str, table_name: str, run_id: str | None, drift_type: str, result: dict) -> dict:
+    """Build a metadata-ready drift evidence record for schema/profile/partition checks."""
+    return {
+        "dataset_name": dataset_name,
+        "table_name": table_name,
+        "run_id": run_id,
+        "drift_type": drift_type,
+        "status": str(result.get("status", "unknown")),
+        "can_continue": bool(result.get("can_continue", True)),
+        "summary_json": _json_dumps(result.get("summary", {})),
+        "result_json": _json_dumps(result),
+        "created_at": _utc_now_iso(),
+    }
+
+
 def prepare_drift_baselines(
     *,
     current_profile: dict | None = None,
