@@ -32,6 +32,11 @@ def test_00_env_config_import_and_default_prompt_override_guard():
     assert "REVIEW_WORKFLOW_CONFIG = ReviewWorkflowConfig(" in prompt_block
     assert "review_workflow_config=REVIEW_WORKFLOW_CONFIG" in prompt_block
     assert "AI_PROMPTS = {" not in prompt_block
+    assert "notebook_runtime_config=RUNTIME_CONFIG" in prompt_block
+    assert "\n    runtime_config=RUNTIME_CONFIG," not in prompt_block
+    assert "NotebookRuntimeConfig(\n    allowed_notebook_prefixes=NOTEBOOK_PREFIXES,\n    validation_mode=VALIDATION_MODE" not in prompt_block
+    assert "setup_fabricops_notebook(\n    config=CONFIG,\n    env=ENV," in prompt_block
+    assert "validation_mode=VALIDATION_MODE" not in prompt_block
     assert "Suggest governance labels as JSON. Profile: {profile}" not in prompt_block
     assert "Summarize run handover details as markdown. Context: {context}" not in prompt_block
 
@@ -208,8 +213,8 @@ def test_01_data_agreement_template_has_no_dq_enforcement_or_column_widget_execu
 
 def test_00_env_config_keeps_review_workflow_defaults_generic():
     text = Path("templates/notebooks/00_env_config.ipynb").read_text(encoding="utf-8")
-    assert '"business_context": ""' in text or 'business_context=' in text
-    assert '"approved_usage": ""' in text or 'approved_usage=' in text
+    assert "BUSINESS_CONTEXT_PROMPT_TEMPLATE" in text
+    assert "GOVERNANCE_REVIEW_PROMPT_TEMPLATE" in text
     assert "Customer analytics and governed reporting" not in text
 
 
