@@ -1,5 +1,5 @@
 # Deployment and promotion
-![Deployment](assets/deployment.png
+![Deployment](assets/deployment.png)
 
 ## Enterprise-friendly promotion model
 
