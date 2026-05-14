@@ -86,6 +86,11 @@ from .metadata import (
     write_column_business_context,
     write_column_governance_context,
 )
+from .data_contracts import (
+    generate_handover_contract,
+    export_handover_contract,
+)
+
 from .run_summary import build_run_summary, render_run_summary_markdown
 from .technical_columns import standardize_output_columns
 
@@ -161,5 +166,7 @@ __all__ = [
     "plot_lineage_steps",
     "build_run_summary",
     "render_run_summary_markdown",
+    "generate_handover_contract",
+    "export_handover_contract",
     "standardize_output_columns",
 ]

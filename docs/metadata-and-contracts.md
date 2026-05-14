@@ -37,6 +37,11 @@ The metadata/contract store is the source of truth:
 
 The assembled contract output is exportable to Open Data Contract-compatible YAML/JSON.
 
+Recommended runtime entrypoints:
+
+- `generate_handover_contract(...)` to assemble approved metadata-backed handover packages.
+- `export_handover_contract(...)` to write reusable YAML/JSON handover exports.
+
 ## 6. Core operational loop
 
 Step 5 → Step 2: pipeline execution produces evidence, and that evidence improves governance metadata and future agreement quality.
