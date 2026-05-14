@@ -4,7 +4,7 @@ FabricOps Starter Kit helps teams run governed Fabric notebook workflows by turn
 
 <div align="center">
 
-[![Open Documentation](https://img.shields.io/badge/Open%20Documentation-FabricOps%20Starter%20Kit-blue?style=for-the-badge)](https://voycepeh.github.io/FabricOps-Starter-Kit/)
+[![Open Documentation](https://img.shields.io/badge/Start%20Here-FabricOps%20Starter%20Kit-blue?style=for-the-badge)](https://voycepeh.github.io/FabricOps-Starter-Kit/)
 
 </div>
 
