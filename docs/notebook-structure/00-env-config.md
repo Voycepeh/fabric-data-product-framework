@@ -1,56 +1,172 @@
 # 00_env_config
 
-`00_env_config` is the single shared environment bootstrap notebook for FabricOps Starter Kit templates.
+`00_env_config` is the shared environment bootstrap notebook for FabricOps Starter Kit.
 
 > <a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb">Open template notebook</a>
 
 ## Purpose
 
-`00_env_config` loads first and defines only environment-wide configuration values plus framework wiring.
-Reusable behavior is imported from `src/fabricops_kit/` package modules.
+Use one `00_env_config` notebook per environment/workspace. It is loaded by downstream notebooks with `%run 00_env_config` and should contain environment-wide values and configuration wiring only.
 
-## What belongs in 00_env_config
+Main principle:
 
-- Environment-wide values such as `ENV`, `VALIDATION_MODE`, and `AI_ENABLED`
-- Notebook naming policy (allowed prefixes)
-- Environment path registry values (as `Housepath` placeholders)
-- Framework config assembly (`PathConfig`, `NotebookRuntimeConfig`, `AIPromptConfig`, `FrameworkConfig`)
-- Environment-level AI prompt override cells that import package defaults
-- Startup bootstrap and smoke checks (`load_fabric_config`, `setup_fabricops_notebook`)
+- **Is**: environment bootstrap, package-default wiring, and environment-level AI prompt override review.
+- **Is not**: agreement-specific, source/target-specific, helper-function implementation, or dataset-specific transformation/governance logic.
 
-## What does not belong in 00_env_config
+## What the template contains
 
-- Reusable helper function implementations (these belong in `src/fabricops_kit/*.py`)
-- `AGREEMENT_ID`, `SOURCE_LAYER`, `TARGET_LAYER`
-- Dataset-, contract-, or run-specific parameters
+### Package imports
 
-## Downstream ownership
+The template imports reusable package behavior from:
 
-Downstream notebooks define their own scoped parameters:
+- `fabricops_kit.fabric_input_output`
+- `fabricops_kit.config`
 
-- `01_dsa_*`: agreement scope and agreement identifiers
-- `02_ex_*`: exploration source/topic parameters
-- `03_pc_*`: source layer, target layer, and input/output table parameters
+Imported capabilities include:
 
-## Usage pattern
+- `Housepath`
+- `lakehouse_table_read` / `lakehouse_table_write`
+- `lakehouse_csv_read`
+- `warehouse_read` / `warehouse_write`
+- `check_naming_convention`
+- `PathConfig`
+- `NotebookRuntimeConfig`
+- `AIPromptConfig`
+- `FrameworkConfig`
+- `load_fabric_config`
+- `get_path`
+- `setup_fabricops_notebook`
+
+### Environment-level values
+
+The template defines environment-level control values:
+
+- `ENV`
+- `VALIDATION_MODE`
+- `AI_ENABLED`
+- `NOTEBOOK_PREFIXES`
+
+`VALIDATION_MODE` guidance:
+
+- `"warn"` is safer for public templates and initial setup.
+- `"strict"` should fail naming checks when you are ready for controlled production use.
+
+### Environment path registry
+
+`ENV_PATHS` registers per-environment targets and `Housepath` values. Expected target keys are:
+
+- `source`
+- `unified`
+- `product`
+- `metadata`
+- `warehouse`
+
+Replace placeholder `Housepath` IDs, item names, and roots with your own Fabric workspace/lakehouse/warehouse identifiers.
+
+### AI prompt overrides
+
+Prompt defaults come from package constants:
+
+- `DEFAULT_BUSINESS_CONTEXT_PROMPT_TEMPLATE`
+- `DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE`
+- `DEFAULT_GOVERNANCE_PERSONAL_IDENTIFIER_PROMPT_TEMPLATE`
+- `DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE`
+- `DEFAULT_GOVERNANCE_REVIEW_TEMPLATE`
+- `DEFAULT_HANDOVER_SUMMARY_TEMPLATE`
+
+`00_env_config` maps these into environment override variables:
+
+- `BUSINESS_CONTEXT_PROMPT_TEMPLATE`
+- `DQ_RULE_SUGGESTION_PROMPT_TEMPLATE`
+- `GOVERNANCE_PERSONAL_IDENTIFIER_PROMPT_TEMPLATE`
+- `GOVERNANCE_CANDIDATE_PROMPT_TEMPLATE`
+- `GOVERNANCE_REVIEW_PROMPT_TEMPLATE`
+- `HANDOVER_SUMMARY_PROMPT_TEMPLATE`
+
+Policy:
+
+- The package is the source of truth for default prompt text.
+- `00_env_config` exposes prompt override cells so a workspace can intentionally override defaults.
+- Downstream notebooks should consume prompts from `CONFIG.ai_prompt_config`.
+
+### Framework config assembly
+
+The template assembles framework objects in order:
+
+- `PATH_CONFIG = PathConfig(...)`
+- `RUNTIME_CONFIG = NotebookRuntimeConfig(...)`
+- `AI_PROMPT_CONFIG = AIPromptConfig(...)`
+- `QUALITY_CONFIG = QualityConfig()`
+- `GOVERNANCE_CONFIG = GovernanceConfig()`
+- `REVIEW_WORKFLOW_CONFIG = ReviewWorkflowConfig()`
+- `LINEAGE_CONFIG = LineageConfig()`
+- `CONFIG = FrameworkConfig(...)`
+
+`CONFIG` is the object downstream notebooks should rely on.
+
+### Bootstrap checks
+
+The template runs:
+
+- `CONFIG = load_fabric_config(CONFIG)` to apply runtime-aware Fabric configuration updates.
+- `BOOTSTRAP = setup_fabricops_notebook(...)` to validate required targets and optional AI dependencies.
+- `check_naming_convention(..., fail_on_error=(VALIDATION_MODE == "strict"))` to enforce notebook naming policy.
+
+### Downstream usage
 
 ```python
 %run 00_env_config
 
-# Package helpers imported by 00_env_config are available for downstream notebooks.
 source_hp = get_path(ENV, "source", CONFIG)
+metadata_hp = get_path(ENV, "metadata", CONFIG)
+
+# Downstream notebooks define their own scoped variables
+AGREEMENT_ID = "..."
+SOURCE_LAYER = "source"
+TARGET_LAYER = "unified"
 ```
 
-## Maintenance rules
+Keep those downstream variables in downstream notebooks; do not move them back into `00_env_config`.
 
-- Keep template defaults public-safe and placeholder-based.
-- Do not commit production identifiers or internal URLs.
-- Keep `00_env_config` singular per environment/workspace.
+## What belongs / what does not belong
 
+### Belongs
 
-## AI prompt override policy
+- Imports from package modules
+- Environment values
+- Path registry
+- Notebook prefix policy
+- Prompt override variables
+- Config object assembly
+- Bootstrap checks
 
-- Default AI prompt templates are defined in `src/fabricops_kit/config.py` as the package source of truth.
-- `00_env_config` imports those defaults and may override them for a specific environment/workspace.
-- Keep each prompt in a separate notebook section/cell so reviewers can safely inspect/edit one prompt at a time.
-- Downstream notebooks should read prompts from `CONFIG.ai_prompt_config` and must not hardcode prompt text.
+### Does not belong
+
+- Reusable function definitions
+- Dataclass definitions already in package
+- `AGREEMENT_ID`
+- `SOURCE_LAYER`
+- `TARGET_LAYER`
+- `SOURCE_TABLE` / `TARGET_TABLE`
+- Transformation logic
+- DQ enforcement logic
+- Agreement approval content
+- One-off exploration analysis
+
+## Before using this template
+
+- Install/import the `fabricops_kit` wheel in Fabric.
+- Replace placeholder `Housepath` IDs and roots.
+- Confirm `ENV` matches the active environment.
+- Confirm target keys match downstream notebooks.
+- Review AI prompt override cells.
+- Keep `VALIDATION_MODE = "warn"` during setup.
+- Switch to `"strict"` once naming and paths are stable.
+
+## Common mistakes
+
+- Defining helper functions inside `00_env_config` instead of package modules.
+- Putting `AGREEMENT_ID` or source/target layer variables here.
+- Editing package default prompts directly when only an environment override is needed.
+- Using prompt names that do not exist in `AIPromptConfig`.
+- Using target names in downstream notebooks that do not exist in `ENV_PATHS`.
