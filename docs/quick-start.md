@@ -23,6 +23,7 @@ Open and copy these real starter templates first:
 | [`00_env_config.ipynb`](../templates/notebooks/00_env_config.ipynb) | reusable environment config notebook |
 | [`02_ex_agreement_topic.ipynb`](../templates/notebooks/02_ex_agreement_topic.ipynb) | exploration, profiling, AI-assisted suggestions, contract drafting |
 | [`03_pc_agreement_source_to_target.ipynb`](../templates/notebooks/03_pc_agreement_source_to_target.ipynb) | approved pipeline execution, DQ enforcement, quarantine/output/metadata/lineage |
+| [`04_handover_data_contract_export.ipynb`](../templates/notebooks/04_handover_data_contract_export.ipynb) | metadata-backed handover/data contract assembly and YAML/JSON export |
 
 These are copy-ready starter notebooks. Rename and adapt them for your own agreement and pipeline.
 
@@ -34,6 +35,7 @@ After copying, use this canonical naming model for your working notebooks:
 - `01_data_sharing_agreement_<agreement>`
 - `02_ex_<agreement>_<topic>`
 - `03_pc_<agreement>_<pipeline>`
+- `04_handover_data_contract_export`
 
 ## Run them in this order
 
@@ -41,6 +43,7 @@ After copying, use this canonical naming model for your working notebooks:
 2. Capture agreement context in `01_data_sharing_agreement_<agreement>`.
 3. Run exploration/profile work in `02_ex_<agreement>_<topic>`.
 4. Run the approved pipeline contract in `03_pc_<agreement>_<pipeline>`.
+5. Run handover export in `04_handover_data_contract_export`.
 
 ## What to edit first
 
