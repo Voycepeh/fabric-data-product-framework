@@ -471,13 +471,11 @@ def main() -> None:
 
     notebook_page_files = {
         "00_env_config": "00-env-config.md",
-        "01_data_agreement": "01-data-sharing-agreement.md",
         "02_ex": "02-exploration.md",
         "03_pc": "03-pipeline-contract.md",
     }
     notebook_boundary_notes = {
         "00_env_config": "`00_env_config` is shared setup.",
-        "01_data_agreement": "`01_data_sharing_agreement` is the governance source of truth.",
         "02_ex": "`02_ex` proposes evidence and AI-assisted suggestions.",
         "03_pc": "`03_pc` loads approved metadata and enforces controls.",
     }
