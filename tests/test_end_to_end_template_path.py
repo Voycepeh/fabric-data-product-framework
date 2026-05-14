@@ -33,6 +33,29 @@ def test_00_env_config_import_and_default_prompt_override_guard():
     assert "Summarize run handover details as markdown. Context: {context}" not in prompt_block
 
 
+def test_00_env_config_is_environment_only_and_imports_package_helpers():
+    text = Path("templates/notebooks/00_env_config.ipynb").read_text(encoding="utf-8")
+    for token in ["AGREEMENT_ID", "SOURCE_LAYER", "TARGET_LAYER"]:
+        assert token not in text
+    for token in [
+        "from fabricops_kit.fabric_input_output import (",
+        "from fabricops_kit.config import (",
+        "setup_fabricops_notebook(",
+        "load_fabric_config(CONFIG)",
+    ]:
+        assert token in text
+    for token in [
+        "def get_path",
+        "def validate_environment",
+        "def validate_target",
+        "def clean_datetime_columns",
+        "def add_system_technical_columns",
+        "def initialize_fabricops_runtime",
+        "class RuntimeContext",
+    ]:
+        assert token not in text
+
+
 def test_02_ex_dq_only_handoff_is_runnable():
     ex = _all_code("templates/notebooks/02_ex_agreement_topic.ipynb")
     assert "DQ_TABLE_NAME = TARGET_TABLE" in ex
