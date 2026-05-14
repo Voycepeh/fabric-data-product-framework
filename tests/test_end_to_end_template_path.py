@@ -19,18 +19,50 @@ def test_00_env_config_import_and_default_prompt_override_guard():
     assert "from fabricops_kit.config import (" in import_block
     assert "create_ai_prompt_config" not in import_block
     assert "AI_PROMPT_CONFIG = AIPromptConfig(" in prompt_block
-    assert "DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE" in import_block
+    assert "DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE" in import_block
     assert "DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE" in import_block
     assert "DEFAULT_HANDOVER_SUMMARY_TEMPLATE" in import_block
-    assert "DQ_RULE_CANDIDATE_PROMPT_TEMPLATE = DEFAULT_DQ_RULE_CANDIDATE_TEMPLATE" in prompt_block
+    assert "BUSINESS_CONTEXT_PROMPT_TEMPLATE = DEFAULT_BUSINESS_CONTEXT_PROMPT_TEMPLATE" in prompt_block
+    assert "DQ_RULE_SUGGESTION_PROMPT_TEMPLATE = DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE" in prompt_block
+    assert "GOVERNANCE_PERSONAL_IDENTIFIER_PROMPT_TEMPLATE = DEFAULT_GOVERNANCE_PERSONAL_IDENTIFIER_PROMPT_TEMPLATE" in prompt_block
     assert "GOVERNANCE_CANDIDATE_PROMPT_TEMPLATE = DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE" in prompt_block
+    assert "GOVERNANCE_REVIEW_PROMPT_TEMPLATE = DEFAULT_GOVERNANCE_REVIEW_TEMPLATE" in prompt_block
     assert "HANDOVER_SUMMARY_PROMPT_TEMPLATE = DEFAULT_HANDOVER_SUMMARY_TEMPLATE" in prompt_block
     assert "ReviewWorkflowConfig" in import_block
     assert "REVIEW_WORKFLOW_CONFIG = ReviewWorkflowConfig(" in prompt_block
     assert "review_workflow_config=REVIEW_WORKFLOW_CONFIG" in prompt_block
-    assert "Suggest candidate DQ rules as JSON. Profile: {profile}" not in prompt_block
+    assert "AI_PROMPTS = {" not in prompt_block
+    assert "notebook_runtime_config=RUNTIME_CONFIG" in prompt_block
+    assert "\n    runtime_config=RUNTIME_CONFIG," not in prompt_block
+    assert "NotebookRuntimeConfig(\n    allowed_notebook_prefixes=NOTEBOOK_PREFIXES,\n    validation_mode=VALIDATION_MODE" not in prompt_block
+    assert "setup_fabricops_notebook(\n    config=CONFIG,\n    env=ENV," in prompt_block
+    assert "validation_mode=VALIDATION_MODE" not in prompt_block
+    assert "check_naming_convention(\n    allowed_prefixes=NOTEBOOK_PREFIXES,\n    fail_on_error=(VALIDATION_MODE == \"strict\"),\n)" in prompt_block
     assert "Suggest governance labels as JSON. Profile: {profile}" not in prompt_block
     assert "Summarize run handover details as markdown. Context: {context}" not in prompt_block
+
+
+def test_00_env_config_is_environment_only_and_imports_package_helpers():
+    text = Path("templates/notebooks/00_env_config.ipynb").read_text(encoding="utf-8")
+    for token in ["AGREEMENT_ID", "SOURCE_LAYER", "TARGET_LAYER"]:
+        assert token not in text
+    for token in [
+        "from fabricops_kit.fabric_input_output import (",
+        "from fabricops_kit.config import (",
+        "setup_fabricops_notebook(",
+        "load_fabric_config(CONFIG)",
+    ]:
+        assert token in text
+    for token in [
+        "def get_path",
+        "def validate_environment",
+        "def validate_target",
+        "def clean_datetime_columns",
+        "def add_system_technical_columns",
+        "def initialize_fabricops_runtime",
+        "class RuntimeContext",
+    ]:
+        assert token not in text
 
 
 def test_02_ex_dq_only_handoff_is_runnable():
@@ -182,8 +214,8 @@ def test_01_data_agreement_template_has_no_dq_enforcement_or_column_widget_execu
 
 def test_00_env_config_keeps_review_workflow_defaults_generic():
     text = Path("templates/notebooks/00_env_config.ipynb").read_text(encoding="utf-8")
-    assert '"business_context": ""' in text or 'business_context=' in text
-    assert '"approved_usage": ""' in text or 'approved_usage=' in text
+    assert "BUSINESS_CONTEXT_PROMPT_TEMPLATE" in text
+    assert "GOVERNANCE_REVIEW_PROMPT_TEMPLATE" in text
     assert "Customer analytics and governed reporting" not in text
 
 
