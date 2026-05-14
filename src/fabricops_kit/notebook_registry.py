@@ -37,9 +37,14 @@ def _latest_distinct_agreements(rows: list[dict[str, Any]]) -> list[dict[str, An
     return list(latest.values())
 
 
-def load_agreements(spark, metadata_table: str = "METADATA_DATA_AGREEMENT") -> list[dict[str, Any]]:
+def load_agreements(spark, metadata_table: str = "METADATA_DATA_AGREEMENT", missing_ok: bool = False) -> list[dict[str, Any]]:
     """Load latest distinct agreement rows for widget selection."""
-    rows = _coerce_row_dicts(spark.table(metadata_table))
+    try:
+        rows = _coerce_row_dicts(spark.table(metadata_table))
+    except Exception:
+        if missing_ok:
+            return []
+        raise RuntimeError("No agreements found. Run 01_data_sharing_agreement first.")
     picked = []
     for row in _latest_distinct_agreements(rows):
         picked.append(
@@ -132,8 +137,13 @@ def register_current_notebook(spark, metadata_path, agreement_id, notebook_type,
     return row
 
 
-def load_notebook_registry(spark, agreement_id, metadata_table="METADATA_NOTEBOOK_REGISTRY", notebook_type=None, environment_name=None) -> list[dict[str, Any]]:
-    rows = _coerce_row_dicts(spark.table(metadata_table))
+def load_notebook_registry(spark, agreement_id, metadata_table="METADATA_NOTEBOOK_REGISTRY", notebook_type=None, environment_name=None, missing_ok: bool = True) -> list[dict[str, Any]]:
+    try:
+        rows = _coerce_row_dicts(spark.table(metadata_table))
+    except Exception:
+        if missing_ok:
+            return []
+        raise
     out = []
     for row in rows:
         if str(row.get("agreement_id") or "") != str(agreement_id):
