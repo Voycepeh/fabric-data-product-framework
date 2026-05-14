@@ -166,14 +166,22 @@ candidate_rules = draft_dq_rules(
     output_col="ai_response",
 )
 
-# 3) Human review + explicit approval (02_ex)
-import fabricops_kit.data_quality as data_quality
-review_dq_rules(candidate_rules, table_name=DQ_TABLE_NAME)
-approved = list(data_quality.APPROVED_RULES_FROM_WIDGET)
+# 3) Launch human review widget (02_ex)
+run_dq_rule_review_widget(
+    candidate_rules,
+    table_name=DQ_TABLE_NAME,
+)
+# 4) After analyst interaction, collect current widget state (02_ex)
+review = get_dq_rule_review_results(
+    table_name=DQ_TABLE_NAME,
+    environment_name=ENV_NAME,
+    dataset_name=DATASET_NAME,
+)
+approved = review["approved_rules"]
 if not approved:
     raise ValueError("No approved DQ rules selected in widget.")
 
-# 4) Persist governed approval history (02_ex)
+# 5) Persist governed approval history (02_ex)
 write_dq_rules(
     approved,
     table_name=DQ_TABLE_NAME,
@@ -181,20 +189,26 @@ write_dq_rules(
     action_by="notebook_user",
 )
 
-# 5) Pipeline enforces approved active rules deterministically (03_pc)
+# 6) Pipeline loads approved active rules only (03_pc)
+approved_for_pipeline = load_approved_dq_rules(
+    lakehouse_table_read(metadata_path, "METADATA_DQ_RULES"),
+    table_name=DQ_TABLE_NAME,
+)
+
+# 7) Pipeline enforces approved active rules deterministically (03_pc)
 dq = enforce_dq_rules(
     df_standard,
     table_name=DQ_TABLE_NAME,
-    metadata_df=spark.table("METADATA_DQ_RULES"),
+    rules=approved_for_pipeline,
     dq_run_id=RUN_ID,
 )
 
-# 6) Optional evidence outputs
+# 8) Optional evidence outputs
 _ = dq.valid_rows
 _ = dq.quarantine_rows
 _ = dq.failure_rows
 
-# 7) Final explicit gate
+# 9) Final explicit gate
 assert_dq_passed(dq.rule_results)
 ```
 
