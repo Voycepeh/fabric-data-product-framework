@@ -8,6 +8,12 @@ Exploration and proposal notebook for analyst/data scientist-led investigation o
 
 `02_ex` is where analysts and data scientists explore source data, test shaping logic, and capture evidence that informs governance and pipeline contracts. It is intentionally iterative and analysis-first.
 
+`02_ex` should reuse `00_env_config` for shared config and validation instead of redefining environment setup.
+
+`02_ex` should inspect existing metadata before profiling from scratch. Existing profile rows, approved DQ rules, governance labels, business context, and prior runtime evidence should be reused where current enough.
+
+DQ rule suggestion and DQ rule review in `02_ex` are analyst/engineer data-quality control decisions, not governance approval decisions.
+
 ## Ownership
 
 - Primary owner: Analyst / Data Scientist
@@ -25,6 +31,7 @@ Exploration and proposal notebook for analyst/data scientist-led investigation o
 - Source quirk investigation and analyst observations
 - Exploratory transforms (joins, filters, mappings, derived fields, date/time logic, deduplication ideas)
 - AI-assisted DQ suggestion drafting (advisory)
+- DQ review widget-based analyst/engineer approval for DQ control decisions
 - AI-assisted classification/sensitivity candidate drafting (advisory)
 - Metadata evidence and rationale that informs governance updates and downstream pipeline decisions
 
@@ -35,7 +42,7 @@ Exploration and proposal notebook for analyst/data scientist-led investigation o
 - Scheduled, run-all-safe production enforcement
 - Final deterministic production transformation contract
 
-`02_ex` does **not** approve governance controls and does **not** enforce approved DQ rules in production.
+`02_ex` does **not** approve governance controls and does **not** enforce approved DQ rules in production. Governance covers usage, ownership, sensitivity/classification, and restrictions; DQ rule approval is owned by analysts/engineers.
 
 ## Recommended notebook flow
 
@@ -47,31 +54,34 @@ Exploration and proposal notebook for analyst/data scientist-led investigation o
    - Approved usage context from the data sharing agreement
 2. **Configuration and setup**
    - Import shared config from `00_env_config`
-   - Validate notebook naming convention
-   - Resolve environment paths, lakehouse/warehouse names, and metadata targets
-3. **Data ingestion for exploration**
+   - Reuse shared runtime checks and naming policy from `00_env_config`
+   - Resolve environment paths and source access options
+3. **Inspect existing metadata and decide whether to reuse, refresh, or extend evidence**
+   - Review existing profile rows, approved DQ rules, governance labels, business context, and prior proposal/runtime evidence
+   - Decide whether evidence is current enough to reuse or needs refresh
+4. **Data ingestion for exploration**
    - Load source data
    - Run basic count/schema checks
    - Register or inspect source metadata where relevant
-4. **Data exploration and profiling**
+5. **Data exploration and profiling**
    - Profile source columns
    - Inspect nulls, distinct counts, min/max, duplicates, distributions, sample records
    - Capture analyst observations
-5. **Exploratory transforms**
+6. **Exploratory transforms**
    - Test joins, filters, mappings, derived columns, date/time logic, deduplication logic, and other shaping ideas
    - Mark exploratory logic clearly until promoted into pipeline contract execution
-6. **AI-assisted proposals**
+7. **AI-assisted proposals**
    - AI-assisted DQ suggestions
    - AI-assisted classification/sensitivity suggestions
    - AI-assisted summarisation of findings
    - AI-assisted lineage notes when useful
    - Clearly state AI output is advisory and requires human validation/approval
-7. **Findings and proposal**
+8. **Findings and proposal**
    - Freeze important findings
    - Explain why downstream transformations or controls are needed
    - Identify proposed metadata updates for `01_data_sharing_agreement`
    - Identify proposed pipeline logic for `03_pc`
-8. **Handoff**
+9. **Handoff**
    - Governance updates go to `01_data_sharing_agreement` for approval
    - Approved rules/classifications are later consumed by `03_pc`
    - Production transformation and enforcement belong in `03_pc`
@@ -91,7 +101,7 @@ Exploration and proposal notebook for analyst/data scientist-led investigation o
 
 ## Examples
 
-- Explore source null behaviors and propose candidate required-field rules for governance review.
+- Explore source null behaviors and propose candidate required-field rules for analyst/engineer DQ review.
 - Trial date standardization logic and document why a deterministic transform should be implemented in `03_pc`.
 - Use AI to suggest classification candidates, then record analyst rationale and hand off for governance approval.
 
