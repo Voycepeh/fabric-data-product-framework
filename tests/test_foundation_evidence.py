@@ -1,8 +1,3 @@
-import sys
-import types
-
-sys.modules.setdefault("yaml", types.SimpleNamespace(safe_load=lambda *_a, **_k: {}))
-
 import json
 
 import pytest
@@ -20,12 +15,9 @@ from fabricops_kit.metadata import (
 )
 
 
-def test_lineage_wrappers_importable_from_package(monkeypatch) -> None:
+def test_lineage_wrappers_importable_from_package() -> None:
     import importlib
-    import types
-    import sys
 
-    monkeypatch.setitem(sys.modules, "yaml", types.SimpleNamespace(safe_load=lambda *_a, **_k: {}))
     pkg = importlib.import_module("fabricops_kit")
     assert callable(pkg.enrich_lineage_steps_with_ai)
     assert callable(pkg.build_lineage_record_from_steps)
