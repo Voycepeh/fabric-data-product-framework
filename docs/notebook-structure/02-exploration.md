@@ -6,13 +6,15 @@ Exploration and proposal notebook for analyst/data scientist-led investigation o
 
 ## Purpose
 
-`02_ex` is where analysts and data scientists explore source data, test shaping logic, and capture evidence that informs governance and pipeline contracts. It is intentionally iterative and analysis-first.
+`02_ex` is where analysts and data scientists perform agreement-aware exploration before production enforcement.
 
-`02_ex` should reuse `00_env_config` for shared config and validation instead of redefining environment setup.
+`02_ex` starts from `00_env_config` and should reuse shared configuration/runtime validation instead of redefining notebook setup.
 
-`02_ex` should inspect existing metadata before profiling from scratch. Existing profile rows, approved DQ rules, governance labels, business context, and prior runtime evidence should be reused where current enough.
+`02_ex` first explores existing metadata context (approved DQ state, governance/classification context, and prior notebook evidence), then explores the dataset itself.
 
-DQ rule suggestion and DQ rule review in `02_ex` are analyst/engineer data-quality control decisions, not governance approval decisions.
+`02_ex` captures findings in markdown and uses the DQ widget flow to suggest, review, approve, and deactivate DQ rules.
+
+`02_ex` should not manually define final DQ rules in the findings section.
 
 ## Ownership
 
@@ -27,83 +29,104 @@ DQ rule suggestion and DQ rule review in `02_ex` are analyst/engineer data-quali
 
 ## What belongs in `02_ex`
 
+- Agreement selection and agreement context
 - Source data profiling and discovery
 - Source quirk investigation and analyst observations
-- Exploratory transforms (joins, filters, mappings, derived fields, date/time logic, deduplication ideas)
-- AI-assisted DQ suggestion drafting (advisory)
-- DQ review widget-based analyst/engineer approval for DQ control decisions
-- AI-assisted classification/sensitivity candidate drafting (advisory)
-- Metadata evidence and rationale that informs governance updates and downstream pipeline decisions
+- Exploratory analysis
+- Exploratory transform ideas (investigation only)
+- AI-assisted DQ candidate drafting (advisory)
+- DQ widget-based analyst/engineer review and approval
+- Read-only metadata exploration
+- Read-only review of approved DQ rules, governance/classification metadata, and notebook registry/prior evidence
+- Findings and handoff notes
 
 ## What does not belong in `02_ex`
 
 - Governance approval authority
-- Final approval-state metadata ownership
-- Scheduled, run-all-safe production enforcement
+- Production enforcement
 - Final deterministic production transformation contract
+- Manual final DQ rule writing outside the DQ widget flow
+- Scheduled, run-all-safe behavior
 
-`02_ex` does **not** approve governance controls and does **not** enforce approved DQ rules in production. Governance covers usage, ownership, sensitivity/classification, and restrictions; DQ rule approval is owned by analysts/engineers.
+`02_ex` does **not** approve governance controls and does **not** enforce approved DQ rules in production. Governance covers usage, ownership, sensitivity/classification, and restrictions; DQ rule approval is owned by analysts/engineers through the review flow.
 
 ## Recommended notebook flow
 
 1. **Introduction and scope**
-   - Agreement ID
-   - Topic
-   - Source being explored
-   - Question being answered
-   - Approved usage context from the data sharing agreement
-2. **Configuration and setup**
-   - Import shared config from `00_env_config`
-   - Reuse shared runtime checks and naming policy from `00_env_config`
-   - Resolve environment paths and source access options
-3. **Inspect existing metadata and decide whether to reuse, refresh, or extend evidence**
-   - Review existing profile rows, approved DQ rules, governance labels, business context, and prior proposal/runtime evidence
-   - Decide whether evidence is current enough to reuse or needs refresh
-4. **Data ingestion for exploration**
-   - Load source data
-   - Run basic count/schema checks
-   - Register or inspect source metadata where relevant
-5. **Data exploration and profiling**
-   - Profile source columns
-   - Inspect nulls, distinct counts, min/max, duplicates, distributions, sample records
-   - Capture analyst observations
-6. **Exploratory transforms**
-   - Test joins, filters, mappings, derived columns, date/time logic, deduplication logic, and other shaping ideas
-   - Mark exploratory logic clearly until promoted into pipeline contract execution
-7. **AI-assisted proposals**
-   - AI-assisted DQ suggestions
-   - AI-assisted classification/sensitivity suggestions
-   - AI-assisted summarisation of findings
-   - AI-assisted lineage notes when useful
-   - Clearly state AI output is advisory and requires human validation/approval
-8. **Findings and proposal**
-   - Freeze important findings
-   - Explain why downstream transformations or controls are needed
-   - Identify proposed metadata updates for `01_data_sharing_agreement`
-   - Identify proposed pipeline logic for `03_pc`
-9. **Handoff**
-   - Governance updates go to `01_data_sharing_agreement` for approval
-   - Approved rules/classifications are later consumed by `03_pc`
-   - Production transformation and enforcement belong in `03_pc`
+   - Set `agreement_id`, `topic`, and `table_name`.
+   - These are the only required top-level placeholders.
+2. **Agreement context**
+   - Explain that the notebook operates within a selected data agreement.
+   - Approved usage, ownership, and business context come from the agreement metadata where available.
+3. **Configuration and imports**
+   - Run `%run 00_env_config` in its own standalone cell.
+   - Import all helper functions used below in one setup cell.
+   - Resolve `metadata_path` using `get_path(ENV_NAME, "metadata", config=FABRIC_CONFIG)`.
+   - Resolve DQ metadata table using `FABRIC_CONFIG.review_workflow_config.dq_approved_table`.
+   - Do not call `setup_fabricops_notebook` again inside `02_ex`.
+4. **Metadata exploration**
+   - Select agreement using the agreement helper/widget flow.
+   - Register the current notebook against the selected agreement.
+   - Read existing approved DQ rules as read-only context.
+   - Read governance/classification metadata as read-only context.
+   - Read notebook registry/prior evidence as read-only context.
+   - This section should not profile source data and should not write DQ rules.
+5. **Dataset exploration**
+   - Choose one source-loading pattern.
+   - Load from lakehouse table, warehouse table, CSV, or parquet using existing helper functions.
+   - Display schema and sample records.
+   - Run `profile_dataframe`.
+   - Add focused exploratory checks in an empty analyst code block.
+   - Keep exploratory transform logic here only as investigation; final repeatable logic belongs in `03_pc`.
+6. **Findings**
+   - Record findings in markdown, not structured proposal rows.
+   - Use small subtitles:
+     - Key findings
+     - Source quirks
+     - Business context notes
+     - Classification / sensitivity notes
+     - Suggested pipeline transform notes
+     - Open questions
+     - Handoff notes
+   - Do not create `proposal_rows`.
+   - Do not create `proposal_df`.
+   - Do not manually define final DQ rules here.
+   - Handoff notes should say:
+     - Approved DQ rules from section 07 are consumed by `03_pc`.
+     - Governance/classification updates follow the data agreement workflow.
+     - Production transformations and deterministic enforcement belong in `03_pc`.
+7. **AI-assisted DQ flow**
+   - Load existing approved/active DQ rules.
+   - Generate AI candidate rules when needed using `draft_dq_rules`.
+   - Review/edit/approve/reject candidates using `run_dq_rule_review_widget`.
+   - Collect widget results using `get_dq_rule_review_results`.
+   - Persist only approved rules using `write_dq_rules`.
+   - Review existing active rules for deactivation using `review_dq_rule_deactivations`.
+   - Persist deactivation metadata using `build_dq_rule_deactivation_metadata_df`.
+   - Do not write AI candidate rules directly to metadata.
 
-**Principle:** “02_ex is allowed to contain exploratory transformation logic, but final repeatable run-all-safe transformation logic belongs in 03_pc.”
+**Principle:** “`02_ex` is exploratory and analyst-driven; deterministic production logic and enforcement belong in `03_pc`.”
 
 ## AI boundary
 
-- AI suggestions in `02_ex` are advisory drafts, not approvals.
-- Human reviewers validate evidence and proposals before governance metadata is updated.
-- Governance control authority remains in `01_data_sharing_agreement`; execution enforcement remains in `03_pc`.
+- AI suggestions are advisory until reviewed.
+- DQ approval is analyst/engineer-owned through the DQ widget flow.
+- Governance/classification approval follows the data agreement workflow.
+- `03_pc` enforces active approved DQ metadata only.
 
-## Handoff to `01_data_sharing_agreement` and `03_pc`
+## Handoff boundaries
 
-- Promote validated governance proposals from `02_ex` into `01_data_sharing_agreement_<agreement>` for official approval/state management.
-- Promote approved transformation and enforcement requirements into `03_pc_<agreement>_<pipeline>` for deterministic scheduled execution.
+- DQ rules approved through the section 07 widget flow are consumed by `03_pc`.
+- Governance/classification changes identified during exploration should follow the data agreement workflow.
+- Production transformations and deterministic enforcement belong in `03_pc`.
+- `02_ex` should remain exploratory and analyst-driven.
 
 ## Examples
 
-- Explore source null behaviors and propose candidate required-field rules for analyst/engineer DQ review.
-- Trial date standardization logic and document why a deterministic transform should be implemented in `03_pc`.
-- Use AI to suggest classification candidates, then record analyst rationale and hand off for governance approval.
+- Select an agreement, inspect existing DQ/governance context, then profile a source table.
+- Use profile evidence and business context to draft DQ candidates, review them in the DQ widget, and persist only approved rules.
+- Record source quirks and suggested transform notes in the Findings section.
+- Identify classification/sensitivity observations for the data agreement workflow.
 
 ## Cross-links
 
