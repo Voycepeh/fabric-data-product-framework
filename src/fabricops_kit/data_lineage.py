@@ -146,24 +146,6 @@ def _enrich_lineage_steps_with_ai(lineage_steps: list[dict[str, Any]], ai_helper
     return {"steps": ai_helper(lineage_steps) or lineage_steps, "ai_used": True, "fallback_prompt": "", "notes": "AI enrichment applied."}
 
 
-def enrich_lineage_steps_with_ai(lineage_steps: list[dict[str, Any]], ai_helper: Any | None = None) -> dict[str, Any]:
-    """Public wrapper for optional AI enrichment of deterministic lineage steps.
-
-    Parameters
-    ----------
-    lineage_steps : list of dict of str to Any
-        Deterministic lineage step dictionaries.
-    ai_helper : Any or None, default=None
-        Optional callable that returns enriched lineage steps.
-
-    Returns
-    -------
-    dict of str to Any
-        Enrichment payload containing steps, AI usage state, and review notes.
-    """
-    return _enrich_lineage_steps_with_ai(lineage_steps, ai_helper=ai_helper)
-
-
 def _validate_lineage_steps(lineage_steps: Any) -> dict[str, Any]:
     """Validate lineage step structure and flag records requiring human review.
 
