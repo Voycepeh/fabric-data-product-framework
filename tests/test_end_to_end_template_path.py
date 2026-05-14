@@ -37,6 +37,7 @@ def test_00_env_config_import_and_default_prompt_override_guard():
     assert "NotebookRuntimeConfig(\n    allowed_notebook_prefixes=NOTEBOOK_PREFIXES,\n    validation_mode=VALIDATION_MODE" not in prompt_block
     assert "setup_fabricops_notebook(\n    config=CONFIG,\n    env=ENV," in prompt_block
     assert "validation_mode=VALIDATION_MODE" not in prompt_block
+    assert "check_naming_convention(\n    allowed_prefixes=NOTEBOOK_PREFIXES,\n    fail_on_error=(VALIDATION_MODE == \"strict\"),\n)" in prompt_block
     assert "Suggest governance labels as JSON. Profile: {profile}" not in prompt_block
     assert "Summarize run handover details as markdown. Context: {context}" not in prompt_block
 
