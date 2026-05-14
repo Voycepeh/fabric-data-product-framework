@@ -101,7 +101,11 @@ def capture_column_business_context(suggestions: list[dict], environment_name: s
     global COLUMN_BUSINESS_CONTEXT_FROM_WIDGET, REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET
     widgets, ipy_display = _require_ipywidgets()
     approved, rejected = [], []
+    action_history: list[str] = []
     state = {"i": 0}
+
+    COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.clear()
+    REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.clear()
 
     title = widgets.HTML("<h4>Review column business context</h4>")
     summary = widgets.HTML()
@@ -144,23 +148,41 @@ def capture_column_business_context(suggestions: list[dict], environment_name: s
             "approved_at": datetime.now(timezone.utc).isoformat() if status_value == "approved" else None,
         }
 
+    def _sync_globals():
+        COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.clear()
+        COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.extend(approved)
+        REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.clear()
+        REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.extend(rejected)
+
     def on_approve(_):
         row = curr()
+        if row is None:
+            return
         approved.append(build_row(row, "approved"))
+        action_history.append("approve")
+        _sync_globals()
         state["i"] += 1
         load()
 
     def on_reject(_):
         row = curr()
+        if row is None:
+            return
         rejected.append(build_row(row, "rejected"))
+        action_history.append("reject")
+        _sync_globals()
         state["i"] += 1
         load()
 
     def on_undo(_):
-        if rejected:
+        if not action_history:
+            return
+        last = action_history.pop()
+        if last == "reject" and rejected:
             rejected.pop()
-        elif approved:
+        elif last == "approve" and approved:
             approved.pop()
+        _sync_globals()
         state["i"] = max(0, state["i"] - 1)
         load()
 
@@ -169,8 +191,4 @@ def capture_column_business_context(suggestions: list[dict], environment_name: s
     btn_undo.on_click(on_undo)
     load()
     ipy_display(widgets.VBox([title, summary, approved_box, notes_box, reviewer_box, widgets.HBox([btn_approve, btn_reject, btn_undo]), status]))
-    COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.clear()
-    COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.extend(approved)
-    REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.clear()
-    REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.extend(rejected)
     return None

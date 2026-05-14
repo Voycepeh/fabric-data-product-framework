@@ -54,3 +54,12 @@ Display existing approved DQ rules for governance visibility (read-only; no enfo
     <tr><td><a href="../../api/reference/step-02a-shared-runtime-config/get_path/"><code>get_path</code></a></td><td><a class="reference-module-link" href="../../api/modules/config/">config</a></td><td>Resolve metadata path for read/write operations.</td></tr>
   </tbody>
 </table>
+
+
+## Agreement and notebook registration flow
+
+- Notebook `01` creates and saves agreement metadata into `METADATA_DATA_AGREEMENT`.
+- Notebooks `02_ex` and `03_pc` use a widget to select an existing agreement from `METADATA_DATA_AGREEMENT`; users do not need to type `agreement_id`.
+- Notebooks `01`, `02_ex`, and `03_pc` self-register to `METADATA_NOTEBOOK_REGISTRY`.
+- Notebook `01` fetches clickable notebook links from `METADATA_NOTEBOOK_REGISTRY` for the selected agreement.
+- `related_notebook_links` remains a fallback/manual bridge when registry rows are not available.
