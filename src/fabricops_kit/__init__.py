@@ -78,6 +78,13 @@ from .business_context import (
     prepare_business_context_profile_input,
     suggest_column_business_contexts,
 )
+from .notebook_registry import (
+    get_selected_agreement,
+    load_agreements,
+    load_notebook_registry,
+    register_current_notebook,
+    select_agreement,
+)
 from .metadata import (
     build_dq_rule_key,
     build_metadata_column_key,
@@ -151,6 +158,11 @@ __all__ = [
     "build_dq_rule_key",
     "write_metadata_rows",
     "write_column_business_context",
+    "load_agreements",
+    "select_agreement",
+    "get_selected_agreement",
+    "register_current_notebook",
+    "load_notebook_registry",
     "write_column_governance_context",
     "build_lineage_records",
     "scan_notebook_lineage",

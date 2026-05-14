@@ -59,3 +59,5 @@ Environment Workspace (Sandbox / Dev-Test / Prod)
 - [Lifecycle Operating Model](lifecycle-operating-model.md)
 - [Metadata and Data Contract Assembly](metadata-and-contracts.md)
 - [Data Quality Rules System](data-quality-rules-system.md)
+
+- 02_ex and 03_pc notebooks select an existing agreement_id from METADATA_DATA_AGREEMENT and self-register to METADATA_NOTEBOOK_REGISTRY.
