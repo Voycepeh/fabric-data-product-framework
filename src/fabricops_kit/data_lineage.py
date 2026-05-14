@@ -50,7 +50,7 @@ def _step(source: str, target: str, transformation: str, source_type: str, targe
     return {"source": source, "target": target, "transformation": transformation, "reason": "", "source_type": source_type, "target_type": target_type, "confidence": confidence, "notes": notes, "operation_types": ops, "code_refs": [f"line:{lineno}"]}
 
 
-def scan_notebook_lineage(code: str) -> list[dict[str, Any]]:
+def _scan_notebook_lineage(code: str) -> list[dict[str, Any]]:
     """Extract deterministic lineage steps from notebook code using AST parsing.
 
     Parameters
@@ -89,7 +89,7 @@ def scan_notebook_lineage(code: str) -> list[dict[str, Any]]:
     return steps
 
 
-def scan_notebook_cells(cells: list[str]) -> list[dict[str, Any]]:
+def _scan_notebook_cells(cells: list[str]) -> list[dict[str, Any]]:
     """Scan multiple notebook cells and append cell references to lineage steps.
 
     Parameters
@@ -104,7 +104,7 @@ def scan_notebook_cells(cells: list[str]) -> list[dict[str, Any]]:
     """
     out: list[dict[str, Any]] = []
     for idx, cell in enumerate(cells):
-        for step in scan_notebook_lineage(cell):
+        for step in _scan_notebook_lineage(cell):
             step["code_refs"].append(f"cell:{idx}")
             out.append(step)
     return out
@@ -164,7 +164,7 @@ def enrich_lineage_steps_with_ai(lineage_steps: list[dict[str, Any]], ai_helper:
     return _enrich_lineage_steps_with_ai(lineage_steps, ai_helper=ai_helper)
 
 
-def validate_lineage_steps(lineage_steps: Any) -> dict[str, Any]:
+def _validate_lineage_steps(lineage_steps: Any) -> dict[str, Any]:
     """Validate lineage step structure and flag records requiring human review.
 
     Parameters
@@ -228,14 +228,14 @@ def _build_lineage_record_from_steps(dataset_name: str, lineage_steps: list[dict
     ValueError
         If lineage steps fail schema validation.
     """
-    v = validate_lineage_steps(lineage_steps)
+    v = _validate_lineage_steps(lineage_steps)
     if not v["is_valid"]:
         raise ValueError(f"Invalid lineage_steps: {v['errors']}")
     ts = datetime.now(timezone.utc).isoformat()
     return [{"dataset_name": dataset_name, "step_number": i, **s, "run_id": run_id, "workspace_id": workspace_id, "workspace_name": workspace_name, "notebook_id": notebook_id, "notebook_name": notebook_name, "created_by": created_by, "created_ts": ts} for i, s in enumerate(lineage_steps, 1)]
 
 
-def build_lineage_record_from_steps(dataset_name: str, lineage_steps: list[dict], run_id: str | None = None, notebook_name: str | None = None, workspace_name: str | None = None, workspace_id: str | None = None, notebook_id: str | None = None, created_by: str | None = None) -> list[dict]:
+def _build_lineage_records(dataset_name: str, lineage_steps: list[dict], run_id: str | None = None, notebook_name: str | None = None, workspace_name: str | None = None, workspace_id: str | None = None, notebook_id: str | None = None, created_by: str | None = None) -> list[dict]:
     """Build metadata-ready lineage rows from validated lineage steps.
 
     Parameters
@@ -285,29 +285,6 @@ def build_lineage_records(*, dataset_name: str, run_id: str, source_tables: list
     return [{"run_id": run_id, "dataset_name": dataset_name, "source_tables": source_tables, "target_table": target_table, **s} for s in transformation_steps]
 
 
-def build_lineage_from_notebook_code(code: str, use_ai: bool = True, ai_helper: Any | None = None) -> dict[str, Any]:
-    """Scan, optionally enrich, and validate lineage from notebook source code.
-
-    Parameters
-    ----------
-    code : str
-        Notebook source code to parse.
-    use_ai : bool, default=True
-        Whether to invoke AI enrichment when a helper is provided.
-    ai_helper : Any or None, default=None
-        Optional callable used to enrich deterministic lineage steps.
-
-    Returns
-    -------
-    dict of str to Any
-        End-to-end lineage result with steps, validation, review status, and notes.
-    """
-    steps = scan_notebook_lineage(code)
-    enrichment = _enrich_lineage_steps_with_ai(steps, ai_helper=ai_helper) if use_ai else {"steps": steps, "ai_used": False, "fallback_prompt": "", "notes": "AI disabled."}
-    validation = validate_lineage_steps(enrichment["steps"]) if enrichment["steps"] else {"is_valid": False, "errors": ["No lineage detected."], "warnings": [], "review_required": True}
-    return {"steps": enrichment["steps"], "validation": validation, "review_required": True if not validation["is_valid"] else (validation["review_required"] or not enrichment.get("ai_used", False)), "fallback_prompt": enrichment.get("fallback_prompt", ""), "ai_used": enrichment.get("ai_used", False), "notes": enrichment.get("notes", "")}
-
-
 def plot_lineage_steps(lineage_steps_or_record, title: str | None = None):
     """Render lineage steps as a directed graph figure.
 
@@ -329,14 +306,14 @@ def plot_lineage_steps(lineage_steps_or_record, title: str | None = None):
     for s in lineage_steps_or_record:
         g.add_edge(s.get("source", "unknown"), s.get("target", "unknown"), label=s.get("transformation", ""))
     fig, ax = plt.subplots(figsize=(10, 5))
-    pos = build_top_down_lineage_layout(lineage_steps_or_record)
+    pos = _build_top_down_lineage_layout(lineage_steps_or_record)
     nx.draw(g, pos, with_labels=True, node_color="#f2f2f2", ax=ax)
     nx.draw_networkx_edge_labels(g, pos, edge_labels={(u, v): d.get("label", "") for u, v, d in g.edges(data=True)}, font_size=7, ax=ax)
     ax.set_title(title or "Notebook lineage")
     return fig
 
 
-def build_top_down_lineage_layout(lineage_steps_or_record) -> dict[str, tuple[float, float]]:
+def _build_top_down_lineage_layout(lineage_steps_or_record) -> dict[str, tuple[float, float]]:
     """Build a stable top-down layout for lineage graph plotting."""
     nodes: list[str] = []
     for step in lineage_steps_or_record:
@@ -349,7 +326,7 @@ def build_top_down_lineage_layout(lineage_steps_or_record) -> dict[str, tuple[fl
     return {node: (0.0, float(-idx)) for idx, node in enumerate(nodes)}
 
 
-def build_lineage_summary_markdown(result: dict[str, Any]) -> str:
+def _build_lineage_summary_markdown(result: dict[str, Any]) -> str:
     """Create a concise markdown lineage summary from lineage execution results.
 
     Parameters
@@ -367,4 +344,49 @@ def build_lineage_summary_markdown(result: dict[str, Any]) -> str:
 
 def build_lineage_handover_markdown(result: dict[str, Any]) -> str:
     """Backward-compatible alias for ``build_lineage_summary_markdown``."""
-    return build_lineage_summary_markdown(result)
+    return _build_lineage_summary_markdown(result)
+
+
+
+def build_notebook_lineage(*, notebook_code: str | None = None, cells: list[str] | None = None, dataset_name: str = "unknown", table_name: str = "unknown", run_id: str | None = None, workspace_id: str | None = None, workspace_name: str | None = None, notebook_id: str | None = None, notebook_name: str | None = None, created_by: str | None = None) -> dict[str, Any]:
+    """Build deterministic notebook lineage, validate it, and return metadata-ready records."""
+    if notebook_code is None and cells is None:
+        raise ValueError("Provide notebook_code or cells.")
+    steps = _scan_notebook_lineage(notebook_code) if notebook_code is not None else _scan_notebook_cells(cells or [])
+    validation = _validate_lineage_steps(steps) if steps else {"is_valid": False, "errors": ["No lineage detected."], "warnings": [], "review_required": True}
+    records = []
+    if validation["is_valid"]:
+        records = _build_lineage_record_from_steps(
+            dataset_name,
+            steps,
+            run_id=run_id,
+            notebook_name=notebook_name,
+            workspace_name=workspace_name,
+            workspace_id=workspace_id,
+            notebook_id=notebook_id,
+            created_by=created_by,
+        )
+    result = {
+        "dataset_name": dataset_name,
+        "table_name": table_name,
+        "steps": steps,
+        "validation": validation,
+        "records": records,
+        "review_required": True if not validation["is_valid"] else bool(validation.get("review_required", False)),
+    }
+    result["summary_markdown"] = _build_lineage_summary_markdown(result)
+    return result
+
+
+def build_lineage_from_notebook_code(code: str, use_ai: bool = True, ai_helper: Any | None = None) -> dict[str, Any]:
+    """Backward-compatible alias to ``build_notebook_lineage``."""
+    return build_notebook_lineage(notebook_code=code)
+
+
+# Module-level compatibility aliases (not exported from package root)
+scan_notebook_lineage = _scan_notebook_lineage
+scan_notebook_cells = _scan_notebook_cells
+validate_lineage_steps = _validate_lineage_steps
+build_lineage_record_from_steps = _build_lineage_records
+build_top_down_lineage_layout = _build_top_down_lineage_layout
+build_lineage_summary_markdown = _build_lineage_summary_markdown

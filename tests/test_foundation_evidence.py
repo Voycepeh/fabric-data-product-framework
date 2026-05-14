@@ -2,32 +2,46 @@ import json
 
 import pytest
 
+from fabricops_kit import build_notebook_lineage
 from fabricops_kit.data_lineage import build_lineage_record_from_steps
-from fabricops_kit.drift import (
-    UnsupportedDataFrameEngineError,
-    build_drift_evidence_record,
-    build_schema_snapshot,
-)
+from fabricops_kit.drift import UnsupportedDataFrameEngineError, build_drift_evidence_record, build_schema_snapshot
 from fabricops_kit.metadata import EVIDENCE_DRIFT_RESULT, EVIDENCE_LINEAGE, build_evidence_row, default_evidence_types
 
 
-# Notebook templates should read Fabric identity directly, for example:
-# from notebookutils import runtime
-# ctx = runtime.context
-# if callable(ctx):
-#     ctx = ctx()
-# workspace_id = ctx.get("workspaceId") or ctx.get("currentWorkspaceId")
-# notebook_id = ctx.get("notebookId") or ctx.get("currentNotebookId") or ctx.get("artifactId") or ctx.get("itemId")
-# notebook_name = ctx.get("notebookName") or ctx.get("currentNotebookName") or ctx.get("artifactName") or ctx.get("itemName")
-# run_id = ctx.get("runId") or ctx.get("activityRunId") or ctx.get("livyId") or ctx.get("sessionId")
+def test_build_notebook_lineage_returns_expected_sections() -> None:
+    code = """
+df = lakehouse_table_read('orders')
+clean = df.select('id')
+lakehouse_table_write(clean, lh_out, 'orders_clean')
+"""
+    out = build_notebook_lineage(
+        notebook_code=code,
+        dataset_name="ds",
+        table_name="orders_clean",
+        run_id="r1",
+        workspace_id="ws-1",
+        notebook_id="nb-1",
+    )
+    assert out["steps"]
+    assert "validation" in out
+    assert "records" in out
+    assert "summary_markdown" in out
 
 
-def test_top_level_does_not_export_internal_drift_helpers() -> None:
+def test_lineage_record_identity_fields() -> None:
+    steps = [{"source": "a", "target": "b", "transformation": "join", "reason": "x", "source_type": "dataframe", "target_type": "dataframe", "confidence": "high"}]
+    rows = build_lineage_record_from_steps("ds", steps, workspace_id="ws-1", notebook_id="nb-1")
+    assert rows[0]["workspace_id"] == "ws-1"
+    assert rows[0]["notebook_id"] == "nb-1"
+
+
+def test_helpers_not_top_level_exports() -> None:
     import fabricops_kit as fk
 
-    assert callable(fk.build_drift_evidence_record)
-    assert not hasattr(fk, "UnsupportedDataFrameEngineError")
-    assert not hasattr(fk, "detect_dataframe_engine")
+    assert callable(fk.build_notebook_lineage)
+    assert not hasattr(fk, "scan_notebook_lineage")
+    assert not hasattr(fk, "validate_lineage_steps")
+    assert not hasattr(fk, "build_lineage_record_from_steps")
 
 
 def test_build_schema_snapshot_pandas_engine() -> None:
@@ -74,10 +88,3 @@ def test_metadata_evidence_constants_and_helpers() -> None:
     )
     assert row["workspace_id"] == "ws-1"
     assert row["notebook_id"] == "nb-1"
-
-
-def test_lineage_record_includes_workspace_and_notebook_ids() -> None:
-    steps = [{"source": "a", "target": "b", "transformation": "join", "reason": "x", "source_type": "dataframe", "target_type": "dataframe", "confidence": "high"}]
-    rows = build_lineage_record_from_steps("ds", steps, workspace_id="ws-1", notebook_id="nb-1")
-    assert rows[0]["workspace_id"] == "ws-1"
-    assert rows[0]["notebook_id"] == "nb-1"
