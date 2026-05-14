@@ -423,6 +423,18 @@
       "template_segment": "Not mapped in template flow segment"
     },
     {
+      "module_name": "data_quality",
+      "visibility": "public",
+      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "get_dq_rule_review_results",
+      "callable_visibility": "public",
+      "callable_role": "essential",
+      "template_notebook": "02_ex",
+      "template_segment": "Segment 3: AI-assisted drafting (advisory only)"
+    },
+    {
       "module_name": "environment_config",
       "visibility": "public",
       "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",

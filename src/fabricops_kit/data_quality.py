@@ -915,8 +915,8 @@ def run_dq_rule_review_widget(
     table_name: str,
     environment_name: str | None = None,
     dataset_name: str | None = None,
-) -> dict[str, list[dict[str, Any]]]:
-    """Run the canonical DQ review widget and return approved/rejected rule payloads.
+) -> None:
+    """Launch the canonical DQ review widget for analyst validation.
 
     Parameters
     ----------
@@ -931,11 +931,41 @@ def run_dq_rule_review_widget(
 
     Returns
     -------
-    dict[str, list[dict[str, Any]]]
-        ``{"approved_rules": [...], "rejected_rules": [...]}`` with metadata keys
-        attached when environment and dataset are provided.
+    None
+        Displays the review widget and stores user actions in module-level state.
+
+    Notes
+    -----
+    This function intentionally does not return review outcomes synchronously.
+    In notebook workflows, call :func:`get_dq_rule_review_results` after the
+    analyst has completed widget interactions.
     """
     review_dq_rules(candidate_rules, table_name=table_name)
+
+
+def get_dq_rule_review_results(
+    *,
+    table_name: str,
+    environment_name: str | None = None,
+    dataset_name: str | None = None,
+) -> dict[str, list[dict[str, Any]]]:
+    """Collect current approved/rejected DQ review results from widget state.
+
+    Parameters
+    ----------
+    table_name : str
+        Logical table name used for governed DQ metadata.
+    environment_name : str | None, optional
+        Optional environment key attached to returned rules.
+    dataset_name : str | None, optional
+        Optional dataset key attached to returned rules.
+
+    Returns
+    -------
+    dict[str, list[dict[str, Any]]]
+        ``{"approved_rules": [...], "rejected_rules": [...]}`` reflecting
+        current widget-reviewed state.
+    """
     approved = list(APPROVED_RULES_FROM_WIDGET)
     rejected = list(REJECTED_RULES_FROM_WIDGET)
     if environment_name and dataset_name:
