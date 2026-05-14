@@ -1,6 +1,6 @@
 # FabricOps Starter Kit
 
-A practical starter kit for building governed, quality-checked, AI-ready notebooks in Microsoft Fabric.
+FabricOps Starter Kit helps teams run governed Fabric notebook workflows by turning governance intent, profiling evidence, DQ rules, pipeline outputs, and lineage into a metadata-backed data contract.
 
 <div align="center">
 
@@ -24,7 +24,7 @@ A practical starter kit for building governed, quality-checked, AI-ready noteboo
 
 ![Before vs after using the starter kit](docs/assets/before-after.png)
 
-Fabric notebooks often begin as analysis work and then become recurring operations. This starter kit gives that transition a reusable structure for configuration, checks, governance review, lineage, and handover.
+Fabric notebooks often begin as analysis work and then become recurring operations. This starter kit gives teams a role-based operating model where governance is defined once, analysts validate DQ rule validity, engineers enforce approved metadata, and handover/data contract outputs are generated from metadata and evidence.
 
 Read more: [Quick Start](https://voycepeh.github.io/FabricOps-Starter-Kit/quick-start/) · [Lifecycle Operating Model](https://voycepeh.github.io/FabricOps-Starter-Kit/lifecycle-operating-model/) · [Functions](https://voycepeh.github.io/FabricOps-Starter-Kit/reference/) · [Data contracts](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/)
 
@@ -32,7 +32,7 @@ Read more: [Quick Start](https://voycepeh.github.io/FabricOps-Starter-Kit/quick-
 
 ![Benefits of the FabricOps Starter Kit](docs/assets/framework-benefits.png)
 
-Reusable templates and callable functions for building governed Fabric notebook pipelines without rebuilding the same setup, profiling, quality, contract, lineage, and handover patterns each time.
+Reusable templates and callable functions for a runnable end-to-end flow: 01 governance agreement, 02 profiling/DQ validation, 03 pipeline enforcement, and handover/data contract export.
 
 <div align="center">
 
@@ -69,11 +69,11 @@ The quality-check model is inspired by DQX-style reusable rule definitions and r
 
 AI may help suggest rules, humans approve them, and pipeline notebooks enforce them.
 
-### AI-in-the-loop
+### AI-assisted with human approval
 
-AI helps with repeated governance and engineering work such as metadata summaries, DQ rule suggestions, sensitivity classification suggestions, lineage drafting, and handover notes.
-
-AI does not replace approval. Governance owners, data stewards, and engineers remain responsible for approved usage, classifications, quality rules, and production release decisions.
+- Step 2 Governance: AI suggests, human approves.
+- Step 4 DQ: AI applies/suggests, human validates rule validity.
+- Step 6 Handover: AI generates from approved metadata and evidence.
 
 ### Handover-first
 
