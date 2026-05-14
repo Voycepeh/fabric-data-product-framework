@@ -1,86 +1,122 @@
-# `00_env_config`
+# 00_env_config
 
-Shared environment bootstrap and validation before exploration or pipeline notebooks run.
+`00_env_config` is the shared runtime bootstrap for the full FabricOps notebook chain.
 
 > <a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb">Open template notebook</a>
 
-> `00_env_config` is shared setup.
+## Purpose
 
-## Segment 1: Explain the shared environment role
+`00_env_config` is the first notebook loaded by downstream notebooks and centralizes common setup so the rest of the flow stays clean, repeatable, and run-all-safe.
 
-Describe what this shared config notebook sets up and what downstream exploration or pipeline notebooks depend on.
+Downstream notebooks should start with:
 
-## Segment 2: Define environment targets and notebook policy
+```python
+%run 00_env_config
+```
 
-<table class="reference-function-table notebook-structure-function-table">
-  <thead>
-    <tr>
-      <th>Function / class</th>
-      <th>Module</th>
-      <th>Purpose</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/Housepath/"><code>Housepath</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a></td>
-      <td data-label="Purpose">Fabric lakehouse or warehouse connection details.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/load_fabric_config/"><code>load_fabric_config</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Purpose">Validate and return a user-supplied framework configuration.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/get_path/"><code>get_path</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Purpose">Resolve a configured Fabric path for an environment and target.</td>
-    </tr>
-  </tbody>
-</table>
+After that, `01_dsa`, `02_ex`, and `03_pc` notebooks share the same runtime context, paths, prompts, classes, helper functions, and validation checks.
 
-## Segment 3: Set AI, quality, governance, and lineage defaults
+## How it fits the notebook lifecycle
 
-## Segment 4: Assemble and validate framework config
+The parent [Notebook Structure](../notebook-structure.md) page remains the high-level source of truth for notebook roles.
 
-<table class="reference-function-table notebook-structure-function-table">
-  <thead>
-    <tr>
-      <th>Function / class</th>
-      <th>Module</th>
-      <th>Purpose</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/load_fabric_config/"><code>load_fabric_config</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Purpose">Validate and return a user-supplied framework configuration.</td>
-    </tr>
-  </tbody>
-</table>
+`00_env_config` implements **Step 2: Config** in the delivery flow and prepares runtime state for:
 
-## Segment 5: Run startup checks and show resolved paths
+- ingestion
+- exploration and profiling
+- transformation
+- standardization
+- output publishing
+- metadata capture
+- lineage capture
+- handover summaries
 
-<table class="reference-function-table notebook-structure-function-table">
-  <thead>
-    <tr>
-      <th>Function / class</th>
-      <th>Module</th>
-      <th>Purpose</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/setup_fabricops_notebook/"><code>setup_fabricops_notebook</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Purpose">Run consolidated FabricOps startup for exploration and pipeline notebooks.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/get_path/"><code>get_path</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Purpose">Resolve a configured Fabric path for an environment and target.</td>
-    </tr>
-  </tbody>
-</table>
+`02_ex` explains the **why** through profiling and evidence.
+`03_pc` enforces the approved **what**.
+`00_env_config` gives both notebooks the same shared runtime foundation.
 
+## What belongs in 00_env_config
+
+1. **Environment and path registry**
+   - dev/prod or sandbox/prod environment setup
+   - Source, Unified, Product, Metadata, and Warehouse targets
+   - guardrails against accidental cross-environment leakage
+
+2. **Shared classes and config objects**
+   - `Housepath` or equivalent path object
+   - environment and target registry objects
+   - notebook naming rules
+   - runtime context object
+   - technical/audit column standards
+   - metadata table name defaults
+
+3. **Shared variables**
+   - `ENV`
+   - `AGREEMENT_ID`
+   - `SOURCE_LAYER`
+   - `TARGET_LAYER`
+   - `RUN_ID`
+   - `RUN_TIMESTAMP`
+   - `AI_ENABLED`
+   - `VALIDATION_MODE`
+   - default metadata table names
+   - default output naming conventions
+
+4. **Shared utility functions**
+   - `get_path`
+   - lakehouse read/write helpers
+   - warehouse read/write helpers
+   - metadata logging helpers
+   - datetime cleaning helpers
+   - technical column helpers
+   - transformation summary helpers
+   - validation helpers
+
+5. **AI prompt registry**
+   - business context interpretation prompt
+   - DQ rule suggestion prompt
+   - DQ rule review prompt
+   - governance/sensitivity classification prompt
+   - metadata/profile explanation prompt
+   - lineage summary prompt
+   - handover summary prompt
+
+6. **Startup validation / fail-fast tests**
+   - required imports
+   - Fabric runtime availability
+   - `notebookutils` availability where used
+   - required parameters/widgets
+   - notebook naming convention
+   - configured environment exists
+   - configured source/unified/product/metadata targets exist
+   - no cross-environment target mismatch
+   - metadata table names are configured
+   - Fabric AI function readiness when `AI_ENABLED=True`
+
+## What does not belong in 00_env_config
+
+- dataset-specific transformation logic
+- one-off exploration cells
+- business-rule enforcement that belongs in `03_pc`
+- agreement approval content that belongs in `01_dsa`
+- source-specific profiling commentary that belongs in `02_ex`
+
+## Expected usage
+
+```python
+%run 00_env_config
+
+get_path("source")
+lakehouse_table_read("source", "sales.orders")
+check_naming_convention("02_ex_customer_orders")
+initialize_fabricops_runtime()
+AI_PROMPTS["dq_rule_suggestion"]
+```
+
+## Maintenance rules
+
+- Edit once per environment/workspace.
+- Keep placeholders in public templates.
+- Do not commit real workspace IDs, lakehouse IDs, warehouse IDs, or internal names.
+- Keep dev/sandbox configuration separate from prod.
+- If `00_env_config` passes startup validation, downstream notebooks can assume shared runtime setup is ready.
