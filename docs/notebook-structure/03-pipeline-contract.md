@@ -154,24 +154,24 @@ Pipeline notebook flow for deterministic enforcement and controlled publishing.
       <td data-label="Purpose">Summarize schema, partition, and profile drift outcomes into one decision.</td>
     </tr>
     <tr>
-      <td data-label="Function / class"><a href="../../api/reference/classify_columns/"><code>classify_columns</code></a></td>
+      <td data-label="Function / class"><a href="../../api/reference/prepare_governance_input/"><code>prepare_governance_input</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a></td>
-      <td data-label="Purpose">Classify multiple columns and return normalized governance suggestions.</td>
+      <td data-label="Purpose">Join approved business context into profile rows for governance AI suggestions.</td>
     </tr>
     <tr>
-      <td data-label="Function / class"><a href="../../api/reference/build_governance_classification_records/"><code>build_governance_classification_records</code></a></td>
+      <td data-label="Function / class"><a href="../../api/reference/write_governance/"><code>write_governance</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a></td>
-      <td data-label="Purpose">Build metadata-ready governance classification records from column suggestions.</td>
+      <td data-label="Purpose">Persist approved governance rows to metadata table.</td>
     </tr>
     <tr>
-      <td data-label="Function / class"><a href="../../api/reference/write_governance_classifications/"><code>write_governance_classifications</code></a></td>
+      <td data-label="Function / class"><a href="../../api/reference/write_governance/"><code>write_governance</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a></td>
-      <td data-label="Purpose">Persist governance classifications to a metadata destination.</td>
+      <td data-label="Purpose">Persist approved governance rows to metadata table.</td>
     </tr>
     <tr>
-      <td data-label="Function / class"><a href="../../api/reference/summarize_governance_classifications/"><code>summarize_governance_classifications</code></a></td>
+      <td data-label="Function / class"><a href="../../api/reference/load_governance/"><code>load_governance</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a></td>
-      <td data-label="Purpose">Summarize governance classification outputs into review-friendly counts.</td>
+      <td data-label="Purpose">Load approved governance metadata as read-only context.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../api/reference/build_lineage_records/"><code>build_lineage_records</code></a></td>
