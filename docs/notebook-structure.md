@@ -50,6 +50,7 @@ Environment Workspace (Sandbox / Dev-Test / Prod)
 ## Notebook details
 
 - [`00_env_config`](notebook-structure/00-env-config.md)
+- [`01_data_sharing_agreement_<agreement>`](notebook-structure/01-data-sharing-agreement.md)
 - [`02_ex_<agreement>_<topic>`](notebook-structure/02-exploration.md)
 - [`03_pc_<agreement>_<pipeline>`](notebook-structure/03-pipeline-contract.md)
 
