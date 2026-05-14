@@ -8,17 +8,6 @@ FabricOps Starter Kit helps teams run governed Fabric notebook workflows by turn
 
 </div>
 
-## Start here
-
-| Need | Go to |
-| --- | --- |
-| Understand the full workflow | [Lifecycle Operating Model](https://voycepeh.github.io/FabricOps-Starter-Kit/lifecycle-operating-model/) |
-| Run the starter kit quickly | [Quick Start](https://voycepeh.github.io/FabricOps-Starter-Kit/quick-start/) |
-| Understand notebook naming and structure | [Notebook Structure](https://voycepeh.github.io/FabricOps-Starter-Kit/notebook-structure/) |
-| Understand metadata and data contracts | [Metadata and Contracts](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/) |
-| Use AI to suggest data quality rules | [AI-Assisted Data Quality](https://voycepeh.github.io/FabricOps-Starter-Kit/data-quality-rules-system/) |
-| Find reusable callable functions | [Functions](https://voycepeh.github.io/FabricOps-Starter-Kit/reference/) |
-| Install the wheel in Fabric | [Install in Fabric](https://voycepeh.github.io/FabricOps-Starter-Kit/setup/fabric-wheel-install/) |
 
 ## Why this starter kit exists
 
