@@ -4,60 +4,50 @@ Pipeline notebook flow for deterministic enforcement and controlled publishing.
 
 > <a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb">Open template notebook</a>
 
-`03_pc` is currently **parameter-driven**. The pipeline "contract" is represented by notebook parameters plus approved metadata tables (especially approved DQ metadata). This notebook does not run AI suggestion or human approval widgets.
+`03_pc` is parameter-driven. The contract is represented by notebook parameters and approved metadata tables. This notebook enforces approved DQ rules and canonical technical/audit columns; it does not include AI suggestion flows, approval widgets, or governance classification generation.
 
-## Segment 1: Load shared config and runtime context
+## 1. Runtime setup and pipeline parameters
 
-- Load `00_env_config`.
-- Import notebook-safe FabricOps functions from `fabricops_kit`.
-- Define pipeline parameters:
-  - `ENV_NAME`, `SOURCE_KIND`, `TARGET_KIND`
-  - `SOURCE_LAYER`, `TARGET_LAYER`
-  - `SOURCE_TABLE`, `TARGET_TABLE`, `DQ_TABLE_NAME`
-  - `DATASET_NAME`, `PIPELINE_NAME`, `WRITE_MODE`
-  - `REQUIRED_SOURCE_COLUMNS`, `BUSINESS_KEYS`, `RUN_ID`
+- Load `00_env_config` and import notebook-safe functions from `fabricops_kit`.
+- Define canonical runtime parameters (`ENV_NAME`, source/target settings, `PIPELINE_NAME`, `RUN_ID`, `REQUIRED_SOURCE_COLUMNS`, `BUSINESS_KEYS`, `DRIFT_MODE`).
 - Load Fabric config with `load_fabric_config`.
-- Resolve source/target/metadata paths with `get_path`.
+- Resolve `source_path`, `target_path`, and `metadata_path` with `get_path`.
 
-## Segment 2: Load source data and run schema fail-fast
+## 2. Load agreement context and source data
 
-- Read source using `lakehouse_table_read` or `warehouse_read`.
-- Validate required source columns with simple notebook code.
+- Select agreement context with `load_agreements`, `select_agreement`, `get_selected_agreement`.
+- Register notebook run context with `register_current_notebook`.
+- Read source data via `lakehouse_table_read` or `warehouse_read`.
 
-## Segment 3: Load approved active DQ rules from metadata
+## 3. Source evidence and guardrails
 
-- Load approved DQ metadata using the metadata table pattern (`METADATA_DQ_RULES`).
-- Keep enforcement deterministic and metadata-driven.
+- Validate required source columns (fail-fast notebook code).
+- Build source profile evidence via `profile_dataframe`.
+- Run drift checks every run: `check_schema_drift`, `check_partition_drift`, `check_profile_drift`.
+- Summarize drift via `summarize_drift_results`.
+- Apply configurable drift action through `DRIFT_MODE` (`warn` or `fail`).
 
-## Segment 4: Apply deterministic transformation (editable)
+## 4. Deterministic transformation and technical columns
 
-- Apply deterministic transformation logic in one clearly marked editable cell.
-- No AI-generated rules, labels, or governance suggestions are proposed here.
-
-## Segment 5: Standardize technical/audit columns, run DQ, publish evidence, then assert
-
+- Apply deterministic transformation logic in the editable transformation block.
 - Apply canonical technical/audit enrichment with `standardize_output_columns`.
+
+## 5. DQ enforcement and evidence materialization
+
+- Load approved DQ metadata from `METADATA_DQ_RULES`.
 - Enforce approved DQ rules with `enforce_dq_rules`.
-- Split output from DQ result:
-  - `dq.valid_rows`
-  - `dq.quarantine_rows`
-  - `dq.failure_rows`
-  - `dq.rule_results`
-- Materialize evidence before pass/fail assertion:
-  - write valid rows
-  - write quarantine rows
-  - write DQ failure evidence
-  - write DQ rule results
-- Call `assert_dq_passed` **only after** evidence writes complete.
+- Split DQ output into `dq.valid_rows`, `dq.quarantine_rows`, `dq.failure_rows`, and `dq.rule_results`.
+- Write DQ failure evidence and DQ rule results to `metadata_path`.
+- Call `assert_dq_passed` only after DQ evidence is materialized.
 
-## Optional evidence sections
+## 6. Publish outputs
 
-- Optional drift/profile/lineage/run summary sections can appear at the end and should use existing FabricOps functions only.
-- End with a compact final run summary.
+- Publish valid rows to target table.
+- Publish quarantine rows to `${TARGET_TABLE}_QUARANTINE`.
+- Use `lakehouse_table_write` or `warehouse_write` depending on target kind.
 
-## Scope guardrails for `03_pc`
+## 7. Lineage and run summary
 
-- Enforce approved metadata and approved DQ rules only.
-- Do not invent new contract-loading helpers.
-- Do not add `load_pipeline_contract`, `validate_output_contract`, or equivalent new abstractions.
-- AI suggestion and approval flows belong in `02_ex` or `01` agreement notebooks, not `03_pc`.
+- Build lineage evidence with `build_lineage_records` and `build_lineage_handover_markdown`.
+- Build and render run summary with `build_run_summary` and `render_run_summary_markdown`.
+- End with a compact handover summary.
