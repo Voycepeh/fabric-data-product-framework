@@ -25,8 +25,8 @@ Want to try the workflow immediately? Import the example one-notebook demo into 
 | 1. Source data | Input | Start from the raw dataframe or source table. | Source dataframe / table |
 | 2. Profile data | Exploration notebook (`02_ex`) | Create profile metadata such as nulls, distinct values, ranges, and observed patterns. | Profile evidence |
 | 3. AI suggests DQ rules | Exploration notebook (`02_ex`) | Use AI to suggest candidate value-level DQ rules from the profile. | Candidate rule suggestions |
-| 4. Human review and approval | Human + exploration notebook (`02_ex`) | Review, edit, approve, or reject the suggested rules. | Approved rules |
-| 5. Store approved rules | Config or metadata | Persist approved rules so they become the governed source used by pipelines. | Approved rule metadata |
+| 4. Human review and proposal packaging | Human + exploration notebook (`02_ex`) | Review/edit suggestions and package rationale/evidence for governance review. | Proposal package |
+| 5. Governance approval and storage | `01_data_sharing_agreement` + metadata | Approve and persist governed rules so pipelines consume approved state only. | Approved rule metadata |
 | 6. Pipeline applies approved rules | Pipeline notebook (`03_pc`) | Load only approved active rules and enforce them deterministically on the incoming dataframe. | DQ evaluation result |
 | 7. Split results | Pipeline notebook (`03_pc`) | Passing rows continue; failed rows are quarantined with failure reasons. | Accepted rows + quarantined rows |
 
