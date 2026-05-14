@@ -1,5 +1,5 @@
 import fabricops_kit.data_governance as dg
-from fabricops_kit.data_governance import _approved_widget_rows, _coerce_row_dicts, load_governance
+from fabricops_kit.data_governance import _approved_widget_rows, _coerce_row_dicts, _undo_last_action, load_governance
 
 
 class RowLike:
@@ -62,3 +62,19 @@ def test_approved_widget_rows_merges_context_and_status():
     assert rows[0]["agreement_id"] == "A1"
     assert rows[0]["status"] == "approved"
     assert rows[0]["approved_by"] == "tester"
+
+
+def test_undo_last_action_tracks_approve_and_reject():
+    actions = ["approve", "reject"]
+    approved = [{"column_name": "a"}]
+    rejected = [{"column_name": "b"}]
+
+    assert _undo_last_action(actions, approved, rejected) is True
+    assert actions == ["approve"]
+    assert len(rejected) == 0
+
+    assert _undo_last_action(actions, approved, rejected) is True
+    assert actions == []
+    assert len(approved) == 0
+
+    assert _undo_last_action(actions, approved, rejected) is False

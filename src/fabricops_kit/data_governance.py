@@ -141,15 +141,9 @@ def review_governance(suggestions: list[dict], environment_name: str, dataset_na
         load()
 
     def on_undo(_):
-        if not action_history:
-            return
-        last = action_history.pop()
-        if last == "approve" and _WIDGET_APPROVED_ROWS:
-            _WIDGET_APPROVED_ROWS.pop()
-        elif last == "reject" and _WIDGET_REJECTED_ROWS:
-            _WIDGET_REJECTED_ROWS.pop()
-        idx["i"] = max(0, idx["i"] - 1)
-        load()
+        if _undo_last_action(action_history, _WIDGET_APPROVED_ROWS, _WIDGET_REJECTED_ROWS):
+            idx["i"] = max(0, idx["i"] - 1)
+            load()
 
     b1.on_click(on_approve)
     b2.on_click(on_reject)
@@ -184,6 +178,20 @@ def _approved_widget_rows(agreement_context: dict[str, Any] | None = None, actio
         rows.append(merged)
     return rows
 
+
+
+def _undo_last_action(action_history: list[str], approved_rows: list[dict[str, Any]], rejected_rows: list[dict[str, Any]]) -> bool:
+    """Undo the most recent governance review action in widget state."""
+    if not action_history:
+        return False
+    last = action_history.pop()
+    if last == "approve" and approved_rows:
+        approved_rows.pop()
+        return True
+    if last == "reject" and rejected_rows:
+        rejected_rows.pop()
+        return True
+    return False
 
 def write_governance(
     spark,
