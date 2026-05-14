@@ -1,6 +1,7 @@
 """Public notebook-friendly entrypoints for the FabricOps Starter Kit."""
 
 from .drift import build_drift_evidence_record, check_partition_drift, check_profile_drift, check_schema_drift, summarize_drift_results
+from .runtime import get_current_notebook_identity
 from .config import (
     get_path,
     load_fabric_config,
@@ -23,7 +24,6 @@ from .data_lineage import (
     build_lineage_summary_markdown,
     build_lineage_record_from_steps,
     build_lineage_records,
-    enrich_lineage_steps_with_ai,
     build_top_down_lineage_layout,
     plot_lineage_steps,
     scan_notebook_cells,
@@ -153,6 +153,7 @@ __all__ = [
     "check_profile_drift",
     "summarize_drift_results",
     "build_drift_evidence_record",
+    "get_current_notebook_identity",
     "COLUMN_BUSINESS_CONTEXT_FROM_WIDGET",
     "REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET",
     "prepare_business_context_profile_input",
@@ -175,7 +176,6 @@ __all__ = [
     "write_column_governance_context",
     "build_lineage_records",
     "build_lineage_record_from_steps",
-    "enrich_lineage_steps_with_ai",
     "scan_notebook_lineage",
     "scan_notebook_cells",
     "validate_lineage_steps",

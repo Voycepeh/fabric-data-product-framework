@@ -747,12 +747,16 @@ def summarize_drift_results(schema_drift_result: dict | None = None, partition_d
     }
 
 
-def build_drift_evidence_record(*, dataset_name: str, table_name: str, run_id: str | None, drift_type: str, result: dict) -> dict:
+def build_drift_evidence_record(*, dataset_name: str, table_name: str, run_id: str | None, drift_type: str, result: dict, workspace_id: str | None = None, workspace_name: str | None = None, notebook_id: str | None = None, notebook_name: str | None = None) -> dict:
     """Build a metadata-ready drift evidence record for schema/profile/partition checks."""
     return {
         "dataset_name": dataset_name,
         "table_name": table_name,
         "run_id": run_id,
+        "workspace_id": workspace_id,
+        "workspace_name": workspace_name,
+        "notebook_id": notebook_id,
+        "notebook_name": notebook_name,
         "drift_type": drift_type,
         "status": str(result.get("status", "unknown")),
         "can_continue": bool(result.get("can_continue", True)),

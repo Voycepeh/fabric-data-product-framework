@@ -25,12 +25,16 @@ def default_evidence_types() -> dict[str, str]:
     }
 
 
-def build_evidence_row(*, dataset_name: str, table_name: str, run_id: str | None, evidence_type: str, payload_json: str, created_at: str | None = None) -> dict:
+def build_evidence_row(*, dataset_name: str, table_name: str, run_id: str | None, evidence_type: str, payload_json: str, workspace_id: str | None = None, workspace_name: str | None = None, notebook_id: str | None = None, notebook_name: str | None = None, created_at: str | None = None) -> dict:
     """Build a lightweight metadata-ready evidence row."""
     return {
         "dataset_name": dataset_name,
         "table_name": table_name,
         "run_id": run_id,
+        "workspace_id": workspace_id,
+        "workspace_name": workspace_name,
+        "notebook_id": notebook_id,
+        "notebook_name": notebook_name,
         "evidence_type": evidence_type,
         "payload_json": payload_json,
         "created_at": created_at or _now_utc_iso(),

@@ -200,7 +200,7 @@ def validate_lineage_steps(lineage_steps: Any) -> dict[str, Any]:
     return {"is_valid": not errors, "errors": errors, "warnings": warnings, "review_required": review_required}
 
 
-def _build_lineage_record_from_steps(dataset_name: str, lineage_steps: list[dict], run_id: str | None = None, notebook_name: str | None = None, workspace_name: str | None = None, created_by: str | None = None) -> list[dict]:
+def _build_lineage_record_from_steps(dataset_name: str, lineage_steps: list[dict], run_id: str | None = None, notebook_name: str | None = None, workspace_name: str | None = None, workspace_id: str | None = None, notebook_id: str | None = None, created_by: str | None = None) -> list[dict]:
     """Create metadata-ready lineage records from validated lineage steps.
 
     Parameters
@@ -232,10 +232,10 @@ def _build_lineage_record_from_steps(dataset_name: str, lineage_steps: list[dict
     if not v["is_valid"]:
         raise ValueError(f"Invalid lineage_steps: {v['errors']}")
     ts = datetime.now(timezone.utc).isoformat()
-    return [{"dataset_name": dataset_name, "step_number": i, **s, "run_id": run_id, "notebook_name": notebook_name, "workspace_name": workspace_name, "created_by": created_by, "created_ts": ts} for i, s in enumerate(lineage_steps, 1)]
+    return [{"dataset_name": dataset_name, "step_number": i, **s, "run_id": run_id, "workspace_id": workspace_id, "workspace_name": workspace_name, "notebook_id": notebook_id, "notebook_name": notebook_name, "created_by": created_by, "created_ts": ts} for i, s in enumerate(lineage_steps, 1)]
 
 
-def build_lineage_record_from_steps(dataset_name: str, lineage_steps: list[dict], run_id: str | None = None, notebook_name: str | None = None, workspace_name: str | None = None, created_by: str | None = None) -> list[dict]:
+def build_lineage_record_from_steps(dataset_name: str, lineage_steps: list[dict], run_id: str | None = None, notebook_name: str | None = None, workspace_name: str | None = None, workspace_id: str | None = None, notebook_id: str | None = None, created_by: str | None = None) -> list[dict]:
     """Build metadata-ready lineage rows from validated lineage steps.
 
     Parameters
@@ -258,7 +258,7 @@ def build_lineage_record_from_steps(dataset_name: str, lineage_steps: list[dict]
     list of dict
         Lineage rows suitable for metadata persistence.
     """
-    return _build_lineage_record_from_steps(dataset_name, lineage_steps, run_id=run_id, notebook_name=notebook_name, workspace_name=workspace_name, created_by=created_by)
+    return _build_lineage_record_from_steps(dataset_name, lineage_steps, run_id=run_id, notebook_name=notebook_name, workspace_name=workspace_name, workspace_id=workspace_id, notebook_id=notebook_id, created_by=created_by)
 
 
 def build_lineage_records(*, dataset_name: str, run_id: str, source_tables: list[str], target_table: str, transformation_steps: list[dict]) -> list[dict]:
