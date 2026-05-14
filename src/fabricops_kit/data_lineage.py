@@ -1,4 +1,4 @@
-"""Notebook lineage utilities: deterministic scan, optional AI enrichment, validation, records, and plotting."""
+"""Notebook lineage helpers for deterministic parsing and metadata-ready evidence."""
 from __future__ import annotations
 import ast
 from datetime import datetime, timezone
@@ -146,6 +146,24 @@ def _enrich_lineage_steps_with_ai(lineage_steps: list[dict[str, Any]], ai_helper
     return {"steps": ai_helper(lineage_steps) or lineage_steps, "ai_used": True, "fallback_prompt": "", "notes": "AI enrichment applied."}
 
 
+def enrich_lineage_steps_with_ai(lineage_steps: list[dict[str, Any]], ai_helper: Any | None = None) -> dict[str, Any]:
+    """Public wrapper for optional AI enrichment of deterministic lineage steps.
+
+    Parameters
+    ----------
+    lineage_steps : list of dict of str to Any
+        Deterministic lineage step dictionaries.
+    ai_helper : Any or None, default=None
+        Optional callable that returns enriched lineage steps.
+
+    Returns
+    -------
+    dict of str to Any
+        Enrichment payload containing steps, AI usage state, and review notes.
+    """
+    return _enrich_lineage_steps_with_ai(lineage_steps, ai_helper=ai_helper)
+
+
 def validate_lineage_steps(lineage_steps: Any) -> dict[str, Any]:
     """Validate lineage step structure and flag records requiring human review.
 
@@ -215,6 +233,32 @@ def _build_lineage_record_from_steps(dataset_name: str, lineage_steps: list[dict
         raise ValueError(f"Invalid lineage_steps: {v['errors']}")
     ts = datetime.now(timezone.utc).isoformat()
     return [{"dataset_name": dataset_name, "step_number": i, **s, "run_id": run_id, "notebook_name": notebook_name, "workspace_name": workspace_name, "created_by": created_by, "created_ts": ts} for i, s in enumerate(lineage_steps, 1)]
+
+
+def build_lineage_record_from_steps(dataset_name: str, lineage_steps: list[dict], run_id: str | None = None, notebook_name: str | None = None, workspace_name: str | None = None, created_by: str | None = None) -> list[dict]:
+    """Build metadata-ready lineage rows from validated lineage steps.
+
+    Parameters
+    ----------
+    dataset_name : str
+        Dataset identifier associated with the lineage rows.
+    lineage_steps : list of dict
+        Validated lineage step dictionaries.
+    run_id : str or None, default=None
+        Optional run identifier.
+    notebook_name : str or None, default=None
+        Optional notebook name.
+    workspace_name : str or None, default=None
+        Optional workspace display name.
+    created_by : str or None, default=None
+        Optional creator identity.
+
+    Returns
+    -------
+    list of dict
+        Lineage rows suitable for metadata persistence.
+    """
+    return _build_lineage_record_from_steps(dataset_name, lineage_steps, run_id=run_id, notebook_name=notebook_name, workspace_name=workspace_name, created_by=created_by)
 
 
 def build_lineage_records(*, dataset_name: str, run_id: str, source_tables: list[str], target_table: str, transformation_steps: list[dict]) -> list[dict]:
@@ -292,8 +336,8 @@ def plot_lineage_steps(lineage_steps_or_record, title: str | None = None):
     return fig
 
 
-def build_lineage_handover_markdown(result: dict[str, Any]) -> str:
-    """Create a concise markdown handover summary from lineage execution results.
+def build_lineage_summary_markdown(result: dict[str, Any]) -> str:
+    """Create a concise markdown lineage summary from lineage execution results.
 
     Parameters
     ----------
@@ -305,4 +349,9 @@ def build_lineage_handover_markdown(result: dict[str, Any]) -> str:
     str
         Markdown summary with step count, AI usage, and review requirement.
     """
-    return f"## Lineage Handover\n- Steps: {len(result.get('steps', []))}\n- AI used: {result.get('ai_used')}\n- Review required: {result.get('review_required')}"
+    return f"## Lineage Summary\n- Steps: {len(result.get('steps', []))}\n- AI used: {result.get('ai_used')}\n- Review required: {result.get('review_required')}"
+
+
+def build_lineage_handover_markdown(result: dict[str, Any]) -> str:
+    """Backward-compatible alias for ``build_lineage_summary_markdown``."""
+    return build_lineage_summary_markdown(result)
