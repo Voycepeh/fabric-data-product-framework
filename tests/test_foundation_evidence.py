@@ -26,6 +26,7 @@ lakehouse_table_write(clean, lh_out, 'orders_clean')
     assert "validation" in out
     assert "records" in out
     assert "summary_markdown" in out
+    assert "figure" not in out
 
 
 def test_lineage_record_identity_fields() -> None:
@@ -42,6 +43,7 @@ def test_helpers_not_top_level_exports() -> None:
     assert not hasattr(fk, "scan_notebook_lineage")
     assert not hasattr(fk, "validate_lineage_steps")
     assert not hasattr(fk, "build_lineage_record_from_steps")
+    assert not hasattr(fk, "build_lineage_from_notebook_code")
 
 
 def test_build_schema_snapshot_pandas_engine() -> None:

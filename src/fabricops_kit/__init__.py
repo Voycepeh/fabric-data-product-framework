@@ -19,7 +19,6 @@ from .fabric_input_output import (
 )
 from .data_lineage import (
     build_notebook_lineage,
-    build_lineage_from_notebook_code,
 )
 from .data_governance import (
     build_governance_context,
@@ -165,7 +164,6 @@ __all__ = [
     "write_column_business_context",
     "write_column_governance_context",
     "build_notebook_lineage",
-    "build_lineage_from_notebook_code",
     "build_run_summary",
     "render_run_summary_markdown",
     "standardize_output_columns",
