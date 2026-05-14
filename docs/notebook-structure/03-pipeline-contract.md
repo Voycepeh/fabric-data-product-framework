@@ -4,195 +4,60 @@ Pipeline notebook flow for deterministic enforcement and controlled publishing.
 
 > <a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb">Open template notebook</a>
 
-> `03_pc` is deterministic pipeline enforcement.
+`03_pc` is currently **parameter-driven**. The pipeline "contract" is represented by notebook parameters plus approved metadata tables (especially approved DQ metadata). This notebook does not run AI suggestion or human approval widgets.
 
 ## Segment 1: Load shared config and runtime context
 
-<table class="reference-function-table notebook-structure-function-table">
-  <thead>
-    <tr>
-      <th>Function / class</th>
-      <th>Module</th>
-      <th>Purpose</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/setup_fabricops_notebook/"><code>setup_fabricops_notebook</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Purpose">Run consolidated FabricOps startup for exploration and pipeline notebooks.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/load_fabric_config/"><code>load_fabric_config</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Purpose">Validate and return a user-supplied framework configuration.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/get_path/"><code>get_path</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Purpose">Resolve a configured Fabric path for an environment and target.</td>
-    </tr>
-  </tbody>
-</table>
+- Load `00_env_config`.
+- Import notebook-safe FabricOps functions from `fabricops_kit`.
+- Define pipeline parameters:
+  - `ENV_NAME`, `SOURCE_KIND`, `TARGET_KIND`
+  - `SOURCE_LAYER`, `TARGET_LAYER`
+  - `SOURCE_TABLE`, `TARGET_TABLE`, `DQ_TABLE_NAME`
+  - `DATASET_NAME`, `PIPELINE_NAME`, `WRITE_MODE`
+  - `REQUIRED_SOURCE_COLUMNS`, `BUSINESS_KEYS`, `RUN_ID`
+- Load Fabric config with `load_fabric_config`.
+- Resolve source/target/metadata paths with `get_path`.
 
-## Segment 2: Load source data and validate required columns
+## Segment 2: Load source data and run schema fail-fast
 
-<table class="reference-function-table notebook-structure-function-table">
-  <thead>
-    <tr>
-      <th>Function / class</th>
-      <th>Module</th>
-      <th>Purpose</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/lakehouse_table_read/"><code>lakehouse_table_read</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a></td>
-      <td data-label="Purpose">Read a Delta table from a Fabric lakehouse.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/warehouse_read/"><code>warehouse_read</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a></td>
-      <td data-label="Purpose">Read a table from a Microsoft Fabric warehouse.</td>
-    </tr>
-  </tbody>
-</table>
+- Read source using `lakehouse_table_read` or `warehouse_read`.
+- Validate required source columns with simple notebook code.
 
-## Segment 3: Transform and apply runtime standards
+## Segment 3: Load approved active DQ rules from metadata
 
-<table class="reference-function-table notebook-structure-function-table">
-  <thead>
-    <tr>
-      <th>Function / class</th>
-      <th>Module</th>
-      <th>Purpose</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/standardize_output_columns/"><code>standardize_output_columns</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/technical_columns/" title="Open technical_columns module page" aria-label="Open technical_columns module page">technical_columns</a></td>
-      <td data-label="Purpose">Apply canonical technical/audit enrichment in one notebook-facing wrapper.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/validate_dq_rules/"><code>validate_dq_rules</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
-      <td data-label="Purpose">Validate canonical DQ rules before enforcement.</td>
-    </tr>
-  </tbody>
-</table>
+- Load approved DQ metadata using the metadata table pattern (`METADATA_DQ_RULES`).
+- Keep enforcement deterministic and metadata-driven.
 
-## Segment 4: Run DQ, split outputs, and publish
+## Segment 4: Apply deterministic transformation (editable)
 
-<table class="reference-function-table notebook-structure-function-table">
-  <thead>
-    <tr>
-      <th>Function / class</th>
-      <th>Module</th>
-      <th>Purpose</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/enforce_dq_rules/"><code>enforce_dq_rules</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
-      <td data-label="Purpose">Run notebook-facing DQ rules and return a Spark DataFrame result.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/assert_dq_passed/"><code>assert_dq_passed</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
-      <td data-label="Purpose">Raise only after evidence materialization when error-severity rules fail.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/lakehouse_table_write/"><code>lakehouse_table_write</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a></td>
-      <td data-label="Purpose">Write a Spark DataFrame to a Fabric lakehouse Delta table.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/warehouse_write/"><code>warehouse_write</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a></td>
-      <td data-label="Purpose">Write a Spark DataFrame to a Microsoft Fabric warehouse table.</td>
-    </tr>
-  </tbody>
-</table>
+- Apply deterministic transformation logic in one clearly marked editable cell.
+- No AI-generated rules, labels, or governance suggestions are proposed here.
 
-## Optional profiling, drift, governance, lineage, and handover
+## Segment 5: Standardize technical/audit columns, run DQ, publish evidence, then assert
 
-<table class="reference-function-table notebook-structure-function-table">
-  <thead>
-    <tr>
-      <th>Function / class</th>
-      <th>Module</th>
-      <th>Purpose</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/profile_dataframe/"><code>profile_dataframe</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_profiling/" title="Open data_profiling module page" aria-label="Open data_profiling module page">data_profiling</a></td>
-      <td data-label="Purpose">Build canonical DQ-ready profiling rows from a Spark DataFrame.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/check_schema_drift/"><code>check_schema_drift</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_drift/" title="Open data_drift module page" aria-label="Open data_drift module page">data_drift</a></td>
-      <td data-label="Purpose">Compare a current dataframe schema against a baseline schema snapshot.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/check_partition_drift/"><code>check_partition_drift</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_drift/" title="Open data_drift module page" aria-label="Open data_drift module page">data_drift</a></td>
-      <td data-label="Purpose">Check partition-level drift using keys, partitions, and optional watermark baselines.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/check_profile_drift/"><code>check_profile_drift</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_drift/" title="Open data_drift module page" aria-label="Open data_drift module page">data_drift</a></td>
-      <td data-label="Purpose">Compare profile metrics against a baseline profile and drift thresholds.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/summarize_drift_results/"><code>summarize_drift_results</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_drift/" title="Open data_drift module page" aria-label="Open data_drift module page">data_drift</a></td>
-      <td data-label="Purpose">Summarize schema, partition, and profile drift outcomes into one decision.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/prepare_governance_input/"><code>prepare_governance_input</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a></td>
-      <td data-label="Purpose">Join approved business context into profile rows for governance AI suggestions.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/write_governance/"><code>write_governance</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a></td>
-      <td data-label="Purpose">Persist approved governance rows to metadata table.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/write_governance/"><code>write_governance</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a></td>
-      <td data-label="Purpose">Persist approved governance rows to metadata table.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/load_governance/"><code>load_governance</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_governance/" title="Open data_governance module page" aria-label="Open data_governance module page">data_governance</a></td>
-      <td data-label="Purpose">Load approved governance metadata as read-only context.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/build_lineage_records/"><code>build_lineage_records</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a></td>
-      <td data-label="Purpose">Build compact lineage records for downstream metadata sinks.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/build_lineage_handover_markdown/"><code>build_lineage_handover_markdown</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a></td>
-      <td data-label="Purpose">Create a concise markdown handover summary from lineage execution results.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/build_run_summary/"><code>build_run_summary</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/run_summary/" title="Open run_summary module page" aria-label="Open run_summary module page">run_summary</a></td>
-      <td data-label="Purpose">Build a handover-friendly summary for one data product run.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/render_run_summary_markdown/"><code>render_run_summary_markdown</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/run_summary/" title="Open run_summary module page" aria-label="Open run_summary module page">run_summary</a></td>
-      <td data-label="Purpose">Render a run summary dictionary into Markdown for handover notes.</td>
-    </tr>
-  </tbody>
-</table>
+- Apply canonical technical/audit enrichment with `standardize_output_columns`.
+- Enforce approved DQ rules with `enforce_dq_rules`.
+- Split output from DQ result:
+  - `dq.valid_rows`
+  - `dq.quarantine_rows`
+  - `dq.failure_rows`
+  - `dq.rule_results`
+- Materialize evidence before pass/fail assertion:
+  - write valid rows
+  - write quarantine rows
+  - write DQ failure evidence
+  - write DQ rule results
+- Call `assert_dq_passed` **only after** evidence writes complete.
 
+## Optional evidence sections
+
+- Optional drift/profile/lineage/run summary sections can appear at the end and should use existing FabricOps functions only.
+- End with a compact final run summary.
+
+## Scope guardrails for `03_pc`
+
+- Enforce approved metadata and approved DQ rules only.
+- Do not invent new contract-loading helpers.
+- Do not add `load_pipeline_contract`, `validate_output_contract`, or equivalent new abstractions.
+- AI suggestion and approval flows belong in `02_ex` or `01` agreement notebooks, not `03_pc`.
