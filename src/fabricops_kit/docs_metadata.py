@@ -107,6 +107,45 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [
         ],
     },
     {
+        "notebook_key": "01_data_agreement",
+        "notebook_label": "`01_data_sharing_agreement_<agreement>`",
+        "template_path": "templates/notebooks/01_data_agreement_template.ipynb",
+        "segment_intro": "Captures approved usage, business context, stewardship notes, DQ approvals, governance approvals, and agreement-level controls reused by exploration and pipeline notebooks.",
+        "segments": [
+            {
+                "title": "Segment 1: Capture agreement context and approved usage",
+                "symbols": [],
+            },
+            {
+                "title": "Segment 2: Prepare governance input from approved business context",
+                "symbols": [
+                    "prepare_governance_input",
+                    "build_governance_context",
+                ],
+            },
+            {
+                "title": "Segment 3: Suggest AI-assisted PII and sensitivity labels",
+                "symbols": [
+                    "suggest_pii_labels",
+                    "extract_pii_suggestions",
+                ],
+            },
+            {
+                "title": "Segment 4: Human review and approve governance controls",
+                "symbols": [
+                    "review_governance",
+                    "write_governance",
+                ],
+            },
+            {
+                "title": "Segment 5: Load approved governance metadata for downstream notebooks",
+                "symbols": [
+                    "load_governance",
+                ],
+            },
+        ],
+    },
+    {
         "notebook_key": "02_ex",
         "notebook_label": "`02_ex_<agreement>_<topic>`",
         "template_path": "templates/notebooks/02_ex_agreement_topic.ipynb",
