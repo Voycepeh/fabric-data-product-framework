@@ -1,138 +1,104 @@
 # `02_ex_<agreement>_<topic>`
 
-Exploration notebook flow used to profile source data and draft advisory AI outputs for human review.
+Exploration and proposal notebook for analyst/data scientist-led investigation of source data before governance approval and production enforcement.
 
 > <a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/02_ex_agreement_topic.ipynb">Open template notebook</a>
 
-> `02_ex` is AI-assisted exploration and human review.
+## Purpose
 
-## Segment 1: Load shared config and runtime
+`02_ex` is where analysts and data scientists explore source data, test shaping logic, and capture evidence that informs governance and pipeline contracts. It is intentionally iterative and analysis-first.
 
-<table class="reference-function-table notebook-structure-function-table">
-  <thead>
-    <tr>
-      <th>Function / class</th>
-      <th>Module</th>
-      <th>Purpose</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/setup_fabricops_notebook/"><code>setup_fabricops_notebook</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Purpose">Run consolidated FabricOps startup for exploration and pipeline notebooks.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/load_fabric_config/"><code>load_fabric_config</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Purpose">Validate and return a user-supplied framework configuration.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/get_path/"><code>get_path</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
-      <td data-label="Purpose">Resolve a configured Fabric path for an environment and target.</td>
-    </tr>
-  </tbody>
-</table>
+## Ownership
 
-## Segment 2: Profile source and capture evidence
+- Primary owner: Analyst / Data Scientist
+- Typical collaborators: Data steward, governance owner, data engineer
 
-<table class="reference-function-table notebook-structure-function-table">
-  <thead>
-    <tr>
-      <th>Function / class</th>
-      <th>Module</th>
-      <th>Purpose</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/seed_minimal_sample_source_table/"><code>seed_minimal_sample_source_table</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a></td>
-      <td data-label="Purpose">Create and persist deterministic demo rows into a sample source table.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/lakehouse_table_read/"><code>lakehouse_table_read</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a></td>
-      <td data-label="Purpose">Read a Delta table from a Fabric lakehouse.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/warehouse_read/"><code>warehouse_read</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a></td>
-      <td data-label="Purpose">Read a table from a Microsoft Fabric warehouse.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/profile_dataframe/"><code>profile_dataframe</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_profiling/" title="Open data_profiling module page" aria-label="Open data_profiling module page">data_profiling</a></td>
-      <td data-label="Purpose">Build canonical DQ-ready profiling rows from a Spark DataFrame.</td>
-    </tr>
-  </tbody>
-</table>
+## Naming convention
 
-## Segment 3: AI-assisted drafting (advisory only)
+- Notebook pattern: `02_ex_<agreement>_<topic>`
+- `<agreement>` maps to the governance agreement notebook (`01_data_sharing_agreement_<agreement>`)
+- `<topic>` describes the exploration question/domain focus
 
-<table class="reference-function-table notebook-structure-function-table">
-  <thead>
-    <tr>
-      <th>Function / class</th>
-      <th>Module</th>
-      <th>Purpose</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/draft_dq_rules/"><code>draft_dq_rules</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
-      <td data-label="Purpose">Draft candidate DQ rules from metadata profiles or raw DataFrame fallback.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/review_dq_rules/"><code>review_dq_rules</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
-      <td data-label="Purpose">Review AI-suggested DQ rules sequentially with explicit approve/reject decisions.</td>
-    </tr>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/write_dq_rules/"><code>write_dq_rules</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
-      <td data-label="Purpose">Validate, build, and persist approved DQ rules.</td>
-    </tr>
-  </tbody>
-</table>
+## What belongs in `02_ex`
 
-## Segment 4: Human review and write approved DQ rules
+- Source data profiling and discovery
+- Source quirk investigation and analyst observations
+- Exploratory transforms (joins, filters, mappings, derived fields, date/time logic, deduplication ideas)
+- AI-assisted DQ suggestion drafting (advisory)
+- AI-assisted classification/sensitivity candidate drafting (advisory)
+- Metadata evidence and rationale that informs governance updates and downstream pipeline decisions
 
-<table class="reference-function-table notebook-structure-function-table">
-  <thead>
-    <tr>
-      <th>Function / class</th>
-      <th>Module</th>
-      <th>Purpose</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/write_dq_rules/"><code>write_dq_rules</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a></td>
-      <td data-label="Purpose">Validate, build, and persist approved DQ rules.</td>
-    </tr>
-  </tbody>
-</table>
+## What does not belong in `02_ex`
 
-## Optional lineage notes
+- Governance approval authority
+- Final approval-state metadata ownership
+- Scheduled, run-all-safe production enforcement
+- Final deterministic production transformation contract
 
-<table class="reference-function-table notebook-structure-function-table">
-  <thead>
-    <tr>
-      <th>Function / class</th>
-      <th>Module</th>
-      <th>Purpose</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td data-label="Function / class"><a href="../../api/reference/build_lineage_from_notebook_code/"><code>build_lineage_from_notebook_code</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a></td>
-      <td data-label="Purpose">Scan, optionally enrich, and validate lineage from notebook source code.</td>
-    </tr>
-  </tbody>
-</table>
+`02_ex` does **not** approve governance controls and does **not** enforce approved DQ rules in production.
 
+## Recommended notebook flow
+
+1. **Introduction and scope**
+   - Agreement ID
+   - Topic
+   - Source being explored
+   - Question being answered
+   - Approved usage context from the data sharing agreement
+2. **Configuration and setup**
+   - Import shared config from `00_env_config`
+   - Validate notebook naming convention
+   - Resolve environment paths, lakehouse/warehouse names, and metadata targets
+3. **Data ingestion for exploration**
+   - Load source data
+   - Run basic count/schema checks
+   - Register or inspect source metadata where relevant
+4. **Data exploration and profiling**
+   - Profile source columns
+   - Inspect nulls, distinct counts, min/max, duplicates, distributions, sample records
+   - Capture analyst observations
+5. **Exploratory transforms**
+   - Test joins, filters, mappings, derived columns, date/time logic, deduplication logic, and other shaping ideas
+   - Mark exploratory logic clearly until promoted into pipeline contract execution
+6. **AI-assisted proposals**
+   - AI-assisted DQ suggestions
+   - AI-assisted classification/sensitivity suggestions
+   - AI-assisted summarisation of findings
+   - AI-assisted lineage notes when useful
+   - Clearly state AI output is advisory and requires human validation/approval
+7. **Findings and proposal**
+   - Freeze important findings
+   - Explain why downstream transformations or controls are needed
+   - Identify proposed metadata updates for `01_data_sharing_agreement`
+   - Identify proposed pipeline logic for `03_pc`
+8. **Handoff**
+   - Governance updates go to `01_data_sharing_agreement` for approval
+   - Approved rules/classifications are later consumed by `03_pc`
+   - Production transformation and enforcement belong in `03_pc`
+
+**Principle:** “02_ex is allowed to contain exploratory transformation logic, but final repeatable run-all-safe transformation logic belongs in 03_pc.”
+
+## AI boundary
+
+- AI suggestions in `02_ex` are advisory drafts, not approvals.
+- Human reviewers validate evidence and proposals before governance metadata is updated.
+- Governance control authority remains in `01_data_sharing_agreement`; execution enforcement remains in `03_pc`.
+
+## Handoff to `01_data_sharing_agreement` and `03_pc`
+
+- Promote validated governance proposals from `02_ex` into `01_data_sharing_agreement_<agreement>` for official approval/state management.
+- Promote approved transformation and enforcement requirements into `03_pc_<agreement>_<pipeline>` for deterministic scheduled execution.
+
+## Examples
+
+- Explore source null behaviors and propose candidate required-field rules for governance review.
+- Trial date standardization logic and document why a deterministic transform should be implemented in `03_pc`.
+- Use AI to suggest classification candidates, then record analyst rationale and hand off for governance approval.
+
+## Cross-links
+
+- [Canonical notebook structure](../notebook-structure.md)
+- [01 data sharing agreement role](../notebook-structure.md#notebook-roles-and-responsibilities)
+- [03 pipeline contract notebook](03-pipeline-contract.md)
+- [Data quality rules system](../data-quality-rules-system.md)
+- [Metadata and contracts](../metadata-and-contracts.md)
