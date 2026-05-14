@@ -7,10 +7,12 @@ def test_config_exposes_prompt_constants_and_ai_prompt_defaults():
     assert c.DEFAULT_BUSINESS_CONTEXT_PROMPT_TEMPLATE
     assert c.DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
     assert c.DEFAULT_GOVERNANCE_PERSONAL_IDENTIFIER_PROMPT_TEMPLATE
+    assert c.DEFAULT_GOVERNANCE_REVIEW_TEMPLATE
     cfg = c.AIPromptConfig()
     assert cfg.business_context_template == c.DEFAULT_BUSINESS_CONTEXT_PROMPT_TEMPLATE
     assert cfg.dq_rule_candidate_template == c.DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
     assert cfg.governance_personal_identifier_template == c.DEFAULT_GOVERNANCE_PERSONAL_IDENTIFIER_PROMPT_TEMPLATE
+    assert cfg.governance_review_template == c.DEFAULT_GOVERNANCE_REVIEW_TEMPLATE
 
 
 def test_modules_reference_config_prompt_defaults():

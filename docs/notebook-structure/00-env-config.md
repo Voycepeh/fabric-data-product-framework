@@ -15,6 +15,7 @@ Reusable behavior is imported from `src/fabricops_kit/` package modules.
 - Notebook naming policy (allowed prefixes)
 - Environment path registry values (as `Housepath` placeholders)
 - Framework config assembly (`PathConfig`, `NotebookRuntimeConfig`, `AIPromptConfig`, `FrameworkConfig`)
+- Environment-level AI prompt override cells that import package defaults
 - Startup bootstrap and smoke checks (`load_fabric_config`, `setup_fabricops_notebook`)
 
 ## What does not belong in 00_env_config
@@ -45,3 +46,11 @@ source_hp = get_path(ENV, "source", CONFIG)
 - Keep template defaults public-safe and placeholder-based.
 - Do not commit production identifiers or internal URLs.
 - Keep `00_env_config` singular per environment/workspace.
+
+
+## AI prompt override policy
+
+- Default AI prompt templates are defined in `src/fabricops_kit/config.py` as the package source of truth.
+- `00_env_config` imports those defaults and may override them for a specific environment/workspace.
+- Keep each prompt in a separate notebook section/cell so reviewers can safely inspect/edit one prompt at a time.
+- Downstream notebooks should read prompts from `CONFIG.ai_prompt_config` and must not hardcode prompt text.

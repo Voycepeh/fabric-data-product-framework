@@ -100,11 +100,7 @@ class AIPromptConfig:
     governance_personal_identifier_template: str = ""
     governance_candidate_template: str = ""
     handover_summary_template: str = ""
-    governance_review_template: str = (
-        "Use business_context={business_context}, approved_usage={approved_usage}, dataset_context={dataset_context}, "
-        "profile_context={profile_context}, glossary_context={glossary_context}, steward_notes={steward_notes}. "
-        "Return JSON rows with suggestion_type,target_column,approved_label,business_reason,evidence,confidence."
-    )
+    governance_review_template: str = ""
 
     def __post_init__(self) -> None:
         if not self.business_context_template:
@@ -117,6 +113,8 @@ class AIPromptConfig:
             object.__setattr__(self, "governance_candidate_template", DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE)
         if not self.handover_summary_template:
             object.__setattr__(self, "handover_summary_template", DEFAULT_HANDOVER_SUMMARY_TEMPLATE)
+        if not self.governance_review_template:
+            object.__setattr__(self, "governance_review_template", DEFAULT_GOVERNANCE_REVIEW_TEMPLATE)
         for label, value in {
             "business_context_template": self.business_context_template,
             "dq_rule_candidate_template": self.dq_rule_candidate_template,
@@ -236,6 +234,12 @@ DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE = (
     "Dataset name: {dataset_name}. Business context: {business_context}. "
     "Row profile fields: table_name={table_name}, column_name={column_name}, data_type={data_type}, profile_summary={profile_summary}."
 )
+DEFAULT_GOVERNANCE_REVIEW_TEMPLATE = (
+    "Use business_context={business_context}, approved_usage={approved_usage}, dataset_context={dataset_context}, "
+    "profile_context={profile_context}, glossary_context={glossary_context}, steward_notes={steward_notes}. "
+    "Return JSON rows with suggestion_type,target_column,approved_label,business_reason,evidence,confidence."
+)
+
 DEFAULT_HANDOVER_SUMMARY_TEMPLATE = (
     "Generate handover summary suggestions. "
     "Return JSON only with: pipeline_summary, important_transformations, business_reason, handover_notes, risks_or_open_questions. "
