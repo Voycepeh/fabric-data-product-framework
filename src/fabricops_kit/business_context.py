@@ -147,12 +147,20 @@ def capture_column_business_context(suggestions: list[dict], environment_name: s
     def on_approve(_):
         row = curr()
         approved.append(build_row(row, "approved"))
+        COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.clear()
+        COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.extend(approved)
+        REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.clear()
+        REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.extend(rejected)
         state["i"] += 1
         load()
 
     def on_reject(_):
         row = curr()
         rejected.append(build_row(row, "rejected"))
+        COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.clear()
+        COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.extend(approved)
+        REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.clear()
+        REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.extend(rejected)
         state["i"] += 1
         load()
 
@@ -161,6 +169,10 @@ def capture_column_business_context(suggestions: list[dict], environment_name: s
             rejected.pop()
         elif approved:
             approved.pop()
+        COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.clear()
+        COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.extend(approved)
+        REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.clear()
+        REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.extend(rejected)
         state["i"] = max(0, state["i"] - 1)
         load()
 
@@ -169,8 +181,4 @@ def capture_column_business_context(suggestions: list[dict], environment_name: s
     btn_undo.on_click(on_undo)
     load()
     ipy_display(widgets.VBox([title, summary, approved_box, notes_box, reviewer_box, widgets.HBox([btn_approve, btn_reject, btn_undo]), status]))
-    COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.clear()
-    COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.extend(approved)
-    REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.clear()
-    REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET.extend(rejected)
     return None

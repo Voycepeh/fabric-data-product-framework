@@ -23,6 +23,7 @@ nav:
   - Notebook Model:
       - Overview: notebook-structure.md
       - 00_env_config: notebook-structure/00-env-config.md
+      - 01_data_sharing_agreement: notebook-structure/01-data-sharing-agreement.md
       - 02_ex: notebook-structure/02-exploration.md
       - 03_pc: notebook-structure/03-pipeline-contract.md
   - AI Data Quality: data-quality-rules-system.md
