@@ -1,6 +1,4 @@
 import json
-import sys
-import types
 
 import pytest
 
@@ -11,46 +9,25 @@ from fabricops_kit.drift import (
     build_schema_snapshot,
 )
 from fabricops_kit.metadata import EVIDENCE_DRIFT_RESULT, EVIDENCE_LINEAGE, build_evidence_row, default_evidence_types
-from fabricops_kit.runtime import get_current_notebook_identity
 
 
-def test_top_level_exports_runtime_and_not_internal_drift_helpers() -> None:
+# Notebook templates should read Fabric identity directly, for example:
+# from notebookutils import runtime
+# ctx = runtime.context
+# if callable(ctx):
+#     ctx = ctx()
+# workspace_id = ctx.get("workspaceId") or ctx.get("currentWorkspaceId")
+# notebook_id = ctx.get("notebookId") or ctx.get("currentNotebookId") or ctx.get("artifactId") or ctx.get("itemId")
+# notebook_name = ctx.get("notebookName") or ctx.get("currentNotebookName") or ctx.get("artifactName") or ctx.get("itemName")
+# run_id = ctx.get("runId") or ctx.get("activityRunId") or ctx.get("livyId") or ctx.get("sessionId")
+
+
+def test_top_level_does_not_export_internal_drift_helpers() -> None:
     import fabricops_kit as fk
 
-    assert callable(fk.get_current_notebook_identity)
     assert callable(fk.build_drift_evidence_record)
     assert not hasattr(fk, "UnsupportedDataFrameEngineError")
     assert not hasattr(fk, "detect_dataframe_engine")
-
-
-def test_runtime_identity_strict_false_without_notebookutils(monkeypatch) -> None:
-    monkeypatch.setitem(sys.modules, "notebookutils", None)
-    identity = get_current_notebook_identity(strict=False)
-    assert identity["workspace_id"] is None
-    assert identity["notebook_id"] is None
-    assert identity["error"] is not None
-
-
-def test_runtime_identity_strict_true_without_notebookutils(monkeypatch) -> None:
-    monkeypatch.setitem(sys.modules, "notebookutils", None)
-    with pytest.raises(RuntimeError):
-        get_current_notebook_identity(strict=True)
-
-
-def test_runtime_identity_from_mocked_context(monkeypatch) -> None:
-    runtime = types.SimpleNamespace(context={
-        "workspaceId": "ws-1",
-        "workspaceName": "workspace",
-        "notebookId": "nb-1",
-        "notebookName": "My NB",
-        "runId": "run-1",
-    })
-    monkeypatch.setitem(sys.modules, "notebookutils", types.SimpleNamespace(runtime=runtime))
-    identity = get_current_notebook_identity(strict=True)
-    assert identity["workspace_id"] == "ws-1"
-    assert identity["notebook_id"] == "nb-1"
-    assert identity["notebook_name"] == "My NB"
-    assert identity["run_id"] == "run-1"
 
 
 def test_build_schema_snapshot_pandas_engine() -> None:

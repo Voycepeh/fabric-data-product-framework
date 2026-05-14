@@ -1,7 +1,6 @@
 """Public notebook-friendly entrypoints for the FabricOps Starter Kit."""
 
 from .drift import build_drift_evidence_record, check_partition_drift, check_profile_drift, check_schema_drift, summarize_drift_results
-from .runtime import get_current_notebook_identity
 from .config import (
     get_path,
     load_fabric_config,
@@ -153,7 +152,6 @@ __all__ = [
     "check_profile_drift",
     "summarize_drift_results",
     "build_drift_evidence_record",
-    "get_current_notebook_identity",
     "COLUMN_BUSINESS_CONTEXT_FROM_WIDGET",
     "REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET",
     "prepare_business_context_profile_input",
