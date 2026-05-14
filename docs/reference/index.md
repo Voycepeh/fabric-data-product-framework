@@ -19,6 +19,11 @@ Use this page as an API lookup after you understand the notebook flow.
       <td data-label="Full template"><a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb">Open notebook</a></td>
     </tr>
     <tr>
+      <td data-label="Notebook"><code>01_data_sharing_agreement_&lt;agreement&gt;</code></td>
+      <td data-label="Guided usage">Captures approved usage, business context, stewardship notes, DQ approvals, governance approvals, and agreement-level controls reused by exploration and pipeline notebooks.<br><a href="../notebook-structure/01-data-sharing-agreement/">View guided structure</a></td>
+      <td data-label="Full template"><a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/01_data_agreement_template.ipynb">Open notebook</a></td>
+    </tr>
+    <tr>
       <td data-label="Notebook"><code>02_ex_&lt;agreement&gt;_&lt;topic&gt;</code></td>
       <td data-label="Guided usage">Exploration notebook flow used to profile source data and draft advisory AI outputs for human review.<br><a href="../notebook-structure/02-exploration/">View guided structure</a></td>
       <td data-label="Full template"><a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/02_ex_agreement_topic.ipynb">Open notebook</a></td>
@@ -34,8 +39,9 @@ Use this page as an API lookup after you understand the notebook flow.
 ## What runs where
 
 - `00_env_config` is shared setup.
-- `02_ex` is AI-assisted exploration and human review.
-- `03_pc` is deterministic pipeline enforcement.
+- `01_data_sharing_agreement` is the governance source of truth.
+- `02_ex` proposes evidence and AI-assisted suggestions.
+- `03_pc` loads approved metadata and enforces controls.
 
 AI functions are advisory. Approved contracts and pipeline notebooks are the enforcement point.
 
@@ -395,4 +401,3 @@ Use the finder below to look up public callable functions.
   <p class="reference-catalogue-item-purpose">Write metadata rows to a lakehouse metadata table.</p>
 </article>
 </div>
-

@@ -476,8 +476,8 @@ def main() -> None:
     }
     notebook_boundary_notes = {
         "00_env_config": "`00_env_config` is shared setup.",
-        "02_ex": "`02_ex` is AI-assisted exploration and human review.",
-        "03_pc": "`03_pc` is deterministic pipeline enforcement.",
+        "02_ex": "`02_ex` proposes evidence and AI-assisted suggestions.",
+        "03_pc": "`03_pc` loads approved metadata and enforces controls.",
     }
 
     NOTEBOOK_STRUCTURE_DIR.mkdir(parents=True, exist_ok=True)
@@ -540,6 +540,7 @@ def main() -> None:
     ]
     notebook_structure_links = {
         "00_env_config": "../notebook-structure/00-env-config/",
+        "01_data_agreement": "../notebook-structure/01-data-sharing-agreement/",
         "02_ex": "../notebook-structure/02-exploration/",
         "03_pc": "../notebook-structure/03-pipeline-contract/",
     }
@@ -566,8 +567,9 @@ def main() -> None:
         "## What runs where",
         "",
         "- `00_env_config` is shared setup.",
-        "- `02_ex` is AI-assisted exploration and human review.",
-        "- `03_pc` is deterministic pipeline enforcement.",
+        "- `01_data_sharing_agreement` is the governance source of truth.",
+        "- `02_ex` proposes evidence and AI-assisted suggestions.",
+        "- `03_pc` loads approved metadata and enforces controls.",
         "",
         "AI functions are advisory. Approved contracts and pipeline notebooks are the enforcement point.",
         "",
