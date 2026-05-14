@@ -35,13 +35,13 @@ Pipeline notebook flow for deterministic enforcement and controlled publishing.
 - Enforce rules with `enforce_dq_rules`.
 - Split DQ outputs (`dq.valid_rows`, `dq.quarantine_rows`, `dq.failure_rows`, `dq.rule_results`).
 - Always write DQ failure evidence and DQ rule results to `metadata_path` before any failure is raised.
-- Run `assert_dq_passed` after DQ evidence materialization.
+- DQ evidence is always materialized before any mode-based publish failure is raised.
 
 ## 6. Publish strategy
 - Publish behavior is controlled by `DQ_PUBLISH_MODE`:
-  - `same_table_with_flags`: write the DQ-annotated/full result to target and keep all rows; recommended mainly when DQ rules are warnings/advisory.
-  - `split_valid_quarantine`: write valid rows to target and quarantine rows to `${TARGET_TABLE}_QUARANTINE`.
-  - `fail_on_invalid`: if invalid rows exist, raise before any target publish; do not publish partial target output.
+  - `split_valid_quarantine` (**default production-safe mode**): write valid rows to target and quarantine rows to `${TARGET_TABLE}_QUARANTINE`.
+  - `fail_on_invalid` (**strict mode**): raise before any target publish when invalid rows exist; do not publish partial output.
+  - `same_table_with_flags` (**completeness mode**): write a flagged full dataset to target and keep all rows; only suitable for warning/advisory rule outcomes.
 
 ## 7. Post-write profile, lineage, and run summary
 - Reload the actual published target table.
