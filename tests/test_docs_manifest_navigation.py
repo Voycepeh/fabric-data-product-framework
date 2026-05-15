@@ -42,7 +42,7 @@ def test_workflow_modules_are_present_and_internal_modules_hidden_from_sidebar()
     assert "- ai: api/modules/ai.md" not in mkdocs_text
     assert "- docs_metadata: api/modules/docs_metadata.md" not in mkdocs_text
     assert "- schemas: api/modules/schemas.md" not in mkdocs_text
-    assert "- 3. Data engineer:" in mkdocs_text
+    assert "- 3. Data engineer:" not in mkdocs_text
     assert "- drift: api/modules/drift.md" in mkdocs_text
 
 

@@ -9,6 +9,7 @@ from scripts.generate_function_reference import main as generate_reference
 ROOT = Path(__file__).resolve().parents[1]
 INIT_FILE = ROOT / "src" / "fabricops_kit" / "__init__.py"
 REFERENCE_FILE = ROOT / "docs" / "reference" / "index.md"
+FUNCTION_USAGE_GUIDE_FILE = ROOT / "docs" / "reference" / "function-usage-guide.md"
 DOCS_METADATA_FILE = ROOT / "src" / "fabricops_kit" / "docs_metadata.py"
 CALLABLE_MAP_FILE = ROOT / "docs" / "reference" / "callable-map.md"
 CALLABLE_MAP_JSON_FILE = ROOT / "docs" / "reference" / "callable-map.json"
@@ -76,8 +77,8 @@ def test_every_public_function_is_listed_exactly_once_in_function_catalogue() ->
 def test_reference_contains_required_sections_and_no_notebook_segments() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
-    assert "## Start from the templates" in content
-    assert "## What runs where" in content
+    assert "## Start from the templates" not in content
+    assert "## What runs where" not in content
     assert "## Find a callable" in content
     assert "## Function catalogue" in content
     assert "## Starter path functions" not in content
@@ -115,7 +116,6 @@ def test_reference_includes_callable_finder_block() -> None:
     assert 'id="callable-finder-input"' in content
     assert 'data-callable-finder-empty' in content
     assert content.index("## Find a callable") < content.index("## Function catalogue")
-    assert content.index("## Find a callable") > content.index("## What runs where")
 
 
 def test_reference_callable_finder_exposes_only_public_role_filters() -> None:
@@ -155,7 +155,7 @@ def test_non_starter_callable_still_appears_in_complete_catalogue() -> None:
 
 def test_reference_tables_include_mobile_friendly_classes_and_data_labels() -> None:
     generate_reference()
-    content = REFERENCE_FILE.read_text(encoding="utf-8")
+    content = FUNCTION_USAGE_GUIDE_FILE.read_text(encoding="utf-8")
     assert '<table class="reference-template-table">' in content
     assert 'data-label="Notebook"' in content
     assert 'data-label="Guided usage"' in content
@@ -163,7 +163,7 @@ def test_reference_tables_include_mobile_friendly_classes_and_data_labels() -> N
 
 def test_reference_html_tables_use_anchor_links_not_markdown_links() -> None:
     generate_reference()
-    content = REFERENCE_FILE.read_text(encoding="utf-8")
+    content = FUNCTION_USAGE_GUIDE_FILE.read_text(encoding="utf-8")
     assert '<td data-label="Full template"><a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb">Open notebook</a></td>' in content
     assert 'step-02a-shared-runtime-config/Housepath' not in content
     assert "[`Open notebook`](" not in content
@@ -284,6 +284,7 @@ def test_generated_notebook_detail_pages_exist_with_expected_content() -> None:
             "## Segment 4: Assemble and validate framework config",
             "## Segment 5: Run startup checks and show resolved paths",
             "<code>load_config</code>",
+            "Why it is commonly used here",
             "../../api/reference/",
             "../../api/modules/",
         ],
@@ -324,7 +325,7 @@ def test_no_generated_public_callable_markdown_files_committed() -> None:
         for path in (ROOT / "docs" / "reference").glob("*.md")
         if path.name != "index.md"
     )
-    assert public_reference_files == ["callable-map.md"]
+    assert public_reference_files == ["callable-map.md", "function-usage-guide.md"]
 
 
 def test_reference_links_to_flat_public_callable_pages() -> None:
@@ -368,6 +369,30 @@ def test_notebook_structure_overview_links_to_notebook_detail_pages() -> None:
     assert "notebook-structure/00-env-config.md" in text
     assert "notebook-structure/02-exploration.md" in text
     assert "notebook-structure/03-pipeline-contract.md" in text
+
+
+def test_function_usage_guide_contains_orientation_sections() -> None:
+    generate_reference()
+    content = FUNCTION_USAGE_GUIDE_FILE.read_text(encoding="utf-8")
+    assert "# Function Usage Guide" in content
+    assert "## Start from the templates" in content
+    assert "## What runs where" in content
+
+
+def test_notebook_pages_use_notebook_first_intro_and_table_headings() -> None:
+    generate_reference()
+    notebook_pages = [
+        ROOT / "docs" / "notebook-structure" / "00-env-config.md",
+        ROOT / "docs" / "notebook-structure" / "02-exploration.md",
+        ROOT / "docs" / "notebook-structure" / "03-pipeline-contract.md",
+    ]
+    for page in notebook_pages:
+        content = page.read_text(encoding="utf-8")
+        assert "Use this page to understand the purpose and segment flow of this notebook template." in content
+        assert "Callable" in content
+        assert "Why it is commonly used here" in content
+        assert "Function / class" not in content
+        assert "functions used here per segment" not in content
 
 
 def test_function_catalogue_excludes_supporting_classes_and_keeps_enforcement_callable() -> None:

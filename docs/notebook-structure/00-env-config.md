@@ -1,5 +1,7 @@
 # `00_env_config`
 
+Use this page to understand the purpose and segment flow of this notebook template. Each segment shows the typical callables commonly used there.
+
 Shared environment bootstrap and validation before exploration or pipeline notebooks run.
 
 > <a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb">Open template notebook</a>
@@ -15,26 +17,26 @@ Describe what this shared config notebook sets up and what downstream exploratio
 <table class="reference-function-table notebook-structure-function-table">
   <thead>
     <tr>
-      <th>Function / class</th>
+      <th>Callable</th>
       <th>Module</th>
-      <th>Purpose</th>
+      <th>Why it is commonly used here</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td data-label="Function / class"><a href="../../api/reference/Housepath/"><code>Housepath</code></a></td>
+      <td data-label="Callable"><a href="../../api/reference/Housepath/"><code>Housepath</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/fabric_input_output/" title="Open fabric_input_output module page" aria-label="Open fabric_input_output module page">fabric_input_output</a></td>
-      <td data-label="Purpose">Fabric lakehouse or warehouse connection details.</td>
+      <td data-label="Why it is commonly used here">Fabric lakehouse or warehouse connection details.</td>
     </tr>
     <tr>
-      <td data-label="Function / class"><a href="../../api/reference/load_config/"><code>load_config</code></a></td>
+      <td data-label="Callable"><a href="../../api/reference/load_config/"><code>load_config</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a></td>
-      <td data-label="Purpose">Validate and return a user-supplied framework configuration.</td>
+      <td data-label="Why it is commonly used here">Validate and return a user-supplied framework configuration.</td>
     </tr>
     <tr>
-      <td data-label="Function / class"><a href="../../api/reference/get_path/"><code>get_path</code></a></td>
+      <td data-label="Callable"><a href="../../api/reference/get_path/"><code>get_path</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a></td>
-      <td data-label="Purpose">Resolve a configured Fabric path for an environment and target.</td>
+      <td data-label="Why it is commonly used here">Resolve a configured Fabric path for an environment and target.</td>
     </tr>
   </tbody>
 </table>
@@ -46,16 +48,16 @@ Describe what this shared config notebook sets up and what downstream exploratio
 <table class="reference-function-table notebook-structure-function-table">
   <thead>
     <tr>
-      <th>Function / class</th>
+      <th>Callable</th>
       <th>Module</th>
-      <th>Purpose</th>
+      <th>Why it is commonly used here</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td data-label="Function / class"><a href="../../api/reference/load_config/"><code>load_config</code></a></td>
+      <td data-label="Callable"><a href="../../api/reference/load_config/"><code>load_config</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a></td>
-      <td data-label="Purpose">Validate and return a user-supplied framework configuration.</td>
+      <td data-label="Why it is commonly used here">Validate and return a user-supplied framework configuration.</td>
     </tr>
   </tbody>
 </table>
@@ -65,21 +67,21 @@ Describe what this shared config notebook sets up and what downstream exploratio
 <table class="reference-function-table notebook-structure-function-table">
   <thead>
     <tr>
-      <th>Function / class</th>
+      <th>Callable</th>
       <th>Module</th>
-      <th>Purpose</th>
+      <th>Why it is commonly used here</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td data-label="Function / class"><a href="../../api/reference/setup_notebook/"><code>setup_notebook</code></a></td>
+      <td data-label="Callable"><a href="../../api/reference/setup_notebook/"><code>setup_notebook</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a></td>
-      <td data-label="Purpose">Run consolidated FabricOps startup for exploration and pipeline notebooks.</td>
+      <td data-label="Why it is commonly used here">Run consolidated FabricOps startup for exploration and pipeline notebooks.</td>
     </tr>
     <tr>
-      <td data-label="Function / class"><a href="../../api/reference/get_path/"><code>get_path</code></a></td>
+      <td data-label="Callable"><a href="../../api/reference/get_path/"><code>get_path</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a></td>
-      <td data-label="Purpose">Resolve a configured Fabric path for an environment and target.</td>
+      <td data-label="Why it is commonly used here">Resolve a configured Fabric path for an environment and target.</td>
     </tr>
   </tbody>
 </table>

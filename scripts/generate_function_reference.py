@@ -12,6 +12,7 @@ PACKAGE_NAME = "fabricops_kit"
 INIT_PATH = PKG_DIR / "__init__.py"
 DOCS_METADATA_PATH = PKG_DIR / "docs_metadata.py"
 REFERENCE_PATH = ROOT / "docs" / "reference" / "index.md"
+FUNCTION_USAGE_GUIDE_PATH = ROOT / "docs" / "reference" / "function-usage-guide.md"
 NOTEBOOK_STRUCTURE_DIR = ROOT / "docs" / "notebook-structure"
 MODULE_DIR = ROOT / "docs" / "api" / "modules"
 MKDOCS_PATH = ROOT / "mkdocs.yml"
@@ -664,10 +665,9 @@ def main() -> None:
     end_marker = "      # AUTO-GENERATED-MODULES-END"
     if start_marker in mkdocs_text and end_marker in mkdocs_text:
         generated_lines = []
-        for group_name, modules in workflow_sidebar_groups.items():
-            generated_lines.append(f"          - {group_name}:")
+        for modules in workflow_sidebar_groups.values():
             for module in modules:
-                generated_lines.append(f"              - {module}: api/modules/{module}.md")
+                generated_lines.append(f"          - {module}: api/modules/{module}.md")
         generated = "\n".join(generated_lines)
         before, rest = mkdocs_text.split(start_marker, 1)
         middle, after = rest.split(end_marker, 1)
@@ -795,6 +795,8 @@ def main() -> None:
         notebook_lines = [
             f"# {flow['notebook_label']}",
             "",
+            "Use this page to understand the purpose and segment flow of this notebook template. Each segment shows the typical callables commonly used there.",
+            "",
             flow["segment_intro"],
             "",
             f"> {notebook_link}",
@@ -823,17 +825,17 @@ def main() -> None:
                 notebook_lines.extend(
                     _html_table(
                         "reference-function-table notebook-structure-function-table",
-                        ["Function / class", "Module", "Purpose"],
+                        ["Callable", "Module", "Why it is commonly used here"],
                         segment_rows,
                     )
                 )
                 notebook_lines.append("")
         (NOTEBOOK_STRUCTURE_DIR / page_name).write_text("\n".join(notebook_lines) + "\n", encoding="utf-8", newline="\n")
 
-    ref = [
-        "# Function Reference",
+    usage_guide = [
+        "# Function Usage Guide",
         "",
-        "Use this page as an API lookup after you understand the notebook flow.",
+        "Use this page to understand how notebook templates map to the main public callables.",
         "",
         "## Start from the templates",
         "",
@@ -860,9 +862,9 @@ def main() -> None:
         if guided_link:
             guided_usage = f"{guided_usage}<br><a href=\"{_esc(guided_link)}\">View guided structure</a>"
         template_rows.append([f"<code>{_esc(_strip_backticks(row['notebook_label']))}</code>", guided_usage, template_link])
-    ref.extend(_html_table("reference-template-table", ["Notebook", "Guided usage", "Full template"], template_rows))
+    usage_guide.extend(_html_table("reference-template-table", ["Notebook", "Guided usage", "Full template"], template_rows))
 
-    ref.extend([
+    usage_guide.extend([
         "",
         "## What runs where",
         "",
@@ -874,6 +876,15 @@ def main() -> None:
         "AI functions are advisory. Approved contracts and pipeline notebooks are the enforcement point.",
         "",
     ])
+    FUNCTION_USAGE_GUIDE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    FUNCTION_USAGE_GUIDE_PATH.write_text("\n".join(usage_guide) + "\n", encoding="utf-8", newline="\n")
+
+    ref = [
+        "# Function Reference",
+        "",
+        "Use this page as a callable lookup after you understand the notebook flow.",
+        "",
+    ]
 
     ref.extend(
         [
