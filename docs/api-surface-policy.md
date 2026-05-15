@@ -6,7 +6,7 @@
 
 ## Naming convention
 
-Public notebook-first names should be short, verb-first actions (for example `load_config`, `setup_notebook`, `read_lakehouse_table`, `enforce_dq`). Legacy names stay importable as compatibility aliases.
+Public notebook-first names should be short, verb-first actions (for example `load_config`, `setup_notebook`, `read_lakehouse_table`, `enforce_dq`).
 
 ## TODO
 

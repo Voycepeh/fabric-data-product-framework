@@ -1,4 +1,4 @@
-from fabricops_kit.business_context import extract_column_business_context_suggestions, prepare_business_context_profile_input
+from fabricops_kit.business_context import _extract_column_business_context_suggestions, _prepare_business_context_profile_input
 import fabricops_kit.business_context as business_context
 from fabricops_kit.config import ReviewWorkflowConfig
 from fabricops_kit.data_governance import extract_personal_identifier_suggestions, prepare_governance_profile_input
@@ -6,9 +6,9 @@ from fabricops_kit.data_quality import approved_dq_rules_from_review_rows, prepa
 
 
 def test_business_context_profile_shaping_and_extraction():
-    rows = prepare_business_context_profile_input([{"COLUMN_NAME": "id", "DATA_TYPE": "string"}], table_name="orders", table_context="sales")
+    rows = _prepare_business_context_profile_input([{"COLUMN_NAME": "id", "DATA_TYPE": "string"}], table_name="orders", table_context="sales")
     assert rows[0]["column_name"] == "id"
-    out = extract_column_business_context_suggestions([{"ai_business_context_response": "{'column_name':'id','business_context':'identifier'}"}])
+    out = _extract_column_business_context_suggestions([{"ai_business_context_response": "{'column_name':'id','business_context':'identifier'}"}])
     assert out[0]["column_name"] == "id"
 
 
@@ -33,13 +33,13 @@ def test_review_workflow_config_defaults():
     assert cfg.default_approval_status == "pending"
 
 
-def test_capture_column_business_context_requires_widgets(monkeypatch):
+def test_review_business_context_requires_widgets(monkeypatch):
     def _raise(*args, **kwargs):
         raise ImportError("ipywidgets missing")
 
     monkeypatch.setattr(business_context.importlib, "import_module", _raise)
     try:
-        business_context.capture_column_business_context([{"column_name": "id", "business_context": "Identifier"}], "dev", "sales", "orders")
+        business_context.review_business_context([{"column_name": "id", "business_context": "Identifier"}], "dev", "sales", "orders")
         assert False, "expected ImportError"
     except ImportError:
         assert True

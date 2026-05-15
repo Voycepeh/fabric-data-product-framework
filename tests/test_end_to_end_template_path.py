@@ -204,7 +204,7 @@ def test_01_data_agreement_template_has_no_dq_enforcement_or_column_widget_execu
     forbidden = [
         "enforce_dq(",
         "run_dq_rules(",
-        "capture_column_business_context(",
+        "review_business_context(",
         "review_dq_rules(",
         "review_column_governance_context(",
     ]
@@ -224,10 +224,10 @@ def test_02_ex_template_references_01_agreement_and_business_context_helpers():
     for token in [
         "%run 01_data_agreement_template",
         "BUSINESS_CONTEXT",
-        "prepare_business_context_profile_input",
-        "suggest_column_business_contexts",
-        "extract_column_business_context_suggestions",
-        "capture_column_business_context",
+        "_prepare_business_context_profile_input",
+        "draft_business_context",
+        "_extract_column_business_context_suggestions",
+        "review_business_context",
         "COLUMN_BUSINESS_CONTEXT_FROM_WIDGET",
         "prepare_dq_profile_input",
         "prepare_governance_profile_input",
@@ -239,7 +239,7 @@ def test_02_ex_template_references_01_agreement_and_business_context_helpers():
 
 def test_03_pc_template_has_no_ai_suggestion_or_business_context_widget_calls():
     text = Path("templates/notebooks/03_pc_agreement_source_to_target.ipynb").read_text(encoding="utf-8")
-    for token in ["suggest_column_business_contexts", "suggest_personal_identifier_classifications", "capture_column_business_context"]:
+    for token in ["draft_business_context", "suggest_personal_identifier_classifications", "review_business_context"]:
         assert token not in text
 
 

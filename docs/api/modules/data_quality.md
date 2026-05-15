@@ -39,7 +39,6 @@ Split a Spark DataFrame into pass/quarantine outputs for row-level DQ rules.
 | [`_prepare_dq_profile_input`](../../reference/internal/data_quality/_prepare_dq_profile_input/) | [`draft_dq_rules`](../../reference/draft_dq_rules/) |
 | [`_profile_for_dq`](../../reference/internal/data_quality/_profile_for_dq/) | — |
 | [`_require_ipywidgets`](../../reference/internal/data_quality/_require_ipywidgets/) | [`review_dq_rule_deactivations`](../../reference/review_dq_rule_deactivations/), [`review_dq_rules`](../../reference/review_dq_rules/) |
-| [`_resolve_action_by`](../../reference/internal/data_quality/_resolve_action_by/) | — |
 | [`_run_dq_rules`](../../reference/internal/data_quality/_run_dq_rules/) | [`enforce_dq`](../../reference/enforce_dq/) |
 | [`_split_dq_rows`](../../reference/internal/data_quality/_split_dq_rows/) | [`enforce_dq`](../../reference/enforce_dq/) |
 | [`_suggest_dq_rules`](../../reference/internal/data_quality/_suggest_dq_rules/) | [`draft_dq_rules`](../../reference/draft_dq_rules/) |

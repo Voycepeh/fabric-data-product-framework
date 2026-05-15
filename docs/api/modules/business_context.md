@@ -9,8 +9,8 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`draft_business_context`](../../reference/draft_business_context/) | function | Compatibility-friendly short alias for :func:`suggest_column_business_contexts`. | — |
-| [`review_business_context`](../../reference/review_business_context/) | function | Compatibility-friendly short alias for :func:`capture_column_business_context`. | — |
+| [`draft_business_context`](../../reference/draft_business_context/) | function | Run Fabric AI to draft column business context suggestions. | — |
+| [`review_business_context`](../../reference/review_business_context/) | function | Display interactive approval widget. | [`_require_ipywidgets`](../../reference/internal/business_context/_require_ipywidgets/) (internal) |
 | [`write_business_context`](../../reference/write_business_context/) | function | Persist approved business context rows via metadata writer. | — |
 
 ## Optional callables
@@ -21,5 +21,7 @@ No advanced helpers listed for this module.
 
 | Helper | Related public callables |
 |---|---|
+| [`__extract_column_business_context_suggestions`](../../reference/internal/business_context/__extract_column_business_context_suggestions/) | — |
+| [`__prepare_business_context_profile_input`](../../reference/internal/business_context/__prepare_business_context_profile_input/) | — |
 | [`_parse_ai_dict_response`](../../reference/internal/business_context/_parse_ai_dict_response/) | — |
-| [`_require_ipywidgets`](../../reference/internal/business_context/_require_ipywidgets/) | — |
+| [`_require_ipywidgets`](../../reference/internal/business_context/_require_ipywidgets/) | [`review_business_context`](../../reference/review_business_context/) |

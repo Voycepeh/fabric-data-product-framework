@@ -12,21 +12,6 @@ from datetime import datetime, timezone
 from typing import Any
 
 
-def _resolve_action_by(action_by: str | None) -> str:
-    if action_by:
-        return str(action_by)
-    try:
-        import notebookutils.runtime as nb_runtime  # type: ignore
-        context = getattr(nb_runtime, "context", None)
-        if isinstance(context, dict):
-            return context.get("userName") or context.get("userId") or "unknown"
-        get_method = getattr(context, "get", None)
-        if callable(get_method):
-            return get_method("userName") or get_method("userId") or "unknown"
-    except Exception:
-        pass
-    return "unknown"
-
 from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 from pyspark.sql import SparkSession

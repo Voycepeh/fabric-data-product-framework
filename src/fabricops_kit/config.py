@@ -162,7 +162,7 @@ Use only these FabricOps rule_type values:
 4. value_range
    Use when a numeric, date, or timestamp column should stay within a sensible range.
    Required fields:
-   rule_id, rule_type, columns, min_value or max_value, severity, description
+   rule_id, rule_type, columns, lower_bound or upper_bound, severity, description
 
 5. regex_format
    Use when a string column should match a known format such as email, code, phone, postal code, or ID.
@@ -173,7 +173,7 @@ Heuristics:
 - Suggest not_null when null_count is 0 or when the column name looks mandatory, such as id, key, date, code, status, amount, or name.
 - Suggest unique_key only when distinct_count is close to row_count and the column name looks like an identifier or business key.
 - Suggest accepted_values when distinct_count is small and the observed values look like business categories.
-- Suggest value_range only when min_value and max_value are available and the range is business meaningful.
+- Suggest value_range only when lower_bound and upper_bound are available and the range is business meaningful.
 - Suggest regex_format only for clear format columns such as email, phone, postal_code, programme_code, course_code, invoice_number, or staff_id.
 - Use severity="error" only for rules that should block the pipeline.
 - Use severity="warning" for rules that should be reviewed but should not block the pipeline.
@@ -195,7 +195,7 @@ DQ_RULES = {
 }
 
 For accepted_values, include allowed_values.
-For value_range, include min_value and/or max_value.
+For value_range, include lower_bound and/or upper_bound.
 For regex_format, include regex_pattern.
 
 Table name:

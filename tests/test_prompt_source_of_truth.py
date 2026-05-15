@@ -32,7 +32,7 @@ def test_02_ex_uses_config_ai_prompt_config_and_03_pc_has_no_prompt_helpers():
     assert 'CONFIG.ai_prompt_config.business_context_template' in ex
     assert 'CONFIG.ai_prompt_config.dq_rule_candidate_template' in ex
     assert 'CONFIG.ai_prompt_config.governance_personal_identifier_template' in ex
-    assert 'suggest_column_business_contexts' not in pc
+    assert 'draft_business_context' not in pc
     assert 'suggest_personal_identifier_classifications' not in pc
 
 
@@ -55,7 +55,7 @@ def test_02_ex_has_no_old_todo_draft_flow():
     assert 'TODO_replace_business_context' not in ex
     assert 'draft_dq_rules(' not in ex
     assert '_extract_dq_rules' not in ex
-    assert 'suggest_column_business_contexts(prepared_profile_df=dq_profile_df' not in ex
+    assert 'draft_business_context(prepared_profile_df=dq_profile_df' not in ex
     assert 'suggest_dq_rules_with_fabric_ai' in ex
     assert 'data_quality.APPROVED_RULES_FROM_WIDGET' in ex
     assert 'import fabricops_kit.business_context as business_context' in ex

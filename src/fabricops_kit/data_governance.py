@@ -17,7 +17,7 @@ _WIDGET_REJECTED_ROWS: list[dict[str, Any]] = []
 PDPA_PERSONAL_IDENTIFIER_PROMPT = DEFAULT_GOVERNANCE_PERSONAL_IDENTIFIER_PROMPT_TEMPLATE
 
 
-def build_governance_context(
+def __build_governance_context(
     business_context: str,
     approved_usage: str,
     dataset_context: str,
@@ -36,7 +36,7 @@ def build_governance_context(
     }
 
 
-def prepare_governance_input(profile_rows: list[dict], table_name: str, column_contexts: list[dict]) -> list[dict]:
+def __prepare_governance_input(profile_rows: list[dict], table_name: str, column_contexts: list[dict]) -> list[dict]:
     """Join approved business context into profile rows for governance AI suggestions."""
     context_lookup = {r["column_name"]: r for r in column_contexts or [] if r.get("column_name")}
     out = []
@@ -48,15 +48,15 @@ def prepare_governance_input(profile_rows: list[dict], table_name: str, column_c
     return out
 
 
-def suggest_pii_labels(prepared_profile_df, prompt: str = PDPA_PERSONAL_IDENTIFIER_PROMPT, output_col: str = "ai_governance_response"):
+def draft_governance(prepared_profile_df, prompt: str = PDPA_PERSONAL_IDENTIFIER_PROMPT, output_col: str = "ai_governance_response"):
     """Run Fabric AI personal-identifier suggestion prompt on prepared governance rows."""
     ai = getattr(prepared_profile_df, "ai", None)
     if ai is None or not hasattr(ai, "generate_response"):
-        raise RuntimeError("suggest_pii_labels requires Fabric DataFrame.ai.generate_response.")
+        raise RuntimeError("draft_governance requires Fabric DataFrame.ai.generate_response.")
     return prepared_profile_df.ai.generate_response(prompt=prompt, is_prompt_template=True, output_col=output_col)
 
 
-def extract_pii_suggestions(response_rows, response_col: str = "ai_governance_response") -> list[dict]:
+def __extract_pii_suggestions(response_rows, response_col: str = "ai_governance_response") -> list[dict]:
     """Extract governance suggestions from Spark/list response payloads."""
     if hasattr(response_rows, "collect"):
         iterable = [r.asDict(recursive=True) if hasattr(r, "asDict") else dict(r) for r in response_rows.collect()]
@@ -250,8 +250,3 @@ def load_governance(governance_rows, *, agreement_rows=None, agreement_id: str |
     ]
     return {"agreement_context": agreement_payload, "columns": columns}
 
-
-
-def draft_governance(prepared_profile_df, prompt: str = PDPA_PERSONAL_IDENTIFIER_PROMPT, output_col: str = "ai_governance_response"):
-    """Compatibility-friendly short alias for :func:`suggest_pii_labels`."""
-    return suggest_pii_labels(prepared_profile_df, prompt=prompt, output_col=output_col)

@@ -13,7 +13,7 @@ REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET: list[dict] = []
 BUSINESS_CONTEXT_PROMPT = DEFAULT_BUSINESS_CONTEXT_PROMPT_TEMPLATE
 
 
-def prepare_business_context_profile_input(profile_rows: list[dict], table_name: str, table_context: str = "") -> list[dict]:
+def __prepare_business_context_profile_input(profile_rows: list[dict], table_name: str, table_context: str = "") -> list[dict]:
     out = []
     for row in profile_rows or []:
         out.append(
@@ -31,7 +31,7 @@ def prepare_business_context_profile_input(profile_rows: list[dict], table_name:
     return out
 
 
-def suggest_column_business_contexts(prepared_profile_df, prompt_template: str = BUSINESS_CONTEXT_PROMPT, output_col: str = "ai_business_context_response"):
+def draft_business_context(prepared_profile_df, prompt_template: str = BUSINESS_CONTEXT_PROMPT, output_col: str = "ai_business_context_response"):
     """Run Fabric AI to draft column business context suggestions.
 
     Parameters
@@ -50,7 +50,7 @@ def suggest_column_business_contexts(prepared_profile_df, prompt_template: str =
     """
     ai = getattr(prepared_profile_df, "ai", None)
     if ai is None or not hasattr(ai, "generate_response"):
-        raise RuntimeError("suggest_column_business_contexts requires Fabric DataFrame.ai.generate_response.")
+        raise RuntimeError("draft_business_context requires Fabric DataFrame.ai.generate_response.")
     return prepared_profile_df.ai.generate_response(prompt=prompt_template, is_prompt_template=True, output_col=output_col)
 
 
@@ -70,7 +70,7 @@ def _parse_ai_dict_response(text: str) -> dict:
             return {}
 
 
-def extract_column_business_context_suggestions(response_rows, response_col: str = "ai_business_context_response") -> list[dict]:
+def __extract_column_business_context_suggestions(response_rows, response_col: str = "ai_business_context_response") -> list[dict]:
     """Parse AI suggestion rows from Spark DataFrames or ``list[dict]`` payloads."""
     out = []
     if hasattr(response_rows, "collect"):
@@ -90,7 +90,7 @@ def _require_ipywidgets():
     return widgets, ipy_display
 
 
-def capture_column_business_context(suggestions: list[dict], environment_name: str, dataset_name: str, table_name: str, default_approval_status: str = "pending") -> list[dict]:
+def review_business_context(suggestions: list[dict], environment_name: str, dataset_name: str, table_name: str, default_approval_status: str = "pending") -> list[dict]:
     """Display interactive approval widget.
 
     Notes
@@ -193,16 +193,6 @@ def capture_column_business_context(suggestions: list[dict], environment_name: s
     ipy_display(widgets.VBox([title, summary, approved_box, notes_box, reviewer_box, widgets.HBox([btn_approve, btn_reject, btn_undo]), status]))
     return None
 
-
-
-def draft_business_context(prepared_profile_df, prompt_template: str = BUSINESS_CONTEXT_PROMPT, output_col: str = "ai_business_context_response"):
-    """Compatibility-friendly short alias for :func:`suggest_column_business_contexts`."""
-    return suggest_column_business_contexts(prepared_profile_df, prompt_template=prompt_template, output_col=output_col)
-
-
-def review_business_context(suggestions: list[dict], environment_name: str, dataset_name: str, table_name: str, default_approval_status: str = "pending") -> list[dict]:
-    """Compatibility-friendly short alias for :func:`capture_column_business_context`."""
-    return capture_column_business_context(suggestions, environment_name, dataset_name, table_name, default_approval_status=default_approval_status)
 
 
 def write_business_context(spark, *, rows: list[dict], metadata_path, table_name: str = "METADATA_COLUMN_BUSINESS_CONTEXT", mode: str = "append"):
