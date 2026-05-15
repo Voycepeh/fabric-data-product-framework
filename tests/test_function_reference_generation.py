@@ -97,7 +97,7 @@ def test_function_catalogue_contains_compact_items_and_search_metadata() -> None
     assert '<div class="reference-catalogue-list">' in content
     assert '<table class="reference-catalogue-table">' not in content
     assert 'class="reference-catalogue-item"' in content
-    assert '<a href="../api/reference/load_fabric_config/"><code>load_fabric_config</code></a>' in content
+    assert '<a href="../api/reference/load_config/"><code>load_config</code></a>' in content
     assert "data-callable-row" in content
     assert "data-callable-name=" in content
     assert "data-callable-purpose=" in content
@@ -222,9 +222,9 @@ def test_template_flow_registry_matches_expected_symbol_sets() -> None:
             symbols.update(segment["symbols"])
 
     assert set(symbols_by_notebook) == {"00_env_config", "02_ex", "03_pc"}
-    assert {"setup_fabricops_notebook", "load_fabric_config", "get_path"}.issubset(symbols_by_notebook["00_env_config"])
+    assert {"setup_notebook", "load_config", "get_path"}.issubset(symbols_by_notebook["00_env_config"])
     assert {"seed_minimal_sample_source_table", "draft_dq_rules", "review_dq_rules"}.issubset(symbols_by_notebook["02_ex"])
-    assert {"validate_dq_rules", "assert_dq_passed", "lakehouse_table_write"}.issubset(symbols_by_notebook["03_pc"])
+    assert {"validate_dq_rules", "assert_dq_passed", "write_lakehouse_table"}.issubset(symbols_by_notebook["03_pc"])
 
 def test_every_template_flow_notebook_mentions_multiple_registered_symbols() -> None:
     template_docs = metadata_literal("TEMPLATE_FLOW_DOCS")
@@ -249,7 +249,7 @@ def test_generated_notebook_detail_pages_exist_with_expected_content() -> None:
             "## Segment 3: Set AI, quality, governance, and lineage defaults",
             "## Segment 4: Assemble and validate framework config",
             "## Segment 5: Run startup checks and show resolved paths",
-            "<code>load_fabric_config</code>",
+            "<code>load_config</code>",
             "../../api/reference/",
             "../../api/modules/",
         ],
@@ -269,7 +269,7 @@ def test_generated_notebook_detail_pages_exist_with_expected_content() -> None:
             "03_pc_agreement_source_to_target.ipynb",
             "## Segment 4: Run DQ, split outputs, and publish",
             "## Optional profiling, drift, governance, lineage, and handover",
-            "<code>enforce_dq_rules</code>",
+            "<code>enforce_dq</code>",
             "../../api/reference/",
             "../../api/modules/",
         ],
@@ -343,7 +343,7 @@ def test_function_catalogue_excludes_supporting_classes_and_keeps_enforcement_ca
     all_functions = all_public_functions_section(content)
     assert 'data-callable-name="DQEnforcementResult"' not in all_functions
     assert "<code>DQEnforcementResult</code>" not in all_functions
-    assert 'data-callable-name="enforce_dq_rules"' in all_functions
+    assert 'data-callable-name="enforce_dq"' in all_functions
 
 
 def test_function_catalogue_excludes_housepath_and_keeps_get_path() -> None:
@@ -369,5 +369,5 @@ def test_module_callable_tables_exclude_supporting_data_structures() -> None:
 
     assert "| [`DQEnforcementResult`]" not in data_quality_page
     assert "| [`Housepath`]" not in fabric_io_page
-    assert "| [`enforce_dq_rules`]" in data_quality_page
+    assert "| [`enforce_dq`]" in data_quality_page
     assert "| [`get_path`]" in (ROOT / "docs/api/modules/environment_config.md").read_text(encoding="utf-8")

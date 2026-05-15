@@ -76,7 +76,7 @@ Use only these FabricOps rule_type values:
 4. value_range
    Use when a numeric, date, or timestamp column should stay within a sensible range.
    Required fields:
-   rule_id, rule_type, columns, min_value or max_value, severity, description
+   rule_id, rule_type, columns, lower_bound or upper_bound, severity, description
 
 5. regex_format
    Use when a string column should match a known format such as email, code, phone, postal code, or ID.
@@ -87,7 +87,7 @@ Heuristics:
 - Suggest not_null when null_count is 0 or when the column name looks mandatory, such as id, key, date, code, status, amount, or name.
 - Suggest unique_key only when distinct_count is close to row_count and the column name looks like an identifier or business key.
 - Suggest accepted_values when distinct_count is small and the observed values look like business categories.
-- Suggest value_range only when min_value and max_value are available and the range is business meaningful.
+- Suggest value_range only when lower_bound and upper_bound are available and the range is business meaningful.
 - Suggest regex_format only for clear format columns such as email, phone, postal_code, programme_code, course_code, invoice_number, or staff_id.
 - Use severity="error" only for rules that should block the pipeline.
 - Use severity="warning" for rules that should be reviewed but should not block the pipeline.
@@ -109,7 +109,7 @@ DQ_RULES = {
 }
 
 For accepted_values, include allowed_values.
-For value_range, include min_value and/or max_value.
+For value_range, include lower_bound and/or upper_bound.
 For regex_format, include regex_pattern.
 
 Table name:
@@ -160,8 +160,8 @@ profile_rows = profile_dataframe_to_metadata(df_source, table_name=DQ_TABLE_NAME
 
 # 2) Optional: load existing approved active rules (02_ex)
 dq_metadata_table = FABRIC_CONFIG.review_workflow_config.dq_approved_table
-existing_dq_df = lakehouse_table_read(metadata_path, dq_metadata_table)
-approved_active_rules = load_approved_dq_rules(existing_dq_df, table_name=DQ_TABLE_NAME)
+existing_dq_df = read_lakehouse_table(metadata_path, dq_metadata_table)
+approved_active_rules = load_dq_rules(existing_dq_df, table_name=DQ_TABLE_NAME)
 
 # 3) Ask AI for candidate rules from profile metadata when needed (02_ex)
 candidate_rules = draft_dq_rules(
@@ -178,7 +178,7 @@ run_dq_rule_review_widget(
     table_name=DQ_TABLE_NAME,
 )
 # 5) After analyst/engineer interaction, collect current widget state (02_ex)
-review = get_dq_rule_review_results(
+review = get_dq_review_results(
     table_name=DQ_TABLE_NAME,
     environment_name=ENV_NAME,
     dataset_name=DATASET_NAME,
@@ -200,19 +200,19 @@ deactivation_reviews = review_dq_rule_deactivations(
     approved_active_rules,
     table_name=DQ_TABLE_NAME,
 )
-deactivation_df = build_dq_rule_deactivation_metadata_df(
+deactivation_df = _build_dq_rule_deactivation_metadata_df(
     deactivation_reviews,
     table_name=DQ_TABLE_NAME,
 )
 
 # 8) Pipeline loads active approved rules only (03_pc)
-approved_for_pipeline = load_approved_dq_rules(
-    lakehouse_table_read(metadata_path, dq_metadata_table),
+approved_for_pipeline = load_dq_rules(
+    read_lakehouse_table(metadata_path, dq_metadata_table),
     table_name=DQ_TABLE_NAME,
 )
 
 # 9) Pipeline enforces approved active rules deterministically (03_pc)
-dq = enforce_dq_rules(
+dq = enforce_dq(
     df_standard,
     table_name=DQ_TABLE_NAME,
     rules=approved_for_pipeline,

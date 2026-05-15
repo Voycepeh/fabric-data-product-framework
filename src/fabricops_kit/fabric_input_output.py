@@ -17,7 +17,7 @@ import tempfile
 
 import pandas as pd
 
-from .config import FrameworkConfig, get_path, load_fabric_config as load_framework_config
+from .config import FrameworkConfig, get_path, load_config as load_framework_config
 
 
 @dataclass(frozen=True)
@@ -28,7 +28,7 @@ class Housepath:
     a Fabric lakehouse or warehouse using framework helpers.
 
     In normal use, define these values in a separate Fabric config notebook,
-    validate the `CONFIG` mapping with `load_fabric_config`, then retrieve the
+    validate the `CONFIG` mapping with `load_config`, then retrieve the
     required environment and target with `get_path`.
 
     Attributes
@@ -64,7 +64,7 @@ DEFAULT_ENV = "Sandbox"
 DEFAULT_TARGET = "Source"
 
 
-def load_fabric_config(config: FrameworkConfig | dict) -> FrameworkConfig:
+def load_config(config: FrameworkConfig | dict) -> FrameworkConfig:
     """Validate and return a user-supplied framework configuration.
 
     This public wrapper is typically called from ``00_env_config`` notebooks
@@ -96,7 +96,7 @@ def load_fabric_config(config: FrameworkConfig | dict) -> FrameworkConfig:
 
     Examples
     --------
-    >>> cfg = load_fabric_config(framework_config)
+    >>> cfg = load_config(framework_config)
     >>> isinstance(cfg, FrameworkConfig)
     True
     """
@@ -138,7 +138,7 @@ def _get_spark(spark_session=None):
         ) from exc
 
 
-def lakehouse_table_read(lh, tablename, spark_session=None):
+def read_lakehouse_table(lh, tablename, spark_session=None):
     """Read a Delta table from a Fabric lakehouse.
 
     This reads from the lakehouse `Tables/` area using the ABFSS root stored in
@@ -170,7 +170,7 @@ def lakehouse_table_read(lh, tablename, spark_session=None):
     Examples
     --------
     >>> lh_source = get_path("Sandbox", "Source", config=CONFIG)
-    >>> df = lakehouse_table_read(lh_source, "RAW_ORDERS")
+    >>> df = read_lakehouse_table(lh_source, "RAW_ORDERS")
     """
     if not getattr(lh, "root", None):
         raise ValueError("lh.root is required.")
@@ -182,7 +182,7 @@ def lakehouse_table_read(lh, tablename, spark_session=None):
     return spark_obj.read.format("delta").load(path)
 
 
-def lakehouse_table_write(
+def write_lakehouse_table(
     df,
     lh,
     tablename,
@@ -235,7 +235,7 @@ def lakehouse_table_write(
     Examples
     --------
     >>> lh_unified = get_path("Sandbox", "Unified", config=CONFIG)
-    >>> lakehouse_table_write(
+    >>> write_lakehouse_table(
     ...     df,
     ...     lh_unified,
     ...     "CLEAN_ORDERS",
@@ -280,7 +280,7 @@ def lakehouse_table_write(
     writer.save(path)
 
 
-def lakehouse_csv_read(lh, relative_path, spark_session=None, header=True):
+def read_lakehouse_csv(lh, relative_path, spark_session=None, header=True):
     """Read a CSV file from a Fabric lakehouse Files path.
 
     This reads from the lakehouse `Files/` area using the ABFSS root stored in
@@ -315,7 +315,7 @@ def lakehouse_csv_read(lh, relative_path, spark_session=None, header=True):
     Examples
     --------
     >>> lh_source = get_path("Sandbox", "Source", config=CONFIG)
-    >>> df = lakehouse_csv_read(lh_source, "Files/raw/orders.csv")
+    >>> df = read_lakehouse_csv(lh_source, "Files/raw/orders.csv")
     """
     if not getattr(lh, "root", None):
         raise ValueError("lh.root is required.")
@@ -327,7 +327,7 @@ def lakehouse_csv_read(lh, relative_path, spark_session=None, header=True):
     return spark_obj.read.option("header", header).csv(path)
 
 
-def warehouse_read(env, target, schema, table, config=None, spark_session=None):
+def read_warehouse_table(env, target, schema, table, config=None, spark_session=None):
     """Read a table from a Microsoft Fabric warehouse.
 
     This uses Fabric Spark's `synapsesql` connector to read from a warehouse
@@ -367,7 +367,7 @@ def warehouse_read(env, target, schema, table, config=None, spark_session=None):
 
     Examples
     --------
-    >>> df = warehouse_read(
+    >>> df = read_warehouse_table(
     ...     env="EDLH",
     ...     target="wh_Bronze",
     ...     schema="dbo",
@@ -394,7 +394,7 @@ def warehouse_read(env, target, schema, table, config=None, spark_session=None):
     )
 
 
-def warehouse_write(df, env, target, schema, table, mode="append", config=None):
+def write_warehouse_table(df, env, target, schema, table, mode="append", config=None):
     """Write a Spark DataFrame to a Microsoft Fabric warehouse table.
 
     This uses Fabric Spark's `synapsesql` connector to write to a warehouse
@@ -439,7 +439,7 @@ def warehouse_write(df, env, target, schema, table, mode="append", config=None):
 
     Examples
     --------
-    >>> warehouse_write(
+    >>> write_warehouse_table(
     ...     df,
     ...     env="EDLH",
     ...     target="wh_Bronze",
@@ -475,7 +475,7 @@ def _convert_single_parquet_ns_to_us(local_in_path, local_out_path, verbose=True
     precision. This helper reads one local Parquet file with PyArrow, rewrites
     it with microsecond timestamp precision, and saves it to a fallback path.
 
-    This is an internal helper used by `lakehouse_parquet_read_as_spark`.
+    This is an internal helper used by `read_lakehouse_parquet`.
 
     Parameters
     ----------
@@ -523,7 +523,7 @@ def _convert_single_parquet_ns_to_us(local_in_path, local_out_path, verbose=True
         print(f"FAILED converting ns to us for file {local_in_path}: {exc}")
 
 
-def lakehouse_parquet_read_as_spark(lh, relative_path, verbose=True, spark_session=None):
+def read_lakehouse_parquet(lh, relative_path, verbose=True, spark_session=None):
     """Read a Parquet file from a Fabric lakehouse Files path.
 
     This reads from the lakehouse `Files/` area using Spark. If Spark cannot
@@ -562,7 +562,7 @@ def lakehouse_parquet_read_as_spark(lh, relative_path, verbose=True, spark_sessi
     Examples
     --------
     >>> lh_source = get_path("Sandbox", "Source", config=CONFIG)
-    >>> df = lakehouse_parquet_read_as_spark(
+    >>> df = read_lakehouse_parquet(
     ...     lh_source,
     ...     "raw/orders/orders_2026.parquet",
     ... )
@@ -652,7 +652,7 @@ def lakehouse_parquet_read_as_spark(lh, relative_path, verbose=True, spark_sessi
     raise RuntimeError("Failed to read from both original and _tsus Parquet paths.")
 
 
-def lakehouse_excel_read_as_spark(lh, relative_path, sheet_name=0, spark_session=None):
+def read_lakehouse_excel(lh, relative_path, sheet_name=0, spark_session=None):
     """Read an Excel file from a Fabric lakehouse Files path.
 
     Spark does not natively read Excel files. This helper reads the Excel file
@@ -693,7 +693,7 @@ def lakehouse_excel_read_as_spark(lh, relative_path, sheet_name=0, spark_session
     Examples
     --------
     >>> lh_source = get_path("Sandbox", "Source", config=CONFIG)
-    >>> df_mapping = lakehouse_excel_read_as_spark(
+    >>> df_mapping = read_lakehouse_excel(
     ...     lh_source,
     ...     "Files/reference/faculty_mapping.xlsx",
     ...     sheet_name="Mapping",
@@ -858,7 +858,7 @@ def seed_minimal_sample_source_table(
     table_name : str, default="minimal_source"
         Destination source-table name to seed for sample notebook runs.
     mode : str, default="overwrite"
-        Write mode passed to :func:`lakehouse_table_write`.
+        Write mode passed to :func:`write_lakehouse_table`.
     spark_session : object, optional
         Spark session to use. If omitted, the helper uses notebook global ``spark``.
 
@@ -881,5 +881,5 @@ def seed_minimal_sample_source_table(
     ]
     spark_obj = _get_spark(spark_session)
     df = spark_obj.createDataFrame(rows)
-    lakehouse_table_write(df, source_lakehouse, table_name, mode=mode)
+    write_lakehouse_table(df, source_lakehouse, table_name, mode=mode)
     return df

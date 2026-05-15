@@ -151,7 +151,7 @@ from fabricops_kit.config import (
     get_path,
     run_config_smoke_tests,
 )
-from fabricops_kit.fabric_input_output import Housepath, load_fabric_config
+from fabricops_kit.fabric_input_output import Housepath, load_config
 
 
 def _sample_framework_config():
@@ -174,9 +174,9 @@ def _sample_framework_config():
     )
 
 
-def test_load_fabric_config_accepts_framework_config():
+def test_load_config_accepts_framework_config():
     config = _sample_framework_config()
-    loaded = load_fabric_config(config)
+    loaded = load_config(config)
     assert loaded.path_config.paths["Sandbox"]["Source"].house_name == "SRC"
 
 

@@ -12,26 +12,11 @@ from datetime import datetime, timezone
 from typing import Any
 
 
-def _resolve_action_by(action_by: str | None) -> str:
-    if action_by:
-        return str(action_by)
-    try:
-        import notebookutils.runtime as nb_runtime  # type: ignore
-        context = getattr(nb_runtime, "context", None)
-        if isinstance(context, dict):
-            return context.get("userName") or context.get("userId") or "unknown"
-        get_method = getattr(context, "get", None)
-        if callable(get_method):
-            return get_method("userName") or get_method("userId") or "unknown"
-    except Exception:
-        pass
-    return "unknown"
-
 from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 from pyspark.sql import SparkSession
 from .data_profiling import profile_dataframe
-from .fabric_input_output import lakehouse_table_write
+from .fabric_input_output import write_lakehouse_table
 from .metadata import build_dq_rule_key, build_metadata_column_key, build_metadata_table_key, _now_utc_iso, _resolve_action_by
 from .config import DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
 
@@ -107,7 +92,7 @@ def _suggest_dq_rules(profile_df, prompt_template: str | None = None, output_col
     return profile_df.ai.generate_response(prompt=active_prompt, output_col=output_col)
 
 
-def _parse_dq_rules_dict_from_text(text: str) -> dict[str, list[dict[str, Any]]]:
+def __parse_dq_rules_dict_from_text(text: str) -> dict[str, list[dict[str, Any]]]:
     cleaned = str(text or "").strip()
     match = re.search(r"DQ_RULES\s*=\s*(\{.*\})", cleaned, flags=re.DOTALL)
     payload = match.group(1) if match else cleaned
@@ -118,10 +103,10 @@ def _parse_dq_rules_dict_from_text(text: str) -> dict[str, list[dict[str, Any]]]
     return parsed if isinstance(parsed, dict) else {}
 
 
-parse_dq_rules_dict_from_text = _parse_dq_rules_dict_from_text
+_parse_dq_rules_dict_from_text = __parse_dq_rules_dict_from_text
 
 
-def prepare_dq_profile_input(profile_rows: list[dict], table_name: str, column_contexts: list[dict]) -> list[dict]:
+def _prepare_dq_profile_input_rows(profile_rows: list[dict], table_name: str, column_contexts: list[dict]) -> list[dict]:
     """Join approved column business context into profile rows before DQ AI suggestion."""
     context_lookup = {r["column_name"]: r for r in column_contexts or [] if r.get("column_name")}
     out = []
@@ -134,7 +119,7 @@ def prepare_dq_profile_input(profile_rows: list[dict], table_name: str, column_c
     return out
 
 
-def attach_rule_metadata_keys(candidate_rules: list[dict], environment_name: str, dataset_name: str, table_name: str) -> list[dict]:
+def _attach_rule_metadata_keys(candidate_rules: list[dict], environment_name: str, dataset_name: str, table_name: str) -> list[dict]:
     """Attach deterministic metadata keys to candidate DQ rules."""
     out = []
     for rule in candidate_rules or []:
@@ -157,7 +142,7 @@ def _extract_dq_rules(response_df, table_name: str, response_col: str = "respons
     """Extract notebook-shaped AI responses and deduplicate candidate DQ rules by ``rule_id``."""
     candidates: list[dict[str, Any]] = []
     for row in response_df.select(response_col).collect():
-        candidates.extend(_parse_dq_rules_dict_from_text(row[response_col]).get(table_name, []))
+        candidates.extend(__parse_dq_rules_dict_from_text(row[response_col]).get(table_name, []))
     deduped: dict[str, dict[str, Any]] = {}
     for rule in candidates:
         rid = rule.get("rule_id")
@@ -166,7 +151,7 @@ def _extract_dq_rules(response_df, table_name: str, response_col: str = "respons
     return list(deduped.values())
 
 
-def suggest_dq_rules_with_fabric_ai(prepared_profile_df, prompt_template: str, output_col: str = "ai_dq_response"):
+def _suggest_dq_rules_with_fabric_ai(prepared_profile_df, prompt_template: str, output_col: str = "ai_dq_response"):
     """Run Fabric AI to draft DQ rules from prepared profile rows.
 
     Parameters
@@ -185,11 +170,11 @@ def suggest_dq_rules_with_fabric_ai(prepared_profile_df, prompt_template: str, o
     """
     ai = getattr(prepared_profile_df, "ai", None)
     if ai is None or not hasattr(ai, "generate_response"):
-        raise RuntimeError("suggest_dq_rules_with_fabric_ai requires Fabric DataFrame.ai.generate_response.")
+        raise RuntimeError("_suggest_dq_rules_with_fabric_ai requires Fabric DataFrame.ai.generate_response.")
     return prepared_profile_df.ai.generate_response(prompt=prompt_template, is_prompt_template=True, output_col=output_col)
 
 
-def extract_candidate_rules_from_responses(response_rows, table_name: str, response_col: str = "ai_dq_response") -> list[dict[str, Any]]:
+def _extract_candidate_rules_from_responses(response_rows, table_name: str, response_col: str = "ai_dq_response") -> list[dict[str, Any]]:
     """Extract candidate DQ rules from Spark/list AI responses.
 
     Parameters
@@ -211,32 +196,13 @@ def extract_candidate_rules_from_responses(response_rows, table_name: str, respo
     candidates: list[dict[str, Any]] = []
     for row in response_rows or []:
         text = row.get(response_col) or row.get("response") or ""
-        candidates.extend(_parse_dq_rules_dict_from_text(text).get(table_name, []))
+        candidates.extend(__parse_dq_rules_dict_from_text(text).get(table_name, []))
     by_id = {r.get("rule_id"): r for r in candidates if r.get("rule_id")}
     return list(by_id.values())
 
 
-def build_dq_review_rows(suggested_rules: list[dict[str, Any]], default_approval_status: str = "pending") -> list[dict[str, Any]]:
-    """Build notebook-editable DQ review rows without changing rule taxonomy."""
-    rows: list[dict[str, Any]] = []
-    for rule in suggested_rules or []:
-        rows.append(
-            {
-                "suggestion_type": "dq_rule",
-                "target_column": (rule.get("columns") or [None])[0],
-                "rule_name": rule.get("rule_type"),
-                "proposed_rule_payload": json.dumps(rule, sort_keys=True),
-                "business_reason": rule.get("description", ""),
-                "evidence": "",
-                "confidence": None,
-                "approval_status": default_approval_status,
-                "reviewer_notes": "",
-            }
-        )
-    return rows
 
-
-def approved_dq_rules_from_review_rows(review_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def _approved_dq_rules_from_review_rows(review_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Return approved canonical DQ rules from notebook review rows."""
     approved: list[dict[str, Any]] = []
     for row in review_rows or []:
@@ -531,7 +497,7 @@ def assert_dq_passed(dq_result_df) -> None:
 
 
 
-def _prepare_dq_profile_input(*, profile_df=None, df=None, table_name: str, business_context: str = ""):
+def __prepare_dq_profile_input_rows(*, profile_df=None, df=None, table_name: str, business_context: str = ""):
     if (profile_df is None) == (df is None):
         raise ValueError("Provide exactly one of profile_df or df.")
     if profile_df is None:
@@ -558,7 +524,7 @@ def _prepare_dq_profile_input(*, profile_df=None, df=None, table_name: str, busi
 
 def draft_dq_rules(*, profile_df=None, df=None, table_name: str, business_context: str = "", prompt_template: str | None = None, output_col: str = "response") -> list[dict[str, Any]]:
     """Draft candidate DQ rules from metadata profiles or raw DataFrame fallback."""
-    prepared = _prepare_dq_profile_input(profile_df=profile_df, df=df, table_name=table_name, business_context=business_context)
+    prepared = __prepare_dq_profile_input_rows(profile_df=profile_df, df=df, table_name=table_name, business_context=business_context)
     responses = _suggest_dq_rules(prepared, prompt_template=prompt_template, output_col=output_col)
     return _extract_dq_rules(responses, table_name=table_name, response_col=output_col)
 
@@ -570,11 +536,11 @@ def write_dq_rules(approved_rules, *, table_name: str, metadata_path, metadata_t
     if spark is None:
         raise ValueError("write_dq_rules requires an active SparkSession.")
     history_df = _build_dq_rule_history(spark, table_name=table_name, approved_rules=approved_rules, action_by=action_by, rule_source=rule_source, action_reason=action_reason)
-    lakehouse_table_write(history_df, metadata_path, metadata_table, mode=mode)
+    write_lakehouse_table(history_df, metadata_path, metadata_table, mode=mode)
     return history_df
 
 
-def enforce_dq_rules(df, *, table_name: str, rules=None, metadata_df=None, row_id_columns: list[str] | None = None, dq_run_id: str | None = None) -> DQEnforcementResult:
+def enforce_dq(df, *, table_name: str, rules=None, metadata_df=None, row_id_columns: list[str] | None = None, dq_run_id: str | None = None) -> DQEnforcementResult:
     """Enforce approved DQ rules and return structured deterministic outputs."""
     if rules is None and metadata_df is None:
         raise ValueError("Provide rules or metadata_df.")
@@ -585,7 +551,7 @@ def enforce_dq_rules(df, *, table_name: str, rules=None, metadata_df=None, row_i
     return DQEnforcementResult(active_rules, rule_results, valid_rows, quarantine_rows, failure_rows)
 
 
-def build_dq_rules_metadata_df(spark, approved_rules: list[dict], action_by: str | None = None, action_reason: str = "Approved by reviewer", rule_source: str = "dq_review_widget"):
+def _build_dq_rules_metadata_df(spark, approved_rules: list[dict], action_by: str | None = None, action_reason: str = "Approved by reviewer", rule_source: str = "dq_review_widget"):
     """Build approved DQ metadata rows as a Spark DataFrame."""
     rows = []
     now = _now_utc_iso()
@@ -616,7 +582,7 @@ def build_dq_rules_metadata_df(spark, approved_rules: list[dict], action_by: str
     return spark.createDataFrame(rows)
 
 
-def build_dq_rule_deactivation_metadata_df(spark, rejected_rules: list[dict], action_by: str | None = None, action_reason: str = "Rejected by reviewer", rule_source: str = "dq_review_widget"):
+def _build_dq_rule_deactivation_metadata_df(spark, rejected_rules: list[dict], action_by: str | None = None, action_reason: str = "Rejected by reviewer", rule_source: str = "dq_review_widget"):
     rows = []
     now = _now_utc_iso()
     actor = _resolve_action_by(action_by)
@@ -937,13 +903,13 @@ def run_dq_rule_review_widget(
     Notes
     -----
     This function intentionally does not return review outcomes synchronously.
-    In notebook workflows, call :func:`get_dq_rule_review_results` after the
+    In notebook workflows, call :func:`get_dq_review_results` after the
     analyst has completed widget interactions.
     """
     review_dq_rules(candidate_rules, table_name=table_name)
 
 
-def get_dq_rule_review_results(
+def get_dq_review_results(
     *,
     table_name: str,
     environment_name: str | None = None,
@@ -969,12 +935,12 @@ def get_dq_rule_review_results(
     approved = list(APPROVED_RULES_FROM_WIDGET)
     rejected = list(REJECTED_RULES_FROM_WIDGET)
     if environment_name and dataset_name:
-        approved = attach_rule_metadata_keys(approved, environment_name, dataset_name, table_name)
-        rejected = attach_rule_metadata_keys(rejected, environment_name, dataset_name, table_name)
+        approved = _attach_rule_metadata_keys(approved, environment_name, dataset_name, table_name)
+        rejected = _attach_rule_metadata_keys(rejected, environment_name, dataset_name, table_name)
     return {"approved_rules": approved, "rejected_rules": rejected}
 
 
-def load_approved_dq_rules(metadata_df, *, table_name: str) -> list[dict[str, Any]]:
+def load_dq_rules(metadata_df, *, table_name: str) -> list[dict[str, Any]]:
     """Load latest active approved DQ rules from append-only metadata history.
 
     Parameters

@@ -16,15 +16,15 @@ def test_no_mechanical_rename_regressions_in_templates_and_example():
     forbidden = [
         'profile_rows = draft_dq_rules(',
         'CANDIDATE_DQ_RULES = draft_dq_rules(responses',
-        'rules = enforce_dq_rules(metadata_dq_rules',
-        'df_valid, df_quarantine, dq_failure_evidence = enforce_dq_rules(',
+        'rules = enforce_dq(metadata_dq_rules',
+        'df_valid, df_quarantine, dq_failure_evidence = enforce_dq(',
         'write_dq_rules(\\n    spark=spark',
     ]
     for item in forbidden:
         assert item not in combined
 
     assert combined.count('draft_dq_rules,') <= 3
-    assert combined.count('enforce_dq_rules,') <= 3
+    assert combined.count('enforce_dq,') <= 3
 
 
 def test_expected_canonical_calls_present():
@@ -37,9 +37,9 @@ def test_expected_canonical_calls_present():
     assert 'write_dq_rules(' in ex
 
     assert 'metadata_dq_rules = spark.table("METADATA_DQ_RULES")' in pc
-    assert 'dq = enforce_dq_rules(' in pc
+    assert 'dq = enforce_dq(' in pc
     assert 'assert_dq_passed(dq.rule_results)' in pc
 
     assert 'profile_dataframe_to_metadata(df_test, table_name=TABLE_NAME)' in demo
-    assert 'dq = enforce_dq_rules(' in demo
+    assert 'dq = enforce_dq(' in demo
     assert 'assert_dq_passed(dq.rule_results)' in demo

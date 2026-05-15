@@ -399,7 +399,7 @@ def __add_hash_columns(
     return out
 
 
-def standardize_output_columns(df, run_id=None, pipeline_name=None, environment=None, source_table=None, datetime_columns=None, business_keys=None, bucket_column=None, engine="spark"):
+def standardize_columns(df, run_id=None, pipeline_name=None, environment=None, source_table=None, datetime_columns=None, business_keys=None, bucket_column=None, engine="spark"):
     """Apply canonical technical/audit enrichment in one notebook-facing wrapper."""
     out = df
     if datetime_columns:

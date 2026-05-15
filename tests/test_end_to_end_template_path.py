@@ -35,7 +35,7 @@ def test_00_env_config_import_and_default_prompt_override_guard():
     assert "notebook_runtime_config=RUNTIME_CONFIG" in prompt_block
     assert "\n    runtime_config=RUNTIME_CONFIG," not in prompt_block
     assert "NotebookRuntimeConfig(\n    allowed_notebook_prefixes=NOTEBOOK_PREFIXES,\n    validation_mode=VALIDATION_MODE" not in prompt_block
-    assert "setup_fabricops_notebook(\n    config=CONFIG,\n    env=ENV," in prompt_block
+    assert "setup_notebook(\n    config=CONFIG,\n    env=ENV," in prompt_block
     assert "validation_mode=VALIDATION_MODE" not in prompt_block
     assert "check_naming_convention(\n    allowed_prefixes=NOTEBOOK_PREFIXES,\n    fail_on_error=(VALIDATION_MODE == \"strict\"),\n)" in prompt_block
     assert "Suggest governance labels as JSON. Profile: {profile}" not in prompt_block
@@ -49,8 +49,8 @@ def test_00_env_config_is_environment_only_and_imports_package_helpers():
     for token in [
         "from fabricops_kit.fabric_input_output import (",
         "from fabricops_kit.config import (",
-        "setup_fabricops_notebook(",
-        "load_fabric_config(CONFIG)",
+        "setup_notebook(",
+        "load_config(CONFIG)",
     ]:
         assert token in text
     for token in [
@@ -95,7 +95,7 @@ def test_02_ex_and_03_pc_share_same_dq_table_key_convention():
     assert 'DQ_TABLE_NAME = TARGET_TABLE' in ex
     assert 'DQ_TABLE_NAME = TARGET_TABLE' in pc
     assert 'write_dq_rules(' in ex and 'table_name=DQ_TABLE_NAME' in ex
-    assert "enforce_dq_rules(" in pc
+    assert "enforce_dq(" in pc
     assert "table_name=DQ_TABLE_NAME" in pc
     assert "metadata_df=metadata_dq_rules" in pc
     assert "dq_run_id=RUN_ID" in pc
@@ -107,7 +107,7 @@ def test_03_pc_deterministic_only_and_valid_run_dq_signature():
     assert 'REQUIRED_SOURCE_COLUMNS = ["customer_id", "event_ts", "status", "amount"]' in pc
     assert 'missing = sorted(set(REQUIRED_SOURCE_COLUMNS) - set(df_source.columns))' in pc
     assert 'metadata_dq_rules = spark.table("METADATA_DQ_RULES")' in pc
-    assert "enforce_dq_rules(" in pc
+    assert "enforce_dq(" in pc
     assert "table_name=DQ_TABLE_NAME" in pc
     assert "metadata_df=metadata_dq_rules" in pc
     assert "dq_run_id=RUN_ID" in pc
@@ -120,8 +120,8 @@ def test_03_pc_deterministic_only_and_valid_run_dq_signature():
 
 def test_03_pc_output_write_occurs_after_dq_assertion():
     pc = _all_code("templates/notebooks/03_pc_agreement_source_to_target.ipynb")
-    assert pc.index("df_valid = dq.valid_rows") < pc.index("lakehouse_table_write(df_valid")
-    assert pc.index("assert_dq_passed(dq.rule_results)") < pc.index("lakehouse_table_write(df_valid")
+    assert pc.index("df_valid = dq.valid_rows") < pc.index("write_lakehouse_table(df_valid")
+    assert pc.index("assert_dq_passed(dq.rule_results)") < pc.index("write_lakehouse_table(df_valid")
 
 
 def test_03_pc_optional_advanced_evidence_is_guarded():
@@ -179,9 +179,9 @@ def test_essential_callable_coverage_in_current_starter_notebooks():
     # Allowed missing until governance-context notebook (01_data_agreement) exists.
     allowed_missing = {
         "Housepath",  # type-level helper not always shown explicitly in starter notebooks
-        "lakehouse_csv_read",  # ingestion variant; lakehouse table path is primary in current templates
-        "lakehouse_excel_read_as_spark",  # ingestion variant
-        "lakehouse_parquet_read_as_spark",  # ingestion variant
+        "read_lakehouse_csv",  # ingestion variant; lakehouse table path is primary in current templates
+        "read_lakehouse_excel",  # ingestion variant
+        "read_lakehouse_parquet",  # ingestion variant
     }
     missing = essentials - present - allowed_missing
     assert missing == set(), f"Missing essential callables in templates: {sorted(missing)}"
@@ -202,9 +202,9 @@ def test_01_data_agreement_template_exists_and_contains_required_context_fields(
 def test_01_data_agreement_template_has_no_dq_enforcement_or_column_widget_execution():
     text = Path("templates/notebooks/01_data_agreement_template.ipynb").read_text(encoding="utf-8")
     forbidden = [
-        "enforce_dq_rules(",
+        "enforce_dq(",
         "run_dq_rules(",
-        "capture_column_business_context(",
+        "review_business_context(",
         "review_dq_rules(",
         "review_column_governance_context(",
     ]
@@ -224,12 +224,12 @@ def test_02_ex_template_references_01_agreement_and_business_context_helpers():
     for token in [
         "%run 01_data_agreement_template",
         "BUSINESS_CONTEXT",
-        "prepare_business_context_profile_input",
-        "suggest_column_business_contexts",
-        "extract_column_business_context_suggestions",
-        "capture_column_business_context",
+        "_prepare_business_context_profile_input",
+        "draft_business_context",
+        "_extract_column_business_context_suggestions",
+        "review_business_context",
         "COLUMN_BUSINESS_CONTEXT_FROM_WIDGET",
-        "prepare_dq_profile_input",
+        "_prepare_dq_profile_input_rows",
         "prepare_governance_profile_input",
         "suggest_personal_identifier_classifications",
         "review_column_governance_context",
@@ -239,7 +239,7 @@ def test_02_ex_template_references_01_agreement_and_business_context_helpers():
 
 def test_03_pc_template_has_no_ai_suggestion_or_business_context_widget_calls():
     text = Path("templates/notebooks/03_pc_agreement_source_to_target.ipynb").read_text(encoding="utf-8")
-    for token in ["suggest_column_business_contexts", "suggest_personal_identifier_classifications", "capture_column_business_context"]:
+    for token in ["draft_business_context", "suggest_personal_identifier_classifications", "review_business_context"]:
         assert token not in text
 
 

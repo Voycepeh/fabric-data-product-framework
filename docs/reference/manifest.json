@@ -71,6 +71,13 @@
       "sidebar_include": true
     },
     {
+      "module_name": "notebook_registry",
+      "visibility": "public",
+      "module_summary": "",
+      "sidebar_group": "Modules",
+      "sidebar_include": true
+    },
+    {
       "module_name": "run_summary",
       "visibility": "public",
       "module_summary": "Run summary and handover markdown helpers.",
@@ -95,116 +102,8 @@
       "callable_name": "assert_dq_passed",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Segment 4: Run DQ, split outputs, and publish"
-    },
-    {
-      "module_name": "data_quality",
-      "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "attach_rule_metadata_keys",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "02_ex",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "data_quality",
-      "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_dq_review_rows",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "02_ex",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "data_quality",
-      "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_dq_rule_deactivation_metadata_df",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "02_ex",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "data_product_metadata",
-      "visibility": "public",
-      "module_summary": "Metadata table key builders and metadata write helpers.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": true,
-      "callable_name": "build_dq_rule_key",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "data_quality",
-      "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_dq_rules_metadata_df",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "02_ex",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "ai",
-      "visibility": "public",
-      "module_summary": "AI-assisted helper utilities and prompt builders.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_governance_candidate_prompt",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "data_governance",
-      "visibility": "public",
-      "module_summary": "Governance classification helpers and metadata builders.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_governance_context",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "01_data_agreement",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "ai",
-      "visibility": "public",
-      "module_summary": "AI-assisted helper utilities and prompt builders.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_handover_summary_prompt",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "data_lineage",
-      "visibility": "public",
-      "module_summary": "Lineage extraction and handover documentation helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_lineage_from_notebook_code",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "template_notebook": "02_ex",
-      "template_segment": "Optional lineage notes"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "data_lineage",
@@ -215,8 +114,8 @@
       "callable_name": "build_lineage_handover_markdown",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "data_lineage",
@@ -227,56 +126,8 @@
       "callable_name": "build_lineage_records",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
-    },
-    {
-      "module_name": "ai",
-      "visibility": "public",
-      "module_summary": "AI-assisted helper utilities and prompt builders.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_manual_governance_prompt_package",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "ai",
-      "visibility": "public",
-      "module_summary": "AI-assisted helper utilities and prompt builders.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_manual_handover_prompt_package",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "data_product_metadata",
-      "visibility": "public",
-      "module_summary": "Metadata table key builders and metadata write helpers.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": true,
-      "callable_name": "build_metadata_column_key",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "data_product_metadata",
-      "visibility": "public",
-      "module_summary": "Metadata table key builders and metadata write helpers.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": true,
-      "callable_name": "build_metadata_table_key",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "run_summary",
@@ -287,20 +138,8 @@
       "callable_name": "build_run_summary",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
-    },
-    {
-      "module_name": "business_context",
-      "visibility": "public",
-      "module_summary": "Business context suggestion and review helpers.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": true,
-      "callable_name": "capture_column_business_context",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "data_drift",
@@ -310,9 +149,9 @@
       "sidebar_include": true,
       "callable_name": "check_partition_drift",
       "callable_visibility": "public",
-      "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
+      "callable_role": "optional",
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "data_drift",
@@ -322,9 +161,9 @@
       "sidebar_include": true,
       "callable_name": "check_profile_drift",
       "callable_visibility": "public",
-      "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
+      "callable_role": "optional",
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "data_drift",
@@ -334,9 +173,21 @@
       "sidebar_include": true,
       "callable_name": "check_schema_drift",
       "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
+    },
+    {
+      "module_name": "business_context",
+      "visibility": "public",
+      "module_summary": "Business context suggestion and review helpers.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": true,
+      "callable_name": "draft_business_context",
+      "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "data_quality",
@@ -347,44 +198,8 @@
       "callable_name": "draft_dq_rules",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "02_ex",
-      "template_segment": "Segment 3: AI-assisted drafting (advisory only)"
-    },
-    {
-      "module_name": "data_quality",
-      "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "enforce_dq_rules",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Segment 4: Run DQ, split outputs, and publish"
-    },
-    {
-      "module_name": "data_quality",
-      "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "extract_candidate_rules_from_responses",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "02_ex",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "business_context",
-      "visibility": "public",
-      "module_summary": "Business context suggestion and review helpers.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": true,
-      "callable_name": "extract_column_business_context_suggestions",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "data_governance",
@@ -392,35 +207,11 @@
       "module_summary": "Governance classification helpers and metadata builders.",
       "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "extract_pii_suggestions",
+      "callable_name": "draft_governance",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "01_data_agreement",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "ai",
-      "visibility": "public",
-      "module_summary": "AI-assisted helper utilities and prompt builders.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "generate_governance_candidates_with_fabric_ai",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "ai",
-      "visibility": "public",
-      "module_summary": "AI-assisted helper utilities and prompt builders.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "generate_handover_summary_with_fabric_ai",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "data_quality",
@@ -428,11 +219,23 @@
       "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
       "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "get_dq_rule_review_results",
+      "callable_name": "enforce_dq",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "02_ex",
-      "template_segment": "Segment 3: AI-assisted drafting (advisory only)"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
+    },
+    {
+      "module_name": "data_quality",
+      "visibility": "public",
+      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "get_dq_review_results",
+      "callable_visibility": "public",
+      "callable_role": "essential",
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "environment_config",
@@ -443,80 +246,32 @@
       "callable_name": "get_path",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "00_env_config",
-      "template_segment": "Segment 2: Define environment targets and notebook policy"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
-      "module_name": "fabric_input_output",
+      "module_name": "notebook_registry",
       "visibility": "public",
-      "module_summary": "Lakehouse and warehouse read/write helpers.",
+      "module_summary": "",
       "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "lakehouse_csv_read",
+      "callable_name": "get_selected_agreement",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
-      "module_name": "fabric_input_output",
+      "module_name": "notebook_registry",
       "visibility": "public",
-      "module_summary": "Lakehouse and warehouse read/write helpers.",
+      "module_summary": "",
       "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "lakehouse_excel_read_as_spark",
+      "callable_name": "load_agreements",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "fabric_input_output",
-      "visibility": "public",
-      "module_summary": "Lakehouse and warehouse read/write helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "lakehouse_parquet_read_as_spark",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "fabric_input_output",
-      "visibility": "public",
-      "module_summary": "Lakehouse and warehouse read/write helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "lakehouse_table_read",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "template_notebook": "02_ex",
-      "template_segment": "Segment 2: Profile source and capture evidence"
-    },
-    {
-      "module_name": "fabric_input_output",
-      "visibility": "public",
-      "module_summary": "Lakehouse and warehouse read/write helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "lakehouse_table_write",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Segment 4: Run DQ, split outputs, and publish"
-    },
-    {
-      "module_name": "data_quality",
-      "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "load_approved_dq_rules",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Segment 4: Run DQ, split outputs, and publish"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "environment_config",
@@ -524,11 +279,23 @@
       "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
       "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "load_fabric_config",
+      "callable_name": "load_config",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "00_env_config",
-      "template_segment": "Segment 2: Define environment targets and notebook policy"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
+    },
+    {
+      "module_name": "data_quality",
+      "visibility": "public",
+      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "load_dq_rules",
+      "callable_visibility": "public",
+      "callable_role": "essential",
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "data_governance",
@@ -539,56 +306,20 @@
       "callable_name": "load_governance",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "01_data_agreement",
-      "template_segment": "Not mapped in template flow segment"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
-      "module_name": "ai",
+      "module_name": "notebook_registry",
       "visibility": "public",
-      "module_summary": "AI-assisted helper utilities and prompt builders.",
+      "module_summary": "",
       "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "parse_manual_ai_json_response",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "data_lineage",
-      "visibility": "public",
-      "module_summary": "Lineage extraction and handover documentation helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "plot_lineage_steps",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "business_context",
-      "visibility": "public",
-      "module_summary": "Business context suggestion and review helpers.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": true,
-      "callable_name": "prepare_business_context_profile_input",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "data_governance",
-      "visibility": "public",
-      "module_summary": "Governance classification helpers and metadata builders.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "prepare_governance_input",
+      "callable_name": "load_notebook_registry",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "01_data_agreement",
-      "template_segment": "Not mapped in template flow segment"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "data_profiling",
@@ -599,8 +330,80 @@
       "callable_name": "profile_dataframe",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "02_ex",
-      "template_segment": "Segment 2: Profile source and capture evidence"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
+    },
+    {
+      "module_name": "fabric_input_output",
+      "visibility": "public",
+      "module_summary": "Lakehouse and warehouse read/write helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "read_lakehouse_csv",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
+    },
+    {
+      "module_name": "fabric_input_output",
+      "visibility": "public",
+      "module_summary": "Lakehouse and warehouse read/write helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "read_lakehouse_excel",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
+    },
+    {
+      "module_name": "fabric_input_output",
+      "visibility": "public",
+      "module_summary": "Lakehouse and warehouse read/write helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "read_lakehouse_parquet",
+      "callable_visibility": "public",
+      "callable_role": "optional",
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
+    },
+    {
+      "module_name": "fabric_input_output",
+      "visibility": "public",
+      "module_summary": "Lakehouse and warehouse read/write helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "read_lakehouse_table",
+      "callable_visibility": "public",
+      "callable_role": "essential",
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
+    },
+    {
+      "module_name": "fabric_input_output",
+      "visibility": "public",
+      "module_summary": "Lakehouse and warehouse read/write helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "read_warehouse_table",
+      "callable_visibility": "public",
+      "callable_role": "essential",
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
+    },
+    {
+      "module_name": "notebook_registry",
+      "visibility": "public",
+      "module_summary": "",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "register_current_notebook",
+      "callable_visibility": "public",
+      "callable_role": "essential",
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "run_summary",
@@ -611,8 +414,20 @@
       "callable_name": "render_run_summary_markdown",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
+    },
+    {
+      "module_name": "business_context",
+      "visibility": "public",
+      "module_summary": "Business context suggestion and review helpers.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": true,
+      "callable_name": "review_business_context",
+      "callable_visibility": "public",
+      "callable_role": "essential",
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "data_quality",
@@ -623,8 +438,8 @@
       "callable_name": "review_dq_rule_deactivations",
       "callable_visibility": "public",
       "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "data_quality",
@@ -635,8 +450,8 @@
       "callable_name": "review_dq_rules",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "02_ex",
-      "template_segment": "Segment 3: AI-assisted drafting (advisory only)"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "data_governance",
@@ -647,56 +462,20 @@
       "callable_name": "review_governance",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "01_data_agreement",
-      "template_segment": "Not mapped in template flow segment"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
-      "module_name": "data_quality",
+      "module_name": "notebook_registry",
       "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
+      "module_summary": "",
       "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "run_dq_rule_review_widget",
+      "callable_name": "select_agreement",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "02_ex",
-      "template_segment": "Segment 3: AI-assisted drafting (advisory only)"
-    },
-    {
-      "module_name": "data_lineage",
-      "visibility": "public",
-      "module_summary": "Lineage extraction and handover documentation helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "scan_notebook_cells",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "data_lineage",
-      "visibility": "public",
-      "module_summary": "Lineage extraction and handover documentation helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "scan_notebook_lineage",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "fabric_input_output",
-      "visibility": "public",
-      "module_summary": "Lakehouse and warehouse read/write helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "seed_minimal_sample_source_table",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "02_ex",
-      "template_segment": "Segment 2: Profile source and capture evidence"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "environment_config",
@@ -704,11 +483,11 @@
       "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
       "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "setup_fabricops_notebook",
+      "callable_name": "setup_notebook",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "00_env_config",
-      "template_segment": "Segment 5: Run startup checks and show resolved paths"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "technical_columns",
@@ -716,47 +495,11 @@
       "module_summary": "Technical/audit enrichment helpers for pipeline outputs.",
       "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "standardize_output_columns",
+      "callable_name": "standardize_columns",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Segment 3: Transform and apply runtime standards"
-    },
-    {
-      "module_name": "business_context",
-      "visibility": "public",
-      "module_summary": "Business context suggestion and review helpers.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": true,
-      "callable_name": "suggest_column_business_contexts",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "data_quality",
-      "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "suggest_dq_rules_with_fabric_ai",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "02_ex",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "data_governance",
-      "visibility": "public",
-      "module_summary": "Governance classification helpers and metadata builders.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "suggest_pii_labels",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "template_notebook": "01_data_agreement",
-      "template_segment": "Not mapped in template flow segment"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "data_drift",
@@ -766,9 +509,9 @@
       "sidebar_include": true,
       "callable_name": "summarize_drift_results",
       "callable_visibility": "public",
-      "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Optional profiling, drift, governance, lineage, and handover"
+      "callable_role": "optional",
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "data_quality",
@@ -779,68 +522,20 @@
       "callable_name": "validate_dq_rules",
       "callable_visibility": "public",
       "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Segment 3: Transform and apply runtime standards"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
-      "module_name": "data_lineage",
+      "module_name": "business_context",
       "visibility": "public",
-      "module_summary": "Lineage extraction and handover documentation helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "validate_lineage_steps",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "fabric_input_output",
-      "visibility": "public",
-      "module_summary": "Lakehouse and warehouse read/write helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "warehouse_read",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "template_notebook": "02_ex",
-      "template_segment": "Segment 2: Profile source and capture evidence"
-    },
-    {
-      "module_name": "fabric_input_output",
-      "visibility": "public",
-      "module_summary": "Lakehouse and warehouse read/write helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "warehouse_write",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "template_notebook": "03_pc",
-      "template_segment": "Segment 4: Run DQ, split outputs, and publish"
-    },
-    {
-      "module_name": "data_product_metadata",
-      "visibility": "public",
-      "module_summary": "Metadata table key builders and metadata write helpers.",
+      "module_summary": "Business context suggestion and review helpers.",
       "sidebar_group": "Advanced",
       "sidebar_include": true,
-      "callable_name": "write_column_business_context",
+      "callable_name": "write_business_context",
       "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
-    },
-    {
-      "module_name": "data_product_metadata",
-      "visibility": "public",
-      "module_summary": "Metadata table key builders and metadata write helpers.",
-      "sidebar_group": "Advanced",
-      "sidebar_include": true,
-      "callable_name": "write_column_governance_context",
-      "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
+      "callable_role": "essential",
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "data_quality",
@@ -851,8 +546,8 @@
       "callable_name": "write_dq_rules",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "02_ex",
-      "template_segment": "Segment 3: AI-assisted drafting (advisory only)"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
       "module_name": "data_governance",
@@ -863,20 +558,32 @@
       "callable_name": "write_governance",
       "callable_visibility": "public",
       "callable_role": "essential",
-      "template_notebook": "01_data_agreement",
-      "template_segment": "Not mapped in template flow segment"
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     },
     {
-      "module_name": "data_product_metadata",
+      "module_name": "fabric_input_output",
       "visibility": "public",
-      "module_summary": "Metadata table key builders and metadata write helpers.",
-      "sidebar_group": "Advanced",
+      "module_summary": "Lakehouse and warehouse read/write helpers.",
+      "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "write_metadata_rows",
+      "callable_name": "write_lakehouse_table",
       "callable_visibility": "public",
-      "callable_role": "optional",
-      "template_notebook": "03_pc",
-      "template_segment": "Not mapped in template flow segment"
+      "callable_role": "essential",
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
+    },
+    {
+      "module_name": "fabric_input_output",
+      "visibility": "public",
+      "module_summary": "Lakehouse and warehouse read/write helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "write_warehouse_table",
+      "callable_visibility": "public",
+      "callable_role": "essential",
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
     }
   ]
 }

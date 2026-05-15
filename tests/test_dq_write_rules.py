@@ -22,7 +22,7 @@ def test_write_dq_rules_writes_history_payload(monkeypatch):
         written["mode"] = mode
 
     monkeypatch.setattr(dq, "build_dq_rule_history", _fake_build)
-    monkeypatch.setattr(dq, "lakehouse_table_write", _fake_write)
+    monkeypatch.setattr(dq, "write_lakehouse_table", _fake_write)
 
     out = dq.write_dq_rules(
         [{"rule_id": "r1", "rule_type": "not_null", "columns": ["c"], "severity": "error", "description": "d"}],
