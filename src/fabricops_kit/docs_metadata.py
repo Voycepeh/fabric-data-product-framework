@@ -34,19 +34,23 @@ class ModuleDocMetadata(TypedDict):
 
 
 MODULE_DOCS_METADATA: list[ModuleDocMetadata] = [
-    {"module_name": "environment_config", "visibility": "public", "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.", "sidebar_group": "Modules", "sidebar_include": True},
-    {"module_name": "fabric_input_output", "visibility": "public", "module_summary": "Lakehouse and warehouse read/write helpers.", "sidebar_group": "Modules", "sidebar_include": True},
-    {"module_name": "data_profiling", "visibility": "public", "module_summary": "Source/output profiling and metadata conversion helpers.", "sidebar_group": "Modules", "sidebar_include": True},
-    {"module_name": "data_quality", "visibility": "public", "module_summary": "Deterministic DQ rule validation and enforcement helpers.", "sidebar_group": "Modules", "sidebar_include": True},
-    {"module_name": "data_governance", "visibility": "public", "module_summary": "Governance classification helpers and metadata builders.", "sidebar_group": "Modules", "sidebar_include": True},
-    {"module_name": "data_lineage", "visibility": "public", "module_summary": "Lineage extraction and handover documentation helpers.", "sidebar_group": "Modules", "sidebar_include": True},
-        {"module_name": "data_drift", "visibility": "public", "module_summary": "Schema/profile/partition drift checks supporting notebook validation.", "sidebar_group": "Modules", "sidebar_include": True},
-        {"module_name": "handover", "visibility": "public", "module_summary": "Handover summary and handover markdown helpers.", "sidebar_group": "Modules", "sidebar_include": True},
-    {"module_name": "technical_columns", "visibility": "public", "module_summary": "Technical/audit enrichment helpers for pipeline outputs.", "sidebar_group": "Modules", "sidebar_include": True},
-    {"module_name": "data_agreement", "visibility": "internal", "module_summary": "Agreement metadata selection helpers for approved data agreements.", "sidebar_group": "Advanced", "sidebar_include": False},
-    {"module_name": "data_product_metadata", "visibility": "internal", "module_summary": "Generic metadata persistence and notebook traceability helpers.", "sidebar_group": "Advanced", "sidebar_include": False},
-    {"module_name": "business_context", "visibility": "internal", "module_summary": "Business context suggestion and review helpers.", "sidebar_group": "Advanced", "sidebar_include": False},
+    {"module_name": "config", "visibility": "public", "module_summary": "Owns environment setup, runtime initialization, paths, and notebook-wide configuration.", "sidebar_group": "0. Environment setup", "sidebar_include": True},
+    {"module_name": "business_context", "visibility": "public", "module_summary": "Owns business meaning for tables and columns.", "sidebar_group": "1. Governance steward", "sidebar_include": True},
+    {"module_name": "data_governance", "visibility": "public", "module_summary": "Owns sensitivity, PII, confidentiality, policy labels, and governance approval evidence.", "sidebar_group": "1. Governance steward", "sidebar_include": True},
+    {"module_name": "data_profiling", "visibility": "public", "module_summary": "Owns deterministic profiling evidence such as schema, nulls, distincts, min/max, and samples.", "sidebar_group": "2. Analyst / data scientist", "sidebar_include": True},
+    {"module_name": "data_quality", "visibility": "public", "module_summary": "Owns DQ rule drafting, review, enforcement, quarantine, and quality results.", "sidebar_group": "2. Analyst / data scientist", "sidebar_include": True},
+    {"module_name": "fabric_input_output", "visibility": "public", "module_summary": "Owns Fabric read/write helpers for Lakehouse, Warehouse, and file/table IO.", "sidebar_group": "3. Data engineer", "sidebar_include": True},
+    {"module_name": "technical_columns", "visibility": "public", "module_summary": "Owns standard output/audit columns for pipeline outputs.", "sidebar_group": "3. Data engineer", "sidebar_include": True},
+    {"module_name": "data_lineage", "visibility": "public", "module_summary": "Owns source-to-target lineage and transformation evidence.", "sidebar_group": "3. Data engineer", "sidebar_include": True},
+    {"module_name": "drift", "visibility": "public", "module_summary": "Owns schema/profile/data drift checks as engineering guardrails during pipeline runs.", "sidebar_group": "3. Data engineer", "sidebar_include": True},
+    {"module_name": "handover", "visibility": "public", "module_summary": "Owns generated maintainer-facing handover and contract narrative output.", "sidebar_group": "4. Handover / data contract", "sidebar_include": True},
+    {"module_name": "metadata", "visibility": "public", "module_summary": "Owns metadata/contract store access, evidence persistence, agreement metadata, notebook evidence, and contract assembly inputs.", "sidebar_group": "5. Metadata / contract store", "sidebar_include": True},
+    {"module_name": "ai", "visibility": "internal", "module_summary": "Internal AI utility surface used by workflow-facing public functions.", "sidebar_group": "Internal", "sidebar_include": False},
+    {"module_name": "docs_metadata", "visibility": "internal", "module_summary": "Documentation generation metadata and flow mapping internals.", "sidebar_group": "Internal", "sidebar_include": False},
+    {"module_name": "schemas", "visibility": "internal", "module_summary": "Internal schema artifacts used for validation and contracts.", "sidebar_group": "Internal", "sidebar_include": False},
+    {"module_name": "_utils", "visibility": "internal", "module_summary": "Internal shared helper utilities.", "sidebar_group": "Internal", "sidebar_include": False},
 ]
+
 
 class TemplateFlowSegmentMetadata(TypedDict):
     """Segment metadata for starter template guidance on the reference landing page."""
