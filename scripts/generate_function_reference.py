@@ -16,7 +16,6 @@ NOTEBOOK_STRUCTURE_DIR = ROOT / "docs" / "notebook-structure"
 MODULE_DIR = ROOT / "docs" / "api" / "modules"
 MKDOCS_PATH = ROOT / "mkdocs.yml"
 MANIFEST_PATH = ROOT / "docs" / "reference" / "manifest.json"
-DATA_AGREEMENT_PLACEHOLDER_MODULE = "data_agreement"  # TODO: remove special-case once module lands in src/fabricops_kit.
 
 PUBLIC_MODULE_PREFERRED_NAMES = {
     "config": "config",
@@ -381,43 +380,21 @@ def main() -> None:
         module_index_lines.append(f"- [`{module}`]({module}.md)")
 
     (MODULE_DIR / "index.md").write_text("\n".join(module_index_lines) + "\n", encoding="utf-8", newline="\n")
-    workflow_sidebar_groups = [
-        ("0. Environment setup", ["config"]),
-        ("1. Governance steward", [DATA_AGREEMENT_PLACEHOLDER_MODULE, "business_context", "data_governance"]),
-        ("2. Analyst / data scientist", ["data_profiling", "data_quality"]),
-        ("3. Data engineer", ["fabric_input_output", "technical_columns", "data_lineage", "drift"]),
-        ("4. Handover / data contract", ["handover"]),
-        ("5. Metadata / contract store", ["metadata"]),
-    ]
-    workflow_sidebar_modules = [m for _, mods in workflow_sidebar_groups for m in mods]
     discovered_set = set(discovered_doc_modules)
-    missing_workflow_modules = [m for m in workflow_sidebar_modules if m not in discovered_set and m != DATA_AGREEMENT_PLACEHOLDER_MODULE]
-    if missing_workflow_modules:
-        raise RuntimeError(f"Missing workflow sidebar modules in src/fabricops_kit: {', '.join(missing_workflow_modules)}")
-
-    if DATA_AGREEMENT_PLACEHOLDER_MODULE not in discovered_set:
-        placeholder_page = MODULE_DIR / f"{DATA_AGREEMENT_PLACEHOLDER_MODULE}.md"
-        placeholder_page.write_text(
-            "\n".join(
-                [
-                    "# `data_agreement` module (placeholder)",
-                    "",
-                    "This module page is reserved for the data agreement workflow. The implementation is landing in a separate PR.",
-                    "",
-                    "Once the data_agreement PR lands, this placeholder page should be replaced by the generated module page.",
-                    "",
-                ]
-            ),
-            encoding="utf-8",
-            newline="\n",
-        )
+    workflow_sidebar_rows = [row for row in module_docs_metadata if row.get("sidebar_include")]
+    workflow_sidebar_groups: dict[str, list[str]] = {}
+    for row in workflow_sidebar_rows:
+        module_name = row["module_name"]
+        if module_name not in discovered_set:
+            raise RuntimeError(f"Workflow sidebar module is missing in src/fabricops_kit: {module_name}")
+        workflow_sidebar_groups.setdefault(row["sidebar_group"], []).append(module_name)
 
     mkdocs_text = MKDOCS_PATH.read_text(encoding="utf-8")
     start_marker = "      # AUTO-GENERATED-MODULES-START"
     end_marker = "      # AUTO-GENERATED-MODULES-END"
     if start_marker in mkdocs_text and end_marker in mkdocs_text:
         generated_lines = ["          - Workflow Modules:"]
-        for group_name, modules in workflow_sidebar_groups:
+        for group_name, modules in workflow_sidebar_groups.items():
             generated_lines.append(f"              - {group_name}:")
             for module in modules:
                 generated_lines.append(f"                  - {module}: api/modules/{module}.md")
@@ -438,12 +415,12 @@ def main() -> None:
         manifest_rows.append(
             {
                 "module_name": canonical_module,
-                "visibility": "public",
+                "visibility": module_meta["visibility"],
                 "module_summary": module_meta["module_summary"],
                 "sidebar_group": module_meta["sidebar_group"],
-                "sidebar_include": True,
+                "sidebar_include": module_meta["sidebar_include"],
                 "callable_name": s.name,
-                "callable_visibility": "public",
+                "callable_visibility": module_meta["visibility"],
                 "callable_role": callable_role,
                 "template_notebook": docs_metadata[s.name].get("template_notebook"),
                 "template_segment": docs_metadata[s.name].get("template_segment"),
@@ -454,10 +431,10 @@ def main() -> None:
         meta = module_manifest.get(module, {})
         manifest_modules.append({
             "module_name": module,
-            "visibility": "public",
+            "visibility": meta.get("visibility", "public"),
             "module_summary": meta.get("module_summary", ""),
             "sidebar_group": meta.get("sidebar_group", "Modules"),
-            "sidebar_include": True,
+            "sidebar_include": meta.get("sidebar_include", True),
         })
     MANIFEST_PATH.write_text(json.dumps({"modules": manifest_modules, "callables": manifest_rows}, indent=2) + "\n", encoding="utf-8")
 

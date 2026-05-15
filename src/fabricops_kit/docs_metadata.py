@@ -35,6 +35,7 @@ class ModuleDocMetadata(TypedDict):
 
 MODULE_DOCS_METADATA: list[ModuleDocMetadata] = [
     {"module_name": "config", "visibility": "public", "module_summary": "Owns environment setup, runtime initialization, paths, and notebook-wide configuration.", "sidebar_group": "0. Environment setup", "sidebar_include": True},
+    {"module_name": "data_agreement", "visibility": "public", "module_summary": "Owns agreement discovery and selection helpers used to anchor notebook workflows to approved business agreements.", "sidebar_group": "1. Governance steward", "sidebar_include": True},
     {"module_name": "business_context", "visibility": "public", "module_summary": "Owns business meaning for tables and columns.", "sidebar_group": "1. Governance steward", "sidebar_include": True},
     {"module_name": "data_governance", "visibility": "public", "module_summary": "Owns sensitivity, PII, confidentiality, policy labels, and governance approval evidence.", "sidebar_group": "1. Governance steward", "sidebar_include": True},
     {"module_name": "data_profiling", "visibility": "public", "module_summary": "Owns deterministic profiling evidence such as schema, nulls, distincts, min/max, and samples.", "sidebar_group": "2. Analyst / data scientist", "sidebar_include": True},
