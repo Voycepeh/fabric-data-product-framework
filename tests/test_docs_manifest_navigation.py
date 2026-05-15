@@ -36,13 +36,15 @@ def test_discovered_modules_generate_docs_pages_and_nav() -> None:
 def test_workflow_modules_are_present_and_internal_modules_hidden_from_sidebar() -> None:
     _run_generator()
     mkdocs_text = (ROOT / "mkdocs.yml").read_text(encoding="utf-8")
+    assert "- Function Usage Guide: reference/function-usage-guide.md" in mkdocs_text
     assert "- business_context: api/modules/business_context.md" in mkdocs_text
     assert "- data_agreement: api/modules/data_agreement.md" in mkdocs_text
     assert "- metadata: api/modules/metadata.md" in mkdocs_text
     assert "- ai: api/modules/ai.md" not in mkdocs_text
     assert "- docs_metadata: api/modules/docs_metadata.md" not in mkdocs_text
     assert "- schemas: api/modules/schemas.md" not in mkdocs_text
-    assert "- 3. Data engineer:" in mkdocs_text
+    assert "Workflow Modules" not in mkdocs_text
+    assert "- 3. Data engineer:" not in mkdocs_text
     assert "- drift: api/modules/drift.md" in mkdocs_text
 
 

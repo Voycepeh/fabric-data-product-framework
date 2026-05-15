@@ -652,22 +652,20 @@ def main() -> None:
     (MODULE_DIR / "index.md").write_text("\n".join(module_index_lines) + "\n", encoding="utf-8", newline="\n")
     discovered_set = set(discovered_doc_modules)
     workflow_sidebar_rows = [row for row in module_docs_metadata if row.get("sidebar_include")]
-    workflow_sidebar_groups: dict[str, list[str]] = {}
+    sidebar_modules: list[str] = []
     for row in workflow_sidebar_rows:
         module_name = row["module_name"]
         if module_name not in discovered_set:
             raise RuntimeError(f"Workflow sidebar module is missing in src/fabricops_kit: {module_name}")
-        workflow_sidebar_groups.setdefault(row["sidebar_group"], []).append(module_name)
+        sidebar_modules.append(module_name)
 
     mkdocs_text = MKDOCS_PATH.read_text(encoding="utf-8")
     start_marker = "      # AUTO-GENERATED-MODULES-START"
     end_marker = "      # AUTO-GENERATED-MODULES-END"
     if start_marker in mkdocs_text and end_marker in mkdocs_text:
         generated_lines = []
-        for group_name, modules in workflow_sidebar_groups.items():
-            generated_lines.append(f"          - {group_name}:")
-            for module in modules:
-                generated_lines.append(f"              - {module}: api/modules/{module}.md")
+        for module in sidebar_modules:
+            generated_lines.append(f"          - {module}: api/modules/{module}.md")
         generated = "\n".join(generated_lines)
         before, rest = mkdocs_text.split(start_marker, 1)
         middle, after = rest.split(end_marker, 1)
@@ -830,10 +828,10 @@ def main() -> None:
                 notebook_lines.append("")
         (NOTEBOOK_STRUCTURE_DIR / page_name).write_text("\n".join(notebook_lines) + "\n", encoding="utf-8", newline="\n")
 
-    ref = [
-        "# Function Reference",
+    usage_guide = [
+        "# Function Usage Guide",
         "",
-        "Use this page as an API lookup after you understand the notebook flow.",
+        "Start here to orient yourself before using the callable lookup pages.",
         "",
         "## Start from the templates",
         "",
@@ -860,9 +858,9 @@ def main() -> None:
         if guided_link:
             guided_usage = f"{guided_usage}<br><a href=\"{_esc(guided_link)}\">View guided structure</a>"
         template_rows.append([f"<code>{_esc(_strip_backticks(row['notebook_label']))}</code>", guided_usage, template_link])
-    ref.extend(_html_table("reference-template-table", ["Notebook", "Guided usage", "Full template"], template_rows))
+    usage_guide.extend(_html_table("reference-template-table", ["Notebook", "Guided usage", "Full template"], template_rows))
 
-    ref.extend([
+    usage_guide.extend([
         "",
         "## What runs where",
         "",
@@ -874,6 +872,14 @@ def main() -> None:
         "AI functions are advisory. Approved contracts and pipeline notebooks are the enforcement point.",
         "",
     ])
+    (REFERENCE_PATH.parent / "function-usage-guide.md").write_text("\n".join(usage_guide) + "\n", encoding="utf-8", newline="\n")
+
+    ref = [
+        "# Function Reference",
+        "",
+        "Use this page as a callable lookup.",
+        "",
+    ]
 
     ref.extend(
         [

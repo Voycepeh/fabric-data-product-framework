@@ -530,10 +530,6 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 
 | caller module | caller function | callee module | callee function |
 |---|---|---|---|
-| `data_governance` | `review_governance` | `metadata` | `build_metadata_table_key` |
-| `data_governance` | `review_governance` | `metadata` | `build_metadata_column_key` |
-| `data_governance` | `review_governance` | `metadata` | `_now_utc_iso` |
-| `data_governance` | `_approved_widget_rows` | `metadata` | `_resolve_action_by` |
 | `data_quality` | `_attach_rule_metadata_keys` | `metadata` | `build_metadata_table_key` |
 | `data_quality` | `_attach_rule_metadata_keys` | `metadata` | `build_dq_rule_key` |
 | `data_quality` | `_attach_rule_metadata_keys` | `metadata` | `build_metadata_column_key` |
@@ -545,9 +541,18 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 | `data_quality` | `_build_dq_rules_metadata_df` | `metadata` | `_resolve_action_by` |
 | `data_quality` | `_build_dq_rule_deactivation_metadata_df` | `metadata` | `_now_utc_iso` |
 | `data_quality` | `_build_dq_rule_deactivation_metadata_df` | `metadata` | `_resolve_action_by` |
+| `data_profiling` | `_get_profiled_columns` | `technical_columns` | `_default_technical_columns` |
 | `fabric_input_output` | `load_config` | `config` | `load_config` |
 | `fabric_input_output` | `read_warehouse_table` | `config` | `get_path` |
 | `fabric_input_output` | `write_warehouse_table` | `config` | `get_path` |
+| `metadata` | `write_metadata_rows` | `fabric_input_output` | `write_lakehouse_table` |
+| `business_context` | `review_business_context` | `metadata` | `build_metadata_table_key` |
+| `business_context` | `review_business_context` | `metadata` | `build_metadata_column_key` |
+| `business_context` | `write_business_context` | `metadata` | `write_column_business_context` |
+| `data_governance` | `review_governance` | `metadata` | `build_metadata_table_key` |
+| `data_governance` | `review_governance` | `metadata` | `build_metadata_column_key` |
+| `data_governance` | `review_governance` | `metadata` | `_now_utc_iso` |
+| `data_governance` | `_approved_widget_rows` | `metadata` | `_resolve_action_by` |
 | `drift` | `_json_dumps` | `_utils` | `_to_jsonable` |
 | `drift` | `_build_pandas_partition_snapshot` | `_utils` | `_to_jsonable` |
 | `drift` | `_build_pandas_partition_snapshot` | `_utils` | `_to_jsonable` |
@@ -558,11 +563,6 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 | `drift` | `compare_partition_snapshots` | `_utils` | `_to_jsonable` |
 | `drift` | `compare_partition_snapshots` | `_utils` | `_to_jsonable` |
 | `drift` | `build_incremental_safety_records` | `_utils` | `_to_jsonable` |
-| `data_profiling` | `_get_profiled_columns` | `technical_columns` | `_default_technical_columns` |
-| `metadata` | `write_metadata_rows` | `fabric_input_output` | `write_lakehouse_table` |
-| `business_context` | `review_business_context` | `metadata` | `build_metadata_table_key` |
-| `business_context` | `review_business_context` | `metadata` | `build_metadata_column_key` |
-| `business_context` | `write_business_context` | `metadata` | `write_column_business_context` |
 
 ## Module dependency summary
 
@@ -570,7 +570,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 |---|---|---|---:|---:|
 | `_utils` | — | — | 0 | 1 |
 | `business_context` | `metadata` | — | 3 | 4 |
-| `config` | — | — | 3 | 12 |
+| `config` | — | `fabric_input_output` | 3 | 12 |
 | `data_agreement` | — | — | 3 | 3 |
 | `data_governance` | `metadata` | — | 4 | 6 |
 | `data_lineage` | — | — | 2 | 13 |
@@ -580,5 +580,5 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 | `drift` | `_utils` | — | 4 | 14 |
 | `fabric_input_output` | `config` | `data_quality` | 8 | 3 |
 | `handover` | — | — | 2 | 1 |
-| `metadata` | `fabric_input_output` | `data_governance`, `data_quality` | 2 | 6 |
-| `technical_columns` | — | — | 1 | 10 |
+| `metadata` | `fabric_input_output` | `data_quality` | 2 | 6 |
+| `technical_columns` | — | `data_profiling` | 1 | 10 |
