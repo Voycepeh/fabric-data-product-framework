@@ -25,12 +25,13 @@ The core execution path is a 7-step workflow aligned to the visual flow: **AI su
 | Step | Where | What happens | Output |
 |---|---|---|---|
 | 1. Source data | Input dataframe or source table | Start from the raw dataframe or source table. | Source dataframe |
-| 2a. Profile data | Exploration notebook (`02_ex`) | Create profile evidence such as null counts, distinct values, ranges, and patterns. | Profile evidence metadata |
-| 2b. AI suggests DQ rules | Exploration notebook (`02_ex`) | Generate candidate value-level DQ rules from profile evidence and business context. | Candidate DQ rules |
-| 3. Human review and approval | Analyst/engineer + DQ review widget in `02_ex` | Review, edit, approve, or reject suggested rules. | Reviewed decisions + approved rules |
-| 4. Store approved rules | Exploration notebook (`02_ex`) + metadata | Persist approved rules as governed metadata history. | Approved DQ metadata |
-| 5. Pipeline applies approved rules | Pipeline notebook (`03_pc`) | Load only approved active rules and enforce them deterministically. | DQ enforcement result |
-| 6. Split results | Pipeline notebook (`03_pc`) | Split enforcement output into accepted rows and quarantined failed rows with reasons. | Accepted rows + quarantined rows |
+| 2a. Load profiled data and approved rules | Exploration notebook (`02_ex`) + metadata | Load existing profile evidence and currently approved active DQ rules when available. | Reusable profile + active-rule context |
+| 2b. Profile data (if needed) | Exploration notebook (`02_ex`) | Profile or refresh evidence only when profile metadata is missing or stale for the current dataset/question. | Current profile evidence metadata |
+| 3. AI suggests DQ rules | Exploration notebook (`02_ex`) | Generate candidate value-level DQ rules from profile evidence and business context. | Candidate DQ rules |
+| 4. Human review and approval | Analyst/engineer + DQ review widget in `02_ex` | Review, edit, approve, or reject suggested rules. | Reviewed decisions + approved rules |
+| 5. Store approved rules | Exploration notebook (`02_ex`) + metadata | Persist approved rules as governed metadata history. | Approved DQ metadata |
+| 6. Pipeline applies approved rules | Pipeline notebook (`03_pc`) | Load only approved active rules and enforce them deterministically. | DQ enforcement result |
+| 7. Split results | Pipeline notebook (`03_pc`) | Split enforcement output into accepted rows and quarantined failed rows with reasons. | Accepted rows + quarantined rows |
 
 Use one shared metadata key across notebooks (for example `DQ_TABLE_NAME = TARGET_TABLE`) so exploration writes and pipeline enforcement reads the same governed rule set.
 
