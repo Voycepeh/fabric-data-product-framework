@@ -23,7 +23,7 @@ Run this recipe:
 
 - after packaging changes
 - after notebook starter changes (`00_env_config` / `02_ex` / `03_pc`)
-- after DQ/profiling/drift/governance/lineage/metadata/run summary changes
+- after DQ/profiling/drift/governance/lineage/metadata/handover summary changes
 - before full actual-data pipeline-contract testing
 - before publishing a new wheel for team use
 
@@ -149,7 +149,7 @@ PASS if:
 - deterministic DQ rules run
 - sample DQ issues are surfaced
 - no writes happen in safe mode
-- run summary and AI handoff context are generated
+- handover summary and AI handoff context are generated
 - final gate gives clear readiness status
 
 FAIL if:

@@ -1,14 +1,22 @@
-# `handover` module (internal)
+# `handover` module
 
 <div class="api-status-block">
-  <span class="api-chip api-chip-internal">Internal-only module</span>
-  <div class="api-chip-subtitle">Not intended as a primary user-facing API surface.</div>
+  <span class="api-chip api-chip-module">Module overview</span>
 </div>
 
-## Public callables from `__all__`
+## Essential callables
 
-No public exports in this module.
+| Callable | Type | Summary | Related helpers |
+|---|---|---|---|
+| [`build_handover`](../../reference/build_handover/) | function | Build a handover-friendly summary for one data product run. | — |
+| [`render_handover_markdown`](../../reference/render_handover_markdown/) | function | Render a handover summary dictionary into Markdown for handover notes. | [`_status_of`](../../reference/internal/handover/_status_of/) (internal) |
 
-## Internal helpers
+## Optional callables
 
-No module-level internal helpers detected.
+No advanced helpers listed for this module.
+
+## Related internal helpers
+
+| Helper | Related public callables |
+|---|---|
+| [`_status_of`](../../reference/internal/handover/_status_of/) | [`render_handover_markdown`](../../reference/render_handover_markdown/) |

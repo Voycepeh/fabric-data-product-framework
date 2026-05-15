@@ -60,7 +60,7 @@ def _contract(refresh_mode=None):
         "schema": {"required_source_columns": ["order_id", "updated_at"], "required_output_columns": ["order_id", "updated_at"]},
         "quality": {"rules": [{"rule_id": "DQ001", "rule_type": "not_null", "column": "order_id", "severity": "critical"}]},
         "drift": {"schema_policy": {}, "incremental_policy": {}},
-        "metadata": {"source_profile_table": "meta.source_profile", "output_profile_table": "meta.output_profile", "schema_snapshot_table": "meta.schema_snapshot", "partition_snapshot_table": "meta.partition_snapshot", "quality_result_table": "meta.quality_result", "quarantine_table": "meta.quarantine", "contract_validation_table": "meta.contract_validation", "lineage_table": "meta.lineage", "run_summary_table": "meta.run_summary", "dataset_runs_table": "meta.dataset_runs"},
+        "metadata": {"source_profile_table": "meta.source_profile", "output_profile_table": "meta.output_profile", "schema_snapshot_table": "meta.schema_snapshot", "partition_snapshot_table": "meta.partition_snapshot", "quality_result_table": "meta.quality_result", "quarantine_table": "meta.quarantine", "contract_validation_table": "meta.contract_validation", "lineage_table": "meta.lineage", "handover_table": "meta.handover", "dataset_runs_table": "meta.dataset_runs"},
     }
     if refresh_mode is not None:
         c["refresh"] = {"mode": refresh_mode}
@@ -109,7 +109,7 @@ def test_load_data_contract_accepts_dict_and_path(tmp_path: Path):
         "  quarantine_table: m.quarantine\n"
         "  contract_validation_table: m.contract_validation\n"
         "  lineage_table: m.lineage\n"
-        "  run_summary_table: m.run_summary\n"
+        "  handover_table: m.handover\n"
         "  dataset_runs_table: m.dataset_runs\n",
         encoding="utf-8",
     )

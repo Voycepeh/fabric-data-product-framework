@@ -15,7 +15,7 @@ FabricOps still produces a data contract. The contract is assembled from approve
 | What quality evidence was observed in this run? | DQ results and quarantine evidence |
 | What drift boundaries are approved and what drift occurred? | Drift guardrails and drift results |
 | How was the output produced? | Lineage and transformation evidence |
-| When and where did this run execute? | Runtime/run summary metadata |
+| When and where did this run execute? | Runtime/handover summary metadata |
 
 ## Conceptual assembled shape (handover view)
 

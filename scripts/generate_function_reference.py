@@ -28,7 +28,7 @@ PUBLIC_MODULE_PREFERRED_NAMES = {
     "data_governance": "data_governance",
     "metadata": "data_product_metadata",
     "data_lineage": "data_lineage",
-    "run_summary": "run_summary",
+    "handover": "handover",
     "technical_columns": "technical_columns",
 }
 INTERNAL_MODULE_BLACKLIST = {"_utils"}
