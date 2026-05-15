@@ -39,7 +39,6 @@ nav:
       - Function Reference: reference/index.md
       - Modules:
       # AUTO-GENERATED-MODULES-START
-          - ai: api/modules/ai.md
           - business_context: api/modules/business_context.md
           - environment_config: api/modules/environment_config.md
           - data_governance: api/modules/data_governance.md
