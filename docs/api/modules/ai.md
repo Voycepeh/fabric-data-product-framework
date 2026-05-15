@@ -16,6 +16,5 @@ No advanced helpers listed for this module.
 
 | Helper | Related public callables |
 |---|---|
-| [`_compact_sample_rows`](../../reference/internal/ai/_compact_sample_rows/) | — |
-| [`_require_fabric_ai_dataframe`](../../reference/internal/ai/_require_fabric_ai_dataframe/) | — |
-| [`_resolve_prompt_template`](../../reference/internal/ai/_resolve_prompt_template/) | — |
+| [`_check_fabric_ai_functions_available`](../../reference/internal/ai/_check_fabric_ai_functions_available/) | — |
+| [`_configure_fabric_ai_functions`](../../reference/internal/ai/_configure_fabric_ai_functions/) | — |
