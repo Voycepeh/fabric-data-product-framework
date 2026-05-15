@@ -15,6 +15,13 @@
       "sidebar_include": true
     },
     {
+      "module_name": "data_agreement",
+      "visibility": "public",
+      "module_summary": "Agreement metadata selection helpers for approved data agreements.",
+      "sidebar_group": "Advanced",
+      "sidebar_include": true
+    },
+    {
       "module_name": "data_governance",
       "visibility": "public",
       "module_summary": "Owns sensitivity, PII, confidentiality, policy labels, and governance approval evidence.",
@@ -66,8 +73,8 @@
     {
       "module_name": "metadata",
       "visibility": "public",
-      "module_summary": "Owns metadata/contract store access, evidence persistence, agreement metadata, notebook evidence, and contract assembly inputs.",
-      "sidebar_group": "5. Metadata / contract store",
+      "module_summary": "Generic metadata persistence and notebook traceability helpers.",
+      "sidebar_group": "Advanced",
       "sidebar_include": true
     },
     {
@@ -236,10 +243,10 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "metadata",
+      "module_name": "data_agreement",
       "visibility": "public",
-      "module_summary": "Owns metadata/contract store access, evidence persistence, agreement metadata, notebook evidence, and contract assembly inputs.",
-      "sidebar_group": "5. Metadata / contract store",
+      "module_summary": "Agreement metadata selection helpers for approved data agreements.",
+      "sidebar_group": "Advanced",
       "sidebar_include": true,
       "callable_name": "get_selected_agreement",
       "callable_visibility": "public",
@@ -248,10 +255,10 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "metadata",
+      "module_name": "data_agreement",
       "visibility": "public",
-      "module_summary": "Owns metadata/contract store access, evidence persistence, agreement metadata, notebook evidence, and contract assembly inputs.",
-      "sidebar_group": "5. Metadata / contract store",
+      "module_summary": "Agreement metadata selection helpers for approved data agreements.",
+      "sidebar_group": "Advanced",
       "sidebar_include": true,
       "callable_name": "load_agreements",
       "callable_visibility": "public",
@@ -298,8 +305,8 @@
     {
       "module_name": "metadata",
       "visibility": "public",
-      "module_summary": "Owns metadata/contract store access, evidence persistence, agreement metadata, notebook evidence, and contract assembly inputs.",
-      "sidebar_group": "5. Metadata / contract store",
+      "module_summary": "Generic metadata persistence and notebook traceability helpers.",
+      "sidebar_group": "Advanced",
       "sidebar_include": true,
       "callable_name": "load_notebook_registry",
       "callable_visibility": "public",
@@ -382,8 +389,8 @@
     {
       "module_name": "metadata",
       "visibility": "public",
-      "module_summary": "Owns metadata/contract store access, evidence persistence, agreement metadata, notebook evidence, and contract assembly inputs.",
-      "sidebar_group": "5. Metadata / contract store",
+      "module_summary": "Generic metadata persistence and notebook traceability helpers.",
+      "sidebar_group": "Advanced",
       "sidebar_include": true,
       "callable_name": "register_current_notebook",
       "callable_visibility": "public",
@@ -452,10 +459,10 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "metadata",
+      "module_name": "data_agreement",
       "visibility": "public",
-      "module_summary": "Owns metadata/contract store access, evidence persistence, agreement metadata, notebook evidence, and contract assembly inputs.",
-      "sidebar_group": "5. Metadata / contract store",
+      "module_summary": "Agreement metadata selection helpers for approved data agreements.",
+      "sidebar_group": "Advanced",
       "sidebar_include": true,
       "callable_name": "select_agreement",
       "callable_visibility": "public",
