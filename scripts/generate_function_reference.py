@@ -16,6 +16,7 @@ NOTEBOOK_STRUCTURE_DIR = ROOT / "docs" / "notebook-structure"
 MODULE_DIR = ROOT / "docs" / "api" / "modules"
 MKDOCS_PATH = ROOT / "mkdocs.yml"
 MANIFEST_PATH = ROOT / "docs" / "reference" / "manifest.json"
+DATA_AGREEMENT_PLACEHOLDER_MODULE = "data_agreement"  # TODO: remove special-case once module lands in src/fabricops_kit.
 
 PUBLIC_MODULE_PREFERRED_NAMES = {
     "config": "config",
@@ -373,7 +374,7 @@ def main() -> None:
     (MODULE_DIR / "index.md").write_text("\n".join(module_index_lines) + "\n", encoding="utf-8", newline="\n")
     workflow_sidebar_groups = [
         ("0. Environment setup", ["config"]),
-        ("1. Governance steward", ["business_context", "data_governance"]),
+        ("1. Governance steward", [DATA_AGREEMENT_PLACEHOLDER_MODULE, "business_context", "data_governance"]),
         ("2. Analyst / data scientist", ["data_profiling", "data_quality"]),
         ("3. Data engineer", ["fabric_input_output", "technical_columns", "data_lineage", "drift"]),
         ("4. Handover / data contract", ["handover"]),
@@ -381,9 +382,26 @@ def main() -> None:
     ]
     workflow_sidebar_modules = [m for _, mods in workflow_sidebar_groups for m in mods]
     discovered_set = set(discovered_doc_modules)
-    missing_workflow_modules = [m for m in workflow_sidebar_modules if m not in discovered_set]
+    missing_workflow_modules = [m for m in workflow_sidebar_modules if m not in discovered_set and m != DATA_AGREEMENT_PLACEHOLDER_MODULE]
     if missing_workflow_modules:
         raise RuntimeError(f"Missing workflow sidebar modules in src/fabricops_kit: {', '.join(missing_workflow_modules)}")
+
+    if DATA_AGREEMENT_PLACEHOLDER_MODULE not in discovered_set:
+        placeholder_page = MODULE_DIR / f"{DATA_AGREEMENT_PLACEHOLDER_MODULE}.md"
+        placeholder_page.write_text(
+            "\n".join(
+                [
+                    "# `data_agreement` module (placeholder)",
+                    "",
+                    "This module page is reserved for the data agreement workflow. The implementation is landing in a separate PR.",
+                    "",
+                    "Once the data_agreement PR lands, this placeholder page should be replaced by the generated module page.",
+                    "",
+                ]
+            ),
+            encoding="utf-8",
+            newline="\n",
+        )
 
     mkdocs_text = MKDOCS_PATH.read_text(encoding="utf-8")
     start_marker = "      # AUTO-GENERATED-MODULES-START"
@@ -391,7 +409,7 @@ def main() -> None:
     if start_marker in mkdocs_text and end_marker in mkdocs_text:
         generated_lines = ["          - Workflow Modules:"]
         for group_name, modules in workflow_sidebar_groups:
-            generated_lines.append(f"              - {group_name}")
+            generated_lines.append(f"              - {group_name}:")
             for module in modules:
                 generated_lines.append(f"                  - {module}: api/modules/{module}.md")
         generated = "\n".join(generated_lines)

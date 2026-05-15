@@ -37,10 +37,19 @@ def test_workflow_modules_are_present_and_internal_modules_hidden_from_sidebar()
     _run_generator()
     mkdocs_text = (ROOT / "mkdocs.yml").read_text(encoding="utf-8")
     assert "- business_context: api/modules/business_context.md" in mkdocs_text
+    assert "- data_agreement: api/modules/data_agreement.md" in mkdocs_text
     assert "- metadata: api/modules/metadata.md" in mkdocs_text
     assert "- ai: api/modules/ai.md" not in mkdocs_text
     assert "- docs_metadata: api/modules/docs_metadata.md" not in mkdocs_text
     assert "- schemas: api/modules/schemas.md" not in mkdocs_text
+    assert "- 3. Data engineer:" in mkdocs_text
+    assert "- drift: api/modules/drift.md" in mkdocs_text
+
+
+def test_data_agreement_placeholder_page_exists() -> None:
+    _run_generator()
+    text = (ROOT / "docs" / "api" / "modules" / "data_agreement.md").read_text(encoding="utf-8")
+    assert "reserved for the data agreement workflow" in text
 
 
 def test_public_callables_point_to_generated_module_pages() -> None:

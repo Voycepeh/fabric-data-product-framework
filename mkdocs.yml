@@ -40,22 +40,23 @@ nav:
       - Modules:
       # AUTO-GENERATED-MODULES-START
           - Workflow Modules:
-              - 0. Environment setup
+              - 0. Environment setup:
                   - config: api/modules/config.md
-              - 1. Governance steward
+              - 1. Governance steward:
+                  - data_agreement: api/modules/data_agreement.md
                   - business_context: api/modules/business_context.md
                   - data_governance: api/modules/data_governance.md
-              - 2. Analyst / data scientist
+              - 2. Analyst / data scientist:
                   - data_profiling: api/modules/data_profiling.md
                   - data_quality: api/modules/data_quality.md
-              - 3. Data engineer
+              - 3. Data engineer:
                   - fabric_input_output: api/modules/fabric_input_output.md
                   - technical_columns: api/modules/technical_columns.md
                   - data_lineage: api/modules/data_lineage.md
                   - drift: api/modules/drift.md
-              - 4. Handover / data contract
+              - 4. Handover / data contract:
                   - handover: api/modules/handover.md
-              - 5. Metadata / contract store
+              - 5. Metadata / contract store:
                   - metadata: api/modules/metadata.md
       # AUTO-GENERATED-MODULES-END
 
