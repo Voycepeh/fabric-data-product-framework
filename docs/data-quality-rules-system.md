@@ -18,28 +18,35 @@ Want to try the workflow immediately? Import the example one-notebook demo into 
 - [Example one-notebook DQ demo](https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/examples/notebooks/FabricOps_AI_DQ_Source_of_Truth_Widget_Metadata_Flow.ipynb)
 - Matching wheel release: Coming with the tested release asset.
 
-## 8-step workflow (exploration to analyst/engineer-approved enforcement)
+## Main workflow
+
+The core execution path is a 7-step workflow aligned to the visual flow: **AI suggests, humans approve, pipelines enforce, and results split into accepted vs. quarantined outputs**.
 
 | Step | Where | What happens | Output |
 |---|---|---|---|
-| 1. Source data or existing metadata | Input + metadata | Start from source data and/or existing metadata evidence. | Source dataframe / metadata evidence |
-| 2. Load existing profile and active DQ rules if available | Exploration notebook (`02_ex`) | Inspect current profile rows and currently active approved DQ rules when present. | Reusable evidence context |
-| 3. Profile or refresh only when needed | Exploration notebook (`02_ex`) | Refresh profile evidence only when metadata is missing/stale for the current question. | Current-enough profile evidence |
-| 4. AI suggests candidate DQ rules | Exploration notebook (`02_ex`) | Use AI to suggest candidate value-level DQ rules from profile + business context. | Candidate rule suggestions |
-| 5. Human DQ review | Analyst/engineer + DQ review widget in `02_ex` | Analyst/engineer reviews, edits, approves, or rejects candidates. | Reviewed decision rows |
-| 6. Persist approved DQ metadata | Exploration notebook (`02_ex`) + metadata | Write approved rules to append-only DQ rule history metadata. | Approved DQ metadata |
-| 7. Deterministic pipeline enforcement | Pipeline notebook (`03_pc`) | Load active approved rules and enforce them deterministically. | DQ evaluation result |
-| 8. Optional rule deactivation workflow | DQ deactivation widget + metadata | Deactivate existing active rules with explicit `action_reason`; append inactive history rows. | Append-only inactive metadata rows |
-
-Run evidence such as DQ results, quarantine counts, and rule history is persisted as metadata during enforcement, but it is not a separate step in the core rule workflow.
+| 1. Source data | Input dataframe or source table | Start from the raw dataframe or source table. | Source dataframe |
+| 2a. Load profiled data and approved rules | Exploration notebook (`02_ex`) + metadata | Load existing profile evidence and currently approved active DQ rules when available. | Reusable profile + active-rule context |
+| 2b. Profile data (if needed) | Exploration notebook (`02_ex`) | Profile or refresh evidence only when profile metadata is missing or stale for the current dataset/question. | Current profile evidence metadata |
+| 3. AI suggests DQ rules | Exploration notebook (`02_ex`) | Generate candidate value-level DQ rules from profile evidence and business context. | Candidate DQ rules |
+| 4. Human review and approval | Analyst/engineer + DQ review widget in `02_ex` | Review, edit, approve, or reject suggested rules. | Reviewed decisions + approved rules |
+| 5. Store approved rules | Exploration notebook (`02_ex`) + metadata | Persist approved rules as governed metadata history. | Approved DQ metadata |
+| 6. Pipeline applies approved rules | Pipeline notebook (`03_pc`) | Load only approved active rules and enforce them deterministically. | DQ enforcement result |
+| 7. Split results | Pipeline notebook (`03_pc`) | Split enforcement output into accepted rows and quarantined failed rows with reasons. | Accepted rows + quarantined rows |
 
 Use one shared metadata key across notebooks (for example `DQ_TABLE_NAME = TARGET_TABLE`) so exploration writes and pipeline enforcement reads the same governed rule set.
 
-## Why start small?
+## Outputs
 
-FabricOps starts with a compact set of high-value value-level rules so the first workflow stays understandable and usable. The architecture is intentionally extensible: approved rules are stored as governed metadata and enforced through a shared rule engine, so additional rule types can be added later without changing the core suggest → approve → store → enforce workflow.
+- **Accepted rows**: valid rows continue to downstream pipeline steps.
+- **Quarantined rows**: failed rows are isolated with explicit failure reasons for triage and remediation.
 
-The approval history is useful beyond governance. Because the suggestions, decisions, and final approved rules are stored as metadata inside Fabric, they become reusable feedback data that can later improve prompts, evaluation, and future rule suggestions.
+## Optional feedback loop
+
+Feedback and learning are **not** a numbered execution step. As an optional continuous-improvement loop, AI suggestions, human decisions, and approved-rule history can be captured as reusable metadata to improve future rule suggestions, prompts, and evaluation.
+
+## Expandable rule set
+
+Start with a compact set of high-value value-level rules so the workflow stays understandable and practical. Then add rule types over time as needed. The same shared approval-and-enforcement engine remains in place, so the workflow stays consistent while coverage expands.
 
 ## Canonical config and real framework prompt
 
@@ -172,12 +179,12 @@ candidate_rules = draft_dq_rules(
     output_col="ai_response",
 )
 
-# 3) Launch human review widget (02_ex)
+# 4) Launch human review widget (02_ex)
 run_dq_rule_review_widget(
     candidate_rules,
     table_name=DQ_TABLE_NAME,
 )
-# 5) After analyst/engineer interaction, collect current widget state (02_ex)
+# 4) After analyst/engineer interaction, collect current widget state (02_ex)
 review = get_dq_review_results(
     table_name=DQ_TABLE_NAME,
     environment_name=ENV_NAME,
@@ -187,7 +194,7 @@ approved = review["approved_rules"]
 if not approved:
     raise ValueError("No approved DQ rules selected in widget.")
 
-# 6) Persist analyst / engineer DQ approval history (02_ex)
+# 5) Persist analyst / engineer DQ approval history (02_ex)
 write_dq_rules(
     approved,
     table_name=DQ_TABLE_NAME,
@@ -195,7 +202,7 @@ write_dq_rules(
     action_by="notebook_user",
 )
 
-# 7) Optional: review active rules for deactivation (02_ex)
+# Optional feedback loop: review active rules for deactivation (02_ex)
 deactivation_reviews = review_dq_rule_deactivations(
     approved_active_rules,
     table_name=DQ_TABLE_NAME,
@@ -205,13 +212,13 @@ deactivation_df = _build_dq_rule_deactivation_metadata_df(
     table_name=DQ_TABLE_NAME,
 )
 
-# 8) Pipeline loads active approved rules only (03_pc)
+# 6) Pipeline loads active approved rules only (03_pc)
 approved_for_pipeline = load_dq_rules(
     read_lakehouse_table(metadata_path, dq_metadata_table),
     table_name=DQ_TABLE_NAME,
 )
 
-# 9) Pipeline enforces approved active rules deterministically (03_pc)
+# 7) Pipeline enforces approved active rules deterministically (03_pc)
 dq = enforce_dq(
     df_standard,
     table_name=DQ_TABLE_NAME,
@@ -219,12 +226,12 @@ dq = enforce_dq(
     dq_run_id=RUN_ID,
 )
 
-# 8) Optional evidence outputs
+# 7) Split outputs
 _ = dq.valid_rows
 _ = dq.quarantine_rows
 _ = dq.failure_rows
 
-# 9) Final explicit gate
+# Final explicit gate
 assert_dq_passed(dq.rule_results)
 ```
 
