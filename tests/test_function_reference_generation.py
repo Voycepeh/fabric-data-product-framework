@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import json
 from pathlib import Path
 
 from scripts.generate_function_reference import main as generate_reference
@@ -9,6 +10,8 @@ ROOT = Path(__file__).resolve().parents[1]
 INIT_FILE = ROOT / "src" / "fabricops_kit" / "__init__.py"
 REFERENCE_FILE = ROOT / "docs" / "reference" / "index.md"
 DOCS_METADATA_FILE = ROOT / "src" / "fabricops_kit" / "docs_metadata.py"
+CALLABLE_MAP_FILE = ROOT / "docs" / "reference" / "callable-map.md"
+CALLABLE_MAP_JSON_FILE = ROOT / "docs" / "reference" / "callable-map.json"
 
 
 def public_exports() -> list[str]:
@@ -185,6 +188,37 @@ def test_generated_docs_are_multiline_readable_and_lf_safe() -> None:
     text = REFERENCE_FILE.read_text(encoding="utf-8")
     assert text.count("\n") > 20
     assert "\r\n" not in text
+
+
+def test_callable_map_generated_with_required_sections() -> None:
+    generate_reference()
+    assert CALLABLE_MAP_FILE.exists()
+    content = CALLABLE_MAP_FILE.read_text(encoding="utf-8")
+    assert "# Callable Map" in content
+    assert "## Public callable chains" in content
+    assert "## Internal helper index" in content
+    assert "## Cross-module FabricOps calls" in content
+    assert "## Module dependency summary" in content
+
+
+def test_callable_map_json_is_valid_and_includes_exported_nodes() -> None:
+    generate_reference()
+    data = json.loads(CALLABLE_MAP_JSON_FILE.read_text(encoding="utf-8"))
+    assert isinstance(data.get("nodes"), list)
+    assert isinstance(data.get("edges"), list)
+    assert isinstance(data.get("module_summary"), list)
+    exported_nodes = {row["callable_name"] for row in data["nodes"] if row.get("exported")}
+    for symbol in public_exports():
+        assert symbol in exported_nodes
+
+
+def test_callable_map_internal_helpers_and_unresolved_edges_exist() -> None:
+    generate_reference()
+    data = json.loads(CALLABLE_MAP_JSON_FILE.read_text(encoding="utf-8"))
+    helper_nodes = [row for row in data["nodes"] if row["callable_name"].startswith("_")]
+    assert helper_nodes
+    unresolved_edges = [row for row in data["edges"] if row["edge_type"] == "unresolved"]
+    assert unresolved_edges is not None
 
 
 def test_template_flow_symbols_are_exported() -> None:
