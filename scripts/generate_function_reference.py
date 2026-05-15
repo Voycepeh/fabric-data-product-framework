@@ -16,6 +16,8 @@ NOTEBOOK_STRUCTURE_DIR = ROOT / "docs" / "notebook-structure"
 MODULE_DIR = ROOT / "docs" / "api" / "modules"
 MKDOCS_PATH = ROOT / "mkdocs.yml"
 MANIFEST_PATH = ROOT / "docs" / "reference" / "manifest.json"
+CALLABLE_MAP_PATH = ROOT / "docs" / "reference" / "callable-map.md"
+CALLABLE_MAP_JSON_PATH = ROOT / "docs" / "reference" / "callable-map.json"
 
 PUBLIC_MODULE_PREFERRED_NAMES = {
     "config": "config",
@@ -94,6 +96,184 @@ def parse_module(path: Path) -> dict[str, Any]:
             if callee in callees:
                 used_by.setdefault(callee, set()).add(caller)
     return {"functions": functions, "classes": classes, "constants": constants, "calls": calls, "used_by": used_by}
+
+
+def parse_import_aliases(nodes: list[ast.stmt]) -> tuple[dict[str, str], dict[str, str]]:
+    module_aliases: dict[str, str] = {}
+    symbol_aliases: dict[str, str] = {}
+    for node in nodes:
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                name = alias.asname or alias.name
+                module_aliases[name] = alias.name
+        elif isinstance(node, ast.ImportFrom):
+            if not node.module:
+                continue
+            for alias in node.names:
+                if alias.name == "*":
+                    continue
+                name = alias.asname or alias.name
+                symbol_aliases[name] = f"{node.module}.{alias.name}"
+    return module_aliases, symbol_aliases
+
+
+def collect_function_calls(node: ast.FunctionDef | ast.AsyncFunctionDef) -> list[dict[str, str]]:
+    calls: list[dict[str, str]] = []
+    for child in ast.walk(node):
+        if not isinstance(child, ast.Call):
+            continue
+        call_target = ""
+        call_type = "unknown"
+        if isinstance(child.func, ast.Name):
+            call_target = child.func.id
+            call_type = "name"
+        elif isinstance(child.func, ast.Attribute):
+            attr = child.func.attr
+            if isinstance(child.func.value, ast.Name):
+                call_target = f"{child.func.value.id}.{attr}"
+            else:
+                call_target = attr
+            call_type = "attribute"
+        if call_target:
+            calls.append({"raw_name": call_target, "call_type": call_type})
+    return calls
+
+
+def resolve_call_target(
+    module: str,
+    raw_name: str,
+    module_aliases: dict[str, str],
+    symbol_aliases: dict[str, str],
+    same_module_names: set[str],
+    exported_symbol_map: dict[str, Symbol],
+    package_module_names: set[str],
+) -> tuple[str | None, str, str]:
+    def _classify_callee(module_name: str, symbol_name: str) -> str:
+        mapped = exported_symbol_map.get(symbol_name)
+        if mapped and mapped.actual_module == module_name:
+            return "public_export"
+        if symbol_name.startswith("_"):
+            return "internal_helper"
+        return "internal_callable"
+    # same-module callable/class names are always safe to resolve first
+    if raw_name in same_module_names:
+        return f"{PACKAGE_NAME}.{module}.{raw_name}", "same_module", _classify_callee(module, raw_name)
+
+    # explicit import alias from "from x import y as z"
+    if raw_name in symbol_aliases:
+        imported = symbol_aliases[raw_name]
+        imported_short = imported.split(".")
+        if len(imported_short) >= 2 and (imported.startswith(PACKAGE_NAME) or imported_short[-2] in package_module_names):
+            resolved_module = imported_short[-2]
+            resolved_symbol = imported_short[-1]
+            callee_kind = _classify_callee(resolved_module, resolved_symbol)
+            return (
+                f"{PACKAGE_NAME}.{resolved_module}.{resolved_symbol}",
+                "cross_module" if resolved_module != module else "same_module",
+                callee_kind,
+            )
+
+    # module/alias call like alias.func() or module.func()
+    if "." in raw_name:
+        owner, member = raw_name.split(".", 1)
+        mapped_owner = module_aliases.get(owner, owner)
+        short_owner = mapped_owner.split(".")[-1]
+        if mapped_owner.startswith(PACKAGE_NAME) or short_owner in package_module_names:
+            resolved_module = short_owner if short_owner in package_module_names else mapped_owner.rsplit(".", 1)[-1]
+            callee_kind = _classify_callee(resolved_module, member)
+            return f"{PACKAGE_NAME}.{resolved_module}.{member}", "cross_module" if resolved_module != module else "same_module", callee_kind
+        return None, "unresolved", "unresolved"
+
+    # public exported symbol map fallback (bare-name cross-module only for exported mapping)
+    exported = exported_symbol_map.get(raw_name)
+    if exported and exported.actual_module != module:
+        callee_kind = _classify_callee(exported.actual_module, raw_name)
+        return f"{PACKAGE_NAME}.{exported.actual_module}.{raw_name}", "cross_module", callee_kind
+
+    return None, "unresolved", "unresolved"
+
+
+def build_callable_graph(
+    module_data: dict[str, dict[str, Any]],
+    symbol_map: dict[str, Symbol],
+    public_exports: list[str],
+    docs_metadata: dict[str, dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+    package_modules = {m for m in module_data if m not in {"docs_metadata"}}
+    nodes: list[dict[str, Any]] = []
+    edges: list[dict[str, Any]] = []
+    node_keys: set[tuple[str, str]] = set()
+    module_summaries: list[dict[str, Any]] = []
+    calls_modules: dict[str, set[str]] = {m: set() for m in package_modules}
+    called_by_modules: dict[str, set[str]] = {m: set() for m in package_modules}
+
+    for module, info in module_data.items():
+        module_tree = ast.parse((PKG_DIR / f"{module}.py").read_text(encoding="utf-8"))
+        module_aliases, symbol_aliases = parse_import_aliases(list(getattr(module_tree, "body", [])))
+        functions = info.get("functions", {})
+        classes = info.get("classes", {})
+        exported_names = {name for name, sym in symbol_map.items() if sym.actual_module == module}
+        same_module_names = set(functions) | set(classes)
+        for callable_name in sorted(set(functions) | set(classes)):
+            role = str(docs_metadata.get(callable_name, {}).get("role", "internal")).lower()
+            exported = callable_name in exported_names
+            if not exported and role not in {"essential", "optional", "internal"}:
+                role = "internal"
+            qualified_name = f"{PACKAGE_NAME}.{module}.{callable_name}"
+            key = (module, callable_name)
+            if key not in node_keys:
+                node_keys.add(key)
+                nodes.append(
+                    {
+                        "callable_name": callable_name,
+                        "module_name": module,
+                        "qualified_name": qualified_name,
+                        "role": role if exported else "internal",
+                        "exported": exported,
+                        "is_underscore": callable_name.startswith("_"),
+                    }
+                )
+
+        for node in module_tree.body:
+            if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                continue
+            caller_qn = f"{PACKAGE_NAME}.{module}.{node.name}"
+            local_module_aliases, local_symbol_aliases = parse_import_aliases(
+                [n for n in ast.walk(node) if isinstance(n, (ast.Import, ast.ImportFrom))]
+            )
+            merged_module_aliases = {**module_aliases, **local_module_aliases}
+            merged_symbol_aliases = {**symbol_aliases, **local_symbol_aliases}
+            for call in collect_function_calls(node):
+                raw_name = call["raw_name"]
+                resolved_qn, edge_type, callee_kind = resolve_call_target(
+                    module, raw_name, merged_module_aliases, merged_symbol_aliases, same_module_names, symbol_map, package_modules
+                )
+                edge = {
+                    "caller_qualified_name": caller_qn,
+                    "callee_qualified_name": resolved_qn,
+                    "callee_raw_name": raw_name if resolved_qn is None else None,
+                    "edge_type": edge_type,
+                    "callee_kind": callee_kind,
+                }
+                edges.append(edge)
+                if resolved_qn and edge_type in {"same_module", "cross_module"}:
+                    callee_module = resolved_qn.split(".")[-2]
+                    if callee_module != module:
+                        calls_modules[module].add(callee_module)
+                        called_by_modules[callee_module].add(module)
+
+        public_count = len([name for name in exported_names if not name.startswith("_")])
+        helper_count = len([name for name in functions if name.startswith("_")])
+        module_summaries.append(
+            {
+                "module": module,
+                "calls_modules": sorted(calls_modules.get(module, set())),
+                "called_by_modules": sorted(called_by_modules.get(module, set())),
+                "public_callable_count": public_count,
+                "internal_helper_count": helper_count,
+            }
+        )
+    return nodes, edges, sorted(module_summaries, key=lambda x: x["module"])
 
 
 def parse_public_exports() -> list[str]:
@@ -193,6 +373,96 @@ def resolve_preferred_actual_module(preferred_module: str) -> str:
 def canonical_public_module(module_name: str) -> str:
     """Return the canonical docs/public module name for metadata and manifests."""
     return PUBLIC_MODULE_PREFERRED_NAMES.get(module_name, module_name)
+
+
+def render_callable_map_page(nodes: list[dict[str, Any]], edges: list[dict[str, Any]], module_summary: list[dict[str, Any]]) -> str:
+    public_nodes = [n for n in nodes if n["exported"]]
+    helper_nodes = [n for n in nodes if n["is_underscore"]]
+    outgoing: dict[str, list[dict[str, Any]]] = {}
+    incoming: dict[str, list[dict[str, Any]]] = {}
+    for edge in edges:
+        outgoing.setdefault(edge["caller_qualified_name"], []).append(edge)
+        if edge["callee_qualified_name"]:
+            incoming.setdefault(edge["callee_qualified_name"], []).append(edge)
+
+    lines = [
+        "# Callable Map",
+        "",
+        "This page maps public FabricOps callables to the internal helpers they use. It is generated from src/fabricops_kit/*.py using Python AST parsing.",
+        "",
+        "## Public callable chains",
+        "",
+        '<input id="callable-map-search" type="search" placeholder="Search callable map" aria-label="Search callable map">',
+        "",
+    ]
+    for node in sorted(public_nodes, key=lambda x: x["qualified_name"]):
+        direct_edges = outgoing.get(node["qualified_name"], [])
+        same_module = sorted({e["callee_qualified_name"] for e in direct_edges if e["edge_type"] == "same_module" and e["callee_qualified_name"]})
+        cross_module_public = sorted({
+            e["callee_qualified_name"] for e in direct_edges
+            if e["edge_type"] == "cross_module" and e["callee_qualified_name"] and e.get("callee_kind") == "public_export"
+        })
+        cross_module_private = sorted({
+            e["callee_qualified_name"] for e in direct_edges
+            if e["edge_type"] == "cross_module" and e["callee_qualified_name"] and e.get("callee_kind") == "internal_helper"
+        })
+        cross_module_internal = sorted({
+            e["callee_qualified_name"] for e in direct_edges
+            if e["edge_type"] == "cross_module" and e["callee_qualified_name"] and e.get("callee_kind") == "internal_callable"
+        })
+        helper_names = sorted({x.split(".")[-1] for x in same_module if x.split(".")[-1].startswith("_")})
+        cross_names = sorted({x.split(".")[-1] for x in (cross_module_public + cross_module_private + cross_module_internal)})
+        searchable_helpers = " ".join(helper_names)
+        searchable_cross = " ".join(cross_names)
+        lines.extend(
+            [
+                (
+                    f'<article data-callable-map-row="true" data-callable-name="{node["callable_name"]}" '
+                    f'data-callable-module="{node["module_name"]}" data-callable-role="{node["role"]}" '
+                    f'data-callable-helpers="{searchable_helpers}" data-callable-cross-module="{searchable_cross}">'
+                ),
+                f"### `{node['callable_name']}`",
+                f"- module: `{node['module_name']}`",
+                f"- role: `{node['role']}`",
+                "- direct internal helpers used: " + (", ".join(f"`{x}`" for x in helper_names) or "—"),
+                "- direct cross-module public calls: " + (", ".join(f"`{x}`" for x in cross_module_public) or "—"),
+                "- direct cross-module private helper calls: " + (", ".join(f"`{x}`" for x in cross_module_private) or "—"),
+                "- direct cross-module internal calls: " + (", ".join(f"`{x}`" for x in cross_module_internal) or "—"),
+                "</article>",
+                "",
+            ]
+        )
+
+    lines.extend(["## Internal helper index", "", "| helper | module | used by public callables | used by internal helpers |", "|---|---|---|---|"])
+    for node in sorted(helper_nodes, key=lambda x: x["qualified_name"]):
+        users = incoming.get(node["qualified_name"], [])
+        by_public = sorted({e["caller_qualified_name"].split(".")[-1] for e in users if any(n["qualified_name"] == e["caller_qualified_name"] and n["exported"] for n in nodes)})
+        by_internal = sorted({e["caller_qualified_name"].split(".")[-1] for e in users if any(n["qualified_name"] == e["caller_qualified_name"] and not n["exported"] for n in nodes)})
+        lines.append(f"| `{node['callable_name']}` | `{node['module_name']}` | {', '.join(f'`{x}`' for x in by_public) or '—'} | {', '.join(f'`{x}`' for x in by_internal) or '—'} |")
+
+    lines.extend(["", "## Cross-module FabricOps calls", "", "| caller module | caller function | callee module | callee function |", "|---|---|---|---|"])
+    for edge in edges:
+        if edge["edge_type"] != "cross_module" or not edge["callee_qualified_name"]:
+            continue
+        caller = edge["caller_qualified_name"].split(".")
+        callee = edge["callee_qualified_name"].split(".")
+        lines.append(f"| `{caller[-2]}` | `{caller[-1]}` | `{callee[-2]}` | `{callee[-1]}` |")
+
+    lines.extend(["", "## Module dependency summary", "", "| module | calls modules | called by modules | public callable count | internal helper count |", "|---|---|---|---:|---:|"])
+    for row in module_summary:
+        lines.append(
+            f"| `{row['module']}` | {', '.join(f'`{m}`' for m in row['calls_modules']) or '—'} | "
+            f"{', '.join(f'`{m}`' for m in row['called_by_modules']) or '—'} | {row['public_callable_count']} | {row['internal_helper_count']} |"
+        )
+    return "\n".join(lines) + "\n"
+
+
+def write_callable_map_manifest(nodes: list[dict[str, Any]], edges: list[dict[str, Any]], module_summary: list[dict[str, Any]]) -> None:
+    CALLABLE_MAP_JSON_PATH.parent.mkdir(parents=True, exist_ok=True)
+    CALLABLE_MAP_JSON_PATH.write_text(
+        json.dumps({"nodes": nodes, "edges": edges, "module_summary": module_summary}, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
 
 def main() -> None:
@@ -393,11 +663,11 @@ def main() -> None:
     start_marker = "      # AUTO-GENERATED-MODULES-START"
     end_marker = "      # AUTO-GENERATED-MODULES-END"
     if start_marker in mkdocs_text and end_marker in mkdocs_text:
-        generated_lines = ["          - Workflow Modules:"]
+        generated_lines = []
         for group_name, modules in workflow_sidebar_groups.items():
-            generated_lines.append(f"              - {group_name}:")
+            generated_lines.append(f"          - {group_name}:")
             for module in modules:
-                generated_lines.append(f"                  - {module}: api/modules/{module}.md")
+                generated_lines.append(f"              - {module}: api/modules/{module}.md")
         generated = "\n".join(generated_lines)
         before, rest = mkdocs_text.split(start_marker, 1)
         middle, after = rest.split(end_marker, 1)
@@ -437,6 +707,14 @@ def main() -> None:
             "sidebar_include": meta.get("sidebar_include", True),
         })
     MANIFEST_PATH.write_text(json.dumps({"modules": manifest_modules, "callables": manifest_rows}, indent=2) + "\n", encoding="utf-8")
+    nodes, edges, module_summary = build_callable_graph(module_data, symbol_map, public, docs_metadata)
+    CALLABLE_MAP_PATH.parent.mkdir(parents=True, exist_ok=True)
+    CALLABLE_MAP_PATH.write_text(
+        render_callable_map_page(nodes, edges, module_summary),
+        encoding="utf-8",
+        newline="\n",
+    )
+    write_callable_map_manifest(nodes, edges, module_summary)
 
     starter_symbol_to_notebooks: dict[str, set[str]] = {}
     for flow in template_flow_docs:

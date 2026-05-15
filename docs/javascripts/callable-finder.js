@@ -113,6 +113,35 @@
     roleFilters.forEach((cb) => cb.addEventListener("change", update));
     update();
   }
+  function initCallableMapFinder() {
+    const input = document.getElementById("callable-map-search");
+    const rows = Array.from(document.querySelectorAll("[data-callable-map-row='true']"));
+    if (!input || rows.length === 0) return;
+    if (input.dataset.callableMapInitialized === "true") return;
+    input.dataset.callableMapInitialized = "true";
+    const entries = rows.map((row) => {
+      const text = normalize([
+        row.dataset.callableName,
+        row.dataset.callableModule,
+        row.dataset.callableRole,
+        row.dataset.callableHelpers,
+        row.dataset.callableCrossModule,
+      ].join(" "));
+      return { row, tokens: tokenize(text), text };
+    });
+    function update() {
+      const query = normalize(input.value);
+      const qTokens = tokenize(query);
+      entries.forEach((entry) => {
+        const show = !query || queryMatchesEntry(qTokens, entry.tokens) || entry.text.includes(query);
+        entry.row.hidden = !show;
+      });
+    }
+    input.addEventListener("input", update);
+    update();
+  }
   document.addEventListener("DOMContentLoaded", initCallableFinder);
+  document.addEventListener("DOMContentLoaded", initCallableMapFinder);
   if (typeof document$ !== "undefined" && document$.subscribe) document$.subscribe(initCallableFinder);
+  if (typeof document$ !== "undefined" && document$.subscribe) document$.subscribe(initCallableMapFinder);
 })();

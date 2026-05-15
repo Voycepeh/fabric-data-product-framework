@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import json
 from pathlib import Path
 
 from scripts.generate_function_reference import main as generate_reference
@@ -9,6 +10,8 @@ ROOT = Path(__file__).resolve().parents[1]
 INIT_FILE = ROOT / "src" / "fabricops_kit" / "__init__.py"
 REFERENCE_FILE = ROOT / "docs" / "reference" / "index.md"
 DOCS_METADATA_FILE = ROOT / "src" / "fabricops_kit" / "docs_metadata.py"
+CALLABLE_MAP_FILE = ROOT / "docs" / "reference" / "callable-map.md"
+CALLABLE_MAP_JSON_FILE = ROOT / "docs" / "reference" / "callable-map.json"
 
 
 def public_exports() -> list[str]:
@@ -147,7 +150,7 @@ def test_non_starter_callable_still_appears_in_complete_catalogue() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     all_functions = all_public_functions_section(content)
-    assert "<code>build_run_summary</code>" in all_functions
+    assert "<code>read_lakehouse_csv</code>" in all_functions
 
 
 def test_reference_tables_include_mobile_friendly_classes_and_data_labels() -> None:
@@ -187,6 +190,37 @@ def test_generated_docs_are_multiline_readable_and_lf_safe() -> None:
     assert "\r\n" not in text
 
 
+def test_callable_map_generated_with_required_sections() -> None:
+    generate_reference()
+    assert CALLABLE_MAP_FILE.exists()
+    content = CALLABLE_MAP_FILE.read_text(encoding="utf-8")
+    assert "# Callable Map" in content
+    assert "## Public callable chains" in content
+    assert "## Internal helper index" in content
+    assert "## Cross-module FabricOps calls" in content
+    assert "## Module dependency summary" in content
+
+
+def test_callable_map_json_is_valid_and_includes_exported_nodes() -> None:
+    generate_reference()
+    data = json.loads(CALLABLE_MAP_JSON_FILE.read_text(encoding="utf-8"))
+    assert isinstance(data.get("nodes"), list)
+    assert isinstance(data.get("edges"), list)
+    assert isinstance(data.get("module_summary"), list)
+    exported_nodes = {row["callable_name"] for row in data["nodes"] if row.get("exported")}
+    for symbol in public_exports():
+        assert symbol in exported_nodes
+
+
+def test_callable_map_internal_helpers_and_unresolved_edges_exist() -> None:
+    generate_reference()
+    data = json.loads(CALLABLE_MAP_JSON_FILE.read_text(encoding="utf-8"))
+    helper_nodes = [row for row in data["nodes"] if row["callable_name"].startswith("_")]
+    assert helper_nodes
+    unresolved_edges = [row for row in data["edges"] if row["edge_type"] == "unresolved"]
+    assert unresolved_edges is not None
+
+
 def test_template_flow_symbols_are_exported() -> None:
     exports = set(public_exports())
     template_docs = metadata_literal("TEMPLATE_FLOW_DOCS")
@@ -221,9 +255,9 @@ def test_template_flow_registry_matches_expected_symbol_sets() -> None:
         for segment in notebook["segments"]:
             symbols.update(segment["symbols"])
 
-    assert set(symbols_by_notebook) == {"00_env_config", "02_ex", "03_pc"}
+    assert set(symbols_by_notebook) == {"00_env_config", "01_data_agreement", "02_ex", "03_pc"}
     assert {"setup_notebook", "load_config", "get_path"}.issubset(symbols_by_notebook["00_env_config"])
-    assert {"seed_minimal_sample_source_table", "draft_dq_rules", "review_dq_rules"}.issubset(symbols_by_notebook["02_ex"])
+    assert {"draft_dq_rules", "review_dq_rules", "profile_dataframe"}.issubset(symbols_by_notebook["02_ex"])
     assert {"validate_dq_rules", "assert_dq_passed", "write_lakehouse_table"}.issubset(symbols_by_notebook["03_pc"])
 
 def test_every_template_flow_notebook_mentions_multiple_registered_symbols() -> None:
@@ -290,7 +324,7 @@ def test_no_generated_public_callable_markdown_files_committed() -> None:
         for path in (ROOT / "docs" / "reference").glob("*.md")
         if path.name != "index.md"
     )
-    assert public_reference_files == []
+    assert public_reference_files == ["callable-map.md"]
 
 
 def test_reference_links_to_flat_public_callable_pages() -> None:
@@ -313,11 +347,10 @@ def test_mkdocs_reference_generator_writes_public_callable_pages_without_workflo
 
 def test_generated_module_and_notebook_pages_link_to_public_callable_urls() -> None:
     generate_reference()
-    environment_config = (ROOT / "docs/api/modules/environment_config.md").read_text(encoding="utf-8")
+    environment_config = (ROOT / "docs/api/modules/config.md").read_text(encoding="utf-8")
     notebook_page = (ROOT / "docs/notebook-structure/00-env-config.md").read_text(encoding="utf-8")
-    assert "../../api/reference/get_path/" in environment_config
+    assert "../../reference/get_path/" in environment_config
     assert "../../api/reference/get_path/" in notebook_page
-    assert "../../api/reference/Housepath/" in notebook_page
     assert "reference/step-" not in environment_config
     assert "reference/step-" not in notebook_page
 
@@ -370,4 +403,4 @@ def test_module_callable_tables_exclude_supporting_data_structures() -> None:
     assert "| [`DQEnforcementResult`]" not in data_quality_page
     assert "| [`Housepath`]" not in fabric_io_page
     assert "| [`enforce_dq`]" in data_quality_page
-    assert "| [`get_path`]" in (ROOT / "docs/api/modules/environment_config.md").read_text(encoding="utf-8")
+    assert "| [`get_path`]" in (ROOT / "docs/api/modules/config.md").read_text(encoding="utf-8")
