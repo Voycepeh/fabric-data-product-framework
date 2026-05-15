@@ -64,6 +64,13 @@
       "sidebar_include": true
     },
     {
+      "module_name": "handover",
+      "visibility": "public",
+      "module_summary": "Handover summary and handover markdown helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true
+    },
+    {
       "module_name": "data_product_metadata",
       "visibility": "public",
       "module_summary": "Metadata table key builders and metadata write helpers.",
@@ -74,13 +81,6 @@
       "module_name": "notebook_registry",
       "visibility": "public",
       "module_summary": "",
-      "sidebar_group": "Modules",
-      "sidebar_include": true
-    },
-    {
-      "module_name": "run_summary",
-      "visibility": "public",
-      "module_summary": "Run summary and handover markdown helpers.",
       "sidebar_group": "Modules",
       "sidebar_include": true
     },
@@ -106,6 +106,18 @@
       "template_segment": "\u2014"
     },
     {
+      "module_name": "handover",
+      "visibility": "public",
+      "module_summary": "Handover summary and handover markdown helpers.",
+      "sidebar_group": "Modules",
+      "sidebar_include": true,
+      "callable_name": "build_handover",
+      "callable_visibility": "public",
+      "callable_role": "essential",
+      "template_notebook": "\u2014",
+      "template_segment": "\u2014"
+    },
+    {
       "module_name": "data_lineage",
       "visibility": "public",
       "module_summary": "Lineage extraction and handover documentation helpers.",
@@ -124,18 +136,6 @@
       "sidebar_group": "Modules",
       "sidebar_include": true,
       "callable_name": "build_lineage_records",
-      "callable_visibility": "public",
-      "callable_role": "essential",
-      "template_notebook": "\u2014",
-      "template_segment": "\u2014"
-    },
-    {
-      "module_name": "run_summary",
-      "visibility": "public",
-      "module_summary": "Run summary and handover markdown helpers.",
-      "sidebar_group": "Modules",
-      "sidebar_include": true,
-      "callable_name": "build_run_summary",
       "callable_visibility": "public",
       "callable_role": "essential",
       "template_notebook": "\u2014",
@@ -406,12 +406,12 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "run_summary",
+      "module_name": "handover",
       "visibility": "public",
-      "module_summary": "Run summary and handover markdown helpers.",
+      "module_summary": "Handover summary and handover markdown helpers.",
       "sidebar_group": "Modules",
       "sidebar_include": true,
-      "callable_name": "render_run_summary_markdown",
+      "callable_name": "render_handover_markdown",
       "callable_visibility": "public",
       "callable_role": "essential",
       "template_notebook": "\u2014",

@@ -179,14 +179,14 @@ Pipeline notebook flow for deterministic enforcement and controlled publishing.
       <td data-label="Purpose">Build a concise markdown handover summary from lineage execution results.</td>
     </tr>
     <tr>
-      <td data-label="Function / class"><a href="../../api/reference/build_run_summary/"><code>build_run_summary</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/run_summary/" title="Open run_summary module page" aria-label="Open run_summary module page">run_summary</a></td>
+      <td data-label="Function / class"><a href="../../api/reference/build_handover/"><code>build_handover</code></a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/handover/" title="Open handover module page" aria-label="Open handover module page">handover</a></td>
       <td data-label="Purpose">Build a handover-friendly summary for one data product run.</td>
     </tr>
     <tr>
-      <td data-label="Function / class"><a href="../../api/reference/render_run_summary_markdown/"><code>render_run_summary_markdown</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/run_summary/" title="Open run_summary module page" aria-label="Open run_summary module page">run_summary</a></td>
-      <td data-label="Purpose">Render a run summary dictionary into Markdown for handover notes.</td>
+      <td data-label="Function / class"><a href="../../api/reference/render_handover_markdown/"><code>render_handover_markdown</code></a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/handover/" title="Open handover module page" aria-label="Open handover module page">handover</a></td>
+      <td data-label="Purpose">Render a handover summary dictionary into Markdown for handover notes.</td>
     </tr>
   </tbody>
 </table>

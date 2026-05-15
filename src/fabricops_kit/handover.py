@@ -1,4 +1,4 @@
-"""Run summary builders for notebook handover and metadata logging."""
+"""Handover summary builders for notebook handover and metadata logging."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ def _status_of(section: dict | None) -> str:
     return section.get("status", "not_provided")
 
 
-def build_run_summary(*, runtime_context: dict, contract: dict | None = None, source_profile: dict | None = None, output_profile: dict | None = None, schema_drift_result: dict | None = None, incremental_safety_result: dict | None = None, quality_result: dict | None = None, contract_validation_result: dict | None = None, lineage_summary: dict | None = None, notes: list[str] | None = None) -> dict:
+def build_handover(*, runtime_context: dict, contract: dict | None = None, source_profile: dict | None = None, output_profile: dict | None = None, schema_drift_result: dict | None = None, incremental_safety_result: dict | None = None, quality_result: dict | None = None, contract_validation_result: dict | None = None, lineage_summary: dict | None = None, notes: list[str] | None = None) -> dict:
     """Build a handover-friendly summary for one data product run.
 
     Parameters
@@ -45,13 +45,13 @@ def build_run_summary(*, runtime_context: dict, contract: dict | None = None, so
     return {"run_id": runtime_context.get("run_id"), "dataset_name": runtime_context.get("dataset_name") or (contract or {}).get("dataset", {}).get("name"), "environment": runtime_context.get("environment"), "source_table": runtime_context.get("source_table"), "target_table": runtime_context.get("target_table"), "started_at_utc": runtime_context.get("started_at_utc"), "generated_at_utc": datetime.now(timezone.utc).isoformat(), "overall_status": overall, "can_continue": not failed, "sections": sections, "not_provided_sections": not_provided_sections, "action_items": action_items}
 
 
-def render_run_summary_markdown(summary: dict) -> str:
-    """Render a run summary dictionary into Markdown for handover notes.
+def render_handover_markdown(summary: dict) -> str:
+    """Render a handover summary dictionary into Markdown for handover notes.
 
     Parameters
     ----------
     summary : dict
-        Output from :func:`build_run_summary`.
+        Output from :func:`build_handover`.
 
     Returns
     -------
@@ -59,7 +59,7 @@ def render_run_summary_markdown(summary: dict) -> str:
         Markdown text containing key run outcomes and diagnostics.
     """
     s = summary.get("sections", {})
-    lines = [f"# Run Summary — {summary.get('dataset_name', 'unknown')}", f"- Run ID: `{summary.get('run_id', 'unknown')}`", f"- Environment: `{summary.get('environment', 'unknown')}`", f"- Overall status: **{summary.get('overall_status', 'unknown')}**", "", "## Run Context", f"- Source table: `{summary.get('source_table', 'unknown')}`", f"- Target table: `{summary.get('target_table', 'unknown')}`", f"- Started at (UTC): `{summary.get('started_at_utc', 'unknown')}`", "", "## Dataset Purpose", f"{s.get('purpose') or 'Not provided.'}", "", "## Section Status", f"- Schema drift: **{_status_of(s.get('schema_drift'))}**", f"- Incremental safety: **{_status_of(s.get('incremental_safety'))}**", f"- Quality: **{_status_of(s.get('quality'))}**", f"- Contracts: **{_status_of(s.get('contracts'))}**"]
+    lines = [f"# Handover Summary — {summary.get('dataset_name', 'unknown')}", f"- Run ID: `{summary.get('run_id', 'unknown')}`", f"- Environment: `{summary.get('environment', 'unknown')}`", f"- Overall status: **{summary.get('overall_status', 'unknown')}**", "", "## Run Context", f"- Source table: `{summary.get('source_table', 'unknown')}`", f"- Target table: `{summary.get('target_table', 'unknown')}`", f"- Started at (UTC): `{summary.get('started_at_utc', 'unknown')}`", "", "## Dataset Purpose", f"{s.get('purpose') or 'Not provided.'}", "", "## Section Status", f"- Schema drift: **{_status_of(s.get('schema_drift'))}**", f"- Incremental safety: **{_status_of(s.get('incremental_safety'))}**", f"- Quality: **{_status_of(s.get('quality'))}**", f"- Contracts: **{_status_of(s.get('contracts'))}**"]
     lines.extend(["", "## Not Provided Sections"])
     lines.extend([f"- {n}" for n in summary.get("not_provided_sections", [])] or ["- None"])
     src_count = (s.get("source_profile") or {}).get("row_count")
@@ -71,8 +71,8 @@ def render_run_summary_markdown(summary: dict) -> str:
     return "\n".join(lines)
 
 
-def build_run_summary_record(summary: dict) -> dict:
-    """Execute the `build_run_summary_record` workflow step in FabricOps.
+def build_handover_record(summary: dict) -> dict:
+    """Execute the `build_handover_record` workflow step in FabricOps.
     
         Use this callable at its corresponding stage of the pipeline contract
         (configuration, IO, profiling, quality, drift, lineage, or handover)
@@ -101,7 +101,7 @@ def build_run_summary_record(summary: dict) -> dict:
     
         Examples
         --------
-        >>> build_run_summary_record(...)
+        >>> build_handover_record(...)
         """
     sections = summary.get("sections", {})
-    return {"run_id": summary.get("run_id"), "dataset_name": summary.get("dataset_name"), "environment": summary.get("environment"), "source_table": summary.get("source_table"), "target_table": summary.get("target_table"), "overall_status": summary.get("overall_status"), "can_continue": summary.get("can_continue"), "generated_at_utc": summary.get("generated_at_utc"), "source_row_count": (sections.get("source_profile") or {}).get("row_count"), "output_row_count": (sections.get("output_profile") or {}).get("row_count"), "schema_drift_status": _status_of(sections.get("schema_drift")), "incremental_safety_status": _status_of(sections.get("incremental_safety")), "quality_status": _status_of(sections.get("quality")), "contract_status": _status_of(sections.get("contracts")), "action_item_count": len(summary.get("action_items", [])), "summary_markdown": render_run_summary_markdown(summary)}
+    return {"run_id": summary.get("run_id"), "dataset_name": summary.get("dataset_name"), "environment": summary.get("environment"), "source_table": summary.get("source_table"), "target_table": summary.get("target_table"), "overall_status": summary.get("overall_status"), "can_continue": summary.get("can_continue"), "generated_at_utc": summary.get("generated_at_utc"), "source_row_count": (sections.get("source_profile") or {}).get("row_count"), "output_row_count": (sections.get("output_profile") or {}).get("row_count"), "schema_drift_status": _status_of(sections.get("schema_drift")), "incremental_safety_status": _status_of(sections.get("incremental_safety")), "quality_status": _status_of(sections.get("quality")), "contract_status": _status_of(sections.get("contracts")), "action_item_count": len(summary.get("action_items", [])), "summary_markdown": render_handover_markdown(summary)}

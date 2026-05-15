@@ -75,6 +75,11 @@ Use the finder below to look up public callable functions.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
   <p class="reference-catalogue-item-purpose">Raise only after evidence materialization when error-severity rules fail.</p>
 </article>
+<article id="build_handover" class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_handover" data-callable-module="handover" data-callable-starter-path="03_pc" data-role="essential" data-callable-purpose="Build a handover-friendly summary for one data product run.">
+  <h3 class="reference-catalogue-item-name"><a href="../api/reference/build_handover/"><code>build_handover</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/handover/" title="Open handover module page" aria-label="Open handover module page">handover</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Build a handover-friendly summary for one data product run.</p>
+</article>
 <article id="build_lineage_handover_markdown" class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_lineage_handover_markdown" data-callable-module="data_lineage" data-callable-starter-path="03_pc" data-role="essential" data-callable-purpose="Build a concise markdown handover summary from lineage execution results.">
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/build_lineage_handover_markdown/"><code>build_lineage_handover_markdown</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
@@ -84,11 +89,6 @@ Use the finder below to look up public callable functions.
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/build_lineage_records/"><code>build_lineage_records</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
   <p class="reference-catalogue-item-purpose">Build compact lineage records for downstream metadata sinks.</p>
-</article>
-<article id="build_run_summary" class="reference-catalogue-item" data-callable-row="true" data-callable-name="build_run_summary" data-callable-module="run_summary" data-callable-starter-path="03_pc" data-role="essential" data-callable-purpose="Build a handover-friendly summary for one data product run.">
-  <h3 class="reference-catalogue-item-name"><a href="../api/reference/build_run_summary/"><code>build_run_summary</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/run_summary/" title="Open run_summary module page" aria-label="Open run_summary module page">run_summary</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-  <p class="reference-catalogue-item-purpose">Build a handover-friendly summary for one data product run.</p>
 </article>
 <article id="check_partition_drift" class="reference-catalogue-item" data-callable-row="true" data-callable-name="check_partition_drift" data-callable-module="data_drift" data-callable-starter-path="03_pc" data-role="optional" data-callable-purpose="Check partition-level drift using keys, partitions, and optional watermark baselines.">
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/check_partition_drift/"><code>check_partition_drift</code></a></h3>
@@ -200,10 +200,10 @@ Use the finder below to look up public callable functions.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/notebook_registry/" title="Open notebook_registry module page" aria-label="Open notebook_registry module page">notebook_registry</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">—</p>
 </article>
-<article id="render_run_summary_markdown" class="reference-catalogue-item" data-callable-row="true" data-callable-name="render_run_summary_markdown" data-callable-module="run_summary" data-callable-starter-path="03_pc" data-role="essential" data-callable-purpose="Render a run summary dictionary into Markdown for handover notes.">
-  <h3 class="reference-catalogue-item-name"><a href="../api/reference/render_run_summary_markdown/"><code>render_run_summary_markdown</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/run_summary/" title="Open run_summary module page" aria-label="Open run_summary module page">run_summary</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
-  <p class="reference-catalogue-item-purpose">Render a run summary dictionary into Markdown for handover notes.</p>
+<article id="render_handover_markdown" class="reference-catalogue-item" data-callable-row="true" data-callable-name="render_handover_markdown" data-callable-module="handover" data-callable-starter-path="03_pc" data-role="essential" data-callable-purpose="Render a handover summary dictionary into Markdown for handover notes.">
+  <h3 class="reference-catalogue-item-name"><a href="../api/reference/render_handover_markdown/"><code>render_handover_markdown</code></a></h3>
+  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/handover/" title="Open handover module page" aria-label="Open handover module page">handover</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>03_pc</span></p>
+  <p class="reference-catalogue-item-purpose">Render a handover summary dictionary into Markdown for handover notes.</p>
 </article>
 <article id="review_business_context" class="reference-catalogue-item" data-callable-row="true" data-callable-name="review_business_context" data-callable-module="business_context" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Display interactive approval widget.">
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/review_business_context/"><code>review_business_context</code></a></h3>
