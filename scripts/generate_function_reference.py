@@ -663,11 +663,11 @@ def main() -> None:
     start_marker = "      # AUTO-GENERATED-MODULES-START"
     end_marker = "      # AUTO-GENERATED-MODULES-END"
     if start_marker in mkdocs_text and end_marker in mkdocs_text:
-        generated_lines = ["          - Workflow Modules:"]
+        generated_lines = []
         for group_name, modules in workflow_sidebar_groups.items():
-            generated_lines.append(f"              - {group_name}:")
+            generated_lines.append(f"          - {group_name}:")
             for module in modules:
-                generated_lines.append(f"                  - {module}: api/modules/{module}.md")
+                generated_lines.append(f"              - {module}: api/modules/{module}.md")
         generated = "\n".join(generated_lines)
         before, rest = mkdocs_text.split(start_marker, 1)
         middle, after = rest.split(end_marker, 1)
