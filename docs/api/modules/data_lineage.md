@@ -8,7 +8,7 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`build_lineage_handover_markdown`](../../reference/build_lineage_handover_markdown/) | function | Backward-compatible alias for ``build_lineage_summary_markdown``. | [`_build_lineage_summary_markdown`](../../reference/internal/data_lineage/_build_lineage_summary_markdown/) (internal) |
+| [`build_lineage_handover_markdown`](../../reference/build_lineage_handover_markdown/) | function | Build a concise markdown handover summary from lineage execution results. | — |
 | [`build_lineage_records`](../../reference/build_lineage_records/) | function | Build compact lineage records for downstream metadata sinks. | — |
 
 ## Optional callables
@@ -21,8 +21,6 @@ No advanced helpers listed for this module.
 |---|---|
 | [`_build_lineage_record_from_steps`](../../reference/internal/data_lineage/_build_lineage_record_from_steps/) | — |
 | [`_build_lineage_records`](../../reference/internal/data_lineage/_build_lineage_records/) | — |
-| [`_build_lineage_summary_markdown`](../../reference/internal/data_lineage/_build_lineage_summary_markdown/) | [`build_lineage_handover_markdown`](../../reference/build_lineage_handover_markdown/) |
-| [`_build_top_down_lineage_layout`](../../reference/internal/data_lineage/_build_top_down_lineage_layout/) | — |
 | [`_call_name`](../../reference/internal/data_lineage/_call_name/) | — |
 | [`_enrich_lineage_steps_with_ai`](../../reference/internal/data_lineage/_enrich_lineage_steps_with_ai/) | — |
 | [`_fallback_copilot_lineage_prompt`](../../reference/internal/data_lineage/_fallback_copilot_lineage_prompt/) | — |

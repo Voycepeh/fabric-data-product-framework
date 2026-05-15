@@ -3,7 +3,6 @@ import json
 import pytest
 
 from fabricops_kit import build_notebook_lineage
-from fabricops_kit.data_lineage import build_lineage_record_from_steps
 from fabricops_kit.drift import UnsupportedDataFrameEngineError, build_drift_evidence_record, build_schema_snapshot
 from fabricops_kit.metadata import EVIDENCE_DRIFT_RESULT, EVIDENCE_LINEAGE, build_evidence_row, default_evidence_types
 
@@ -27,13 +26,6 @@ write_lakehouse_table(clean, lh_out, 'orders_clean')
     assert "records" in out
     assert "summary_markdown" in out
     assert "figure" not in out
-
-
-def test_lineage_record_identity_fields() -> None:
-    steps = [{"source": "a", "target": "b", "transformation": "join", "reason": "x", "source_type": "dataframe", "target_type": "dataframe", "confidence": "high"}]
-    rows = build_lineage_record_from_steps("ds", steps, workspace_id="ws-1", notebook_id="nb-1")
-    assert rows[0]["workspace_id"] == "ws-1"
-    assert rows[0]["notebook_id"] == "nb-1"
 
 
 def test_helpers_not_top_level_exports() -> None:

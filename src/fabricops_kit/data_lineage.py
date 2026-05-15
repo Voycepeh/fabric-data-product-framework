@@ -267,108 +267,13 @@ def build_lineage_records(*, dataset_name: str, run_id: str, source_tables: list
     return [{"run_id": run_id, "dataset_name": dataset_name, "source_tables": source_tables, "target_table": target_table, **s} for s in transformation_steps]
 
 
-def plot_lineage_steps(lineage_steps_or_record, title: str | None = None):
-    """Render lineage steps as a directed graph figure.
-
-    Parameters
-    ----------
-    lineage_steps_or_record : iterable
-        Lineage step dictionaries containing source, target, and transformation keys.
-    title : str or None, default=None
-        Optional chart title override.
-
-    Returns
-    -------
-    matplotlib.figure.Figure
-        Rendered lineage diagram figure.
-    """
-    import matplotlib.pyplot as plt
-    import networkx as nx
-    g = nx.DiGraph()
-    for s in lineage_steps_or_record:
-        g.add_edge(s.get("source", "unknown"), s.get("target", "unknown"), label=s.get("transformation", ""))
-    fig, ax = plt.subplots(figsize=(10, 5))
-    pos = _build_top_down_lineage_layout(lineage_steps_or_record)
-    nx.draw(g, pos, with_labels=True, node_color="#f2f2f2", ax=ax)
-    nx.draw_networkx_edge_labels(g, pos, edge_labels={(u, v): d.get("label", "") for u, v, d in g.edges(data=True)}, font_size=7, ax=ax)
-    ax.set_title(title or "Notebook lineage")
-    return fig
-
-
-def _build_top_down_lineage_layout(lineage_steps_or_record) -> dict[str, tuple[float, float]]:
-    """Build a stable top-down layout for lineage graph plotting."""
-    nodes: list[str] = []
-    for step in lineage_steps_or_record:
-        src = step.get("source", "unknown")
-        tgt = step.get("target", "unknown")
-        if src not in nodes:
-            nodes.append(src)
-        if tgt not in nodes:
-            nodes.append(tgt)
-    return {node: (0.0, float(-idx)) for idx, node in enumerate(nodes)}
-
-
-def _build_lineage_summary_markdown(result: dict[str, Any]) -> str:
-    """Create a concise markdown lineage summary from lineage execution results.
-
-    Parameters
-    ----------
-    result : dict of str to Any
-        Lineage result payload returned by ``build_lineage_from_notebook_code``.
-
-    Returns
-    -------
-    str
-        Markdown summary with step count, AI usage, and review requirement.
-    """
-    return f"## Lineage Summary\n- Steps: {len(result.get('steps', []))}\n- AI used: {result.get('ai_used')}\n- Review required: {result.get('review_required')}"
-
 
 def build_lineage_handover_markdown(result: dict[str, Any]) -> str:
-    """Backward-compatible alias for ``build_lineage_summary_markdown``."""
-    return _build_lineage_summary_markdown(result)
-
-
-
-def build_notebook_lineage(*, notebook_code: str | None = None, cells: list[str] | None = None, dataset_name: str = "unknown", table_name: str = "unknown", run_id: str | None = None, workspace_id: str | None = None, workspace_name: str | None = None, notebook_id: str | None = None, notebook_name: str | None = None, created_by: str | None = None) -> dict[str, Any]:
-    """Build deterministic notebook lineage, validate it, and return metadata-ready records."""
-    if notebook_code is None and cells is None:
-        raise ValueError("Provide notebook_code or cells.")
-    steps = _scan_notebook_lineage(notebook_code) if notebook_code is not None else _scan_notebook_cells(cells or [])
-    validation = _validate_lineage_steps(steps) if steps else {"is_valid": False, "errors": ["No lineage detected."], "warnings": [], "review_required": True}
-    records = []
-    if validation["is_valid"]:
-        records = _build_lineage_record_from_steps(
-            dataset_name,
-            steps,
-            run_id=run_id,
-            notebook_name=notebook_name,
-            workspace_name=workspace_name,
-            workspace_id=workspace_id,
-            notebook_id=notebook_id,
-            created_by=created_by,
-        )
-    result = {
-        "dataset_name": dataset_name,
-        "table_name": table_name,
-        "steps": steps,
-        "validation": validation,
-        "records": records,
-        "review_required": True if not validation["is_valid"] else bool(validation.get("review_required", False)),
-    }
-    result["summary_markdown"] = _build_lineage_summary_markdown(result)
-    return result
-
-
-def build_lineage_from_notebook_code(code: str, use_ai: bool = True, ai_helper: Any | None = None) -> dict[str, Any]:
-    """Backward-compatible alias to ``build_notebook_lineage``."""
-    return build_notebook_lineage(notebook_code=code)
-
-
-# Module-level compatibility aliases (not exported from package root)
-scan_notebook_lineage = _scan_notebook_lineage
-scan_notebook_cells = _scan_notebook_cells
-validate_lineage_steps = _validate_lineage_steps
-build_lineage_record_from_steps = _build_lineage_records
-build_top_down_lineage_layout = _build_top_down_lineage_layout
-build_lineage_summary_markdown = _build_lineage_summary_markdown
+    """Build a concise markdown handover summary from lineage execution results."""
+    records = result.get("records") or result.get("lineage_records") or []
+    lines = ["# Lineage Handover", "", f"Total records: {len(records)}", ""]
+    for row in records[:20]:
+        src = row.get("source") or row.get("source_tables")
+        tgt = row.get("target") or row.get("target_table")
+        lines.append(f"- {src} -> {tgt}")
+    return "\n".join(lines)

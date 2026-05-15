@@ -17,7 +17,7 @@ _WIDGET_REJECTED_ROWS: list[dict[str, Any]] = []
 PDPA_PERSONAL_IDENTIFIER_PROMPT = DEFAULT_GOVERNANCE_PERSONAL_IDENTIFIER_PROMPT_TEMPLATE
 
 
-def __build_governance_context(
+def _build_governance_context(
     business_context: str,
     approved_usage: str,
     dataset_context: str,
@@ -36,7 +36,7 @@ def __build_governance_context(
     }
 
 
-def __prepare_governance_input(profile_rows: list[dict], table_name: str, column_contexts: list[dict]) -> list[dict]:
+def _prepare_governance_input(profile_rows: list[dict], table_name: str, column_contexts: list[dict]) -> list[dict]:
     """Join approved business context into profile rows for governance AI suggestions."""
     context_lookup = {r["column_name"]: r for r in column_contexts or [] if r.get("column_name")}
     out = []
@@ -56,7 +56,7 @@ def draft_governance(prepared_profile_df, prompt: str = PDPA_PERSONAL_IDENTIFIER
     return prepared_profile_df.ai.generate_response(prompt=prompt, is_prompt_template=True, output_col=output_col)
 
 
-def __extract_pii_suggestions(response_rows, response_col: str = "ai_governance_response") -> list[dict]:
+def _extract_pii_suggestions(response_rows, response_col: str = "ai_governance_response") -> list[dict]:
     """Extract governance suggestions from Spark/list response payloads."""
     if hasattr(response_rows, "collect"):
         iterable = [r.asDict(recursive=True) if hasattr(r, "asDict") else dict(r) for r in response_rows.collect()]

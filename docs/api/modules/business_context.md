@@ -21,7 +21,7 @@ No advanced helpers listed for this module.
 
 | Helper | Related public callables |
 |---|---|
-| [`__extract_column_business_context_suggestions`](../../reference/internal/business_context/__extract_column_business_context_suggestions/) | — |
-| [`__prepare_business_context_profile_input`](../../reference/internal/business_context/__prepare_business_context_profile_input/) | — |
+| [`_extract_column_business_context_suggestions`](../../reference/internal/business_context/_extract_column_business_context_suggestions/) | — |
 | [`_parse_ai_dict_response`](../../reference/internal/business_context/_parse_ai_dict_response/) | — |
+| [`_prepare_business_context_profile_input`](../../reference/internal/business_context/_prepare_business_context_profile_input/) | — |
 | [`_require_ipywidgets`](../../reference/internal/business_context/_require_ipywidgets/) | [`review_business_context`](../../reference/review_business_context/) |

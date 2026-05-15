@@ -13,7 +13,7 @@ REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET: list[dict] = []
 BUSINESS_CONTEXT_PROMPT = DEFAULT_BUSINESS_CONTEXT_PROMPT_TEMPLATE
 
 
-def __prepare_business_context_profile_input(profile_rows: list[dict], table_name: str, table_context: str = "") -> list[dict]:
+def _prepare_business_context_profile_input(profile_rows: list[dict], table_name: str, table_context: str = "") -> list[dict]:
     out = []
     for row in profile_rows or []:
         out.append(
@@ -70,7 +70,7 @@ def _parse_ai_dict_response(text: str) -> dict:
             return {}
 
 
-def __extract_column_business_context_suggestions(response_rows, response_col: str = "ai_business_context_response") -> list[dict]:
+def _extract_column_business_context_suggestions(response_rows, response_col: str = "ai_business_context_response") -> list[dict]:
     """Parse AI suggestion rows from Spark DataFrames or ``list[dict]`` payloads."""
     out = []
     if hasattr(response_rows, "collect"):

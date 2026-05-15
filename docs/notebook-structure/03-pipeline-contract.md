@@ -176,7 +176,7 @@ Pipeline notebook flow for deterministic enforcement and controlled publishing.
     <tr>
       <td data-label="Function / class"><a href="../../api/reference/build_lineage_handover_markdown/"><code>build_lineage_handover_markdown</code></a></td>
       <td data-label="Module"><a class="reference-module-link" href="../../api/modules/data_lineage/" title="Open data_lineage module page" aria-label="Open data_lineage module page">data_lineage</a></td>
-      <td data-label="Purpose">Backward-compatible alias for ``build_lineage_summary_markdown``.</td>
+      <td data-label="Purpose">Build a concise markdown handover summary from lineage execution results.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../api/reference/build_run_summary/"><code>build_run_summary</code></a></td>

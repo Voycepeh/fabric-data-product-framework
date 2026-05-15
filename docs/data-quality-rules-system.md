@@ -200,7 +200,7 @@ deactivation_reviews = review_dq_rule_deactivations(
     approved_active_rules,
     table_name=DQ_TABLE_NAME,
 )
-deactivation_df = build_dq_rule_deactivation_metadata_df(
+deactivation_df = _build_dq_rule_deactivation_metadata_df(
     deactivation_reviews,
     table_name=DQ_TABLE_NAME,
 )

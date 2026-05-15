@@ -56,7 +56,7 @@ def test_02_ex_has_no_old_todo_draft_flow():
     assert 'draft_dq_rules(' not in ex
     assert '_extract_dq_rules' not in ex
     assert 'draft_business_context(prepared_profile_df=dq_profile_df' not in ex
-    assert 'suggest_dq_rules_with_fabric_ai' in ex
+    assert '_suggest_dq_rules_with_fabric_ai' in ex
     assert 'data_quality.APPROVED_RULES_FROM_WIDGET' in ex
     assert 'import fabricops_kit.business_context as business_context' in ex
     assert 'business_context.COLUMN_BUSINESS_CONTEXT_FROM_WIDGET' in ex

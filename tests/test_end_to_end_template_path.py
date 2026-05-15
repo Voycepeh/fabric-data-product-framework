@@ -229,7 +229,7 @@ def test_02_ex_template_references_01_agreement_and_business_context_helpers():
         "_extract_column_business_context_suggestions",
         "review_business_context",
         "COLUMN_BUSINESS_CONTEXT_FROM_WIDGET",
-        "prepare_dq_profile_input",
+        "_prepare_dq_profile_input_rows",
         "prepare_governance_profile_input",
         "suggest_personal_identifier_classifications",
         "review_column_governance_context",
