@@ -10,9 +10,9 @@ from fabricops_kit.metadata import EVIDENCE_DRIFT_RESULT, EVIDENCE_LINEAGE, buil
 
 def test_build_notebook_lineage_returns_expected_sections() -> None:
     code = """
-df = lakehouse_table_read('orders')
+df = read_lakehouse_table('orders')
 clean = df.select('id')
-lakehouse_table_write(clean, lh_out, 'orders_clean')
+write_lakehouse_table(clean, lh_out, 'orders_clean')
 """
     out = build_notebook_lineage(
         notebook_code=code,

@@ -5,7 +5,7 @@ import fabricops_kit
 CANONICAL_DQ_EXPORTS = {
     "draft_dq_rules",
     "write_dq_rules",
-    "enforce_dq_rules",
+    "enforce_dq",
     "validate_dq_rules",
     "assert_dq_passed",
     "review_dq_rules",

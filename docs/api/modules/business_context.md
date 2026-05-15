@@ -9,20 +9,17 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| — | — | No recommended entrypoints configured. | — |
+| [`draft_business_context`](../../reference/draft_business_context/) | function | Compatibility-friendly short alias for :func:`suggest_column_business_contexts`. | — |
+| [`review_business_context`](../../reference/review_business_context/) | function | Compatibility-friendly short alias for :func:`capture_column_business_context`. | — |
+| [`write_business_context`](../../reference/write_business_context/) | function | Persist approved business context rows via metadata writer. | — |
 
 ## Optional callables
 
-| Callable | Type | Summary | Related helpers |
-|---|---|---|---|
-| [`capture_column_business_context`](../../reference/capture_column_business_context/) | function | Display interactive approval widget. | [`_require_ipywidgets`](../../reference/internal/business_context/_require_ipywidgets/) (internal) |
-| [`extract_column_business_context_suggestions`](../../reference/extract_column_business_context_suggestions/) | function | Parse AI suggestion rows from Spark DataFrames or ``list[dict]`` payloads. | [`_parse_ai_dict_response`](../../reference/internal/business_context/_parse_ai_dict_response/) (internal) |
-| [`prepare_business_context_profile_input`](../../reference/prepare_business_context_profile_input/) | function | — | — |
-| [`suggest_column_business_contexts`](../../reference/suggest_column_business_contexts/) | function | Run Fabric AI to draft column business context suggestions. | — |
+No advanced helpers listed for this module.
 
 ## Related internal helpers
 
 | Helper | Related public callables |
 |---|---|
-| [`_parse_ai_dict_response`](../../reference/internal/business_context/_parse_ai_dict_response/) | [`extract_column_business_context_suggestions`](../../reference/extract_column_business_context_suggestions/) |
-| [`_require_ipywidgets`](../../reference/internal/business_context/_require_ipywidgets/) | [`capture_column_business_context`](../../reference/capture_column_business_context/) |
+| [`_parse_ai_dict_response`](../../reference/internal/business_context/_parse_ai_dict_response/) | — |
+| [`_require_ipywidgets`](../../reference/internal/business_context/_require_ipywidgets/) | — |

@@ -11,9 +11,9 @@ from fabricops_kit.data_lineage import (
 
 def test_scan_read_transform_write_deterministic() -> None:
     code = """
-df = lakehouse_table_read('orders')
+df = read_lakehouse_table('orders')
 clean = df.filter(df.amount > 0).select('id','amount')
-lakehouse_table_write(clean, lh_out, 'orders_clean')
+write_lakehouse_table(clean, lh_out, 'orders_clean')
 """
     one = scan_notebook_lineage(code)
     two = scan_notebook_lineage(code)
@@ -25,7 +25,7 @@ lakehouse_table_write(clean, lh_out, 'orders_clean')
 
 
 def test_scan_join_and_cells() -> None:
-    cells = ["a = lakehouse_table_read('a')", "b = lakehouse_table_read('b')\nout = a.join(b, 'id')"]
+    cells = ["a = read_lakehouse_table('a')", "b = read_lakehouse_table('b')\nout = a.join(b, 'id')"]
     steps = scan_notebook_cells(cells)
     assert any("join" in s["operation_types"] for s in steps)
     assert any("cell:1" in s["code_refs"] for s in steps)
@@ -43,7 +43,7 @@ def test_validation_rules() -> None:
 
 
 def test_orchestration_and_fallback() -> None:
-    code = "df = lakehouse_table_read('x')\nout = df.dropna()"
+    code = "df = read_lakehouse_table('x')\nout = df.dropna()"
     result = build_lineage_from_notebook_code(code, use_ai=False)
     assert result["steps"]
     assert result["ai_used"] is False

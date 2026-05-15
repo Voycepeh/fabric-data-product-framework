@@ -249,3 +249,9 @@ def load_governance(governance_rows, *, agreement_rows=None, agreement_id: str |
         for r in filtered
     ]
     return {"agreement_context": agreement_payload, "columns": columns}
+
+
+
+def draft_governance(prepared_profile_df, prompt: str = PDPA_PERSONAL_IDENTIFIER_PROMPT, output_col: str = "ai_governance_response"):
+    """Compatibility-friendly short alias for :func:`suggest_pii_labels`."""
+    return suggest_pii_labels(prepared_profile_df, prompt=prompt, output_col=output_col)

@@ -192,3 +192,20 @@ def capture_column_business_context(suggestions: list[dict], environment_name: s
     load()
     ipy_display(widgets.VBox([title, summary, approved_box, notes_box, reviewer_box, widgets.HBox([btn_approve, btn_reject, btn_undo]), status]))
     return None
+
+
+
+def draft_business_context(prepared_profile_df, prompt_template: str = BUSINESS_CONTEXT_PROMPT, output_col: str = "ai_business_context_response"):
+    """Compatibility-friendly short alias for :func:`suggest_column_business_contexts`."""
+    return suggest_column_business_contexts(prepared_profile_df, prompt_template=prompt_template, output_col=output_col)
+
+
+def review_business_context(suggestions: list[dict], environment_name: str, dataset_name: str, table_name: str, default_approval_status: str = "pending") -> list[dict]:
+    """Compatibility-friendly short alias for :func:`capture_column_business_context`."""
+    return capture_column_business_context(suggestions, environment_name, dataset_name, table_name, default_approval_status=default_approval_status)
+
+
+def write_business_context(spark, *, rows: list[dict], metadata_path, table_name: str = "METADATA_COLUMN_BUSINESS_CONTEXT", mode: str = "append"):
+    """Persist approved business context rows via metadata writer."""
+    from .metadata import write_column_business_context
+    return write_column_business_context(spark=spark, rows=rows, metadata_path=metadata_path, table_name=table_name, mode=mode)

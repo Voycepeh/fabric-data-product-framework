@@ -17,20 +17,20 @@ committing to a full production write path.
 from fabricops_kit.data_quality import run_dq_workflow
 from fabricops_kit.fabric_input_output import (
     get_path,
-    lakehouse_table_read,
-    load_fabric_config,
+    read_lakehouse_table,
+    load_config,
 )
 from fabricops_kit.data_profiling import profile_dataframe
 
 DRY_RUN = True
 
-cfg = load_fabric_config(CONFIG)
+cfg = load_config(CONFIG)
 lh_source = get_path(env="Sandbox", target="Source", config=cfg)
 
 dataset_name = "orders"
 table_name = "orders_source"
 
-source_df = lakehouse_table_read(lh_source, table_name, spark_session=spark)
+source_df = read_lakehouse_table(lh_source, table_name, spark_session=spark)
 profile = profile_dataframe(source_df, dataset_name=dataset_name, engine="spark")
 
 quality_contract = {

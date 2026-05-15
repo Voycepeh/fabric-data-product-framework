@@ -6,8 +6,8 @@ from typing import Any
 
 _ALLOWED_TYPES = {"dataframe", "lakehouse_table", "warehouse_table", "file", "unknown"}
 _ALLOWED_CONFIDENCE = {"high", "medium", "low"}
-READ_HELPERS = {"lakehouse_table_read": "lakehouse_table", "warehouse_read": "warehouse_table", "lakehouse_csv_read": "file", "lakehouse_excel_read_as_spark": "file", "lakehouse_parquet_read_as_spark": "file"}
-WRITE_HELPERS = {"lakehouse_table_write": "lakehouse_table", "warehouse_write": "warehouse_table"}
+READ_HELPERS = {"read_lakehouse_table": "lakehouse_table", "read_warehouse_table": "warehouse_table", "read_lakehouse_csv": "file", "read_lakehouse_excel": "file", "read_lakehouse_parquet": "file"}
+WRITE_HELPERS = {"write_lakehouse_table": "lakehouse_table", "write_warehouse_table": "warehouse_table"}
 
 
 def _name(node: ast.AST) -> str | None:
@@ -37,9 +37,9 @@ def _literal(node: ast.AST) -> str | None:
 
 
 def _resolve_write_target(cname: str, call: ast.Call) -> str:
-    if cname == "lakehouse_table_write":
+    if cname == "write_lakehouse_table":
         return _literal(call.args[2]) if len(call.args) >= 3 else "unknown_lakehouse_table"
-    if cname == "warehouse_write":
+    if cname == "write_warehouse_table":
         if len(call.args) >= 5:
             return f"{_literal(call.args[3]) or 'schema'}.{_literal(call.args[4]) or 'table'}"
         return "unknown_warehouse_table"

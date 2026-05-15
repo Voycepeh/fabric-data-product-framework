@@ -31,7 +31,7 @@ from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 from pyspark.sql import SparkSession
 from .data_profiling import profile_dataframe
-from .fabric_input_output import lakehouse_table_write
+from .fabric_input_output import write_lakehouse_table
 from .metadata import build_dq_rule_key, build_metadata_column_key, build_metadata_table_key, _now_utc_iso, _resolve_action_by
 from .config import DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
 
@@ -215,25 +215,6 @@ def extract_candidate_rules_from_responses(response_rows, table_name: str, respo
     by_id = {r.get("rule_id"): r for r in candidates if r.get("rule_id")}
     return list(by_id.values())
 
-
-def build_dq_review_rows(suggested_rules: list[dict[str, Any]], default_approval_status: str = "pending") -> list[dict[str, Any]]:
-    """Build notebook-editable DQ review rows without changing rule taxonomy."""
-    rows: list[dict[str, Any]] = []
-    for rule in suggested_rules or []:
-        rows.append(
-            {
-                "suggestion_type": "dq_rule",
-                "target_column": (rule.get("columns") or [None])[0],
-                "rule_name": rule.get("rule_type"),
-                "proposed_rule_payload": json.dumps(rule, sort_keys=True),
-                "business_reason": rule.get("description", ""),
-                "evidence": "",
-                "confidence": None,
-                "approval_status": default_approval_status,
-                "reviewer_notes": "",
-            }
-        )
-    return rows
 
 
 def approved_dq_rules_from_review_rows(review_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -570,11 +551,11 @@ def write_dq_rules(approved_rules, *, table_name: str, metadata_path, metadata_t
     if spark is None:
         raise ValueError("write_dq_rules requires an active SparkSession.")
     history_df = _build_dq_rule_history(spark, table_name=table_name, approved_rules=approved_rules, action_by=action_by, rule_source=rule_source, action_reason=action_reason)
-    lakehouse_table_write(history_df, metadata_path, metadata_table, mode=mode)
+    write_lakehouse_table(history_df, metadata_path, metadata_table, mode=mode)
     return history_df
 
 
-def enforce_dq_rules(df, *, table_name: str, rules=None, metadata_df=None, row_id_columns: list[str] | None = None, dq_run_id: str | None = None) -> DQEnforcementResult:
+def enforce_dq(df, *, table_name: str, rules=None, metadata_df=None, row_id_columns: list[str] | None = None, dq_run_id: str | None = None) -> DQEnforcementResult:
     """Enforce approved DQ rules and return structured deterministic outputs."""
     if rules is None and metadata_df is None:
         raise ValueError("Provide rules or metadata_df.")
@@ -937,13 +918,13 @@ def run_dq_rule_review_widget(
     Notes
     -----
     This function intentionally does not return review outcomes synchronously.
-    In notebook workflows, call :func:`get_dq_rule_review_results` after the
+    In notebook workflows, call :func:`get_dq_review_results` after the
     analyst has completed widget interactions.
     """
     review_dq_rules(candidate_rules, table_name=table_name)
 
 
-def get_dq_rule_review_results(
+def get_dq_review_results(
     *,
     table_name: str,
     environment_name: str | None = None,
@@ -974,7 +955,7 @@ def get_dq_rule_review_results(
     return {"approved_rules": approved, "rejected_rules": rejected}
 
 
-def load_approved_dq_rules(metadata_df, *, table_name: str) -> list[dict[str, Any]]:
+def load_dq_rules(metadata_df, *, table_name: str) -> list[dict[str, Any]]:
     """Load latest active approved DQ rules from append-only metadata history.
 
     Parameters

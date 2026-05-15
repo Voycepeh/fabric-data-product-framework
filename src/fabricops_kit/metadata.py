@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 from datetime import datetime, timezone
-from .fabric_input_output import lakehouse_table_write
+from .fabric_input_output import write_lakehouse_table
 
 EVIDENCE_SOURCE_PROFILE = "source_profile"
 EVIDENCE_OUTPUT_PROFILE = "output_profile"
@@ -116,7 +116,7 @@ def column_context_rows_for_spark(rows: list[dict]) -> list[dict]:
 def write_metadata_rows(spark, rows: list[dict], metadata_path, table_name: str, mode: str = "append"):
     """Write metadata rows to a lakehouse metadata table."""
     df = spark.createDataFrame(column_context_rows_for_spark(rows))
-    lakehouse_table_write(df, metadata_path, table_name, mode=mode)
+    write_lakehouse_table(df, metadata_path, table_name, mode=mode)
     return df
 
 

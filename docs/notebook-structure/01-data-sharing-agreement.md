@@ -80,6 +80,6 @@ This section is read-only DQ visibility only. There is no DQ enforcement in this
 <table class="reference-function-table notebook-structure-function-table">
   <thead><tr><th>Function / class</th><th>Module</th><th>Purpose</th></tr></thead>
   <tbody>
-    <tr><td><a href="../../api/reference/load_approved_dq_rules/"><code>load_approved_dq_rules</code></a></td><td><a class="reference-module-link" href="../../api/modules/data_quality/">data_quality</a></td><td>Load approved DQ rules for governance-side visibility.</td></tr>
+    <tr><td><a href="../../api/reference/load_dq_rules/"><code>load_dq_rules</code></a></td><td><a class="reference-module-link" href="../../api/modules/data_quality/">data_quality</a></td><td>Load approved DQ rules for governance-side visibility.</td></tr>
   </tbody>
 </table>

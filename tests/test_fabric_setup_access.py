@@ -4,14 +4,14 @@ from fabricops_kit.fabric_input_output import (
     Housepath,
     build_table_identifier,
     get_path,
-    lakehouse_csv_read,
-    lakehouse_table_read,
-    load_fabric_config,
-    warehouse_read,
+    read_lakehouse_csv,
+    read_lakehouse_table,
+    load_config,
+    read_warehouse_table,
 )
 
 
-def test_load_fabric_config_and_get_path(tmp_path):
+def test_load_config_and_get_path(tmp_path):
     cfg = tmp_path / "fabric_config.yml"
     cfg.write_text(
         """
@@ -25,7 +25,7 @@ environments:
 """,
         encoding="utf-8",
     )
-    parsed = load_fabric_config(cfg)
+    parsed = load_config(cfg)
     p = get_path("Sandbox", "Source", config=parsed)
     assert isinstance(p, Housepath)
     assert p.house_name == "SRC"
@@ -76,14 +76,14 @@ class _FakeSpark:
 def test_lakehouse_read_helpers_with_fake_spark():
     lh = Housepath("w", "h", "n", "abfss://root")
     spark = _FakeSpark()
-    lakehouse_table_read(lh, "orders", spark_session=spark)
-    lakehouse_csv_read(lh, "Files/orders.csv", spark_session=spark)
+    read_lakehouse_table(lh, "orders", spark_session=spark)
+    read_lakehouse_csv(lh, "Files/orders.csv", spark_session=spark)
     assert spark.read.loaded_path.endswith("/Tables/orders")
     assert spark.read.csv_path.endswith("/Files/orders.csv")
 
 
-def test_warehouse_read_missing_fabric_connector_message():
+def test_read_warehouse_table_missing_fabric_connector_message():
     lh = Housepath("w", "h", "wh", "abfss://root")
     cfg = {"DE": {"Warehouse": lh}}
     with pytest.raises(RuntimeError, match="must run inside Microsoft Fabric Spark"):
-        warehouse_read("DE", "Warehouse", "dbo", "t", config=cfg, spark_session=_FakeSpark())
+        read_warehouse_table("DE", "Warehouse", "dbo", "t", config=cfg, spark_session=_FakeSpark())

@@ -160,8 +160,8 @@ profile_rows = profile_dataframe_to_metadata(df_source, table_name=DQ_TABLE_NAME
 
 # 2) Optional: load existing approved active rules (02_ex)
 dq_metadata_table = FABRIC_CONFIG.review_workflow_config.dq_approved_table
-existing_dq_df = lakehouse_table_read(metadata_path, dq_metadata_table)
-approved_active_rules = load_approved_dq_rules(existing_dq_df, table_name=DQ_TABLE_NAME)
+existing_dq_df = read_lakehouse_table(metadata_path, dq_metadata_table)
+approved_active_rules = load_dq_rules(existing_dq_df, table_name=DQ_TABLE_NAME)
 
 # 3) Ask AI for candidate rules from profile metadata when needed (02_ex)
 candidate_rules = draft_dq_rules(
@@ -178,7 +178,7 @@ run_dq_rule_review_widget(
     table_name=DQ_TABLE_NAME,
 )
 # 5) After analyst/engineer interaction, collect current widget state (02_ex)
-review = get_dq_rule_review_results(
+review = get_dq_review_results(
     table_name=DQ_TABLE_NAME,
     environment_name=ENV_NAME,
     dataset_name=DATASET_NAME,
@@ -206,13 +206,13 @@ deactivation_df = build_dq_rule_deactivation_metadata_df(
 )
 
 # 8) Pipeline loads active approved rules only (03_pc)
-approved_for_pipeline = load_approved_dq_rules(
-    lakehouse_table_read(metadata_path, dq_metadata_table),
+approved_for_pipeline = load_dq_rules(
+    read_lakehouse_table(metadata_path, dq_metadata_table),
     table_name=DQ_TABLE_NAME,
 )
 
 # 9) Pipeline enforces approved active rules deterministically (03_pc)
-dq = enforce_dq_rules(
+dq = enforce_dq(
     df_standard,
     table_name=DQ_TABLE_NAME,
     rules=approved_for_pipeline,

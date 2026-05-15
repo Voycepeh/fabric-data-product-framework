@@ -402,7 +402,7 @@ class ConfigBootstrapResult:
 
 @dataclass(frozen=True)
 class NotebookSetupContext:
-    """Consolidated startup context returned by :func:`setup_fabricops_notebook`.
+    """Consolidated startup context returned by :func:`setup_notebook`.
 
     Parameters
     ----------
@@ -516,7 +516,7 @@ def _validate_framework_config(config: FrameworkConfig | dict[str, Any]) -> Fram
     return normalized
 
 
-def load_fabric_config(config: FrameworkConfig | dict[str, Any]) -> FrameworkConfig:
+def load_config(config: FrameworkConfig | dict[str, Any]) -> FrameworkConfig:
     """Validate and return a user-supplied framework configuration.
 
     Parameters
@@ -543,7 +543,7 @@ def load_fabric_config(config: FrameworkConfig | dict[str, Any]) -> FrameworkCon
 
     Examples
     --------
-    >>> cfg = load_fabric_config(framework_config)
+    >>> cfg = load_config(framework_config)
     >>> isinstance(cfg, FrameworkConfig)
     True
     """
@@ -700,7 +700,7 @@ def _run_config_smoke_tests(
 
     if check_io_import:
         try:
-            from .fabric_input_output import lakehouse_table_read  # noqa: F401
+            from .fabric_input_output import read_lakehouse_table  # noqa: F401
             results.append(ConfigSmokeCheckResult("fabric_io_import", "pass", "fabric_io helpers are importable."))
         except Exception as exc:
             results.append(ConfigSmokeCheckResult("fabric_io_import", "fail", str(exc)))
@@ -763,7 +763,7 @@ def _bootstrap_fabric_env(
     >>> result.readiness_status in {"ready", "not_ready"}
     True
     """
-    normalized = load_fabric_config(config) if config is not None else None
+    normalized = load_config(config) if config is not None else None
     if normalized is None:
         raise ValueError("config is required for bootstrap_fabric_env.")
     required_targets = required_targets or ["Source", "Unified"]
@@ -792,7 +792,7 @@ def _bootstrap_fabric_env(
 
 
 
-def setup_fabricops_notebook(
+def setup_notebook(
     config: FrameworkConfig | dict[str, Any],
     env: str = "Sandbox",
     required_targets: list[str] | None = None,
@@ -807,7 +807,7 @@ def setup_fabricops_notebook(
     from uuid import uuid4
     from datetime import datetime, timezone
 
-    normalized = load_fabric_config(config)
+    normalized = load_config(config)
     required_targets = required_targets or ["Source", "Unified"]
     resolved_paths = {target: get_path(env=env, target=target, config=normalized) for target in required_targets}
 

@@ -1,182 +1,44 @@
 """Public notebook-friendly entrypoints for the FabricOps Starter Kit."""
 
-from .drift import build_drift_evidence_record, check_partition_drift, check_profile_drift, check_schema_drift, summarize_drift_results
-from .config import (
-    get_path,
-    load_fabric_config,
-    setup_fabricops_notebook,
-)
+from .config import get_path, load_config, setup_notebook
 from .fabric_input_output import (
     Housepath,
-    lakehouse_csv_read,
-    lakehouse_excel_read_as_spark,
-    lakehouse_parquet_read_as_spark,
-    lakehouse_table_read,
-    lakehouse_table_write,
-    warehouse_read,
-    warehouse_write,
-    seed_minimal_sample_source_table,
+    read_lakehouse_csv,
+    read_lakehouse_excel,
+    read_lakehouse_parquet,
+    read_lakehouse_table,
+    read_warehouse_table,
+    write_lakehouse_table,
+    write_warehouse_table,
 )
-from .data_lineage import (
-    build_notebook_lineage,
-)
-from .data_governance import (
-    build_governance_context,
-    prepare_governance_input,
-    suggest_pii_labels,
-    extract_pii_suggestions,
-    review_governance,
-    write_governance,
-    load_governance,
-)
-
-
-
-from .data_profiling import (
-    profile_dataframe,
-)
-from .ai import (
-    build_governance_candidate_prompt,
-    build_handover_summary_prompt,
-    build_manual_governance_prompt_package,
-    build_manual_handover_prompt_package,
-    generate_governance_candidates_with_fabric_ai,
-    generate_handover_summary_with_fabric_ai,
-    parse_manual_ai_json_response,
-)
+from .data_profiling import profile_dataframe
+from .business_context import draft_business_context, review_business_context, write_business_context
 from .data_quality import (
-    DQEnforcementResult,
-    approved_dq_rules_from_review_rows,
-    attach_rule_metadata_keys,
-    build_dq_rule_deactivation_metadata_df,
-    build_dq_review_rows,
-    build_dq_rules_metadata_df,
-    extract_candidate_rules_from_responses,
-    get_dq_rule_review_results,
-    load_approved_dq_rules,
-    draft_dq_rules,
-    write_dq_rules,
-    enforce_dq_rules,
-    validate_dq_rules,
     assert_dq_passed,
-    review_dq_rules,
-    run_dq_rule_review_widget,
+    draft_dq_rules,
+    enforce_dq,
+    get_dq_review_results,
+    load_dq_rules,
     review_dq_rule_deactivations,
-    suggest_dq_rules_with_fabric_ai,
+    review_dq_rules,
+    validate_dq_rules,
+    write_dq_rules,
 )
-from .business_context import (
-    COLUMN_BUSINESS_CONTEXT_FROM_WIDGET,
-    REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET,
-    capture_column_business_context,
-    extract_column_business_context_suggestions,
-    prepare_business_context_profile_input,
-    suggest_column_business_contexts,
-)
-from .notebook_registry import (
-    get_selected_agreement,
-    load_agreements,
-    load_notebook_registry,
-    register_current_notebook,
-    select_agreement,
-)
-from .metadata import (
-    EVIDENCE_BUSINESS_CONTEXT,
-    EVIDENCE_DRIFT_RESULT,
-    EVIDENCE_GOVERNANCE_CONTEXT,
-    EVIDENCE_LINEAGE,
-    EVIDENCE_OUTPUT_PROFILE,
-    EVIDENCE_SOURCE_PROFILE,
-    build_dq_rule_key,
-    build_evidence_row,
-    build_metadata_column_key,
-    build_metadata_table_key,
-    default_evidence_types,
-    write_metadata_rows,
-    write_column_business_context,
-    write_column_governance_context,
-)
+from .data_governance import draft_governance, load_governance, review_governance, write_governance
+from .drift import check_partition_drift, check_profile_drift, check_schema_drift, summarize_drift_results
+from .data_lineage import build_lineage_handover_markdown, build_lineage_records
 from .run_summary import build_run_summary, render_run_summary_markdown
-from .technical_columns import standardize_output_columns
+from .notebook_registry import get_selected_agreement, load_agreements, load_notebook_registry, register_current_notebook, select_agreement
+from .technical_columns import standardize_columns
 
 __version__ = "0.1.0"
 
 __all__ = [
-    "review_dq_rule_deactivations",
-    "build_dq_rules_metadata_df",
-    "build_dq_rule_deactivation_metadata_df",
-    "suggest_dq_rules_with_fabric_ai",
-    "extract_candidate_rules_from_responses",
-    "attach_rule_metadata_keys",
-    "DQEnforcementResult",
-    "build_dq_review_rows",
-    "review_dq_rules",
-    "run_dq_rule_review_widget",
-    "get_dq_rule_review_results",
-    "load_approved_dq_rules",
-    "draft_dq_rules",
-    "write_dq_rules",
-    "enforce_dq_rules",
+    "load_config","setup_notebook","get_path","load_agreements","select_agreement","get_selected_agreement","register_current_notebook","load_notebook_registry",
+    "read_lakehouse_table","write_lakehouse_table","read_warehouse_table","write_warehouse_table","profile_dataframe",
+    "draft_business_context","review_business_context","write_business_context",
+    "draft_dq_rules","review_dq_rules","get_dq_review_results","write_dq_rules","load_dq_rules","enforce_dq","assert_dq_passed",
+    "draft_governance","review_governance","write_governance","load_governance","standardize_columns","build_lineage_records","build_lineage_handover_markdown","build_run_summary","render_run_summary_markdown",
+    "read_lakehouse_csv","read_lakehouse_parquet","read_lakehouse_excel","validate_dq_rules","review_dq_rule_deactivations","check_schema_drift","check_partition_drift","check_profile_drift","summarize_drift_results",
     "Housepath",
-    "load_fabric_config",
-    "get_path",
-    "setup_fabricops_notebook",
-    "lakehouse_table_read",
-    "lakehouse_table_write",
-    "lakehouse_csv_read",
-    "lakehouse_parquet_read_as_spark",
-    "lakehouse_excel_read_as_spark",
-    "warehouse_read",
-    "warehouse_write",
-    "seed_minimal_sample_source_table",
-    "profile_dataframe",
-    "assert_dq_passed",
-    "validate_dq_rules",
-    "parse_manual_ai_json_response",
-    "build_manual_handover_prompt_package",
-    "build_manual_governance_prompt_package",
-    "build_handover_summary_prompt",
-    "build_governance_candidate_prompt",
-    "generate_governance_candidates_with_fabric_ai",
-    "generate_handover_summary_with_fabric_ai",
-    "build_governance_context",
-    "prepare_governance_input",
-    "suggest_pii_labels",
-    "extract_pii_suggestions",
-    "review_governance",
-    "write_governance",
-    "load_governance",
-    "check_schema_drift",
-    "check_partition_drift",
-    "check_profile_drift",
-    "summarize_drift_results",
-    "build_drift_evidence_record",
-    "COLUMN_BUSINESS_CONTEXT_FROM_WIDGET",
-    "REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET",
-    "prepare_business_context_profile_input",
-    "suggest_column_business_contexts",
-    "extract_column_business_context_suggestions",
-    "capture_column_business_context",
-    "build_metadata_table_key",
-    "build_metadata_column_key",
-    "build_dq_rule_key",
-    "EVIDENCE_SOURCE_PROFILE",
-    "EVIDENCE_OUTPUT_PROFILE",
-    "EVIDENCE_DRIFT_RESULT",
-    "EVIDENCE_LINEAGE",
-    "EVIDENCE_BUSINESS_CONTEXT",
-    "EVIDENCE_GOVERNANCE_CONTEXT",
-    "default_evidence_types",
-    "build_evidence_row",
-    "write_metadata_rows",
-    "write_column_business_context",
-    "load_agreements",
-    "select_agreement",
-    "get_selected_agreement",
-    "register_current_notebook",
-    "load_notebook_registry",
-    "write_column_governance_context",
-    "build_notebook_lineage",
-    "build_run_summary",
-    "render_run_summary_markdown",
-    "standardize_output_columns",
 ]

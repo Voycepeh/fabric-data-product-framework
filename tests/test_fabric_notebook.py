@@ -5,8 +5,8 @@ from fabricops_kit.fabric_input_output import (
     Housepath,
     check_naming_convention,
     get_path,
-    lakehouse_table_read,
-    lakehouse_table_write,
+    read_lakehouse_table,
+    write_lakehouse_table,
 )
 
 from fabricops_kit.data_profiling import generate_metadata_profile
@@ -90,10 +90,10 @@ def test_check_naming_convention_fails():
         check_naming_convention("bad_name")
 
 
-def test_lakehouse_table_write_repartition_partition_string():
+def test_write_lakehouse_table_repartition_partition_string():
     df = FakeDF()
     lh = Housepath("w", "h", "name", "abfss://root")
-    lakehouse_table_write(
+    write_lakehouse_table(
         df,
         lh,
         "EMAIL_LOGS",
@@ -105,17 +105,17 @@ def test_lakehouse_table_write_repartition_partition_string():
     assert df.write.partition_by == ("p_bucket",)
 
 
-def test_lakehouse_table_write_repartition_with_int_and_column():
+def test_write_lakehouse_table_repartition_with_int_and_column():
     df = FakeDF()
     lh = Housepath("w", "h", "name", "abfss://root")
-    lakehouse_table_write(df, lh, "EMAIL_LOGS", repartition_by=(200, "p_bucket"))
+    write_lakehouse_table(df, lh, "EMAIL_LOGS", repartition_by=(200, "p_bucket"))
     assert df.repartition_calls == [(200, "p_bucket")]
 
 
-def test_lakehouse_table_read_builds_path():
+def test_read_lakehouse_table_builds_path():
     spark = FakeSpark()
     lh = Housepath("w", "h", "name", "abfss://root")
-    lakehouse_table_read(lh, "MY_TABLE", spark_session=spark)
+    read_lakehouse_table(lh, "MY_TABLE", spark_session=spark)
     assert spark.read.loaded_path.endswith("/Tables/MY_TABLE")
 
 
