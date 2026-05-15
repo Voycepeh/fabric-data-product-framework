@@ -803,7 +803,6 @@ def setup_notebook(
     local_fallback_name: str | None = None,
 ) -> NotebookSetupContext:
     """Run consolidated FabricOps startup for exploration and pipeline notebooks."""
-    from .ai import configure_fabric_ai_functions
     from uuid import uuid4
     from datetime import datetime, timezone
 
@@ -850,7 +849,7 @@ def setup_notebook(
 
     ai_status = _check_fabric_ai_functions_available() if check_ai else {"available": None, "message": "AI check disabled."}
     if configure_ai and check_ai and ai_status.get("available"):
-        ai_status = {**ai_status, **configure_fabric_ai_functions()}
+        ai_status = {**ai_status, **_configure_fabric_ai_functions()}
 
     checks = _run_config_smoke_tests(config=normalized, env=env, required_targets=required_targets, check_ai=check_ai, notebook_name=resolved_notebook_name, ai_result=ai_status)
     readiness_status = "ready" if all(r.status in {"pass", "warn", "skipped"} for r in checks) else "not_ready"
@@ -869,20 +868,56 @@ def setup_notebook(
     )
 
 def _check_fabric_ai_functions_available() -> dict[str, Any]:
-    """Check whether Fabric AI Functions are available in the current runtime.
+    """Check whether Fabric AI Functions can be imported in the current runtime."""
+    try:
+        import synapse.ml.spark.aifunc as _aifunc  # noqa: F401
+        return {
+            "available": True,
+            "runtime": "fabric_pyspark",
+            "message": "Microsoft Fabric AI Functions import check passed.",
+        }
+    except Exception as exc:  # pragma: no cover
+        return {
+            "available": False,
+            "runtime": "local_or_unknown",
+            "message": (
+                "Microsoft Fabric AI Functions are unavailable. "
+                "Require Fabric PySpark runtime and feature enablement. "
+                f"Import error: {exc}"
+            ),
+        }
 
-    Returns
-    -------
-    dict[str, Any]
-        Diagnostic payload containing an ``available`` flag and a message.
 
-    Notes
-    -----
-    This is a config-facing wrapper around the AI module so readiness checks are callable from ``config``.
-    """
-    from .ai import check_fabric_ai_functions_available as _check
+def _configure_fabric_ai_functions(
+    deployment_name: str | None = None,
+    temperature: float = 0.0,
+) -> dict[str, Any]:
+    """Apply optional default Fabric AI Function configuration."""
+    try:
+        import synapse.ml.spark.aifunc as aifunc
+    except Exception as exc:  # pragma: no cover
+        return {
+            "available": False,
+            "configured": False,
+            "message": f"Microsoft Fabric AI Functions are unavailable. Import error: {exc}",
+        }
 
-    return _check()
+    conf = getattr(aifunc, "default_conf", None)
+    if conf is None:
+        return {
+            "available": True,
+            "configured": False,
+            "message": "aifunc.default_conf is not available in this runtime.",
+        }
+    if deployment_name and hasattr(conf, "set_deployment_name"):
+        conf.set_deployment_name(deployment_name)
+    if hasattr(conf, "set_temperature"):
+        conf.set_temperature(float(temperature))
+    return {
+        "available": True,
+        "configured": True,
+        "message": "Microsoft Fabric AI Functions default configuration applied.",
+    }
 
 
 def _check_spark_session() -> tuple[bool, str]:

@@ -43,7 +43,6 @@ MODULE_DOCS_METADATA: list[ModuleDocMetadata] = [
         {"module_name": "data_drift", "visibility": "public", "module_summary": "Schema/profile/partition drift checks supporting notebook validation.", "sidebar_group": "Modules", "sidebar_include": True},
         {"module_name": "handover", "visibility": "public", "module_summary": "Handover summary and handover markdown helpers.", "sidebar_group": "Modules", "sidebar_include": True},
     {"module_name": "technical_columns", "visibility": "public", "module_summary": "Technical/audit enrichment helpers for pipeline outputs.", "sidebar_group": "Modules", "sidebar_include": True},
-    {"module_name": "ai", "visibility": "public", "module_summary": "AI-assisted helper utilities and prompt builders.", "sidebar_group": "Modules", "sidebar_include": True},
     {"module_name": "data_product_metadata", "visibility": "internal", "module_summary": "Metadata table key builders and metadata write helpers.", "sidebar_group": "Advanced", "sidebar_include": False},
     {"module_name": "business_context", "visibility": "internal", "module_summary": "Business context suggestion and review helpers.", "sidebar_group": "Advanced", "sidebar_include": False},
 ]

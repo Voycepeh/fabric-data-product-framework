@@ -147,7 +147,7 @@ def test_non_starter_callable_still_appears_in_complete_catalogue() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     all_functions = all_public_functions_section(content)
-    assert "<code>parse_manual_ai_json_response</code>" in all_functions
+    assert "<code>build_run_summary</code>" in all_functions
 
 
 def test_reference_tables_include_mobile_friendly_classes_and_data_labels() -> None:

@@ -56,11 +56,6 @@ def test_generated_primary_reference_links_use_api_reference_prefix() -> None:
 
 
 def test_generated_module_pages_use_api_reference_prefix() -> None:
-    ai_module = ROOT / "docs" / "api" / "modules" / "ai.md"
-    text = ai_module.read_text(encoding="utf-8")
-    assert "../../reference/build_governance_candidate_prompt/" in text
-    assert "../../api/reference/build_governance_candidate_prompt/" not in text
-
     import json
     manifest = json.loads((ROOT / "docs" / "reference" / "manifest.json").read_text(encoding="utf-8"))
     module_pages = [ROOT / "docs" / "api" / "modules" / f"{row['module_name']}.md" for row in manifest["modules"]]
