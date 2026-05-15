@@ -1,7 +1,7 @@
 import pytest
 
 import fabricops_kit.business_context as bc
-import fabricops_kit.notebook_registry as nr
+import fabricops_kit.metadata as nr
 
 
 def test_agreement_option_label_and_load_normalization():
