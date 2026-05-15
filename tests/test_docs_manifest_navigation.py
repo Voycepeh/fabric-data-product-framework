@@ -46,10 +46,11 @@ def test_workflow_modules_are_present_and_internal_modules_hidden_from_sidebar()
     assert "- drift: api/modules/drift.md" in mkdocs_text
 
 
-def test_data_agreement_placeholder_page_exists() -> None:
+def test_data_agreement_module_page_is_generated_normally() -> None:
     _run_generator()
     text = (ROOT / "docs" / "api" / "modules" / "data_agreement.md").read_text(encoding="utf-8")
-    assert "reserved for the data agreement workflow" in text
+    assert "## Essential callables" in text
+    assert "placeholder" not in text.lower()
 
 
 def test_public_callables_point_to_generated_module_pages() -> None:
@@ -74,12 +75,16 @@ def test_mkdocs_sync_markers_render_current_manifest_modules() -> None:
         assert f"- {module}: api/modules/{module}.md" in block
 
 
-def test_sidebar_include_flag_cannot_hide_discovered_modules() -> None:
+def test_sidebar_include_flag_controls_visibility() -> None:
     _run_generator()
     manifest = json.loads((ROOT / "docs" / "reference" / "manifest.json").read_text(encoding="utf-8"))
     mkdocs_text = (ROOT / "mkdocs.yml").read_text(encoding="utf-8")
     for row in manifest["modules"]:
-        assert f"- {row['module_name']}: api/modules/{row['module_name']}.md" in mkdocs_text
+        nav_line = f"- {row['module_name']}: api/modules/{row['module_name']}.md"
+        if row["sidebar_include"]:
+            assert nav_line in mkdocs_text
+        else:
+            assert nav_line not in mkdocs_text
 
 
 def test_only_explicit_blacklist_hides_modules() -> None:
