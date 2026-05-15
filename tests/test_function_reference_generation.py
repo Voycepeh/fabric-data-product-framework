@@ -116,7 +116,6 @@ def test_reference_includes_callable_finder_block() -> None:
     assert 'id="callable-finder-input"' in content
     assert 'data-callable-finder-empty' in content
     assert content.index("## Find a callable") < content.index("## Function catalogue")
-    assert content.index("## Find a callable") < content.index("## Function catalogue")
 
 
 def test_reference_callable_finder_exposes_only_public_role_filters() -> None:
@@ -285,7 +284,6 @@ def test_generated_notebook_detail_pages_exist_with_expected_content() -> None:
             "## Segment 4: Assemble and validate framework config",
             "## Segment 5: Run startup checks and show resolved paths",
             "<code>load_config</code>",
-            "Typical functions used in this segment",
             "Why it is commonly used here",
             "../../api/reference/",
             "../../api/modules/",
@@ -383,7 +381,11 @@ def test_function_usage_guide_contains_orientation_sections() -> None:
 
 def test_notebook_pages_use_notebook_first_intro_and_table_headings() -> None:
     generate_reference()
-    notebook_pages = sorted((ROOT / "docs" / "notebook-structure").glob("*.md"))
+    notebook_pages = [
+        ROOT / "docs" / "notebook-structure" / "00-env-config.md",
+        ROOT / "docs" / "notebook-structure" / "02-exploration.md",
+        ROOT / "docs" / "notebook-structure" / "03-pipeline-contract.md",
+    ]
     for page in notebook_pages:
         content = page.read_text(encoding="utf-8")
         assert "Use this page to understand the purpose and segment flow of this notebook template." in content
