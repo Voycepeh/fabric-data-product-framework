@@ -3,78 +3,78 @@
     {
       "module_name": "business_context",
       "visibility": "public",
-      "module_summary": "Business context suggestion and review helpers.",
-      "sidebar_group": "Advanced",
+      "module_summary": "Owns business meaning for tables and columns.",
+      "sidebar_group": "1. Governance steward",
       "sidebar_include": true
     },
     {
-      "module_name": "environment_config",
+      "module_name": "config",
       "visibility": "public",
-      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns environment setup, runtime initialization, paths, and notebook-wide configuration.",
+      "sidebar_group": "0. Environment setup",
       "sidebar_include": true
     },
     {
       "module_name": "data_governance",
       "visibility": "public",
-      "module_summary": "Governance classification helpers and metadata builders.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns sensitivity, PII, confidentiality, policy labels, and governance approval evidence.",
+      "sidebar_group": "1. Governance steward",
       "sidebar_include": true
     },
     {
       "module_name": "data_lineage",
       "visibility": "public",
-      "module_summary": "Lineage extraction and handover documentation helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns source-to-target lineage and transformation evidence.",
+      "sidebar_group": "3. Data engineer",
       "sidebar_include": true
     },
     {
       "module_name": "data_profiling",
       "visibility": "public",
-      "module_summary": "Source/output profiling and metadata conversion helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns deterministic profiling evidence such as schema, nulls, distincts, min/max, and samples.",
+      "sidebar_group": "2. Analyst / data scientist",
       "sidebar_include": true
     },
     {
       "module_name": "data_quality",
       "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns DQ rule drafting, review, enforcement, quarantine, and quality results.",
+      "sidebar_group": "2. Analyst / data scientist",
       "sidebar_include": true
     },
     {
-      "module_name": "data_drift",
+      "module_name": "drift",
       "visibility": "public",
-      "module_summary": "Schema/profile/partition drift checks supporting notebook validation.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns schema/profile/data drift checks as engineering guardrails during pipeline runs.",
+      "sidebar_group": "3. Data engineer",
       "sidebar_include": true
     },
     {
       "module_name": "fabric_input_output",
       "visibility": "public",
-      "module_summary": "Lakehouse and warehouse read/write helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns Fabric read/write helpers for Lakehouse, Warehouse, and file/table IO.",
+      "sidebar_group": "3. Data engineer",
       "sidebar_include": true
     },
     {
       "module_name": "handover",
       "visibility": "public",
-      "module_summary": "Handover summary and handover markdown helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns generated maintainer-facing handover and contract narrative output.",
+      "sidebar_group": "4. Handover / data contract",
       "sidebar_include": true
     },
     {
-      "module_name": "data_product_metadata",
+      "module_name": "metadata",
       "visibility": "public",
-      "module_summary": "Metadata table key builders and metadata write helpers.",
-      "sidebar_group": "Advanced",
+      "module_summary": "Owns metadata/contract store access, evidence persistence, agreement metadata, notebook evidence, and contract assembly inputs.",
+      "sidebar_group": "5. Metadata / contract store",
       "sidebar_include": true
     },
     {
       "module_name": "technical_columns",
       "visibility": "public",
-      "module_summary": "Technical/audit enrichment helpers for pipeline outputs.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns standard output/audit columns for pipeline outputs.",
+      "sidebar_group": "3. Data engineer",
       "sidebar_include": true
     }
   ],
@@ -82,8 +82,8 @@
     {
       "module_name": "data_quality",
       "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns DQ rule drafting, review, enforcement, quarantine, and quality results.",
+      "sidebar_group": "2. Analyst / data scientist",
       "sidebar_include": true,
       "callable_name": "assert_dq_passed",
       "callable_visibility": "public",
@@ -94,8 +94,8 @@
     {
       "module_name": "handover",
       "visibility": "public",
-      "module_summary": "Handover summary and handover markdown helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns generated maintainer-facing handover and contract narrative output.",
+      "sidebar_group": "4. Handover / data contract",
       "sidebar_include": true,
       "callable_name": "build_handover",
       "callable_visibility": "public",
@@ -106,8 +106,8 @@
     {
       "module_name": "data_lineage",
       "visibility": "public",
-      "module_summary": "Lineage extraction and handover documentation helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns source-to-target lineage and transformation evidence.",
+      "sidebar_group": "3. Data engineer",
       "sidebar_include": true,
       "callable_name": "build_lineage_handover_markdown",
       "callable_visibility": "public",
@@ -118,8 +118,8 @@
     {
       "module_name": "data_lineage",
       "visibility": "public",
-      "module_summary": "Lineage extraction and handover documentation helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns source-to-target lineage and transformation evidence.",
+      "sidebar_group": "3. Data engineer",
       "sidebar_include": true,
       "callable_name": "build_lineage_records",
       "callable_visibility": "public",
@@ -128,10 +128,10 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "data_drift",
+      "module_name": "drift",
       "visibility": "public",
-      "module_summary": "Schema/profile/partition drift checks supporting notebook validation.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns schema/profile/data drift checks as engineering guardrails during pipeline runs.",
+      "sidebar_group": "3. Data engineer",
       "sidebar_include": true,
       "callable_name": "check_partition_drift",
       "callable_visibility": "public",
@@ -140,10 +140,10 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "data_drift",
+      "module_name": "drift",
       "visibility": "public",
-      "module_summary": "Schema/profile/partition drift checks supporting notebook validation.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns schema/profile/data drift checks as engineering guardrails during pipeline runs.",
+      "sidebar_group": "3. Data engineer",
       "sidebar_include": true,
       "callable_name": "check_profile_drift",
       "callable_visibility": "public",
@@ -152,10 +152,10 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "data_drift",
+      "module_name": "drift",
       "visibility": "public",
-      "module_summary": "Schema/profile/partition drift checks supporting notebook validation.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns schema/profile/data drift checks as engineering guardrails during pipeline runs.",
+      "sidebar_group": "3. Data engineer",
       "sidebar_include": true,
       "callable_name": "check_schema_drift",
       "callable_visibility": "public",
@@ -166,8 +166,8 @@
     {
       "module_name": "business_context",
       "visibility": "public",
-      "module_summary": "Business context suggestion and review helpers.",
-      "sidebar_group": "Advanced",
+      "module_summary": "Owns business meaning for tables and columns.",
+      "sidebar_group": "1. Governance steward",
       "sidebar_include": true,
       "callable_name": "draft_business_context",
       "callable_visibility": "public",
@@ -178,8 +178,8 @@
     {
       "module_name": "data_quality",
       "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns DQ rule drafting, review, enforcement, quarantine, and quality results.",
+      "sidebar_group": "2. Analyst / data scientist",
       "sidebar_include": true,
       "callable_name": "draft_dq_rules",
       "callable_visibility": "public",
@@ -190,8 +190,8 @@
     {
       "module_name": "data_governance",
       "visibility": "public",
-      "module_summary": "Governance classification helpers and metadata builders.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns sensitivity, PII, confidentiality, policy labels, and governance approval evidence.",
+      "sidebar_group": "1. Governance steward",
       "sidebar_include": true,
       "callable_name": "draft_governance",
       "callable_visibility": "public",
@@ -202,8 +202,8 @@
     {
       "module_name": "data_quality",
       "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns DQ rule drafting, review, enforcement, quarantine, and quality results.",
+      "sidebar_group": "2. Analyst / data scientist",
       "sidebar_include": true,
       "callable_name": "enforce_dq",
       "callable_visibility": "public",
@@ -214,8 +214,8 @@
     {
       "module_name": "data_quality",
       "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns DQ rule drafting, review, enforcement, quarantine, and quality results.",
+      "sidebar_group": "2. Analyst / data scientist",
       "sidebar_include": true,
       "callable_name": "get_dq_review_results",
       "callable_visibility": "public",
@@ -224,10 +224,10 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "environment_config",
+      "module_name": "config",
       "visibility": "public",
-      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns environment setup, runtime initialization, paths, and notebook-wide configuration.",
+      "sidebar_group": "0. Environment setup",
       "sidebar_include": true,
       "callable_name": "get_path",
       "callable_visibility": "public",
@@ -236,10 +236,10 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "data_product_metadata",
+      "module_name": "metadata",
       "visibility": "public",
-      "module_summary": "Metadata table key builders and metadata write helpers.",
-      "sidebar_group": "Advanced",
+      "module_summary": "Owns metadata/contract store access, evidence persistence, agreement metadata, notebook evidence, and contract assembly inputs.",
+      "sidebar_group": "5. Metadata / contract store",
       "sidebar_include": true,
       "callable_name": "get_selected_agreement",
       "callable_visibility": "public",
@@ -248,10 +248,10 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "data_product_metadata",
+      "module_name": "metadata",
       "visibility": "public",
-      "module_summary": "Metadata table key builders and metadata write helpers.",
-      "sidebar_group": "Advanced",
+      "module_summary": "Owns metadata/contract store access, evidence persistence, agreement metadata, notebook evidence, and contract assembly inputs.",
+      "sidebar_group": "5. Metadata / contract store",
       "sidebar_include": true,
       "callable_name": "load_agreements",
       "callable_visibility": "public",
@@ -260,10 +260,10 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "environment_config",
+      "module_name": "config",
       "visibility": "public",
-      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns environment setup, runtime initialization, paths, and notebook-wide configuration.",
+      "sidebar_group": "0. Environment setup",
       "sidebar_include": true,
       "callable_name": "load_config",
       "callable_visibility": "public",
@@ -274,8 +274,8 @@
     {
       "module_name": "data_quality",
       "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns DQ rule drafting, review, enforcement, quarantine, and quality results.",
+      "sidebar_group": "2. Analyst / data scientist",
       "sidebar_include": true,
       "callable_name": "load_dq_rules",
       "callable_visibility": "public",
@@ -286,8 +286,8 @@
     {
       "module_name": "data_governance",
       "visibility": "public",
-      "module_summary": "Governance classification helpers and metadata builders.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns sensitivity, PII, confidentiality, policy labels, and governance approval evidence.",
+      "sidebar_group": "1. Governance steward",
       "sidebar_include": true,
       "callable_name": "load_governance",
       "callable_visibility": "public",
@@ -296,10 +296,10 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "data_product_metadata",
+      "module_name": "metadata",
       "visibility": "public",
-      "module_summary": "Metadata table key builders and metadata write helpers.",
-      "sidebar_group": "Advanced",
+      "module_summary": "Owns metadata/contract store access, evidence persistence, agreement metadata, notebook evidence, and contract assembly inputs.",
+      "sidebar_group": "5. Metadata / contract store",
       "sidebar_include": true,
       "callable_name": "load_notebook_registry",
       "callable_visibility": "public",
@@ -310,8 +310,8 @@
     {
       "module_name": "data_profiling",
       "visibility": "public",
-      "module_summary": "Source/output profiling and metadata conversion helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns deterministic profiling evidence such as schema, nulls, distincts, min/max, and samples.",
+      "sidebar_group": "2. Analyst / data scientist",
       "sidebar_include": true,
       "callable_name": "profile_dataframe",
       "callable_visibility": "public",
@@ -322,8 +322,8 @@
     {
       "module_name": "fabric_input_output",
       "visibility": "public",
-      "module_summary": "Lakehouse and warehouse read/write helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns Fabric read/write helpers for Lakehouse, Warehouse, and file/table IO.",
+      "sidebar_group": "3. Data engineer",
       "sidebar_include": true,
       "callable_name": "read_lakehouse_csv",
       "callable_visibility": "public",
@@ -334,8 +334,8 @@
     {
       "module_name": "fabric_input_output",
       "visibility": "public",
-      "module_summary": "Lakehouse and warehouse read/write helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns Fabric read/write helpers for Lakehouse, Warehouse, and file/table IO.",
+      "sidebar_group": "3. Data engineer",
       "sidebar_include": true,
       "callable_name": "read_lakehouse_excel",
       "callable_visibility": "public",
@@ -346,8 +346,8 @@
     {
       "module_name": "fabric_input_output",
       "visibility": "public",
-      "module_summary": "Lakehouse and warehouse read/write helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns Fabric read/write helpers for Lakehouse, Warehouse, and file/table IO.",
+      "sidebar_group": "3. Data engineer",
       "sidebar_include": true,
       "callable_name": "read_lakehouse_parquet",
       "callable_visibility": "public",
@@ -358,8 +358,8 @@
     {
       "module_name": "fabric_input_output",
       "visibility": "public",
-      "module_summary": "Lakehouse and warehouse read/write helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns Fabric read/write helpers for Lakehouse, Warehouse, and file/table IO.",
+      "sidebar_group": "3. Data engineer",
       "sidebar_include": true,
       "callable_name": "read_lakehouse_table",
       "callable_visibility": "public",
@@ -370,8 +370,8 @@
     {
       "module_name": "fabric_input_output",
       "visibility": "public",
-      "module_summary": "Lakehouse and warehouse read/write helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns Fabric read/write helpers for Lakehouse, Warehouse, and file/table IO.",
+      "sidebar_group": "3. Data engineer",
       "sidebar_include": true,
       "callable_name": "read_warehouse_table",
       "callable_visibility": "public",
@@ -380,10 +380,10 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "data_product_metadata",
+      "module_name": "metadata",
       "visibility": "public",
-      "module_summary": "Metadata table key builders and metadata write helpers.",
-      "sidebar_group": "Advanced",
+      "module_summary": "Owns metadata/contract store access, evidence persistence, agreement metadata, notebook evidence, and contract assembly inputs.",
+      "sidebar_group": "5. Metadata / contract store",
       "sidebar_include": true,
       "callable_name": "register_current_notebook",
       "callable_visibility": "public",
@@ -394,8 +394,8 @@
     {
       "module_name": "handover",
       "visibility": "public",
-      "module_summary": "Handover summary and handover markdown helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns generated maintainer-facing handover and contract narrative output.",
+      "sidebar_group": "4. Handover / data contract",
       "sidebar_include": true,
       "callable_name": "render_handover_markdown",
       "callable_visibility": "public",
@@ -406,8 +406,8 @@
     {
       "module_name": "business_context",
       "visibility": "public",
-      "module_summary": "Business context suggestion and review helpers.",
-      "sidebar_group": "Advanced",
+      "module_summary": "Owns business meaning for tables and columns.",
+      "sidebar_group": "1. Governance steward",
       "sidebar_include": true,
       "callable_name": "review_business_context",
       "callable_visibility": "public",
@@ -418,8 +418,8 @@
     {
       "module_name": "data_quality",
       "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns DQ rule drafting, review, enforcement, quarantine, and quality results.",
+      "sidebar_group": "2. Analyst / data scientist",
       "sidebar_include": true,
       "callable_name": "review_dq_rule_deactivations",
       "callable_visibility": "public",
@@ -430,8 +430,8 @@
     {
       "module_name": "data_quality",
       "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns DQ rule drafting, review, enforcement, quarantine, and quality results.",
+      "sidebar_group": "2. Analyst / data scientist",
       "sidebar_include": true,
       "callable_name": "review_dq_rules",
       "callable_visibility": "public",
@@ -442,8 +442,8 @@
     {
       "module_name": "data_governance",
       "visibility": "public",
-      "module_summary": "Governance classification helpers and metadata builders.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns sensitivity, PII, confidentiality, policy labels, and governance approval evidence.",
+      "sidebar_group": "1. Governance steward",
       "sidebar_include": true,
       "callable_name": "review_governance",
       "callable_visibility": "public",
@@ -452,10 +452,10 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "data_product_metadata",
+      "module_name": "metadata",
       "visibility": "public",
-      "module_summary": "Metadata table key builders and metadata write helpers.",
-      "sidebar_group": "Advanced",
+      "module_summary": "Owns metadata/contract store access, evidence persistence, agreement metadata, notebook evidence, and contract assembly inputs.",
+      "sidebar_group": "5. Metadata / contract store",
       "sidebar_include": true,
       "callable_name": "select_agreement",
       "callable_visibility": "public",
@@ -464,10 +464,10 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "environment_config",
+      "module_name": "config",
       "visibility": "public",
-      "module_summary": "Runtime and path bootstrap helpers for shared notebook setup.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns environment setup, runtime initialization, paths, and notebook-wide configuration.",
+      "sidebar_group": "0. Environment setup",
       "sidebar_include": true,
       "callable_name": "setup_notebook",
       "callable_visibility": "public",
@@ -478,8 +478,8 @@
     {
       "module_name": "technical_columns",
       "visibility": "public",
-      "module_summary": "Technical/audit enrichment helpers for pipeline outputs.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns standard output/audit columns for pipeline outputs.",
+      "sidebar_group": "3. Data engineer",
       "sidebar_include": true,
       "callable_name": "standardize_columns",
       "callable_visibility": "public",
@@ -488,10 +488,10 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "data_drift",
+      "module_name": "drift",
       "visibility": "public",
-      "module_summary": "Schema/profile/partition drift checks supporting notebook validation.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns schema/profile/data drift checks as engineering guardrails during pipeline runs.",
+      "sidebar_group": "3. Data engineer",
       "sidebar_include": true,
       "callable_name": "summarize_drift_results",
       "callable_visibility": "public",
@@ -502,8 +502,8 @@
     {
       "module_name": "data_quality",
       "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns DQ rule drafting, review, enforcement, quarantine, and quality results.",
+      "sidebar_group": "2. Analyst / data scientist",
       "sidebar_include": true,
       "callable_name": "validate_dq_rules",
       "callable_visibility": "public",
@@ -514,8 +514,8 @@
     {
       "module_name": "business_context",
       "visibility": "public",
-      "module_summary": "Business context suggestion and review helpers.",
-      "sidebar_group": "Advanced",
+      "module_summary": "Owns business meaning for tables and columns.",
+      "sidebar_group": "1. Governance steward",
       "sidebar_include": true,
       "callable_name": "write_business_context",
       "callable_visibility": "public",
@@ -526,8 +526,8 @@
     {
       "module_name": "data_quality",
       "visibility": "public",
-      "module_summary": "Deterministic DQ rule validation and enforcement helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns DQ rule drafting, review, enforcement, quarantine, and quality results.",
+      "sidebar_group": "2. Analyst / data scientist",
       "sidebar_include": true,
       "callable_name": "write_dq_rules",
       "callable_visibility": "public",
@@ -538,8 +538,8 @@
     {
       "module_name": "data_governance",
       "visibility": "public",
-      "module_summary": "Governance classification helpers and metadata builders.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns sensitivity, PII, confidentiality, policy labels, and governance approval evidence.",
+      "sidebar_group": "1. Governance steward",
       "sidebar_include": true,
       "callable_name": "write_governance",
       "callable_visibility": "public",
@@ -550,8 +550,8 @@
     {
       "module_name": "fabric_input_output",
       "visibility": "public",
-      "module_summary": "Lakehouse and warehouse read/write helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns Fabric read/write helpers for Lakehouse, Warehouse, and file/table IO.",
+      "sidebar_group": "3. Data engineer",
       "sidebar_include": true,
       "callable_name": "write_lakehouse_table",
       "callable_visibility": "public",
@@ -562,8 +562,8 @@
     {
       "module_name": "fabric_input_output",
       "visibility": "public",
-      "module_summary": "Lakehouse and warehouse read/write helpers.",
-      "sidebar_group": "Modules",
+      "module_summary": "Owns Fabric read/write helpers for Lakehouse, Warehouse, and file/table IO.",
+      "sidebar_group": "3. Data engineer",
       "sidebar_include": true,
       "callable_name": "write_warehouse_table",
       "callable_visibility": "public",

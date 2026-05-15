@@ -18,21 +18,21 @@ MKDOCS_PATH = ROOT / "mkdocs.yml"
 MANIFEST_PATH = ROOT / "docs" / "reference" / "manifest.json"
 
 PUBLIC_MODULE_PREFERRED_NAMES = {
-    "config": "environment_config",
-    "runtime": "runtime_context",
+    "config": "config",
     "fabric_input_output": "fabric_input_output",
     "data_profiling": "data_profiling",
-    "data_contracts": "data_contracts",
     "data_quality": "data_quality",
-    "drift": "data_drift",
+    "drift": "drift",
     "data_governance": "data_governance",
-    "metadata": "data_product_metadata",
+    "metadata": "metadata",
     "data_lineage": "data_lineage",
     "handover": "handover",
     "technical_columns": "technical_columns",
+    "business_context": "business_context",
+    "data_agreement": "data_agreement",
 }
 INTERNAL_MODULE_BLACKLIST = {"_utils"}
-INTERNAL_ALIAS_MODULES = {"metadata": "data_product_metadata", "config": "environment_config", "drift": "data_drift"}
+INTERNAL_ALIAS_MODULES = {}
 @dataclass
 class Symbol:
     name: str
@@ -371,12 +371,30 @@ def main() -> None:
         module_index_lines.append(f"- [`{module}`]({module}.md)")
 
     (MODULE_DIR / "index.md").write_text("\n".join(module_index_lines) + "\n", encoding="utf-8", newline="\n")
-    sidebar_modules = list(discovered_doc_modules)
+    workflow_sidebar_groups = [
+        ("0. Environment setup", ["config"]),
+        ("1. Governance steward", ["business_context", "data_governance"]),
+        ("2. Analyst / data scientist", ["data_profiling", "data_quality"]),
+        ("3. Data engineer", ["fabric_input_output", "technical_columns", "data_lineage", "drift"]),
+        ("4. Handover / data contract", ["handover"]),
+        ("5. Metadata / contract store", ["metadata"]),
+    ]
+    workflow_sidebar_modules = [m for _, mods in workflow_sidebar_groups for m in mods]
+    discovered_set = set(discovered_doc_modules)
+    missing_workflow_modules = [m for m in workflow_sidebar_modules if m not in discovered_set]
+    if missing_workflow_modules:
+        raise RuntimeError(f"Missing workflow sidebar modules in src/fabricops_kit: {', '.join(missing_workflow_modules)}")
+
     mkdocs_text = MKDOCS_PATH.read_text(encoding="utf-8")
     start_marker = "      # AUTO-GENERATED-MODULES-START"
     end_marker = "      # AUTO-GENERATED-MODULES-END"
     if start_marker in mkdocs_text and end_marker in mkdocs_text:
-        generated = "\n".join([f"          - {m}: api/modules/{m}.md" for m in sidebar_modules])
+        generated_lines = ["          - Workflow Modules:"]
+        for group_name, modules in workflow_sidebar_groups:
+            generated_lines.append(f"              - {group_name}")
+            for module in modules:
+                generated_lines.append(f"                  - {module}: api/modules/{module}.md")
+        generated = "\n".join(generated_lines)
         before, rest = mkdocs_text.split(start_marker, 1)
         middle, after = rest.split(end_marker, 1)
         mkdocs_text = before + start_marker + "\n" + generated + "\n" + end_marker + after

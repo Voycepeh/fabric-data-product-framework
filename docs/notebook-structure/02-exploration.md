@@ -19,17 +19,17 @@ Exploration notebook flow used to profile source data and draft advisory AI outp
   <tbody>
     <tr>
       <td data-label="Function / class"><a href="../../api/reference/setup_notebook/"><code>setup_notebook</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a></td>
       <td data-label="Purpose">Run consolidated FabricOps startup for exploration and pipeline notebooks.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../api/reference/load_config/"><code>load_config</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a></td>
       <td data-label="Purpose">Validate and return a user-supplied framework configuration.</td>
     </tr>
     <tr>
       <td data-label="Function / class"><a href="../../api/reference/get_path/"><code>get_path</code></a></td>
-      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/environment_config/" title="Open environment_config module page" aria-label="Open environment_config module page">environment_config</a></td>
+      <td data-label="Module"><a class="reference-module-link" href="../../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a></td>
       <td data-label="Purpose">Resolve a configured Fabric path for an environment and target.</td>
     </tr>
   </tbody>

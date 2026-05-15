@@ -14,7 +14,7 @@ def _run_generator() -> None:
 
 def _discover_expected_modules() -> set[str]:
     blacklist = {"__init__", "docs_metadata", "_utils"}
-    alias = {"config": "environment_config", "drift": "data_drift", "metadata": "data_product_metadata"}
+    alias = {}
     modules = {p.stem for p in PKG_DIR.glob("*.py") if p.stem not in blacklist}
     return {alias.get(m, m) for m in modules}
 
@@ -33,11 +33,14 @@ def test_discovered_modules_generate_docs_pages_and_nav() -> None:
         assert f"- {module}: api/modules/{module}.md" in mkdocs_text
 
 
-def test_business_context_and_metadata_appear_automatically() -> None:
+def test_workflow_modules_are_present_and_internal_modules_hidden_from_sidebar() -> None:
     _run_generator()
     mkdocs_text = (ROOT / "mkdocs.yml").read_text(encoding="utf-8")
     assert "- business_context: api/modules/business_context.md" in mkdocs_text
-    assert "- data_product_metadata: api/modules/data_product_metadata.md" in mkdocs_text
+    assert "- metadata: api/modules/metadata.md" in mkdocs_text
+    assert "- ai: api/modules/ai.md" not in mkdocs_text
+    assert "- docs_metadata: api/modules/docs_metadata.md" not in mkdocs_text
+    assert "- schemas: api/modules/schemas.md" not in mkdocs_text
 
 
 def test_public_callables_point_to_generated_module_pages() -> None:
