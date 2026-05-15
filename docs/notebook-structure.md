@@ -6,7 +6,7 @@ Notebook Structure is the canonical guide for notebook ownership, governance res
 
 ## Workspace layout
 
-`01_data_sharing_agreement_<agreement>` lives with governance-owned metadata and is defined once as the agreement source of truth.
+`01_data_sharing_agreement_<agreement>` is the governance-owned control-plane notebook and is defined once as the agreement source of truth.
 
 Each execution environment (Sandbox, Dev/Test, Prod) reuses approved agreement metadata.
 
@@ -34,8 +34,8 @@ Environment Workspace (Sandbox / Dev-Test / Prod)
 
 - Governance is defined once in `01_data_sharing_agreement_<agreement>`.
 - Sandbox, Dev/Test, and Prod notebooks reuse approved governance metadata.
-- `02_ex` notebooks propose metadata updates based on profiling and AI-assisted evidence.
-- `03_pc` notebooks load approved metadata and enforce it during execution.
+- `02_ex` notebooks propose metadata evidence updates based on profiling and AI-assisted evidence; they do not define agreements.
+- `03_pc` notebooks load approved agreement metadata and enforce it during execution; they do not define agreements.
 - Pipeline execution writes operational evidence for quality, lineage, and controls.
 - That evidence can feed back into governance metadata updates.
 - Core operational loop: `03_pc` evidence → `01_data_sharing_agreement` governance update.
@@ -61,3 +61,5 @@ Environment Workspace (Sandbox / Dev-Test / Prod)
 - [Data Quality Rules System](data-quality-rules-system.md)
 
 - 02_ex and 03_pc notebooks select an existing agreement_id from METADATA_DATA_AGREEMENT and self-register to METADATA_NOTEBOOK_REGISTRY.
+
+- Agreement metadata selection in `02_ex` and `03_pc` uses agreement-selection helpers from `data_agreement.py`, while `metadata.py` persists metadata evidence and notebook traceability; governance approvals remain in `data_governance.py` and `01_data_sharing_agreement_<agreement>`.

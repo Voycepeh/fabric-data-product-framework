@@ -298,6 +298,15 @@ def main() -> None:
                 '</div>'
             )
         lines = [title, "", status_banner, ""]
+        if module == "data_product_metadata":
+            lines.extend(
+                [
+                    "## Module boundary",
+                    "",
+                    "This module stores and retrieves metadata evidence. It does not own governance approval logic. Agreement approval, classification, sensitivity, and PII review remain in `data_governance.py` and the `01_data_sharing_agreement_<agreement>` notebook.",
+                    "",
+                ]
+            )
         if public_in_module:
             recommended = sorted([s for s in public_in_module if s.role == "essential"], key=lambda x: x.name.lower())
             advanced = sorted([s for s in public_in_module if s.role == "optional"], key=lambda x: x.name.lower())
