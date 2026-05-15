@@ -28,7 +28,8 @@ from .data_governance import draft_governance, load_governance, review_governanc
 from .drift import check_partition_drift, check_profile_drift, check_schema_drift, summarize_drift_results
 from .data_lineage import build_lineage_handover_markdown, build_lineage_records
 from .handover import build_handover, render_handover_markdown
-from .metadata import get_selected_agreement, load_agreements, load_notebook_registry, register_current_notebook, select_agreement
+from .data_agreement import get_selected_agreement, load_agreements, select_agreement
+from .metadata import load_notebook_registry, register_current_notebook
 from .technical_columns import standardize_columns
 
 __version__ = "0.1.0"

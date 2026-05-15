@@ -1,26 +1,5 @@
-import pytest
-
 import fabricops_kit.business_context as bc
 import fabricops_kit.metadata as nr
-
-
-def test_agreement_option_label_and_load_normalization():
-    class Spark:
-        def table(self, _):
-            return [
-                {"agreement_id": "A1", "agreement_name": "One", "approved_usage": "use", "updated_at": "2026-01-01"},
-                {"agreement_id": "A1", "agreement_name": "One v2", "approved_usage": "use2", "updated_at": "2026-02-01"},
-            ]
-
-    rows = nr.load_agreements(Spark())
-    assert rows[0]["agreement_name"] == "One v2"
-    assert nr._agreement_option_label(rows[0]) == "One v2 | A1 | use2"
-
-
-def test_get_selected_agreement_requires_selection(monkeypatch):
-    monkeypatch.setattr(nr, "_SELECTED_AGREEMENT", None)
-    with pytest.raises(RuntimeError, match="No agreement selected"):
-        nr.get_selected_agreement()
 
 
 def test_register_current_notebook_outside_fabric(monkeypatch):

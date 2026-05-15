@@ -62,4 +62,4 @@ Environment Workspace (Sandbox / Dev-Test / Prod)
 
 - 02_ex and 03_pc notebooks select an existing agreement_id from METADATA_DATA_AGREEMENT and self-register to METADATA_NOTEBOOK_REGISTRY.
 
-- Agreement metadata selection in `02_ex` and `03_pc` uses metadata-backed helpers from `metadata.py` (read/write/select only), while governance approvals remain in `data_governance.py` and `01_data_sharing_agreement_<agreement>`.
+- Agreement metadata selection in `02_ex` and `03_pc` uses agreement-selection helpers from `data_agreement.py`, while `metadata.py` persists metadata evidence and notebook traceability; governance approvals remain in `data_governance.py` and `01_data_sharing_agreement_<agreement>`.
