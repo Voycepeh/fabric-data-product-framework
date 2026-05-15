@@ -98,10 +98,10 @@ def parse_module(path: Path) -> dict[str, Any]:
     return {"functions": functions, "classes": classes, "constants": constants, "calls": calls, "used_by": used_by}
 
 
-def parse_import_aliases(tree: ast.AST) -> tuple[dict[str, str], dict[str, str]]:
+def parse_import_aliases(nodes: list[ast.stmt]) -> tuple[dict[str, str], dict[str, str]]:
     module_aliases: dict[str, str] = {}
     symbol_aliases: dict[str, str] = {}
-    for node in getattr(tree, "body", []):
+    for node in nodes:
         if isinstance(node, ast.Import):
             for alias in node.names:
                 name = alias.asname or alias.name
@@ -148,9 +148,16 @@ def resolve_call_target(
     exported_symbol_map: dict[str, Symbol],
     package_module_names: set[str],
 ) -> tuple[str | None, str, str]:
+    def _classify_callee(module_name: str, symbol_name: str) -> str:
+        mapped = exported_symbol_map.get(symbol_name)
+        if mapped and mapped.actual_module == module_name:
+            return "public_export"
+        if symbol_name.startswith("_"):
+            return "internal_helper"
+        return "internal_callable"
     # same-module callable/class names are always safe to resolve first
     if raw_name in same_module_names:
-        return f"{PACKAGE_NAME}.{module}.{raw_name}", "same_module", "internal_helper" if raw_name.startswith("_") else "public_export"
+        return f"{PACKAGE_NAME}.{module}.{raw_name}", "same_module", _classify_callee(module, raw_name)
 
     # explicit import alias from "from x import y as z"
     if raw_name in symbol_aliases:
@@ -159,7 +166,7 @@ def resolve_call_target(
         if len(imported_short) >= 2 and (imported.startswith(PACKAGE_NAME) or imported_short[-2] in package_module_names):
             resolved_module = imported_short[-2]
             resolved_symbol = imported_short[-1]
-            callee_kind = "internal_helper" if resolved_symbol.startswith("_") else "public_export"
+            callee_kind = _classify_callee(resolved_module, resolved_symbol)
             return (
                 f"{PACKAGE_NAME}.{resolved_module}.{resolved_symbol}",
                 "cross_module" if resolved_module != module else "same_module",
@@ -173,14 +180,14 @@ def resolve_call_target(
         short_owner = mapped_owner.split(".")[-1]
         if mapped_owner.startswith(PACKAGE_NAME) or short_owner in package_module_names:
             resolved_module = short_owner if short_owner in package_module_names else mapped_owner.rsplit(".", 1)[-1]
-            callee_kind = "internal_helper" if member.startswith("_") else "public_export"
+            callee_kind = _classify_callee(resolved_module, member)
             return f"{PACKAGE_NAME}.{resolved_module}.{member}", "cross_module" if resolved_module != module else "same_module", callee_kind
         return None, "unresolved", "unresolved"
 
     # public exported symbol map fallback (bare-name cross-module only for exported mapping)
     exported = exported_symbol_map.get(raw_name)
     if exported and exported.actual_module != module:
-        callee_kind = "internal_helper" if raw_name.startswith("_") else "public_export"
+        callee_kind = _classify_callee(exported.actual_module, raw_name)
         return f"{PACKAGE_NAME}.{exported.actual_module}.{raw_name}", "cross_module", callee_kind
 
     return None, "unresolved", "unresolved"
@@ -202,7 +209,7 @@ def build_callable_graph(
 
     for module, info in module_data.items():
         module_tree = ast.parse((PKG_DIR / f"{module}.py").read_text(encoding="utf-8"))
-        module_aliases, symbol_aliases = parse_import_aliases(module_tree)
+        module_aliases, symbol_aliases = parse_import_aliases(list(getattr(module_tree, "body", [])))
         functions = info.get("functions", {})
         classes = info.get("classes", {})
         exported_names = {name for name, sym in symbol_map.items() if sym.actual_module == module}
@@ -231,10 +238,15 @@ def build_callable_graph(
             if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 continue
             caller_qn = f"{PACKAGE_NAME}.{module}.{node.name}"
+            local_module_aliases, local_symbol_aliases = parse_import_aliases(
+                [n for n in ast.walk(node) if isinstance(n, (ast.Import, ast.ImportFrom))]
+            )
+            merged_module_aliases = {**module_aliases, **local_module_aliases}
+            merged_symbol_aliases = {**symbol_aliases, **local_symbol_aliases}
             for call in collect_function_calls(node):
                 raw_name = call["raw_name"]
                 resolved_qn, edge_type, callee_kind = resolve_call_target(
-                    module, raw_name, module_aliases, symbol_aliases, same_module_names, symbol_map, package_modules
+                    module, raw_name, merged_module_aliases, merged_symbol_aliases, same_module_names, symbol_map, package_modules
                 )
                 edge = {
                     "caller_qualified_name": caller_qn,
@@ -394,8 +406,12 @@ def render_callable_map_page(nodes: list[dict[str, Any]], edges: list[dict[str, 
             e["callee_qualified_name"] for e in direct_edges
             if e["edge_type"] == "cross_module" and e["callee_qualified_name"] and e.get("callee_kind") == "internal_helper"
         })
+        cross_module_internal = sorted({
+            e["callee_qualified_name"] for e in direct_edges
+            if e["edge_type"] == "cross_module" and e["callee_qualified_name"] and e.get("callee_kind") == "internal_callable"
+        })
         helper_names = sorted({x.split(".")[-1] for x in same_module if x.split(".")[-1].startswith("_")})
-        cross_names = sorted({x.split(".")[-1] for x in (cross_module_public + cross_module_private)})
+        cross_names = sorted({x.split(".")[-1] for x in (cross_module_public + cross_module_private + cross_module_internal)})
         searchable_helpers = " ".join(helper_names)
         searchable_cross = " ".join(cross_names)
         lines.extend(
@@ -411,6 +427,7 @@ def render_callable_map_page(nodes: list[dict[str, Any]], edges: list[dict[str, 
                 "- direct internal helpers used: " + (", ".join(f"`{x}`" for x in helper_names) or "—"),
                 "- direct cross-module public calls: " + (", ".join(f"`{x}`" for x in cross_module_public) or "—"),
                 "- direct cross-module private helper calls: " + (", ".join(f"`{x}`" for x in cross_module_private) or "—"),
+                "- direct cross-module internal calls: " + (", ".join(f"`{x}`" for x in cross_module_internal) or "—"),
                 "</article>",
                 "",
             ]

@@ -13,6 +13,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: —
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="review_business_context" data-callable-module="business_context" data-callable-role="essential" data-callable-helpers="_require_ipywidgets" data-callable-cross-module="build_metadata_column_key build_metadata_table_key">
@@ -20,17 +21,19 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - module: `business_context`
 - role: `essential`
 - direct internal helpers used: `_require_ipywidgets`
-- direct cross-module public calls: `fabricops_kit.metadata.build_metadata_column_key`, `fabricops_kit.metadata.build_metadata_table_key`
+- direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: `fabricops_kit.metadata.build_metadata_column_key`, `fabricops_kit.metadata.build_metadata_table_key`
 </article>
 
-<article data-callable-map-row="true" data-callable-name="write_business_context" data-callable-module="business_context" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
+<article data-callable-map-row="true" data-callable-name="write_business_context" data-callable-module="business_context" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="write_column_business_context">
 ### `write_business_context`
 - module: `business_context`
 - role: `essential`
 - direct internal helpers used: —
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: `fabricops_kit.metadata.write_column_business_context`
 </article>
 
 <article data-callable-map-row="true" data-callable-name="get_path" data-callable-module="config" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
@@ -40,6 +43,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: —
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="load_config" data-callable-module="config" data-callable-role="essential" data-callable-helpers="_validate_framework_config" data-callable-cross-module="">
@@ -49,6 +53,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `_validate_framework_config`
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="setup_notebook" data-callable-module="config" data-callable-role="essential" data-callable-helpers="_check_fabric_ai_functions_available _configure_fabric_ai_functions _run_config_smoke_tests" data-callable-cross-module="">
@@ -58,6 +63,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `_check_fabric_ai_functions_available`, `_configure_fabric_ai_functions`, `_run_config_smoke_tests`
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="get_selected_agreement" data-callable-module="data_agreement" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
@@ -67,6 +73,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: —
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="load_agreements" data-callable-module="data_agreement" data-callable-role="essential" data-callable-helpers="_coerce_row_dicts _latest_distinct_agreements" data-callable-cross-module="">
@@ -76,6 +83,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `_coerce_row_dicts`, `_latest_distinct_agreements`
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="select_agreement" data-callable-module="data_agreement" data-callable-role="essential" data-callable-helpers="_agreement_option_label _coerce_row_dicts" data-callable-cross-module="">
@@ -85,6 +93,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `_agreement_option_label`, `_coerce_row_dicts`
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="draft_governance" data-callable-module="data_governance" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
@@ -94,6 +103,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: —
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="load_governance" data-callable-module="data_governance" data-callable-role="essential" data-callable-helpers="_coerce_row_dicts" data-callable-cross-module="">
@@ -103,6 +113,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `_coerce_row_dicts`
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="review_governance" data-callable-module="data_governance" data-callable-role="essential" data-callable-helpers="_undo_last_action" data-callable-cross-module="_now_utc_iso build_metadata_column_key build_metadata_table_key">
@@ -110,8 +121,9 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - module: `data_governance`
 - role: `essential`
 - direct internal helpers used: `_undo_last_action`
-- direct cross-module public calls: `fabricops_kit.metadata.build_metadata_column_key`, `fabricops_kit.metadata.build_metadata_table_key`
+- direct cross-module public calls: —
 - direct cross-module private helper calls: `fabricops_kit.metadata._now_utc_iso`
+- direct cross-module internal calls: `fabricops_kit.metadata.build_metadata_column_key`, `fabricops_kit.metadata.build_metadata_table_key`
 </article>
 
 <article data-callable-map-row="true" data-callable-name="write_governance" data-callable-module="data_governance" data-callable-role="essential" data-callable-helpers="_approved_widget_rows" data-callable-cross-module="">
@@ -121,6 +133,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `_approved_widget_rows`
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="build_lineage_handover_markdown" data-callable-module="data_lineage" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
@@ -130,6 +143,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: —
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="build_lineage_records" data-callable-module="data_lineage" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
@@ -139,6 +153,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: —
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="profile_dataframe" data-callable-module="data_profiling" data-callable-role="essential" data-callable-helpers="_get_profiled_columns _is_min_max_supported_type" data-callable-cross-module="">
@@ -148,6 +163,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `_get_profiled_columns`, `_is_min_max_supported_type`
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="assert_dq_passed" data-callable-module="data_quality" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
@@ -157,6 +173,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: —
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="draft_dq_rules" data-callable-module="data_quality" data-callable-role="essential" data-callable-helpers="__prepare_dq_profile_input_rows _extract_dq_rules _suggest_dq_rules" data-callable-cross-module="">
@@ -166,6 +183,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `__prepare_dq_profile_input_rows`, `_extract_dq_rules`, `_suggest_dq_rules`
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="enforce_dq" data-callable-module="data_quality" data-callable-role="essential" data-callable-helpers="_load_active_dq_rules _run_dq_rules _split_dq_rows" data-callable-cross-module="">
@@ -175,6 +193,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `_load_active_dq_rules`, `_run_dq_rules`, `_split_dq_rows`
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="get_dq_review_results" data-callable-module="data_quality" data-callable-role="essential" data-callable-helpers="_attach_rule_metadata_keys" data-callable-cross-module="">
@@ -184,6 +203,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `_attach_rule_metadata_keys`
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="load_dq_rules" data-callable-module="data_quality" data-callable-role="essential" data-callable-helpers="_load_active_dq_rules" data-callable-cross-module="">
@@ -193,6 +213,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `_load_active_dq_rules`
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="review_dq_rule_deactivations" data-callable-module="data_quality" data-callable-role="optional" data-callable-helpers="_require_ipywidgets" data-callable-cross-module="">
@@ -202,6 +223,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `_require_ipywidgets`
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="review_dq_rules" data-callable-module="data_quality" data-callable-role="essential" data-callable-helpers="_require_ipywidgets" data-callable-cross-module="">
@@ -211,6 +233,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `_require_ipywidgets`
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="validate_dq_rules" data-callable-module="data_quality" data-callable-role="optional" data-callable-helpers="" data-callable-cross-module="">
@@ -220,6 +243,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: —
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="write_dq_rules" data-callable-module="data_quality" data-callable-role="essential" data-callable-helpers="_build_dq_rule_history" data-callable-cross-module="write_lakehouse_table">
@@ -229,6 +253,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `_build_dq_rule_history`
 - direct cross-module public calls: `fabricops_kit.fabric_input_output.write_lakehouse_table`
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="check_partition_drift" data-callable-module="drift" data-callable-role="optional" data-callable-helpers="" data-callable-cross-module="">
@@ -238,6 +263,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: —
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="check_profile_drift" data-callable-module="drift" data-callable-role="optional" data-callable-helpers="" data-callable-cross-module="">
@@ -247,6 +273,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: —
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="check_schema_drift" data-callable-module="drift" data-callable-role="optional" data-callable-helpers="" data-callable-cross-module="">
@@ -256,6 +283,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: —
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="summarize_drift_results" data-callable-module="drift" data-callable-role="optional" data-callable-helpers="" data-callable-cross-module="">
@@ -265,6 +293,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: —
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="Housepath" data-callable-module="fabric_input_output" data-callable-role="optional" data-callable-helpers="" data-callable-cross-module="">
@@ -274,6 +303,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: —
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="read_lakehouse_csv" data-callable-module="fabric_input_output" data-callable-role="optional" data-callable-helpers="_get_spark" data-callable-cross-module="">
@@ -283,6 +313,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `_get_spark`
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="read_lakehouse_excel" data-callable-module="fabric_input_output" data-callable-role="optional" data-callable-helpers="_get_spark" data-callable-cross-module="">
@@ -292,6 +323,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `_get_spark`
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="read_lakehouse_parquet" data-callable-module="fabric_input_output" data-callable-role="optional" data-callable-helpers="_convert_single_parquet_ns_to_us _get_spark" data-callable-cross-module="">
@@ -301,6 +333,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `_convert_single_parquet_ns_to_us`, `_get_spark`
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="read_lakehouse_table" data-callable-module="fabric_input_output" data-callable-role="essential" data-callable-helpers="_get_spark" data-callable-cross-module="">
@@ -310,6 +343,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `_get_spark`
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="read_warehouse_table" data-callable-module="fabric_input_output" data-callable-role="essential" data-callable-helpers="_get_spark" data-callable-cross-module="get_path">
@@ -319,6 +353,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `_get_spark`
 - direct cross-module public calls: `fabricops_kit.config.get_path`
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="write_lakehouse_table" data-callable-module="fabric_input_output" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
@@ -328,6 +363,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: —
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="write_warehouse_table" data-callable-module="fabric_input_output" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="get_path">
@@ -337,6 +373,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: —
 - direct cross-module public calls: `fabricops_kit.config.get_path`
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="build_handover" data-callable-module="handover" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
@@ -346,6 +383,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: —
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="render_handover_markdown" data-callable-module="handover" data-callable-role="essential" data-callable-helpers="_status_of" data-callable-cross-module="">
@@ -355,6 +393,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `_status_of`
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="load_notebook_registry" data-callable-module="metadata" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
@@ -364,6 +403,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: —
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="register_current_notebook" data-callable-module="metadata" data-callable-role="essential" data-callable-helpers="_runtime_context" data-callable-cross-module="">
@@ -373,6 +413,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: `_runtime_context`
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 <article data-callable-map-row="true" data-callable-name="standardize_columns" data-callable-module="technical_columns" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
@@ -382,6 +423,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 - direct internal helpers used: —
 - direct cross-module public calls: —
 - direct cross-module private helper calls: —
+- direct cross-module internal calls: —
 </article>
 
 ## Internal helper index
@@ -520,6 +562,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 | `metadata` | `write_metadata_rows` | `fabric_input_output` | `write_lakehouse_table` |
 | `business_context` | `review_business_context` | `metadata` | `build_metadata_table_key` |
 | `business_context` | `review_business_context` | `metadata` | `build_metadata_column_key` |
+| `business_context` | `write_business_context` | `metadata` | `write_column_business_context` |
 
 ## Module dependency summary
 

@@ -68,6 +68,24 @@ def test_cross_module_private_helper_calls_flagged_distinctly() -> None:
     generate_reference()
     payload = json.loads(CALLABLE_MAP_JSON_FILE.read_text(encoding="utf-8"))
     edges = payload["edges"]
-    assert any(e["edge_type"] == "cross_module" and e["callee_kind"] == "private_helper" for e in edges) is False
     assert any(e["edge_type"] == "cross_module" and e["callee_kind"] == "internal_helper" for e in edges)
     assert any(e["edge_type"] == "cross_module" and e["callee_kind"] == "public_export" for e in edges)
+    assert any(e["edge_type"] == "cross_module" and e["callee_kind"] == "internal_callable" for e in edges)
+
+
+def test_write_business_context_resolves_function_level_import_call() -> None:
+    generate_reference()
+    payload = json.loads(CALLABLE_MAP_JSON_FILE.read_text(encoding="utf-8"))
+    assert any(
+        edge["caller_qualified_name"] == "fabricops_kit.business_context.write_business_context"
+        and edge["callee_qualified_name"] == "fabricops_kit.metadata.write_column_business_context"
+        and edge["edge_type"] == "cross_module"
+        for edge in payload["edges"]
+    )
+
+
+def test_callee_kind_values_are_restricted() -> None:
+    generate_reference()
+    payload = json.loads(CALLABLE_MAP_JSON_FILE.read_text(encoding="utf-8"))
+    allowed = {"public_export", "internal_helper", "internal_callable", "unresolved"}
+    assert {edge["callee_kind"] for edge in payload["edges"]}.issubset(allowed)

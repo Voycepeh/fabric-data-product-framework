@@ -1984,14 +1984,14 @@
       "callee_qualified_name": "fabricops_kit.metadata.build_metadata_table_key",
       "callee_raw_name": null,
       "edge_type": "cross_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.data_governance.review_governance",
       "callee_qualified_name": "fabricops_kit.metadata.build_metadata_column_key",
       "callee_raw_name": null,
       "edge_type": "cross_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.data_governance.review_governance",
@@ -2579,7 +2579,7 @@
       "callee_qualified_name": "fabricops_kit.config.FrameworkConfig",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.config._validate_framework_config",
@@ -2635,7 +2635,7 @@
       "callee_qualified_name": "fabricops_kit.config.keys",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.config._validate_framework_config",
@@ -2824,7 +2824,7 @@
       "callee_qualified_name": "fabricops_kit.config.ConfigSmokeCheckResult",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.config._run_config_smoke_tests",
@@ -2845,7 +2845,7 @@
       "callee_qualified_name": "fabricops_kit.config.ConfigSmokeCheckResult",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.config._run_config_smoke_tests",
@@ -2908,14 +2908,14 @@
       "callee_qualified_name": "fabricops_kit.config.ConfigSmokeCheckResult",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.config._run_config_smoke_tests",
       "callee_qualified_name": "fabricops_kit.config.ConfigSmokeCheckResult",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.config._run_config_smoke_tests",
@@ -2929,14 +2929,14 @@
       "callee_qualified_name": "fabricops_kit.config.ConfigSmokeCheckResult",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.config._run_config_smoke_tests",
       "callee_qualified_name": "fabricops_kit.config.ConfigSmokeCheckResult",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.config._run_config_smoke_tests",
@@ -2950,7 +2950,7 @@
       "callee_qualified_name": "fabricops_kit.config.ConfigSmokeCheckResult",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.config._run_config_smoke_tests",
@@ -2971,7 +2971,7 @@
       "callee_qualified_name": "fabricops_kit.config.ConfigSmokeCheckResult",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.config._run_config_smoke_tests",
@@ -2985,7 +2985,7 @@
       "callee_qualified_name": "fabricops_kit.config.ConfigSmokeCheckResult",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.config._run_config_smoke_tests",
@@ -2999,7 +2999,7 @@
       "callee_qualified_name": "fabricops_kit.config.ConfigSmokeCheckResult",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.config._run_config_smoke_tests",
@@ -3041,7 +3041,7 @@
       "callee_qualified_name": "fabricops_kit.config.ConfigSmokeCheckResult",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.config._run_config_smoke_tests",
@@ -3062,14 +3062,14 @@
       "callee_qualified_name": "fabricops_kit.config.ConfigSmokeCheckResult",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.config._run_config_smoke_tests",
       "callee_qualified_name": "fabricops_kit.config.ConfigSmokeCheckResult",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.config._run_config_smoke_tests",
@@ -3090,7 +3090,7 @@
       "callee_qualified_name": "fabricops_kit.config.ConfigBootstrapResult",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.config._bootstrap_fabric_env",
@@ -3153,7 +3153,7 @@
       "callee_qualified_name": "fabricops_kit.config.NotebookSetupContext",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.config.setup_notebook",
@@ -3657,14 +3657,14 @@
       "callee_qualified_name": "fabricops_kit.config.validate_dataset_contract",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.config.assert_valid_dataset_contract",
       "callee_qualified_name": "fabricops_kit.config.DatasetContractValidationError",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.config.assert_valid_dataset_contract",
@@ -3678,14 +3678,14 @@
       "callee_qualified_name": "fabricops_kit.config.load_dataset_contract",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.config.load_and_validate_dataset_contract",
       "callee_qualified_name": "fabricops_kit.config.validate_dataset_contract",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.technical_columns._assert_columns_exist",
@@ -4833,21 +4833,21 @@
       "callee_qualified_name": "fabricops_kit.metadata.build_metadata_table_key",
       "callee_raw_name": null,
       "edge_type": "cross_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.data_quality._attach_rule_metadata_keys",
       "callee_qualified_name": "fabricops_kit.metadata.build_dq_rule_key",
       "callee_raw_name": null,
       "edge_type": "cross_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.data_quality._attach_rule_metadata_keys",
       "callee_qualified_name": "fabricops_kit.metadata.build_metadata_column_key",
       "callee_raw_name": null,
       "edge_type": "cross_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.data_quality._attach_rule_metadata_keys",
@@ -6744,7 +6744,7 @@
       "callee_qualified_name": "fabricops_kit.data_quality.DQEnforcementResult",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.data_quality.enforce_dq",
@@ -8781,7 +8781,7 @@
       "callee_qualified_name": "fabricops_kit.drift.UnsupportedDataFrameEngineError",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.drift.detect_dataframe_engine",
@@ -9019,7 +9019,7 @@
       "callee_qualified_name": "fabricops_kit.drift.detect_dataframe_engine",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.drift.build_schema_snapshot",
@@ -9075,7 +9075,7 @@
       "callee_qualified_name": "fabricops_kit.drift.default_schema_drift_policy",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.drift.compare_schema_snapshots",
@@ -9432,7 +9432,7 @@
       "callee_qualified_name": "fabricops_kit.drift.SchemaDriftError",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.drift.assert_no_blocking_schema_drift",
@@ -9530,14 +9530,14 @@
       "callee_qualified_name": "fabricops_kit.drift.build_schema_snapshot",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.drift.check_schema_drift",
       "callee_qualified_name": "fabricops_kit.drift.compare_schema_snapshots",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.drift.check_schema_drift",
@@ -9572,14 +9572,14 @@
       "callee_qualified_name": "fabricops_kit.drift.default_schema_drift_policy",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.drift.build_and_write_schema_snapshot",
       "callee_qualified_name": "fabricops_kit.drift.build_schema_snapshot",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.drift.build_and_write_schema_snapshot",
@@ -9803,14 +9803,14 @@
       "callee_qualified_name": "fabricops_kit.drift.build_partition_snapshot",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.drift.check_partition_drift",
       "callee_qualified_name": "fabricops_kit.drift.compare_partition_snapshots",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.drift.check_partition_drift",
@@ -9859,14 +9859,14 @@
       "callee_qualified_name": "fabricops_kit.drift.default_incremental_safety_policy",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.drift.build_and_write_partition_snapshot",
       "callee_qualified_name": "fabricops_kit.drift.build_partition_snapshot",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.drift.build_and_write_partition_snapshot",
@@ -11182,7 +11182,7 @@
       "callee_qualified_name": "fabricops_kit.drift.detect_dataframe_engine",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.drift.build_partition_snapshot",
@@ -11322,7 +11322,7 @@
       "callee_qualified_name": "fabricops_kit.drift.default_incremental_safety_policy",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.drift.compare_partition_snapshots",
@@ -11567,7 +11567,7 @@
       "callee_qualified_name": "fabricops_kit.drift.IncrementalSafetyError",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.drift.assert_incremental_safe",
@@ -13443,21 +13443,21 @@
       "callee_qualified_name": "fabricops_kit.metadata.column_context_rows_for_spark",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.metadata.write_column_business_context",
       "callee_qualified_name": "fabricops_kit.metadata.write_metadata_rows",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.metadata.write_column_governance_context",
       "callee_qualified_name": "fabricops_kit.metadata.write_metadata_rows",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.metadata._runtime_context",
@@ -13520,7 +13520,7 @@
       "callee_qualified_name": "fabricops_kit.metadata.write_metadata_rows",
       "callee_raw_name": null,
       "edge_type": "same_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.metadata.register_current_notebook",
@@ -14717,14 +14717,14 @@
       "callee_qualified_name": "fabricops_kit.metadata.build_metadata_table_key",
       "callee_raw_name": null,
       "edge_type": "cross_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.business_context.review_business_context",
       "callee_qualified_name": "fabricops_kit.metadata.build_metadata_column_key",
       "callee_raw_name": null,
       "edge_type": "cross_module",
-      "callee_kind": "public_export"
+      "callee_kind": "internal_callable"
     },
     {
       "caller_qualified_name": "fabricops_kit.business_context.review_business_context",
@@ -14854,10 +14854,10 @@
     },
     {
       "caller_qualified_name": "fabricops_kit.business_context.write_business_context",
-      "callee_qualified_name": null,
-      "callee_raw_name": "write_column_business_context",
-      "edge_type": "unresolved",
-      "callee_kind": "unresolved"
+      "callee_qualified_name": "fabricops_kit.metadata.write_column_business_context",
+      "callee_raw_name": null,
+      "edge_type": "cross_module",
+      "callee_kind": "internal_callable"
     }
   ],
   "module_summary": [
