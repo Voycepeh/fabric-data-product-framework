@@ -15,5 +15,4 @@ Short-form modules remain import-compatible aliases but are intentionally hidden
 - [`fabric_input_output`](fabric_input_output.md)
 - [`handover`](handover.md)
 - [`data_product_metadata`](data_product_metadata.md)
-- [`notebook_registry`](notebook_registry.md)
 - [`technical_columns`](technical_columns.md)

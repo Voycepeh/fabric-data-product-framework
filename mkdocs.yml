@@ -50,7 +50,6 @@ nav:
           - fabric_input_output: api/modules/fabric_input_output.md
           - handover: api/modules/handover.md
           - data_product_metadata: api/modules/data_product_metadata.md
-          - notebook_registry: api/modules/notebook_registry.md
           - technical_columns: api/modules/technical_columns.md
       # AUTO-GENERATED-MODULES-END
 

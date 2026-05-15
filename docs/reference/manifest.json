@@ -78,13 +78,6 @@
       "sidebar_include": true
     },
     {
-      "module_name": "notebook_registry",
-      "visibility": "public",
-      "module_summary": "",
-      "sidebar_group": "Modules",
-      "sidebar_include": true
-    },
-    {
       "module_name": "technical_columns",
       "visibility": "public",
       "module_summary": "Technical/audit enrichment helpers for pipeline outputs.",
@@ -250,10 +243,10 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "notebook_registry",
+      "module_name": "data_product_metadata",
       "visibility": "public",
-      "module_summary": "",
-      "sidebar_group": "Modules",
+      "module_summary": "Metadata table key builders and metadata write helpers.",
+      "sidebar_group": "Advanced",
       "sidebar_include": true,
       "callable_name": "get_selected_agreement",
       "callable_visibility": "public",
@@ -262,10 +255,10 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "notebook_registry",
+      "module_name": "data_product_metadata",
       "visibility": "public",
-      "module_summary": "",
-      "sidebar_group": "Modules",
+      "module_summary": "Metadata table key builders and metadata write helpers.",
+      "sidebar_group": "Advanced",
       "sidebar_include": true,
       "callable_name": "load_agreements",
       "callable_visibility": "public",
@@ -310,10 +303,10 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "notebook_registry",
+      "module_name": "data_product_metadata",
       "visibility": "public",
-      "module_summary": "",
-      "sidebar_group": "Modules",
+      "module_summary": "Metadata table key builders and metadata write helpers.",
+      "sidebar_group": "Advanced",
       "sidebar_include": true,
       "callable_name": "load_notebook_registry",
       "callable_visibility": "public",
@@ -394,10 +387,10 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "notebook_registry",
+      "module_name": "data_product_metadata",
       "visibility": "public",
-      "module_summary": "",
-      "sidebar_group": "Modules",
+      "module_summary": "Metadata table key builders and metadata write helpers.",
+      "sidebar_group": "Advanced",
       "sidebar_include": true,
       "callable_name": "register_current_notebook",
       "callable_visibility": "public",
@@ -466,10 +459,10 @@
       "template_segment": "\u2014"
     },
     {
-      "module_name": "notebook_registry",
+      "module_name": "data_product_metadata",
       "visibility": "public",
-      "module_summary": "",
-      "sidebar_group": "Modules",
+      "module_summary": "Metadata table key builders and metadata write helpers.",
+      "sidebar_group": "Advanced",
       "sidebar_include": true,
       "callable_name": "select_agreement",
       "callable_visibility": "public",
