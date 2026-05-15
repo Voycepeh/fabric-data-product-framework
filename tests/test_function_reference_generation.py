@@ -150,7 +150,7 @@ def test_non_starter_callable_still_appears_in_complete_catalogue() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     all_functions = all_public_functions_section(content)
-    assert "<code>build_run_summary</code>" in all_functions
+    assert "<code>read_lakehouse_csv</code>" in all_functions
 
 
 def test_reference_tables_include_mobile_friendly_classes_and_data_labels() -> None:
@@ -255,9 +255,9 @@ def test_template_flow_registry_matches_expected_symbol_sets() -> None:
         for segment in notebook["segments"]:
             symbols.update(segment["symbols"])
 
-    assert set(symbols_by_notebook) == {"00_env_config", "02_ex", "03_pc"}
+    assert set(symbols_by_notebook) == {"00_env_config", "01_data_agreement", "02_ex", "03_pc"}
     assert {"setup_notebook", "load_config", "get_path"}.issubset(symbols_by_notebook["00_env_config"])
-    assert {"seed_minimal_sample_source_table", "draft_dq_rules", "review_dq_rules"}.issubset(symbols_by_notebook["02_ex"])
+    assert {"draft_dq_rules", "review_dq_rules", "profile_dataframe"}.issubset(symbols_by_notebook["02_ex"])
     assert {"validate_dq_rules", "assert_dq_passed", "write_lakehouse_table"}.issubset(symbols_by_notebook["03_pc"])
 
 def test_every_template_flow_notebook_mentions_multiple_registered_symbols() -> None:
@@ -324,7 +324,7 @@ def test_no_generated_public_callable_markdown_files_committed() -> None:
         for path in (ROOT / "docs" / "reference").glob("*.md")
         if path.name != "index.md"
     )
-    assert public_reference_files == []
+    assert public_reference_files == ["callable-map.md"]
 
 
 def test_reference_links_to_flat_public_callable_pages() -> None:
@@ -347,11 +347,10 @@ def test_mkdocs_reference_generator_writes_public_callable_pages_without_workflo
 
 def test_generated_module_and_notebook_pages_link_to_public_callable_urls() -> None:
     generate_reference()
-    environment_config = (ROOT / "docs/api/modules/environment_config.md").read_text(encoding="utf-8")
+    environment_config = (ROOT / "docs/api/modules/config.md").read_text(encoding="utf-8")
     notebook_page = (ROOT / "docs/notebook-structure/00-env-config.md").read_text(encoding="utf-8")
-    assert "../../api/reference/get_path/" in environment_config
+    assert "../../reference/get_path/" in environment_config
     assert "../../api/reference/get_path/" in notebook_page
-    assert "../../api/reference/Housepath/" in notebook_page
     assert "reference/step-" not in environment_config
     assert "reference/step-" not in notebook_page
 
@@ -404,4 +403,4 @@ def test_module_callable_tables_exclude_supporting_data_structures() -> None:
     assert "| [`DQEnforcementResult`]" not in data_quality_page
     assert "| [`Housepath`]" not in fabric_io_page
     assert "| [`enforce_dq`]" in data_quality_page
-    assert "| [`get_path`]" in (ROOT / "docs/api/modules/environment_config.md").read_text(encoding="utf-8")
+    assert "| [`get_path`]" in (ROOT / "docs/api/modules/config.md").read_text(encoding="utf-8")

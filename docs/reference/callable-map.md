@@ -6,391 +6,382 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 
 <input id="callable-map-search" type="search" placeholder="Search callable map" aria-label="Search callable map">
 
-<article data-callable-map-row="true" data-callable-name="draft_business_context" data-callable-module="business_context" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="draft_business_context" data-callable-module="business_context" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
 ### `draft_business_context`
 - module: `business_context`
 - role: `essential`
 - direct internal helpers used: —
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 4
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="review_business_context" data-callable-module="business_context" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="review_business_context" data-callable-module="business_context" data-callable-role="essential" data-callable-helpers="_require_ipywidgets" data-callable-cross-module="build_metadata_column_key build_metadata_table_key">
 ### `review_business_context`
 - module: `business_context`
 - role: `essential`
 - direct internal helpers used: `_require_ipywidgets`
-- direct cross-module FabricOps calls used: `fabricops_kit.metadata.build_metadata_column_key`, `fabricops_kit.metadata.build_metadata_table_key`
-- unresolved external/library calls: 60
+- direct cross-module public calls: `fabricops_kit.metadata.build_metadata_column_key`, `fabricops_kit.metadata.build_metadata_table_key`
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="write_business_context" data-callable-module="business_context" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="write_business_context" data-callable-module="business_context" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
 ### `write_business_context`
 - module: `business_context`
 - role: `essential`
 - direct internal helpers used: —
-- direct cross-module FabricOps calls used: `fabricops_kit.metadata.write_column_business_context`
-- unresolved external/library calls: 0
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="get_path" data-callable-module="config" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="get_path" data-callable-module="config" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
 ### `get_path`
 - module: `config`
 - role: `essential`
 - direct internal helpers used: —
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 10
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="load_config" data-callable-module="config" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="load_config" data-callable-module="config" data-callable-role="essential" data-callable-helpers="_validate_framework_config" data-callable-cross-module="">
 ### `load_config`
 - module: `config`
 - role: `essential`
 - direct internal helpers used: `_validate_framework_config`
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 0
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="setup_notebook" data-callable-module="config" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="setup_notebook" data-callable-module="config" data-callable-role="essential" data-callable-helpers="_check_fabric_ai_functions_available _configure_fabric_ai_functions _run_config_smoke_tests" data-callable-cross-module="">
 ### `setup_notebook`
 - module: `config`
 - role: `essential`
 - direct internal helpers used: `_check_fabric_ai_functions_available`, `_configure_fabric_ai_functions`, `_run_config_smoke_tests`
-- direct cross-module FabricOps calls used: `fabricops_kit.fabric_input_output.load_config`
-- unresolved external/library calls: 26
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="get_selected_agreement" data-callable-module="data_agreement" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="get_selected_agreement" data-callable-module="data_agreement" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
 ### `get_selected_agreement`
 - module: `data_agreement`
 - role: `essential`
 - direct internal helpers used: —
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 2
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="load_agreements" data-callable-module="data_agreement" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="load_agreements" data-callable-module="data_agreement" data-callable-role="essential" data-callable-helpers="_coerce_row_dicts _latest_distinct_agreements" data-callable-cross-module="">
 ### `load_agreements`
 - module: `data_agreement`
 - role: `essential`
 - direct internal helpers used: `_coerce_row_dicts`, `_latest_distinct_agreements`
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 11
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="select_agreement" data-callable-module="data_agreement" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="select_agreement" data-callable-module="data_agreement" data-callable-role="essential" data-callable-helpers="_agreement_option_label _coerce_row_dicts" data-callable-cross-module="">
 ### `select_agreement`
 - module: `data_agreement`
 - role: `essential`
 - direct internal helpers used: `_agreement_option_label`, `_coerce_row_dicts`
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 10
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="draft_governance" data-callable-module="data_governance" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="draft_governance" data-callable-module="data_governance" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
 ### `draft_governance`
 - module: `data_governance`
 - role: `essential`
 - direct internal helpers used: —
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 4
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="load_governance" data-callable-module="data_governance" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="load_governance" data-callable-module="data_governance" data-callable-role="essential" data-callable-helpers="_coerce_row_dicts" data-callable-cross-module="">
 ### `load_governance`
 - module: `data_governance`
 - role: `essential`
-- direct internal helpers used: —
-- direct cross-module FabricOps calls used: `fabricops_kit.data_agreement._coerce_row_dicts`
-- unresolved external/library calls: 27
+- direct internal helpers used: `_coerce_row_dicts`
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="review_governance" data-callable-module="data_governance" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="review_governance" data-callable-module="data_governance" data-callable-role="essential" data-callable-helpers="_undo_last_action" data-callable-cross-module="_now_utc_iso build_metadata_column_key build_metadata_table_key">
 ### `review_governance`
 - module: `data_governance`
 - role: `essential`
 - direct internal helpers used: `_undo_last_action`
-- direct cross-module FabricOps calls used: `fabricops_kit.metadata._now_utc_iso`, `fabricops_kit.metadata.build_metadata_column_key`, `fabricops_kit.metadata.build_metadata_table_key`
-- unresolved external/library calls: 43
+- direct cross-module public calls: `fabricops_kit.metadata.build_metadata_column_key`, `fabricops_kit.metadata.build_metadata_table_key`
+- direct cross-module private helper calls: `fabricops_kit.metadata._now_utc_iso`
 </article>
 
-<article data-callable-map-row="true" data-callable-name="write_governance" data-callable-module="data_governance" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="write_governance" data-callable-module="data_governance" data-callable-role="essential" data-callable-helpers="_approved_widget_rows" data-callable-cross-module="">
 ### `write_governance`
 - module: `data_governance`
 - role: `essential`
 - direct internal helpers used: `_approved_widget_rows`
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 3
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="build_lineage_handover_markdown" data-callable-module="data_lineage" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="build_lineage_handover_markdown" data-callable-module="data_lineage" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
 ### `build_lineage_handover_markdown`
 - module: `data_lineage`
 - role: `essential`
 - direct internal helpers used: —
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 9
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="build_lineage_records" data-callable-module="data_lineage" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="build_lineage_records" data-callable-module="data_lineage" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
 ### `build_lineage_records`
 - module: `data_lineage`
 - role: `essential`
 - direct internal helpers used: —
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 0
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="profile_dataframe" data-callable-module="data_profiling" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="profile_dataframe" data-callable-module="data_profiling" data-callable-role="essential" data-callable-helpers="_get_profiled_columns _is_min_max_supported_type" data-callable-cross-module="">
 ### `profile_dataframe`
 - module: `data_profiling`
 - role: `essential`
 - direct internal helpers used: `_get_profiled_columns`, `_is_min_max_supported_type`
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 73
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="assert_dq_passed" data-callable-module="data_quality" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="assert_dq_passed" data-callable-module="data_quality" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
 ### `assert_dq_passed`
 - module: `data_quality`
 - role: `essential`
 - direct internal helpers used: —
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 3
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="draft_dq_rules" data-callable-module="data_quality" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="draft_dq_rules" data-callable-module="data_quality" data-callable-role="essential" data-callable-helpers="__prepare_dq_profile_input_rows _extract_dq_rules _suggest_dq_rules" data-callable-cross-module="">
 ### `draft_dq_rules`
 - module: `data_quality`
 - role: `essential`
 - direct internal helpers used: `__prepare_dq_profile_input_rows`, `_extract_dq_rules`, `_suggest_dq_rules`
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 0
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="enforce_dq" data-callable-module="data_quality" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="enforce_dq" data-callable-module="data_quality" data-callable-role="essential" data-callable-helpers="_load_active_dq_rules _run_dq_rules _split_dq_rows" data-callable-cross-module="">
 ### `enforce_dq`
 - module: `data_quality`
 - role: `essential`
 - direct internal helpers used: `_load_active_dq_rules`, `_run_dq_rules`, `_split_dq_rows`
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 1
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="get_dq_review_results" data-callable-module="data_quality" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="get_dq_review_results" data-callable-module="data_quality" data-callable-role="essential" data-callable-helpers="_attach_rule_metadata_keys" data-callable-cross-module="">
 ### `get_dq_review_results`
 - module: `data_quality`
 - role: `essential`
 - direct internal helpers used: `_attach_rule_metadata_keys`
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 2
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="load_dq_rules" data-callable-module="data_quality" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="load_dq_rules" data-callable-module="data_quality" data-callable-role="essential" data-callable-helpers="_load_active_dq_rules" data-callable-cross-module="">
 ### `load_dq_rules`
 - module: `data_quality`
 - role: `essential`
 - direct internal helpers used: `_load_active_dq_rules`
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 0
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="review_dq_rule_deactivations" data-callable-module="data_quality" data-callable-role="optional">
+<article data-callable-map-row="true" data-callable-name="review_dq_rule_deactivations" data-callable-module="data_quality" data-callable-role="optional" data-callable-helpers="_require_ipywidgets" data-callable-cross-module="">
 ### `review_dq_rule_deactivations`
 - module: `data_quality`
 - role: `optional`
-- direct internal helpers used: —
-- direct cross-module FabricOps calls used: `fabricops_kit.business_context._require_ipywidgets`
-- unresolved external/library calls: 48
+- direct internal helpers used: `_require_ipywidgets`
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="review_dq_rules" data-callable-module="data_quality" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="review_dq_rules" data-callable-module="data_quality" data-callable-role="essential" data-callable-helpers="_require_ipywidgets" data-callable-cross-module="">
 ### `review_dq_rules`
 - module: `data_quality`
 - role: `essential`
-- direct internal helpers used: —
-- direct cross-module FabricOps calls used: `fabricops_kit.business_context._require_ipywidgets`
-- unresolved external/library calls: 65
+- direct internal helpers used: `_require_ipywidgets`
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="validate_dq_rules" data-callable-module="data_quality" data-callable-role="optional">
+<article data-callable-map-row="true" data-callable-name="validate_dq_rules" data-callable-module="data_quality" data-callable-role="optional" data-callable-helpers="" data-callable-cross-module="">
 ### `validate_dq_rules`
 - module: `data_quality`
 - role: `optional`
 - direct internal helpers used: —
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 21
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="write_dq_rules" data-callable-module="data_quality" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="write_dq_rules" data-callable-module="data_quality" data-callable-role="essential" data-callable-helpers="_build_dq_rule_history" data-callable-cross-module="write_lakehouse_table">
 ### `write_dq_rules`
 - module: `data_quality`
 - role: `essential`
 - direct internal helpers used: `_build_dq_rule_history`
-- direct cross-module FabricOps calls used: `fabricops_kit.fabric_input_output.write_lakehouse_table`
-- unresolved external/library calls: 2
+- direct cross-module public calls: `fabricops_kit.fabric_input_output.write_lakehouse_table`
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="check_partition_drift" data-callable-module="drift" data-callable-role="optional">
+<article data-callable-map-row="true" data-callable-name="check_partition_drift" data-callable-module="drift" data-callable-role="optional" data-callable-helpers="" data-callable-cross-module="">
 ### `check_partition_drift`
 - module: `drift`
 - role: `optional`
 - direct internal helpers used: —
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 6
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="check_profile_drift" data-callable-module="drift" data-callable-role="optional">
+<article data-callable-map-row="true" data-callable-name="check_profile_drift" data-callable-module="drift" data-callable-role="optional" data-callable-helpers="" data-callable-cross-module="">
 ### `check_profile_drift`
 - module: `drift`
 - role: `optional`
 - direct internal helpers used: —
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 43
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="check_schema_drift" data-callable-module="drift" data-callable-role="optional">
+<article data-callable-map-row="true" data-callable-name="check_schema_drift" data-callable-module="drift" data-callable-role="optional" data-callable-helpers="" data-callable-cross-module="">
 ### `check_schema_drift`
 - module: `drift`
 - role: `optional`
 - direct internal helpers used: —
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 4
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="summarize_drift_results" data-callable-module="drift" data-callable-role="optional">
+<article data-callable-map-row="true" data-callable-name="summarize_drift_results" data-callable-module="drift" data-callable-role="optional" data-callable-helpers="" data-callable-cross-module="">
 ### `summarize_drift_results`
 - module: `drift`
 - role: `optional`
 - direct internal helpers used: —
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 11
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="Housepath" data-callable-module="fabric_input_output" data-callable-role="optional">
+<article data-callable-map-row="true" data-callable-name="Housepath" data-callable-module="fabric_input_output" data-callable-role="optional" data-callable-helpers="" data-callable-cross-module="">
 ### `Housepath`
 - module: `fabric_input_output`
 - role: `optional`
 - direct internal helpers used: —
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 0
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="load_config" data-callable-module="fabric_input_output" data-callable-role="essential">
-### `load_config`
-- module: `fabric_input_output`
-- role: `essential`
-- direct internal helpers used: —
-- direct cross-module FabricOps calls used: `fabricops_kit.config.load_config`
-- unresolved external/library calls: 0
-</article>
-
-<article data-callable-map-row="true" data-callable-name="read_lakehouse_csv" data-callable-module="fabric_input_output" data-callable-role="optional">
+<article data-callable-map-row="true" data-callable-name="read_lakehouse_csv" data-callable-module="fabric_input_output" data-callable-role="optional" data-callable-helpers="_get_spark" data-callable-cross-module="">
 ### `read_lakehouse_csv`
 - module: `fabric_input_output`
 - role: `optional`
 - direct internal helpers used: `_get_spark`
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 7
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="read_lakehouse_excel" data-callable-module="fabric_input_output" data-callable-role="optional">
+<article data-callable-map-row="true" data-callable-name="read_lakehouse_excel" data-callable-module="fabric_input_output" data-callable-role="optional" data-callable-helpers="_get_spark" data-callable-cross-module="">
 ### `read_lakehouse_excel`
 - module: `fabric_input_output`
 - role: `optional`
 - direct internal helpers used: `_get_spark`
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 17
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="read_lakehouse_parquet" data-callable-module="fabric_input_output" data-callable-role="optional">
+<article data-callable-map-row="true" data-callable-name="read_lakehouse_parquet" data-callable-module="fabric_input_output" data-callable-role="optional" data-callable-helpers="_convert_single_parquet_ns_to_us _get_spark" data-callable-cross-module="">
 ### `read_lakehouse_parquet`
 - module: `fabric_input_output`
 - role: `optional`
 - direct internal helpers used: `_convert_single_parquet_ns_to_us`, `_get_spark`
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 28
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="read_lakehouse_table" data-callable-module="fabric_input_output" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="read_lakehouse_table" data-callable-module="fabric_input_output" data-callable-role="essential" data-callable-helpers="_get_spark" data-callable-cross-module="">
 ### `read_lakehouse_table`
 - module: `fabric_input_output`
 - role: `essential`
 - direct internal helpers used: `_get_spark`
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 6
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="read_warehouse_table" data-callable-module="fabric_input_output" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="read_warehouse_table" data-callable-module="fabric_input_output" data-callable-role="essential" data-callable-helpers="_get_spark" data-callable-cross-module="get_path">
 ### `read_warehouse_table`
 - module: `fabric_input_output`
 - role: `essential`
 - direct internal helpers used: `_get_spark`
-- direct cross-module FabricOps calls used: `fabricops_kit.config.get_path`
-- unresolved external/library calls: 4
+- direct cross-module public calls: `fabricops_kit.config.get_path`
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="write_lakehouse_table" data-callable-module="fabric_input_output" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="write_lakehouse_table" data-callable-module="fabric_input_output" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
 ### `write_lakehouse_table`
 - module: `fabric_input_output`
 - role: `essential`
 - direct internal helpers used: —
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 23
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="write_warehouse_table" data-callable-module="fabric_input_output" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="write_warehouse_table" data-callable-module="fabric_input_output" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="get_path">
 ### `write_warehouse_table`
 - module: `fabric_input_output`
 - role: `essential`
 - direct internal helpers used: —
-- direct cross-module FabricOps calls used: `fabricops_kit.config.get_path`
-- unresolved external/library calls: 5
+- direct cross-module public calls: `fabricops_kit.config.get_path`
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="build_handover" data-callable-module="handover" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="build_handover" data-callable-module="handover" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
 ### `build_handover`
 - module: `handover`
 - role: `essential`
 - direct internal helpers used: —
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 23
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="render_handover_markdown" data-callable-module="handover" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="render_handover_markdown" data-callable-module="handover" data-callable-role="essential" data-callable-helpers="_status_of" data-callable-cross-module="">
 ### `render_handover_markdown`
 - module: `handover`
 - role: `essential`
 - direct internal helpers used: `_status_of`
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 27
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="load_notebook_registry" data-callable-module="metadata" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="load_notebook_registry" data-callable-module="metadata" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
 ### `load_notebook_registry`
 - module: `metadata`
 - role: `essential`
 - direct internal helpers used: —
-- direct cross-module FabricOps calls used: `fabricops_kit.data_agreement._coerce_row_dicts`
-- unresolved external/library calls: 11
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="register_current_notebook" data-callable-module="metadata" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="register_current_notebook" data-callable-module="metadata" data-callable-role="essential" data-callable-helpers="_runtime_context" data-callable-cross-module="">
 ### `register_current_notebook`
 - module: `metadata`
 - role: `essential`
 - direct internal helpers used: `_runtime_context`
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 10
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
-<article data-callable-map-row="true" data-callable-name="standardize_columns" data-callable-module="technical_columns" data-callable-role="essential">
+<article data-callable-map-row="true" data-callable-name="standardize_columns" data-callable-module="technical_columns" data-callable-role="essential" data-callable-helpers="" data-callable-cross-module="">
 ### `standardize_columns`
 - module: `technical_columns`
 - role: `essential`
 - direct internal helpers used: —
-- direct cross-module FabricOps calls used: —
-- unresolved external/library calls: 4
+- direct cross-module public calls: —
+- direct cross-module private helper calls: —
 </article>
 
 ## Internal helper index
@@ -401,7 +392,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 | `_extract_column_business_context_suggestions` | `business_context` | — | — |
 | `_parse_ai_dict_response` | `business_context` | — | `_extract_column_business_context_suggestions` |
 | `_prepare_business_context_profile_input` | `business_context` | — | — |
-| `_require_ipywidgets` | `business_context` | `review_business_context`, `review_dq_rule_deactivations`, `review_dq_rules` | — |
+| `_require_ipywidgets` | `business_context` | `review_business_context` | — |
 | `_bootstrap_fabric_env` | `config` | — | — |
 | `_check_fabric_ai_functions_available` | `config` | `setup_notebook` | `_bootstrap_fabric_env`, `_run_config_smoke_tests` |
 | `_check_spark_session` | `config` | — | `_run_config_smoke_tests` |
@@ -415,11 +406,11 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 | `_validate_framework_config` | `config` | `load_config` | — |
 | `_validate_notebook_name` | `config` | — | `_run_config_smoke_tests` |
 | `_agreement_option_label` | `data_agreement` | `select_agreement` | — |
-| `_coerce_row_dicts` | `data_agreement` | `load_agreements`, `load_governance`, `load_notebook_registry`, `select_agreement` | — |
+| `_coerce_row_dicts` | `data_agreement` | `load_agreements`, `select_agreement` | — |
 | `_latest_distinct_agreements` | `data_agreement` | `load_agreements` | — |
 | `_approved_widget_rows` | `data_governance` | `write_governance` | — |
 | `_build_governance_context` | `data_governance` | — | — |
-| `_coerce_row_dicts` | `data_governance` | — | — |
+| `_coerce_row_dicts` | `data_governance` | `load_governance` | — |
 | `_extract_pii_suggestions` | `data_governance` | — | — |
 | `_prepare_governance_input` | `data_governance` | — | — |
 | `_undo_last_action` | `data_governance` | `review_governance` | — |
@@ -453,7 +444,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 | `_load_active_dq_rules` | `data_quality` | `enforce_dq`, `load_dq_rules` | — |
 | `_prepare_dq_profile_input_rows` | `data_quality` | — | — |
 | `_profile_for_dq` | `data_quality` | — | — |
-| `_require_ipywidgets` | `data_quality` | — | — |
+| `_require_ipywidgets` | `data_quality` | `review_dq_rule_deactivations`, `review_dq_rules` | — |
 | `_run_dq_rules` | `data_quality` | `enforce_dq` | — |
 | `_split_dq_rows` | `data_quality` | `enforce_dq` | `_run_dq_rules` |
 | `_suggest_dq_rules` | `data_quality` | `draft_dq_rules` | — |
@@ -473,7 +464,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 | `_utc_now_iso` | `drift` | — | `build_and_write_partition_snapshot`, `build_and_write_schema_snapshot`, `build_drift_evidence_record` |
 | `_write_metadata_rows` | `drift` | — | `build_and_write_partition_snapshot`, `build_and_write_schema_snapshot` |
 | `_convert_single_parquet_ns_to_us` | `fabric_input_output` | `read_lakehouse_parquet` | — |
-| `_get_fabric_runtime_context` | `fabric_input_output` | — | `__add_audit_columns`, `check_naming_convention` |
+| `_get_fabric_runtime_context` | `fabric_input_output` | — | `check_naming_convention` |
 | `_get_spark` | `fabric_input_output` | `read_lakehouse_csv`, `read_lakehouse_excel`, `read_lakehouse_parquet`, `read_lakehouse_table`, `read_warehouse_table` | `seed_minimal_sample_source_table` |
 | `_status_of` | `handover` | `render_handover_markdown` | `build_handover_record` |
 | `_extract_columns_from_profile` | `metadata` | — | — |
@@ -488,7 +479,7 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 | `__default_technical_columns` | `technical_columns` | — | — |
 | `_assert_columns_exist` | `technical_columns` | — | `__add_audit_columns`, `__add_datetime_features`, `__add_hash_columns` |
 | `_bucket_values_pandas` | `technical_columns` | — | `__add_audit_columns` |
-| `_get_fabric_runtime_context` | `technical_columns` | — | — |
+| `_get_fabric_runtime_context` | `technical_columns` | — | `__add_audit_columns` |
 | `_hash_row` | `technical_columns` | — | `__add_hash_columns` |
 | `_non_technical_columns` | `technical_columns` | — | `__add_hash_columns` |
 | `_safe_string` | `technical_columns` | — | `_bucket_values_pandas`, `_hash_row` |
@@ -501,11 +492,6 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 | `data_governance` | `review_governance` | `metadata` | `build_metadata_column_key` |
 | `data_governance` | `review_governance` | `metadata` | `_now_utc_iso` |
 | `data_governance` | `_approved_widget_rows` | `metadata` | `_resolve_action_by` |
-| `data_governance` | `load_governance` | `data_agreement` | `_coerce_row_dicts` |
-| `data_governance` | `load_governance` | `data_agreement` | `_coerce_row_dicts` |
-| `config` | `_bootstrap_fabric_env` | `fabric_input_output` | `load_config` |
-| `config` | `setup_notebook` | `fabric_input_output` | `load_config` |
-| `technical_columns` | `__add_audit_columns` | `fabric_input_output` | `_get_fabric_runtime_context` |
 | `data_quality` | `_attach_rule_metadata_keys` | `metadata` | `build_metadata_table_key` |
 | `data_quality` | `_attach_rule_metadata_keys` | `metadata` | `build_dq_rule_key` |
 | `data_quality` | `_attach_rule_metadata_keys` | `metadata` | `build_metadata_column_key` |
@@ -517,8 +503,6 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 | `data_quality` | `_build_dq_rules_metadata_df` | `metadata` | `_resolve_action_by` |
 | `data_quality` | `_build_dq_rule_deactivation_metadata_df` | `metadata` | `_now_utc_iso` |
 | `data_quality` | `_build_dq_rule_deactivation_metadata_df` | `metadata` | `_resolve_action_by` |
-| `data_quality` | `review_dq_rules` | `business_context` | `_require_ipywidgets` |
-| `data_quality` | `review_dq_rule_deactivations` | `business_context` | `_require_ipywidgets` |
 | `fabric_input_output` | `load_config` | `config` | `load_config` |
 | `fabric_input_output` | `read_warehouse_table` | `config` | `get_path` |
 | `fabric_input_output` | `write_warehouse_table` | `config` | `get_path` |
@@ -534,26 +518,24 @@ This page maps public FabricOps callables to the internal helpers they use. It i
 | `drift` | `build_incremental_safety_records` | `_utils` | `_to_jsonable` |
 | `data_profiling` | `_get_profiled_columns` | `technical_columns` | `_default_technical_columns` |
 | `metadata` | `write_metadata_rows` | `fabric_input_output` | `write_lakehouse_table` |
-| `metadata` | `load_notebook_registry` | `data_agreement` | `_coerce_row_dicts` |
 | `business_context` | `review_business_context` | `metadata` | `build_metadata_table_key` |
 | `business_context` | `review_business_context` | `metadata` | `build_metadata_column_key` |
-| `business_context` | `write_business_context` | `metadata` | `write_column_business_context` |
 
 ## Module dependency summary
 
 | module | calls modules | called by modules | public callable count | internal helper count |
 |---|---|---|---:|---:|
 | `_utils` | — | — | 0 | 1 |
-| `business_context` | `metadata` | `data_quality` | 3 | 4 |
-| `config` | `fabric_input_output` | — | 3 | 12 |
-| `data_agreement` | — | `data_governance` | 3 | 3 |
-| `data_governance` | `data_agreement`, `metadata` | — | 4 | 6 |
+| `business_context` | `metadata` | — | 3 | 4 |
+| `config` | — | — | 3 | 12 |
+| `data_agreement` | — | — | 3 | 3 |
+| `data_governance` | `metadata` | — | 4 | 6 |
 | `data_lineage` | — | — | 2 | 13 |
 | `data_profiling` | `technical_columns` | `data_quality` | 1 | 2 |
-| `data_quality` | `business_context`, `data_profiling`, `fabric_input_output`, `metadata` | — | 9 | 20 |
+| `data_quality` | `data_profiling`, `fabric_input_output`, `metadata` | — | 9 | 20 |
 | `docs_metadata` | — | — | 0 | 0 |
 | `drift` | `_utils` | — | 4 | 14 |
-| `fabric_input_output` | `config` | `config`, `data_quality`, `technical_columns` | 8 | 3 |
+| `fabric_input_output` | `config` | `data_quality` | 8 | 3 |
 | `handover` | — | — | 2 | 1 |
-| `metadata` | `data_agreement`, `fabric_input_output` | `data_governance`, `data_quality` | 2 | 6 |
-| `technical_columns` | `fabric_input_output` | — | 1 | 10 |
+| `metadata` | `fabric_input_output` | `data_governance`, `data_quality` | 2 | 6 |
+| `technical_columns` | — | — | 1 | 10 |

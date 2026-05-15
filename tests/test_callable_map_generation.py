@@ -53,3 +53,21 @@ def test_callable_map_contains_internal_helpers_and_unresolved_edges() -> None:
     assert any(node["callable_name"].startswith("_") for node in payload["nodes"])
     unresolved = [edge for edge in payload["edges"] if edge["edge_type"] == "unresolved"]
     assert isinstance(unresolved, list)
+
+
+def test_duplicate_names_not_marked_exported_in_wrong_module() -> None:
+    generate_reference()
+    payload = json.loads(CALLABLE_MAP_JSON_FILE.read_text(encoding="utf-8"))
+    nodes = payload["nodes"]
+    exported_lookup = {(n["module_name"], n["callable_name"]): n["exported"] for n in nodes}
+    assert exported_lookup.get(("config", "load_config")) is True
+    assert exported_lookup.get(("fabric_input_output", "load_config"), False) is False
+
+
+def test_cross_module_private_helper_calls_flagged_distinctly() -> None:
+    generate_reference()
+    payload = json.loads(CALLABLE_MAP_JSON_FILE.read_text(encoding="utf-8"))
+    edges = payload["edges"]
+    assert any(e["edge_type"] == "cross_module" and e["callee_kind"] == "private_helper" for e in edges) is False
+    assert any(e["edge_type"] == "cross_module" and e["callee_kind"] == "internal_helper" for e in edges)
+    assert any(e["edge_type"] == "cross_module" and e["callee_kind"] == "public_export" for e in edges)

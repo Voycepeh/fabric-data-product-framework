@@ -144,33 +144,46 @@ def resolve_call_target(
     raw_name: str,
     module_aliases: dict[str, str],
     symbol_aliases: dict[str, str],
-    callable_owners: dict[str, str],
+    same_module_names: set[str],
+    exported_symbol_map: dict[str, Symbol],
     package_module_names: set[str],
-) -> tuple[str | None, str]:
+) -> tuple[str | None, str, str]:
+    # same-module callable/class names are always safe to resolve first
+    if raw_name in same_module_names:
+        return f"{PACKAGE_NAME}.{module}.{raw_name}", "same_module", "internal_helper" if raw_name.startswith("_") else "public_export"
+
+    # explicit import alias from "from x import y as z"
+    if raw_name in symbol_aliases:
+        imported = symbol_aliases[raw_name]
+        imported_short = imported.split(".")
+        if len(imported_short) >= 2 and (imported.startswith(PACKAGE_NAME) or imported_short[-2] in package_module_names):
+            resolved_module = imported_short[-2]
+            resolved_symbol = imported_short[-1]
+            callee_kind = "internal_helper" if resolved_symbol.startswith("_") else "public_export"
+            return (
+                f"{PACKAGE_NAME}.{resolved_module}.{resolved_symbol}",
+                "cross_module" if resolved_module != module else "same_module",
+                callee_kind,
+            )
+
+    # module/alias call like alias.func() or module.func()
     if "." in raw_name:
         owner, member = raw_name.split(".", 1)
         mapped_owner = module_aliases.get(owner, owner)
         short_owner = mapped_owner.split(".")[-1]
         if mapped_owner.startswith(PACKAGE_NAME) or short_owner in package_module_names:
             resolved_module = short_owner if short_owner in package_module_names else mapped_owner.rsplit(".", 1)[-1]
-            qualified = f"{PACKAGE_NAME}.{resolved_module}.{member}"
-            return qualified, "cross_module" if resolved_module != module else "same_module"
-        return None, "unresolved"
+            callee_kind = "internal_helper" if member.startswith("_") else "public_export"
+            return f"{PACKAGE_NAME}.{resolved_module}.{member}", "cross_module" if resolved_module != module else "same_module", callee_kind
+        return None, "unresolved", "unresolved"
 
-    if raw_name in callable_owners:
-        owner_module = callable_owners[raw_name]
-        return f"{PACKAGE_NAME}.{owner_module}.{raw_name}", "same_module" if owner_module == module else "cross_module"
+    # public exported symbol map fallback (bare-name cross-module only for exported mapping)
+    exported = exported_symbol_map.get(raw_name)
+    if exported and exported.actual_module != module:
+        callee_kind = "internal_helper" if raw_name.startswith("_") else "public_export"
+        return f"{PACKAGE_NAME}.{exported.actual_module}.{raw_name}", "cross_module", callee_kind
 
-    if raw_name in symbol_aliases:
-        imported = symbol_aliases[raw_name]
-        imported_short = imported.split(".")
-        if len(imported_short) >= 2 and (
-            imported.startswith(PACKAGE_NAME) or imported_short[-2] in package_module_names
-        ):
-            resolved_module = imported_short[-2]
-            resolved_symbol = imported_short[-1]
-            return f"{PACKAGE_NAME}.{resolved_module}.{resolved_symbol}", "cross_module" if resolved_module != module else "same_module"
-    return None, "unresolved"
+    return None, "unresolved", "unresolved"
 
 
 def build_callable_graph(
@@ -180,13 +193,6 @@ def build_callable_graph(
     docs_metadata: dict[str, dict[str, Any]],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
     package_modules = {m for m in module_data if m not in {"docs_metadata"}}
-    callable_owners: dict[str, str] = {}
-    for module, info in module_data.items():
-        for fn in info.get("functions", {}):
-            callable_owners[fn] = module
-        for cls in info.get("classes", {}):
-            callable_owners[cls] = module
-
     nodes: list[dict[str, Any]] = []
     edges: list[dict[str, Any]] = []
     node_keys: set[tuple[str, str]] = set()
@@ -200,9 +206,10 @@ def build_callable_graph(
         functions = info.get("functions", {})
         classes = info.get("classes", {})
         exported_names = {name for name, sym in symbol_map.items() if sym.actual_module == module}
+        same_module_names = set(functions) | set(classes)
         for callable_name in sorted(set(functions) | set(classes)):
             role = str(docs_metadata.get(callable_name, {}).get("role", "internal")).lower()
-            exported = callable_name in public_exports
+            exported = callable_name in exported_names
             if not exported and role not in {"essential", "optional", "internal"}:
                 role = "internal"
             qualified_name = f"{PACKAGE_NAME}.{module}.{callable_name}"
@@ -226,14 +233,15 @@ def build_callable_graph(
             caller_qn = f"{PACKAGE_NAME}.{module}.{node.name}"
             for call in collect_function_calls(node):
                 raw_name = call["raw_name"]
-                resolved_qn, edge_type = resolve_call_target(
-                    module, raw_name, module_aliases, symbol_aliases, callable_owners, package_modules
+                resolved_qn, edge_type, callee_kind = resolve_call_target(
+                    module, raw_name, module_aliases, symbol_aliases, same_module_names, symbol_map, package_modules
                 )
                 edge = {
                     "caller_qualified_name": caller_qn,
                     "callee_qualified_name": resolved_qn,
                     "callee_raw_name": raw_name if resolved_qn is None else None,
                     "edge_type": edge_type,
+                    "callee_kind": callee_kind,
                 }
                 edges.append(edge)
                 if resolved_qn and edge_type in {"same_module", "cross_module"}:
@@ -378,20 +386,31 @@ def render_callable_map_page(nodes: list[dict[str, Any]], edges: list[dict[str, 
     for node in sorted(public_nodes, key=lambda x: x["qualified_name"]):
         direct_edges = outgoing.get(node["qualified_name"], [])
         same_module = sorted({e["callee_qualified_name"] for e in direct_edges if e["edge_type"] == "same_module" and e["callee_qualified_name"]})
-        cross_module = sorted({e["callee_qualified_name"] for e in direct_edges if e["edge_type"] == "cross_module" and e["callee_qualified_name"]})
-        unresolved_count = len([e for e in direct_edges if e["edge_type"] == "unresolved"])
+        cross_module_public = sorted({
+            e["callee_qualified_name"] for e in direct_edges
+            if e["edge_type"] == "cross_module" and e["callee_qualified_name"] and e.get("callee_kind") == "public_export"
+        })
+        cross_module_private = sorted({
+            e["callee_qualified_name"] for e in direct_edges
+            if e["edge_type"] == "cross_module" and e["callee_qualified_name"] and e.get("callee_kind") == "internal_helper"
+        })
+        helper_names = sorted({x.split(".")[-1] for x in same_module if x.split(".")[-1].startswith("_")})
+        cross_names = sorted({x.split(".")[-1] for x in (cross_module_public + cross_module_private)})
+        searchable_helpers = " ".join(helper_names)
+        searchable_cross = " ".join(cross_names)
         lines.extend(
             [
                 (
                     f'<article data-callable-map-row="true" data-callable-name="{node["callable_name"]}" '
-                    f'data-callable-module="{node["module_name"]}" data-callable-role="{node["role"]}">'
+                    f'data-callable-module="{node["module_name"]}" data-callable-role="{node["role"]}" '
+                    f'data-callable-helpers="{searchable_helpers}" data-callable-cross-module="{searchable_cross}">'
                 ),
                 f"### `{node['callable_name']}`",
                 f"- module: `{node['module_name']}`",
                 f"- role: `{node['role']}`",
-                "- direct internal helpers used: " + (", ".join(f"`{x.split('.')[-1]}`" for x in same_module if x.split('.')[-1].startswith("_")) or "—"),
-                "- direct cross-module FabricOps calls used: " + (", ".join(f"`{x}`" for x in cross_module) or "—"),
-                f"- unresolved external/library calls: {unresolved_count}",
+                "- direct internal helpers used: " + (", ".join(f"`{x}`" for x in helper_names) or "—"),
+                "- direct cross-module public calls: " + (", ".join(f"`{x}`" for x in cross_module_public) or "—"),
+                "- direct cross-module private helper calls: " + (", ".join(f"`{x}`" for x in cross_module_private) or "—"),
                 "</article>",
                 "",
             ]
