@@ -1,8 +1,6 @@
 # `01_data_sharing_agreement_<agreement>`
 
-`01_data_agreement_template.ipynb` defines the **agreement-level usage boundary** for one agreement.
-
-It captures who approved usage, what usage is approved, why it is approved, and until when it remains valid.
+`01_data_agreement_template.ipynb` defines the **source/agreement-level permission boundary** for one agreement.
 
 - Keep `agreement_id` stable for the same agreement.
 - Keep `save_to_metadata=False` while testing.
@@ -17,25 +15,33 @@ It captures who approved usage, what usage is approved, why it is approved, and 
 - Import only public APIs from `fabricops_kit`.
 - The notebook remains lightweight and avoids private/internal helpers.
 
-## 02 Agreement parameters (agreement-level only)
+## 02 Agreement parameters (source/agreement-level only)
 
-The agreement input section is intentionally small:
+The notebook captures source/agreement-level approval evidence fields:
 
 - `agreement_id`
-- `agreement_name`
-- `agreement_context`
-- `approved_usage`
-- `owner`
-- `expiry_date`
-- `notes`
-
-Optional context values such as `dataset_name` and `table_name` may be used for local testing, but they are not required agreement inputs.
+- `agreement_requested_source`
+- `agreement_source_data_classification`
+- `agreement_source_contains_pii_flag`
+- `agreement_source_tables`
+- `agreement_source_stewarding_data_manager_name`
+- `agreement_purpose`
+- `agreement_permitted_uses`
+- `agreement_approval_duration`
+- `agreement_approval_date`
+- `agreement_requester_name`
+- `agreement_requesting_department`
+- `agreement_stewarding_approver_name`
+- `agreement_stewarding_department`
+- `agreement_renewal_procedure`
+- `agreement_status`
+- `agreement_notes`
+- `environment_name`
+- `created_at`
 
 ## 03 Build agreement record
 
-The notebook builds one agreement metadata record with agreement-level fields (plus `created_at`).
-
-Do **not** require table/column governance fields here.
+The notebook builds one agreement metadata record only and appends it to `METADATA_DATA_AGREEMENT` through config-routed metadata IO.
 
 ## 04 Save agreement metadata
 
@@ -43,27 +49,14 @@ When metadata writes are enabled, the notebook appends to `METADATA_DATA_AGREEME
 
 No extra agreement mapping tables are introduced in this step.
 
-## 04 Table/column metadata review under the agreement
-
-After the lightweight agreement record is defined, `01` continues with table/column review:
-
-- Select dataset and table context for review.
-- Load profile evidence from `METADATA_PROFILE_ROWS` (or optionally profile source data when evidence is absent).
-- Draft and review business context suggestions with the existing ipywidgets review flow.
-- Save approved business context rows to `METADATA_COLUMN_CONTEXT`.
-- Draft and review governance/classification suggestions from approved business context + profile evidence.
-- Save approved governance rows to `METADATA_COLUMN_GOVERNANCE`.
-- Keep DQ rule visibility read-only in this notebook.
-
 ## 05 Register notebook
 
 The notebook optionally registers itself via `register_current_notebook` into `METADATA_NOTEBOOK_REGISTRY`.
 
-Registration links notebook evidence to `agreement_id` and environment without requiring dataset/table fields.
+Registration links notebook evidence to `agreement_id` and environment.
 
 ## 06 What happens next
 
-- `01` sets agreement-level boundaries.
-- `02` exploration profiles real table/column evidence.
-- Table/column classification, sensitivity, and PII review happen later in governance-focused steps.
-- `03` pipeline contract enforces approved outputs and rules using agreement context.
+- `01` captures source/agreement-level permission boundary evidence only.
+- `02` and `03` produce and enforce evidence under `agreement_id`.
+- `04` (future) performs table/column governance enrichment under `agreement_id + dataset_name + table_name`.
