@@ -62,9 +62,9 @@ def test_notebook_01_uses_supported_setup_notebook_signature() -> None:
 
 def test_notebook_01_restores_table_column_governance_workflow() -> None:
     combined = "\n".join(_code_cells())
-    assert 'dataset_name = "sales"' in combined
-    assert 'table_name = "orders"' in combined
-    assert 'spark.table("METADATA_PROFILE_ROWS")' in combined
+    assert 'dataset_name = "r002_sales_demo"' in combined
+    assert 'table_name = "sales_orders"' in combined
+    assert 'read_lakehouse_table(CONFIG, env_name, "metadata", "METADATA_PROFILE_ROWS")' in combined
     assert "prepare_business_context_profile_input(" in combined
     assert "draft_business_context(" in combined
     assert "review_business_context(" in combined
@@ -73,3 +73,24 @@ def test_notebook_01_restores_table_column_governance_workflow() -> None:
     assert "draft_governance(" in combined
     assert "review_governance(" in combined
     assert "write_governance(" in combined
+
+
+def test_notebook_01_widget_launch_and_save_are_split_cells() -> None:
+    code_cells = _code_cells()
+    for code in code_cells:
+        assert not ("review_business_context(" in code and "get_reviewed_business_context_rows(" in code)
+        assert not ("review_governance(" in code and "write_governance(" in code)
+
+
+def test_notebook_01_guards_empty_profile_rows_before_create_dataframe() -> None:
+    combined = "\n".join(_code_cells())
+    assert "if profile_rows:" in combined
+    assert "if prepared_rows:" in combined
+
+
+def test_notebook_01_metadata_access_uses_configured_routing_only() -> None:
+    combined = "\n".join(_code_cells())
+    assert 'spark.table("METADATA_' not in combined
+    assert 'spark.sql(' not in combined
+    assert 'read_lakehouse_table(CONFIG, env_name, "metadata", "METADATA_PROFILE_ROWS")' in combined
+    assert 'read_lakehouse_table(CONFIG, env_name, "metadata", "METADATA_DQ_RULES")' in combined
