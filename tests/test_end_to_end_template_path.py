@@ -236,7 +236,7 @@ def test_03_pc_template_has_no_ai_suggestion_or_business_context_widget_calls():
 
 def test_templates_readme_documents_all_four_layers():
     text = Path("templates/notebooks/README.md").read_text(encoding="utf-8")
-    for token in ["00_env_config", "01_data_agreement_template", "02_ex_*", "03_pc_*"]:
+    for token in ["00_env_config", "01_data_agreement_template", "02_ex_*", "03_pc_*", "04_gov_*"]:
         assert token in text
 
 
@@ -271,11 +271,26 @@ def test_04_gov_template_smoke_guards_and_metadata_io():
         "{observed_values_sample}",
     ]:
         assert token in combined
-    assert "prompt=AI_PROMPTS.governance_personal_identifier_prompt_template" in combined
+    assert "GOVERNANCE_ROW_CLASSIFICATION_PROMPT_TEMPLATE" in combined
+    assert "prompt=GOVERNANCE_ROW_CLASSIFICATION_PROMPT_TEMPLATE" in combined
     assert "if not filtered_profile_rows:" in combined
     assert "if not prepared_context_rows:" in combined
     assert "if not approved_context_rows:" in combined
     assert "if not prepared_governance_rows:" in combined
+    for token in [
+        "Return JSON ONLY with exactly these keys:",
+        "ai_suggested_personal_identifier_classification",
+        "confidentiality_label",
+        "not_personal_data",
+        "direct_identifier",
+        "indirect_identifier",
+        "unknown",
+        "public",
+        "confidential",
+        "restricted",
+    ]:
+        assert token in combined
+    assert "PERSONAL_IDENTIFIER_CANDIDATES" not in combined
 
     forbidden = [
         "spark.table(\"METADATA_",

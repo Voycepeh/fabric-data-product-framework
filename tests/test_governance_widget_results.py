@@ -1,5 +1,5 @@
 import fabricops_kit.data_governance as dg
-from fabricops_kit.data_governance import _approved_widget_rows, _coerce_row_dicts, _undo_last_action, load_governance
+from fabricops_kit.data_governance import _approved_widget_rows, _coerce_row_dicts, _undo_last_action, extract_governance_suggestions, load_governance
 
 
 class RowLike:
@@ -78,3 +78,31 @@ def test_undo_last_action_tracks_approve_and_reject():
     assert len(approved) == 0
 
     assert _undo_last_action(actions, approved, rejected) is False
+
+
+def test_extract_governance_suggestions_parses_json_row_contract():
+    rows = [
+        {
+            "ai_governance_response": (
+                '{"column_name":"email","ai_suggested_personal_identifier_classification":"direct_identifier",'
+                '"confidentiality_label":"confidential","approved_business_context":"Contact","evidence":"sample","reasoning":"contains email"}'
+            )
+        }
+    ]
+    out = extract_governance_suggestions(rows)
+    assert out[0]["column_name"] == "email"
+    assert out[0]["ai_suggested_personal_identifier_classification"] == "direct_identifier"
+
+
+def test_extract_governance_suggestions_parses_python_assignment_fallback():
+    rows = [
+        {
+            "ai_governance_response": (
+                "GOVERNANCE_ROW = {'column_name':'user_id','ai_suggested_personal_identifier_classification':'indirect_identifier',"
+                "'confidentiality_label':'confidential','approved_business_context':'user analytics','evidence':'id key','reasoning':'joinable'}"
+            )
+        }
+    ]
+    out = extract_governance_suggestions(rows)
+    assert out[0]["column_name"] == "user_id"
+    assert out[0]["ai_suggested_personal_identifier_classification"] == "indirect_identifier"
