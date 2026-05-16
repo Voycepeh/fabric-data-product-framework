@@ -97,7 +97,7 @@ def test_03_pc_deterministic_only_and_valid_run_dq_signature():
     assert "RUN_OPTIONAL_ADVANCED_EVIDENCE = False" in pc
     assert 'REQUIRED_SOURCE_COLUMNS = ["customer_id", "event_ts", "status", "amount"]' in pc
     assert 'missing = sorted(set(REQUIRED_SOURCE_COLUMNS) - set(df_source.columns))' in pc
-    assert 'metadata_dq_rules = spark.table("METADATA_DQ_RULES")' in pc
+    assert 'metadata_dq_rules = read_lakehouse_table(CONFIG, ENV_NAME, "metadata", "METADATA_DQ_RULES")' in pc
     assert "enforce_dq(" in pc
     assert "table_name=DQ_TABLE_NAME" in pc
     assert "metadata_df=metadata_dq_rules" in pc

@@ -36,7 +36,7 @@ def test_expected_canonical_calls_present():
     assert 'profile_df=profile_rows' in ex
     assert 'write_dq_rules(' in ex
 
-    assert 'metadata_dq_rules = spark.table("METADATA_DQ_RULES")' in pc
+    assert 'metadata_dq_rules = read_lakehouse_table(CONFIG, ENV_NAME, "metadata", "METADATA_DQ_RULES")' in pc
     assert 'dq = enforce_dq(' in pc
     assert 'assert_dq_passed(dq.rule_results)' in pc
 
