@@ -7,9 +7,9 @@
     body{margin:0;font:14px system-ui;background:#0b1020;color:#d7deff}
     #app{display:flex;min-height:100vh}
     .title{font-size:16px;font-weight:700;margin-bottom:8px}
-    #left{flex:1;padding:12px}
+    #left{flex:1 1 auto;min-width:0;padding:12px}
     #graphWrap{position:relative;overflow:hidden;border:1px solid #25304a;border-radius:8px;background:#0f1730}
-    #right{width:34%;min-width:280px;border-left:1px solid #25304a;padding:12px;overflow:auto}
+    #right{width:32%;min-width:280px;max-width:420px;border-left:1px solid #25304a;padding:12px;overflow:auto}
     input,select,button{background:#121a31;color:#d7deff;border:1px solid #2f3a58;border-radius:6px;padding:6px}
     button{cursor:pointer}
     .search-wrap{display:flex;flex-direction:column;gap:6px;min-width:220px;position:relative}
@@ -17,7 +17,7 @@
     .match-item{display:block;width:100%;text-align:left;padding:8px;border:none;border-bottom:1px solid #25304a;background:transparent;color:#d7deff;cursor:pointer}
     .match-item:last-child{border-bottom:none}
     .match-item:hover{background:#1a2647}
-    svg{width:100%;height:var(--graph-height,72vh);touch-action:none}
+    svg{width:100%;height:var(--graph-height,62vh);touch-action:none}
     .node{cursor:pointer}
     .edge{stroke:#5a6a95;stroke-opacity:.24}
     .edge.hl{stroke:#ffd166;stroke-opacity:.95;stroke-width:2.2}
@@ -26,7 +26,13 @@
     .pill{display:inline-block;padding:2px 7px;border-radius:999px;border:1px solid #2f3a58;background:#121a31;margin-right:5px}
     .empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#b9c4e8;font-weight:600}
     .controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;align-items:flex-start}
+    .layout-toggle{display:inline-flex;border:1px solid #2f3a58;border-radius:6px;overflow:hidden}
+    .layout-toggle button{border:none;border-right:1px solid #2f3a58;border-radius:0;background:#121a31;padding:6px 10px}
+    .layout-toggle button:last-child{border-right:none}
+    .layout-toggle button.active{background:#24355f;color:#ffffff}
+    .layout-toggle button.deemphasized{opacity:.72}
     .search-hint{font-size:12px;color:#aebae3;margin:0}
+    #mobileOverviewHint{display:none;font-size:12px;color:#ffd166;margin:0}
     body.embed-mode #app{min-height:0}
     body.embed-mode .title,
     body.embed-mode .controls,
@@ -47,6 +53,11 @@
       svg{height:var(--graph-height,56vh)}
       .search-wrap{min-width:100%}
     }
+    @media(min-width:1200px){
+      #left{padding:14px 16px}
+      #right{width:24%;max-width:360px}
+      svg{height:var(--graph-height,58vh)}
+    }
   </style>
 </head>
 <body>
@@ -61,6 +72,11 @@
         </div>
         <select id='m'><option value=''>All modules</option></select>
         <select id='r'><option value=''>All roles</option></select>
+        <div id='layoutToggle' class='layout-toggle' role='group' aria-label='Graph layout mode'>
+          <button id='layoutOverview' type='button' data-layout='overview'>Overview</button>
+          <button id='layoutFocus' type='button' data-layout='focus'>Focus</button>
+        </div>
+        <p id='mobileOverviewHint'>Overview map is best viewed on a larger screen.</p>
         <button id='reset'>Reset view</button>
       </div>
       <div id='graphWrap'><svg id='g'></svg><div id='empty' class='empty' style='display:none'>No callables match the current filters.</div></div>
@@ -75,6 +91,10 @@ const params=new URLSearchParams(window.location.search);
 const embedMode=params.get('embed')==='1';
 if(embedMode) document.body.classList.add('embed-mode');
 const qEl=document.getElementById('q'),mEl=document.getElementById('m'),rEl=document.getElementById('r'),ins=document.getElementById('ins');
+const layoutToggle=document.getElementById('layoutToggle');
+const layoutOverviewBtn=document.getElementById('layoutOverview');
+const layoutFocusBtn=document.getElementById('layoutFocus');
+const mobileOverviewHint=document.getElementById('mobileOverviewHint');
 const picker=document.getElementById('matchPicker');
 const svg=document.getElementById('g'),empty=document.getElementById('empty'),resetBtn=document.getElementById('reset');
 const nodes=data.nodes, edges=data.edges.filter(e=>e.callee_qualified_name), byQ=Object.fromEntries(nodes.map(n=>[n.qualified_name,n]));
@@ -85,8 +105,38 @@ let pinchDist=0;
 const PADDING={full:26,filtered:18,focused:10,embed:8};
 const HEIGHT_LIMITS=embedMode?{min:220,max:520,row:34,pad:80}:{min:260,max:820,row:34,pad:120};
 const urlFocus=params.get('focus');
+const isMobileStandalone=()=>!embedMode&&window.matchMedia('(max-width: 900px)').matches;
+let layoutMode=embedMode?'focus':((urlFocus||isMobileStandalone())?'focus':'overview');
+if(embedMode&&layoutToggle) layoutToggle.style.display='none';
 
-const layout=()=>{const groups=new Map();for(const n of visNodes){if(!groups.has(n.module_name))groups.set(n.module_name,[]);groups.get(n.module_name).push(n)}const modules=[...groups.keys()].sort();const rowH=34,colGap=120;let x=0;pos={};for(const m of modules){const arr=groups.get(m).sort((a,b)=>a.callable_name.localeCompare(b.callable_name));const h=Math.max(100,arr.length*rowH+44);for(let i=0;i<arr.length;i++)pos[arr[i].qualified_name]={x:x+70,y:i*rowH+42-h/2};x+=Math.max(200,Math.min(320,140+arr.length*7))+colGap}if(modules.length===1){for(const k in pos)pos[k].x-=x/2}};
+function setLayoutMode(mode){
+  layoutMode=mode==='focus'?'focus':'overview';
+  layoutOverviewBtn.classList.toggle('active',layoutMode==='overview');
+  layoutFocusBtn.classList.toggle('active',layoutMode==='focus');
+  const mobile=isMobileStandalone();
+  layoutOverviewBtn.classList.toggle('deemphasized',mobile);
+  if(mobileOverviewHint) mobileOverviewHint.style.display=(mobile&&layoutMode==='overview')?'block':'none';
+}
+setLayoutMode(layoutMode);
+
+const layout=()=>{
+  const focusLayout=layoutMode==='focus'&&!embedMode&&sel;
+  if(focusLayout){
+    const rels=directRelationships(sel);
+    const upstream=rels.up.filter(q=>byQ[q]).map(q=>byQ[q]).sort((a,b)=>a.callable_name.localeCompare(b.callable_name));
+    const downstream=rels.down.filter(q=>byQ[q]).map(q=>byQ[q]).sort((a,b)=>a.callable_name.localeCompare(b.callable_name));
+    pos={};
+    const rowH=44;
+    const centerX=120;
+    const neighborX=410;
+    pos[sel]={x:centerX,y:0};
+    const placeColumn=(arr,startY)=>{for(let i=0;i<arr.length;i++)pos[arr[i].qualified_name]={x:neighborX,y:startY+i*rowH};};
+    placeColumn(upstream,-Math.max(0,(upstream.length-1)*rowH));
+    placeColumn(downstream,Math.max(rowH,(downstream.length?rowH:0)));
+    return;
+  }
+  const groups=new Map();for(const n of visNodes){if(!groups.has(n.module_name))groups.set(n.module_name,[]);groups.get(n.module_name).push(n)}const modules=[...groups.keys()].sort();const rowH=34,colGap=120;let x=0;pos={};for(const m of modules){const arr=groups.get(m).sort((a,b)=>a.callable_name.localeCompare(b.callable_name));const h=Math.max(100,arr.length*rowH+44);for(let i=0;i<arr.length;i++)pos[arr[i].qualified_name]={x:x+70,y:i*rowH+42-h/2};x+=Math.max(200,Math.min(320,140+arr.length*7))+colGap}if(modules.length===1){for(const k in pos)pos[k].x-=x/2}
+};
 const bounds=(keys)=>{const pts=keys.map(k=>pos[k]).filter(Boolean);if(!pts.length)return null;let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9;for(const p of pts){minX=Math.min(minX,p.x);maxX=Math.max(maxX,p.x+140);minY=Math.min(minY,p.y-18);maxY=Math.max(maxY,p.y+18)}return{minX,minY,maxX,maxY}};
 
 function inScopeNodes(){const mf=mEl.value,rf=rEl.value;return nodes.filter(n=>(!mf||n.module_name===mf)&&(!rf||n.role===rf));}
@@ -143,7 +193,7 @@ function render(){
     else showPicker(matches);
   } else picker.style.display='none';
 
-  const keepKeys=neighborhoodKeys(sel,set,scopedEdges);
+  const keepKeys=(layoutMode==='focus')?neighborhoodKeys(sel,set,scopedEdges):new Set([...set]);
   visNodes=scoped.filter(n=>keepKeys.has(n.qualified_name));
   const vset=new Set(visNodes.map(n=>n.qualified_name));
   visEdges=scopedEdges.filter(e=>vset.has(e.caller_qualified_name)&&vset.has(e.callee_qualified_name));
@@ -154,13 +204,17 @@ function render(){
   layout();
 
   for(const e of visEdges){const a=pos[e.caller_qualified_name],b=pos[e.callee_qualified_name];if(!a||!b)continue;const highlight=sel&&(e.caller_qualified_name===sel||e.callee_qualified_name===sel);svg.insertAdjacentHTML('beforeend',`<line class='edge ${highlight?'hl':''}' x1='${a.x}' y1='${a.y}' x2='${b.x}' y2='${b.y}'/>`);} 
-  for(const n of visNodes){const p=pos[n.qualified_name];const muted=sel&&n.qualified_name!==sel&&!visEdges.some(e=>(e.caller_qualified_name===sel&&e.callee_qualified_name===n.qualified_name)||(e.callee_qualified_name===sel&&e.caller_qualified_name===n.qualified_name));const stroke=n.qualified_name===sel?'#ffd166':'#1b2542';svg.insertAdjacentHTML('beforeend',`<g class='node ${muted?'muted':''}' data-q='${n.qualified_name}'><circle cx='${p.x}' cy='${p.y}' r='8' fill='${color(n)}' stroke='${stroke}' stroke-width='2'/><text x='${p.x+12}' y='${p.y+4}' fill='#d7deff' font-size='12'>${n.callable_name}</text></g>`);} 
+  const labelSize=(layoutMode==='focus'&&!embedMode)?14:12;
+  for(const n of visNodes){const p=pos[n.qualified_name];const muted=sel&&n.qualified_name!==sel&&!visEdges.some(e=>(e.caller_qualified_name===sel&&e.callee_qualified_name===n.qualified_name)||(e.callee_qualified_name===sel&&e.caller_qualified_name===n.qualified_name));const stroke=n.qualified_name===sel?'#ffd166':'#1b2542';svg.insertAdjacentHTML('beforeend',`<g class='node ${muted?'muted':''}' data-q='${n.qualified_name}'><circle cx='${p.x}' cy='${p.y}' r='8' fill='${color(n)}' stroke='${stroke}' stroke-width='2'/><text x='${p.x+12}' y='${p.y+4}' fill='#d7deff' font-size='${labelSize}'>${n.callable_name}</text></g>`);} 
   svg.querySelectorAll('.node').forEach(el=>el.onclick=()=>select(el.dataset.q,true));
   if(sel&&pos[sel]) fit([sel,...new Set(visEdges.flatMap(e=>e.caller_qualified_name===sel?[e.callee_qualified_name]:e.callee_qualified_name===sel?[e.caller_qualified_name]:[]))]); else fit();
   renderInspector(sel);
 }
 function select(qn,setInput=false){sel=qn;if(setInput&&byQ[qn]&&!embedMode) qEl.value=byQ[qn].callable_name;render();}
 [qEl,mEl,rEl].forEach(x=>x.oninput=render);resetBtn.onclick=()=>{sel=null;qEl.value='';picker.style.display='none';render()};
+layoutOverviewBtn.onclick=()=>{setLayoutMode('overview');render();};
+layoutFocusBtn.onclick=()=>{setLayoutMode('focus');render();};
+window.matchMedia('(max-width: 900px)').addEventListener('change',()=>{setLayoutMode(layoutMode);render();});
 document.addEventListener('click',e=>{if(!picker.contains(e.target)&&e.target!==qEl)picker.style.display='none';});
 
 svg.addEventListener('wheel',e=>{if(!visNodes.length)return;e.preventDefault();const f=e.deltaY<0?0.9:1.1;camera.w*=f;camera.h*=f;svg.setAttribute('viewBox',`${camera.x} ${camera.y} ${camera.w} ${camera.h}`)},{passive:false});
