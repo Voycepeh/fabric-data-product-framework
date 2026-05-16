@@ -40,7 +40,7 @@ def test_setup_uses_current_run_id_and_user_fallback(monkeypatch):
     runtime_mod = types.SimpleNamespace(context=context)
     monkeypatch.setitem(sys.modules, "notebookutils.runtime", runtime_mod)
 
-    out = setup_notebook(config=_sample_config(), env="Sandbox", check_ai=False)
+    out = setup_notebook(config=_sample_config(), env="Sandbox")
     assert out.run_id == "fabric_run_1"
     assert out.user_name == "alice"
 
@@ -49,6 +49,6 @@ def test_setup_user_falls_back_to_user_id(monkeypatch):
     context = {"currentNotebookName": "03_pc_test_source_to_unified", "currentRunId": "", "userId": "u2"}
     runtime_mod = types.SimpleNamespace(context=context)
     monkeypatch.setitem(sys.modules, "notebookutils.runtime", runtime_mod)
-    out = setup_notebook(config=_sample_config(), env="Sandbox", check_ai=False)
+    out = setup_notebook(config=_sample_config(), env="Sandbox")
     assert out.user_name == "u2"
     assert out.run_id

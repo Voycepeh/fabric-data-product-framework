@@ -188,7 +188,7 @@ def test__get_store_missing_values_raise_clean_errors():
 
 def test_bootstrap_env_and_smoke_behavior(monkeypatch):
     config = _sample_framework_config()
-    ctx = bootstrap_fabric_env(config=config, check_ai=False, smoke_test=False)
+    ctx = bootstrap_fabric_env(config=config, smoke_test=False)
     assert ctx.paths["Source"].name == "SRC"
     assert ctx.smoke_test_results == []
 
@@ -196,13 +196,13 @@ def test_bootstrap_env_and_smoke_behavior(monkeypatch):
     monkeypatch.setitem(sys.modules, "notebookutils", types.SimpleNamespace(runtime=runtime_mod))
     monkeypatch.setitem(sys.modules, "notebookutils.runtime", runtime_mod)
     monkeypatch.setattr("fabricops_kit.config.spark", object(), raising=False)
-    results = run_config_smoke_tests(config=config, check_ai=False)
+    results = run_config_smoke_tests(config=config)
     assert all(isinstance(r, ConfigSmokeCheckResult) for r in results)
 
 
 def test_bootstrap_invalid_env_raises_useful_error():
     with pytest.raises(ValueError, match="Environment 'Prod'"):
-        bootstrap_fabric_env(env="Prod", config=_sample_framework_config(), smoke_test=False, check_ai=False)
+        bootstrap_fabric_env(env="Prod", config=_sample_framework_config(), smoke_test=False)
 
 
 def test_config_dataclass_validation_guards() -> None:
