@@ -56,7 +56,7 @@ Environment Workspace (Sandbox / Dev-Test / Prod)
 
 ## Related pages
 
-- [Lifecycle Operating Model](lifecycle-operating-model.md)
+- [Workflow](workflow.md)
 - [Metadata and Data Contract Assembly](metadata-and-contracts.md)
 - [Data Quality Rules System](data-quality-rules-system.md)
 
