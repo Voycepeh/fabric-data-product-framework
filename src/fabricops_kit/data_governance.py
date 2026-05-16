@@ -33,7 +33,7 @@ def _build_governance_context(
     }
 
 
-def _prepare_governance_input(profile_rows: list[dict], table_name: str, column_contexts: list[dict]) -> list[dict]:
+def prepare_governance_input(profile_rows: list[dict], table_name: str, column_contexts: list[dict]) -> list[dict]:
     """Join approved business context into profile rows for governance AI suggestions."""
     context_lookup = {r["column_name"]: r for r in column_contexts or [] if r.get("column_name")}
     out = []
@@ -55,7 +55,7 @@ def draft_governance(prepared_profile_df, prompt: str | None = None, output_col:
     return prepared_profile_df.ai.generate_response(prompt=prompt, is_prompt_template=True, output_col=output_col)
 
 
-def _extract_pii_suggestions(response_rows, response_col: str = "ai_governance_response") -> list[dict]:
+def extract_governance_suggestions(response_rows, response_col: str = "ai_governance_response") -> list[dict]:
     """Extract governance suggestions from Spark/list response payloads."""
     if hasattr(response_rows, "collect"):
         iterable = [r.asDict(recursive=True) if hasattr(r, "asDict") else dict(r) for r in response_rows.collect()]
@@ -211,6 +211,11 @@ def write_governance(
     return rows
 
 
+# Backward-compatible aliases for existing internal usage.
+_prepare_governance_input = prepare_governance_input
+_extract_pii_suggestions = extract_governance_suggestions
+
+
 def load_governance(governance_rows, *, agreement_rows=None, agreement_id: str | None = None, dataset_name: str | None = None, table_name: str | None = None) -> dict[str, Any]:
     """Load approved governance metadata as read-only agreement context."""
     rows = _coerce_row_dicts(governance_rows)
@@ -248,4 +253,3 @@ def load_governance(governance_rows, *, agreement_rows=None, agreement_id: str |
         for r in filtered
     ]
     return {"agreement_context": agreement_payload, "columns": columns}
-

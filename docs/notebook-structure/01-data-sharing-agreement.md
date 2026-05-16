@@ -43,6 +43,18 @@ When metadata writes are enabled, the notebook appends to `METADATA_DATA_AGREEME
 
 No extra agreement mapping tables are introduced in this step.
 
+## 04 Table/column metadata review under the agreement
+
+After the lightweight agreement record is defined, `01` continues with table/column review:
+
+- Select dataset and table context for review.
+- Load profile evidence from `METADATA_PROFILE_ROWS` (or optionally profile source data when evidence is absent).
+- Draft and review business context suggestions with the existing ipywidgets review flow.
+- Save approved business context rows to `METADATA_COLUMN_CONTEXT`.
+- Draft and review governance/classification suggestions from approved business context + profile evidence.
+- Save approved governance rows to `METADATA_COLUMN_GOVERNANCE`.
+- Keep DQ rule visibility read-only in this notebook.
+
 ## 05 Register notebook
 
 The notebook optionally registers itself via `register_current_notebook` into `METADATA_NOTEBOOK_REGISTRY`.

@@ -58,3 +58,18 @@ def test_notebook_01_uses_supported_setup_notebook_signature() -> None:
     assert "env=env_name" in combined
     assert 'required_targets=["metadata"]' in combined
     assert 'notebook_name="01_data_agreement_template"' in combined
+
+
+def test_notebook_01_restores_table_column_governance_workflow() -> None:
+    combined = "\n".join(_code_cells())
+    assert 'dataset_name = "sales"' in combined
+    assert 'table_name = "orders"' in combined
+    assert 'spark.table("METADATA_PROFILE_ROWS")' in combined
+    assert "prepare_business_context_profile_input(" in combined
+    assert "draft_business_context(" in combined
+    assert "review_business_context(" in combined
+    assert "write_business_context(" in combined
+    assert "prepare_governance_input(" in combined
+    assert "draft_governance(" in combined
+    assert "review_governance(" in combined
+    assert "write_governance(" in combined

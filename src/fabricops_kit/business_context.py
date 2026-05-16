@@ -9,7 +9,7 @@ from .metadata import build_metadata_column_key, build_metadata_table_key
 COLUMN_BUSINESS_CONTEXT_FROM_WIDGET: list[dict] = []
 REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET: list[dict] = []
 
-def _prepare_business_context_profile_input(profile_rows: list[dict], table_name: str, table_context: str = "") -> list[dict]:
+def prepare_business_context_profile_input(profile_rows: list[dict], table_name: str, table_context: str = "") -> list[dict]:
     out = []
     for row in profile_rows or []:
         out.append(
@@ -68,7 +68,7 @@ def _parse_ai_dict_response(text: str) -> dict:
             return {}
 
 
-def _extract_column_business_context_suggestions(response_rows, response_col: str = "ai_business_context_response") -> list[dict]:
+def extract_column_business_context_suggestions(response_rows, response_col: str = "ai_business_context_response") -> list[dict]:
     """Parse AI suggestion rows from Spark DataFrames or ``list[dict]`` payloads."""
     out = []
     if hasattr(response_rows, "collect"):
@@ -197,3 +197,17 @@ def write_business_context(spark, *, rows: list[dict], metadata_path, table_name
     """Persist approved business context rows via metadata writer."""
     from .metadata import write_column_business_context
     return write_column_business_context(spark=spark, rows=rows, metadata_path=metadata_path, table_name=table_name, mode=mode)
+
+
+def get_reviewed_business_context_rows(status: str = "approved") -> list[dict]:
+    """Return business-context rows captured by the review widget."""
+    if status == "approved":
+        return list(COLUMN_BUSINESS_CONTEXT_FROM_WIDGET)
+    if status == "rejected":
+        return list(REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET)
+    raise ValueError("status must be 'approved' or 'rejected'.")
+
+
+# Backward-compatible aliases for existing internal usage.
+_prepare_business_context_profile_input = prepare_business_context_profile_input
+_extract_column_business_context_suggestions = extract_column_business_context_suggestions
