@@ -1,27 +1,161 @@
-<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
-<style>body{margin:0;font:14px system-ui;background:#0b1020;color:#d7deff}#app{display:flex;min-height:100vh}.title{font-size:16px;font-weight:700;margin-bottom:8px}#left{flex:1;padding:12px}#graphWrap{position:relative;overflow:hidden;border:1px solid #25304a;border-radius:8px;background:#0f1730}#right{width:34%;min-width:280px;border-left:1px solid #25304a;padding:12px;overflow:auto}input,select,button{background:#121a31;color:#d7deff;border:1px solid #2f3a58;border-radius:6px;padding:6px}button{cursor:pointer}svg{width:100%;height:72vh;touch-action:none}.node{cursor:pointer}.edge{stroke:#5a6a95;stroke-opacity:.24}.edge.hl{stroke:#ffd166;stroke-opacity:.95;stroke-width:2.2}.muted{opacity:.14}.legend span{display:inline-block;margin-right:8px}.pill{display:inline-block;padding:2px 7px;border-radius:999px;border:1px solid #2f3a58;background:#121a31;margin-right:5px}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#b9c4e8;font-weight:600}.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}@media(max-width:900px){#app{flex-direction:column}#right{width:auto;min-width:0;border-left:none;border-top:1px solid #25304a}svg{height:56vh}}</style></head>
-<body><div id='app'><section id='left'><div class='title'>Callable Dependency Explorer</div><div class='controls'><input id='q' placeholder='Search callable'><select id='m'><option value=''>All modules</option></select><select id='r'><option value=''>All roles</option></select><button id='reset'>Reset view</button></div><div id='graphWrap'><svg id='g'></svg><div id='empty' class='empty' style='display:none'>No callables match the current filters.</div></div><div class='legend'><span>● public</span><span>● internal helper</span><span>● internal callable</span></div></section><aside id='right'><h3>Callable Inspector</h3><div id='ins'>Select a node.</div></aside></div>
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <style>
+    body{margin:0;font:14px system-ui;background:#0b1020;color:#d7deff}
+    #app{display:flex;min-height:100vh}
+    .title{font-size:16px;font-weight:700;margin-bottom:8px}
+    #left{flex:1;padding:12px}
+    #graphWrap{position:relative;overflow:hidden;border:1px solid #25304a;border-radius:8px;background:#0f1730}
+    #right{width:34%;min-width:280px;border-left:1px solid #25304a;padding:12px;overflow:auto}
+    input,select,button{background:#121a31;color:#d7deff;border:1px solid #2f3a58;border-radius:6px;padding:6px}
+    button{cursor:pointer}
+    .search-wrap{display:flex;flex-direction:column;gap:6px;min-width:220px;position:relative}
+    #matchPicker{display:none;position:absolute;top:36px;left:0;right:0;max-height:180px;overflow:auto;background:#10182e;border:1px solid #334061;border-radius:8px;z-index:20}
+    .match-item{display:block;width:100%;text-align:left;padding:8px;border:none;border-bottom:1px solid #25304a;background:transparent;color:#d7deff;cursor:pointer}
+    .match-item:last-child{border-bottom:none}
+    .match-item:hover{background:#1a2647}
+    svg{width:100%;height:var(--graph-height,72vh);touch-action:none}
+    .node{cursor:pointer}
+    .edge{stroke:#5a6a95;stroke-opacity:.24}
+    .edge.hl{stroke:#ffd166;stroke-opacity:.95;stroke-width:2.2}
+    .muted{opacity:.14}
+    .legend span{display:inline-block;margin-right:8px}
+    .pill{display:inline-block;padding:2px 7px;border-radius:999px;border:1px solid #2f3a58;background:#121a31;margin-right:5px}
+    .empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#b9c4e8;font-weight:600}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;align-items:flex-start}
+    .search-hint{font-size:12px;color:#aebae3;margin:0}
+    @media(max-width:900px){
+      #app{flex-direction:column}
+      #right{width:auto;min-width:0;border-left:none;border-top:1px solid #25304a}
+      svg{height:var(--graph-height,56vh)}
+      .search-wrap{min-width:100%}
+    }
+  </style>
+</head>
+<body>
+  <div id='app'>
+    <section id='left'>
+      <div class='title'>Callable Dependency Explorer</div>
+      <div class='controls'>
+        <div class='search-wrap'>
+          <input id='q' placeholder='Find callable to focus'>
+          <div id='matchPicker'></div>
+          <p class='search-hint'>Search focuses a callable neighborhood; module/role filters control graph scope.</p>
+        </div>
+        <select id='m'><option value=''>All modules</option></select>
+        <select id='r'><option value=''>All roles</option></select>
+        <button id='reset'>Reset view</button>
+      </div>
+      <div id='graphWrap'><svg id='g'></svg><div id='empty' class='empty' style='display:none'>No callables match the current filters.</div></div>
+      <div class='legend'><span>● public</span><span>● internal helper</span><span>● internal callable</span></div>
+    </section>
+    <aside id='right'><h3>Callable Inspector</h3><div id='ins'>Select a node.</div></aside>
+  </div>
 <script>
 const color=n=>n.exported?'#66d9ef':(n.is_underscore?'#ff6b6b':'#c792ea');
 fetch('../reference/callable-map.json').then(r=>r.json()).then(data=>{
 const qEl=document.getElementById('q'),mEl=document.getElementById('m'),rEl=document.getElementById('r'),ins=document.getElementById('ins');
+const picker=document.getElementById('matchPicker');
 const svg=document.getElementById('g'),empty=document.getElementById('empty'),resetBtn=document.getElementById('reset');
 const nodes=data.nodes, edges=data.edges.filter(e=>e.callee_qualified_name), byQ=Object.fromEntries(nodes.map(n=>[n.qualified_name,n]));
 [...new Set(nodes.map(n=>n.module_name))].sort().forEach(m=>mEl.innerHTML+=`<option>${m}</option>`);
 [...new Set(nodes.map(n=>n.role))].sort().forEach(r=>rEl.innerHTML+=`<option>${r}</option>`);
 let sel=null, visNodes=[], visEdges=[], pos={}, camera={x:0,y:0,w:100,h:100};
 let pinchDist=0;
-const related=(q)=>{const up=new Set(),down=new Set();let ch=true;while(ch){ch=false;for(const e of visEdges){if(e.callee_qualified_name===q||up.has(e.callee_qualified_name)){if(!up.has(e.caller_qualified_name)){up.add(e.caller_qualified_name);ch=true}} if(e.caller_qualified_name===q||down.has(e.caller_qualified_name)){if(!down.has(e.callee_qualified_name)){down.add(e.callee_qualified_name);ch=true}}}}return{up,down}};
-const layout=()=>{const groups=new Map();for(const n of visNodes){if(!groups.has(n.module_name))groups.set(n.module_name,[]);groups.get(n.module_name).push(n)};const modules=[...groups.keys()].sort();const rowH=34,colGap=120,colPad=36;let x=0;pos={};for(const m of modules){const arr=groups.get(m).sort((a,b)=>a.callable_name.localeCompare(b.callable_name));const h=Math.max(100,arr.length*rowH+44);for(let i=0;i<arr.length;i++)pos[arr[i].qualified_name]={x:x+70,y:i*rowH+42-h/2};x+=Math.max(200,Math.min(320,140+arr.length*7))+colGap}if(modules.length===1){for(const k in pos)pos[k].x-=x/2}};
+const PADDING={full:26,filtered:18,focused:10};
+const HEIGHT_LIMITS={min:260,max:820,row:34,pad:120};
+const urlFocus=new URLSearchParams(window.location.search).get('focus');
+
+const layout=()=>{const groups=new Map();for(const n of visNodes){if(!groups.has(n.module_name))groups.set(n.module_name,[]);groups.get(n.module_name).push(n)}const modules=[...groups.keys()].sort();const rowH=34,colGap=120;let x=0;pos={};for(const m of modules){const arr=groups.get(m).sort((a,b)=>a.callable_name.localeCompare(b.callable_name));const h=Math.max(100,arr.length*rowH+44);for(let i=0;i<arr.length;i++)pos[arr[i].qualified_name]={x:x+70,y:i*rowH+42-h/2};x+=Math.max(200,Math.min(320,140+arr.length*7))+colGap}if(modules.length===1){for(const k in pos)pos[k].x-=x/2}};
 const bounds=(keys)=>{const pts=keys.map(k=>pos[k]).filter(Boolean);if(!pts.length)return null;let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9;for(const p of pts){minX=Math.min(minX,p.x);maxX=Math.max(maxX,p.x+140);minY=Math.min(minY,p.y-18);maxY=Math.max(maxY,p.y+18)}return{minX,minY,maxX,maxY}};
-const fit=(targetKeys)=>{const b=bounds(targetKeys||visNodes.map(n=>n.qualified_name));if(!b){camera={x:-50,y:-50,w:100,h:100};svg.setAttribute('viewBox',`${camera.x} ${camera.y} ${camera.w} ${camera.h}`);return;}const pad=48;const w=Math.max(260,b.maxX-b.minX+pad*2),h=Math.max(200,b.maxY-b.minY+pad*2);camera={x:b.minX-pad,y:b.minY-pad,w,h};svg.setAttribute('viewBox',`${camera.x} ${camera.y} ${camera.w} ${camera.h}`)};
-const draw=()=>{svg.innerHTML='';empty.style.display=visNodes.length?'none':'flex';if(!visNodes.length){ins.textContent='No callables match the current filters.';return;}layout();const rel=sel?related(sel):{up:new Set(),down:new Set()};for(const e of visEdges){const a=pos[e.caller_qualified_name],b=pos[e.callee_qualified_name];if(!a||!b)continue;const keep=!sel||(e.caller_qualified_name===sel||e.callee_qualified_name===sel||rel.up.has(e.caller_qualified_name)&&rel.up.has(e.callee_qualified_name)||rel.down.has(e.caller_qualified_name)&&rel.down.has(e.callee_qualified_name)||rel.up.has(e.caller_qualified_name)&&e.callee_qualified_name===sel||e.caller_qualified_name===sel&&rel.down.has(e.callee_qualified_name));svg.insertAdjacentHTML('beforeend',`<line class='edge ${keep&&sel?'hl':''} ${sel&&!keep?'muted':''}' x1='${a.x}' y1='${a.y}' x2='${b.x}' y2='${b.y}'/>`);}for(const n of visNodes){const p=pos[n.qualified_name];const keep=!sel||n.qualified_name===sel||rel.up.has(n.qualified_name)||rel.down.has(n.qualified_name);const stroke=n.qualified_name===sel?'#ffd166':'#1b2542';svg.insertAdjacentHTML('beforeend',`<g class='node ${keep?'':'muted'}' data-q='${n.qualified_name}'><circle cx='${p.x}' cy='${p.y}' r='8' fill='${color(n)}' stroke='${stroke}' stroke-width='2'/><text x='${p.x+12}' y='${p.y+4}' fill='#d7deff' font-size='12'>${n.callable_name}</text></g>`);}svg.querySelectorAll('.node').forEach(el=>el.onclick=()=>select(el.dataset.q));if(sel&&pos[sel]){const relKeys=[sel,...rel.up,...rel.down];fit(relKeys)}else fit();};
-function render(){const q=qEl.value.toLowerCase(),mf=mEl.value,rf=rEl.value;visNodes=nodes.filter(n=>(!q||n.callable_name.toLowerCase().includes(q)||n.qualified_name.toLowerCase().includes(q))&&(!mf||n.module_name===mf)&&(!rf||n.role===rf));const set=new Set(visNodes.map(n=>n.qualified_name));visEdges=edges.filter(e=>set.has(e.caller_qualified_name)&&set.has(e.callee_qualified_name));if(sel&&!set.has(sel))sel=null;draw();}
-function select(qn){sel=qn;const n=byQ[qn];const upstream=[...new Set(visEdges.filter(e=>e.callee_qualified_name===qn).map(e=>e.caller_qualified_name.split('.').slice(-2).join('.')))].sort();const downstream=[...new Set(visEdges.filter(e=>e.caller_qualified_name===qn).map(e=>e.callee_qualified_name.split('.').slice(-2).join('.')))].sort();const ctype=n.exported?'public callable':(n.is_underscore?'private helper':'internal callable');ins.innerHTML=`<div class='pill'>module: ${n.module_name}</div><div class='pill'>role: ${n.role}</div><div class='pill'>type: ${ctype}</div><h4 style='margin:10px 0 4px'>${n.callable_name}</h4><b>Upstream callers</b><br>${upstream.join('<br>')||'—'}<br><br><b>Downstream calls</b><br>${downstream.join('<br>')||'—'}`;draw();}
-[qEl,mEl,rEl].forEach(x=>x.oninput=render);resetBtn.onclick=()=>{sel=null;render()};
+
+function inScopeNodes(){const mf=mEl.value,rf=rEl.value;return nodes.filter(n=>(!mf||n.module_name===mf)&&(!rf||n.role===rf));}
+function inScopeEdges(set){return edges.filter(e=>set.has(e.caller_qualified_name)&&set.has(e.callee_qualified_name));}
+function searchMatches(scopeNodes,q){const t=q.trim().toLowerCase();if(!t)return[];return scopeNodes.filter(n=>n.callable_name.toLowerCase().includes(t)||n.qualified_name.toLowerCase().includes(t)).sort((a,b)=>a.callable_name.localeCompare(b.callable_name));}
+function isDirectHelper(a,b){return a.module_name===b.module_name&&(a.is_underscore||b.is_underscore);} 
+function neighborhoodKeys(selected,set,scopeEdges){
+  if(!selected||!set.has(selected)) return new Set([...set]);
+  const out=new Set([selected]);
+  const selectedNode=byQ[selected];
+  for(const e of scopeEdges){
+    if(e.caller_qualified_name===selected){
+      const n=byQ[e.callee_qualified_name]; if(!n) continue;
+      if(isDirectHelper(selectedNode,n)||selectedNode.module_name!==n.module_name) out.add(n.qualified_name);
+    }
+    if(e.callee_qualified_name===selected){
+      const n=byQ[e.caller_qualified_name]; if(!n) continue;
+      if(isDirectHelper(selectedNode,n)||selectedNode.module_name!==n.module_name) out.add(n.qualified_name);
+    }
+  }
+  return out;
+}
+function showPicker(matches){
+  if(!matches.length){picker.style.display='none';picker.innerHTML='';return;}
+  picker.innerHTML=matches.slice(0,12).map(n=>`<button class='match-item' data-q='${n.qualified_name}'>${n.callable_name} <span style='opacity:.75'>(${n.module_name})</span></button>`).join('');
+  picker.style.display='block';
+  picker.querySelectorAll('.match-item').forEach(b=>b.onclick=()=>{picker.style.display='none';select(b.dataset.q,true);});
+}
+const modePadding=(targetKeys)=>{if(sel&&targetKeys&&targetKeys.length) return PADDING.focused;const hasFilters=Boolean(mEl.value||rEl.value);return hasFilters?PADDING.filtered:PADDING.full;};
+const setGraphHeight=(targetKeys)=>{const b=bounds(targetKeys||visNodes.map(n=>n.qualified_name));if(!b){svg.style.setProperty('--graph-height',`${HEIGHT_LIMITS.min}px`);return;}const nodeCount=(targetKeys&&targetKeys.length)||visNodes.length||1;const content=Math.max(b.maxY-b.minY+HEIGHT_LIMITS.pad,nodeCount*HEIGHT_LIMITS.row+HEIGHT_LIMITS.pad);const h=Math.max(HEIGHT_LIMITS.min,Math.min(HEIGHT_LIMITS.max,Math.round(content)));svg.style.setProperty('--graph-height',`${h}px`);};
+const fit=(targetKeys)=>{const keys=targetKeys||visNodes.map(n=>n.qualified_name);const b=bounds(keys);if(!b){camera={x:-50,y:-50,w:100,h:100};svg.setAttribute('viewBox',`${camera.x} ${camera.y} ${camera.w} ${camera.h}`);setGraphHeight();return;}const pad=modePadding(keys);const w=Math.max(220,b.maxX-b.minX+pad*2),h=Math.max(140,b.maxY-b.minY+pad*2);camera={x:b.minX-pad,y:b.minY-pad,w,h};svg.setAttribute('viewBox',`${camera.x} ${camera.y} ${camera.w} ${camera.h}`);setGraphHeight(keys)};
+
+function directRelationships(qn){
+  const up=[...new Set(visEdges.filter(e=>e.callee_qualified_name===qn).map(e=>e.caller_qualified_name))].sort();
+  const down=[...new Set(visEdges.filter(e=>e.caller_qualified_name===qn).map(e=>e.callee_qualified_name))].sort();
+  return {up,down};
+}
+function renderInspector(qn){
+  if(!qn||!byQ[qn]){ins.textContent='Select a node.';return;}
+  const n=byQ[qn],rels=directRelationships(qn);const ctype=n.exported?'public callable':(n.is_underscore?'private helper':'internal callable');
+  ins.innerHTML=`<div class='pill'>module: ${n.module_name}</div><div class='pill'>role: ${n.role}</div><div class='pill'>type: ${ctype}</div><h4 style='margin:10px 0 4px'>${n.callable_name}</h4><p style='margin:0 0 8px;color:#aebae3'>Focused callable</p><b>Direct upstream callers</b><br>${rels.up.map(v=>v.split('.').slice(-2).join('.')).join('<br>')||'—'}<br><br><b>Direct downstream calls</b><br>${rels.down.map(v=>v.split('.').slice(-2).join('.')).join('<br>')||'—'}`;
+}
+function render(){
+  const scoped=inScopeNodes();
+  const set=new Set(scoped.map(n=>n.qualified_name));
+  const scopedEdges=inScopeEdges(set);
+  if(sel&&!set.has(sel)) sel=null;
+
+  const q=qEl.value.trim();
+  const matches=searchMatches(scoped,q);
+  if(q){
+    const exact=matches.find(n=>n.callable_name.toLowerCase()===q.toLowerCase()||n.qualified_name.toLowerCase()===q.toLowerCase());
+    if(exact){sel=exact.qualified_name;picker.style.display='none';}
+    else showPicker(matches);
+  } else picker.style.display='none';
+
+  const keepKeys=neighborhoodKeys(sel,set,scopedEdges);
+  visNodes=scoped.filter(n=>keepKeys.has(n.qualified_name));
+  const vset=new Set(visNodes.map(n=>n.qualified_name));
+  visEdges=scopedEdges.filter(e=>vset.has(e.caller_qualified_name)&&vset.has(e.callee_qualified_name));
+
+  svg.innerHTML='';
+  empty.style.display=visNodes.length?'none':'flex';
+  if(!visNodes.length){ins.textContent='No callables match the current filters.';return;}
+  layout();
+
+  for(const e of visEdges){const a=pos[e.caller_qualified_name],b=pos[e.callee_qualified_name];if(!a||!b)continue;const highlight=sel&&(e.caller_qualified_name===sel||e.callee_qualified_name===sel);svg.insertAdjacentHTML('beforeend',`<line class='edge ${highlight?'hl':''}' x1='${a.x}' y1='${a.y}' x2='${b.x}' y2='${b.y}'/>`);} 
+  for(const n of visNodes){const p=pos[n.qualified_name];const muted=sel&&n.qualified_name!==sel&&!visEdges.some(e=>(e.caller_qualified_name===sel&&e.callee_qualified_name===n.qualified_name)||(e.callee_qualified_name===sel&&e.caller_qualified_name===n.qualified_name));const stroke=n.qualified_name===sel?'#ffd166':'#1b2542';svg.insertAdjacentHTML('beforeend',`<g class='node ${muted?'muted':''}' data-q='${n.qualified_name}'><circle cx='${p.x}' cy='${p.y}' r='8' fill='${color(n)}' stroke='${stroke}' stroke-width='2'/><text x='${p.x+12}' y='${p.y+4}' fill='#d7deff' font-size='12'>${n.callable_name}</text></g>`);} 
+  svg.querySelectorAll('.node').forEach(el=>el.onclick=()=>select(el.dataset.q,true));
+  if(sel&&pos[sel]) fit([sel,...new Set(visEdges.flatMap(e=>e.caller_qualified_name===sel?[e.callee_qualified_name]:e.callee_qualified_name===sel?[e.caller_qualified_name]:[]))]); else fit();
+  renderInspector(sel);
+}
+function select(qn,setInput=false){sel=qn;if(setInput&&byQ[qn]) qEl.value=byQ[qn].callable_name;render();}
+[qEl,mEl,rEl].forEach(x=>x.oninput=render);resetBtn.onclick=()=>{sel=null;qEl.value='';picker.style.display='none';render()};
+document.addEventListener('click',e=>{if(!picker.contains(e.target)&&e.target!==qEl)picker.style.display='none';});
+
 svg.addEventListener('wheel',e=>{if(!visNodes.length)return;e.preventDefault();const f=e.deltaY<0?0.9:1.1;camera.w*=f;camera.h*=f;svg.setAttribute('viewBox',`${camera.x} ${camera.y} ${camera.w} ${camera.h}`)},{passive:false});
 let dragging=false,sx=0,sy=0;svg.addEventListener('pointerdown',e=>{dragging=true;sx=e.clientX;sy=e.clientY;svg.setPointerCapture(e.pointerId)});svg.addEventListener('pointermove',e=>{if(!dragging)return;const dx=(e.clientX-sx)*(camera.w/svg.clientWidth),dy=(e.clientY-sy)*(camera.h/svg.clientHeight);camera.x-=dx;camera.y-=dy;sx=e.clientX;sy=e.clientY;svg.setAttribute('viewBox',`${camera.x} ${camera.y} ${camera.w} ${camera.h}`)});svg.addEventListener('pointerup',()=>dragging=false);
-svg.addEventListener('touchstart',e=>{if(e.touches.length===2){const[a,b]=e.touches;pinchDist=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)}if(e.touches.length===1&&e.detail===2){sel=null;render()}},{passive:true});svg.addEventListener('touchmove',e=>{if(e.touches.length!==2||!pinchDist)return;const[a,b]=e.touches;const d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);const f=pinchDist/d;camera.w*=f;camera.h*=f;pinchDist=d;svg.setAttribute('viewBox',`${camera.x} ${camera.y} ${camera.w} ${camera.h}`)},{passive:true});
+svg.addEventListener('touchstart',e=>{if(e.touches.length===2){const[a,b]=e.touches;pinchDist=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY)}},{passive:true});svg.addEventListener('touchmove',e=>{if(e.touches.length!==2||!pinchDist)return;const[a,b]=e.touches;const d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);const f=pinchDist/d;camera.w*=f;camera.h*=f;pinchDist=d;svg.setAttribute('viewBox',`${camera.x} ${camera.y} ${camera.w} ${camera.h}`)},{passive:true});
+if(urlFocus){
+  const normalized=urlFocus.toLowerCase();
+  const hit=nodes.find(n=>n.callable_name.toLowerCase()===normalized||n.qualified_name.toLowerCase().endsWith(`.${normalized}`)||n.qualified_name.toLowerCase()===normalized);
+  if(hit){sel=hit.qualified_name;qEl.value=hit.callable_name;}
+}
 render();
 });
-</script></body></html>
+</script>
+</body>
+</html>

@@ -54,6 +54,15 @@ for row in sorted(public_symbol_docs, key=lambda item: item["symbol_name"]):
             f"- **Role:** `{row.get('role') or 'optional'}`\n"
             f"- **Module:** `{module_name}`\n\n"
         )
+        fd.write("## Focused callable dependency view\n\n")
+        fd.write(
+            f"- [Open focused dependency explorer](../../../reference/callable-map/?focus={symbol_name})\n\n"
+        )
+        fd.write(
+            f'<iframe src="../../../assets/callable-map.html?focus={symbol_name}" '
+            'title="Focused callable dependency explorer" '
+            'style="width:100%;height:360px;min-height:300px;border:1px solid #2a2f3a;border-radius:8px;"></iframe>\n\n'
+        )
         fd.write(f"::: {PACKAGE}.{module_name}.{symbol_name}\n")
         fd.write("    options:\n")
         fd.write("      show_root_heading: false\n")
