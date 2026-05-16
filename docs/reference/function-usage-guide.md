@@ -39,7 +39,7 @@ Use this page to understand how notebook templates map to the main public callab
 ## What runs where
 
 - `00_env_config` is shared setup.
-- `01_da` is the governance source of truth.
+- `01_data_sharing_agreement` is the governance source of truth.
 - `02_ex` proposes evidence and AI-assisted suggestions.
 - `03_pc` loads approved metadata and enforces controls.
 
