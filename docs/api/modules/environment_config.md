@@ -8,7 +8,6 @@
 
 | Callable | Type | Summary | Related helpers |
 |---|---|---|---|
-| [`get_path`](../../reference/get_path/) | function | Resolve a configured Fabric path for an environment and target. | — |
 | [`load_config`](../../reference/load_config/) | function | Validate and return a user-supplied framework configuration. | [`_validate_framework_config`](../../reference/internal/config/_validate_framework_config/) (internal) |
 | [`setup_notebook`](../../reference/setup_notebook/) | function | Run consolidated FabricOps startup for exploration and pipeline notebooks. | [`_check_fabric_ai_functions_available`](../../reference/internal/config/_check_fabric_ai_functions_available/) (internal), [`_configure_fabric_ai_functions`](../../reference/internal/config/_configure_fabric_ai_functions/) (internal), [`_run_config_smoke_tests`](../../reference/internal/config/_run_config_smoke_tests/) (internal) |
 

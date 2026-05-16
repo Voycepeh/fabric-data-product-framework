@@ -176,6 +176,13 @@ def test_docs_metadata_matches_public_exports() -> None:
     assert exports == metadata_symbols
 
 
+def test_public_reference_metadata_excludes_legacy_and_internal_symbols() -> None:
+    metadata_symbols = {row["symbol_name"] for row in metadata_literal("PUBLIC_SYMBOL_DOCS")}
+    assert "get_path" not in metadata_symbols
+    assert "Housepath" not in metadata_symbols
+    assert "_get_store" not in metadata_symbols
+
+
 def test_reference_file_is_in_sync_with_generator() -> None:
     before = REFERENCE_FILE.read_text(encoding="utf-8")
     generate_reference()

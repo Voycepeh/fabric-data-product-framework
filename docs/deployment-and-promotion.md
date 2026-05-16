@@ -72,8 +72,8 @@ Then resolve environment-specific paths through config, for example:
 
 ```python
 ENV = "DE"
-lh_in = get_path(ENV, "Source")
-lh_out = get_path(ENV, "Unified")
+source_df = read_lakehouse_table(CONFIG, ENV, "source", "RAW_ORDERS")
+write_lakehouse_table(source_df, CONFIG, ENV, "unified", "CLEAN_ORDERS", mode="overwrite")
 ```
 
 This keeps notebook logic stable while config controls whether runtime points to dev or production lakehouses.
