@@ -1,3 +1,4 @@
+from fabricops_kit.config import PathConfig
 import pytest
 
 from fabricops_kit.fabric_input_output import (
@@ -28,7 +29,7 @@ environments:
     parsed = load_config(cfg)
     p = _get_store("Sandbox", "Source", config=parsed)
     assert isinstance(p, FabricStore)
-    assert p.house_name == "SRC"
+    assert p.name == "SRC"
 
 
 def test__get_store_missing_env_and_target_errors():
@@ -76,8 +77,8 @@ class _FakeSpark:
 def test_lakehouse_read_helpers_with_fake_spark():
     lh = FabricStore("Sandbox", "w", "h", "n", "lakehouse")
     spark = _FakeSpark()
-    read_lakehouse_table(lh, "orders", spark_session=spark)
-    read_lakehouse_csv(lh, "Files/orders.csv", spark_session=spark)
+    read_lakehouse_table(PathConfig(paths={"Sandbox": {"source": lh}}), "Sandbox", "source", "orders", spark_session=spark)
+    read_lakehouse_csv(PathConfig(paths={"Sandbox": {"source": lh}}), "Sandbox", "source", "Files/orders.csv", spark_session=spark)
     assert spark.read.loaded_path.endswith("/Tables/orders")
     assert spark.read.csv_path.endswith("/Files/orders.csv")
 
@@ -86,4 +87,4 @@ def test_read_warehouse_table_missing_fabric_connector_message():
     lh = FabricStore("Sandbox", "w", "h", "wh", "warehouse")
     cfg = {"DE": {"Warehouse": lh}}
     with pytest.raises(RuntimeError, match="must run inside Microsoft Fabric Spark"):
-        read_warehouse_table("DE", "Warehouse", "dbo", "t", config=cfg, spark_session=_FakeSpark())
+        read_warehouse_table(cfg, "DE", "Warehouse", "dbo", "t", spark_session=_FakeSpark())

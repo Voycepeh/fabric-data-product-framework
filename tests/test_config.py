@@ -158,8 +158,8 @@ def _sample_framework_config():
     path_config = PathConfig(
         {
             "Sandbox": {
-                "Source": FabricStore("w1", "h1", "SRC", "abfss://src"),
-                "Unified": FabricStore("w1", "h2", "UNI", "abfss://uni"),
+                "Source": FabricStore("Sandbox", "w1", "h1", "SRC", "lakehouse"),
+                "Unified": FabricStore("Sandbox", "w1", "h2", "UNI", "lakehouse"),
             }
         }
     )
@@ -177,7 +177,7 @@ def _sample_framework_config():
 def test_load_config_accepts_framework_config():
     config = _sample_framework_config()
     loaded = load_config(config)
-    assert loaded.path_config.paths["Sandbox"]["Source"].house_name == "SRC"
+    assert loaded.path_config.paths["Sandbox"]["Source"].name == "SRC"
 
 
 def test__get_store_missing_values_raise_clean_errors():
@@ -189,7 +189,7 @@ def test__get_store_missing_values_raise_clean_errors():
 def test_bootstrap_env_and_smoke_behavior(monkeypatch):
     config = _sample_framework_config()
     ctx = bootstrap_fabric_env(config=config, check_ai=False, smoke_test=False)
-    assert ctx.paths["Source"].house_name == "SRC"
+    assert ctx.paths["Source"].name == "SRC"
     assert ctx.smoke_test_results == []
 
     runtime_mod = types.SimpleNamespace(context={"currentNotebookName": "00_env_config"})

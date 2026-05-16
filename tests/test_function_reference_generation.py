@@ -256,7 +256,7 @@ def test_template_flow_registry_matches_expected_symbol_sets() -> None:
             symbols.update(segment["symbols"])
 
     assert set(symbols_by_notebook) == {"00_env_config", "01_data_agreement", "02_ex", "03_pc"}
-    assert {"setup_notebook", "load_config", "_get_store"}.issubset(symbols_by_notebook["00_env_config"])
+    assert {"setup_notebook", "load_config", "load_config"}.issubset(symbols_by_notebook["00_env_config"])
     assert {"draft_dq_rules", "review_dq_rules", "profile_dataframe"}.issubset(symbols_by_notebook["02_ex"])
     assert {"validate_dq_rules", "assert_dq_passed", "write_lakehouse_table"}.issubset(symbols_by_notebook["03_pc"])
 
@@ -332,7 +332,7 @@ def test_reference_links_to_flat_public_callable_pages() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     assert 'href="../api/reference/review_dq_rule_deactivations/"' in content
-    assert 'href="../api/reference/_get_store/"' in content
+    assert 'href="../api/reference/load_config/"' in content
     assert "reference/step-" not in content
     assert "../api/reference/" in content
 
@@ -350,8 +350,8 @@ def test_generated_module_and_notebook_pages_link_to_public_callable_urls() -> N
     generate_reference()
     environment_config = (ROOT / "docs/api/modules/config.md").read_text(encoding="utf-8")
     notebook_page = (ROOT / "docs/notebook-structure/00-env-config.md").read_text(encoding="utf-8")
-    assert "../../reference/_get_store/" in environment_config
-    assert "../../api/reference/_get_store/" in notebook_page
+    assert "../../reference/load_config/" in environment_config
+    assert "../../api/reference/load_config/" in notebook_page
     assert "reference/step-" not in environment_config
     assert "reference/step-" not in notebook_page
 
@@ -404,13 +404,13 @@ def test_function_catalogue_excludes_supporting_classes_and_keeps_enforcement_ca
     assert 'data-callable-name="enforce_dq"' in all_functions
 
 
-def test_function_catalogue_excludes_housepath_and_keeps__get_store() -> None:
+def test_function_catalogue_excludes_housepath_and_keeps_load_config() -> None:
     generate_reference()
     content = REFERENCE_FILE.read_text(encoding="utf-8")
     all_functions = all_public_functions_section(content)
     assert 'data-callable-name="FabricStore"' not in all_functions
     assert "<code>FabricStore</code>" not in all_functions
-    assert 'data-callable-name="_get_store"' in all_functions
+    assert 'data-callable-name="load_config"' in all_functions
 
 
 def test_dq_review_functions_share_data_quality_public_module_group() -> None:
@@ -428,4 +428,4 @@ def test_module_callable_tables_exclude_supporting_data_structures() -> None:
     assert "| [`DQEnforcementResult`]" not in data_quality_page
     assert "| [`FabricStore`]" not in fabric_io_page
     assert "| [`enforce_dq`]" in data_quality_page
-    assert "| [`_get_store`]" in (ROOT / "docs/api/modules/config.md").read_text(encoding="utf-8")
+    assert "| [`load_config`]" in (ROOT / "docs/api/modules/config.md").read_text(encoding="utf-8")

@@ -54,7 +54,7 @@ def test_00_env_config_is_environment_only_and_imports_package_helpers():
     ]:
         assert token in text
     for token in [
-        "def _get_store",
+        "def load_config",
         "def validate_environment",
         "def validate_target",
         "def clean_datetime_columns",

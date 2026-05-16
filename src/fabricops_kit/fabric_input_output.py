@@ -24,12 +24,12 @@ from .config import FrameworkConfig, PathConfig, load_config as load_framework_c
 class FabricStore:
     """Fabric lakehouse or warehouse connection details.
 
-    `Housepath` stores the minimum identifiers needed to read from or write to
+    `FabricStore` stores the minimum identifiers needed to read from or write to
     a Fabric lakehouse or warehouse using framework helpers.
 
     In normal use, define these values in a separate Fabric config notebook,
     validate the `CONFIG` mapping with `load_config`, then retrieve the
-    required environment and target with `get_path`.
+    required environment and target with `read helper resolution`.
 
     Attributes
     ----------
@@ -119,7 +119,7 @@ def load_config(config: FrameworkConfig | dict) -> FrameworkConfig:
     """
     return load_framework_config(config)
 
-# NOTE: get_path is now owned by fabricops_kit.config.
+# NOTE: read helper resolution is now owned by fabricops_kit.config.
 
 
 def _get_store(config: FrameworkConfig | PathConfig, env: str, target: str) -> FabricStore:
@@ -175,13 +175,13 @@ def read_lakehouse_table(config, env, target, table, spark_session=None):
     """Read a Delta table from a Fabric lakehouse.
 
     This reads from the lakehouse `Tables/` area using the ABFSS root stored in
-    a `Housepath`. In the notebook lifecycle, call this near the start of the
+    a `FabricStore`. In the notebook lifecycle, call this near the start of the
     Source or Unified step when loading Delta-backed source datasets.
 
     Parameters
     ----------
     lh : Housepath
-        Lakehouse path object returned by `get_path`.
+        Lakehouse path object returned by `read helper resolution`.
     tablename : str
         Name of the table under the lakehouse `Tables/` folder.
     spark_session : object, optional
@@ -202,7 +202,7 @@ def read_lakehouse_table(config, env, target, table, spark_session=None):
 
     Examples
     --------
-    >>> lh_source = get_path("Sandbox", "Source", config=CONFIG)
+    >>> lh_source = read helper resolution("Sandbox", "Source", config=CONFIG)
     >>> df = read_lakehouse_table(lh_source, "RAW_ORDERS")
     """
     store = _get_store(config, env, target)
@@ -230,7 +230,7 @@ def write_lakehouse_table(
     """Write a Spark DataFrame to a Fabric lakehouse Delta table.
 
     This writes to the lakehouse `Tables/` area using the ABFSS root stored in
-    a `Housepath`. Use this in the Unified/Product stage after transformations,
+    a `FabricStore`. Use this in the Unified/Product stage after transformations,
     DQ checks, and technical-column enrichment are complete.
 
     Parameters
@@ -238,7 +238,7 @@ def write_lakehouse_table(
     df : pyspark.sql.DataFrame
         Spark DataFrame to write.
     lh : Housepath
-        Lakehouse path object returned by `get_path`.
+        Lakehouse path object returned by `read helper resolution`.
     tablename : str
         Target table name under the lakehouse `Tables/` folder.
     mode : str, default "append"
@@ -270,7 +270,7 @@ def write_lakehouse_table(
 
     Examples
     --------
-    >>> lh_unified = get_path("Sandbox", "Unified", config=CONFIG)
+    >>> lh_unified = read helper resolution("Sandbox", "Unified", config=CONFIG)
     >>> write_lakehouse_table(
     ...     df,
     ...     lh_unified,
@@ -321,13 +321,13 @@ def read_lakehouse_csv(config, env, target, relative_path, spark_session=None, h
     """Read a CSV file from a Fabric lakehouse Files path.
 
     This reads from the lakehouse `Files/` area using the ABFSS root stored in
-    a `Housepath`. In the Source step, use it for raw file ingestion before
+    a `FabricStore`. In the Source step, use it for raw file ingestion before
     standardisation or conversion to Delta tables.
 
     Parameters
     ----------
     lh : Housepath
-        Lakehouse path object returned by `get_path`.
+        Lakehouse path object returned by `read helper resolution`.
     relative_path : str
         Path to the CSV file or folder under the lakehouse root, for example
         `"Files/raw/orders.csv"` or `"Files/raw/orders/"`.
@@ -351,7 +351,7 @@ def read_lakehouse_csv(config, env, target, relative_path, spark_session=None, h
 
     Examples
     --------
-    >>> lh_source = get_path("Sandbox", "Source", config=CONFIG)
+    >>> lh_source = read helper resolution("Sandbox", "Source", config=CONFIG)
     >>> df = read_lakehouse_csv(lh_source, "Files/raw/orders.csv")
     """
     store = _get_store(config, env, target)
@@ -361,7 +361,10 @@ def read_lakehouse_csv(config, env, target, relative_path, spark_session=None, h
         raise ValueError("relative_path is required.")
 
     spark_obj = _get_spark(spark_session)
-    path = f"{store.root.rstrip('/')}/Files/{relative_path.lstrip('/')}"
+    normalized_relative_path = relative_path.lstrip("/")
+    if normalized_relative_path.startswith("Files/"):
+        normalized_relative_path = normalized_relative_path[len("Files/"):]
+    path = f"{store.root.rstrip('/')}/Files/{normalized_relative_path}"
     return spark_obj.read.option("header", header).csv(path)
 
 
@@ -428,7 +431,7 @@ def read_warehouse_table(config, env, target, schema, table, spark_session=None)
         ) from exc
 
     return (
-        spark_obj.read.option(Constants.WorkspaceId, p.workspace_id)
+        spark_obj.read.option(Constants.WorkspaceId, store.workspace_id)
         .option(Constants.DatawarehouseId, store.item_id)
         .synapsesql(f"{store.name}.{schema}.{table}")
     )
@@ -504,7 +507,7 @@ def write_warehouse_table(df, config, env, target, schema, table, mode="append")
 
     (
         df.write.mode(mode)
-        .option(Constants.WorkspaceId, p.workspace_id)
+        .option(Constants.WorkspaceId, store.workspace_id)
         .option(Constants.DatawarehouseId, store.item_id)
         .synapsesql(f"{store.name}.{schema}.{table}")
     )
@@ -577,7 +580,7 @@ def read_lakehouse_parquet(lh, relative_path, verbose=True, spark_session=None):
     Parameters
     ----------
     lh : Housepath
-        Lakehouse path object returned by `get_path`.
+        Lakehouse path object returned by `read helper resolution`.
     relative_path : str
         Path to the Parquet file under the lakehouse `Files/` folder, without
         the leading `"Files/"`. For example:
@@ -603,7 +606,7 @@ def read_lakehouse_parquet(lh, relative_path, verbose=True, spark_session=None):
 
     Examples
     --------
-    >>> lh_source = get_path("Sandbox", "Source", config=CONFIG)
+    >>> lh_source = read helper resolution("Sandbox", "Source", config=CONFIG)
     >>> df = read_lakehouse_parquet(
     ...     lh_source,
     ...     "raw/orders/orders_2026.parquet",
@@ -708,7 +711,7 @@ def read_lakehouse_excel(lh, relative_path, sheet_name=0, spark_session=None):
     Parameters
     ----------
     lh : Housepath
-        Lakehouse path object returned by `get_path`.
+        Lakehouse path object returned by `read helper resolution`.
     relative_path : str
         Path to the Excel file under the lakehouse root, for example
         `"Files/reference/faculty_mapping.xlsx"`.
@@ -734,7 +737,7 @@ def read_lakehouse_excel(lh, relative_path, sheet_name=0, spark_session=None):
 
     Examples
     --------
-    >>> lh_source = get_path("Sandbox", "Source", config=CONFIG)
+    >>> lh_source = read helper resolution("Sandbox", "Source", config=CONFIG)
     >>> df_mapping = read_lakehouse_excel(
     ...     lh_source,
     ...     "Files/reference/faculty_mapping.xlsx",
@@ -898,7 +901,7 @@ def seed_minimal_sample_source_table(
     Parameters
     ----------
     source_lakehouse : Housepath
-        Lakehouse destination returned by ``get_path`` for the source layer.
+        Lakehouse destination returned by ``read helper resolution`` for the source layer.
     table_name : str, default="minimal_source"
         Destination source-table name to seed for sample notebook runs.
     mode : str, default="overwrite"

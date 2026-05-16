@@ -72,7 +72,7 @@ class FakeSpark:
 def test__get_store_with_injected_config():
     cfg = PathConfig(paths={"Sandbox": {"Source": FabricStore("Sandbox", "w", "h", "n", "lakehouse")}})
     p = _get_store("Sandbox", "Source", config=cfg)
-    assert p.house_name == "n"
+    assert p.name == "n"
 
 
 def test__get_store_invalid_raises():
@@ -95,7 +95,9 @@ def test_write_lakehouse_table_repartition_partition_string():
     lh = FabricStore("Sandbox", "w", "h", "name", "lakehouse")
     write_lakehouse_table(
         df,
-        lh,
+        PathConfig(paths={"Sandbox": {"source": lh}}),
+        "Sandbox",
+        "source",
         "EMAIL_LOGS",
         mode="overwrite",
         partition_by="p_bucket",
@@ -108,14 +110,14 @@ def test_write_lakehouse_table_repartition_partition_string():
 def test_write_lakehouse_table_repartition_with_int_and_column():
     df = FakeDF()
     lh = FabricStore("Sandbox", "w", "h", "name", "lakehouse")
-    write_lakehouse_table(df, lh, "EMAIL_LOGS", repartition_by=(200, "p_bucket"))
+    write_lakehouse_table(df, PathConfig(paths={"Sandbox": {"source": lh}}), "Sandbox", "source", "EMAIL_LOGS", repartition_by=(200, "p_bucket"))
     assert df.repartition_calls == [(200, "p_bucket")]
 
 
 def test_read_lakehouse_table_builds_path():
     spark = FakeSpark()
     lh = FabricStore("Sandbox", "w", "h", "name", "lakehouse")
-    read_lakehouse_table(lh, "MY_TABLE", spark_session=spark)
+    read_lakehouse_table(PathConfig(paths={"Sandbox": {"source": lh}}), "Sandbox", "source", "MY_TABLE", spark_session=spark)
     assert spark.read.loaded_path.endswith("/Tables/MY_TABLE")
 
 
