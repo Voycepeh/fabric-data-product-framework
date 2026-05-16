@@ -42,16 +42,59 @@ class PathConfig:
     paths: dict[str, dict[str, Any]]
 
     def __post_init__(self) -> None:
-        for label, value in {
-            "business_context_template": self.business_context_template,
-            "dq_rule_candidate_template": self.dq_rule_candidate_template,
-            "governance_personal_identifier_template": self.governance_personal_identifier_template,
-            "governance_candidate_template": self.governance_candidate_template,
-            "handover_summary_template": self.handover_summary_template,
-            "governance_review_template": self.governance_review_template,
-        }.items():
-            if not isinstance(value, str) or not value.strip():
-                raise ValueError(f"{label} must be a non-empty string.")
+        if not isinstance(self.paths, dict) or not self.paths:
+            raise ValueError("paths must be a non-empty mapping of environments to targets.")
+
+
+@dataclass(frozen=True)
+class NotebookRuntimeConfig:
+    """Runtime options used by notebook-oriented helpers."""
+
+    allowed_notebook_prefixes: tuple[str, ...] = ("00_", "01_", "02_", "03_")
+
+    def __post_init__(self) -> None:
+        prefixes = tuple(prefix.strip() for prefix in self.allowed_notebook_prefixes if str(prefix).strip())
+        if not prefixes:
+            raise ValueError("allowed_notebook_prefixes must contain at least one non-empty prefix.")
+        object.__setattr__(self, "allowed_notebook_prefixes", prefixes)
+
+
+@dataclass(frozen=True)
+class AIPromptConfig:
+    """Prompt templates used by AI-assisted framework workflows."""
+
+    business_context_prompt_template: str = ""
+    dq_rule_suggestion_prompt_template: str = ""
+    governance_personal_identifier_prompt_template: str = ""
+    governance_candidate_prompt_template: str = ""
+    governance_review_prompt_template: str = ""
+    handover_summary_prompt_template: str = ""
+
+    # Backward-compatible aliases (canonicalized in __post_init__)
+    business_context_template: str = ""
+    dq_rule_candidate_template: str = ""
+    governance_personal_identifier_template: str = ""
+    governance_candidate_template: str = ""
+    governance_review_template: str = ""
+    handover_summary_template: str = ""
+
+    def __post_init__(self) -> None:
+        canonical_to_legacy = {
+            "business_context_prompt_template": "business_context_template",
+            "dq_rule_suggestion_prompt_template": "dq_rule_candidate_template",
+            "governance_personal_identifier_prompt_template": "governance_personal_identifier_template",
+            "governance_candidate_prompt_template": "governance_candidate_template",
+            "governance_review_prompt_template": "governance_review_template",
+            "handover_summary_prompt_template": "handover_summary_template",
+        }
+        for canonical, legacy in canonical_to_legacy.items():
+            canonical_value = getattr(self, canonical)
+            legacy_value = getattr(self, legacy)
+            resolved = canonical_value or legacy_value
+            if not isinstance(resolved, str) or not resolved.strip():
+                raise ValueError(f"{canonical} must be a non-empty string.")
+            object.__setattr__(self, canonical, resolved)
+            object.__setattr__(self, legacy, resolved)
 
 
 
