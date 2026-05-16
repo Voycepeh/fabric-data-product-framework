@@ -90,7 +90,7 @@ This notebook owns the full prompt strings used by the AI-assisted workflow. Tho
 
 ### AI prompt templates
 
-`00_env_config` loads these standard templates into `AIPromptConfig`:
+`00_env_config` defines these prompt strings and passes them into `AIPromptConfig`:
 
 - `BUSINESS_CONTEXT_PROMPT_TEMPLATE` for business context extraction.
 - `DQ_RULE_SUGGESTION_PROMPT_TEMPLATE` for AI-assisted DQ rule suggestion.
@@ -109,7 +109,7 @@ The notebook assembles:
 
 - `PATH_CONFIG`
 - `RUNTIME_CONFIG`
-- `AI_PROMPT_CONFIG`
+- `AI_PROMPTS`
 - `QUALITY_CONFIG`
 - `GOVERNANCE_CONFIG`
 - `REVIEW_WORKFLOW_CONFIG`
