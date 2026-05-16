@@ -21,9 +21,9 @@ No advanced helpers listed for this module.
 | [`__add_audit_columns`](../../reference/internal/technical_columns/__add_audit_columns/) | — |
 | [`__add_datetime_features`](../../reference/internal/technical_columns/__add_datetime_features/) | — |
 | [`__add_hash_columns`](../../reference/internal/technical_columns/__add_hash_columns/) | — |
-| [`__default_technical_columns`](../../reference/internal/technical_columns/__default_technical_columns/) | — |
 | [`_assert_columns_exist`](../../reference/internal/technical_columns/_assert_columns_exist/) | — |
 | [`_bucket_values_pandas`](../../reference/internal/technical_columns/_bucket_values_pandas/) | — |
+| [`_default_technical_columns`](../../reference/internal/technical_columns/_default_technical_columns/) | — |
 | [`_get_fabric_runtime_context`](../../reference/internal/technical_columns/_get_fabric_runtime_context/) | — |
 | [`_hash_row`](../../reference/internal/technical_columns/_hash_row/) | — |
 | [`_non_technical_columns`](../../reference/internal/technical_columns/_non_technical_columns/) | — |

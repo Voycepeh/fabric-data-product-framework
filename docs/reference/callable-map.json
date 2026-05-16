@@ -281,9 +281,9 @@
       "is_underscore": true
     },
     {
-      "callable_name": "__default_technical_columns",
+      "callable_name": "_default_technical_columns",
       "module_name": "technical_columns",
-      "qualified_name": "fabricops_kit.technical_columns.__default_technical_columns",
+      "qualified_name": "fabricops_kit.technical_columns._default_technical_columns",
       "role": "internal",
       "exported": false,
       "is_underscore": true

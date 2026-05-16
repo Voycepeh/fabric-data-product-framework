@@ -15,7 +15,7 @@ import pandas as pd
 
 
 
-def __default_technical_columns() -> list[str]:
+def _default_technical_columns() -> list[str]:
     """Return framework-generated and legacy technical column names to ignore.
 
     The returned list is intended for downstream profiling and hash generation logic
