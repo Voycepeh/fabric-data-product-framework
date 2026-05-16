@@ -17,7 +17,7 @@ import tempfile
 
 import pandas as pd
 
-from .config import FrameworkConfig, PathConfig, load_config as load_framework_config
+from .config import FrameworkConfig, PathConfig, _get_store, load_config as load_framework_config
 
 
 @dataclass(frozen=True)
@@ -29,7 +29,7 @@ class FabricStore:
 
     In normal use, define these values in a separate Fabric config notebook,
     validate the `CONFIG` mapping with `load_config`, then retrieve the
-    required environment and target with `read helper resolution`.
+    required environment and target with `_get_store`.
 
     Attributes
     ----------
@@ -119,23 +119,7 @@ def load_config(config: FrameworkConfig | dict) -> FrameworkConfig:
     """
     return load_framework_config(config)
 
-# NOTE: read helper resolution is now owned by fabricops_kit.config.
-
-
-def _get_store(config: FrameworkConfig | PathConfig, env: str, target: str) -> FabricStore:
-    """Resolve an environment target into a FabricStore."""
-    if config is None:
-        raise ValueError("config is required.")
-    paths = config.path_config.paths if isinstance(config, FrameworkConfig) else config.paths
-    if env not in paths:
-        raise ValueError(f"Environment '{env}' was not found in path config.")
-    targets = paths[env]
-    if target not in targets:
-        raise ValueError(f"Target '{target}' was not found under environment '{env}'.")
-    store = targets[target]
-    if not isinstance(store, FabricStore):
-        raise ValueError(f"Target '{env}/{target}' must resolve to a FabricStore.")
-    return store
+# NOTE: _get_store is now owned by fabricops_kit.config.
 
 
 def _get_spark(spark_session=None):
@@ -181,7 +165,7 @@ def read_lakehouse_table(config, env, target, table, spark_session=None):
     Parameters
     ----------
     lh : Housepath
-        Lakehouse path object returned by `read helper resolution`.
+        Lakehouse path object returned by `_get_store`.
     tablename : str
         Name of the table under the lakehouse `Tables/` folder.
     spark_session : object, optional
@@ -202,7 +186,7 @@ def read_lakehouse_table(config, env, target, table, spark_session=None):
 
     Examples
     --------
-    >>> lh_source = read helper resolution("Sandbox", "Source", config=CONFIG)
+    >>> lh_source = _get_store("Sandbox", "Source", config=CONFIG)
     >>> df = read_lakehouse_table(lh_source, "RAW_ORDERS")
     """
     store = _get_store(config, env, target)
@@ -238,7 +222,7 @@ def write_lakehouse_table(
     df : pyspark.sql.DataFrame
         Spark DataFrame to write.
     lh : Housepath
-        Lakehouse path object returned by `read helper resolution`.
+        Lakehouse path object returned by `_get_store`.
     tablename : str
         Target table name under the lakehouse `Tables/` folder.
     mode : str, default "append"
@@ -270,7 +254,7 @@ def write_lakehouse_table(
 
     Examples
     --------
-    >>> lh_unified = read helper resolution("Sandbox", "Unified", config=CONFIG)
+    >>> lh_unified = _get_store("Sandbox", "Unified", config=CONFIG)
     >>> write_lakehouse_table(
     ...     df,
     ...     lh_unified,
@@ -327,7 +311,7 @@ def read_lakehouse_csv(config, env, target, relative_path, spark_session=None, h
     Parameters
     ----------
     lh : Housepath
-        Lakehouse path object returned by `read helper resolution`.
+        Lakehouse path object returned by `_get_store`.
     relative_path : str
         Path to the CSV file or folder under the lakehouse root, for example
         `"Files/raw/orders.csv"` or `"Files/raw/orders/"`.
@@ -351,7 +335,7 @@ def read_lakehouse_csv(config, env, target, relative_path, spark_session=None, h
 
     Examples
     --------
-    >>> lh_source = read helper resolution("Sandbox", "Source", config=CONFIG)
+    >>> lh_source = _get_store("Sandbox", "Source", config=CONFIG)
     >>> df = read_lakehouse_csv(lh_source, "Files/raw/orders.csv")
     """
     store = _get_store(config, env, target)
@@ -568,7 +552,7 @@ def _convert_single_parquet_ns_to_us(local_in_path, local_out_path, verbose=True
         print(f"FAILED converting ns to us for file {local_in_path}: {exc}")
 
 
-def read_lakehouse_parquet(lh, relative_path, verbose=True, spark_session=None):
+def read_lakehouse_parquet(config, env, target, relative_path, verbose=True, spark_session=None):
     """Read a Parquet file from a Fabric lakehouse Files path.
 
     This reads from the lakehouse `Files/` area using Spark. If Spark cannot
@@ -580,7 +564,7 @@ def read_lakehouse_parquet(lh, relative_path, verbose=True, spark_session=None):
     Parameters
     ----------
     lh : Housepath
-        Lakehouse path object returned by `read helper resolution`.
+        Lakehouse path object returned by `_get_store`.
     relative_path : str
         Path to the Parquet file under the lakehouse `Files/` folder, without
         the leading `"Files/"`. For example:
@@ -606,7 +590,7 @@ def read_lakehouse_parquet(lh, relative_path, verbose=True, spark_session=None):
 
     Examples
     --------
-    >>> lh_source = read helper resolution("Sandbox", "Source", config=CONFIG)
+    >>> lh_source = _get_store("Sandbox", "Source", config=CONFIG)
     >>> df = read_lakehouse_parquet(
     ...     lh_source,
     ...     "raw/orders/orders_2026.parquet",
@@ -616,8 +600,9 @@ def read_lakehouse_parquet(lh, relative_path, verbose=True, spark_session=None):
     Assumes Fabric notebook runtime filesystem conventions for local fallback
     conversion paths (``/lakehouse/default/Files/...``).
     """
-    if not getattr(lh, "root", None):
-        raise ValueError("lh.root is required.")
+    store = _get_store(env, target, config)
+    if store.kind != "lakehouse":
+        raise ValueError(f"Target '{env}/{target}' is not a lakehouse store.")
     if not relative_path:
         raise ValueError("relative_path is required.")
 
@@ -697,7 +682,7 @@ def read_lakehouse_parquet(lh, relative_path, verbose=True, spark_session=None):
     raise RuntimeError("Failed to read from both original and _tsus Parquet paths.")
 
 
-def read_lakehouse_excel(lh, relative_path, sheet_name=0, spark_session=None):
+def read_lakehouse_excel(config, env, target, relative_path, sheet_name=0, spark_session=None):
     """Read an Excel file from a Fabric lakehouse Files path.
 
     Spark does not natively read Excel files. This helper reads the Excel file
@@ -711,7 +696,7 @@ def read_lakehouse_excel(lh, relative_path, sheet_name=0, spark_session=None):
     Parameters
     ----------
     lh : Housepath
-        Lakehouse path object returned by `read helper resolution`.
+        Lakehouse path object returned by `_get_store`.
     relative_path : str
         Path to the Excel file under the lakehouse root, for example
         `"Files/reference/faculty_mapping.xlsx"`.
@@ -737,7 +722,7 @@ def read_lakehouse_excel(lh, relative_path, sheet_name=0, spark_session=None):
 
     Examples
     --------
-    >>> lh_source = read helper resolution("Sandbox", "Source", config=CONFIG)
+    >>> lh_source = _get_store("Sandbox", "Source", config=CONFIG)
     >>> df_mapping = read_lakehouse_excel(
     ...     lh_source,
     ...     "Files/reference/faculty_mapping.xlsx",
@@ -749,13 +734,14 @@ def read_lakehouse_excel(lh, relative_path, sheet_name=0, spark_session=None):
     - Creates a temporary local file during conversion.
     - Materializes rows through pandas before creating a Spark DataFrame.
     """
-    if not getattr(lh, "root", None):
-        raise ValueError("lh.root is required.")
+    store = _get_store(env, target, config)
+    if store.kind != "lakehouse":
+        raise ValueError(f"Target '{env}/{target}' is not a lakehouse store.")
     if not relative_path:
         raise ValueError("relative_path is required.")
 
     spark_obj = _get_spark(spark_session)
-    lakehouse_file_path = f"{lh.root.rstrip('/')}/{relative_path.lstrip('/')}"
+    lakehouse_file_path = f"{store.root.rstrip('/')}/Files/{relative_path.lstrip('/')}"
 
     bin_df = (
         spark_obj.read.format("binaryFile")
@@ -901,7 +887,7 @@ def seed_minimal_sample_source_table(
     Parameters
     ----------
     source_lakehouse : Housepath
-        Lakehouse destination returned by ``read helper resolution`` for the source layer.
+        Lakehouse destination returned by ``_get_store`` for the source layer.
     table_name : str, default="minimal_source"
         Destination source-table name to seed for sample notebook runs.
     mode : str, default="overwrite"

@@ -611,7 +611,7 @@ def _run_config_smoke_tests(
     config: FrameworkConfig,
     env: str = "Sandbox",
     required_targets: list[str] | None = None,
-    check_ai: bool = True,
+    check_ai: bool = False,
     check_io_import: bool = False,
     notebook_name: str | None = None,
     ai_result: dict[str, Any] | None = None,
@@ -712,7 +712,7 @@ def _run_config_smoke_tests(
 def _bootstrap_fabric_env(
     env: str = "Sandbox",
     required_targets: list[str] | None = None,
-    check_ai: bool = True,
+    check_ai: bool = False,
     smoke_test: bool = True,
     config: FrameworkConfig | dict[str, Any] | None = None,
     notebook_name: str | None = None,
@@ -798,7 +798,7 @@ def setup_notebook(
     required_targets: list[str] | None = None,
     notebook_name: str | None = None,
     run_id_prefix: str = "run",
-    check_ai: bool = True,
+    check_ai: bool = False,
     configure_ai: bool = False,
     local_fallback_name: str | None = None,
 ) -> NotebookSetupContext:
