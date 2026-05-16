@@ -1,7 +1,34 @@
-# Callable Dependency Map
+# Callable Map
 
-!!! note "Maintainer diagnostic page"
-    This page is generated from source code and is intended for maintainers.
-    For normal usage, start with the Function Usage Guide or Function Reference.
+This page is generated from FabricOps source code using static AST parsing. It shows module dependencies, public callables, internal helpers, and cross-module calls.
 
-<iframe src="../../assets/callable-map.html" title="Callable lineage explorer" style="width:100%;height:78vh;min-height:640px;border:1px solid #2a2f3a;border-radius:8px;"></iframe>
+## 1. Module dependency graph
+
+```mermaid
+flowchart LR
+  config --> metadata
+```
+
+## 2. Public callables by module
+
+| Module | Public callable | Referenced by |
+|---|---|---|
+| `config` | `load_config` | — |
+
+## 3. Internal helper index
+
+| Module | Internal helper | Called by public callables |
+|---|---|---|
+| `config` | `_validate_runtime_environment` | `fabricops_kit.config.load_config` |
+
+## 4. Cross-module FabricOps calls
+
+| Caller | Callee | Callee kind |
+|---|---|---|
+| `fabricops_kit.config.load_config` | `fabricops_kit.metadata.resolve_env_profile` | `internal_callable` |
+
+## 5. Module dependency summary
+
+| Module | Calls modules | Called by modules | Public callables | Internal helpers |
+|---|---|---|---:|---:|
+| `config` | `metadata` | — | 1 | 1 |
