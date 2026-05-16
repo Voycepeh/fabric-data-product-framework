@@ -30,6 +30,13 @@ def test_callable_map_markdown_sections_present() -> None:
     assert "## 1. Module dependency graph" in content
     assert "```mermaid" in content
     assert "## 2. Public callables by module" in content
-    assert "Internal helper index" in content
-    assert "Cross-module FabricOps calls" in content
-    assert "Module dependency summary" in content
+    assert "## 3. Internal helper index" in content
+    assert "## 4. Cross-module FabricOps calls" in content
+    assert "## 5. Module dependency summary" in content
+
+
+def test_callable_map_excludes_iframe_and_script_tags() -> None:
+    generate_reference()
+    content = CALLABLE_MAP_FILE.read_text(encoding="utf-8")
+    assert "<iframe" not in content
+    assert "<script" not in content

@@ -203,9 +203,9 @@ def test_callable_map_generated_with_required_sections() -> None:
     assert "## 1. Module dependency graph" in content
     assert "```mermaid" in content
     assert "## 2. Public callables by module" in content
-    assert "## Internal helper index" in content
-    assert "## Cross-module FabricOps calls" in content
-    assert "## Module dependency summary" in content
+    assert "## 3. Internal helper index" in content
+    assert "## 4. Cross-module FabricOps calls" in content
+    assert "## 5. Module dependency summary" in content
 
 
 def test_callable_map_has_static_markdown_tables() -> None:
@@ -214,6 +214,17 @@ def test_callable_map_has_static_markdown_tables() -> None:
     assert "| Module | Public callable | Referenced by |" in content
     assert "| Module | Internal helper | Called by public callables |" in content
     assert "| Caller | Callee | Callee kind |" in content
+
+
+def test_gen_ref_pages_has_no_html_callable_map_dependency() -> None:
+    source = (ROOT / "docs" / "gen_ref_pages.py").read_text(encoding="utf-8")
+    assert "callable-map.html" not in source
+
+
+def test_gen_ref_pages_template_has_no_iframe_and_includes_relationship_table() -> None:
+    source = (ROOT / "docs" / "gen_ref_pages.py").read_text(encoding="utf-8")
+    assert "<iframe" not in source
+    assert "| Relationship | Callables |" in source
 
 
 def test_template_flow_symbols_are_exported() -> None:
