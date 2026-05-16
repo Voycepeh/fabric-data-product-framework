@@ -176,6 +176,13 @@ def test_docs_metadata_matches_public_exports() -> None:
     assert exports == metadata_symbols
 
 
+def test_public_reference_metadata_excludes_legacy_and_internal_symbols() -> None:
+    metadata_symbols = {row["symbol_name"] for row in metadata_literal("PUBLIC_SYMBOL_DOCS")}
+    assert "get_path" not in metadata_symbols
+    assert "Housepath" not in metadata_symbols
+    assert "_get_store" not in metadata_symbols
+
+
 def test_reference_file_is_in_sync_with_generator() -> None:
     before = REFERENCE_FILE.read_text(encoding="utf-8")
     generate_reference()
@@ -428,4 +435,17 @@ def test_module_callable_tables_exclude_supporting_data_structures() -> None:
     assert "| [`DQEnforcementResult`]" not in data_quality_page
     assert "| [`FabricStore`]" not in fabric_io_page
     assert "| [`enforce_dq`]" in data_quality_page
+
+
+def test_read_lakehouse_table_reference_excludes_legacy_housepath_tokens() -> None:
+    generate_reference()
+    callable_page = (ROOT / "docs" / "api" / "reference" / "read_lakehouse_table.md").read_text(encoding="utf-8")
+    assert "Housepath" not in callable_page
+    assert "get_path" not in callable_page
+
+
+def test_read_lakehouse_table_reference_uses_config_env_target_example() -> None:
+    generate_reference()
+    callable_page = (ROOT / "docs" / "api" / "reference" / "read_lakehouse_table.md").read_text(encoding="utf-8")
+    assert 'read_lakehouse_table(CONFIG, ENV, "source", "RAW_ORDERS")' in callable_page
     assert "| [`load_config`]" in (ROOT / "docs/api/modules/config.md").read_text(encoding="utf-8")

@@ -87,11 +87,6 @@ Use the finder below to look up public callable functions.
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_quality/" title="Open data_quality module page" aria-label="Open data_quality module page">data_quality</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>
   <p class="reference-catalogue-item-purpose">Collect current approved/rejected DQ review results from widget state.</p>
 </article>
-<article id="get_path" class="reference-catalogue-item" data-callable-row="true" data-callable-name="get_path" data-callable-module="config" data-callable-starter-path="00_env_config, 02_ex, 03_pc" data-role="essential" data-callable-purpose="Resolve a configured Fabric path for an environment and target.">
-  <h3 class="reference-catalogue-item-name"><a href="../api/reference/get_path/"><code>get_path</code></a></h3>
-  <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/config/" title="Open config module page" aria-label="Open config module page">config</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>00_env_config, 02_ex, 03_pc</span></p>
-  <p class="reference-catalogue-item-purpose">Resolve a configured Fabric path for an environment and target.</p>
-</article>
 <article id="get_selected_agreement" class="reference-catalogue-item" data-callable-row="true" data-callable-name="get_selected_agreement" data-callable-module="data_agreement" data-callable-starter-path="—" data-role="essential" data-callable-purpose="Return selected agreement from widget flow.">
   <h3 class="reference-catalogue-item-name"><a href="../api/reference/get_selected_agreement/"><code>get_selected_agreement</code></a></h3>
   <p class="reference-catalogue-item-meta"><a class="reference-module-link" href="../api/modules/data_agreement/" title="Open data_agreement module page" aria-label="Open data_agreement module page">data_agreement</a> <span class="reference-catalogue-separator">·</span> <span>essential</span> <span class="reference-catalogue-separator">·</span> <span>—</span></p>

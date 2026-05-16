@@ -164,10 +164,14 @@ def read_lakehouse_table(config, env, target, table, spark_session=None):
 
     Parameters
     ----------
-    lh : FabricStore
-        Lakehouse path object resolved from config/env/target.
-    tablename : str
-        Name of the table under the lakehouse `Tables/` folder.
+    config : FrameworkConfig | dict
+        FabricOps FrameworkConfig or compatible config object.
+    env : str
+        Environment key such as `"dev"`.
+    target : str
+        Logical target name such as `"source"` or `"unified"`.
+    table : str
+        Table name under the lakehouse `Tables` area.
     spark_session : object, optional
         Spark session to use. If omitted, the helper uses the notebook global
         `spark`.
@@ -180,7 +184,7 @@ def read_lakehouse_table(config, env, target, table, spark_session=None):
     Raises
     ------
     ValueError
-        If `lh.root` or `tablename` is missing.
+        If `table` is missing or the resolved target is not a lakehouse.
     RuntimeError
         If no Spark session is available.
 
@@ -220,10 +224,14 @@ def write_lakehouse_table(
     ----------
     df : pyspark.sql.DataFrame
         Spark DataFrame to write.
-    lh : FabricStore
-        Lakehouse path object resolved from config/env/target.
-    tablename : str
-        Target table name under the lakehouse `Tables/` folder.
+    config : FrameworkConfig | dict
+        FabricOps FrameworkConfig or compatible config object.
+    env : str
+        Environment key such as `"dev"`.
+    target : str
+        Logical target name such as `"source"` or `"unified"`.
+    table : str
+        Target table name under the lakehouse `Tables` area.
     mode : str, default "append"
         Spark write mode. Supported values are `"append"`, `"overwrite"`,
         `"errorifexists"`, and `"ignore"`.
@@ -242,29 +250,18 @@ def write_lakehouse_table(
     Notes
     -----
     Side effects:
-    - Persists data to OneLake Delta storage under ``Tables/<tablename>``.
+    - Persists data to OneLake Delta storage under ``Tables/<table>``.
     - Optional repartitioning can change output file sizing and partition
       layout.
 
     Raises
     ------
     ValueError
-        If `lh.root`, `tablename`, or `mode` is invalid.
+        If `table` is missing, `mode` is invalid, or the resolved target is not a lakehouse.
 
     Examples
     --------
-    >>> write_lakehouse_table(
-...     df,
-...     CONFIG,
-...     ENV,
-...     "unified",
-    ...     df,
-    ...     lh_unified,
-    ...     "CLEAN_ORDERS",
-    ...     mode="overwrite",
-    ...     partition_by="p_bucket",
-    ...     repartition_by=(200, "p_bucket"),
-    ... )
+    >>> write_lakehouse_table(df, CONFIG, ENV, "unified", "CLEAN_ORDERS")
     """
     store = _get_store(config, env, target)
     if store.kind != "lakehouse":
@@ -312,8 +309,12 @@ def read_lakehouse_csv(config, env, target, relative_path, spark_session=None, h
 
     Parameters
     ----------
-    lh : FabricStore
-        Lakehouse path object resolved from config/env/target.
+    config : FrameworkConfig | dict
+        FabricOps FrameworkConfig or compatible config object.
+    env : str
+        Environment key such as `"dev"`.
+    target : str
+        Logical target name such as `"source"` or `"unified"`.
     relative_path : str
         Path to the CSV file or folder under the lakehouse root, for example
         `"Files/raw/orders.csv"` or `"Files/raw/orders/"`.
@@ -331,7 +332,7 @@ def read_lakehouse_csv(config, env, target, relative_path, spark_session=None, h
     Raises
     ------
     ValueError
-        If `lh.root` or `relative_path` is missing.
+        If `relative_path` is missing or the resolved target is not a lakehouse.
     RuntimeError
         If no Spark session is available.
 
@@ -363,6 +364,8 @@ def read_warehouse_table(config, env, target, schema, table, spark_session=None)
 
     Parameters
     ----------
+    config : FrameworkConfig | dict
+        FabricOps FrameworkConfig or compatible config object.
     env : str
         Environment name in the config mapping, for example `"Sandbox"` or `"DE"`.
     target : str
@@ -372,9 +375,6 @@ def read_warehouse_table(config, env, target, schema, table, spark_session=None)
         Warehouse schema name, for example `"dbo"`.
     table : str
         Warehouse table name.
-    config : dict, optional
-        Config mapping from the config notebook. Expected shape:
-        `config[environment][target] = FabricStore(...)`.
     spark_session : object, optional
         Spark session to use. If omitted, the helper uses the notebook global
         `spark`.
@@ -393,13 +393,7 @@ def read_warehouse_table(config, env, target, schema, table, spark_session=None)
 
     Examples
     --------
-    >>> df = read_warehouse_table(
-    ...     env="EDLH",
-    ...     target="wh_Bronze",
-    ...     schema="dbo",
-    ...     table="Customer",
-    ...     config=CONFIG,
-    ... )
+    >>> df = read_warehouse_table(CONFIG, ENV, "product", "dbo", "TABLE_NAME")
     """
     spark_obj = _get_spark(spark_session)
     store = _get_store(config, env, target)
@@ -433,6 +427,8 @@ def write_warehouse_table(df, config, env, target, schema, table, mode="append")
     ----------
     df : pyspark.sql.DataFrame
         Spark DataFrame to write.
+    config : FrameworkConfig | dict
+        FabricOps FrameworkConfig or compatible config object.
     env : str
         Environment name in the config mapping, for example `"Sandbox"` or `"DE"`.
     target : str
@@ -444,9 +440,6 @@ def write_warehouse_table(df, config, env, target, schema, table, mode="append")
         Warehouse table name.
     mode : str, default "append"
         Spark write mode, for example `"append"` or `"overwrite"`.
-    config : dict, optional
-        Config mapping from the config notebook. Expected shape:
-        `config[environment][target] = FabricStore(...)`.
 
     Returns
     -------
@@ -467,15 +460,7 @@ def write_warehouse_table(df, config, env, target, schema, table, mode="append")
 
     Examples
     --------
-    >>> write_warehouse_table(
-    ...     df,
-    ...     env="EDLH",
-    ...     target="wh_Bronze",
-    ...     schema="dbo",
-    ...     table="Customer",
-    ...     mode="append",
-    ...     config=CONFIG,
-    ... )
+    >>> write_warehouse_table(df, CONFIG, ENV, "product", "dbo", "TABLE_NAME")
     """
     store = _get_store(config, env, target)
     if store.kind != "warehouse":
@@ -564,8 +549,12 @@ def read_lakehouse_parquet(config, env, target, relative_path, verbose=True, spa
 
     Parameters
     ----------
-    lh : FabricStore
-        Lakehouse path object resolved from config/env/target.
+    config : FrameworkConfig | dict
+        FabricOps FrameworkConfig or compatible config object.
+    env : str
+        Environment key such as `"dev"`.
+    target : str
+        Logical target name such as `"source"` or `"unified"`.
     relative_path : str
         Path to the Parquet file under the lakehouse `Files/` folder, without
         the leading `"Files/"`. For example:
@@ -692,8 +681,12 @@ def read_lakehouse_excel(config, env, target, relative_path, sheet_name=0, spark
 
     Parameters
     ----------
-    lh : FabricStore
-        Lakehouse path object resolved from config/env/target.
+    config : FrameworkConfig | dict
+        FabricOps FrameworkConfig or compatible config object.
+    env : str
+        Environment key such as `"dev"`.
+    target : str
+        Logical target name such as `"source"` or `"unified"`.
     relative_path : str
         Path to the Excel file under the lakehouse root, for example
         `"Files/reference/faculty_mapping.xlsx"`.
@@ -711,7 +704,7 @@ def read_lakehouse_excel(config, env, target, relative_path, sheet_name=0, spark
     Raises
     ------
     ValueError
-        If `lh.root` or `relative_path` is missing.
+        If `relative_path` is missing or the resolved target is not a lakehouse.
     FileNotFoundError
         If the Excel file cannot be found at the resolved lakehouse path.
     RuntimeError
