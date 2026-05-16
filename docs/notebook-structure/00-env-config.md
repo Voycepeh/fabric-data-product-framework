@@ -13,7 +13,7 @@ This notebook performs environment setup, not business logic. It:
 3. Sets notebook validation mode.
 4. Defines allowed notebook naming prefixes.
 5. Defines environment targets for `source`, `unified`, `product`, and `metadata`.
-6. Loads standard AI prompt templates.
+6. Defines the full operational prompt strings used by AI-assisted workflow steps.
 7. Assembles `FrameworkConfig` and its sub-configs.
 8. Runs `load_config` and `setup_notebook` startup validation.
 9. Runs `check_naming_convention` for notebook naming policy.
@@ -83,6 +83,10 @@ The template includes placeholder Fabric item names and IDs. Replace these with 
 ## Segment 3: Set AI, quality, governance, and lineage defaults
 
 This segment sets default prompt templates and framework policy defaults used by the rest of the notebook flow.
+
+This notebook owns the full prompt strings used by the AI-assisted workflow. Those prompt strings are visible, auditable, and editable per workspace or environment in the notebook itself. Package functions consume prompt templates from `AIPromptConfig` (or explicit function arguments when provided), and should not rely on hidden package-level `DEFAULT_*` prompt constants at runtime.
+
+`00_env_config` also does **not** check whether Fabric AI execution works. AI-assisted cells should handle AI availability locally when they run.
 
 ### AI prompt templates
 
