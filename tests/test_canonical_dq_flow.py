@@ -20,10 +20,10 @@ def spark():
 
 def test_configured_prompt_contains_canonical_sections():
     prompt=AIPromptConfig(
-        dq_rule_candidate_template="Suggest candidate DQ rules as JSON. Profile: {profile}",
-        governance_candidate_template="g",
-        handover_summary_template="h",
-    ).dq_rule_candidate_template
+        dq_rule_suggestion_prompt_template="Suggest candidate DQ rules as JSON. Profile: {profile}",
+        governance_candidate_prompt_template="g",
+        handover_summary_prompt_template="h",
+    ).dq_rule_suggestion_prompt_template
     for snippet in [
         "1. not_null", "2. unique_key", "Heuristics:",
         "Do not return Great Expectations, Deequ, DQX, SQL, or pseudocode syntax.",

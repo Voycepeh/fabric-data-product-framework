@@ -75,7 +75,7 @@ def _suggest_dq_rules(profile_df, prompt_template: str | None = None, output_col
     profile_df : pyspark.sql.DataFrame
         Output of :func:`_profile_for_dq`.
     prompt_template : str | None, optional
-        Prompt template from ``config.ai_prompt_config.dq_rule_candidate_template``.
+        Prompt template from ``config.ai_prompt_config.dq_rule_suggestion_prompt_template``.
     output_col : str, default="response"
         Output column for AI text responses.
 
@@ -157,7 +157,7 @@ def _suggest_dq_rules_with_fabric_ai(prepared_profile_df, prompt_template: str, 
     prepared_profile_df : pyspark.sql.DataFrame
         Prepared profile rows (including approved business context) for prompt execution.
     prompt_template : str
-        Prompt template text, usually from ``CONFIG.ai_prompt_config.dq_rule_candidate_template``.
+        Prompt template text, usually from ``CONFIG.ai_prompt_config.dq_rule_suggestion_prompt_template``.
     output_col : str, default=\"ai_dq_response\"
         Response column for AI output text.
 
