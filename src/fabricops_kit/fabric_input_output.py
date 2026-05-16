@@ -44,7 +44,7 @@ class FabricStore:
 
     Examples
     --------
-    >>> lh = Housepath(
+    >>> lh = FabricStore(
     ...     workspace_id="<workspace-id>",
     ...     house_id="<lakehouse-id>",
     ...     house_name="DEX_SB_SOURCE",
@@ -164,7 +164,7 @@ def read_lakehouse_table(config, env, target, table, spark_session=None):
 
     Parameters
     ----------
-    lh : Housepath
+    lh : FabricStore
         Lakehouse path object returned by `_get_store`.
     tablename : str
         Name of the table under the lakehouse `Tables/` folder.
@@ -186,8 +186,7 @@ def read_lakehouse_table(config, env, target, table, spark_session=None):
 
     Examples
     --------
-    >>> lh_source = _get_store("Sandbox", "Source", config=CONFIG)
-    >>> df = read_lakehouse_table(lh_source, "RAW_ORDERS")
+    >>> df = read_lakehouse_table(CONFIG, ENV, "source", "RAW_ORDERS")
     """
     store = _get_store(config, env, target)
     if store.kind != "lakehouse":
@@ -221,7 +220,7 @@ def write_lakehouse_table(
     ----------
     df : pyspark.sql.DataFrame
         Spark DataFrame to write.
-    lh : Housepath
+    lh : FabricStore
         Lakehouse path object returned by `_get_store`.
     tablename : str
         Target table name under the lakehouse `Tables/` folder.
@@ -254,8 +253,11 @@ def write_lakehouse_table(
 
     Examples
     --------
-    >>> lh_unified = _get_store("Sandbox", "Unified", config=CONFIG)
     >>> write_lakehouse_table(
+...     df,
+...     CONFIG,
+...     ENV,
+...     "unified",
     ...     df,
     ...     lh_unified,
     ...     "CLEAN_ORDERS",
@@ -310,7 +312,7 @@ def read_lakehouse_csv(config, env, target, relative_path, spark_session=None, h
 
     Parameters
     ----------
-    lh : Housepath
+    lh : FabricStore
         Lakehouse path object returned by `_get_store`.
     relative_path : str
         Path to the CSV file or folder under the lakehouse root, for example
@@ -335,8 +337,7 @@ def read_lakehouse_csv(config, env, target, relative_path, spark_session=None, h
 
     Examples
     --------
-    >>> lh_source = _get_store("Sandbox", "Source", config=CONFIG)
-    >>> df = read_lakehouse_csv(lh_source, "Files/raw/orders.csv")
+    >>> df = read_lakehouse_csv(CONFIG, ENV, "source", "raw/orders.csv")
     """
     store = _get_store(config, env, target)
     if store.kind != "lakehouse":
@@ -373,7 +374,7 @@ def read_warehouse_table(config, env, target, schema, table, spark_session=None)
         Warehouse table name.
     config : dict, optional
         Config mapping from the config notebook. Expected shape:
-        `config[environment][target] = Housepath(...)`.
+        `config[environment][target] = FabricStore(...)`.
     spark_session : object, optional
         Spark session to use. If omitted, the helper uses the notebook global
         `spark`.
@@ -445,7 +446,7 @@ def write_warehouse_table(df, config, env, target, schema, table, mode="append")
         Spark write mode, for example `"append"` or `"overwrite"`.
     config : dict, optional
         Config mapping from the config notebook. Expected shape:
-        `config[environment][target] = Housepath(...)`.
+        `config[environment][target] = FabricStore(...)`.
 
     Returns
     -------
@@ -563,7 +564,7 @@ def read_lakehouse_parquet(config, env, target, relative_path, verbose=True, spa
 
     Parameters
     ----------
-    lh : Housepath
+    lh : FabricStore
         Lakehouse path object returned by `_get_store`.
     relative_path : str
         Path to the Parquet file under the lakehouse `Files/` folder, without
@@ -590,17 +591,13 @@ def read_lakehouse_parquet(config, env, target, relative_path, verbose=True, spa
 
     Examples
     --------
-    >>> lh_source = _get_store("Sandbox", "Source", config=CONFIG)
-    >>> df = read_lakehouse_parquet(
-    ...     lh_source,
-    ...     "raw/orders/orders_2026.parquet",
-    ... )
+    >>> df = read_lakehouse_parquet(CONFIG, ENV, "source", "raw/orders/orders_2026.parquet")
     Notes
     -----
     Assumes Fabric notebook runtime filesystem conventions for local fallback
     conversion paths (``/lakehouse/default/Files/...``).
     """
-    store = _get_store(env, target, config)
+    store = _get_store(config, env, target)
     if store.kind != "lakehouse":
         raise ValueError(f"Target '{env}/{target}' is not a lakehouse store.")
     if not relative_path:
@@ -695,7 +692,7 @@ def read_lakehouse_excel(config, env, target, relative_path, sheet_name=0, spark
 
     Parameters
     ----------
-    lh : Housepath
+    lh : FabricStore
         Lakehouse path object returned by `_get_store`.
     relative_path : str
         Path to the Excel file under the lakehouse root, for example
@@ -722,19 +719,14 @@ def read_lakehouse_excel(config, env, target, relative_path, sheet_name=0, spark
 
     Examples
     --------
-    >>> lh_source = _get_store("Sandbox", "Source", config=CONFIG)
-    >>> df_mapping = read_lakehouse_excel(
-    ...     lh_source,
-    ...     "Files/reference/faculty_mapping.xlsx",
-    ...     sheet_name="Mapping",
-    ... )
+    >>> df_mapping = read_lakehouse_excel(CONFIG, ENV, "source", "reference/faculty_mapping.xlsx", sheet_name="Mapping")
     Notes
     -----
     Side effects:
     - Creates a temporary local file during conversion.
     - Materializes rows through pandas before creating a Spark DataFrame.
     """
-    store = _get_store(env, target, config)
+    store = _get_store(config, env, target)
     if store.kind != "lakehouse":
         raise ValueError(f"Target '{env}/{target}' is not a lakehouse store.")
     if not relative_path:
@@ -886,7 +878,7 @@ def seed_minimal_sample_source_table(
 
     Parameters
     ----------
-    source_lakehouse : Housepath
+    source_lakehouse : FabricStore
         Lakehouse destination returned by ``_get_store`` for the source layer.
     table_name : str, default="minimal_source"
         Destination source-table name to seed for sample notebook runs.

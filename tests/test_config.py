@@ -183,7 +183,7 @@ def test_load_config_accepts_framework_config():
 def test__get_store_missing_values_raise_clean_errors():
     config = _sample_framework_config()
     with pytest.raises(ValueError, match="Environment 'Prod' was not found"):
-        _get_store("Prod", "Source", config=config)
+        _get_store(config, "Prod", "Source")
 
 
 def test_bootstrap_env_and_smoke_behavior(monkeypatch):

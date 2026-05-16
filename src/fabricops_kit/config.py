@@ -546,7 +546,7 @@ def load_config(config: FrameworkConfig | dict[str, Any]) -> FrameworkConfig:
     return _validate_framework_config(config)
 
 
-def _get_store(env: str, target: str, config: FrameworkConfig | PathConfig | None) -> Any:
+def _get_store(config: FrameworkConfig | PathConfig | None, env: str, target: str) -> Any:
     """Resolve a configured Fabric path for an environment and target.
 
     Parameters
@@ -664,7 +664,7 @@ def _run_config_smoke_tests(
     results.append(ConfigSmokeCheckResult("fabric_runtime_context", runtime_status, runtime_message))
     try:
         for target in required_targets:
-            p = _get_store(env=env, target=target, config=config)
+            p = _get_store(config=config, env=env, target=target)
             missing = [attr for attr in ("workspace_id", "item_id", "name", "kind") if not getattr(p, attr, None)]
             if missing:
                 results.append(ConfigSmokeCheckResult(f"path:{target}", "fail", f"Missing required fields: {missing}"))
@@ -747,7 +747,7 @@ def _bootstrap_fabric_env(
     if normalized is None:
         raise ValueError("config is required for bootstrap_fabric_env.")
     required_targets = required_targets or ["Source", "Unified"]
-    resolved_paths = {target: _get_store(env=env, target=target, config=normalized) for target in required_targets}
+    resolved_paths = {target: _get_store(config=normalized, env=env, target=target) for target in required_targets}
     runtime_meta = _get_fabric_runtime_metadata(notebook_name=notebook_name)
     smoke = _run_config_smoke_tests(
         normalized,
@@ -783,7 +783,7 @@ def setup_notebook(
 
     normalized = load_config(config)
     required_targets = required_targets or ["Source", "Unified"]
-    resolved_paths = {target: _get_store(env=env, target=target, config=normalized) for target in required_targets}
+    resolved_paths = {target: _get_store(config=normalized, env=env, target=target) for target in required_targets}
 
     context = None
     try:

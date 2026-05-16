@@ -16,6 +16,7 @@ def test_templates_do_not_contain_legacy_tokens():
     assert 'Housepath' not in text
     assert 'get_path(' not in text
     assert 'AI_ENABLED' not in text
+    assert '_get_store(' not in text
 
 def test_00_env_config_has_fabricstore_keywords():
     d=json.loads(Path('templates/notebooks/00_env_config.ipynb').read_text(encoding='utf-8'))

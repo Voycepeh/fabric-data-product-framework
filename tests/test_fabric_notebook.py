@@ -71,13 +71,13 @@ class FakeSpark:
 
 def test__get_store_with_injected_config():
     cfg = PathConfig(paths={"Sandbox": {"Source": FabricStore("Sandbox", "w", "h", "n", "lakehouse")}})
-    p = _get_store("Sandbox", "Source", config=cfg)
+    p = _get_store(cfg, "Sandbox", "Source")
     assert p.name == "n"
 
 
 def test__get_store_invalid_raises():
     with pytest.raises(ValueError):
-        _get_store("Bad", "Source", config={})
+        _get_store({}, "Bad", "Source")
 
 
 def test_check_naming_convention_passes():

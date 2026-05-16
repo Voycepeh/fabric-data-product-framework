@@ -27,7 +27,7 @@ environments:
         encoding="utf-8",
     )
     parsed = load_config(cfg)
-    p = _get_store("Sandbox", "Source", config=parsed)
+    p = _get_store(parsed, "Sandbox", "Source")
     assert isinstance(p, FabricStore)
     assert p.name == "SRC"
 
@@ -35,9 +35,9 @@ environments:
 def test__get_store_missing_env_and_target_errors():
     cfg = {"Sandbox": {"Source": FabricStore("Sandbox", "w", "h", "n", "lakehouse")}}
     with pytest.raises(ValueError, match="Environment 'Prod' was not found"):
-        _get_store("Prod", "Source", config=cfg)
+        _get_store(cfg, "Prod", "Source")
     with pytest.raises(ValueError, match="Target 'Unified' was not found"):
-        _get_store("Sandbox", "Unified", config=cfg)
+        _get_store(cfg, "Sandbox", "Unified")
 
 
 def test_build_table_identifier_variants():
