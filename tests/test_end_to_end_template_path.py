@@ -248,6 +248,8 @@ def test_04_gov_template_smoke_guards_and_metadata_io():
     assert "from fabricops_kit import (" in combined
     assert "register_current_notebook(" in combined
     assert "read_lakehouse_table(CONFIG, env_name, \"metadata\", \"METADATA_PROFILE_ROWS\")" in combined
+    assert "CONFIG.paths[" not in combined
+    assert "CONFIG.path_config.paths[env_name][\"metadata\"]" in combined
     assert "write_business_context(" in combined
     assert "table_name=\"METADATA_COLUMN_CONTEXT\"" in combined
     assert "write_governance(" in combined
