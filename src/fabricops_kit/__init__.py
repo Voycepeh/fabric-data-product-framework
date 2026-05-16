@@ -43,14 +43,13 @@ from .drift import check_partition_drift, check_profile_drift, check_schema_drif
 from .data_lineage import build_lineage_handover_markdown, build_lineage_records
 from .handover import build_handover, render_handover_markdown
 from .data_agreement import get_selected_agreement, load_agreements, select_agreement
-from .metadata import load_notebook_registry, register_current_notebook, write_metadata_rows
+from .metadata import load_notebook_registry, register_current_notebook
 from .technical_columns import standardize_columns
 
 __version__ = "0.1.0"
 
 __all__ = [
     "load_config","setup_notebook","load_agreements","select_agreement","get_selected_agreement","register_current_notebook","load_notebook_registry",
-    "write_metadata_rows",
     "read_lakehouse_table","write_lakehouse_table","read_warehouse_table","write_warehouse_table","profile_dataframe",
     "draft_business_context","prepare_business_context_profile_input","extract_column_business_context_suggestions","review_business_context","get_reviewed_business_context_rows","write_business_context",
     "draft_dq_rules","review_dq_rules","get_dq_review_results","write_dq_rules","load_dq_rules","enforce_dq","assert_dq_passed",

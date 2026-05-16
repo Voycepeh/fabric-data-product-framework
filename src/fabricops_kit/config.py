@@ -50,7 +50,7 @@ class PathConfig:
 class NotebookRuntimeConfig:
     """Runtime options used by notebook-oriented helpers."""
 
-    allowed_notebook_prefixes: tuple[str, ...] = ("00_", "01_", "02_", "03_")
+    allowed_notebook_prefixes: tuple[str, ...] = ("00_env_config", "01_da_", "02_ex_", "03_pc_", "04_gov")
 
     def __post_init__(self) -> None:
         prefixes = tuple(prefix.strip() for prefix in self.allowed_notebook_prefixes if str(prefix).strip())
@@ -550,9 +550,10 @@ def _validate_notebook_name(notebook_name: str, config: FrameworkConfig | None =
     name = _normalize_name(notebook_name)
     patterns = [
         r"^00_env_config$",
-        r"^01_data_sharing_agreement_[a-z0-9_]+$",
+        r"^01_da_[a-z0-9_]+$",
         r"^02_ex_[a-z0-9_]+_[a-z0-9_]+$",
         r"^03_pc_[a-z0-9_]+_[a-z0-9_]+$",
+        r"^04_gov[a-z0-9_]*$",
     ]
     if any(__import__("re").match(p, name) for p in patterns):
         return []

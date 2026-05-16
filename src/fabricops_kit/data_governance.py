@@ -6,6 +6,7 @@ import ast
 from typing import Any
 
 from fabricops_kit.metadata import _now_utc_iso, _resolve_action_by, build_metadata_column_key, build_metadata_table_key
+from fabricops_kit.config import DEFAULT_GOVERNANCE_PERSONAL_IDENTIFIER_PROMPT_TEMPLATE
 
 _DEFAULT_WIDGET_CONFIG = {
     "confidentiality_labels": ["public", "confidential", "restricted"],
@@ -14,6 +15,8 @@ _DEFAULT_WIDGET_CONFIG = {
 
 _WIDGET_APPROVED_ROWS: list[dict[str, Any]] = []
 _WIDGET_REJECTED_ROWS: list[dict[str, Any]] = []
+PDPA_PERSONAL_IDENTIFIER_PROMPT = DEFAULT_GOVERNANCE_PERSONAL_IDENTIFIER_PROMPT_TEMPLATE
+
 
 def _build_governance_context(
     business_context: str,
@@ -53,8 +56,6 @@ def prepare_governance_input(profile_rows: list[dict], table_name: str, column_c
 
 def draft_governance(prepared_profile_df, prompt: str | None = None, output_col: str = "ai_governance_response"):
     """Run Fabric AI personal-identifier suggestion prompt on prepared governance rows."""
-    if not prompt:
-        raise ValueError("Missing governance_personal_identifier_prompt_template. Define it in AIPromptConfig from 00_env_config or pass prompt_template explicitly.")
     ai = getattr(prepared_profile_df, "ai", None)
     if ai is None or not hasattr(ai, "generate_response"):
         raise RuntimeError("draft_governance requires Fabric DataFrame.ai.generate_response.")

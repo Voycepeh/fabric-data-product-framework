@@ -19,11 +19,11 @@ theme:
 nav:
   - Home: index.md
   - Quick Start: quick-start.md
-  - Lifecycle: lifecycle-operating-model.md
+  - Workflow: workflow.md
   - Notebook Model:
       - Overview: notebook-structure.md
       - 00_env_config: notebook-structure/00-env-config.md
-      - 01_data_sharing_agreement: notebook-structure/01-data-sharing-agreement.md
+      - 01_da: notebook-structure/01-data-sharing-agreement.md
       - 02_ex: notebook-structure/02-exploration.md
       - 03_pc: notebook-structure/03-pipeline-contract.md
       - 04_gov: notebook-structure/04-governance-enrichment.md
