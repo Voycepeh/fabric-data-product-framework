@@ -43,6 +43,13 @@ Describe what this shared config notebook sets up and what downstream exploratio
 
 ## Segment 3: Set AI, quality, governance, and lineage defaults
 
+## Prompt ownership in `00_env_config`
+
+`00_env_config` intentionally owns the full operational AI prompt strings used by the starter workflow. This keeps prompts visible, auditable, and editable per workspace/environment without editing package internals.
+
+Package callables consume prompt templates from `AIPromptConfig` (or explicit function arguments) and execute workflow mechanics only; they do not define hidden prompt policy defaults at runtime.
+
+
 ## Segment 4: Assemble and validate framework config
 
 <table class="reference-function-table notebook-structure-function-table">

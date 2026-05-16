@@ -18,10 +18,8 @@ from pyspark.sql import SparkSession
 from .data_profiling import profile_dataframe
 from .fabric_input_output import write_lakehouse_table
 from .metadata import build_dq_rule_key, build_metadata_column_key, build_metadata_table_key, _now_utc_iso, _resolve_action_by
-from .config import DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
 
 AI_SUGGESTABLE_DQ_RULE_TYPES = {"not_null", "unique_key", "accepted_values", "value_range", "regex_format"}
-DQ_RULE_SUGGESTION_PROMPT_TEMPLATE = DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
 
 
 @dataclass
@@ -77,7 +75,7 @@ def _suggest_dq_rules(profile_df, prompt_template: str | None = None, output_col
     profile_df : pyspark.sql.DataFrame
         Output of :func:`_profile_for_dq`.
     prompt_template : str | None, optional
-        Prompt template from ``config.ai_prompt_config.dq_rule_candidate_template``.
+        Prompt template from ``config.ai_prompt_config.dq_rule_suggestion_prompt_template``.
     output_col : str, default="response"
         Output column for AI text responses.
 
@@ -87,7 +85,7 @@ def _suggest_dq_rules(profile_df, prompt_template: str | None = None, output_col
         Spark DataFrame including AI response text.
     """
     if not prompt_template:
-        raise ValueError("prompt_template must be provided from config.ai_prompt_config.dq_rule_candidate_template.")
+        raise ValueError("Missing dq_rule_suggestion_prompt_template. Define it in AIPromptConfig from 00_env_config or pass prompt_template explicitly.")
     active_prompt = prompt_template
     return profile_df.ai.generate_response(prompt=active_prompt, output_col=output_col)
 
@@ -159,7 +157,7 @@ def _suggest_dq_rules_with_fabric_ai(prepared_profile_df, prompt_template: str, 
     prepared_profile_df : pyspark.sql.DataFrame
         Prepared profile rows (including approved business context) for prompt execution.
     prompt_template : str
-        Prompt template text, usually from ``CONFIG.ai_prompt_config.dq_rule_candidate_template``.
+        Prompt template text, usually from ``CONFIG.ai_prompt_config.dq_rule_suggestion_prompt_template``.
     output_col : str, default=\"ai_dq_response\"
         Response column for AI output text.
 

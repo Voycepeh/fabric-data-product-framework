@@ -210,7 +210,7 @@ def test_config_dataclass_validation_guards() -> None:
         PathConfig(paths={})
     with pytest.raises(ValueError, match="allowed_notebook_prefixes"):
         NotebookRuntimeConfig(allowed_notebook_prefixes=("   ",))
-    with pytest.raises(ValueError, match="dq_rule_candidate_template"):
+    with pytest.raises(ValueError, match="dq_rule_suggestion_prompt_template"):
         AIPromptConfig(" ", "x", "y")
     with pytest.raises(ValueError, match="default_severity"):
         QualityConfig(default_severity="urgent")

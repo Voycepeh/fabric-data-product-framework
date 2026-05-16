@@ -48,19 +48,7 @@ class PathConfig:
 
 @dataclass(frozen=True)
 class NotebookRuntimeConfig:
-    """Runtime options used by notebook-oriented helpers.
-
-    Parameters
-    ----------
-    allowed_notebook_prefixes : tuple[str, ...], default=("00_", "01_", "02_", "03_")
-        Prefixes allowed by notebook-name validation helpers. Values are
-        normalized by trimming whitespace and removing empty entries.
-
-    Examples
-    --------
-    >>> NotebookRuntimeConfig((" 00_ ", "03_ ")).allowed_notebook_prefixes
-    ('00_', '03_')
-    """
+    """Runtime options used by notebook-oriented helpers."""
 
     allowed_notebook_prefixes: tuple[str, ...] = ("00_", "01_", "02_", "03_")
 
@@ -73,55 +61,23 @@ class NotebookRuntimeConfig:
 
 @dataclass(frozen=True)
 class AIPromptConfig:
-    """Prompt templates used by AI-assisted framework workflows.
+    """Prompt templates used by AI-assisted framework workflows."""
 
-    Parameters
-    ----------
-    dq_rule_candidate_template : str
-        Template for generating candidate data-quality rule suggestions.
-    governance_candidate_template : str
-        Template for generating candidate governance label suggestions.
-    handover_summary_template : str
-        Template for generating run-handover summary text.
-
-    Notes
-    -----
-    All template fields must be non-empty strings.
-
-    Examples
-    --------
-    >>> cfg = AIPromptConfig("DQ {profile}", "GOV {profile}", "HO {context}")
-    >>> cfg.handover_summary_template.startswith("HO")
-    True
-    """
-
-    business_context_template: str = ""
-    dq_rule_candidate_template: str = ""
-    governance_personal_identifier_template: str = ""
-    governance_candidate_template: str = ""
-    handover_summary_template: str = ""
-    governance_review_template: str = ""
+    business_context_prompt_template: str = ""
+    dq_rule_suggestion_prompt_template: str = ""
+    governance_personal_identifier_prompt_template: str = ""
+    governance_candidate_prompt_template: str = ""
+    governance_review_prompt_template: str = ""
+    handover_summary_prompt_template: str = ""
 
     def __post_init__(self) -> None:
-        if not self.business_context_template:
-            object.__setattr__(self, "business_context_template", DEFAULT_BUSINESS_CONTEXT_PROMPT_TEMPLATE)
-        if not self.dq_rule_candidate_template:
-            object.__setattr__(self, "dq_rule_candidate_template", DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE)
-        if not self.governance_personal_identifier_template:
-            object.__setattr__(self, "governance_personal_identifier_template", DEFAULT_GOVERNANCE_PERSONAL_IDENTIFIER_PROMPT_TEMPLATE)
-        if not self.governance_candidate_template:
-            object.__setattr__(self, "governance_candidate_template", DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE)
-        if not self.handover_summary_template:
-            object.__setattr__(self, "handover_summary_template", DEFAULT_HANDOVER_SUMMARY_TEMPLATE)
-        if not self.governance_review_template:
-            object.__setattr__(self, "governance_review_template", DEFAULT_GOVERNANCE_REVIEW_TEMPLATE)
         for label, value in {
-            "business_context_template": self.business_context_template,
-            "dq_rule_candidate_template": self.dq_rule_candidate_template,
-            "governance_personal_identifier_template": self.governance_personal_identifier_template,
-            "governance_candidate_template": self.governance_candidate_template,
-            "handover_summary_template": self.handover_summary_template,
-            "governance_review_template": self.governance_review_template,
+            "business_context_prompt_template": self.business_context_prompt_template,
+            "dq_rule_suggestion_prompt_template": self.dq_rule_suggestion_prompt_template,
+            "governance_personal_identifier_prompt_template": self.governance_personal_identifier_prompt_template,
+            "governance_candidate_prompt_template": self.governance_candidate_prompt_template,
+            "governance_review_prompt_template": self.governance_review_prompt_template,
+            "handover_summary_prompt_template": self.handover_summary_prompt_template,
         }.items():
             if not isinstance(value, str) or not value.strip():
                 raise ValueError(f"{label} must be a non-empty string.")
