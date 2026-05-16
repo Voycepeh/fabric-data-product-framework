@@ -1,85 +1,57 @@
 # `01_data_sharing_agreement_<agreement>`
 
-This is the governance-owned control-plane notebook for one data sharing agreement. It defines the agreement, reviews metadata evidence, approves business context and classification/PII metadata, and makes approved metadata available to `02_ex` and `03_pc`.
+`01_data_agreement_template.ipynb` defines the **agreement-level usage boundary** for one agreement.
+
+It captures who approved usage, what usage is approved, why it is approved, and until when it remains valid.
 
 - Keep `agreement_id` stable for the same agreement.
 - Keep `save_to_metadata=False` while testing.
-- Set `save_to_metadata=True` only when ready to write approved metadata.
-- `02_ex` and `03_pc` reuse approved metadata from this notebook.
-- DQ enforcement remains in `03_pc`.
+- Set `save_to_metadata=True` only when ready to write metadata.
+- Set `register_notebook_to_metadata=True` to register the notebook run to metadata.
 
 > <a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/01_data_agreement_template.ipynb">Open template notebook</a>
 
 ## 01 Runtime bootstrap and imports
 
-- `%run 00_env_config` must stay as its own standalone cell.
-- Imports load governance, metadata, business context, DQ visibility, and notebook traceability helpers.
-- Widget display is handled inside helper functions.
-- Avoid importing `display` directly in the notebook except local aliases for custom HTML rendering.
+- `%run 00_env_config` stays in its own cell.
+- Import only public APIs from `fabricops_kit`.
+- The notebook remains lightweight and avoids private/internal helpers.
 
-## 02 Define and save agreement metadata
+## 02 Agreement parameters (agreement-level only)
 
-Governance defines agreement identity, approved usage, business context, ownership, permissions, restrictions, classification, sensitivity, PII posture, and related notebook links. This step builds `governance_prompt_context` and `agreement_context_metadata`, writes `METADATA_DATA_AGREEMENT` only when `save_to_metadata=True`, and registers the notebook to `METADATA_NOTEBOOK_REGISTRY` only when `save_to_metadata=True`.
+The agreement input section is intentionally small:
 
-<table class="reference-function-table notebook-structure-function-table">
-  <thead><tr><th>Function / class</th><th>Module</th><th>Purpose</th></tr></thead>
-  <tbody>
-    <tr><td><a href="../../api/reference/_build_governance_context/"><code>_build_governance_context</code></a></td><td><a class="reference-module-link" href="../../api/modules/data_governance/">data_governance</a></td><td>Build agreement governance prompt context for downstream AI-assisted review steps.</td></tr>
-    <tr><td><a href="../../api/reference/write_metadata_rows/"><code>write_metadata_rows</code></a></td><td><a class="reference-module-link" href="../../api/modules/data_product_metadata/">data_product_metadata</a></td><td>Persist agreement-level metadata rows when metadata writes are enabled.</td></tr>
-    <tr><td><a href="../../api/reference/register_current_notebook/"><code>register_current_notebook</code></a></td><td><a class="reference-module-link" href="../../api/modules/data_product_metadata/">data_product_metadata</a></td><td>Register notebook traceability rows for agreement-level discoverability.</td></tr>
-    <tr><td><a href="../../api/reference/step-02a-shared-runtime-config/get_path/"><code>get_path</code></a></td><td><a class="reference-module-link" href="../../api/modules/config/">config</a></td><td>Resolve canonical metadata table paths for reads and writes.</td></tr>
-  </tbody>
-</table>
+- `agreement_id`
+- `agreement_name`
+- `agreement_context`
+- `approved_usage`
+- `owner`
+- `expiry_date`
+- `notes`
 
-## 03 Load existing metadata evidence and linked notebooks
+Optional context values such as `dataset_name` and `table_name` may be used for local testing, but they are not required agreement inputs.
 
-This is the read-only evidence and traceability section. It loads `METADATA_PROFILE_ROWS`, `METADATA_DQ_RULES`, `METADATA_COLUMN_CONTEXT`, `METADATA_COLUMN_GOVERNANCE`, `METADATA_DATA_AGREEMENT`, and `METADATA_NOTEBOOK_REGISTRY`. Notebook links come from `METADATA_NOTEBOOK_REGISTRY` first, while `related_notebook_links` is fallback only.
+## 03 Build agreement record
 
-<table class="reference-function-table notebook-structure-function-table">
-  <thead><tr><th>Function / class</th><th>Module</th><th>Purpose</th></tr></thead>
-  <tbody>
-    <tr><td><a href="../../api/reference/load_notebook_registry/"><code>load_notebook_registry</code></a></td><td><a class="reference-module-link" href="../../api/modules/data_product_metadata/">data_product_metadata</a></td><td>Load notebook registration rows used to render linked notebook traceability first.</td></tr>
-    <tr><td><a href="../../api/reference/load_governance/"><code>load_governance</code></a></td><td><a class="reference-module-link" href="../../api/modules/data_governance/">data_governance</a></td><td>Load approved governance metadata as read-only evidence context.</td></tr>
-  </tbody>
-</table>
+The notebook builds one agreement metadata record with agreement-level fields (plus `created_at`).
 
-## 04 Review and save column business context
+Do **not** require table/column governance fields here.
 
-This step uses existing profile rows as evidence. AI suggests column business context, a human reviewer approves or rejects suggestions using the widget, and approved rows write to `METADATA_COLUMN_CONTEXT` only when `save_to_metadata=True`.
+## 04 Save agreement metadata
 
-<table class="reference-function-table notebook-structure-function-table">
-  <thead><tr><th>Function / class</th><th>Module</th><th>Purpose</th></tr></thead>
-  <tbody>
-    <tr><td><a href="../../api/reference/_prepare_business_context_profile_input/"><code>_prepare_business_context_profile_input</code></a></td><td><a class="reference-module-link" href="../../api/modules/business_context/">business_context</a></td><td>Prepare profile evidence rows for business-context prompting.</td></tr>
-    <tr><td><a href="../../api/reference/draft_business_context/"><code>draft_business_context</code></a></td><td><a class="reference-module-link" href="../../api/modules/business_context/">business_context</a></td><td>Generate AI-assisted column business-context suggestions.</td></tr>
-    <tr><td><a href="../../api/reference/_extract_column_business_context_suggestions/"><code>_extract_column_business_context_suggestions</code></a></td><td><a class="reference-module-link" href="../../api/modules/business_context/">business_context</a></td><td>Extract review-ready business-context suggestion rows.</td></tr>
-    <tr><td><a href="../../api/reference/review_business_context/"><code>review_business_context</code></a></td><td><a class="reference-module-link" href="../../api/modules/business_context/">business_context</a></td><td>Capture human approvals/rejections through the review widget.</td></tr>
-    <tr><td><a href="../../api/reference/write_column_business_context/"><code>write_column_business_context</code></a></td><td><a class="reference-module-link" href="../../api/modules/data_product_metadata/">data_product_metadata</a></td><td>Write approved business-context rows when metadata writes are enabled.</td></tr>
-  </tbody>
-</table>
+When metadata writes are enabled, the notebook appends to `METADATA_DATA_AGREEMENT` using `write_lakehouse_table`.
 
-## 05 Review and save classification / sensitivity / PII
+No extra agreement mapping tables are introduced in this step.
 
-This step uses approved business context as input. AI suggests classification, sensitivity, and PII labels, then a human reviewer approves or rejects through the governance widget. Approved rows write to `METADATA_COLUMN_GOVERNANCE` only when `save_to_metadata=True`.
+## 05 Register notebook
 
-<table class="reference-function-table notebook-structure-function-table">
-  <thead><tr><th>Function / class</th><th>Module</th><th>Purpose</th></tr></thead>
-  <tbody>
-    <tr><td><a href="../../api/reference/_prepare_governance_input/"><code>_prepare_governance_input</code></a></td><td><a class="reference-module-link" href="../../api/modules/data_governance/">data_governance</a></td><td>Join approved business-context evidence into governance prompt inputs.</td></tr>
-    <tr><td><a href="../../api/reference/draft_governance/"><code>draft_governance</code></a></td><td><a class="reference-module-link" href="../../api/modules/data_governance/">data_governance</a></td><td>Generate AI-assisted classification, sensitivity, and PII suggestions.</td></tr>
-    <tr><td><a href="../../api/reference/_extract_pii_suggestions/"><code>_extract_pii_suggestions</code></a></td><td><a class="reference-module-link" href="../../api/modules/data_governance/">data_governance</a></td><td>Extract structured governance review candidates from AI output.</td></tr>
-    <tr><td><a href="../../api/reference/review_governance/"><code>review_governance</code></a></td><td><a class="reference-module-link" href="../../api/modules/data_governance/">data_governance</a></td><td>Run the governance widget to capture human approval decisions.</td></tr>
-    <tr><td><a href="../../api/reference/write_governance/"><code>write_governance</code></a></td><td><a class="reference-module-link" href="../../api/modules/data_governance/">data_governance</a></td><td>Persist approved governance rows when metadata writes are enabled.</td></tr>
-  </tbody>
-</table>
+The notebook optionally registers itself via `register_current_notebook` into `METADATA_NOTEBOOK_REGISTRY`.
 
-## 06 View existing DQ rules
+Registration links notebook evidence to `agreement_id` and environment without requiring dataset/table fields.
 
-This section is read-only DQ visibility only. There is no DQ enforcement in this notebook; `03_pc` enforces approved DQ rules.
+## 06 What happens next
 
-<table class="reference-function-table notebook-structure-function-table">
-  <thead><tr><th>Function / class</th><th>Module</th><th>Purpose</th></tr></thead>
-  <tbody>
-    <tr><td><a href="../../api/reference/load_dq_rules/"><code>load_dq_rules</code></a></td><td><a class="reference-module-link" href="../../api/modules/data_quality/">data_quality</a></td><td>Load approved DQ rules for governance-side visibility.</td></tr>
-  </tbody>
-</table>
+- `01` sets agreement-level boundaries.
+- `02` exploration profiles real table/column evidence.
+- Table/column classification, sensitivity, and PII review happen later in governance-focused steps.
+- `03` pipeline contract enforces approved outputs and rules using agreement context.
