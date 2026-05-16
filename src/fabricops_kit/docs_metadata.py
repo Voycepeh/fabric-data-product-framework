@@ -79,7 +79,7 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [{'notebook_key': '00_env_co
                 'text': 'Describe what this shared config notebook sets up and what downstream exploration or pipeline notebooks depend '
                         'on.',
                 'symbols': []},
-               {'title': 'Segment 2: Define environment targets and notebook policy', 'symbols': ['Housepath', 'load_config', 'get_path']},
+               {'title': 'Segment 2: Define environment targets and notebook policy', 'symbols': ['FabricStore', 'load_config']},
                {'title': 'Segment 3: Set AI, quality, governance, and lineage defaults', 'symbols': []},
                {'title': 'Segment 4: Assemble and validate framework config', 'symbols': ['load_config']},
                {'title': 'Segment 5: Run startup checks and show resolved paths', 'symbols': ['setup_notebook', 'get_path']}]},
@@ -431,7 +431,7 @@ PUBLIC_SYMBOL_DOCS: list[PublicSymbolDocMetadata] = [{'symbol_name': 'load_confi
   'template_segment': '—',
   'role': 'optional',
   'summary_override': None},
- {'symbol_name': 'Housepath',
+ {'symbol_name': 'FabricStore',
   'module': 'fabric_input_output',
   'kind': 'class',
   'template_notebook': '—',

@@ -2,9 +2,9 @@ import pytest
 
 from fabricops_kit.config import PathConfig
 from fabricops_kit.fabric_input_output import (
-    Housepath,
+    FabricStore,
     check_naming_convention,
-    get_path,
+    _get_store,
     read_lakehouse_table,
     write_lakehouse_table,
 )
@@ -69,15 +69,15 @@ class FakeSpark:
         self.read = FakeRead()
 
 
-def test_get_path_with_injected_config():
-    cfg = PathConfig(paths={"Sandbox": {"Source": Housepath("w", "h", "n", "abfss://root")}})
-    p = get_path("Sandbox", "Source", config=cfg)
-    assert p.house_name == "n"
+def test__get_store_with_injected_config():
+    cfg = PathConfig(paths={"Sandbox": {"Source": FabricStore("Sandbox", "w", "h", "n", "lakehouse")}})
+    p = _get_store(cfg, "Sandbox", "Source")
+    assert p.name == "n"
 
 
-def test_get_path_invalid_raises():
+def test__get_store_invalid_raises():
     with pytest.raises(ValueError):
-        get_path("Bad", "Source", config={})
+        _get_store({}, "Bad", "Source")
 
 
 def test_check_naming_convention_passes():
@@ -92,10 +92,12 @@ def test_check_naming_convention_fails():
 
 def test_write_lakehouse_table_repartition_partition_string():
     df = FakeDF()
-    lh = Housepath("w", "h", "name", "abfss://root")
+    lh = FabricStore("Sandbox", "w", "h", "name", "lakehouse")
     write_lakehouse_table(
         df,
-        lh,
+        PathConfig(paths={"Sandbox": {"source": lh}}),
+        "Sandbox",
+        "source",
         "EMAIL_LOGS",
         mode="overwrite",
         partition_by="p_bucket",
@@ -107,15 +109,15 @@ def test_write_lakehouse_table_repartition_partition_string():
 
 def test_write_lakehouse_table_repartition_with_int_and_column():
     df = FakeDF()
-    lh = Housepath("w", "h", "name", "abfss://root")
-    write_lakehouse_table(df, lh, "EMAIL_LOGS", repartition_by=(200, "p_bucket"))
+    lh = FabricStore("Sandbox", "w", "h", "name", "lakehouse")
+    write_lakehouse_table(df, PathConfig(paths={"Sandbox": {"source": lh}}), "Sandbox", "source", "EMAIL_LOGS", repartition_by=(200, "p_bucket"))
     assert df.repartition_calls == [(200, "p_bucket")]
 
 
 def test_read_lakehouse_table_builds_path():
     spark = FakeSpark()
-    lh = Housepath("w", "h", "name", "abfss://root")
-    read_lakehouse_table(lh, "MY_TABLE", spark_session=spark)
+    lh = FabricStore("Sandbox", "w", "h", "name", "lakehouse")
+    read_lakehouse_table(PathConfig(paths={"Sandbox": {"source": lh}}), "Sandbox", "source", "MY_TABLE", spark_session=spark)
     assert spark.read.loaded_path.endswith("/Tables/MY_TABLE")
 
 

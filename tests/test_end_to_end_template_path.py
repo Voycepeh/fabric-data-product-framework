@@ -54,7 +54,7 @@ def test_00_env_config_is_environment_only_and_imports_package_helpers():
     ]:
         assert token in text
     for token in [
-        "def get_path",
+        "def load_config",
         "def validate_environment",
         "def validate_target",
         "def clean_datetime_columns",
@@ -178,7 +178,7 @@ def test_essential_callable_coverage_in_current_starter_notebooks():
 
     # Allowed missing until governance-context notebook (01_data_agreement) exists.
     allowed_missing = {
-        "Housepath",  # type-level helper not always shown explicitly in starter notebooks
+        "FabricStore",  # type-level helper not always shown explicitly in starter notebooks
         "read_lakehouse_csv",  # ingestion variant; lakehouse table path is primary in current templates
         "read_lakehouse_excel",  # ingestion variant
         "read_lakehouse_parquet",  # ingestion variant

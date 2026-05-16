@@ -13,9 +13,9 @@ def test_all_exports_are_importable():
 
 def _sample_config():
     from fabricops_kit.config import AIPromptConfig, FrameworkConfig, GovernanceConfig, LineageConfig, NotebookRuntimeConfig, PathConfig, QualityConfig, ReviewWorkflowConfig
-    from fabricops_kit.fabric_input_output import Housepath
+    from fabricops_kit.fabric_input_output import FabricStore
     return FrameworkConfig(
-        path_config=PathConfig({"Sandbox": {"Source": Housepath("w", "h", "s", "abfss://s"), "Unified": Housepath("w", "h2", "u", "abfss://u")}}),
+        path_config=PathConfig({"Sandbox": {"Source": FabricStore("w", "h", "s", "abfss://s"), "Unified": FabricStore("w", "h2", "u", "abfss://u")}}),
         notebook_runtime_config=NotebookRuntimeConfig(("00_", "02_", "03_")),
         ai_prompt_config=AIPromptConfig("dq", "gov", "ho"),
         quality_config=QualityConfig(),
@@ -40,7 +40,7 @@ def test_setup_uses_current_run_id_and_user_fallback(monkeypatch):
     runtime_mod = types.SimpleNamespace(context=context)
     monkeypatch.setitem(sys.modules, "notebookutils.runtime", runtime_mod)
 
-    out = setup_notebook(config=_sample_config(), env="Sandbox", check_ai=False)
+    out = setup_notebook(config=_sample_config(), env="Sandbox")
     assert out.run_id == "fabric_run_1"
     assert out.user_name == "alice"
 
@@ -49,6 +49,6 @@ def test_setup_user_falls_back_to_user_id(monkeypatch):
     context = {"currentNotebookName": "03_pc_test_source_to_unified", "currentRunId": "", "userId": "u2"}
     runtime_mod = types.SimpleNamespace(context=context)
     monkeypatch.setitem(sys.modules, "notebookutils.runtime", runtime_mod)
-    out = setup_notebook(config=_sample_config(), env="Sandbox", check_ai=False)
+    out = setup_notebook(config=_sample_config(), env="Sandbox")
     assert out.user_name == "u2"
     assert out.run_id

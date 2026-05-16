@@ -17,19 +17,19 @@ import tempfile
 
 import pandas as pd
 
-from .config import FrameworkConfig, get_path, load_config as load_framework_config
+from .config import FrameworkConfig, PathConfig, _get_store, load_config as load_framework_config
 
 
 @dataclass(frozen=True)
-class Housepath:
+class FabricStore:
     """Fabric lakehouse or warehouse connection details.
 
-    `Housepath` stores the minimum identifiers needed to read from or write to
+    `FabricStore` stores the minimum identifiers needed to read from or write to
     a Fabric lakehouse or warehouse using framework helpers.
 
     In normal use, define these values in a separate Fabric config notebook,
     validate the `CONFIG` mapping with `load_config`, then retrieve the
-    required environment and target with `get_path`.
+    required environment and target via public IO helpers.
 
     Attributes
     ----------
@@ -44,7 +44,7 @@ class Housepath:
 
     Examples
     --------
-    >>> lh = Housepath(
+    >>> lh = FabricStore(
     ...     workspace_id="<workspace-id>",
     ...     house_id="<lakehouse-id>",
     ...     house_name="DEX_SB_SOURCE",
@@ -54,10 +54,27 @@ class Housepath:
     'DEX_SB_SOURCE'
     """
 
+    env: str
     workspace_id: str
-    house_id: str
-    house_name: str
-    root: str
+    item_id: str
+    name: str
+    kind: str
+
+    def __post_init__(self) -> None:
+        for field_name in ("env", "workspace_id", "item_id", "name", "kind"):
+            value = getattr(self, field_name)
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError(f"{field_name} must be a non-empty string.")
+        normalized_kind = self.kind.strip().lower()
+        if normalized_kind not in {"lakehouse", "warehouse"}:
+            raise ValueError("kind must be one of: lakehouse, warehouse.")
+        object.__setattr__(self, "kind", normalized_kind)
+
+    @property
+    def root(self) -> str:
+        if self.kind != "lakehouse":
+            raise ValueError("root is only available for lakehouse stores.")
+        return f"abfss://{self.workspace_id}@onelake.dfs.fabric.microsoft.com/{self.item_id}"
 
 
 DEFAULT_ENV = "Sandbox"
@@ -102,7 +119,7 @@ def load_config(config: FrameworkConfig | dict) -> FrameworkConfig:
     """
     return load_framework_config(config)
 
-# NOTE: get_path is now owned by fabricops_kit.config.
+# NOTE: _get_store is now owned by fabricops_kit.config.
 
 
 def _get_spark(spark_session=None):
@@ -138,17 +155,17 @@ def _get_spark(spark_session=None):
         ) from exc
 
 
-def read_lakehouse_table(lh, tablename, spark_session=None):
+def read_lakehouse_table(config, env, target, table, spark_session=None):
     """Read a Delta table from a Fabric lakehouse.
 
     This reads from the lakehouse `Tables/` area using the ABFSS root stored in
-    a `Housepath`. In the notebook lifecycle, call this near the start of the
+    a `FabricStore`. In the notebook lifecycle, call this near the start of the
     Source or Unified step when loading Delta-backed source datasets.
 
     Parameters
     ----------
-    lh : Housepath
-        Lakehouse path object returned by `get_path`.
+    lh : FabricStore
+        Lakehouse path object resolved from config/env/target.
     tablename : str
         Name of the table under the lakehouse `Tables/` folder.
     spark_session : object, optional
@@ -169,23 +186,25 @@ def read_lakehouse_table(lh, tablename, spark_session=None):
 
     Examples
     --------
-    >>> lh_source = get_path("Sandbox", "Source", config=CONFIG)
-    >>> df = read_lakehouse_table(lh_source, "RAW_ORDERS")
+    >>> df = read_lakehouse_table(CONFIG, ENV, "source", "RAW_ORDERS")
     """
-    if not getattr(lh, "root", None):
-        raise ValueError("lh.root is required.")
-    if not tablename:
-        raise ValueError("tablename is required.")
+    store = _get_store(config, env, target)
+    if store.kind != "lakehouse":
+        raise ValueError(f"Target '{env}/{target}' is not a lakehouse store.")
+    if not table:
+        raise ValueError("table is required.")
 
     spark_obj = _get_spark(spark_session)
-    path = f"{lh.root.rstrip('/')}/Tables/{tablename}"
+    path = f"{store.root.rstrip('/')}/Tables/{table}"
     return spark_obj.read.format("delta").load(path)
 
 
 def write_lakehouse_table(
     df,
-    lh,
-    tablename,
+    config,
+    env,
+    target,
+    table,
     mode="append",
     partition_by=None,
     repartition_by=None,
@@ -194,15 +213,15 @@ def write_lakehouse_table(
     """Write a Spark DataFrame to a Fabric lakehouse Delta table.
 
     This writes to the lakehouse `Tables/` area using the ABFSS root stored in
-    a `Housepath`. Use this in the Unified/Product stage after transformations,
+    a `FabricStore`. Use this in the Unified/Product stage after transformations,
     DQ checks, and technical-column enrichment are complete.
 
     Parameters
     ----------
     df : pyspark.sql.DataFrame
         Spark DataFrame to write.
-    lh : Housepath
-        Lakehouse path object returned by `get_path`.
+    lh : FabricStore
+        Lakehouse path object resolved from config/env/target.
     tablename : str
         Target table name under the lakehouse `Tables/` folder.
     mode : str, default "append"
@@ -234,8 +253,11 @@ def write_lakehouse_table(
 
     Examples
     --------
-    >>> lh_unified = get_path("Sandbox", "Unified", config=CONFIG)
     >>> write_lakehouse_table(
+...     df,
+...     CONFIG,
+...     ENV,
+...     "unified",
     ...     df,
     ...     lh_unified,
     ...     "CLEAN_ORDERS",
@@ -244,16 +266,17 @@ def write_lakehouse_table(
     ...     repartition_by=(200, "p_bucket"),
     ... )
     """
-    if not getattr(lh, "root", None):
-        raise ValueError("lh.root is required.")
-    if not tablename:
-        raise ValueError("tablename is required.")
+    store = _get_store(config, env, target)
+    if store.kind != "lakehouse":
+        raise ValueError(f"Target '{env}/{target}' is not a lakehouse store.")
+    if not table:
+        raise ValueError("table is required.")
 
     normalized_mode = str(mode or "").lower().strip()
     if normalized_mode not in {"append", "overwrite", "errorifexists", "ignore"}:
         raise ValueError("mode must be one of append, overwrite, errorifexists, ignore.")
 
-    path = f"{lh.root.rstrip('/')}/Tables/{tablename}"
+    path = f"{store.root.rstrip('/')}/Tables/{table}"
 
     if repartition_by is not None:
         if isinstance(repartition_by, (list, tuple)):
@@ -280,17 +303,17 @@ def write_lakehouse_table(
     writer.save(path)
 
 
-def read_lakehouse_csv(lh, relative_path, spark_session=None, header=True):
+def read_lakehouse_csv(config, env, target, relative_path, spark_session=None, header=True):
     """Read a CSV file from a Fabric lakehouse Files path.
 
     This reads from the lakehouse `Files/` area using the ABFSS root stored in
-    a `Housepath`. In the Source step, use it for raw file ingestion before
+    a `FabricStore`. In the Source step, use it for raw file ingestion before
     standardisation or conversion to Delta tables.
 
     Parameters
     ----------
-    lh : Housepath
-        Lakehouse path object returned by `get_path`.
+    lh : FabricStore
+        Lakehouse path object resolved from config/env/target.
     relative_path : str
         Path to the CSV file or folder under the lakehouse root, for example
         `"Files/raw/orders.csv"` or `"Files/raw/orders/"`.
@@ -314,20 +337,23 @@ def read_lakehouse_csv(lh, relative_path, spark_session=None, header=True):
 
     Examples
     --------
-    >>> lh_source = get_path("Sandbox", "Source", config=CONFIG)
-    >>> df = read_lakehouse_csv(lh_source, "Files/raw/orders.csv")
+    >>> df = read_lakehouse_csv(CONFIG, ENV, "source", "raw/orders.csv")
     """
-    if not getattr(lh, "root", None):
-        raise ValueError("lh.root is required.")
+    store = _get_store(config, env, target)
+    if store.kind != "lakehouse":
+        raise ValueError(f"Target '{env}/{target}' is not a lakehouse store.")
     if not relative_path:
         raise ValueError("relative_path is required.")
 
     spark_obj = _get_spark(spark_session)
-    path = f"{lh.root.rstrip('/')}/{relative_path.lstrip('/')}"
+    normalized_relative_path = relative_path.lstrip("/")
+    if normalized_relative_path.startswith("Files/"):
+        normalized_relative_path = normalized_relative_path[len("Files/"):]
+    path = f"{store.root.rstrip('/')}/Files/{normalized_relative_path}"
     return spark_obj.read.option("header", header).csv(path)
 
 
-def read_warehouse_table(env, target, schema, table, config=None, spark_session=None):
+def read_warehouse_table(config, env, target, schema, table, spark_session=None):
     """Read a table from a Microsoft Fabric warehouse.
 
     This uses Fabric Spark's `synapsesql` connector to read from a warehouse
@@ -348,7 +374,7 @@ def read_warehouse_table(env, target, schema, table, config=None, spark_session=
         Warehouse table name.
     config : dict, optional
         Config mapping from the config notebook. Expected shape:
-        `config[environment][target] = Housepath(...)`.
+        `config[environment][target] = FabricStore(...)`.
     spark_session : object, optional
         Spark session to use. If omitted, the helper uses the notebook global
         `spark`.
@@ -376,7 +402,9 @@ def read_warehouse_table(env, target, schema, table, config=None, spark_session=
     ... )
     """
     spark_obj = _get_spark(spark_session)
-    p = get_path(env, target, config=config)
+    store = _get_store(config, env, target)
+    if store.kind != "warehouse":
+        raise ValueError(f"Target '{env}/{target}' is not a warehouse store.")
 
     try:
         import com.microsoft.spark.fabric
@@ -388,13 +416,13 @@ def read_warehouse_table(env, target, schema, table, config=None, spark_session=
         ) from exc
 
     return (
-        spark_obj.read.option(Constants.WorkspaceId, p.workspace_id)
-        .option(Constants.DatawarehouseId, p.house_id)
-        .synapsesql(f"{p.house_name}.{schema}.{table}")
+        spark_obj.read.option(Constants.WorkspaceId, store.workspace_id)
+        .option(Constants.DatawarehouseId, store.item_id)
+        .synapsesql(f"{store.name}.{schema}.{table}")
     )
 
 
-def write_warehouse_table(df, env, target, schema, table, mode="append", config=None):
+def write_warehouse_table(df, config, env, target, schema, table, mode="append"):
     """Write a Spark DataFrame to a Microsoft Fabric warehouse table.
 
     This uses Fabric Spark's `synapsesql` connector to write to a warehouse
@@ -418,7 +446,7 @@ def write_warehouse_table(df, env, target, schema, table, mode="append", config=
         Spark write mode, for example `"append"` or `"overwrite"`.
     config : dict, optional
         Config mapping from the config notebook. Expected shape:
-        `config[environment][target] = Housepath(...)`.
+        `config[environment][target] = FabricStore(...)`.
 
     Returns
     -------
@@ -449,7 +477,9 @@ def write_warehouse_table(df, env, target, schema, table, mode="append", config=
     ...     config=CONFIG,
     ... )
     """
-    p = get_path(env, target, config=config)
+    store = _get_store(config, env, target)
+    if store.kind != "warehouse":
+        raise ValueError(f"Target '{env}/{target}' is not a warehouse store.")
 
     try:
         import com.microsoft.spark.fabric
@@ -462,9 +492,9 @@ def write_warehouse_table(df, env, target, schema, table, mode="append", config=
 
     (
         df.write.mode(mode)
-        .option(Constants.WorkspaceId, p.workspace_id)
-        .option(Constants.DatawarehouseId, p.house_id)
-        .synapsesql(f"{p.house_name}.{schema}.{table}")
+        .option(Constants.WorkspaceId, store.workspace_id)
+        .option(Constants.DatawarehouseId, store.item_id)
+        .synapsesql(f"{store.name}.{schema}.{table}")
     )
 
 
@@ -523,7 +553,7 @@ def _convert_single_parquet_ns_to_us(local_in_path, local_out_path, verbose=True
         print(f"FAILED converting ns to us for file {local_in_path}: {exc}")
 
 
-def read_lakehouse_parquet(lh, relative_path, verbose=True, spark_session=None):
+def read_lakehouse_parquet(config, env, target, relative_path, verbose=True, spark_session=None):
     """Read a Parquet file from a Fabric lakehouse Files path.
 
     This reads from the lakehouse `Files/` area using Spark. If Spark cannot
@@ -534,8 +564,8 @@ def read_lakehouse_parquet(lh, relative_path, verbose=True, spark_session=None):
 
     Parameters
     ----------
-    lh : Housepath
-        Lakehouse path object returned by `get_path`.
+    lh : FabricStore
+        Lakehouse path object resolved from config/env/target.
     relative_path : str
         Path to the Parquet file under the lakehouse `Files/` folder, without
         the leading `"Files/"`. For example:
@@ -561,18 +591,15 @@ def read_lakehouse_parquet(lh, relative_path, verbose=True, spark_session=None):
 
     Examples
     --------
-    >>> lh_source = get_path("Sandbox", "Source", config=CONFIG)
-    >>> df = read_lakehouse_parquet(
-    ...     lh_source,
-    ...     "raw/orders/orders_2026.parquet",
-    ... )
+    >>> df = read_lakehouse_parquet(CONFIG, ENV, "source", "raw/orders.parquet")
     Notes
     -----
     Assumes Fabric notebook runtime filesystem conventions for local fallback
     conversion paths (``/lakehouse/default/Files/...``).
     """
-    if not getattr(lh, "root", None):
-        raise ValueError("lh.root is required.")
+    store = _get_store(config, env, target)
+    if store.kind != "lakehouse":
+        raise ValueError(f"Target '{env}/{target}' is not a lakehouse store.")
     if not relative_path:
         raise ValueError("relative_path is required.")
 
@@ -652,7 +679,7 @@ def read_lakehouse_parquet(lh, relative_path, verbose=True, spark_session=None):
     raise RuntimeError("Failed to read from both original and _tsus Parquet paths.")
 
 
-def read_lakehouse_excel(lh, relative_path, sheet_name=0, spark_session=None):
+def read_lakehouse_excel(config, env, target, relative_path, sheet_name=0, spark_session=None):
     """Read an Excel file from a Fabric lakehouse Files path.
 
     Spark does not natively read Excel files. This helper reads the Excel file
@@ -665,8 +692,8 @@ def read_lakehouse_excel(lh, relative_path, sheet_name=0, spark_session=None):
 
     Parameters
     ----------
-    lh : Housepath
-        Lakehouse path object returned by `get_path`.
+    lh : FabricStore
+        Lakehouse path object resolved from config/env/target.
     relative_path : str
         Path to the Excel file under the lakehouse root, for example
         `"Files/reference/faculty_mapping.xlsx"`.
@@ -692,25 +719,21 @@ def read_lakehouse_excel(lh, relative_path, sheet_name=0, spark_session=None):
 
     Examples
     --------
-    >>> lh_source = get_path("Sandbox", "Source", config=CONFIG)
-    >>> df_mapping = read_lakehouse_excel(
-    ...     lh_source,
-    ...     "Files/reference/faculty_mapping.xlsx",
-    ...     sheet_name="Mapping",
-    ... )
+    >>> df_mapping = read_lakehouse_excel(CONFIG, ENV, "source", "reference/mapping.xlsx")
     Notes
     -----
     Side effects:
     - Creates a temporary local file during conversion.
     - Materializes rows through pandas before creating a Spark DataFrame.
     """
-    if not getattr(lh, "root", None):
-        raise ValueError("lh.root is required.")
+    store = _get_store(config, env, target)
+    if store.kind != "lakehouse":
+        raise ValueError(f"Target '{env}/{target}' is not a lakehouse store.")
     if not relative_path:
         raise ValueError("relative_path is required.")
 
     spark_obj = _get_spark(spark_session)
-    lakehouse_file_path = f"{lh.root.rstrip('/')}/{relative_path.lstrip('/')}"
+    lakehouse_file_path = f"{store.root.rstrip('/')}/Files/{relative_path.lstrip('/')}"
 
     bin_df = (
         spark_obj.read.format("binaryFile")
@@ -844,7 +867,9 @@ def check_naming_convention(notebook_name=None, allowed_prefixes=None, fail_on_e
 
 
 def seed_minimal_sample_source_table(
-    source_lakehouse,
+    config,
+    env,
+    target,
     table_name: str = "minimal_source",
     mode: str = "overwrite",
     spark_session=None,
@@ -853,8 +878,8 @@ def seed_minimal_sample_source_table(
 
     Parameters
     ----------
-    source_lakehouse : Housepath
-        Lakehouse destination returned by ``get_path`` for the source layer.
+    source_lakehouse : FabricStore
+        Source lakehouse target selected by config/environment/target inputs.
     table_name : str, default="minimal_source"
         Destination source-table name to seed for sample notebook runs.
     mode : str, default="overwrite"
@@ -881,5 +906,5 @@ def seed_minimal_sample_source_table(
     ]
     spark_obj = _get_spark(spark_session)
     df = spark_obj.createDataFrame(rows)
-    write_lakehouse_table(df, source_lakehouse, table_name, mode=mode)
+    write_lakehouse_table(df, config, env, target, table_name, mode=mode)
     return df

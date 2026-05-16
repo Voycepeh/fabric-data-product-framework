@@ -148,18 +148,18 @@ from fabricops_kit.config import (
     PathConfig,
     QualityConfig,
     ReviewWorkflowConfig,
-    get_path,
+    _get_store,
     run_config_smoke_tests,
 )
-from fabricops_kit.fabric_input_output import Housepath, load_config
+from fabricops_kit.fabric_input_output import FabricStore, load_config
 
 
 def _sample_framework_config():
     path_config = PathConfig(
         {
             "Sandbox": {
-                "Source": Housepath("w1", "h1", "SRC", "abfss://src"),
-                "Unified": Housepath("w1", "h2", "UNI", "abfss://uni"),
+                "Source": FabricStore("Sandbox", "w1", "h1", "SRC", "lakehouse"),
+                "Unified": FabricStore("Sandbox", "w1", "h2", "UNI", "lakehouse"),
             }
         }
     )
@@ -177,32 +177,32 @@ def _sample_framework_config():
 def test_load_config_accepts_framework_config():
     config = _sample_framework_config()
     loaded = load_config(config)
-    assert loaded.path_config.paths["Sandbox"]["Source"].house_name == "SRC"
+    assert loaded.path_config.paths["Sandbox"]["Source"].name == "SRC"
 
 
-def test_get_path_missing_values_raise_clean_errors():
+def test__get_store_missing_values_raise_clean_errors():
     config = _sample_framework_config()
     with pytest.raises(ValueError, match="Environment 'Prod' was not found"):
-        get_path("Prod", "Source", config=config)
+        _get_store(config, "Prod", "Source")
 
 
 def test_bootstrap_env_and_smoke_behavior(monkeypatch):
     config = _sample_framework_config()
-    ctx = bootstrap_fabric_env(config=config, check_ai=False, smoke_test=False)
-    assert ctx.paths["Source"].house_name == "SRC"
+    ctx = bootstrap_fabric_env(config=config, smoke_test=False)
+    assert ctx.paths["Source"].name == "SRC"
     assert ctx.smoke_test_results == []
 
     runtime_mod = types.SimpleNamespace(context={"currentNotebookName": "00_env_config"})
     monkeypatch.setitem(sys.modules, "notebookutils", types.SimpleNamespace(runtime=runtime_mod))
     monkeypatch.setitem(sys.modules, "notebookutils.runtime", runtime_mod)
     monkeypatch.setattr("fabricops_kit.config.spark", object(), raising=False)
-    results = run_config_smoke_tests(config=config, check_ai=False)
+    results = run_config_smoke_tests(config=config)
     assert all(isinstance(r, ConfigSmokeCheckResult) for r in results)
 
 
 def test_bootstrap_invalid_env_raises_useful_error():
     with pytest.raises(ValueError, match="Environment 'Prod'"):
-        bootstrap_fabric_env(env="Prod", config=_sample_framework_config(), smoke_test=False, check_ai=False)
+        bootstrap_fabric_env(env="Prod", config=_sample_framework_config(), smoke_test=False)
 
 
 def test_config_dataclass_validation_guards() -> None:

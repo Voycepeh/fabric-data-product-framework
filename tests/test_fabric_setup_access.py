@@ -1,9 +1,10 @@
+from fabricops_kit.config import PathConfig
 import pytest
 
 from fabricops_kit.fabric_input_output import (
-    Housepath,
+    FabricStore,
     build_table_identifier,
-    get_path,
+    _get_store,
     read_lakehouse_csv,
     read_lakehouse_table,
     load_config,
@@ -11,7 +12,7 @@ from fabricops_kit.fabric_input_output import (
 )
 
 
-def test_load_config_and_get_path(tmp_path):
+def test_load_config_and__get_store(tmp_path):
     cfg = tmp_path / "fabric_config.yml"
     cfg.write_text(
         """
@@ -26,17 +27,17 @@ environments:
         encoding="utf-8",
     )
     parsed = load_config(cfg)
-    p = get_path("Sandbox", "Source", config=parsed)
-    assert isinstance(p, Housepath)
-    assert p.house_name == "SRC"
+    p = _get_store(parsed, "Sandbox", "Source")
+    assert isinstance(p, FabricStore)
+    assert p.name == "SRC"
 
 
-def test_get_path_missing_env_and_target_errors():
-    cfg = {"Sandbox": {"Source": Housepath("w", "h", "n", "abfss://root")}}
+def test__get_store_missing_env_and_target_errors():
+    cfg = {"Sandbox": {"Source": FabricStore("Sandbox", "w", "h", "n", "lakehouse")}}
     with pytest.raises(ValueError, match="Environment 'Prod' was not found"):
-        get_path("Prod", "Source", config=cfg)
+        _get_store(cfg, "Prod", "Source")
     with pytest.raises(ValueError, match="Target 'Unified' was not found"):
-        get_path("Sandbox", "Unified", config=cfg)
+        _get_store(cfg, "Sandbox", "Unified")
 
 
 def test_build_table_identifier_variants():
@@ -74,16 +75,16 @@ class _FakeSpark:
 
 
 def test_lakehouse_read_helpers_with_fake_spark():
-    lh = Housepath("w", "h", "n", "abfss://root")
+    lh = FabricStore("Sandbox", "w", "h", "n", "lakehouse")
     spark = _FakeSpark()
-    read_lakehouse_table(lh, "orders", spark_session=spark)
-    read_lakehouse_csv(lh, "Files/orders.csv", spark_session=spark)
+    read_lakehouse_table(PathConfig(paths={"Sandbox": {"source": lh}}), "Sandbox", "source", "orders", spark_session=spark)
+    read_lakehouse_csv(PathConfig(paths={"Sandbox": {"source": lh}}), "Sandbox", "source", "Files/orders.csv", spark_session=spark)
     assert spark.read.loaded_path.endswith("/Tables/orders")
     assert spark.read.csv_path.endswith("/Files/orders.csv")
 
 
 def test_read_warehouse_table_missing_fabric_connector_message():
-    lh = Housepath("w", "h", "wh", "abfss://root")
+    lh = FabricStore("Sandbox", "w", "h", "wh", "warehouse")
     cfg = {"DE": {"Warehouse": lh}}
     with pytest.raises(RuntimeError, match="must run inside Microsoft Fabric Spark"):
-        read_warehouse_table("DE", "Warehouse", "dbo", "t", config=cfg, spark_session=_FakeSpark())
+        read_warehouse_table(cfg, "DE", "Warehouse", "dbo", "t", spark_session=_FakeSpark())

@@ -395,7 +395,6 @@ class ConfigBootstrapResult:
     environment: str
     paths: dict[str, Any]
     runtime_metadata: dict[str, Any]
-    ai_availability: dict[str, Any]
     smoke_test_results: list[ConfigSmokeCheckResult]
     readiness_status: str
 
@@ -418,8 +417,6 @@ class NotebookSetupContext:
         Selected environment key used for path resolution.
     paths : dict[str, Any]
         Resolved environment target mappings keyed by target name.
-    ai_status : dict[str, Any]
-        AI availability/configuration status payload.
     validation_results : list[ConfigSmokeCheckResult]
         Startup validation checks executed during setup.
     runtime_metadata : dict[str, Any]
@@ -434,7 +431,6 @@ class NotebookSetupContext:
     user_name: str | None
     environment: str
     paths: dict[str, Any]
-    ai_status: dict[str, Any]
     validation_results: list[ConfigSmokeCheckResult]
     runtime_metadata: dict[str, Any]
     readiness_status: str
@@ -462,7 +458,7 @@ def _validate_framework_config(config: FrameworkConfig | dict[str, Any]) -> Fram
 
     Notes
     -----
-    Validation checks configuration shape and required Housepath-style fields.
+    Validation checks configuration shape and required FabricStore fields.
     It does not perform external IO or provision Fabric resources.
 
     Examples
@@ -509,9 +505,9 @@ def _validate_framework_config(config: FrameworkConfig | dict[str, Any]) -> Fram
         if not isinstance(targets, dict) or not targets:
             raise ValueError(f"Environment '{env_name}' must contain at least one target.")
         for target_name, housepath in targets.items():
-            required = ("workspace_id", "house_id", "house_name", "root")
+            required = ("workspace_id", "item_id", "name", "kind")
             if not all(hasattr(housepath, attr) for attr in required):
-                raise ValueError(f"Target '{env_name}/{target_name}' must provide Housepath-style fields: {required}.")
+                raise ValueError(f"Target '{env_name}/{target_name}' must provide FabricStore fields: {required}.")
 
     return normalized
 
@@ -550,7 +546,7 @@ def load_config(config: FrameworkConfig | dict[str, Any]) -> FrameworkConfig:
     return _validate_framework_config(config)
 
 
-def get_path(env: str, target: str, config: FrameworkConfig | PathConfig | None) -> Any:
+def _get_store(config: FrameworkConfig | PathConfig | None, env: str, target: str) -> Any:
     """Resolve a configured Fabric path for an environment and target.
 
     Parameters
@@ -565,7 +561,7 @@ def get_path(env: str, target: str, config: FrameworkConfig | PathConfig | None)
     Returns
     -------
     Any
-        Housepath-style object with ``workspace_id``, ``house_id``, ``house_name``, and ``root``.
+        FabricStore object with ``workspace_id``, ``house_id``, ``house_name``, and ``root``.
 
     Raises
     ------
@@ -611,16 +607,14 @@ def _run_config_smoke_tests(
     config: FrameworkConfig,
     env: str = "Sandbox",
     required_targets: list[str] | None = None,
-    check_ai: bool = True,
     check_io_import: bool = False,
     notebook_name: str | None = None,
-    ai_result: dict[str, Any] | None = None,
 ) -> list[ConfigSmokeCheckResult]:
     """Run 00_env_config readiness smoke checks for configuration bootstrap.
 
     Use this during environment bootstrap to verify Spark availability, Fabric
     runtime context access, required path mappings, notebook naming policy, and
-    optional AI/IO import readiness before executing downstream notebook steps.
+    optional IO import readiness before executing downstream notebook steps.
 
     Parameters
     ----------
@@ -631,15 +625,10 @@ def _run_config_smoke_tests(
     required_targets : list[str] | None, optional
         Required targets expected in ``config.path_config``. Defaults to
         ``["Source", "Unified"]`` when not provided.
-    check_ai : bool, default=True
-        Whether to run the Fabric AI availability check.
     check_io_import : bool, default=False
         Whether to test importability of ``fabric_input_output`` helpers.
     notebook_name : str | None, optional
         Notebook name to validate against configured naming prefixes.
-    ai_result : dict[str, Any] | None, optional
-        Optional precomputed AI availability payload to reuse instead of
-        re-running the runtime import check.
 
     Returns
     -------
@@ -675,14 +664,14 @@ def _run_config_smoke_tests(
     results.append(ConfigSmokeCheckResult("fabric_runtime_context", runtime_status, runtime_message))
     try:
         for target in required_targets:
-            p = get_path(env=env, target=target, config=config)
-            missing = [attr for attr in ("workspace_id", "house_id", "house_name", "root") if not getattr(p, attr, None)]
+            p = _get_store(config=config, env=env, target=target)
+            missing = [attr for attr in ("workspace_id", "item_id", "name", "kind") if not getattr(p, attr, None)]
             if missing:
                 results.append(ConfigSmokeCheckResult(f"path:{target}", "fail", f"Missing required fields: {missing}"))
-            elif str(p.root).startswith("abfss://"):
-                results.append(ConfigSmokeCheckResult(f"path:{target}", "pass", "Path is populated and ABFSS formatted."))
+            elif p.kind == "lakehouse" and str(p.root).startswith("abfss://"):
+                results.append(ConfigSmokeCheckResult(f"path:{target}", "pass", "Lakehouse store is populated and ABFSS root is derivable."))
             else:
-                results.append(ConfigSmokeCheckResult(f"path:{target}", "warn", "Path root is populated but not ABFSS-formatted."))
+                results.append(ConfigSmokeCheckResult(f"path:{target}", "pass", "Store is populated."))
     except Exception as exc:
         results.append(ConfigSmokeCheckResult("path_resolution", "fail", str(exc)))
 
@@ -691,12 +680,6 @@ def _run_config_smoke_tests(
         results.append(ConfigSmokeCheckResult("notebook_naming", "pass" if not errors else "fail", "; ".join(errors) or "Notebook name is valid."))
     else:
         results.append(ConfigSmokeCheckResult("notebook_naming", "skipped", "Notebook name check skipped."))
-
-    if check_ai:
-        ai_status = ai_result or _check_fabric_ai_functions_available()
-        results.append(ConfigSmokeCheckResult("fabric_ai", "pass" if ai_status.get("available") else "warn", ai_status.get("message", "")))
-    else:
-        results.append(ConfigSmokeCheckResult("fabric_ai", "skipped", "AI check disabled."))
 
     if check_io_import:
         try:
@@ -712,7 +695,6 @@ def _run_config_smoke_tests(
 def _bootstrap_fabric_env(
     env: str = "Sandbox",
     required_targets: list[str] | None = None,
-    check_ai: bool = True,
     smoke_test: bool = True,
     config: FrameworkConfig | dict[str, Any] | None = None,
     notebook_name: str | None = None,
@@ -721,7 +703,7 @@ def _bootstrap_fabric_env(
 
     This is a one-call bootstrap helper used at the start of a FabricOps run.
     It validates/loads configuration, resolves required environment targets,
-    gathers runtime and AI availability metadata, and optionally executes smoke
+    gathers runtime metadata and optionally executes smoke
     checks before quality/governance/lineage workflows continue.
 
     Parameters
@@ -731,8 +713,6 @@ def _bootstrap_fabric_env(
     required_targets : list[str] | None, optional
         Target names that must resolve for the selected environment. Defaults
         to ``["Source", "Unified"]``.
-    check_ai : bool, default=True
-        Whether to include Fabric AI availability checks.
     smoke_test : bool, default=True
         Whether to execute :func:`run_config_smoke_tests`.
     config : FrameworkConfig | dict[str, Any] | None, optional
@@ -744,7 +724,7 @@ def _bootstrap_fabric_env(
     -------
     ConfigBootstrapResult
         Structured bootstrap result containing resolved paths, runtime metadata,
-        AI status, smoke-check results, and overall readiness status.
+        smoke-check results, and overall readiness status.
 
     Raises
     ------
@@ -767,24 +747,20 @@ def _bootstrap_fabric_env(
     if normalized is None:
         raise ValueError("config is required for bootstrap_fabric_env.")
     required_targets = required_targets or ["Source", "Unified"]
-    resolved_paths = {target: get_path(env=env, target=target, config=normalized) for target in required_targets}
-    ai_result = _check_fabric_ai_functions_available() if check_ai else {"available": None, "message": "AI check disabled."}
+    resolved_paths = {target: _get_store(config=normalized, env=env, target=target) for target in required_targets}
     runtime_meta = _get_fabric_runtime_metadata(notebook_name=notebook_name)
     smoke = _run_config_smoke_tests(
         normalized,
         env=env,
         required_targets=required_targets,
-        check_ai=check_ai,
         check_io_import=False,
         notebook_name=notebook_name,
-        ai_result=ai_result,
     ) if smoke_test else []
     status = "ready" if all(r.status in {"pass", "skipped", "warn"} for r in smoke) else "not_ready"
     return ConfigBootstrapResult(
         environment=env,
         paths=resolved_paths,
         runtime_metadata=runtime_meta,
-        ai_availability=ai_result,
         smoke_test_results=smoke,
         readiness_status=status,
     )
@@ -798,7 +774,6 @@ def setup_notebook(
     required_targets: list[str] | None = None,
     notebook_name: str | None = None,
     run_id_prefix: str = "run",
-    check_ai: bool = True,
     configure_ai: bool = False,
     local_fallback_name: str | None = None,
 ) -> NotebookSetupContext:
@@ -808,7 +783,7 @@ def setup_notebook(
 
     normalized = load_config(config)
     required_targets = required_targets or ["Source", "Unified"]
-    resolved_paths = {target: get_path(env=env, target=target, config=normalized) for target in required_targets}
+    resolved_paths = {target: _get_store(config=normalized, env=env, target=target) for target in required_targets}
 
     context = None
     try:
@@ -847,11 +822,7 @@ def setup_notebook(
         "runtime_available": context is not None,
     }
 
-    ai_status = _check_fabric_ai_functions_available() if check_ai else {"available": None, "message": "AI check disabled."}
-    if configure_ai and check_ai and ai_status.get("available"):
-        ai_status = {**ai_status, **_configure_fabric_ai_functions()}
-
-    checks = _run_config_smoke_tests(config=normalized, env=env, required_targets=required_targets, check_ai=check_ai, notebook_name=resolved_notebook_name, ai_result=ai_status)
+    checks = _run_config_smoke_tests(config=normalized, env=env, required_targets=required_targets, notebook_name=resolved_notebook_name)
     readiness_status = "ready" if all(r.status in {"pass", "warn", "skipped"} for r in checks) else "not_ready"
 
     return NotebookSetupContext(
@@ -861,7 +832,6 @@ def setup_notebook(
         user_name=str(user_name),
         environment=env,
         paths=resolved_paths,
-        ai_status=ai_status,
         validation_results=checks,
         runtime_metadata=runtime_meta,
         readiness_status=readiness_status,
