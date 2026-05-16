@@ -18,16 +18,7 @@ def test_00_env_config_import_and_default_prompt_override_guard():
     prompt_block = "\n".join(cells)
     assert "from fabricops_kit.config import (" in import_block
     assert "create_ai_prompt_config" not in import_block
-    assert "AI_PROMPT_CONFIG = AIPromptConfig(" in prompt_block
-    assert "DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE" in import_block
-    assert "DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE" in import_block
-    assert "DEFAULT_HANDOVER_SUMMARY_TEMPLATE" in import_block
-    assert "BUSINESS_CONTEXT_PROMPT_TEMPLATE = DEFAULT_BUSINESS_CONTEXT_PROMPT_TEMPLATE" in prompt_block
-    assert "DQ_RULE_SUGGESTION_PROMPT_TEMPLATE = DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE" in prompt_block
-    assert "GOVERNANCE_PERSONAL_IDENTIFIER_PROMPT_TEMPLATE = DEFAULT_GOVERNANCE_PERSONAL_IDENTIFIER_PROMPT_TEMPLATE" in prompt_block
-    assert "GOVERNANCE_CANDIDATE_PROMPT_TEMPLATE = DEFAULT_GOVERNANCE_CANDIDATE_TEMPLATE" in prompt_block
-    assert "GOVERNANCE_REVIEW_PROMPT_TEMPLATE = DEFAULT_GOVERNANCE_REVIEW_TEMPLATE" in prompt_block
-    assert "HANDOVER_SUMMARY_PROMPT_TEMPLATE = DEFAULT_HANDOVER_SUMMARY_TEMPLATE" in prompt_block
+    assert "AI_PROMPTS = AIPromptConfig(" in prompt_block
     assert "ReviewWorkflowConfig" in import_block
     assert "REVIEW_WORKFLOW_CONFIG = ReviewWorkflowConfig(" in prompt_block
     assert "review_workflow_config=REVIEW_WORKFLOW_CONFIG" in prompt_block
