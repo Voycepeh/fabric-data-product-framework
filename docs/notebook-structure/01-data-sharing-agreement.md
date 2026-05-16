@@ -27,6 +27,7 @@ Governance defines agreement identity, approved usage, business context, ownersh
     <tr><td><a href="../../api/reference/_build_governance_context/"><code>_build_governance_context</code></a></td><td><a class="reference-module-link" href="../../api/modules/data_governance/">data_governance</a></td><td>Build agreement governance prompt context for downstream AI-assisted review steps.</td></tr>
     <tr><td><a href="../../api/reference/write_metadata_rows/"><code>write_metadata_rows</code></a></td><td><a class="reference-module-link" href="../../api/modules/data_product_metadata/">data_product_metadata</a></td><td>Persist agreement-level metadata rows when metadata writes are enabled.</td></tr>
     <tr><td><a href="../../api/reference/register_current_notebook/"><code>register_current_notebook</code></a></td><td><a class="reference-module-link" href="../../api/modules/data_product_metadata/">data_product_metadata</a></td><td>Register notebook traceability rows for agreement-level discoverability.</td></tr>
+    <tr><td><a href="../../api/reference/step-02a-shared-runtime-config/get_path/"><code>get_path</code></a></td><td><a class="reference-module-link" href="../../api/modules/config/">config</a></td><td>Resolve canonical metadata table paths for reads and writes.</td></tr>
   </tbody>
 </table>
 
