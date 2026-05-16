@@ -428,4 +428,17 @@ def test_module_callable_tables_exclude_supporting_data_structures() -> None:
     assert "| [`DQEnforcementResult`]" not in data_quality_page
     assert "| [`FabricStore`]" not in fabric_io_page
     assert "| [`enforce_dq`]" in data_quality_page
+
+
+def test_read_lakehouse_table_reference_excludes_legacy_housepath_tokens() -> None:
+    generate_reference()
+    callable_page = (ROOT / "docs" / "api" / "reference" / "read_lakehouse_table.md").read_text(encoding="utf-8")
+    assert "Housepath" not in callable_page
+    assert "get_path" not in callable_page
+
+
+def test_read_lakehouse_table_reference_uses_config_env_target_example() -> None:
+    generate_reference()
+    callable_page = (ROOT / "docs" / "api" / "reference" / "read_lakehouse_table.md").read_text(encoding="utf-8")
+    assert 'read_lakehouse_table(CONFIG, ENV, "source", "RAW_ORDERS")' in callable_page
     assert "| [`load_config`]" in (ROOT / "docs/api/modules/config.md").read_text(encoding="utf-8")
