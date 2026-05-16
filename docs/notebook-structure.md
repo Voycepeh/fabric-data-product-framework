@@ -1,12 +1,24 @@
-# Notebook Structure
+# Notebook Operating Model
 
-Notebook Structure is the canonical guide for notebook ownership, lifecycle boundaries, and execution behavior in FabricOps Starter Kit.
+This page defines how FabricOps Starter Kit notebooks operate across governance and execution workspaces, how stages connect, and where each notebook boundary applies.
 
 ![Governance-Centered Workspace Model](assets/notebook-structure.png)
 
-## Revised notebook sequence
+## Workspace model
 
-Use the following sequence for the lifecycle:
+FabricOps uses two workspace zones connected by a shared governance metadata plane:
+
+- **Governance Workspace**
+  - `01_da_<agreement>`
+  - Governance metadata lakehouse
+  - `04_gov_<agreement>_<dataset>_<table>` (planned stage)
+- **Execution Workspace (Dev / Test / Prod)**
+  - `00_env_config`
+  - `02_ex_<agreement>_<topic>`
+  - Lakehouse / Warehouse data store
+  - `03_pc_<agreement>_<pipeline>`
+
+## Stage sequence
 
 ```text
 00_env_config
@@ -16,77 +28,28 @@ Use the following sequence for the lifecycle:
 04_gov_<agreement>_<dataset>_<table>
 ```
 
-## Workspace structure aligned to the model
-
-The lifecycle runs across two workspace zones:
-
-- **Governance Workspace** owns agreement approvals and governance enrichment.
-- **Execution Workspaces** (Dev / Test / Prod) run exploration and pipeline execution.
-
-The **governance metadata lakehouse** is the shared metadata plane connecting governance and execution activities.
-
-```text
-Governance Workspace
-├── 01_da_<agreement>                           (agreement-level approval evidence)
-├── Governance metadata lakehouse               (shared metadata/evidence plane)
-└── 04_gov_<agreement>_<dataset>_<table>        (1-many, planned stage)
-
-Execution Workspace (Dev / Test / Prod)
-├── 00_env_config
-├── 02_ex_<agreement>_<topic>      (1-many)
-├── 03_pc_<agreement>_<pipeline>   (1-many)
-├── 04_gov_<agreement>_<dataset>_<table>   (0-many)
-└── Local metadata/evidence lakehouse
-├── 02_ex_<agreement>_<topic>                   (1-many)
-├── Lakehouse / Warehouse data store
-└── 03_pc_<agreement>_<pipeline>                (1-many)
-```
-
 ## Notebook roles and boundaries
 
-| Notebook | Primary ownership | Scope | What belongs here |
+| Notebook | Workspace | Primary role | Boundary |
 |---|---|---|---|
-| `00_env_config` | Platform / engineering | Environment runtime configuration | Shared environment config, paths, runtime settings, startup checks, and reusable config objects. |
-| `01_data_sharing_agreement_<agreement>` | Governance steward / data owner | Cross-environment governance control plane | Agreement context, approved usage, business context, ownership, permissions, restrictions, classification, sensitivity/PII posture, and approved DQ metadata. |
-| `02_ex_<agreement>_<topic>` | Analyst / data scientist | Exploration and proposal | Profiling, discovery, exploratory transforms, AI-assisted DQ suggestions, AI-assisted classification suggestions, and metadata evidence that informs governance updates. |
-| `03_pc_<agreement>_<pipeline>` | Data engineer | Pipeline contract enforcement | Run-all-safe and schedulable execution that loads approved metadata/rules/classifications, performs deterministic transforms, writes outputs, and records runtime evidence. |
-| `04_gov_<agreement>_<dataset>_<table>` | Governance steward / analyst | Table and column governance enrichment | Uses profile evidence created by `02_ex`/`03_pc` to draft column business context and governance classifications, requires human widget review, and writes approved rows to metadata tables. |
-| Notebook | Primary ownership | Scope | What belongs here | What does **not** belong here |
-|---|---|---|---|---|
-| `00_env_config` | Platform / engineering | Environment bootstrap and runtime config | Build `CONFIG`, set metadata lakehouse routing, define AI prompts, runtime settings, and path targets. | Agreement approvals, profiling, pipeline transforms, column governance decisions. |
-| `01_da_<agreement>` | Governance steward / data owner | Agreement-level approval evidence | Capture and write agreement-level approval evidence to `METADATA_DATA_AGREEMENT`; register notebook in `METADATA_NOTEBOOK_REGISTRY`. | Table/column business context review and classification/PII governance review. |
-| `02_ex_<agreement>_<topic>` | Analyst / data scientist | Exploration and profiling evidence | Require existing `agreement_id`; register under that agreement; profile data and write evidence tied to `agreement_id`, `environment_name`, `dataset_name`, `table_name`, and `column_name`. | Defining new agreements, final governance approval decisions. |
-| `03_pc_<agreement>_<pipeline>` | Data engineer | Pipeline contract execution evidence | Require existing `agreement_id`; register under that agreement; execute transformation/DQ/pipeline work and write evidence tied to `agreement_id`. | Defining agreements or standalone governance approvals outside agreement context. |
-| `04_gov_<agreement>_<dataset>_<table>` | Governance steward / data owner | Column-level governance enrichment (planned stage) | Documented operating stage after profile/pipeline evidence exists; reviews per-column business context and classification/PII/confidentiality and is expected to write `METADATA_COLUMN_CONTEXT` and `METADATA_COLUMN_GOVERNANCE` once template support is added. | Agreement creation and environment bootstrap. |
+| `00_env_config` | Execution | Runtime bootstrap and routing config | Does not define agreements or governance outcomes. |
+| `01_da_<agreement>` | Governance | Agreement-level approval evidence | Writes agreement evidence only; no column-level enrichment. |
+| `02_ex_<agreement>_<topic>` | Execution | Exploration and profiling evidence | Uses existing `agreement_id`; does not approve governance policy. |
+| `03_pc_<agreement>_<pipeline>` | Execution | Pipeline contract execution | Enforces approved metadata; does not create agreements. |
+| `04_gov_<agreement>_<dataset>_<table>` | Governance | Column governance enrichment (planned stage) | Reviews business context and classification/PII/confidentiality; not part of execution workspace. |
 
-## Cross-notebook enforcement rules
+## Governance flow across stages
 
-- Governance is defined once in `01_data_sharing_agreement_<agreement>`.
-- Sandbox, Dev/Test, and Prod notebooks reuse approved governance metadata.
-- `02_ex` notebooks propose metadata evidence updates based on profiling and AI-assisted evidence; they do not define agreements.
-- `03_pc` notebooks load approved agreement metadata and enforce it during execution; they do not define agreements.
-- `04_gov` enriches table/column governance metadata after profile evidence exists and does not replace agreement-level ownership in `01_data_sharing_agreement`.
-- Pipeline execution writes operational evidence for quality, lineage, and controls.
-- That evidence can feed back into governance metadata updates.
-- Core operational loop: `03_pc` evidence → `01_data_sharing_agreement` governance update.
-- All downstream notebooks (`02_ex`, `03_pc`, `04_gov`) must declare `agreement_id`.
-- Before doing work, downstream notebooks must validate that `agreement_id` exists in `METADATA_DATA_AGREEMENT`.
-- All notebooks must register themselves in `METADATA_NOTEBOOK_REGISTRY` under the `agreement_id` to avoid stray notebooks.
+- `01_da` defines and approves agreement-level metadata once.
+- `02_ex` and `03_pc` run under that approved `agreement_id` and produce execution evidence.
+- `04_gov` is the documented governance-stage follow-on for table/column enrichment after evidence exists (planned where template support is not yet available).
 
-## Metadata routing rule (required)
+## Required metadata routing rule
 
-Do not use `spark.table("METADATA_*")` or implicit/default lakehouse assumptions.
+Never rely on default-lakehouse metadata access such as `spark.table("METADATA_*")`.
+Always route metadata through configured targets using `read_lakehouse_table(...)` and `write_lakehouse_table(...)` with `CONFIG`, `env_name`, and `"metadata"`.
 
-Always use `read_lakehouse_table` and `write_lakehouse_table` with `CONFIG`, `env_name`, and the `metadata` target.
-
-## Governance flow across notebooks
-
-- `01_da` captures agreement-level approval evidence once and publishes it for reuse.
-- `02_ex` and `03_pc` run under an existing agreement and produce profiling/pipeline evidence.
-- `04_gov` is the documented next operating stage for column-level enrichment; until a dedicated template notebook is added, treat it as planned guidance.
-- Human approval remains the control authority for governance outcomes.
-
-## Notebook details
+## Notebook-specific pages
 
 - [`00_env_config`](notebook-structure/00-env-config.md)
 - [`01_da_<agreement>`](notebook-structure/01-data-sharing-agreement.md)
