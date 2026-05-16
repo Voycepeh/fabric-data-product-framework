@@ -1,62 +1,51 @@
 # `01_da_<agreement>`
 
-`01_da_agreement_template.ipynb` defines the **source/agreement-level permission boundary** for one agreement.
+`01_da_<agreement>` is the agreement-level approval notebook.
 
-- Keep `agreement_id` stable for the same agreement.
-- Keep `save_to_metadata=False` while testing.
-- Set `save_to_metadata=True` only when ready to write metadata.
-- Set `register_notebook_to_metadata=True` to register the notebook run to metadata.
+Its operational template remains:
 
-> <a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/01_da_agreement_template.ipynb">Open template notebook</a>
+- `templates/notebooks/01_data_agreement_template.ipynb`
 
-## 01 Runtime bootstrap and imports
+When copying into a project workspace, keep the notebook naming convention as `01_da_<agreement>`.
 
-- `%run 00_env_config` stays in its own cell.
-- Import only public APIs from `fabricops_kit`.
-- The notebook remains lightweight and avoids private/internal helpers.
+It writes agreement evidence only and does **not** perform column-level governance enrichment.
 
-## 02 Agreement parameters (source/agreement-level only)
+> <a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/01_data_agreement_template.ipynb">Open template notebook</a>
 
-The notebook captures source/agreement-level approval evidence fields:
+## What this notebook does
 
-- `agreement_id`
-- `agreement_requested_source`
-- `agreement_source_data_classification`
-- `agreement_source_contains_pii_flag`
-- `agreement_source_tables`
-- `agreement_source_stewarding_data_manager_name`
-- `agreement_purpose`
-- `agreement_permitted_uses`
-- `agreement_approval_duration`
-- `agreement_approval_date`
-- `agreement_requester_name`
-- `agreement_requesting_department`
-- `agreement_stewarding_approver_name`
-- `agreement_stewarding_department`
-- `agreement_renewal_procedure`
-- `agreement_status`
-- `agreement_notes`
-- `environment_name`
-- `created_at`
+1. **Runtime bootstrap**
+   - Runs `%run 00_env_config` so all runtime settings and metadata routing come from shared `CONFIG`.
+2. **Agreement metadata definition**
+   - Defines agreement identity, approved usage context, stewardship/ownership details, and related agreement-level evidence.
+3. **Controlled write behavior**
+   - Uses `save_to_metadata=False` for dry runs/testing.
+   - Uses `save_to_metadata=True` only when approval evidence is ready to persist.
+4. **Agreement persistence**
+   - Writes approved agreement rows to `METADATA_DATA_AGREEMENT`.
+5. **Notebook registration**
+   - Registers itself in `METADATA_NOTEBOOK_REGISTRY` under the `agreement_id` for traceability.
+6. **Downstream reuse**
+   - `02_ex` and `03_pc` select and reuse this approved `agreement_id` and associated agreement metadata.
 
-## 03 Build agreement record
+## Required controls
 
-The notebook builds one agreement metadata record only and appends it to `METADATA_DATA_AGREEMENT` through config-routed metadata IO.
+- Keep `agreement_id` stable for the same real-world agreement.
+- Route metadata reads/writes via configured metadata routing:
+  - `read_lakehouse_table(..., config=CONFIG, env=env_name, target="metadata", ...)`
+  - `write_lakehouse_table(..., config=CONFIG, env=env_name, target="metadata", ...)`
+- Do not rely on `spark.table("METADATA_*")` or default lakehouse assumptions.
 
-## 04 Save agreement metadata
+## Out of scope
 
-When metadata writes are enabled, the notebook appends to `METADATA_DATA_AGREEMENT` using `write_lakehouse_table`.
+These belong to `04_gov_<agreement>_<dataset>_<table>`:
 
-No extra agreement mapping tables are introduced in this step.
+- Per-column business context approval.
+- Per-column classification / PII / confidentiality enrichment.
+- Writes to `METADATA_COLUMN_CONTEXT` and `METADATA_COLUMN_GOVERNANCE`.
 
-## 05 Register notebook
+## Cross-notebook requirements
 
-The notebook optionally registers itself via `register_current_notebook` into `METADATA_NOTEBOOK_REGISTRY`.
-
-Registration links notebook evidence to `agreement_id` and environment.
-
-## 06 What happens next
-
-- `01` captures source/agreement-level permission boundary evidence only.
-- `02` and `03` produce and enforce evidence under `agreement_id`.
-- `04` (future) performs table/column governance enrichment under `agreement_id + dataset_name + table_name`.
+- Downstream notebooks (`02_ex`, `03_pc`, `04_gov`) must declare `agreement_id`.
+- Downstream notebooks must validate `agreement_id` exists in `METADATA_DATA_AGREEMENT` before doing work.
+- All notebooks must register in `METADATA_NOTEBOOK_REGISTRY` under `agreement_id` to avoid stray runs.
