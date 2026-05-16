@@ -47,3 +47,14 @@ def test_notebook_01_agreement_fields_are_lightweight() -> None:
     assert "classification" not in combined
     assert "sensitivity" not in combined
     assert "pii" not in combined
+
+
+def test_notebook_01_uses_supported_setup_notebook_signature() -> None:
+    combined = "\n".join(_code_cells())
+    assert "CONFIG = setup_notebook(" not in combined
+    assert "setup_notebook(spark, env_name=env_name)" not in combined
+    assert "BOOTSTRAP_01 = setup_notebook(" in combined
+    assert "config=CONFIG" in combined
+    assert "env=env_name" in combined
+    assert 'required_targets=["metadata"]' in combined
+    assert 'notebook_name="01_data_agreement_template"' in combined
