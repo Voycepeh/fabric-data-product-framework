@@ -151,8 +151,14 @@ def test_register_current_notebook_handles_none_values(monkeypatch):
     assert row["notebook_id"] == ""
     assert row["user_id"] == ""
     assert row["user_name"] == ""
+    assert row["environment_name"] == ""
+    assert row["dataset_name"] == ""
+    assert row["table_name"] == ""
+    assert row["topic"] == ""
+    assert row["pipeline_name"] == ""
     assert row["notebook_url"] == ""
     assert row["notebook_name"] == "unknown_notebook"
+    assert all(isinstance(value, str) for value in row.values())
     assert captured["row"] == row
 
 
