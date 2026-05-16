@@ -13,9 +13,9 @@ def test_all_exports_are_importable():
 
 def _sample_config():
     from fabricops_kit.config import AIPromptConfig, FrameworkConfig, GovernanceConfig, LineageConfig, NotebookRuntimeConfig, PathConfig, QualityConfig, ReviewWorkflowConfig
-    from fabricops_kit.fabric_input_output import Housepath
+    from fabricops_kit.fabric_input_output import FabricStore
     return FrameworkConfig(
-        path_config=PathConfig({"Sandbox": {"Source": Housepath("w", "h", "s", "abfss://s"), "Unified": Housepath("w", "h2", "u", "abfss://u")}}),
+        path_config=PathConfig({"Sandbox": {"Source": FabricStore("w", "h", "s", "abfss://s"), "Unified": FabricStore("w", "h2", "u", "abfss://u")}}),
         notebook_runtime_config=NotebookRuntimeConfig(("00_", "02_", "03_")),
         ai_prompt_config=AIPromptConfig("dq", "gov", "ho"),
         quality_config=QualityConfig(),

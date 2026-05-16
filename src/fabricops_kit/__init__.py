@@ -1,8 +1,8 @@
 """Public notebook-friendly entrypoints for the FabricOps Starter Kit."""
 
-from .config import get_path, load_config, setup_notebook
+from .config import load_config, setup_notebook
 from .fabric_input_output import (
-    Housepath,
+    FabricStore,
     read_lakehouse_csv,
     read_lakehouse_excel,
     read_lakehouse_parquet,
@@ -35,11 +35,11 @@ from .technical_columns import standardize_columns
 __version__ = "0.1.0"
 
 __all__ = [
-    "load_config","setup_notebook","get_path","load_agreements","select_agreement","get_selected_agreement","register_current_notebook","load_notebook_registry",
+    "load_config","setup_notebook","load_agreements","select_agreement","get_selected_agreement","register_current_notebook","load_notebook_registry",
     "read_lakehouse_table","write_lakehouse_table","read_warehouse_table","write_warehouse_table","profile_dataframe",
     "draft_business_context","review_business_context","write_business_context",
     "draft_dq_rules","review_dq_rules","get_dq_review_results","write_dq_rules","load_dq_rules","enforce_dq","assert_dq_passed",
     "draft_governance","review_governance","write_governance","load_governance","standardize_columns","build_lineage_records","build_lineage_handover_markdown","build_handover","render_handover_markdown",
     "read_lakehouse_csv","read_lakehouse_parquet","read_lakehouse_excel","validate_dq_rules","review_dq_rule_deactivations","check_schema_drift","check_partition_drift","check_profile_drift","summarize_drift_results",
-    "Housepath",
+    "FabricStore",
 ]

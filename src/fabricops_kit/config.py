@@ -462,7 +462,7 @@ def _validate_framework_config(config: FrameworkConfig | dict[str, Any]) -> Fram
 
     Notes
     -----
-    Validation checks configuration shape and required Housepath-style fields.
+    Validation checks configuration shape and required FabricStore fields.
     It does not perform external IO or provision Fabric resources.
 
     Examples
@@ -509,9 +509,9 @@ def _validate_framework_config(config: FrameworkConfig | dict[str, Any]) -> Fram
         if not isinstance(targets, dict) or not targets:
             raise ValueError(f"Environment '{env_name}' must contain at least one target.")
         for target_name, housepath in targets.items():
-            required = ("workspace_id", "house_id", "house_name", "root")
+            required = ("workspace_id", "item_id", "name", "kind")
             if not all(hasattr(housepath, attr) for attr in required):
-                raise ValueError(f"Target '{env_name}/{target_name}' must provide Housepath-style fields: {required}.")
+                raise ValueError(f"Target '{env_name}/{target_name}' must provide FabricStore fields: {required}.")
 
     return normalized
 
@@ -550,7 +550,7 @@ def load_config(config: FrameworkConfig | dict[str, Any]) -> FrameworkConfig:
     return _validate_framework_config(config)
 
 
-def get_path(env: str, target: str, config: FrameworkConfig | PathConfig | None) -> Any:
+def _get_store(env: str, target: str, config: FrameworkConfig | PathConfig | None) -> Any:
     """Resolve a configured Fabric path for an environment and target.
 
     Parameters
@@ -565,7 +565,7 @@ def get_path(env: str, target: str, config: FrameworkConfig | PathConfig | None)
     Returns
     -------
     Any
-        Housepath-style object with ``workspace_id``, ``house_id``, ``house_name``, and ``root``.
+        FabricStore object with ``workspace_id``, ``house_id``, ``house_name``, and ``root``.
 
     Raises
     ------
@@ -675,14 +675,14 @@ def _run_config_smoke_tests(
     results.append(ConfigSmokeCheckResult("fabric_runtime_context", runtime_status, runtime_message))
     try:
         for target in required_targets:
-            p = get_path(env=env, target=target, config=config)
-            missing = [attr for attr in ("workspace_id", "house_id", "house_name", "root") if not getattr(p, attr, None)]
+            p = _get_store(env=env, target=target, config=config)
+            missing = [attr for attr in ("workspace_id", "item_id", "name", "kind") if not getattr(p, attr, None)]
             if missing:
                 results.append(ConfigSmokeCheckResult(f"path:{target}", "fail", f"Missing required fields: {missing}"))
-            elif str(p.root).startswith("abfss://"):
-                results.append(ConfigSmokeCheckResult(f"path:{target}", "pass", "Path is populated and ABFSS formatted."))
+            elif p.kind == "lakehouse" and str(p.root).startswith("abfss://"):
+                results.append(ConfigSmokeCheckResult(f"path:{target}", "pass", "Lakehouse store is populated and ABFSS root is derivable."))
             else:
-                results.append(ConfigSmokeCheckResult(f"path:{target}", "warn", "Path root is populated but not ABFSS-formatted."))
+                results.append(ConfigSmokeCheckResult(f"path:{target}", "pass", "Store is populated."))
     except Exception as exc:
         results.append(ConfigSmokeCheckResult("path_resolution", "fail", str(exc)))
 
@@ -767,7 +767,7 @@ def _bootstrap_fabric_env(
     if normalized is None:
         raise ValueError("config is required for bootstrap_fabric_env.")
     required_targets = required_targets or ["Source", "Unified"]
-    resolved_paths = {target: get_path(env=env, target=target, config=normalized) for target in required_targets}
+    resolved_paths = {target: _get_store(env=env, target=target, config=normalized) for target in required_targets}
     ai_result = _check_fabric_ai_functions_available() if check_ai else {"available": None, "message": "AI check disabled."}
     runtime_meta = _get_fabric_runtime_metadata(notebook_name=notebook_name)
     smoke = _run_config_smoke_tests(
@@ -808,7 +808,7 @@ def setup_notebook(
 
     normalized = load_config(config)
     required_targets = required_targets or ["Source", "Unified"]
-    resolved_paths = {target: get_path(env=env, target=target, config=normalized) for target in required_targets}
+    resolved_paths = {target: _get_store(env=env, target=target, config=normalized) for target in required_targets}
 
     context = None
     try:

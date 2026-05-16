@@ -148,18 +148,18 @@ from fabricops_kit.config import (
     PathConfig,
     QualityConfig,
     ReviewWorkflowConfig,
-    get_path,
+    _get_store,
     run_config_smoke_tests,
 )
-from fabricops_kit.fabric_input_output import Housepath, load_config
+from fabricops_kit.fabric_input_output import FabricStore, load_config
 
 
 def _sample_framework_config():
     path_config = PathConfig(
         {
             "Sandbox": {
-                "Source": Housepath("w1", "h1", "SRC", "abfss://src"),
-                "Unified": Housepath("w1", "h2", "UNI", "abfss://uni"),
+                "Source": FabricStore("w1", "h1", "SRC", "abfss://src"),
+                "Unified": FabricStore("w1", "h2", "UNI", "abfss://uni"),
             }
         }
     )
@@ -180,10 +180,10 @@ def test_load_config_accepts_framework_config():
     assert loaded.path_config.paths["Sandbox"]["Source"].house_name == "SRC"
 
 
-def test_get_path_missing_values_raise_clean_errors():
+def test__get_store_missing_values_raise_clean_errors():
     config = _sample_framework_config()
     with pytest.raises(ValueError, match="Environment 'Prod' was not found"):
-        get_path("Prod", "Source", config=config)
+        _get_store("Prod", "Source", config=config)
 
 
 def test_bootstrap_env_and_smoke_behavior(monkeypatch):
