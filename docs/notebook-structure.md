@@ -18,6 +18,7 @@ Environment Workspace (Sandbox / Dev-Test / Prod)
 ├── 00_env_config
 ├── 02_ex_<agreement>_<topic>      (1-many)
 ├── 03_pc_<agreement>_<pipeline>   (1-many)
+├── 04_gov_<agreement>_<dataset>_<table>   (0-many)
 └── Local metadata/evidence lakehouse
 ```
 
@@ -29,6 +30,7 @@ Environment Workspace (Sandbox / Dev-Test / Prod)
 | `01_data_sharing_agreement_<agreement>` | Governance steward / data owner | Cross-environment governance control plane | Agreement context, approved usage, business context, ownership, permissions, restrictions, classification, sensitivity/PII posture, and approved DQ metadata. |
 | `02_ex_<agreement>_<topic>` | Analyst / data scientist | Exploration and proposal | Profiling, discovery, exploratory transforms, AI-assisted DQ suggestions, AI-assisted classification suggestions, and metadata evidence that informs governance updates. |
 | `03_pc_<agreement>_<pipeline>` | Data engineer | Pipeline contract enforcement | Run-all-safe and schedulable execution that loads approved metadata/rules/classifications, performs deterministic transforms, writes outputs, and records runtime evidence. |
+| `04_gov_<agreement>_<dataset>_<table>` | Governance steward / analyst | Table and column governance enrichment | Uses profile evidence created by `02_ex`/`03_pc` to draft column business context and governance classifications, requires human widget review, and writes approved rows to metadata tables. |
 
 ## Governance flow across notebooks
 
@@ -36,6 +38,7 @@ Environment Workspace (Sandbox / Dev-Test / Prod)
 - Sandbox, Dev/Test, and Prod notebooks reuse approved governance metadata.
 - `02_ex` notebooks propose metadata evidence updates based on profiling and AI-assisted evidence; they do not define agreements.
 - `03_pc` notebooks load approved agreement metadata and enforce it during execution; they do not define agreements.
+- `04_gov` enriches table/column governance metadata after profile evidence exists and does not replace agreement-level ownership in `01_data_sharing_agreement`.
 - Pipeline execution writes operational evidence for quality, lineage, and controls.
 - That evidence can feed back into governance metadata updates.
 - Core operational loop: `03_pc` evidence → `01_data_sharing_agreement` governance update.
@@ -53,6 +56,7 @@ Environment Workspace (Sandbox / Dev-Test / Prod)
 - [`01_data_sharing_agreement_<agreement>`](notebook-structure/01-data-sharing-agreement.md)
 - [`02_ex_<agreement>_<topic>`](notebook-structure/02-exploration.md)
 - [`03_pc_<agreement>_<pipeline>`](notebook-structure/03-pipeline-contract.md)
+- [`04_gov_<agreement>_<dataset>_<table>`](notebook-structure/04-governance-enrichment.md)
 
 ## Related pages
 

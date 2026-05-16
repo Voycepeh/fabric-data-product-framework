@@ -252,11 +252,30 @@ def test_04_gov_template_smoke_guards_and_metadata_io():
     assert "table_name=\"METADATA_COLUMN_CONTEXT\"" in combined
     assert "write_governance(" in combined
     assert "table_name=\"METADATA_COLUMN_GOVERNANCE\"" in combined
+    assert "agreement_context={\"agreement_id\": agreement_id}" in combined
     assert "review_business_context(" in combined
     assert "get_reviewed_business_context_rows(\"approved\")" in combined
     assert "review_governance(" in combined
     assert "METADATA_DATA_AGREEMENT" in combined
     assert "agreement_id not found in METADATA_DATA_AGREEMENT" in combined
+    assert "COLUMN_BUSINESS_CONTEXT_PROMPT_TEMPLATE" in combined
+    assert "prompt_template=COLUMN_BUSINESS_CONTEXT_PROMPT_TEMPLATE" in combined
+    for token in [
+        "{table_name}",
+        "{table_context}",
+        "{column_name}",
+        "{data_type}",
+        "{row_count}",
+        "{null_count}",
+        "{distinct_count}",
+        "{observed_values_sample}",
+    ]:
+        assert token in combined
+    assert "prompt=AI_PROMPTS.governance_personal_identifier_prompt_template" in combined
+    assert "if not filtered_profile_rows:" in combined
+    assert "if not prepared_context_rows:" in combined
+    assert "if not approved_context_rows:" in combined
+    assert "if not prepared_governance_rows:" in combined
 
     forbidden = [
         "spark.table(\"METADATA_",
@@ -275,3 +294,8 @@ def test_04_gov_template_smoke_guards_and_metadata_io():
     save_gov_idx = next(i for i, c in enumerate(code_cells) if "write_governance(" in c and "METADATA_COLUMN_GOVERNANCE" in c)
     assert review_context_idx < save_context_idx
     assert review_gov_idx < save_gov_idx
+
+
+def test_00_env_config_allows_04_gov_prefix():
+    text = Path("templates/notebooks/00_env_config.ipynb").read_text(encoding="utf-8")
+    assert "04_gov_" in text
