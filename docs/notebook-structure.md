@@ -12,22 +12,30 @@ Use the following sequence for the lifecycle:
 00_env_config
 01_da_<agreement>
 02_ex_<agreement>_<topic>
-03_pc_<agreement>_<source>_to_<target>
+03_pc_<agreement>_<pipeline>
 04_gov_<agreement>_<dataset>_<table>
 ```
 
-## Workspace layout
+## Workspace structure aligned to the model
+
+The lifecycle runs across two workspace zones:
+
+- **Governance Workspace** owns agreement approvals and governance enrichment.
+- **Execution Workspaces** (Dev / Test / Prod) run exploration and pipeline execution.
+
+The **governance metadata lakehouse** is the shared metadata plane connecting governance and execution activities.
 
 ```text
 Governance Workspace
-└── 01_da_<agreement>                     (agreement-level approval evidence)
+├── 01_da_<agreement>                           (agreement-level approval evidence)
+├── Governance metadata lakehouse               (shared metadata/evidence plane)
+└── 04_gov_<agreement>_<dataset>_<table>        (1-many, planned stage)
 
-Environment Workspace (Sandbox / Dev-Test / Prod)
+Execution Workspace (Dev / Test / Prod)
 ├── 00_env_config
-├── 02_ex_<agreement>_<topic>             (1-many)
-├── 03_pc_<agreement>_<source>_to_<target> (1-many)
-├── 04_gov_<agreement>_<dataset>_<table>  (1-many)
-└── Local metadata/evidence lakehouse
+├── 02_ex_<agreement>_<topic>                   (1-many)
+├── Lakehouse / Warehouse data store
+└── 03_pc_<agreement>_<pipeline>                (1-many)
 ```
 
 ## Notebook roles and boundaries
@@ -37,7 +45,7 @@ Environment Workspace (Sandbox / Dev-Test / Prod)
 | `00_env_config` | Platform / engineering | Environment bootstrap and runtime config | Build `CONFIG`, set metadata lakehouse routing, define AI prompts, runtime settings, and path targets. | Agreement approvals, profiling, pipeline transforms, column governance decisions. |
 | `01_da_<agreement>` | Governance steward / data owner | Agreement-level approval evidence | Capture and write agreement-level approval evidence to `METADATA_DATA_AGREEMENT`; register notebook in `METADATA_NOTEBOOK_REGISTRY`. | Table/column business context review and classification/PII governance review. |
 | `02_ex_<agreement>_<topic>` | Analyst / data scientist | Exploration and profiling evidence | Require existing `agreement_id`; register under that agreement; profile data and write evidence tied to `agreement_id`, `environment_name`, `dataset_name`, `table_name`, and `column_name`. | Defining new agreements, final governance approval decisions. |
-| `03_pc_<agreement>_<source>_to_<target>` | Data engineer | Pipeline contract execution evidence | Require existing `agreement_id`; register under that agreement; execute transformation/DQ/pipeline work and write evidence tied to `agreement_id`. | Defining agreements or standalone governance approvals outside agreement context. |
+| `03_pc_<agreement>_<pipeline>` | Data engineer | Pipeline contract execution evidence | Require existing `agreement_id`; register under that agreement; execute transformation/DQ/pipeline work and write evidence tied to `agreement_id`. | Defining agreements or standalone governance approvals outside agreement context. |
 | `04_gov_<agreement>_<dataset>_<table>` | Governance steward / data owner | Column-level governance enrichment (planned stage) | Documented operating stage after profile/pipeline evidence exists; reviews per-column business context and classification/PII/confidentiality and is expected to write `METADATA_COLUMN_CONTEXT` and `METADATA_COLUMN_GOVERNANCE` once template support is added. | Agreement creation and environment bootstrap. |
 
 ## Cross-notebook enforcement rules
@@ -64,7 +72,7 @@ Always use `read_lakehouse_table` and `write_lakehouse_table` with `CONFIG`, `en
 - [`00_env_config`](notebook-structure/00-env-config.md)
 - [`01_da_<agreement>`](notebook-structure/01-data-sharing-agreement.md)
 - [`02_ex_<agreement>_<topic>`](notebook-structure/02-exploration.md)
-- [`03_pc_<agreement>_<source>_to_<target>`](notebook-structure/03-pipeline-contract.md)
+- [`03_pc_<agreement>_<pipeline>`](notebook-structure/03-pipeline-contract.md)
 - [`04_gov_<agreement>_<dataset>_<table>`](notebook-structure/04-governance-enrichment.md)
 
 ## Related pages
