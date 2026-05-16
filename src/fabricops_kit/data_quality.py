@@ -18,10 +18,8 @@ from pyspark.sql import SparkSession
 from .data_profiling import profile_dataframe
 from .fabric_input_output import write_lakehouse_table
 from .metadata import build_dq_rule_key, build_metadata_column_key, build_metadata_table_key, _now_utc_iso, _resolve_action_by
-from .config import DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
 
 AI_SUGGESTABLE_DQ_RULE_TYPES = {"not_null", "unique_key", "accepted_values", "value_range", "regex_format"}
-DQ_RULE_SUGGESTION_PROMPT_TEMPLATE = DEFAULT_DQ_RULE_SUGGESTION_PROMPT_TEMPLATE
 
 
 @dataclass
@@ -87,7 +85,7 @@ def _suggest_dq_rules(profile_df, prompt_template: str | None = None, output_col
         Spark DataFrame including AI response text.
     """
     if not prompt_template:
-        raise ValueError("prompt_template must be provided from config.ai_prompt_config.dq_rule_candidate_template.")
+        raise ValueError("Missing dq_rule_suggestion_prompt_template. Define it in AIPromptConfig from 00_env_config or pass prompt_template explicitly.")
     active_prompt = prompt_template
     return profile_df.ai.generate_response(prompt=active_prompt, output_col=output_col)
 
