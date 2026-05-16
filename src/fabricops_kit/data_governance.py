@@ -45,6 +45,11 @@ def _prepare_governance_input(profile_rows: list[dict], table_name: str, column_
     return out
 
 
+def prepare_governance_input(profile_rows: list[dict], table_name: str, column_contexts: list[dict]) -> list[dict]:
+    """Prepare governance prompt input rows from profile evidence and approved context."""
+    return _prepare_governance_input(profile_rows=profile_rows, table_name=table_name, column_contexts=column_contexts)
+
+
 def draft_governance(prepared_profile_df, prompt: str | None = None, output_col: str = "ai_governance_response"):
     """Run Fabric AI personal-identifier suggestion prompt on prepared governance rows."""
     if not prompt:
@@ -81,6 +86,11 @@ def _extract_pii_suggestions(response_rows, response_col: str = "ai_governance_r
                 }
             )
     return [r for r in out if r]
+
+
+def extract_governance_suggestions(response_rows, response_col: str = "ai_governance_response") -> list[dict]:
+    """Extract review-ready governance suggestions from AI responses."""
+    return _extract_pii_suggestions(response_rows=response_rows, response_col=response_col)
 
 
 def review_governance(suggestions: list[dict], environment_name: str, dataset_name: str, table_name: str) -> None:
@@ -248,4 +258,3 @@ def load_governance(governance_rows, *, agreement_rows=None, agreement_id: str |
         for r in filtered
     ]
     return {"agreement_context": agreement_payload, "columns": columns}
-

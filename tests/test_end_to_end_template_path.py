@@ -238,3 +238,40 @@ def test_templates_readme_documents_all_four_layers():
     text = Path("templates/notebooks/README.md").read_text(encoding="utf-8")
     for token in ["00_env_config", "01_data_agreement_template", "02_ex_*", "03_pc_*"]:
         assert token in text
+
+
+def test_04_gov_template_smoke_guards_and_metadata_io():
+    code_cells = _code_cells("templates/notebooks/04_gov_agreement_dataset_table.ipynb")
+    combined = "\n".join(code_cells)
+
+    assert "%run 00_env_config" in combined
+    assert "from fabricops_kit import (" in combined
+    assert "register_current_notebook(" in combined
+    assert "read_lakehouse_table(CONFIG, env_name, \"metadata\", \"METADATA_PROFILE_ROWS\")" in combined
+    assert "write_business_context(" in combined
+    assert "table_name=\"METADATA_COLUMN_CONTEXT\"" in combined
+    assert "write_governance(" in combined
+    assert "table_name=\"METADATA_COLUMN_GOVERNANCE\"" in combined
+    assert "review_business_context(" in combined
+    assert "get_reviewed_business_context_rows(\"approved\")" in combined
+    assert "review_governance(" in combined
+    assert "METADATA_DATA_AGREEMENT" in combined
+    assert "agreement_id not found in METADATA_DATA_AGREEMENT" in combined
+
+    forbidden = [
+        "spark.table(\"METADATA_",
+        "spark.sql(\"SELECT * FROM METADATA_",
+        "notebookutils.widgets",
+        "from fabricops_kit.business_context import _",
+        "from fabricops_kit.data_governance import _",
+    ]
+    for token in forbidden:
+        assert token not in combined
+
+    # Widget review cells and save cells must be separate.
+    review_context_idx = next(i for i, c in enumerate(code_cells) if "review_business_context(" in c)
+    save_context_idx = next(i for i, c in enumerate(code_cells) if "get_reviewed_business_context_rows(\"approved\")" in c)
+    review_gov_idx = next(i for i, c in enumerate(code_cells) if "review_governance(" in c)
+    save_gov_idx = next(i for i, c in enumerate(code_cells) if "write_governance(" in c and "METADATA_COLUMN_GOVERNANCE" in c)
+    assert review_context_idx < save_context_idx
+    assert review_gov_idx < save_gov_idx
