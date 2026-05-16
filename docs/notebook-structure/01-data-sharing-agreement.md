@@ -1,4 +1,4 @@
-# `01_data_sharing_agreement_<agreement>`
+# `01_da_<agreement>`
 
 `01_data_agreement_template.ipynb` defines the **source/agreement-level permission boundary** for one agreement.
 

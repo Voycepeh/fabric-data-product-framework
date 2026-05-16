@@ -48,6 +48,10 @@ def test_notebook_01_agreement_fields_are_lightweight() -> None:
     assert "agreement_source_contains_pii_flag = False" in combined
     assert "agreement_approval_duration" in combined
     assert "agreement_approval_date" in combined
+    assert "agreement_name = agreement_requested_source" in combined
+    assert "business_context = agreement_purpose" in combined
+    assert "approved_usage = agreement_permitted_uses" in combined
+    assert "ownership = agreement_source_stewarding_data_manager_name" in combined
 
 
 def test_notebook_01_uses_supported_setup_notebook_signature() -> None:
@@ -58,7 +62,7 @@ def test_notebook_01_uses_supported_setup_notebook_signature() -> None:
     assert "config=CONFIG" in combined
     assert "env=env_name" in combined
     assert 'required_targets=["metadata"]' in combined
-    assert 'notebook_name="01_data_agreement_template"' in combined
+    assert 'notebook_name="01_da_r002_sales_demo"' in combined
 
 
 def test_notebook_01_is_source_agreement_boundary_only() -> None:
@@ -73,6 +77,8 @@ def test_notebook_01_is_source_agreement_boundary_only() -> None:
     assert "METADATA_COLUMN_CONTEXT" not in combined
     assert "METADATA_COLUMN_GOVERNANCE" not in combined
     assert "METADATA_DQ_RULES" not in combined
+    assert "save_to_metadata = False" in combined
+    assert "register_notebook_to_metadata = False" in combined
 
 
 def test_notebook_01_metadata_access_uses_configured_routing_only() -> None:

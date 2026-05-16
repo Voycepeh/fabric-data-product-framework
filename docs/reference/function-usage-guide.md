@@ -19,7 +19,7 @@ Use this page to understand how notebook templates map to the main public callab
       <td data-label="Full template"><a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/00_env_config.ipynb">Open notebook</a></td>
     </tr>
     <tr>
-      <td data-label="Notebook"><code>01_data_sharing_agreement_&lt;agreement&gt;</code></td>
+      <td data-label="Notebook"><code>01_da_&lt;agreement&gt;</code></td>
       <td data-label="Guided usage">Captures approved usage, business context, stewardship notes, DQ approvals, governance approvals, and agreement-level controls reused by exploration and pipeline notebooks.<br><a href="../notebook-structure/01-data-sharing-agreement/">View guided structure</a></td>
       <td data-label="Full template"><a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/01_data_agreement_template.ipynb">Open notebook</a></td>
     </tr>
@@ -39,7 +39,7 @@ Use this page to understand how notebook templates map to the main public callab
 ## What runs where
 
 - `00_env_config` is shared setup.
-- `01_data_sharing_agreement` is the governance source of truth.
+- `01_da` is the governance source of truth.
 - `02_ex` proposes evidence and AI-assisted suggestions.
 - `03_pc` loads approved metadata and enforces controls.
 

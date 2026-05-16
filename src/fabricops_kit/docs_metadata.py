@@ -84,7 +84,7 @@ TEMPLATE_FLOW_DOCS: list[TemplateFlowDocMetadata] = [{'notebook_key': '00_env_co
                {'title': 'Segment 4: Assemble and validate framework config', 'symbols': ['load_config']},
                {'title': 'Segment 5: Run startup checks and show resolved paths', 'symbols': ['setup_notebook', 'get_path']}]},
  {'notebook_key': '01_data_agreement',
-  'notebook_label': '`01_data_sharing_agreement_<agreement>`',
+  'notebook_label': '`01_da_<agreement>`',
   'template_path': 'templates/notebooks/01_data_agreement_template.ipynb',
   'segment_intro': 'Captures approved usage, business context, stewardship notes, DQ approvals, governance approvals, and agreement-level '
                    'controls reused by exploration and pipeline notebooks.',
