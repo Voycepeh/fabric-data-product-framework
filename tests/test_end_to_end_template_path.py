@@ -82,7 +82,7 @@ def test_02_ex_uses_widget_approved_rules_and_persists_metadata_table():
 
 def test_02_ex_and_03_pc_share_same_dq_table_key_convention():
     ex = _all_code("templates/notebooks/02_ex_agreement_topic.ipynb")
-    pc = _all_code("templates/notebooks/03_pc_agreement_source_to_target.ipynb")
+    pc = _all_code("templates/notebooks/03_pc_agreement_pipeline_template.ipynb")
     assert 'DQ_TABLE_NAME = TARGET_TABLE' in ex
     assert 'DQ_TABLE_NAME = TARGET_TABLE' in pc
     assert 'write_dq_rules(' in ex and 'table_name=DQ_TABLE_NAME' in ex
@@ -93,7 +93,7 @@ def test_02_ex_and_03_pc_share_same_dq_table_key_convention():
 
 
 def test_03_pc_deterministic_only_and_valid_run_dq_signature():
-    pc = _all_code("templates/notebooks/03_pc_agreement_source_to_target.ipynb")
+    pc = _all_code("templates/notebooks/03_pc_agreement_pipeline_template.ipynb")
     assert "RUN_OPTIONAL_ADVANCED_EVIDENCE = False" in pc
     assert 'REQUIRED_SOURCE_COLUMNS = ["customer_id", "event_ts", "status", "amount"]' in pc
     assert 'missing = sorted(set(REQUIRED_SOURCE_COLUMNS) - set(df_source.columns))' in pc
@@ -110,13 +110,13 @@ def test_03_pc_deterministic_only_and_valid_run_dq_signature():
 
 
 def test_03_pc_output_write_occurs_after_dq_assertion():
-    pc = _all_code("templates/notebooks/03_pc_agreement_source_to_target.ipynb")
+    pc = _all_code("templates/notebooks/03_pc_agreement_pipeline_template.ipynb")
     assert pc.index("df_valid = dq.valid_rows") < pc.index("write_lakehouse_table(df_valid")
     assert pc.index("assert_dq_passed(dq.rule_results)") < pc.index("write_lakehouse_table(df_valid")
 
 
 def test_03_pc_optional_advanced_evidence_is_guarded():
-    pc = _all_code("templates/notebooks/03_pc_agreement_source_to_target.ipynb")
+    pc = _all_code("templates/notebooks/03_pc_agreement_pipeline_template.ipynb")
     assert "if RUN_OPTIONAL_ADVANCED_EVIDENCE:" in pc
     assert "prepare_drift_baselines(" in pc
 
@@ -134,7 +134,7 @@ def test_sample_csv_fixture_removed():
 
 def test_no_removed_metadata_replacement_tokens_or_contract_imports():
     text = Path("templates/notebooks/02_ex_agreement_topic.ipynb").read_text(encoding="utf-8") + Path(
-        "templates/notebooks/03_pc_agreement_source_to_target.ipynb"
+        "templates/notebooks/03_pc_agreement_pipeline_template.ipynb"
     ).read_text(encoding="utf-8")
     forbidden = [
         "fabricops_kit.data_contracts",
@@ -163,7 +163,7 @@ def test_essential_callable_coverage_in_current_starter_notebooks():
     notebooks_text = (
         Path("templates/notebooks/00_env_config.ipynb").read_text(encoding="utf-8")
         + Path("templates/notebooks/02_ex_agreement_topic.ipynb").read_text(encoding="utf-8")
-        + Path("templates/notebooks/03_pc_agreement_source_to_target.ipynb").read_text(encoding="utf-8")
+        + Path("templates/notebooks/03_pc_agreement_pipeline_template.ipynb").read_text(encoding="utf-8")
     )
     present = {name for name in essentials if name in notebooks_text}
 
@@ -178,8 +178,8 @@ def test_essential_callable_coverage_in_current_starter_notebooks():
     assert missing == set(), f"Missing essential callables in templates: {sorted(missing)}"
 
 
-def test_01_data_agreement_template_exists_and_contains_required_context_fields():
-    text = Path("templates/notebooks/01_data_agreement_template.ipynb").read_text(encoding="utf-8")
+def test_01_da_agreement_template_exists_and_contains_required_context_fields():
+    text = Path("templates/notebooks/01_da_agreement_template.ipynb").read_text(encoding="utf-8")
     for token in [
         "AGREEMENT_ID",
         "APPROVED_USAGE",
@@ -190,8 +190,8 @@ def test_01_data_agreement_template_exists_and_contains_required_context_fields(
         assert token in text
 
 
-def test_01_data_agreement_template_has_no_dq_enforcement_or_column_widget_execution():
-    text = Path("templates/notebooks/01_data_agreement_template.ipynb").read_text(encoding="utf-8")
+def test_01_da_agreement_template_has_no_dq_enforcement_or_column_widget_execution():
+    text = Path("templates/notebooks/01_da_agreement_template.ipynb").read_text(encoding="utf-8")
     forbidden = [
         "enforce_dq(",
         "run_dq_rules(",
@@ -213,7 +213,7 @@ def test_00_env_config_keeps_review_workflow_defaults_generic():
 def test_02_ex_template_references_01_agreement_and_business_context_helpers():
     text = Path("templates/notebooks/02_ex_agreement_topic.ipynb").read_text(encoding="utf-8")
     for token in [
-        "%run 01_data_agreement_template",
+        "%run 01_da_agreement_template",
         "BUSINESS_CONTEXT",
         "_prepare_business_context_profile_input",
         "draft_business_context",
@@ -229,12 +229,12 @@ def test_02_ex_template_references_01_agreement_and_business_context_helpers():
 
 
 def test_03_pc_template_has_no_ai_suggestion_or_business_context_widget_calls():
-    text = Path("templates/notebooks/03_pc_agreement_source_to_target.ipynb").read_text(encoding="utf-8")
+    text = Path("templates/notebooks/03_pc_agreement_pipeline_template.ipynb").read_text(encoding="utf-8")
     for token in ["draft_business_context", "suggest_personal_identifier_classifications", "review_business_context"]:
         assert token not in text
 
 
 def test_templates_readme_documents_all_four_layers():
     text = Path("templates/notebooks/README.md").read_text(encoding="utf-8")
-    for token in ["00_env_config", "01_data_agreement_template", "02_ex_*", "03_pc_*"]:
+    for token in ["00_env_config", "01_da_agreement_template", "02_ex_*", "03_pc_*"]:
         assert token in text

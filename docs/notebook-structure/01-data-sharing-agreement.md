@@ -1,13 +1,13 @@
 # `01_da_<agreement>`
 
-`01_data_agreement_template.ipynb` defines the **source/agreement-level permission boundary** for one agreement.
+`01_da_agreement_template.ipynb` defines the **source/agreement-level permission boundary** for one agreement.
 
 - Keep `agreement_id` stable for the same agreement.
 - Keep `save_to_metadata=False` while testing.
 - Set `save_to_metadata=True` only when ready to write metadata.
 - Set `register_notebook_to_metadata=True` to register the notebook run to metadata.
 
-> <a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/01_data_agreement_template.ipynb">Open template notebook</a>
+> <a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/01_da_agreement_template.ipynb">Open template notebook</a>
 
 ## 01 Runtime bootstrap and imports
 

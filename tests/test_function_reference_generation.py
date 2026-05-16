@@ -301,7 +301,7 @@ def test_generated_notebook_detail_pages_exist_with_expected_content() -> None:
         "docs/notebook-structure/03-pipeline-contract.md": [
             "# `03_pc_<agreement>_<pipeline>`",
             "Open template notebook",
-            "03_pc_agreement_source_to_target.ipynb",
+            "03_pc_agreement_pipeline_template.ipynb",
             "## Segment 4: Run DQ, split outputs, and publish",
             "## Optional profiling, drift, governance, lineage, and handover",
             "<code>enforce_dq</code>",

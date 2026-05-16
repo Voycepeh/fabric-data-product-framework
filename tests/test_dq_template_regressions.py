@@ -8,7 +8,7 @@ def _text(path: str) -> str:
 def test_no_mechanical_rename_regressions_in_templates_and_example():
     blobs = [
         _text("templates/notebooks/02_ex_agreement_topic.ipynb"),
-        _text("templates/notebooks/03_pc_agreement_source_to_target.ipynb"),
+        _text("templates/notebooks/03_pc_agreement_pipeline_template.ipynb"),
         _text("examples/notebooks/FabricOps_AI_DQ_Source_of_Truth_Widget_Metadata_Flow.ipynb"),
     ]
     combined = "\n".join(blobs)
@@ -29,7 +29,7 @@ def test_no_mechanical_rename_regressions_in_templates_and_example():
 
 def test_expected_canonical_calls_present():
     ex = _text("templates/notebooks/02_ex_agreement_topic.ipynb")
-    pc = _text("templates/notebooks/03_pc_agreement_source_to_target.ipynb")
+    pc = _text("templates/notebooks/03_pc_agreement_pipeline_template.ipynb")
     demo = _text("examples/notebooks/FabricOps_AI_DQ_Source_of_Truth_Widget_Metadata_Flow.ipynb")
 
     assert 'profile_dataframe_to_metadata' in ex

@@ -4,7 +4,7 @@ import ast
 import json
 from pathlib import Path
 
-NOTEBOOK_PATH = Path("templates/notebooks/01_data_agreement_template.ipynb")
+NOTEBOOK_PATH = Path("templates/notebooks/01_da_agreement_template.ipynb")
 
 
 def _code_cells() -> list[str]:

@@ -4,7 +4,7 @@ Use this page to understand the purpose and segment flow of this notebook templa
 
 Pipeline notebook flow for deterministic enforcement and controlled publishing.
 
-> <a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb">Open template notebook</a>
+> <a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_pipeline_template.ipynb">Open template notebook</a>
 
 > `03_pc` loads approved metadata and enforces controls.
 

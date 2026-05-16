@@ -21,7 +21,7 @@ Use this page to understand how notebook templates map to the main public callab
     <tr>
       <td data-label="Notebook"><code>01_da_&lt;agreement&gt;</code></td>
       <td data-label="Guided usage">Captures approved usage, business context, stewardship notes, DQ approvals, governance approvals, and agreement-level controls reused by exploration and pipeline notebooks.<br><a href="../notebook-structure/01-data-sharing-agreement/">View guided structure</a></td>
-      <td data-label="Full template"><a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/01_data_agreement_template.ipynb">Open notebook</a></td>
+      <td data-label="Full template"><a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/01_da_agreement_template.ipynb">Open notebook</a></td>
     </tr>
     <tr>
       <td data-label="Notebook"><code>02_ex_&lt;agreement&gt;_&lt;topic&gt;</code></td>
@@ -31,7 +31,7 @@ Use this page to understand how notebook templates map to the main public callab
     <tr>
       <td data-label="Notebook"><code>03_pc_&lt;agreement&gt;_&lt;pipeline&gt;</code></td>
       <td data-label="Guided usage">Pipeline notebook flow for deterministic enforcement and controlled publishing.<br><a href="../notebook-structure/03-pipeline-contract/">View guided structure</a></td>
-      <td data-label="Full template"><a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_source_to_target.ipynb">Open notebook</a></td>
+      <td data-label="Full template"><a href="https://github.com/Voycepeh/FabricOps-Starter-Kit/blob/main/templates/notebooks/03_pc_agreement_pipeline_template.ipynb">Open notebook</a></td>
     </tr>
   </tbody>
 </table>
