@@ -49,18 +49,8 @@ def _now_utc_iso() -> str:
 def _resolve_action_by(action_by: str | None = None) -> str:
     if action_by:
         return str(action_by)
-    try:
-        import notebookutils.runtime as nb_runtime  # type: ignore
-
-        context = getattr(nb_runtime, "context", None)
-        if isinstance(context, dict):
-            return context.get("userName") or context.get("userId") or "unknown"
-        getter = getattr(context, "get", None)
-        if callable(getter):
-            return getter("userName") or getter("userId") or "unknown"
-    except Exception:
-        pass
-    return "unknown"
+    context = _runtime_context()
+    return str(_context_get(context, "userName", "userId") or "unknown")
 
 
 def _key_part(value) -> str:
@@ -129,28 +119,57 @@ def write_column_governance_context(spark, rows: list[dict], metadata_path, tabl
     return write_metadata_rows(spark, rows, metadata_path, table_name, mode=mode)
 
 
+def _context_get(context: Any, *keys: str) -> Any:
+    for key in keys:
+        try:
+            if isinstance(context, dict):
+                value = context.get(key)
+            else:
+                getter = getattr(context, "get", None)
+                value = getter(key) if callable(getter) else None
+        except Exception:
+            value = None
+        if value is not None:
+            return value
+    return None
+
+
 def _runtime_context() -> dict[str, Any]:
     try:
-        import notebookutils.runtime as nb_runtime  # type: ignore
-
-        context = getattr(nb_runtime, "context", None)
-        if isinstance(context, dict):
-            return context
-        getter = getattr(context, "get", None)
-        keys = ["workspaceId", "workspaceName", "notebookId", "notebookName", "userName", "userId"]
-        if callable(getter):
-            return {k: getter(k) for k in keys}
+        import notebookutils  # type: ignore
     except Exception:
-        pass
-    return {}
+        return {}
+
+    runtime = getattr(notebookutils, "runtime", None)
+    context = getattr(runtime, "context", None)
+    if context is None:
+        return {}
+
+    keys = [
+        "currentWorkspaceId",
+        "currentWorkspaceName",
+        "currentNotebookId",
+        "currentNotebookName",
+        "workspaceId",
+        "workspaceName",
+        "notebookId",
+        "notebookName",
+        "userId",
+        "userName",
+        "activityId",
+    ]
+    return {key: _context_get(context, key) for key in keys}
 
 
 def register_current_notebook(spark, metadata_path, agreement_id, notebook_type, environment_name=None, dataset_name=None, table_name=None, topic=None, pipeline_name=None, metadata_table="METADATA_NOTEBOOK_REGISTRY"):
     ctx = _runtime_context()
-    notebook_name = ctx.get("notebookName") or "unknown_notebook"
+    workspace_id = _context_get(ctx, "currentWorkspaceId", "workspaceId")
+    workspace_name = _context_get(ctx, "currentWorkspaceName", "workspaceName")
+    notebook_id = _context_get(ctx, "currentNotebookId", "notebookId")
+    notebook_name = _context_get(ctx, "currentNotebookName", "notebookName") or "unknown_notebook"
+    user_id = _context_get(ctx, "userId")
+    user_name = _context_get(ctx, "userName")
     inferred_type = notebook_type or str(notebook_name).split("_", 1)[0]
-    workspace_id = ctx.get("workspaceId")
-    notebook_id = ctx.get("notebookId")
     row = {
         "agreement_id": agreement_id,
         "environment_name": environment_name,
@@ -159,13 +178,13 @@ def register_current_notebook(spark, metadata_path, agreement_id, notebook_type,
         "topic": topic,
         "pipeline_name": pipeline_name,
         "notebook_type": inferred_type,
-        "workspace_id": workspace_id,
-        "workspace_name": ctx.get("workspaceName"),
-        "notebook_id": notebook_id,
-        "notebook_name": notebook_name,
-        "notebook_url": f"https://app.fabric.microsoft.com/groups/{workspace_id}/notebooks/{notebook_id}" if workspace_id and notebook_id else None,
-        "user_name": ctx.get("userName"),
-        "user_id": ctx.get("userId"),
+        "workspace_id": str(workspace_id) if workspace_id is not None else "",
+        "workspace_name": str(workspace_name) if workspace_name is not None else "",
+        "notebook_id": str(notebook_id) if notebook_id is not None else "",
+        "notebook_name": str(notebook_name) if notebook_name is not None else "",
+        "notebook_url": f"https://app.fabric.microsoft.com/groups/{workspace_id}/notebooks/{notebook_id}" if workspace_id and notebook_id else "",
+        "user_name": str(user_name) if user_name is not None else "",
+        "user_id": str(user_id) if user_id is not None else "",
         "registered_at": datetime.now(timezone.utc).isoformat(),
     }
     write_metadata_rows(spark, [row], metadata_path=metadata_path, table_name=metadata_table, mode="append")
