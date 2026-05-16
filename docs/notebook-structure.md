@@ -33,6 +33,10 @@ Governance Workspace
 
 Execution Workspace (Dev / Test / Prod)
 ├── 00_env_config
+├── 02_ex_<agreement>_<topic>      (1-many)
+├── 03_pc_<agreement>_<pipeline>   (1-many)
+├── 04_gov_<agreement>_<dataset>_<table>   (0-many)
+└── Local metadata/evidence lakehouse
 ├── 02_ex_<agreement>_<topic>                   (1-many)
 ├── Lakehouse / Warehouse data store
 └── 03_pc_<agreement>_<pipeline>                (1-many)
@@ -40,6 +44,13 @@ Execution Workspace (Dev / Test / Prod)
 
 ## Notebook roles and boundaries
 
+| Notebook | Primary ownership | Scope | What belongs here |
+|---|---|---|---|
+| `00_env_config` | Platform / engineering | Environment runtime configuration | Shared environment config, paths, runtime settings, startup checks, and reusable config objects. |
+| `01_data_sharing_agreement_<agreement>` | Governance steward / data owner | Cross-environment governance control plane | Agreement context, approved usage, business context, ownership, permissions, restrictions, classification, sensitivity/PII posture, and approved DQ metadata. |
+| `02_ex_<agreement>_<topic>` | Analyst / data scientist | Exploration and proposal | Profiling, discovery, exploratory transforms, AI-assisted DQ suggestions, AI-assisted classification suggestions, and metadata evidence that informs governance updates. |
+| `03_pc_<agreement>_<pipeline>` | Data engineer | Pipeline contract enforcement | Run-all-safe and schedulable execution that loads approved metadata/rules/classifications, performs deterministic transforms, writes outputs, and records runtime evidence. |
+| `04_gov_<agreement>_<dataset>_<table>` | Governance steward / analyst | Table and column governance enrichment | Uses profile evidence created by `02_ex`/`03_pc` to draft column business context and governance classifications, requires human widget review, and writes approved rows to metadata tables. |
 | Notebook | Primary ownership | Scope | What belongs here | What does **not** belong here |
 |---|---|---|---|---|
 | `00_env_config` | Platform / engineering | Environment bootstrap and runtime config | Build `CONFIG`, set metadata lakehouse routing, define AI prompts, runtime settings, and path targets. | Agreement approvals, profiling, pipeline transforms, column governance decisions. |
@@ -50,6 +61,14 @@ Execution Workspace (Dev / Test / Prod)
 
 ## Cross-notebook enforcement rules
 
+- Governance is defined once in `01_data_sharing_agreement_<agreement>`.
+- Sandbox, Dev/Test, and Prod notebooks reuse approved governance metadata.
+- `02_ex` notebooks propose metadata evidence updates based on profiling and AI-assisted evidence; they do not define agreements.
+- `03_pc` notebooks load approved agreement metadata and enforce it during execution; they do not define agreements.
+- `04_gov` enriches table/column governance metadata after profile evidence exists and does not replace agreement-level ownership in `01_data_sharing_agreement`.
+- Pipeline execution writes operational evidence for quality, lineage, and controls.
+- That evidence can feed back into governance metadata updates.
+- Core operational loop: `03_pc` evidence → `01_data_sharing_agreement` governance update.
 - All downstream notebooks (`02_ex`, `03_pc`, `04_gov`) must declare `agreement_id`.
 - Before doing work, downstream notebooks must validate that `agreement_id` exists in `METADATA_DATA_AGREEMENT`.
 - All notebooks must register themselves in `METADATA_NOTEBOOK_REGISTRY` under the `agreement_id` to avoid stray notebooks.

@@ -236,5 +236,83 @@ def test_03_pc_template_has_no_ai_suggestion_or_business_context_widget_calls():
 
 def test_templates_readme_documents_all_four_layers():
     text = Path("templates/notebooks/README.md").read_text(encoding="utf-8")
-    for token in ["00_env_config", "01_da_agreement_template", "02_ex_*", "03_pc_*"]:
+    for token in ["00_env_config", "01_data_agreement_template", "02_ex_*", "03_pc_*", "04_gov_*"]:
         assert token in text
+
+
+def test_04_gov_template_smoke_guards_and_metadata_io():
+    code_cells = _code_cells("templates/notebooks/04_gov_agreement_dataset_table.ipynb")
+    combined = "\n".join(code_cells)
+
+    assert "%run 00_env_config" in combined
+    assert "from fabricops_kit import (" in combined
+    assert "register_current_notebook(" in combined
+    assert "read_lakehouse_table(CONFIG, env_name, \"metadata\", \"METADATA_PROFILE_ROWS\")" in combined
+    assert "CONFIG.paths[" not in combined
+    assert "CONFIG.path_config.paths[env_name][\"metadata\"]" in combined
+    assert "write_business_context(" in combined
+    assert "table_name=\"METADATA_COLUMN_CONTEXT\"" in combined
+    assert "write_governance(" in combined
+    assert "table_name=\"METADATA_COLUMN_GOVERNANCE\"" in combined
+    assert "agreement_context={\"agreement_id\": agreement_id}" in combined
+    assert "review_business_context(" in combined
+    assert "get_reviewed_business_context_rows(\"approved\")" in combined
+    assert "review_governance(" in combined
+    assert "METADATA_DATA_AGREEMENT" in combined
+    assert "agreement_id not found in METADATA_DATA_AGREEMENT" in combined
+    assert "COLUMN_BUSINESS_CONTEXT_PROMPT_TEMPLATE" in combined
+    assert "prompt_template=COLUMN_BUSINESS_CONTEXT_PROMPT_TEMPLATE" in combined
+    for token in [
+        "{table_name}",
+        "{table_context}",
+        "{column_name}",
+        "{data_type}",
+        "{row_count}",
+        "{null_count}",
+        "{distinct_count}",
+        "{observed_values_sample}",
+    ]:
+        assert token in combined
+    assert "GOVERNANCE_ROW_CLASSIFICATION_PROMPT_TEMPLATE" in combined
+    assert "prompt=GOVERNANCE_ROW_CLASSIFICATION_PROMPT_TEMPLATE" in combined
+    assert "if not filtered_profile_rows:" in combined
+    assert "if not prepared_context_rows:" in combined
+    assert "if not approved_context_rows:" in combined
+    assert "if not prepared_governance_rows:" in combined
+    for token in [
+        "Return JSON ONLY with exactly these keys:",
+        "ai_suggested_personal_identifier_classification",
+        "confidentiality_label",
+        "not_personal_data",
+        "direct_identifier",
+        "indirect_identifier",
+        "unknown",
+        "public",
+        "confidential",
+        "restricted",
+    ]:
+        assert token in combined
+    assert "PERSONAL_IDENTIFIER_CANDIDATES" not in combined
+
+    forbidden = [
+        "spark.table(\"METADATA_",
+        "spark.sql(\"SELECT * FROM METADATA_",
+        "notebookutils.widgets",
+        "from fabricops_kit.business_context import _",
+        "from fabricops_kit.data_governance import _",
+    ]
+    for token in forbidden:
+        assert token not in combined
+
+    # Widget review cells and save cells must be separate.
+    review_context_idx = next(i for i, c in enumerate(code_cells) if "review_business_context(" in c)
+    save_context_idx = next(i for i, c in enumerate(code_cells) if "get_reviewed_business_context_rows(\"approved\")" in c)
+    review_gov_idx = next(i for i, c in enumerate(code_cells) if "review_governance(" in c)
+    save_gov_idx = next(i for i, c in enumerate(code_cells) if "write_governance(" in c and "METADATA_COLUMN_GOVERNANCE" in c)
+    assert review_context_idx < save_context_idx
+    assert review_gov_idx < save_gov_idx
+
+
+def test_00_env_config_allows_04_gov_prefix():
+    text = Path("templates/notebooks/00_env_config.ipynb").read_text(encoding="utf-8")
+    assert "04_gov_" in text

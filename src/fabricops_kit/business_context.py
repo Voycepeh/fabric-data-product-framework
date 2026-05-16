@@ -84,6 +84,26 @@ def _extract_column_business_context_suggestions(response_rows, response_col: st
     return out
 
 
+def prepare_business_context_profile_input(profile_rows: list[dict], table_name: str, table_context: str = "") -> list[dict]:
+    """Prepare profile rows for business context prompt drafting."""
+    return _prepare_business_context_profile_input(profile_rows=profile_rows, table_name=table_name, table_context=table_context)
+
+
+def extract_column_business_context_suggestions(response_rows, response_col: str = "ai_business_context_response") -> list[dict]:
+    """Extract review-ready business context suggestion rows from AI responses."""
+    return _extract_column_business_context_suggestions(response_rows=response_rows, response_col=response_col)
+
+
+def get_reviewed_business_context_rows(status: str = "approved") -> list[dict]:
+    """Return reviewed business context rows from widget state."""
+    normalized = str(status or "").strip().lower()
+    if normalized == "approved":
+        return list(COLUMN_BUSINESS_CONTEXT_FROM_WIDGET)
+    if normalized == "rejected":
+        return list(REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET)
+    raise ValueError("status must be 'approved' or 'rejected'.")
+
+
 def _require_ipywidgets():
     widgets = importlib.import_module("ipywidgets")
     ipy_display = importlib.import_module("IPython.display").display
