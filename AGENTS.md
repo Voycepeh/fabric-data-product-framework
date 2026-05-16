@@ -187,3 +187,27 @@ PY
 - Notebook templates must not duplicate maintained package defaults when a canonical default already exists in `src/fabricops_kit/`.
 - When defaults are intentionally customizable, templates should import the canonical default and optionally override it, instead of retyping default values inline.
 - Apply this rule especially to AI prompt templates, config defaults, and generated docs metadata defaults.
+
+## Fabric metadata lakehouse routing
+
+Notebook templates and framework helpers must not assume the attached/default lakehouse when reading or writing FabricOps metadata tables.
+
+Do not use default-lakehouse references for metadata, such as:
+- `spark.table("METADATA_PROFILE_ROWS")`
+- `spark.table("METADATA_DQ_RULES")`
+- `spark.sql("SELECT ... FROM METADATA_*")`
+
+Instead, always route metadata reads and writes through the metadata target configured by `00_env_config`:
+
+- `read_lakehouse_table(CONFIG, env_name, "metadata", "<metadata_table>")`
+- `write_lakehouse_table(df, CONFIG, env_name, "metadata", "<metadata_table>", mode="append")`
+- `CONFIG.path_config.paths[env_name]["metadata"]` for helpers that require a `metadata_path`/`FabricStore`
+
+This applies to:
+- `METADATA_DATA_AGREEMENT`
+- `METADATA_PROFILE_ROWS`
+- `METADATA_COLUMN_CONTEXT`
+- `METADATA_COLUMN_GOVERNANCE`
+- `METADATA_DQ_RULES`
+- `METADATA_NOTEBOOK_REGISTRY`
+- any future `METADATA_*` table

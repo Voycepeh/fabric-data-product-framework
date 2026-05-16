@@ -40,7 +40,7 @@ print(getattr(fabricops_kit, "__version__", "unknown"))
 Run notebooks in this order:
 
 1. `00_env_config` configures paths and runtime settings.
-2. `01_data_sharing_agreement_<agreement>` captures approved usage,
+2. `01_da_<agreement>` captures approved usage,
    restrictions, ownership, business context, and governance metadata.
 3. `02_ex_<agreement>_<topic>` profiles source data and prepares AI-assisted
    DQ and classification suggestions.

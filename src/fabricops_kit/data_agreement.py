@@ -40,7 +40,7 @@ def load_agreements(spark, metadata_table: str = "METADATA_DATA_AGREEMENT", miss
     except Exception:
         if missing_ok:
             return []
-        raise RuntimeError("No agreements found. Run 01_data_sharing_agreement first.")
+        raise RuntimeError("No agreements found. Run 01_da first.")
     picked = []
     for row in _latest_distinct_agreements(rows):
         picked.append(

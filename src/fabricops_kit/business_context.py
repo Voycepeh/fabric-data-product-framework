@@ -6,8 +6,12 @@ from datetime import datetime, timezone
 import importlib
 
 from .metadata import build_metadata_column_key, build_metadata_table_key
+from .config import DEFAULT_BUSINESS_CONTEXT_PROMPT_TEMPLATE
+
 COLUMN_BUSINESS_CONTEXT_FROM_WIDGET: list[dict] = []
 REJECTED_COLUMN_BUSINESS_CONTEXT_FROM_WIDGET: list[dict] = []
+BUSINESS_CONTEXT_PROMPT = DEFAULT_BUSINESS_CONTEXT_PROMPT_TEMPLATE
+
 
 def _prepare_business_context_profile_input(profile_rows: list[dict], table_name: str, table_context: str = "") -> list[dict]:
     out = []
@@ -27,14 +31,14 @@ def _prepare_business_context_profile_input(profile_rows: list[dict], table_name
     return out
 
 
-def draft_business_context(prepared_profile_df, prompt_template: str | None = None, output_col: str = "ai_business_context_response"):
+def draft_business_context(prepared_profile_df, prompt_template: str = BUSINESS_CONTEXT_PROMPT, output_col: str = "ai_business_context_response"):
     """Run Fabric AI to draft column business context suggestions.
 
     Parameters
     ----------
     prepared_profile_df : pyspark.sql.DataFrame
         Profile input DataFrame prepared for prompt-template execution.
-    prompt_template : str | None, optional
+    prompt_template : str, default=BUSINESS_CONTEXT_PROMPT
         Prompt template used by Fabric AI.
     output_col : str, default=\"ai_business_context_response\"
         Output column containing AI response text.
@@ -44,8 +48,6 @@ def draft_business_context(prepared_profile_df, prompt_template: str | None = No
     pyspark.sql.DataFrame
         Input DataFrame enriched with AI response output.
     """
-    if not prompt_template:
-        raise ValueError("Missing business_context_prompt_template. Define it in AIPromptConfig from 00_env_config or pass prompt_template explicitly.")
     ai = getattr(prepared_profile_df, "ai", None)
     if ai is None or not hasattr(ai, "generate_response"):
         raise RuntimeError("draft_business_context requires Fabric DataFrame.ai.generate_response.")
