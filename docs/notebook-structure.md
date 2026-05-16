@@ -38,7 +38,7 @@ Environment Workspace (Sandbox / Dev-Test / Prod)
 | `01_da_<agreement>` | Governance steward / data owner | Agreement-level approval evidence | Capture and write agreement-level approval evidence to `METADATA_DATA_AGREEMENT`; register notebook in `METADATA_NOTEBOOK_REGISTRY`. | Table/column business context review and classification/PII governance review. |
 | `02_ex_<agreement>_<topic>` | Analyst / data scientist | Exploration and profiling evidence | Require existing `agreement_id`; register under that agreement; profile data and write evidence tied to `agreement_id`, `environment_name`, `dataset_name`, `table_name`, and `column_name`. | Defining new agreements, final governance approval decisions. |
 | `03_pc_<agreement>_<source>_to_<target>` | Data engineer | Pipeline contract execution evidence | Require existing `agreement_id`; register under that agreement; execute transformation/DQ/pipeline work and write evidence tied to `agreement_id`. | Defining agreements or standalone governance approvals outside agreement context. |
-| `04_gov_<agreement>_<dataset>_<table>` | Governance steward / data owner | Column-level governance enrichment | Run after profile/pipeline evidence exists; review per-column business context and classification/PII/confidentiality; write `METADATA_COLUMN_CONTEXT` and `METADATA_COLUMN_GOVERNANCE`. | Agreement creation and environment bootstrap. |
+| `04_gov_<agreement>_<dataset>_<table>` | Governance steward / data owner | Column-level governance enrichment (planned stage) | Documented operating stage after profile/pipeline evidence exists; reviews per-column business context and classification/PII/confidentiality and is expected to write `METADATA_COLUMN_CONTEXT` and `METADATA_COLUMN_GOVERNANCE` once template support is added. | Agreement creation and environment bootstrap. |
 
 ## Cross-notebook enforcement rules
 
@@ -56,7 +56,7 @@ Always use `read_lakehouse_table` and `write_lakehouse_table` with `CONFIG`, `en
 
 - `01_da` captures agreement-level approval evidence once and publishes it for reuse.
 - `02_ex` and `03_pc` run under an existing agreement and produce profiling/pipeline evidence.
-- `04_gov` uses that evidence to enrich business context and governance decisions at the column level.
+- `04_gov` is the documented next operating stage for column-level enrichment; until a dedicated template notebook is added, treat it as planned guidance.
 - Human approval remains the control authority for governance outcomes.
 
 ## Notebook details
@@ -69,6 +69,6 @@ Always use `read_lakehouse_table` and `write_lakehouse_table` with `CONFIG`, `en
 
 ## Related pages
 
-- [Lifecycle Operating Model](lifecycle-operating-model.md)
+- [Workflow](workflow.md)
 - [Metadata and Data Contract Assembly](metadata-and-contracts.md)
 - [Data Quality Rules System](data-quality-rules-system.md)

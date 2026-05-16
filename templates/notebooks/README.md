@@ -5,9 +5,10 @@ Run the minimal end-to-end sample in the canonical framework lifecycle:
 2. `01_data_agreement_template` = approved usage + agreement context + stewardship notes.
 3. `02_ex_*` = exploration, profiling, AI-assisted proposals, and evidence capture for governance/pipeline handoff.
 4. `03_pc_*` = deterministic enforcement from approved metadata.
-5. Seed/create the sample source table (`minimal_source`) from generated rows in notebook code, then run `02_ex_agreement_topic` and `03_pc_agreement_source_to_target` with `USE_SAMPLE_DATA = True`.
+5. `04_gov_*` = planned next stage for column-level governance enrichment (business context + classification/PII/confidentiality) once a dedicated template notebook is added.
+6. Seed/create the sample source table (`minimal_source`) from generated rows in notebook code, then run `02_ex_agreement_topic` and `03_pc_agreement_source_to_target` with `USE_SAMPLE_DATA = True`.
 
-This proves the core flow: generated sample DataFrame -> persisted source table -> proposal evidence created in `02_ex` -> governance-approved metadata maintained in `01_data_sharing_agreement` -> approved metadata loaded/enforced in `03_pc` -> valid/quarantine split -> output write.
+This proves the core flow: generated sample DataFrame -> persisted source table -> proposal evidence created in `02_ex` -> governance-approved metadata maintained in `01_da_<agreement>` -> approved metadata loaded/enforced in `03_pc` -> valid/quarantine split -> output write.
 
 Templates are copy ready, not source ready. For real projects, replace source paths, target paths, contract values, transformation logic, approval details, and lineage notes.
 
@@ -15,3 +16,8 @@ Local metadata fallback is optional for local-only runs. Set `USE_LOCAL_SAMPLE_M
 
 ## Template notebook purposes
 - `01_data_agreement_template.ipynb`: Captures approved usage, business context, stewardship notes, and agreement-level governance context reused by AI-assisted DQ and governance workflows.
+
+
+## 04_gov template status
+- `04_gov_<agreement>_<dataset>_<table>` is part of the documented lifecycle.
+- A dedicated template notebook file (`templates/notebooks/04_gov_agreement_dataset_table.ipynb`) is not yet present in this repository.

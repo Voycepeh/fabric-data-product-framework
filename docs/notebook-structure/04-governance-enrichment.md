@@ -1,10 +1,10 @@
 # `04_gov_<agreement>_<dataset>_<table>`
 
-This notebook performs governance enrichment after profile/pipeline evidence exists.
+This is a documented **planned operating stage** for governance enrichment after profile/pipeline evidence exists.
 
 It is scoped per agreement + dataset + table.
 
-> Run this notebook only after evidence from `02_ex` and/or `03_pc` is available.
+> Template status: a dedicated `templates/notebooks/04_gov_agreement_dataset_table.ipynb` notebook is **not yet included** in this repo. Use this page as operating guidance until that template is added.
 
 ## Purpose
 
