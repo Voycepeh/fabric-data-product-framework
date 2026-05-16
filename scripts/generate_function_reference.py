@@ -19,6 +19,7 @@ MKDOCS_PATH = ROOT / "mkdocs.yml"
 MANIFEST_PATH = ROOT / "docs" / "reference" / "manifest.json"
 CALLABLE_MAP_PATH = ROOT / "docs" / "reference" / "callable-map.md"
 CALLABLE_MAP_JSON_PATH = ROOT / "docs" / "reference" / "callable-map.json"
+CALLABLE_MAP_HTML_PATH = ROOT / "docs" / "assets" / "callable-map.html"
 
 PUBLIC_MODULE_PREFERRED_NAMES = {
     "config": "config",
@@ -376,86 +377,32 @@ def canonical_public_module(module_name: str) -> str:
     return PUBLIC_MODULE_PREFERRED_NAMES.get(module_name, module_name)
 
 
-def render_callable_map_page(nodes: list[dict[str, Any]], edges: list[dict[str, Any]], module_summary: list[dict[str, Any]]) -> str:
-    public_nodes = [n for n in nodes if n["exported"]]
-    helper_nodes = [n for n in nodes if n["is_underscore"]]
-    outgoing: dict[str, list[dict[str, Any]]] = {}
-    incoming: dict[str, list[dict[str, Any]]] = {}
-    for edge in edges:
-        outgoing.setdefault(edge["caller_qualified_name"], []).append(edge)
-        if edge["callee_qualified_name"]:
-            incoming.setdefault(edge["callee_qualified_name"], []).append(edge)
-
-    lines = [
-        "# Callable Map",
+def render_callable_map_page() -> str:
+    return "\n".join([
+        "# Callable Dependency Map",
         "",
-        "This page maps public FabricOps callables to the internal helpers they use. It is generated from src/fabricops_kit/*.py using Python AST parsing.",
+        '!!! note "Maintainer diagnostic page"',
+        "    This page is generated from source code and is intended for maintainers.",
+        "    For normal usage, start with the Function Usage Guide or Function Reference.",
         "",
-        "## Public callable chains",
+        '<iframe src="../assets/callable-map.html" title="Callable lineage explorer" style="width:100%;height:78vh;min-height:640px;border:1px solid #2a2f3a;border-radius:8px;"></iframe>',
         "",
-        '<input id="callable-map-search" type="search" placeholder="Search callable map" aria-label="Search callable map">',
-        "",
-    ]
-    for node in sorted(public_nodes, key=lambda x: x["qualified_name"]):
-        direct_edges = outgoing.get(node["qualified_name"], [])
-        same_module = sorted({e["callee_qualified_name"] for e in direct_edges if e["edge_type"] == "same_module" and e["callee_qualified_name"]})
-        cross_module_public = sorted({
-            e["callee_qualified_name"] for e in direct_edges
-            if e["edge_type"] == "cross_module" and e["callee_qualified_name"] and e.get("callee_kind") == "public_export"
-        })
-        cross_module_private = sorted({
-            e["callee_qualified_name"] for e in direct_edges
-            if e["edge_type"] == "cross_module" and e["callee_qualified_name"] and e.get("callee_kind") == "internal_helper"
-        })
-        cross_module_internal = sorted({
-            e["callee_qualified_name"] for e in direct_edges
-            if e["edge_type"] == "cross_module" and e["callee_qualified_name"] and e.get("callee_kind") == "internal_callable"
-        })
-        helper_names = sorted({x.split(".")[-1] for x in same_module if x.split(".")[-1].startswith("_")})
-        cross_names = sorted({x.split(".")[-1] for x in (cross_module_public + cross_module_private + cross_module_internal)})
-        searchable_helpers = " ".join(helper_names)
-        searchable_cross = " ".join(cross_names)
-        lines.extend(
-            [
-                (
-                    f'<article data-callable-map-row="true" data-callable-name="{node["callable_name"]}" '
-                    f'data-callable-module="{node["module_name"]}" data-callable-role="{node["role"]}" '
-                    f'data-callable-helpers="{searchable_helpers}" data-callable-cross-module="{searchable_cross}">'
-                ),
-                f"### `{node['callable_name']}`",
-                f"- module: `{node['module_name']}`",
-                f"- role: `{node['role']}`",
-                "- direct internal helpers used: " + (", ".join(f"`{x}`" for x in helper_names) or "—"),
-                "- direct cross-module public calls: " + (", ".join(f"`{x}`" for x in cross_module_public) or "—"),
-                "- direct cross-module private helper calls: " + (", ".join(f"`{x}`" for x in cross_module_private) or "—"),
-                "- direct cross-module internal calls: " + (", ".join(f"`{x}`" for x in cross_module_internal) or "—"),
-                "</article>",
-                "",
-            ]
-        )
+    ])
 
-    lines.extend(["## Internal helper index", "", "| helper | module | used by public callables | used by internal helpers |", "|---|---|---|---|"])
-    for node in sorted(helper_nodes, key=lambda x: x["qualified_name"]):
-        users = incoming.get(node["qualified_name"], [])
-        by_public = sorted({e["caller_qualified_name"].split(".")[-1] for e in users if any(n["qualified_name"] == e["caller_qualified_name"] and n["exported"] for n in nodes)})
-        by_internal = sorted({e["caller_qualified_name"].split(".")[-1] for e in users if any(n["qualified_name"] == e["caller_qualified_name"] and not n["exported"] for n in nodes)})
-        lines.append(f"| `{node['callable_name']}` | `{node['module_name']}` | {', '.join(f'`{x}`' for x in by_public) or '—'} | {', '.join(f'`{x}`' for x in by_internal) or '—'} |")
 
-    lines.extend(["", "## Cross-module FabricOps calls", "", "| caller module | caller function | callee module | callee function |", "|---|---|---|---|"])
-    for edge in edges:
-        if edge["edge_type"] != "cross_module" or not edge["callee_qualified_name"]:
-            continue
-        caller = edge["caller_qualified_name"].split(".")
-        callee = edge["callee_qualified_name"].split(".")
-        lines.append(f"| `{caller[-2]}` | `{caller[-1]}` | `{callee[-2]}` | `{callee[-1]}` |")
-
-    lines.extend(["", "## Module dependency summary", "", "| module | calls modules | called by modules | public callable count | internal helper count |", "|---|---|---|---:|---:|"])
-    for row in module_summary:
-        lines.append(
-            f"| `{row['module']}` | {', '.join(f'`{m}`' for m in row['calls_modules']) or '—'} | "
-            f"{', '.join(f'`{m}`' for m in row['called_by_modules']) or '—'} | {row['public_callable_count']} | {row['internal_helper_count']} |"
-        )
-    return "\n".join(lines) + "\n"
+def render_callable_map_html() -> str:
+    return """<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<style>body{margin:0;font:14px system-ui;background:#0b1020;color:#d7deff}#app{display:flex;min-height:100vh}#left{flex:1;padding:12px}#right{width:34%;min-width:280px;border-left:1px solid #25304a;padding:12px;overflow:auto}input,select{background:#121a31;color:#d7deff;border:1px solid #2f3a58;border-radius:6px;padding:6px}svg{width:100%;height:72vh;background:#0f1730;border:1px solid #25304a;border-radius:8px}.node{cursor:pointer}.edge{stroke:#5a6a95;stroke-opacity:.35}.sel{stroke:#ffd166!important;stroke-width:2.3;stroke-opacity:.95}.muted{opacity:.16}.legend span{display:inline-block;margin-right:8px}@media(max-width:900px){#app{flex-direction:column}#right{width:auto;min-width:0;border-left:none;border-top:1px solid #25304a}svg{height:58vh}}</style></head>
+<body><div id='app'><section id='left'><div style='display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px'><input id='q' placeholder='Search callable'><select id='m'><option value=''>All modules</option></select><select id='r'><option value=''>All roles</option></select></div><svg id='g'></svg><div class='legend'><span>● public</span><span>● internal helper</span><span>● internal callable</span></div></section><aside id='right'><h3>Callable Inspector</h3><div id='ins'>Select a node.</div></aside></div>
+<script>
+const color=n=>n.exported?'#66d9ef':(n.is_underscore?'#ff6b6b':'#c792ea'); fetch('../reference/callable-map.json').then(r=>r.json()).then(data=>{const nodes=data.nodes,edges=data.edges.filter(e=>e.callee_qualified_name);const byQ=Object.fromEntries(nodes.map(n=>[n.qualified_name,n])); const ms=[...new Set(nodes.map(n=>n.module_name))].sort();ms.forEach(m=>mEl.innerHTML+=`<option>${m}</option>`);const rs=[...new Set(nodes.map(n=>n.role))].sort();rs.forEach(r=>rEl.innerHTML+=`<option>${r}</option>`);
+function render(){const q=qEl.value.toLowerCase(),mf=mEl.value,rf=rEl.value; const vis=nodes.filter(n=>(!q||n.callable_name.toLowerCase().includes(q)||n.qualified_name.toLowerCase().includes(q))&&(!mf||n.module_name===mf)&&(!rf||n.role===rf)); const set=new Set(vis.map(n=>n.qualified_name)); const es=edges.filter(e=>set.has(e.caller_qualified_name)&&set.has(e.callee_qualified_name)); draw(vis,es);}
+let sel=null; function draw(ns,es){const svg=document.getElementById('g');const w=svg.clientWidth,h=svg.clientHeight;svg.innerHTML='';const cols=[...new Set(ns.map(n=>n.module_name))]; const colW=Math.max(220,w/Math.max(cols.length,1));const pos={};cols.forEach((m,i)=>{const ms=ns.filter(n=>n.module_name===m);ms.forEach((n,j)=>pos[n.qualified_name]={x:90+i*colW,y:50+j*34});});
+es.forEach(e=>{const a=pos[e.caller_qualified_name],b=pos[e.callee_qualified_name]; if(!a||!b)return; svg.insertAdjacentHTML('beforeend',`<line class='edge ${sel&&(sel===e.caller_qualified_name||sel===e.callee_qualified_name)?'sel':''}' x1='${a.x}' y1='${a.y}' x2='${b.x}' y2='${b.y}'/>`)});
+ns.forEach(n=>{const p=pos[n.qualified_name]; if(!p)return; svg.insertAdjacentHTML('beforeend',`<g class='node ${sel&&sel!==n.qualified_name?'muted':''}' data-q='${n.qualified_name}'><circle cx='${p.x}' cy='${p.y}' r='8' fill='${color(n)}'/><text x='${p.x+12}' y='${p.y+4}' fill='#d7deff' font-size='12'>${n.callable_name}</text></g>`)}); svg.querySelectorAll('.node').forEach(el=>el.onclick=()=>select(el.dataset.q,ns,es));}
+function select(qn,ns,es){sel=qn; const n=byQ[qn]; const out=es.filter(e=>e.caller_qualified_name===qn).map(e=>e.callee_qualified_name.split('.').slice(-2).join('.')); const inn=es.filter(e=>e.callee_qualified_name===qn).map(e=>e.caller_qualified_name.split('.').slice(-2).join('.')); ins.innerHTML=`<b>${n.callable_name}</b><br>module: ${n.module_name}<br>role: ${n.role}<br><br><b>Downstream</b><br>${out.join('<br>')||'—'}<br><br><b>Upstream</b><br>${inn.join('<br>')||'—'}`; render();}
+const qEl=document.getElementById('q'),mEl=document.getElementById('m'),rEl=document.getElementById('r'),ins=document.getElementById('ins'); [qEl,mEl,rEl].forEach(x=>x.oninput=render); render();});
+</script></body></html>"""
 
 
 def write_callable_map_manifest(nodes: list[dict[str, Any]], edges: list[dict[str, Any]], module_summary: list[dict[str, Any]]) -> None:
@@ -464,6 +411,8 @@ def write_callable_map_manifest(nodes: list[dict[str, Any]], edges: list[dict[st
         json.dumps({"nodes": nodes, "edges": edges, "module_summary": module_summary}, indent=2) + "\n",
         encoding="utf-8",
     )
+    CALLABLE_MAP_HTML_PATH.parent.mkdir(parents=True, exist_ok=True)
+    CALLABLE_MAP_HTML_PATH.write_text(render_callable_map_html(), encoding="utf-8")
 
 
 def main() -> None:
@@ -710,7 +659,7 @@ def main() -> None:
     nodes, edges, module_summary = build_callable_graph(module_data, symbol_map, public, docs_metadata)
     CALLABLE_MAP_PATH.parent.mkdir(parents=True, exist_ok=True)
     CALLABLE_MAP_PATH.write_text(
-        render_callable_map_page(nodes, edges, module_summary),
+        render_callable_map_page(),
         encoding="utf-8",
         newline="\n",
     )
