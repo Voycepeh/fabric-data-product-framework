@@ -29,7 +29,7 @@ class FabricStore:
 
     In normal use, define these values in a separate Fabric config notebook,
     validate the `CONFIG` mapping with `load_config`, then retrieve the
-    required environment and target with `_get_store`.
+    required environment and target via public IO helpers.
 
     Attributes
     ----------
@@ -165,7 +165,7 @@ def read_lakehouse_table(config, env, target, table, spark_session=None):
     Parameters
     ----------
     lh : FabricStore
-        Lakehouse path object returned by `_get_store`.
+        Lakehouse path object resolved from config/env/target.
     tablename : str
         Name of the table under the lakehouse `Tables/` folder.
     spark_session : object, optional
@@ -221,7 +221,7 @@ def write_lakehouse_table(
     df : pyspark.sql.DataFrame
         Spark DataFrame to write.
     lh : FabricStore
-        Lakehouse path object returned by `_get_store`.
+        Lakehouse path object resolved from config/env/target.
     tablename : str
         Target table name under the lakehouse `Tables/` folder.
     mode : str, default "append"
@@ -313,7 +313,7 @@ def read_lakehouse_csv(config, env, target, relative_path, spark_session=None, h
     Parameters
     ----------
     lh : FabricStore
-        Lakehouse path object returned by `_get_store`.
+        Lakehouse path object resolved from config/env/target.
     relative_path : str
         Path to the CSV file or folder under the lakehouse root, for example
         `"Files/raw/orders.csv"` or `"Files/raw/orders/"`.
@@ -565,7 +565,7 @@ def read_lakehouse_parquet(config, env, target, relative_path, verbose=True, spa
     Parameters
     ----------
     lh : FabricStore
-        Lakehouse path object returned by `_get_store`.
+        Lakehouse path object resolved from config/env/target.
     relative_path : str
         Path to the Parquet file under the lakehouse `Files/` folder, without
         the leading `"Files/"`. For example:
@@ -591,7 +591,7 @@ def read_lakehouse_parquet(config, env, target, relative_path, verbose=True, spa
 
     Examples
     --------
-    >>> df = read_lakehouse_parquet(CONFIG, ENV, "source", "raw/orders/orders_2026.parquet")
+    >>> df = read_lakehouse_parquet(CONFIG, ENV, "source", "raw/orders.parquet")
     Notes
     -----
     Assumes Fabric notebook runtime filesystem conventions for local fallback
@@ -693,7 +693,7 @@ def read_lakehouse_excel(config, env, target, relative_path, sheet_name=0, spark
     Parameters
     ----------
     lh : FabricStore
-        Lakehouse path object returned by `_get_store`.
+        Lakehouse path object resolved from config/env/target.
     relative_path : str
         Path to the Excel file under the lakehouse root, for example
         `"Files/reference/faculty_mapping.xlsx"`.
@@ -719,7 +719,7 @@ def read_lakehouse_excel(config, env, target, relative_path, sheet_name=0, spark
 
     Examples
     --------
-    >>> df_mapping = read_lakehouse_excel(CONFIG, ENV, "source", "reference/faculty_mapping.xlsx", sheet_name="Mapping")
+    >>> df_mapping = read_lakehouse_excel(CONFIG, ENV, "source", "reference/mapping.xlsx")
     Notes
     -----
     Side effects:
@@ -879,7 +879,7 @@ def seed_minimal_sample_source_table(
     Parameters
     ----------
     source_lakehouse : FabricStore
-        Lakehouse destination returned by ``_get_store`` for the source layer.
+        Source lakehouse target selected by config/environment/target inputs.
     table_name : str, default="minimal_source"
         Destination source-table name to seed for sample notebook runs.
     mode : str, default="overwrite"
