@@ -58,7 +58,7 @@ for row in sorted(public_symbol_docs, key=lambda item: item["symbol_name"]):
         fd.write(
             f'<iframe src="../../../assets/callable-map.html?focus={symbol_name}&embed=1" '
             'title="Focused callable dependency explorer" '
-            'style="width:100%;height:360px;min-height:240px;border:1px solid #2a2f3a;border-radius:8px;overflow:hidden;"></iframe>\n\n'
+            'scrolling="no" style="width:100%;height:320px;min-height:220px;border:1px solid #2a2f3a;border-radius:8px;overflow:hidden;display:block;"></iframe>\n\n'
         )
         fd.write(
             f"[Open full dependency explorer](../../../reference/callable-map/?focus={symbol_name})\n\n"

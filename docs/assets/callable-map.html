@@ -4,7 +4,8 @@
   <meta charset='utf-8'>
   <meta name='viewport' content='width=device-width, initial-scale=1'>
   <style>
-    body{margin:0;font:14px system-ui;background:#0b1020;color:#d7deff}
+    html,body{margin:0;padding:0}
+    body{font:14px system-ui;background:#0b1020;color:#d7deff;overflow-x:hidden}
     #app{display:flex;min-height:82vh}
     .title{font-size:16px;font-weight:700;margin-bottom:8px}
     #left{flex:1 1 auto;min-width:0;padding:12px}
@@ -33,6 +34,7 @@
     .layout-toggle button.deemphasized{opacity:.72}
     .search-hint{font-size:12px;color:#aebae3;margin:0}
     #mobileOverviewHint{display:none;font-size:12px;color:#ffd166;margin:0}
+    body.embed-mode{overflow:hidden}
     body.embed-mode #app{min-height:0}
     body.embed-mode .title,
     body.embed-mode .controls,
@@ -183,6 +185,15 @@ function renderInspector(qn){
   const n=byQ[qn],rels=directRelationships(qn);const ctype=n.exported?'public callable':(n.is_underscore?'private helper':'internal callable');
   ins.innerHTML=`<div class='pill'>module: ${n.module_name}</div><div class='pill'>role: ${n.role}</div><div class='pill'>type: ${ctype}</div><h4 style='margin:10px 0 4px'>${n.callable_name}</h4><p style='margin:0 0 8px;color:#aebae3'>Focused callable</p><b>Direct upstream callers</b><br>${rels.up.map(v=>v.split('.').slice(-2).join('.')).join('<br>')||'—'}<br><br><b>Direct downstream calls</b><br>${rels.down.map(v=>v.split('.').slice(-2).join('.')).join('<br>')||'—'}`;
 }
+function notifyParentHeight(){
+  if(!window.parent||window.parent===window) return;
+  const app=document.getElementById('app');
+  const appHeight=app?app.getBoundingClientRect().height:0;
+  const bodyHeight=document.body.scrollHeight;
+  const docHeight=document.documentElement.scrollHeight;
+  const height=Math.max(appHeight,bodyHeight,docHeight,240);
+  window.parent.postMessage({type:'callable-map-height',height},'*');
+}
 function render(){
   const scoped=inScopeNodes();
   const set=new Set(scoped.map(n=>n.qualified_name));
@@ -213,6 +224,7 @@ function render(){
   svg.querySelectorAll('.node').forEach(el=>el.onclick=()=>select(el.dataset.q,true));
   if(sel&&pos[sel]) fit([sel,...new Set(visEdges.flatMap(e=>e.caller_qualified_name===sel?[e.callee_qualified_name]:e.callee_qualified_name===sel?[e.caller_qualified_name]:[]))]); else fit();
   renderInspector(sel);
+  notifyParentHeight();
 }
 function select(qn,setInput=false){sel=qn;if(setInput&&byQ[qn]&&!embedMode) qEl.value=byQ[qn].callable_name;if(!embedMode&& !sel) document.body.classList.add('standalone-no-selection');
 render();}
@@ -231,6 +243,8 @@ if(urlFocus){
   if(hit){sel=hit.qualified_name;if(!embedMode) qEl.value=hit.callable_name;}
 }
 render();
+window.addEventListener('resize',notifyParentHeight);
+setTimeout(notifyParentHeight,0);
 });
 </script>
 </body>
