@@ -15,10 +15,10 @@ FabricOps starts with a clear operating workflow.
 
 Governance defines approved usage and business context. Analysts profile source data, validate business meaning, and prepare AI-assisted suggestions. Engineers enforce approved metadata through repeatable pipeline contracts. Handover is generated from approved metadata, lineage, quality results, and runtime evidence.
 
-![FabricOps lifecycle operating model overview](assets/mvp-flow.png)
+![FabricOps workflow overview](assets/mvp-flow.png)
 
 <div class="center-cta">
-  <a class="md-button" href="lifecycle-operating-model/">View Lifecycle Operating Model</a>
+  <a class="md-button" href="workflow/">View Workflow</a>
 </div>
 
 ## 2. Notebook model
@@ -30,7 +30,7 @@ FabricOps keeps the notebook structure simple so ownership is clear.
 | Notebook | Purpose |
 |---|---|
 | `00_env_config` | Defines environment paths, workspace settings, and shared reusable configuration once per workspace. |
-| `01_data_sharing_agreement_<agreement>` | Captures approved usage, restrictions, business context, ownership, and governance context for the agreement. |
+| `01_da_<agreement>` | Captures source/agreement-level permission evidence and approval metadata for the agreement. |
 | `02_ex_<agreement>_<topic>` | Supports analyst and data scientist exploration, profiling, business meaning validation, AI-assisted DQ suggestions, and AI-assisted classification suggestions. |
 | `03_pc_<agreement>_<pipeline>` | Acts as the engineer-owned pipeline contract. It is run-all-safe, schedulable, and enforces approved metadata, DQ rules, checks, lineage, and outputs. |
 

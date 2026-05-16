@@ -7,7 +7,7 @@
 
 ## Module boundary
 
-This module stores and retrieves metadata evidence. It does not own governance approval logic. Agreement approval, classification, sensitivity, and PII review remain in `data_governance.py` and the `01_data_sharing_agreement_<agreement>` notebook.
+This module stores and retrieves metadata evidence. It does not own governance approval logic. Agreement approval, classification, sensitivity, and PII review remain in `data_governance.py` and the `01_da_<agreement>` notebook.
 
 ## Essential callables
 

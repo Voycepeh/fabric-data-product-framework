@@ -176,6 +176,13 @@ def test_docs_metadata_matches_public_exports() -> None:
     assert exports == metadata_symbols
 
 
+def test_public_reference_metadata_excludes_legacy_and_internal_symbols() -> None:
+    metadata_symbols = {row["symbol_name"] for row in metadata_literal("PUBLIC_SYMBOL_DOCS")}
+    assert "get_path" not in metadata_symbols
+    assert "Housepath" not in metadata_symbols
+    assert "_get_store" not in metadata_symbols
+
+
 def test_reference_file_is_in_sync_with_generator() -> None:
     before = REFERENCE_FILE.read_text(encoding="utf-8")
     generate_reference()
@@ -301,7 +308,7 @@ def test_generated_notebook_detail_pages_exist_with_expected_content() -> None:
         "docs/notebook-structure/03-pipeline-contract.md": [
             "# `03_pc_<agreement>_<pipeline>`",
             "Open template notebook",
-            "03_pc_agreement_source_to_target.ipynb",
+            "03_pc_agreement_pipeline_template.ipynb",
             "## Segment 4: Run DQ, split outputs, and publish",
             "## Optional profiling, drift, governance, lineage, and handover",
             "<code>enforce_dq</code>",
@@ -428,4 +435,17 @@ def test_module_callable_tables_exclude_supporting_data_structures() -> None:
     assert "| [`DQEnforcementResult`]" not in data_quality_page
     assert "| [`FabricStore`]" not in fabric_io_page
     assert "| [`enforce_dq`]" in data_quality_page
+
+
+def test_read_lakehouse_table_reference_excludes_legacy_housepath_tokens() -> None:
+    generate_reference()
+    callable_page = (ROOT / "docs" / "api" / "reference" / "read_lakehouse_table.md").read_text(encoding="utf-8")
+    assert "Housepath" not in callable_page
+    assert "get_path" not in callable_page
+
+
+def test_read_lakehouse_table_reference_uses_config_env_target_example() -> None:
+    generate_reference()
+    callable_page = (ROOT / "docs" / "api" / "reference" / "read_lakehouse_table.md").read_text(encoding="utf-8")
+    assert 'read_lakehouse_table(CONFIG, ENV, "source", "RAW_ORDERS")' in callable_page
     assert "| [`load_config`]" in (ROOT / "docs/api/modules/config.md").read_text(encoding="utf-8")

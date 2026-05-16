@@ -2,7 +2,7 @@
 
 Run the minimal end-to-end sample in the canonical framework lifecycle:
 1. `00_env_config` = runtime/environment paths and shared runtime configuration.
-2. `01_data_agreement_template` = approved usage + agreement context + stewardship notes.
+2. `01_da_agreement_template` = approved usage + agreement context + stewardship notes.
 3. `02_ex_*` = exploration, profiling, AI-assisted proposals, and evidence capture for governance/pipeline handoff.
 4. `03_pc_*` = deterministic enforcement from approved metadata.
 5. `04_gov_*` = planned next stage for column-level governance enrichment (business context + classification/PII/confidentiality) once a dedicated template notebook is added.
@@ -15,9 +15,4 @@ Templates are copy ready, not source ready. For real projects, replace source pa
 Local metadata fallback is optional for local-only runs. Set `USE_LOCAL_SAMPLE_METADATA = True` in both `02_ex` and `03_pc` when you need local metadata artifacts under `samples/end_to_end/_output/metadata`.
 
 ## Template notebook purposes
-- `01_data_agreement_template.ipynb`: Captures approved usage, business context, stewardship notes, and agreement-level governance context reused by AI-assisted DQ and governance workflows.
-
-
-## 04_gov template status
-- `04_gov_<agreement>_<dataset>_<table>` is part of the documented lifecycle.
-- A dedicated template notebook file (`templates/notebooks/04_gov_agreement_dataset_table.ipynb`) is not yet present in this repository.
+- `01_da_agreement_template.ipynb`: Captures approved usage, business context, stewardship notes, and agreement-level governance context reused by AI-assisted DQ and governance workflows.

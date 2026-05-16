@@ -93,7 +93,7 @@ def test_template_notebooks_have_readable_guided_structure() -> None:
     notebooks = [
         "templates/notebooks/00_env_config.ipynb",
         "templates/notebooks/02_ex_agreement_topic.ipynb",
-        "templates/notebooks/03_pc_agreement_source_to_target.ipynb",
+        "templates/notebooks/03_pc_agreement_pipeline_template.ipynb",
     ]
     for notebook in notebooks:
         cells = _notebook_cells(notebook)
@@ -108,5 +108,5 @@ def test_template_notebooks_have_readable_guided_structure() -> None:
     exploration_text = _markdown_text("templates/notebooks/02_ex_agreement_topic.ipynb")
     assert "AI suggestions are advisory" in exploration_text or "AI advisory" in exploration_text
 
-    pipeline_text = _markdown_text("templates/notebooks/03_pc_agreement_source_to_target.ipynb")
+    pipeline_text = _markdown_text("templates/notebooks/03_pc_agreement_pipeline_template.ipynb")
     assert "human-approved" in pipeline_text

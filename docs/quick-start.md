@@ -22,7 +22,7 @@ Open and copy these real starter templates first:
 | --- | --- |
 | [`00_env_config.ipynb`](../templates/notebooks/00_env_config.ipynb) | reusable environment config notebook |
 | [`02_ex_agreement_topic.ipynb`](../templates/notebooks/02_ex_agreement_topic.ipynb) | exploration, profiling, AI-assisted suggestions, contract drafting |
-| [`03_pc_agreement_source_to_target.ipynb`](../templates/notebooks/03_pc_agreement_source_to_target.ipynb) | approved pipeline execution, DQ enforcement, quarantine/output/metadata/lineage |
+| [`03_pc_agreement_pipeline_template.ipynb`](../templates/notebooks/03_pc_agreement_pipeline_template.ipynb) | approved pipeline execution, DQ enforcement, quarantine/output/metadata/lineage |
 
 These are copy-ready starter notebooks. Rename and adapt them for your own agreement and pipeline.
 
@@ -31,21 +31,22 @@ For the minimal end-to-end sample sequence, see [`templates/notebooks/README.md`
 After copying, use this canonical naming model for your working notebooks:
 
 - `00_env_config`
-- `01_data_sharing_agreement_<agreement>`
+- `01_da_<agreement>`
 - `02_ex_<agreement>_<topic>`
 - `03_pc_<agreement>_<pipeline>`
+- `04_gov_<agreement>_<topic>` (future governance enrichment notebooks)
 
 ## Run them in this order
 
 1. Configure the environment in `00_env_config`.
-2. Capture agreement context in `01_data_sharing_agreement_<agreement>`.
+2. Capture agreement context in `01_da_<agreement>`.
 3. Run exploration/profile work in `02_ex_<agreement>_<topic>`.
 4. Run the approved pipeline contract in `03_pc_<agreement>_<pipeline>`.
 
 ## What to edit first
 
 - Environment paths, connection/runtime values, and shared config in `00_env_config`.
-- Agreement purpose, ownership, and approved usage in `01_data_sharing_agreement_<agreement>`.
+- Agreement purpose, ownership, and approved usage in `01_da_<agreement>`.
 - Source and output expectations for your dataset/pipeline.
 - Approved DQ and classification decisions before enabling contract enforcement in `03_pc_<agreement>_<pipeline>`.
 
@@ -62,7 +63,7 @@ After copying, use this canonical naming model for your working notebooks:
 ## Where to go next
 
 - [Notebook Structure](notebook-structure.md)
-- [Lifecycle Operating Model](lifecycle-operating-model.md)
+- [Workflow](workflow.md)
 - [Metadata and Contracts](metadata-and-contracts.md)
 - [Functions / Reference](reference/index.md)
 - [Run in Fabric](setup/run-in-fabric.md)

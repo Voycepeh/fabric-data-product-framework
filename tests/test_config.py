@@ -225,3 +225,8 @@ def test_config_dataclasses_normalize_values() -> None:
     assert governance.required_classification is True and governance.sensitivity_rules == {}
     lineage = LineageConfig(capture_ai_summaries=0, capture_transformation_steps=1)
     assert lineage.capture_ai_summaries is False and lineage.capture_transformation_steps is True
+
+
+def test_notebook_runtime_default_prefixes_match_template_policy() -> None:
+    runtime = NotebookRuntimeConfig()
+    assert runtime.allowed_notebook_prefixes == ("00_env_config", "01_da_", "02_ex_", "03_pc_", "04_gov")
