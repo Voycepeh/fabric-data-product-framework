@@ -15,10 +15,10 @@ FabricOps starts with a clear operating workflow.
 
 Governance defines approved usage and business context. Analysts profile source data, validate business meaning, and prepare AI-assisted suggestions. Engineers enforce approved metadata through repeatable pipeline contracts. Handover is generated from approved metadata, lineage, quality results, and runtime evidence.
 
-![FabricOps lifecycle operating model overview](assets/mvp-flow.png)
+![FabricOps workflow overview](assets/mvp-flow.png)
 
 <div class="center-cta">
-  <a class="md-button" href="lifecycle-operating-model/">View Lifecycle Operating Model</a>
+  <a class="md-button" href="workflow/">View Workflow</a>
 </div>
 
 ## 2. Notebook model

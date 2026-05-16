@@ -62,7 +62,7 @@ After copying, use this canonical naming model for your working notebooks:
 ## Where to go next
 
 - [Notebook Structure](notebook-structure.md)
-- [Lifecycle Operating Model](lifecycle-operating-model.md)
+- [Workflow](workflow.md)
 - [Metadata and Contracts](metadata-and-contracts.md)
 - [Functions / Reference](reference/index.md)
 - [Run in Fabric](setup/run-in-fabric.md)

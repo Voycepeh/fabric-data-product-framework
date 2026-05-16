@@ -15,7 +15,7 @@ FabricOps Starter Kit helps teams run governed Fabric notebook workflows by turn
 
 Fabric notebooks often begin as analysis work and then become recurring operations. This starter kit gives teams a role-based operating model where governance is defined once, analysts validate DQ rule validity, engineers enforce approved metadata, and handover/data contract outputs are generated from metadata and evidence.
 
-Read more: [Quick Start](https://voycepeh.github.io/FabricOps-Starter-Kit/quick-start/) · [Lifecycle Operating Model](https://voycepeh.github.io/FabricOps-Starter-Kit/lifecycle-operating-model/) · [Functions](https://voycepeh.github.io/FabricOps-Starter-Kit/reference/) · [Data contracts](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/)
+Read more: [Quick Start](https://voycepeh.github.io/FabricOps-Starter-Kit/quick-start/) · [Workflow](https://voycepeh.github.io/FabricOps-Starter-Kit/workflow/) · [Functions](https://voycepeh.github.io/FabricOps-Starter-Kit/reference/) · [Data contracts](https://voycepeh.github.io/FabricOps-Starter-Kit/metadata-and-contracts/)
 
 ## What users get
 

@@ -44,7 +44,7 @@ Step 5 → Step 2: pipeline execution produces evidence, and that evidence impro
 ## 7. Related pages
 
 - [Notebook Structure](notebook-structure.md)
-- [Lifecycle Operating Model](lifecycle-operating-model.md)
+- [Workflow](workflow.md)
 - [Notebook Structure](notebook-structure.md)
 - [Assembled Contract Model](metadata-and-contracts/contract-model.md)
 - [Metadata Tables](metadata-and-contracts/metadata-tables.md)

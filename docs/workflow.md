@@ -1,8 +1,8 @@
-# Lifecycle Operating Model
+# FabricOps Workflow
 
-![Role-Based Lifecycle Workflow](assets/mvp-flow.png)
+![FabricOps workflow overview](assets/mvp-flow.png)
 
-FabricOps Starter Kit uses a governance-centered, role-based operating model where approved metadata is enforced through pipeline contracts and assembled into handover outputs.
+This page explains the canonical 13-step FabricOps workflow. The workflow connects human decisions, AI assistance, Fabric notebook execution, metadata evidence, pipeline contracts, and handover outputs. AI suggests, humans approve where governance or data quality judgment is required, and the framework validates, logs, and packages evidence for handover.
 
 ## 1. Governance steward
 
